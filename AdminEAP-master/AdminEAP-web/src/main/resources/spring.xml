@@ -31,6 +31,8 @@ http://www.springframework.org/schema/context/spring-context-4.0.xsd">
     <import resource="classpath:spring-shiro.xml"/>
     <!--缓存框架redis配置-->
     <import resource="classpath:spring-redis.xml"/>
+    <!--工作流activiti配置-->
+    <import resource="classpath:spring-activiti.xml"/>
 
 
 

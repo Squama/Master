@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<queryContext xmlns="http://www.example.org/query" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.example.org/query query.xsd ">
+	<!-- 合同列表 -->
+	<query id="contract_list" key="id" tableName="合同列表" className="com.cnpc.demos.entity.Contract"
+		   pageSize="10"  widthType="px" order="id asc">
+		<column key="rowIndex" header="序号" width="50" allowSort="false"/>
+		<column key="id" header="id" hidden="true"/>
+		<column key="version" header="version" hidden="true"/>
+		<column key="name" header="合同名称" operator="like" width="100" allowSort="true" />
+		<column key="contractNumber" header="合同编号" align="left" width="100"  operator="like"/>
+		<column key="partyA" header="甲方" operator="like" width="150" allowSort="true" />
+		<column key="partyB" header="乙方" operator="like" width="150" allowSort="true" />
+		<column key="contractAmount" header="合同金额" operator="eq" width="80" allowSort="true" />
+		<column key="fileUrl" header="合同地址" align="left" operator="eq" width="100" hidden="true" />
+		<column key="fileName" header="文件名称" operator="eq" width="200" align="center"/>
+		<column key="status" header="状态" operator="eq" width="50" allowSort="true" render="1=已审核,0=未审核,-1=审核不通过" />
+	</query>
+</queryContext>

@@ -1,6 +1,6 @@
-说明
+最新说明
 ============
-工作流尚未开源，项目到了300个Star时，工作流会开源
+工作流已开源，使用doc下的admineap_with_activiti.sql初始化数据库
 
 Introduction 简介
 ============

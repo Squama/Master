@@ -35,7 +35,7 @@
 <body class="hold-transition login-page">
 <div class="login-box">
     <div class="login-logo">
-        <img src="/resources/common/images/logo_red_03.png" width="220px" height="50px" alt="AdminEAP">
+        <a href="#"><b>Admin</b>EAP</a>
     </div>
     <!-- /.login-logo -->
     <div class="login-box-body">
@@ -76,6 +76,25 @@
         </form>
 
 
+        <div class="social-auth-links" style="margin-bottom: 0px;">
+            <div class="row">
+                <div class="col-xs-5">
+                    <div class="text-left" style="margin-top: 5px;">快速登录</div>
+                </div>
+                <div class="col-xs-7">
+                    <div class="text-right">
+                        <!--<a class="btn btn-social-icon btn-primary"><i class="fa fa-qq"></i></a>
+                        <a class="btn btn-social-icon btn-success"><i class="fa fa-wechat"></i></a>
+                        <a class="btn btn-social-icon btn-warning"><i class="fa fa-weibo"></i></a>
+                        <a class="btn btn-social-icon btn-info"><i class="fa fa-github"></i></a>-->
+                        <#list oAuthServices as oauth>
+                            <a class="btn btn-social-icon ${oauth.btnClass}" href="${oauth.authorizationUrl}"><i class="fa fa-${oauth.oAuthType}"></i></a>
+                        </#list>
+                    </div>
+                </div>
+            </div>
+            <!-- /.social-auth-links -->
+        </div>
         <!-- /.login-box-body -->
     </div>
     <!-- /.login-box -->

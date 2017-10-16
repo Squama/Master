@@ -93,7 +93,7 @@
         <url-pattern>/</url-pattern>
     </servlet-mapping>
 
-    <servlet-mapping>
+   <!-- <servlet-mapping>
         <servlet-name>default</servlet-name>
         <url-pattern>*.jpg</url-pattern>
     </servlet-mapping>
@@ -150,7 +150,7 @@
     <servlet-mapping>
         <servlet-name>default</servlet-name>
         <url-pattern>*.md</url-pattern>
-    </servlet-mapping>
+    </servlet-mapping>-->
 
     <!--解决jetty开发时，静态文件编辑后保存问题，发布到tomcat请注释-->
 <!--    <servlet>

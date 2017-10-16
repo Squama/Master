@@ -2,6 +2,7 @@
 target/*
 .settings/*
 AdminEAP.iml
+AdminEAP.iws
 /target/
 
 *.class
