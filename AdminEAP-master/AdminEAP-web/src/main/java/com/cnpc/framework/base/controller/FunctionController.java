@@ -6,6 +6,7 @@ import com.cnpc.framework.base.pojo.TreeNode;
 import com.cnpc.framework.base.service.FunctionService;
 import com.cnpc.framework.base.service.RoleService;
 import com.cnpc.framework.utils.StrUtil;
+import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Controller;
@@ -51,6 +52,11 @@ public class FunctionController {
         Subject subject = SecurityUtils.getSubject();
         String userId = subject.getPrincipal().toString();
         Set<String> roles = roleService.getRoleCodeSet(userId);
+        for (String role : roles) {
+            if(StringUtils.equals("ADMIN",role)){
+                return  getAll();
+            }
+        }
         return functionService.getFunctionList(roles,userId);
     }
     /**
