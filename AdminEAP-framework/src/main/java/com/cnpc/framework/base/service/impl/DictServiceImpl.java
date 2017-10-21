@@ -61,4 +61,36 @@ public class DictServiceImpl extends BaseServiceImpl implements DictService {
         }
 
     }
+
+    @Override
+    public List<TreeNode> getTreeDataByCode(String code) {
+        // 获取数据
+        String key = RedisConstant.DICT_PRE + code + "s";
+        List<TreeNode> tnlist = null;
+        String tnStr = redisDao.get(key);
+        if(!StrUtil.isEmpty(key)) {
+            tnlist = JSON.parseArray(tnStr,TreeNode.class);
+        }
+        if (tnlist != null) {
+            return tnlist;
+        } else {
+            String hql = "from Dict where code='" + code + "' order by levelCode asc";
+            List<Dict> dicts = this.find(hql);
+            hql = "from Dict where code='" + code + "' or parent_id = '" +dicts.get(0).getId()+ "' order by levelCode asc";
+            dicts = this.find(hql);
+            Map<String, TreeNode> nodelist = new LinkedHashMap<String, TreeNode>();
+            for (Dict dict : dicts) {
+                TreeNode node = new TreeNode();
+                node.setText(dict.getName());
+                node.setId(dict.getId());
+                node.setParentId(dict.getParentId());
+                node.setLevelCode(dict.getLevelCode());
+                nodelist.put(node.getId(), node);
+            }
+            // 构造树形结构
+            tnlist = TreeUtil.getNodeList(nodelist);
+            redisDao.save(key, tnlist);
+            return tnlist;
+        }
+    }
 }

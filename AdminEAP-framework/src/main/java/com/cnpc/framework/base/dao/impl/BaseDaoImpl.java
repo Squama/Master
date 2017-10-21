@@ -467,8 +467,12 @@ public class BaseDaoImpl implements BaseDao {
     }
 
     public int getCountByCriteria(DetachedCriteria criteria) {
-
-        return ((Long) criteria.getExecutableCriteria(getCurrentSession()).setProjection(Projections.rowCount()).uniqueResult()).intValue();
+        try{
+            return ((Long) criteria.getExecutableCriteria(getCurrentSession()).setProjection(Projections.rowCount()).uniqueResult()).intValue();
+        }catch(Exception e){
+            return 0;
+        }
+        
     }
 
     public List findByExample(Object example) {

@@ -73,7 +73,10 @@ public class User extends BaseEntity {
     @Column(name="dept_id")
     private String deptId;
 
-
+    @Header(name="审核状态")
+    @Column(name="audit_status")
+    private String auditStatus;
+    
     @Transient
     private String avatarId;
 
@@ -224,4 +227,12 @@ public class User extends BaseEntity {
         this.isSuperAdmin = isSuperAdmin;
     }
 
+    public String getAuditStatus() {
+        return auditStatus;
+    }
+
+    public void setAuditStatus(String auditStatus) {
+        this.auditStatus = auditStatus;
+    }
+    
 }

@@ -81,6 +81,7 @@ http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
 		<property name="packagesToScan">
 			<list>
 				<value>com.cnpc.**.entity</value>
+				<value>com.radish.**.entity</value>
 			</list>
 		</property>
 

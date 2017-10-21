@@ -153,7 +153,7 @@ public class CodeGeneratorController {
     @RequestMapping(value = "generateXMLFile",method = RequestMethod.POST)
     @ResponseBody
     public Result generateXMLFile(String xmlContent, String xmlFile, HttpServletRequest request) {
-        String xmlPath = request.getRealPath("/").replaceAll("webapp", "resources") + File.separator + "query"
+        String xmlPath = request.getRealPath("/") + "WEB-INF" + File.separator + "classes" +File.separator + "query"
                 + File.separator + xmlFile;
         String rn = "\r\n";
         try {
@@ -291,7 +291,7 @@ public class CodeGeneratorController {
         //创建功能菜单
         if ("1".equals(setting.getIsCreateFunction())&&!StrUtil.isEmpty(setting.getParFuncCode())) {
             // 获取父节点对象
-            String hql = "from Function where code='" + setting.getParFuncCode() + "'";
+            String hql = "from Function where levelCode='" + setting.getParFuncCode() + "'";
             Function parFunc = codeGeneratorService.get(hql);
             setting.setParFuncName(parFunc.getName());
             if (parFunc != null) {

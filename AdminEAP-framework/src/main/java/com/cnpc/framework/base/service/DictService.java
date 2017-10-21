@@ -8,6 +8,8 @@ import com.cnpc.framework.base.pojo.TreeNode;
 public interface DictService extends BaseService {
 
     List<TreeNode> getTreeData();
+    
+    List<TreeNode> getTreeDataByCode(String code);
 
     List<Dict> getDictsByCode(String code);
 }
