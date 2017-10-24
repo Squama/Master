@@ -99,14 +99,14 @@ public class CodeGeneratorController {
         }
         //过滤掉com.cnpc
         for (int i = 2; i < level.length; i++) {
-            htmlDir += (i < level.length - 1) ? level[i] + File.separator : level[i];
+            htmlDir += (i < level.length - 1) ? level[i] + File.separator + File.separator : level[i];
         }
         setting.setBusinessPackage(htmlDir.replace(File.separator, "/"));
         //request.getSession().getServletContext().getRealPath("/");
         String htmlPath = realPath + File.separator + "WEB-INF"
-                + File.separator + "views" + File.separator + htmlDir;
+                + File.separator + "views" + File.separator + File.separator + htmlDir;
         String javaPath = realPath.replaceAll("webapp", "java") + File.separator
-                + setting.getNameSpace().replace(".", File.separator);
+                + setting.getNameSpace().replace(".", File.separator + File.separator);
         setting.setHtmlPath(htmlPath);
         setting.setJavaPath(javaPath);
 
