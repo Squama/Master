@@ -1,0 +1,118 @@
+<!-- 以下代码为代码生成器生成，生成时间: 2017-10-17 13:45:37，作者：billjiang/475572229@qq.com-->
+<section class="content-header">
+    <h1>
+        项目信息查询
+        <small>列表</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
+        <li><a href="#">项目信息</a></li>
+        <li class="active">项目信息查询</li>
+    </ol>
+</section>
+
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="nav-tabs-custom">
+                <ul class="nav nav-tabs pull-right">
+                    <li><a href="#tab-content-edit" data-toggle="tab" id="nav-tab-detail"><i class="fa fa-edit"></i></a></li>
+                    <li class="active"><a href="#tab-content-list" data-toggle="tab" id="nav-tab-list"><i class="fa fa-list-ul"></i></a></li>
+                    <li class="pull-left header"><i class="fa fa-user"></i><small>项目列表</small></li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="tab-content-list">
+			            <div class="box">
+			                <!-- /.box-header -->
+			                <div class="dataTables_filter" id="searchDiv" style="display: none">
+			                    <!--查询条件-->
+			                    <!--查询条件-->
+
+			                   <input type="search" placeholder="请输入项目名" title="项目名" name="project_name" class="form-control" id="project_name" operator="like" likeOption="true">
+			                   <input type="search" placeholder="请输入责任人" title="责任人" name="charge_name" class="form-control" id="charge_name" operator="like" likeOption="true">
+			                    <div class="btn-group">
+			                        <button type="button" class="btn btn-primary" data-btn-type="search">查询</button>
+			                        <button type="button" class="btn btn-default" data-btn-type="reset">重置</button>
+			                    </div>
+			                    <div class="btn-group">
+			                        <button type="button" class="btn btn-default" data-btn-type="detail">查看详情</button>
+			                    </div>
+			                </div>
+			                <div class="box-body">
+			                    <table id="project_table" class="table table-bordered table-striped table-hover">
+			                    </table>
+			                </div>
+			            </div>
+		            </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    var form = $("#searchDiv").form({baseEntity: false}), initData={};
+    var auditStatus="${auditStatus?default(10)}";
+    if(auditStatus == 20){
+    	setTitle("离职项目列表")
+        initData.auditStatus = auditStatus;
+        form.initFormData(initData);
+    }
+
+    var projectQueryTable, winId = "projectQueryWin";
+    $(function (){
+        projectQueryTable = new CommonTable("project_table", "project_list", "searchDiv", null);
+        
+        $("#nav-tab-list").on("click",function(){
+            setTitle("项目列表");
+        });
+        
+        //绑定按钮事件
+        $("button[data-btn-type]").click(function () {
+            var action = $(this).data("btn-type");
+            var rowId = projectQueryTable.getSelectedRowId();
+            switch (action) {
+                case "detail":
+                	if(!rowId){
+                        modals.info('请选择要查看的行');
+                        return false;
+                    }
+                	console.log(rowId);
+                	var detailForm=$("#user-form").form();
+                	detailForm.clearForm();
+                    setTitle("查看用户【"+projectQueryTable.getSelectedRowData().name+"】")
+                    $("#nav-tab-detail").click();
+                    ajaxPost(basePath+"/projectQuery/get/"+projectQueryTable.getSelectedRowData().id,null,function(data){
+                    	console.log(data);
+                    	detailForm.initFormData(data);
+                    });
+                    break;
+            }
+        });
+        
+        $("#project_table tbody").on("dbclick", "tr", function(){
+        	var detailForm=$("#user-form").form();
+            detailForm.clearForm();
+            setTitle("查看用户【"+projectQueryTable.getSelectedRowData().name+"】")
+            $("#nav-tab-detail").click();
+            ajaxPost(basePath+"/projectQuery/get/"+projectQueryTable.getSelectedRowData().id,null,function(data){
+                detailForm.initFormData(data);
+            });
+		});
+    });
+    
+    function setTitle(title){
+       $("ul.nav-tabs li.header small").text(title);
+    }
+    
+    function fnRenderDept(value) {
+        if (value) {
+            var ret=value;
+            ajaxPost(basePath + "/org/show/"+value, null, function (data) {
+                ret=data.data;
+            })
+            return ret;
+        } else
+            return value;
+    }
+</script>
