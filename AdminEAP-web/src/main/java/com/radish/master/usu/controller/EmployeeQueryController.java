@@ -73,6 +73,11 @@ public class EmployeeQueryController {
         request.setAttribute("id", id);
         return "workmanage/employee/employee_edit";
     }
+    
+    @RequestMapping(value="/audit",method = RequestMethod.GET)
+    public String audit(){
+        return "workmanage/employee/employee_audit";
+    }
 
     @RequestMapping(value="/detail",method = RequestMethod.GET)
     public String detail(String id,HttpServletRequest request){
@@ -100,6 +105,7 @@ public class EmployeeQueryController {
         if (StrUtil.isEmpty(user.getId())) {
             //设置初始密码
             user.setPassword(EncryptUtil.getPassword(initPassword,user.getLoginName()));
+            user.setAuditStatus("30");
             String userId = userService.save(user).toString();
             userRoleService.setRoleForRegisterUser(userId);
             //头像和用户管理

@@ -185,7 +185,7 @@
             }
         });
         
-        $("#employee_table tbody").on("dbclick", "tr", function(){
+        $("#employee_table").on("dblclick", "tr", function(){
         	var detailForm=$("#user-form").form();
             detailForm.clearForm();
             setTitle("查看用户【"+employeeQueryTable.getSelectedRowData().name+"】")
