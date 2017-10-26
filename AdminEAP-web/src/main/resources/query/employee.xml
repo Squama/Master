@@ -45,6 +45,7 @@
         <column key="email" header="邮箱" align="left" operator="eq" width="100"  />
         <column key="mobile" header="手机" operator="eq" width="200" align="center"/>
         <column key="qq" header="QQ" operator="eq" width="200" align="center" />
+        <column key="auditStatus" header="审核状态" width="50" operator="in" allowSort="true" render="10=正常,20=离职待审核,30=新增待审核"/>
     </query>
     <!-- 员工信息审核 -->
     <query id="employee_audit" key="id" tableName="员工列表" className="com.cnpc.framework.base.entity.User" pageSize="10"  widthType="px" order="id asc">

@@ -125,14 +125,12 @@ public class EmployeeQueryController {
     @RequestMapping(value="/delete/{id}",method = RequestMethod.POST)
     @ResponseBody
     public Result delete(@PathVariable("id") String id){
+        
         User employee=this.get(id);
-        try{
-            baseService.delete(employee);
-            return new Result();
-        }
-        catch(Exception e){
-            return new Result(false,"该数据已经被引用，不可删除");
-        }
+        employee.setAuditStatus("20");
+        employee.setUpdateDateTime(new Date());
+        userService.update(employee);
+        return new Result();
     }
 
 
