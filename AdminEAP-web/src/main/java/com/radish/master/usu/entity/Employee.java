@@ -24,7 +24,7 @@ import com.cnpc.framework.base.entity.BaseEntity;
  * 
  */
 @Entity
-@Table(name = " tbl_employee")
+@Table(name = "tbl_employee")
 public class Employee extends BaseEntity {
 
     private static final long serialVersionUID = -4535904106336743574L;

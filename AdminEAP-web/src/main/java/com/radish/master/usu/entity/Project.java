@@ -1,6 +1,5 @@
 package com.radish.master.usu.entity;
 
-import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -11,7 +10,6 @@ import com.cnpc.framework.base.entity.BaseEntity;
 @Table(name = "tbl_project")
 public class Project extends BaseEntity {
 
-
   private static final Long serialVersionUID = 4876847951849490118L;
 
   @Header(name = "项目名")
@@ -20,7 +18,7 @@ public class Project extends BaseEntity {
 
   @Header(name = "项目级别")
   @Column(name = "project_level")
-  private int project_level;
+  private String project_level;
 
   @Header(name = "负责人员工编号")
   @Column(name = "charge_id")
@@ -32,8 +30,7 @@ public class Project extends BaseEntity {
 
   @Header(name = "项目状态")
   @Column(name = "status")
-  private int status;
-
+  private String status;
 
   public String getProject_name() {
     return project_name;
@@ -43,11 +40,11 @@ public class Project extends BaseEntity {
     this.project_name = project_name;
   }
 
-  public int getProject_level() {
+  public String getProject_level() {
     return project_level;
   }
 
-  public void setProject_level(int project_level) {
+  public void setProject_level(String project_level) {
     this.project_level = project_level;
   }
 
@@ -67,11 +64,11 @@ public class Project extends BaseEntity {
     this.charge_name = charge_name;
   }
 
-  public int getStatus() {
+  public String getStatus() {
     return status;
   }
 
-  public void setStatus(int status) {
+  public void setStatus(String status) {
     this.status = status;
   }
 }
