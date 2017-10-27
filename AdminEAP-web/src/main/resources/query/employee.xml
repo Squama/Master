@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <queryContext xmlns="http://www.example.org/query" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.example.org/query query.xsd">
 <!--本xml片段为代码生成器生成，时间：2017-10-17 11:38:08-->
-<query id="employee" key="id" tableName="员工信息查询列表" className="com.radish.master.usu.entity.Employee" widthType="px">
-        <column key="rowIndex" header="序号" width="80"/>
-        <column key="id" header="编号" classType="String" allowSort="true" width="150"/>
-        <column key="name" header="姓名" classType="String" allowSort="true" width="150" operator="like"/>
-        <column key="sex" header="性别" classType="String" width="150"/>
-        <column key="birthday" header="出生日期" classType="java.util.Date" operator="between" width="150" dateFormat="yyyy-mm-dd"/>
-        <column key="nation" header="民族" classType="String" width="150"/>
-        <column key="nativeplace" header="籍贯" classType="String" width="150"/>
-        <column key="political" header="政治面貌" classType="String" width="150"/>
-        <column key="marriage" header="婚姻状况" classType="String" width="150"/>
-        <column key="birthplace" header="出生地" classType="String" width="150"/>
-</query>
+	<query id="employee" key="id" tableName="员工信息查询列表" className="com.radish.master.usu.entity.Employee" widthType="px">
+	        <column key="rowIndex" header="序号" width="80"/>
+	        <column key="id" header="编号" classType="String" allowSort="true" width="150"/>
+	        <column key="name" header="姓名" classType="String" allowSort="true" width="150" operator="like"/>
+	        <column key="sex" header="性别" classType="String" width="150"/>
+	        <column key="birthday" header="出生日期" classType="java.util.Date" operator="between" width="150" dateFormat="yyyy-mm-dd"/>
+	        <column key="nation" header="民族" classType="String" width="150"/>
+	        <column key="nativeplace" header="籍贯" classType="String" width="150"/>
+	        <column key="political" header="政治面貌" classType="String" width="150"/>
+	        <column key="marriage" header="婚姻状况" classType="String" width="150"/>
+	        <column key="birthplace" header="出生地" classType="String" width="150"/>
+	</query>
 
     
     <!-- 员工信息查询 -->
@@ -45,6 +45,22 @@
         <column key="email" header="邮箱" align="left" operator="eq" width="100"  />
         <column key="mobile" header="手机" operator="eq" width="200" align="center"/>
         <column key="qq" header="QQ" operator="eq" width="200" align="center" />
+        <column key="auditStatus" header="审核状态" width="50" operator="in" allowSort="true" render="10=正常,20=离职待审核,30=新增待审核"/>
+    </query>
+    <!-- 员工信息审核 -->
+    <query id="employee_audit" key="id" tableName="员工列表" className="com.cnpc.framework.base.entity.User" pageSize="10"  widthType="px" order="id asc">
+        <column key="rowIndex" header="序号" width="50" allowSort="false"/>
+        <column key="id" header="id" hidden="true"/>
+        <column key="version" header="version" hidden="true"/>
+        <column key="name" header="姓名" operator="like" width="100" allowSort="true" />
+        <column key="deptId" header="所在部门" align="left" width="100" fnRender="fnRenderDept"/>
+        <column key="sex" header="性别" operator="eq" width="150" allowSort="true" render="1=男,0=女" />
+        <column key="birthday" header="出生年月" operator="like" width="80" allowSort="true" dateFormat="yyyy-mm-dd" />
+        <column key="loginName" header="登录名" operator="like" width="80" allowSort="true" />
+        <column key="email" header="邮箱" align="left" operator="eq" width="100"  />
+        <column key="mobile" header="手机" operator="eq" width="200" align="center"/>
+        <column key="qq" header="QQ" operator="eq" width="200" align="center" />
+        <column key="auditStatus" header="审核状态" width="50" operator="in" allowSort="true" render="10=正常,20=离职待审核,30=新增待审核"/>
     </query>
 
 

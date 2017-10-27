@@ -73,6 +73,11 @@ public class EmployeeQueryController {
         request.setAttribute("id", id);
         return "workmanage/employee/employee_edit";
     }
+    
+    @RequestMapping(value="/audit",method = RequestMethod.GET)
+    public String audit(){
+        return "workmanage/employee/employee_audit";
+    }
 
     @RequestMapping(value="/detail",method = RequestMethod.GET)
     public String detail(String id,HttpServletRequest request){
@@ -100,6 +105,7 @@ public class EmployeeQueryController {
         if (StrUtil.isEmpty(user.getId())) {
             //设置初始密码
             user.setPassword(EncryptUtil.getPassword(initPassword,user.getLoginName()));
+            user.setAuditStatus("30");
             String userId = userService.save(user).toString();
             userRoleService.setRoleForRegisterUser(userId);
             //头像和用户管理
@@ -119,14 +125,12 @@ public class EmployeeQueryController {
     @RequestMapping(value="/delete/{id}",method = RequestMethod.POST)
     @ResponseBody
     public Result delete(@PathVariable("id") String id){
+        
         User employee=this.get(id);
-        try{
-            baseService.delete(employee);
-            return new Result();
-        }
-        catch(Exception e){
-            return new Result(false,"该数据已经被引用，不可删除");
-        }
+        employee.setAuditStatus("20");
+        employee.setUpdateDateTime(new Date());
+        userService.update(employee);
+        return new Result();
     }
 
 
