@@ -8,18 +8,18 @@
         ${formName}
     </h1>
     <ol class="breadcrumb">
-        <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
-        <li><a href="#">工作流管理</a></li>
-        <li class="active">我的待办</li>
+        <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 棣栭〉</a></li>
+        <li><a href="#">宸ヤ綔娴佺鐞�</a></li>
+        <li class="active">鎴戠殑寰呭姙</li>
     </ol>
 </section>
 
 <!-- Main content -->
 <section class="content" id="section_task">
-    <!--业务表单信息-->
+    <!--涓氬姟琛ㄥ崟淇℃伅-->
     <div class="box box-info" id="form_container" style="display: none">
         <div class="box-header with-border">
-            <span><i class="fa fa-edit">&nbsp;业务表单</i></span>
+            <span><i class="fa fa-edit">&nbsp;涓氬姟琛ㄥ崟</i></span>
             <div class="box-tools pull-right">
                 <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip"
                         title="Collapse">
@@ -31,16 +31,16 @@
         </div>
     </div>
 
-    <!-- 流程审批信息-->
+    <!-- 娴佺▼瀹℃壒淇℃伅-->
     <div class="box box-primary">
         <!--<div class="box-header">-->
         <div class="box-header">
             <ul class="nav nav-tabs">
                 <li class="active"><a href="#tab-content-task" data-toggle="tab" id="nav-tab-task"><i
-                        class="fa fa-edit"></i>&nbsp;流程审批</a></li>
+                        class="fa fa-edit"></i>&nbsp;娴佺▼瀹℃壒</a></li>
                 <li><a href="#tab-content-list" data-toggle="tab" id="nav-tab-list"><i
-                        class="fa fa-list-ul"></i>&nbsp;流程明细列表</a></li>
-                <li><a href="#tab-content-image" data-toggle="tab" id="nav-tab-image"><i class="fa fa-image"></i>&nbsp;流程运行图示</a>
+                        class="fa fa-list-ul"></i>&nbsp;娴佺▼鏄庣粏鍒楄〃</a></li>
+                <li><a href="#tab-content-image" data-toggle="tab" id="nav-tab-image"><i class="fa fa-image"></i>&nbsp;娴佺▼杩愯鍥剧ず</a>
                 </li>
             </ul>
             <div class="box-tools pull-right">
@@ -57,7 +57,7 @@
                     <form name="task_form" id="task_form" class="form-horizontal">
                         <div class="col-xs-12">
                      <#if formData??>
-                         <!--通过formKey中的.form获取表单-->
+                         <!--閫氳繃formKey涓殑.form鑾峰彇琛ㄥ崟-->
                           ${formData}
                      <#else>
                          <#list formProperties as field>
@@ -70,7 +70,7 @@
                              </#if>
                                  <#if field.type.name=='date'>
                                      <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                                     <input type="text" placeholder="请填写${field.name}"  name="${field.id}" id="${field.id}" data-flag="datepicker" class="form-control" data-format="${field.type.getInformation('datePattern')?replace('mm','ii')?replace('MM','mm')}" value="${field.value}" >
+                                     <input type="text" placeholder="璇峰～鍐�${field.name}"  name="${field.id}" id="${field.id}" data-flag="datepicker" class="form-control" data-format="${field.type.getInformation('datePattern')?replace('mm','ii')?replace('MM','mm')}" value="${field.value}" >
                                  <#elseif field.type.name='enum'>
                                      <select name="${field.id}" name="${field.id}" class="form-control select2" data-blank="false">
                                          <#assign itemMap=field.type.getInformation('values')/>
@@ -79,7 +79,8 @@
                                          </#list>
                                      </select>
                                  <#else>
-                                 <input type="text" class="form-control"  <#if !field.isWritable()>readonly</#if> id="${field.id}" value="${field.value?default('')}" name="${field.id}" placeholder="请填写${field.name}">
+                                 <input type="text" class="form-control" />
+                                  <#if !field.isWritable()>readonly</#if> id="${field.id}" value="${field.value?default('')}" name="${field.id}" placeholder="璇峰～鍐�${field.name}">
                                  </#if>
                                  </div>
                              </div>
@@ -87,9 +88,9 @@
                      </#if>
                         </div>
                         <div class="col-xs-12 text-center"style="border-top: 1px solid #ddd;padding-top: 10px;">
-                            <button type="submit" class="btn btn-primary" data-btn-type="submitTask"><i class="fa fa-save"></i>&nbsp;提交</button>
+                            <button type="submit" class="btn btn-primary" data-btn-type="submitTask"><i class="fa fa-save"></i>&nbsp;鎻愪氦</button>
                             &nbsp;&nbsp;
-                            <button type="button" class="btn btn-default" data-btn-type="retTolist"><i class="fa fa-reply"></i>&nbsp;返回待办</button>
+                            <button type="button" class="btn btn-default" data-btn-type="retTolist"><i class="fa fa-reply"></i>&nbsp;杩斿洖寰呭姙</button>
                         </div>
                     </form>
                 </div>
@@ -123,15 +124,15 @@
             this.taskForm=$("#task_form").form({baseEntity:false});
             var self=this;
             $("#task_form").bootstrapValidator({
-                message: '请输入有效值',
+                message: '璇疯緭鍏ユ湁鏁堝��',
                 feedbackIcons: {
                     valid: 'glyphicon glyphicon-ok',
                     invalid: 'glyphicon glyphicon-remove',
                     validating: 'glyphicon glyphicon-refresh'
                 },
                 submitHandler: function (validator, taskform, submitButton) {
-                    modals.confirm('确认提交该流程？', function () {
-                        // TODO 传参类型待定
+                    modals.confirm('纭鎻愪氦璇ユ祦绋嬶紵', function () {
+                        // TODO 浼犲弬绫诲瀷寰呭畾
                         var params = self.taskForm.getFormSimpleData();
                         $.extend(params,self.collectExtFormData());
                         ajaxPost(basePath + '/activiti/task/complete/${taskId}', params, function (data, status) {
@@ -151,7 +152,7 @@
                 fields: {
                     <#list formProperties as field>
                     <#if field.isRequired()>
-                    ${field.id}:{validators:{notEmpty:{message:'请填写${field.name}'}}},
+                    ${field.id}:{validators:{notEmpty:{message:'璇峰～鍐�${field.name}'}}},
                     </#if>
                     </#list>
                 }
@@ -159,7 +160,7 @@
             });
             this.taskForm.initComponent();
         },
-        //通过data-form-property收集业务数据，用来控制流程的变量
+        //閫氳繃data-form-property鏀堕泦涓氬姟鏁版嵁锛岀敤鏉ユ帶鍒舵祦绋嬬殑鍙橀噺
         collectExtFormData:function(){
             var extObj={};
             $("#section_task").find("[data-form-property]").each(function () {
@@ -169,22 +170,22 @@
             })
             return extObj;
         },
-        //通过formKey初始化表单，通用审批
+        //閫氳繃formKey鍒濆鍖栬〃鍗曪紝閫氱敤瀹℃壒
         <#if formData??>
         loadTaskFormByFormKey:function(){
             this.taskForm=workflowCtrl.init("task_form");
             console.log(workflowCtrl.validators());
             var self=this;
             $("#task_form").bootstrapValidator({
-                message: '请输入有效值',
+                message: '璇疯緭鍏ユ湁鏁堝��',
                 feedbackIcons: {
                     valid: 'glyphicon glyphicon-ok',
                     invalid: 'glyphicon glyphicon-remove',
                     validating: 'glyphicon glyphicon-refresh'
                 },
                 submitHandler: function (validator, taskform, submitButton) {
-                    modals.confirm('确认提交该流程？', function () {
-                        // TODO 传参类型待定
+                    modals.confirm('纭鎻愪氦璇ユ祦绋嬶紵', function () {
+                        // TODO 浼犲弬绫诲瀷寰呭畾
                         var params = self.taskForm.getFormSimpleData();
                         $.extend(params,self.collectExtFormData());
                         ajaxPost(basePath + '/activiti/task/complete/${taskId}', params, function (data, status) {
@@ -213,9 +214,9 @@
     };
 
     $(function () {
-        //加载业务表单
+        //鍔犺浇涓氬姟琛ㄥ崟
         taskCtrl.loadBusinessForm();
-        //加载审批表单
+        //鍔犺浇瀹℃壒琛ㄥ崟
         <#if formData??>
         taskCtrl.loadTaskFormByFormKey();
         <#else>
