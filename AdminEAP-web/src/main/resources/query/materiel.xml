@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<queryContext xmlns="http://www.example.org/query" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.example.org/query query.xsd">
+
+	<!-- 物料表-->
+	<query id="materiel_list" key="id" tableName="物料列表" className="com.radish.master.material.entity.Materiel"
+		   pageSize="10"  widthType="px" order="id asc">
+		<column key="ID" header="物料内码" width="50" allowSort="false" hidden="true"/>
+		<column key="parent_ID" header="父节点id" width="50" allowSort="false" hidden="true"/>
+		<column key="mat_number" header="物料编号" operator="like" width="100"/>
+		<column key="mat_name" header="物料名称" operator="like" width="100"/>
+		<column key="mat_standard" header="物料规格" operator="eq" width="100"/>
+		<column key="unit" header="单位" operator="eq" width="100" allowSort="true" />
+		<column key="type" header="类型" operator="eq" width="150" allowSort="true" />
+		<column key="create_name" header="创建人" align="left" width="100"  operator="like"/>
+		<column key="create_time" header="创建时间" operator="eq" width="150" allowSort="true" />
+	</query>
+	
+	
+	
+</queryContext>
