@@ -1,88 +1,88 @@
 drop table if exists tbl_materiel;
 create table tbl_materiel 
 (
-   ID               VARCHAR(64)                   not null comment 'ÎïÁÏÄÚÂë',
-   mat_number                 VARCHAR(20)                   null comment 'ÎïÁÏ±àºÅ',
-    mat_name               VARCHAR(20)                   null comment 'ÎïÁÏÃû³Æ',
-   mat_standard                 VARCHAR(64)                   null comment 'ÎïÁÏ¹æ¸ñ',
-   unit                   VARCHAR(64)                   null comment 'µ¥Î»',
-   isValid                 VARCHAR(2)                    null comment 'ÓĞĞ§±êÊ¶',
-   create_name          VARCHAR(64)                   null comment '´´½¨ÈË',
-   create_name_ID        VARCHAR(64)                   null comment '´´½¨ÈËID',
-   create_time          DATE                           null comment '´´½¨Ê±¼ä',
-   update_name          VARCHAR(64)                   null comment '¸üĞÂÈË',
-   update_name_ID       VARCHAR(64)                   null comment '¸üĞÂÈËID',
-   update_time          DATE                           null comment '¸üĞÂÊ±¼ä',
-   parent_ID		VARCHAR(64)			null comment 'ÉÏ¼¶½ÚµãID',
- type			VARCHAR(64)			null comment '½ÚµãÀàĞÍ',
- reserve1       VARCHAR(64)				 null comment 'Ô¤Áô×Ö¶Î1',
-reserve2       VARCHAR(64)			 null comment 'Ô¤Áô×Ö¶Î2',
-reserve3       VARCHAR(64)			 null comment 'Ô¤Áô×Ö¶Î3',
+   ID               VARCHAR(64)                   not null comment 'ç‰©æ–™å†…ç ',
+   mat_number                 VARCHAR(20)                   null comment 'ç‰©æ–™ç¼–å·',
+    mat_name               VARCHAR(20)                   null comment 'ç‰©æ–™åç§°',
+   mat_standard                 VARCHAR(64)                   null comment 'ç‰©æ–™è§„æ ¼',
+   unit                   VARCHAR(64)                   null comment 'å•ä½',
+   isValid                 VARCHAR(2)                    null comment 'æœ‰æ•ˆæ ‡è¯†',
+   create_name          VARCHAR(64)                   null comment 'åˆ›å»ºäºº',
+   create_name_ID        VARCHAR(64)                   null comment 'åˆ›å»ºäººID',
+   create_time          DATE                           null comment 'åˆ›å»ºæ—¶é—´',
+   update_name          VARCHAR(64)                   null comment 'æ›´æ–°äºº',
+   update_name_ID       VARCHAR(64)                   null comment 'æ›´æ–°äººID',
+   update_time          DATE                           null comment 'æ›´æ–°æ—¶é—´',
+   parent_ID		VARCHAR(64)			null comment 'ä¸Šçº§èŠ‚ç‚¹ID',
+ type			VARCHAR(64)			null comment 'èŠ‚ç‚¹ç±»å‹',
+ reserve1       VARCHAR(64)				 null comment 'é¢„ç•™å­—æ®µ1',
+reserve2       VARCHAR(64)			 null comment 'é¢„ç•™å­—æ®µ2',
+reserve3       VARCHAR(64)			 null comment 'é¢„ç•™å­—æ®µ3',
    constraint PK_TBL_MATERIEL primary key (ID)
 );
 
 drop table if exists tbl_channel;
 
-create table tbl_channel 
+create table tbl_channel
 (
- 
-ID               VARCHAR(64)                   	not null comment 'ÎïÁÏÄÚÂë',
- 
-mat_number        VARCHAR(20)          null comment 'ËùÊôÎïÁÏ±àºÅ',
-   
-mat_name               VARCHAR(20)                   null comment 'ÎïÁÏÃû³Æ',
-isValid                 VARCHAR(2)                    null comment 'ÓĞĞ§±êÊ¶',
-   
-supplier                VARCHAR(64)                    null comment '¹©Ó¦ÉÌ',
-  
- price                DOUBLE                         null comment 'µ¥¼Û',							
-	 create_name          VARCHAR(64)                   null comment '´´½¨ÈË',
-   
-create_name_ID        VARCHAR(64)                   null comment '´´½¨ÈËID',
-   
-create_time          DATE                           null comment '´´½¨Ê±¼ä',
-   
-update_name          VARCHAR(64)                   null comment '¸üĞÂÈË',
-   
-update_name_ID       VARCHAR(64)                   null comment '¸üĞÂÈËID',
-   
-update_time          DATE                           null comment '¸üĞÂÊ±¼ä',
-	 
-reserve1       VARCHAR(64)		null comment 'Ô¤Áô×Ö¶Î1',
-	 
-reserve2       VARCHAR(64)		 null comment 'Ô¤Áô×Ö¶Î2',
-	 
-reserve3       VARCHAR(64)		 null comment 'Ô¤Áô×Ö¶Î3',
-   
+
+ID               VARCHAR(64)                   	not null comment 'ç‰©æ–™å†…ç ',
+
+mat_number        VARCHAR(20)          null comment 'æ‰€å±ç‰©æ–™ç¼–å·',
+
+mat_name               VARCHAR(20)                   null comment 'ç‰©æ–™åç§°',
+isValid                 VARCHAR(2)                    null comment 'æœ‰æ•ˆæ ‡è¯†',
+
+supplier                VARCHAR(64)                    null comment 'ä¾›åº”å•†',
+
+ price                DOUBLE                         null comment 'å•ä»·',
+	 create_name          VARCHAR(64)                   null comment 'åˆ›å»ºäºº',
+
+create_name_ID        VARCHAR(64)                   null comment 'åˆ›å»ºäººID',
+
+create_time          DATE                           null comment 'åˆ›å»ºæ—¶é—´',
+
+update_name          VARCHAR(64)                   null comment 'æ›´æ–°äºº',
+
+update_name_ID       VARCHAR(64)                   null comment 'æ›´æ–°äººID',
+
+update_time          DATE                           null comment 'æ›´æ–°æ—¶é—´',
+
+reserve1       VARCHAR(64)		null comment 'é¢„ç•™å­—æ®µ1',
+
+reserve2       VARCHAR(64)		 null comment 'é¢„ç•™å­—æ®µ2',
+
+reserve3       VARCHAR(64)		 null comment 'é¢„ç•™å­—æ®µ3',
+
 constraint PK_TBL_CHANNEL primary key (ID)
 
 );
 
 drop table if exists tbl_budget;
-create table tbl_budget 
+create table tbl_budget
 (
-`budget_ID` varchar(64) NOT NULL COMMENT 'Ô¤ËãID',
+`budget_ID` varchar(64) NOT NULL COMMENT 'é¢„ç®—ID',
 
-`budget_name` varchar(255) NULL COMMENT 'Ô¤ËãĞÅÏ¢Ãû³Æ',
+`budget_name` varchar(255) NULL COMMENT 'é¢„ç®—ä¿¡æ¯åç§°',
 
-`project_ID` varchar(64) NOT NULL COMMENT 'ËùÊôÏîÄ¿ID',
+`project_ID` varchar(64) NOT NULL COMMENT 'æ‰€å±é¡¹ç›®ID',
 
-`budget_people_ID` varchar(64) NULL COMMENT 'Ô¤ËãÈËÔ±ID',
+`budget_people_ID` varchar(64) NULL COMMENT 'é¢„ç®—äººå‘˜ID',
 
-`approver_ID` varchar(64) NULL COMMENT 'ÉóºËÈËID',
+`approver_ID` varchar(64) NULL COMMENT 'å®¡æ ¸äººID',
 
-`isApprover` int(10) NULL COMMENT 'ÉóºË±êÖ¾£¨0£ºÎ´ÉóºË£»1£ºÒÑÉóºË£©',
+`isApprover` int(10) NULL COMMENT 'å®¡æ ¸æ ‡å¿—ï¼ˆ0ï¼šæœªå®¡æ ¸ï¼›1ï¼šå·²å®¡æ ¸ï¼‰',
 
-`edit_people_ID` varchar(64) NULL COMMENT '±à¼­ÈËID£¨¹©Ó¦ÇşµÀ£©',
+`edit_people_ID` varchar(64) NULL COMMENT 'ç¼–è¾‘äººIDï¼ˆä¾›åº”æ¸ é“ï¼‰',
 
-`isEdit` int(10) NULL COMMENT '±à¼­±êÖ¾£¨0£ºÎ´±à¼­£»1ÒÑ±à¼­£©',
+`isEdit` int(10) NULL COMMENT 'ç¼–è¾‘æ ‡å¿—ï¼ˆ0ï¼šæœªç¼–è¾‘ï¼›1å·²ç¼–è¾‘ï¼‰',
 
 
-`reserve1` varchar(255) NULL COMMENT 'Ô¤Áô×Ö¶Î1',
+`reserve1` varchar(255) NULL COMMENT 'é¢„ç•™å­—æ®µ1',
 
-`reserve2` varchar(255) NULL COMMENT 'Ô¤Áô×Ö¶Î2',
+`reserve2` varchar(255) NULL COMMENT 'é¢„ç•™å­—æ®µ2',
 
-`reserve3` varchar(255) NULL COMMENT 'Ô¤Áô×Ö¶Î3', 
+`reserve3` varchar(255) NULL COMMENT 'é¢„ç•™å­—æ®µ3',
 
    constraint PK_TBL_BUDGET primary key (budget_ID)
 );
@@ -90,27 +90,27 @@ create table tbl_budget
 
 drop table if exists tbl_purchase_history;
 
-create table tbl_purchase_history 
-( 
-`purchase_ID` varchar(64) NOT NULL COMMENT '²É¹ºID',
+create table tbl_purchase_history
+(
+`purchase_ID` varchar(64) NOT NULL COMMENT 'é‡‡è´­ID',
 
-`budget_ID` varchar(64) NOT NULL COMMENT 'Ô¤ËãID',
+`budget_ID` varchar(64) NOT NULL COMMENT 'é¢„ç®—ID',
 
-`mat_number` varchar(64) NULL COMMENT 'ÎïÁÏ±àºÅ',
+`mat_number` varchar(64) NULL COMMENT 'ç‰©æ–™ç¼–å·',
 
-`supplier` varchar(255) NULL COMMENT '¹©Ó¦ÉÌ',
+`supplier` varchar(255) NULL COMMENT 'ä¾›åº”å•†',
 
-`price` double(2,0) NULL COMMENT 'µ¥¼Û',
+`price` double(2,0) NULL COMMENT 'å•ä»·',
 
-`purchase_name_ID` varchar(64) NULL COMMENT '²É¹ºÈËÔ±ID',
+`purchase_name_ID` varchar(64) NULL COMMENT 'é‡‡è´­äººå‘˜ID',
 
-`purchase_time` date NULL COMMENT '²É¹ºÈËÇşµÀ±à¼­Ê±¼ä',
+`purchase_time` date NULL COMMENT 'é‡‡è´­äººæ¸ é“ç¼–è¾‘æ—¶é—´',
 
-`reserve1` varchar(255) NULL COMMENT 'Ô¤Áô×Ö¶Î1',
+`reserve1` varchar(255) NULL COMMENT 'é¢„ç•™å­—æ®µ1',
 
-`reserve2` varchar(255) NULL COMMENT 'Ô¤Áô×Ö¶Î2',
+`reserve2` varchar(255) NULL COMMENT 'é¢„ç•™å­—æ®µ2',
 
-`reserve3` varchar(255) NULL COMMENT 'Ô¤Áô×Ö¶Î3', 
+`reserve3` varchar(255) NULL COMMENT 'é¢„ç•™å­—æ®µ3',
 constraint PK_TBL_PURCHASE_HISTORY primary key (purchase_ID)
 
 );
@@ -119,103 +119,103 @@ constraint PK_TBL_PURCHASE_HISTORY primary key (purchase_ID)
 insert into tbl_dict
 (id,deleted,code,name,parent_id)
 values
-('102901',0,'LS','ÁÙÉè',''),
-('10290101',0,'LS_BF','°å·¿','102901'),
-('1029010101',0,'LS_BF_JC','½¨²Ä','10290101'),
-('1029010102',0,'LS_BF_LD','ÁÙµç','10290101'),
-('1029010103',0,'LS_BF_MC','ÃÅ´°','10290101'),
-('1029010104',0,'LS_BF_QT','ÆäËû','10290101'),
+('102901',0,'LS','ä¸´è®¾',''),
+('10290101',0,'LS_BF','æ¿æˆ¿','102901'),
+('1029010101',0,'LS_BF_JC','å»ºæ','10290101'),
+('1029010102',0,'LS_BF_LD','ä¸´ç”µ','10290101'),
+('1029010103',0,'LS_BF_MC','é—¨çª—','10290101'),
+('1029010104',0,'LS_BF_QT','å…¶ä»–','10290101'),
 
-('10290102',0,'LS_TJ','ÍÁ½¨','102901'),
-('1029010201',0,'LS_TJ_ZTS','×©íÅÉ°','10290102'),
-('1029010202',0,'LS_TJ_LDLS','ÁÙµçÁÙË®','10290102'),
+('10290102',0,'LS_TJ','åœŸå»º','102901'),
+('1029010201',0,'LS_TJ_ZTS','ç –ç ¼ç ‚','10290102'),
+('1029010202',0,'LS_TJ_LDLS','ä¸´ç”µä¸´æ°´','10290102'),
 
-('10290103',0,'LS_QT','ÆäËû','102901'),
+('10290103',0,'LS_QT','å…¶ä»–','102901'),
 
-('102902',0,'ZT','Ö÷Ìå',''),
-('10290201',0,'ZT_JC','½¨²Ä','102902'),
-('1029020101',0,'ZT_JC_GJ','¸Ö½î','10290201'),
-('1029020102',0,'ZT_JC_HNT','»ìÄıÍÁ','10290201'),
-('1029020103',0,'ZT_JC_Z','×©','10290201'),
-('1029020104',0,'ZT_JC_SS','É°Ê¯','10290201'),
-('1029020105',0,'ZT_JC_SN','Ë®Äà','10290201'),
-('1029020106',0,'ZT_JC_MB','Ä£°å','10290201'),
-('1029020107',0,'ZT_JC_GG','¸Ö¹Ü','10290201'),
-('1029020108',0,'ZT_JC_DT','¶¥ÍĞ','10290201'),
-('1029020109',0,'ZT_JC_FM','·½Ä¾','10290201'),
-('1029020110',0,'ZT_JC_ZSDZ','ÔúË¿¶¤×Ó','10290201'),
-('1029020111',0,'ZT_JC_JQTQK','¼ÓÆøíÅÆö¿é','10290201'),
-('1029020112',0,'ZT_JC_TXLG','TĞÍÀ­¸Ë','10290201'),
-('1029020113',0,'ZT_JC_QT','ÆäËû','10290201'),
-('1029020114',0,'ZT_JC_MGXG','PVCÄ¾¹¤Ïß¹Ü','10290201'),
+('102902',0,'ZT','ä¸»ä½“',''),
+('10290201',0,'ZT_JC','å»ºæ','102902'),
+('1029020101',0,'ZT_JC_GJ','é’¢ç­‹','10290201'),
+('1029020102',0,'ZT_JC_HNT','æ··å‡åœŸ','10290201'),
+('1029020103',0,'ZT_JC_Z','ç –','10290201'),
+('1029020104',0,'ZT_JC_SS','ç ‚çŸ³','10290201'),
+('1029020105',0,'ZT_JC_SN','æ°´æ³¥','10290201'),
+('1029020106',0,'ZT_JC_MB','æ¨¡æ¿','10290201'),
+('1029020107',0,'ZT_JC_GG','é’¢ç®¡','10290201'),
+('1029020108',0,'ZT_JC_DT','é¡¶æ‰˜','10290201'),
+('1029020109',0,'ZT_JC_FM','æ–¹æœ¨','10290201'),
+('1029020110',0,'ZT_JC_ZSDZ','æ‰ä¸é’‰å­','10290201'),
+('1029020111',0,'ZT_JC_JQTQK','åŠ æ°”ç ¼ç Œå—','10290201'),
+('1029020112',0,'ZT_JC_TXLG','Tå‹æ‹‰æ†','10290201'),
+('1029020113',0,'ZT_JC_QT','å…¶ä»–','10290201'),
+('1029020114',0,'ZT_JC_MGXG','PVCæœ¨å·¥çº¿ç®¡','10290201'),
 
-('102903',0,'ZS','×°ÊÎ',''),
-('10290301',0,'ZS_MC','ÃÅ´°','102903'),
-('1029030101',0,'ZS_MC_M','ÃÅ','10290301'),
-('1029030102',0,'ZS_MC_C','´°','10290301'),
-('10290302',0,'ZS_FS','·ÀË®','102903'),
-('1029030201',0,'ZS_FS_WM','ÎİÃæ','10290302'),
-('1029030202',0,'ZS_FS_CW','³øÎÀ','10290302'),
-('10290303',0,'ZS_FS','·ÛË¢','102903'),
-('1029030301',0,'ZS_FS_FS','·ÛË¢','10290303'),
-('1029030302',0,'ZS_FS_YQTL','ÓÍÆáÍ¿ÁÏ','10290303'),
-('10290304',0,'ZS_DM','µØÃæ','102903'),
-('10290305',0,'ZS_WM','ÎİÃæ','102903'),
-('10290306',0,'ZS_BW','±£ÎÂ','102903'),
-('10290307',0,'ZS_QT','ÆäËû','102903'),
+('102903',0,'ZS','è£…é¥°',''),
+('10290301',0,'ZS_MC','é—¨çª—','102903'),
+('1029030101',0,'ZS_MC_M','é—¨','10290301'),
+('1029030102',0,'ZS_MC_C','çª—','10290301'),
+('10290302',0,'ZS_FS','é˜²æ°´','102903'),
+('1029030201',0,'ZS_FS_WM','å±‹é¢','10290302'),
+('1029030202',0,'ZS_FS_CW','å¨å«','10290302'),
+('10290303',0,'ZS_FS','ç²‰åˆ·','102903'),
+('1029030301',0,'ZS_FS_FS','ç²‰åˆ·','10290303'),
+('1029030302',0,'ZS_FS_YQTL','æ²¹æ¼†æ¶‚æ–™','10290303'),
+('10290304',0,'ZS_DM','åœ°é¢','102903'),
+('10290305',0,'ZS_WM','å±‹é¢','102903'),
+('10290306',0,'ZS_BW','ä¿æ¸©','102903'),
+('10290307',0,'ZS_QT','å…¶ä»–','102903'),
 
-('102904',0,'AZ','°²×°',''),
-('10290401',0,'AZ_SGC','Ë®¹Ü²Ä','102904'),
-('1029040101',0,'AZ_SGC_GSZG','¹©Ë®Ö÷¹Ü','10290401'),
-('102904010101',0,'AZ_SGC_GSZG_GG','¸Ö¹ÜÀà','1029040101'),
-('1029040102',0,'AZ_SGC_GSPJ','¹©Ë®Åä¼ş','10290401'),
-('102904010201',0,'AZ_SGC_GSPJ_FM','·§ÃÅÀà','1029040102'),
-('102904010202',0,'AZ_SGC_GSPJ_FL','·¨À¼.½ÓÍ·Àà','1029040102'),
-('102904010203',0,'AZ_SGC_GSPJ_HJ','º¸½ÓÅä¼şÀà','1029040102'),
-('102904010204',0,'AZ_SGC_GSPJ_PPJ','P¹Ü¼şÀà','1029040102'),
-('102904010205',0,'AZ_SGC_GSPJ_GS','¸ÖËÜ.Åä¼ş','1029040102'),
-('1029040103',0,'AZ_SGC_PS','ÅÅË®','10290401'),
-('1029040104',0,'AZ_SGC_SDRD','Ïû·ÀË®µçÈõµã','10290401'),
-('1029040105',0,'AZ_SGC_QTCL','Ïû·ÀË®µçÆäËû²ÄÁÏ','10290401'),
-('1029040106',0,'AZ_SGC_NQ','Å¯Æø','10290401'),
-('102904010601',0,'AZ_SGC_NQ_GG','¸Ö¹ÜÀà','1029040106'),
-('102904010602',0,'AZ_SGC_NQ_NQPJ','Å¯ÆøÅä¼şÀà','1029040106'),
-('1029040107',0,'AZ_SGC_PPR','PPRË®¹ÜÅä¼ş','10290401'),
-('1029040108',0,'AZ_SGC_PE','PEË®¹ÜÅä¼ş','10290401'),
+('102904',0,'AZ','å®‰è£…',''),
+('10290401',0,'AZ_SGC','æ°´ç®¡æ','102904'),
+('1029040101',0,'AZ_SGC_GSZG','ä¾›æ°´ä¸»ç®¡','10290401'),
+('102904010101',0,'AZ_SGC_GSZG_GG','é’¢ç®¡ç±»','1029040101'),
+('1029040102',0,'AZ_SGC_GSPJ','ä¾›æ°´é…ä»¶','10290401'),
+('102904010201',0,'AZ_SGC_GSPJ_FM','é˜€é—¨ç±»','1029040102'),
+('102904010202',0,'AZ_SGC_GSPJ_FL','æ³•å…°.æ¥å¤´ç±»','1029040102'),
+('102904010203',0,'AZ_SGC_GSPJ_HJ','ç„Šæ¥é…ä»¶ç±»','1029040102'),
+('102904010204',0,'AZ_SGC_GSPJ_PPJ','Pç®¡ä»¶ç±»','1029040102'),
+('102904010205',0,'AZ_SGC_GSPJ_GS','é’¢å¡‘.é…ä»¶','1029040102'),
+('1029040103',0,'AZ_SGC_PS','æ’æ°´','10290401'),
+('1029040104',0,'AZ_SGC_SDRD','æ¶ˆé˜²æ°´ç”µå¼±ç‚¹','10290401'),
+('1029040105',0,'AZ_SGC_QTCL','æ¶ˆé˜²æ°´ç”µå…¶ä»–ææ–™','10290401'),
+('1029040106',0,'AZ_SGC_NQ','æš–æ°”','10290401'),
+('102904010601',0,'AZ_SGC_NQ_GG','é’¢ç®¡ç±»','1029040106'),
+('102904010602',0,'AZ_SGC_NQ_NQPJ','æš–æ°”é…ä»¶ç±»','1029040106'),
+('1029040107',0,'AZ_SGC_PPR','PPRæ°´ç®¡é…ä»¶','10290401'),
+('1029040108',0,'AZ_SGC_PE','PEæ°´ç®¡é…ä»¶','10290401'),
 
-('10290402',0,'AZ_SD','Ë®µç','102904'),
-('1029040201',0,'AZ_SD_DX','µçÏß','10290402'),
-('1029040202',0,'AZ_SD_DL','µçÀÂ','10290402'),
-('1029040203',0,'AZ_SD_QJ','ÇÅ¼Ü','10290402'),
-('1029040204',0,'AZ_SD_PDX','ÅäµçÏä','10290402'),
-('1029040205',0,'AZ_SD_KG','¿ª¹ØÃæ°å','10290402'),
-('1029040206',0,'AZ_SD_DL','µçÁÏ','10290402'),
-('1029040207',0,'AZ_SD_LB','Â©±£.Õ¢µ¶','10290402'),
+('10290402',0,'AZ_SD','æ°´ç”µ','102904'),
+('1029040201',0,'AZ_SD_DX','ç”µçº¿','10290402'),
+('1029040202',0,'AZ_SD_DL','ç”µç¼†','10290402'),
+('1029040203',0,'AZ_SD_QJ','æ¡¥æ¶','10290402'),
+('1029040204',0,'AZ_SD_PDX','é…ç”µç®±','10290402'),
+('1029040205',0,'AZ_SD_KG','å¼€å…³é¢æ¿','10290402'),
+('1029040206',0,'AZ_SD_DL','ç”µæ–™','10290402'),
+('1029040207',0,'AZ_SD_LB','æ¼ä¿.é—¸åˆ€','10290402'),
 
-('102905',0,'AF','°²·À',''),
-('10290501',0,'AF_AQ','°²È«','102905'),
-('1029050101',0,'AF_AQ_GG','¸Ö¹Ü','10290501'),
-('1029050102',0,'AF_AQ_KJ','¿Û¼ş','10290501'),
-('1029050103',0,'AF_AQ_YQ','ÓÍÆá','10290501'),
-('10290502',0,'AF_DXHFH','¶¨ĞÍ»¯·À»¤','102905'),
-('1029050201',0,'AF_DXHFH_DTM','µçÌİÃÅ','10290502'),
-('1029050202',0,'AF_DXHFH_FHJ','ÍâÌô·À»¤¼Ü','10290502'),
-('1029050203',0,'AF_DXHFH_XG','ĞÍ¸Ö','10290502'),
-('1029050204',0,'AF_DXHFH_FHLP','·À»¤À¸Åï','10290502'),
-('1029050205',0,'AF_DXHFH_QT','ÆäËû','10290502'),
-('10290503',0,'AF_XF','Ïû·À','102905'),
+('102905',0,'AF','å®‰é˜²',''),
+('10290501',0,'AF_AQ','å®‰å…¨','102905'),
+('1029050101',0,'AF_AQ_GG','é’¢ç®¡','10290501'),
+('1029050102',0,'AF_AQ_KJ','æ‰£ä»¶','10290501'),
+('1029050103',0,'AF_AQ_YQ','æ²¹æ¼†','10290501'),
+('10290502',0,'AF_DXHFH','å®šå‹åŒ–é˜²æŠ¤','102905'),
+('1029050201',0,'AF_DXHFH_DTM','ç”µæ¢¯é—¨','10290502'),
+('1029050202',0,'AF_DXHFH_FHJ','å¤–æŒ‘é˜²æŠ¤æ¶','10290502'),
+('1029050203',0,'AF_DXHFH_XG','å‹é’¢','10290502'),
+('1029050204',0,'AF_DXHFH_FHLP','é˜²æŠ¤æ æ£š','10290502'),
+('1029050205',0,'AF_DXHFH_QT','å…¶ä»–','10290502'),
+('10290503',0,'AF_XF','æ¶ˆé˜²','102905'),
 
-('102906',0,'SB','Éè±¸',''),
-('10290601',0,'SB_SB','Éè±¸','102906'),
-('1029060101',0,'SB_SB_CL','³µÁ¾','10290601'),
-('1029060102',0,'SB_SB_TD','Ëşµõ','10290601'),
-('1029060103',0,'SB_SB_SGDT','Ê©¹¤µçÌİ','10290601'),
-('1029060104',0,'SB_SB_JBJ','½Á°è»ú','10290601'),
-('1029060105',0,'SB_SB_XXJX','Ğ¡ĞÍ»úĞµ','10290601'),
-('1029060106',0,'SB_SB_GJMG','¸Ö½îÄ¾¹¤ÓÃ','10290601'),
-('1029060107',0,'SB_SB_ZX','×°ĞŞÓÃ','10290601'),
-('1029060108',0,'SB_SB_QT','ÆäËû','10290601'),
+('102906',0,'SB','è®¾å¤‡',''),
+('10290601',0,'SB_SB','è®¾å¤‡','102906'),
+('1029060101',0,'SB_SB_CL','è½¦è¾†','10290601'),
+('1029060102',0,'SB_SB_TD','å¡”åŠ','10290601'),
+('1029060103',0,'SB_SB_SGDT','æ–½å·¥ç”µæ¢¯','10290601'),
+('1029060104',0,'SB_SB_JBJ','æ…æ‹Œæœº','10290601'),
+('1029060105',0,'SB_SB_XXJX','å°å‹æœºæ¢°','10290601'),
+('1029060106',0,'SB_SB_GJMG','é’¢ç­‹æœ¨å·¥ç”¨','10290601'),
+('1029060107',0,'SB_SB_ZX','è£…ä¿®ç”¨','10290601'),
+('1029060108',0,'SB_SB_QT','å…¶ä»–','10290601'),
 
-('102907',0,'BZJ','±ê×¼¼ş',''),
-('102908',0,'GJL','¹¤¾ßÀà',''),
-('102909',0,'BGYP','°ì¹«ÓÃÆ·','')
+('102907',0,'BZJ','æ ‡å‡†ä»¶',''),
+('102908',0,'GJL','å·¥å…·ç±»',''),
+('102909',0,'BGYP','åŠå…¬ç”¨å“','')

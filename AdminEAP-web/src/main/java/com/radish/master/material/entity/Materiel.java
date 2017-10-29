@@ -239,6 +239,6 @@ public class Materiel {
 		this.mat_name = mat_name;
 	}
     
-   
-    
+
+
 }
