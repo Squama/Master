@@ -8,7 +8,7 @@ create table tbl_materiel
    unit                   VARCHAR(64)                   null comment '单位',
    isValid                 VARCHAR(2)                    null comment '有效标识',
    create_name          VARCHAR(64)                   null comment '创建人',
-   create_name_ID        VARCHAR(64)                   null comment '创建人ID',
+   create_name_ID        VARCHAR(64)                   null comment '创建人的ID',
    create_time          DATE                           null comment '创建时间',
    update_name          VARCHAR(64)                   null comment '更新人',
    update_name_ID       VARCHAR(64)                   null comment '更新人ID',
