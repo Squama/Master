@@ -3,7 +3,7 @@ create table tbl_materiel
 (
    ID               VARCHAR(64)                   not null comment '物料内码',
    mat_number                 VARCHAR(20)                   null comment '物料编号',
-    mat_name               VARCHAR(20)                   null comment '物料名称',
+   mat_name               VARCHAR(64)                   null comment '物料名称',
    mat_standard                 VARCHAR(64)                   null comment '物料规格',
    unit                   VARCHAR(64)                   null comment '单位',
    isValid                 VARCHAR(2)                    null comment '有效标识',
@@ -30,7 +30,7 @@ ID               VARCHAR(64)                   	not null comment '物料内码',
 
 mat_number        VARCHAR(20)          null comment '所属物料编号',
 
-mat_name               VARCHAR(20)                   null comment '物料名称',
+mat_name               VARCHAR(64)                   null comment '物料名称',
 isValid                 VARCHAR(2)                    null comment '有效标识',
 
 supplier                VARCHAR(64)                    null comment '供应商',
