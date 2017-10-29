@@ -58,39 +58,63 @@ constraint PK_TBL_CHANNEL primary key (ID)
 
 );
 
+drop table if exists tbl_budget;
+create table tbl_budget 
+(
+`budget_ID` varchar(64) NOT NULL COMMENT '预算ID',
+
+`budget_name` varchar(255) NULL COMMENT '预算信息名称',
+
+`project_ID` varchar(64) NOT NULL COMMENT '所属项目ID',
+
+`budget_people_ID` varchar(64) NULL COMMENT '预算人员ID',
+
+`approver_ID` varchar(64) NULL COMMENT '审核人ID',
+
+`isApprover` int(10) NULL COMMENT '审核标志（0：未审核；1：已审核）',
+
+`edit_people_ID` varchar(64) NULL COMMENT '编辑人ID（供应渠道）',
+
+`isEdit` int(10) NULL COMMENT '编辑标志（0：未编辑；1已编辑）',
+
+
+`reserve1` varchar(255) NULL COMMENT '预留字段1',
+
+`reserve2` varchar(255) NULL COMMENT '预留字段2',
+
+`reserve3` varchar(255) NULL COMMENT '预留字段3', 
+
+   constraint PK_TBL_BUDGET primary key (budget_ID)
+);
+
+
 drop table if exists tbl_purchase_history;
 
 create table tbl_purchase_history 
-(
-   
-ID               		VARCHAR(64)                  not null comment '历史采购ID',
-   
-mat_number           VARCHAR(20)                  null comment '物料编号',
-   
-mat_name             VARCHAR(64)                  null comment '物料名称',
-   
-supplier             VARCHAR(64)                    null comment '供应商',
-   
-price                DOUBLE                         null comment '单价',							
-	 purchase_name        VARCHAR(64)                   null comment '采购人员',
-   
-purchase_name_ID     VARCHAR(64)                   null comment '采购人员ID',
-   
-purchase_time        DATE                           null comment '采购时间',
-	 
-project_name	VARCHAR(64)		null comment '所属项目',
-   
-project_ID	VARCHAR(64)		null comment '所属项目ID',
-	 
-reserve1       			VARCHAR(64)			 null comment '预留字段1',
-	 
-reserve2      			  VARCHAR(64)		 null comment '预留字段2',
-	 
-reserve3       			VARCHAR(64)				 null comment '预留字段3',
-   
-constraint PK_TBL_PURCHASE_HISTORY primary key (ID)
+( 
+`purchase_ID` varchar(64) NOT NULL COMMENT '采购ID',
+
+`budget_ID` varchar(64) NOT NULL COMMENT '预算ID',
+
+`mat_number` varchar(64) NULL COMMENT '物料编号',
+
+`supplier` varchar(255) NULL COMMENT '供应商',
+
+`price` double(2,0) NULL COMMENT '单价',
+
+`purchase_name_ID` varchar(64) NULL COMMENT '采购人员ID',
+
+`purchase_time` date NULL COMMENT '采购人渠道编辑时间',
+
+`reserve1` varchar(255) NULL COMMENT '预留字段1',
+
+`reserve2` varchar(255) NULL COMMENT '预留字段2',
+
+`reserve3` varchar(255) NULL COMMENT '预留字段3', 
+constraint PK_TBL_PURCHASE_HISTORY primary key (purchase_ID)
 
 );
+
 
 insert into tbl_dict
 (id,deleted,code,name,parent_id)
