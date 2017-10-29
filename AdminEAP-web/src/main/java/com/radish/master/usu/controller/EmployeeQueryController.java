@@ -6,9 +6,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import com.cnpc.framework.utils.EncryptUtil;
-import com.cnpc.framework.utils.PropertiesUtil;
 import com.cnpc.framework.utils.StrUtil;
-import com.radish.master.usu.entity.Employee;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Controller;
@@ -27,8 +25,7 @@ import com.cnpc.framework.base.pojo.Result;
 
 /**
 * 员工信息查询管理控制器
-* @author jrn
-* 2017-10-17 13:41:51由代码生成器自动生成
+* @author dongy
 */
 @Controller
 @RequestMapping("/employeeQuery")

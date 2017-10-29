@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <queryContext xmlns="http://www.example.org/query" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.example.org/query query.xsd">
 <!--本xml片段为代码生成器生成，时间：2017-10-17 11:38:08-->
-    <query id="project_list" key="id" tableName="项目管理列表" className="com.radish.master.usu.entity.Project" widthType="px">
+    
+    <query id="project_list" key="id" tableName="项目管理列表" className="com.radish.master.entity.Project" widthType="px">
         <column key="rowIndex" header="序号" width="80"/>
-        <column key="project_name" header="项目名" classType="String" allowSort="true" width="150"/>
-        <column key="project_level" header="项目级别" allowSort="true" width="150"/>
-        <column key="charge_id" header="负责人员工编号" classType="String" allowSort="true" width="150"/>
-        <column key="charge_name" header="负责人员姓名" classType="String" allowSort="true" width="150"/>
+        <column key="projectName" header="项目名" classType="String" allowSort="true" width="150"/>
+        <column key="projectLevel" header="项目级别" allowSort="true" width="150"/>
+        <column key="projectManager" header="负责人员工编号" classType="String" allowSort="true" width="150"/>
         <column key="status" header="项目状态" allowSort="true" width="150"/>
     </query>
 
