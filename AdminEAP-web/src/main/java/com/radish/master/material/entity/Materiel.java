@@ -1,23 +1,15 @@
-
 /**
  * 版权所有 (c) 2017，周庆博和他的朋友们有限公司
  */
 package com.radish.master.material.entity;
 
-import java.io.Serializable;
-import java.util.Date;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
+import com.cnpc.framework.annotation.Header;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
 
-import com.cnpc.framework.annotation.Header;
-import com.cnpc.framework.base.entity.BaseEntity;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 类说明
@@ -33,15 +25,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Entity
 @Table(name = "tbl_materiel")
 @JsonIgnoreProperties(value = { "hibernateLazyInitializer", "handler", "fieldHandler" })
-public class Materiel implements Serializable{
-
-   
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+public class Materiel implements Serializable {
 
 
+	private static final long serialVersionUID = 7064265855870717810L;
 	/**
      * 主键ID自动生成策略
      */
@@ -66,7 +53,7 @@ public class Materiel implements Serializable{
     
     @Header(name = "单位")
     @Column(name = "unit")
-    private String unit;
+    private Date unit;
 
     @Header(name = "有效标识")
     @Column(name = "isValid")
@@ -140,11 +127,11 @@ public class Materiel implements Serializable{
 		this.mat_standard = mat_standard;
 	}
 
-	public String getUnit() {
+	public Date getUnit() {
 		return unit;
 	}
 
-	public void setUnit(String unit) {
+	public void setUnit(Date unit) {
 		this.unit = unit;
 	}
 
@@ -251,13 +238,7 @@ public class Materiel implements Serializable{
 	public void setMat_name(String mat_name) {
 		this.mat_name = mat_name;
 	}
+    
 
-	@Override
-	public String toString() {
-		return "Materiel [mat_standard=" + mat_standard + ", mat_name=" + mat_name + ", unit=" + unit + ", isValid="
-				+ isValid + "]";
-	}
-    
-   
-    
+
 }
