@@ -5,6 +5,7 @@ import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.utils.FileUtil;
 import com.cnpc.framework.utils.PropertiesUtil;
 import com.cnpc.framework.utils.StrUtil;
+import com.cnpc.framework.utils.SystemEnvironment;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -30,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
@@ -48,12 +50,15 @@ import java.util.zip.ZipInputStream;
 public class ModelOperationController {
 
     protected static final Logger LOGGER = LoggerFactory.getLogger(ModelOperationController.class);
+    
+    protected ServletContext servletContext;
+    
     @Autowired
     RepositoryService repositoryService;
     @Autowired
     ObjectMapper objectMapper;
 
-    private static final String DIR_PATH = PropertiesUtil.getValue("uploaderPath");
+    private static final String DIR_PATH = PropertiesUtil.getValue("activitiPath");
 
 
     @RequestMapping(value = "/modeler/{modelId}", method = RequestMethod.GET)
@@ -460,7 +465,7 @@ public class ModelOperationController {
 
                 ByteArrayInputStream in = new ByteArrayInputStream(bpmnBytes);
                 String fileName = model.getKey() + ".model.bpmn";
-                String realPath = dirPath + File.separator + DIR_PATH + File.separator + fileName;
+                String realPath = dirPath /*+ File.separator */+ DIR_PATH + File.separator + fileName;
                 File file = new File(realPath);
                 if (file.exists()) {
                     file.delete();
@@ -471,7 +476,7 @@ public class ModelOperationController {
             } else {
                 byte[] pngBytes = repositoryService.getModelEditorSourceExtra(modelId);
                 String fileName = model.getKey() + ".model.png";
-                String realPath = dirPath + File.separator + DIR_PATH + File.separator + fileName;
+                String realPath = dirPath /*+ File.separator*/ + DIR_PATH + File.separator + fileName;
                 File file = new File(realPath);
                 if (file.exists()) {
                     file.delete();

@@ -110,6 +110,7 @@
             <!-- 需排除拦截的地址 -->
             <mvc:exclude-mapping path="/resources/**"/>
             <mvc:exclude-mapping path="/uploadPath/**"/>
+            <mvc:exclude-mapping path="/tempFile/**"/>
             <mvc:exclude-mapping path="/login"/>
             <mvc:exclude-mapping path="/logout"/>
             <bean class="com.cnpc.framework.interceptor.CSRFInterceptor"/>
