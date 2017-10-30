@@ -1,0 +1,143 @@
+<link rel="stylesheet" href="${basePath}/resources/common/libs/fileinput/css/fileinput.min.css">
+<script src="${basePath}/resources/common/libs/fileinput/js/fileinput.js"></script>
+<script src="${basePath}/resources/common/libs/fileinput/js/locales/zh.js"></script>
+<!--BaseFile组件-->
+<script src="${basePath}/resources/common/js/base-file.js"></script>
+
+
+<section class="content-header">
+    <h1>
+        新增物料清单
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
+        <li><a href="#">成本控制</a></li>
+        <li class="active">预算管理</li>
+    </ol>
+</section>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <form id="budget-form" name="budget-form" class="form-horizontal">
+                    <input type="hidden" name="id">
+                    <input type="hidden" name="version">
+                    <input type="hidden" name="isSuperAdmin">
+                    <input type="hidden" name="createDateTime" data-flag="date" data-format="yyyy-mm-dd hh:ii:ss">
+                    <input type="hidden" name="deleted">
+                    <input type='hidden' value='${CSRFToken}' id='csrftoken'>
+                    <div class="box-body">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="budget_ID" class="col-sm-3 control-label">预算清单编号：</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="budget_ID" name="budget_ID" placeholder="预算清单编号">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="project_name_id" class="col-sm-3 control-label">负责人：</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="project_name_id" name="project_id" placeholder="负责人">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="project_id" class="col-sm-3 control-label">项目ID：</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="project_id" name="project_id" placeholder="项目ID">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="hidden" name="fileIds" id="fileIds">
+                    <div class="form-group" align="center">
+                        <div class="btn btn-default btn-file" id="uploadFile">
+                            <i class="fa fa-paperclip"></i> 上传预算表(Max. 10MB)
+                        </div>
+                    </div>
+                    <div class="form-group" id="file_container">
+                        <input type="file" name="file"  id="attachment">
+                    </div>
+                    <!-- /.box-body -->
+                    <div class="box-footer text-center">
+                        <!--以下两种方式提交验证,根据所需选择-->
+                        <button type="button" class="btn btn-default" data-btn-type="cancel" data-dismiss="modal">取消</button>
+                        <button type="submit" class="btn btn-primary" data-btn-type="save">提交</button>
+                    </div>
+                    <!-- /.box-footer -->
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<script>
+    //tableId,queryId,conditionContainer
+    var form = null;
+    var id = "${id?default(0)}";
+    $(function() {
+        //初始化控件
+        form = $("#budget-form").form();
+        //数据校验
+        $("#budget-form").bootstrapValidator({
+            message: '请输入有效值',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            submitHandler: function(validator, userform, submitButton) {
+                modals.confirm('确认保存？', function() {
+                    //Save Data，对应'submit-提交'
+                    var params = form.getFormSimpleData();
+                    ajaxPost(
+                        basePath + '/budgetQuery/save',
+                        params,
+                        function(data, status) {
+                            if (data.success) {
+                                form.clearForm();
+                                modals.correct("添加预算成功！请等待采购编辑...");
+                            }
+                        });
+                });
+            },
+            fields: {
+                project_id: {
+                    validators: {
+                        notEmpty: {
+                            message: '请输入项目编号'
+                        }
+                    }
+                }
+            }
+        });
+        form.initComponent();
+    });
+
+    $("#uploadFile").file({
+        title: "请上传附件",
+        fileinput: {
+            maxFileSize: 10240,
+            maxFileCount:3
+        },
+        fileIdContainer:"[name='fileIds']",
+        showContainer:'#attachment',
+        //显示文件类型 edit=可编辑  detail=明细 默认为明细
+        showType:'edit',
+        //弹出窗口 执行上传附件后的回调函数(window:false不调用此方法)
+        window:true,
+        callback:function(fileIds,oldfileIds){
+            //更新fileIds
+            this.showFiles({
+                fileIds:fileIds
+            });
+        }
+    });
+
+    function resetForm() {
+        form.clearForm();
+        $("#budget-form").data('bootstrapValidator').resetForm();
+    }
+</script>
