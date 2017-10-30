@@ -16,7 +16,6 @@
         <div class="col-xs-12">
             <div class="nav-tabs-custom">
                 <ul class="nav nav-tabs pull-right">
-                    <li><a href="#tab-content-edit" data-toggle="tab" id="nav-tab-detail"><i class="fa fa-edit"></i></a></li>
                     <li class="active"><a href="#tab-content-list" data-toggle="tab" id="nav-tab-list"><i class="fa fa-list-ul"></i></a></li>
                     <li class="pull-left header"><i class="fa fa-user"></i><small>物料列表</small></li>
                 </ul>
@@ -73,19 +72,19 @@
         //绑定按钮事件
         $("button[data-btn-type]").click(function () {
             var action = $(this).data("btn-type");
-            var rowId = projectQueryTable.getSelectedRowId();
+            var rowId = materielTable.getSelectedRowId();
             switch (action) {
                 case "detail":
                 	if(!rowId){
                         modals.info('请选择要查看的行');
                         return false;
                     }
-                	console.log(rowId);
+                	
                 	modals.openWin({
                         winId:winId,
-                        title:'查看物料【'+userTable.getSelectedRowData().mat_name+'】',
+                        title:'查看物料【'+materielTable.getSelectedRowData().mat_name+'】',
                         width:'900px',
-                        url:basePath+"/material/detail?id="+rowId+"&&doWhat='1'",
+                        url:basePath+"/material/detail?id="+rowId+"&&doWhat=1"
                        });
                     break;
                 case "add":
@@ -93,7 +92,7 @@
                          winId:winId,
                          title:'新增物料',
                          width:'900px',
-                         url:basePath+"/material/edit"
+                         url:basePath+"/material/add"
                          
                         });     
                 	break;
@@ -105,9 +104,9 @@
                 	console.log(rowId);
                     modals.openWin({
                         winId:winId,
-                        title:'编辑物料【'+userTable.getSelectedRowData().mat_name+'】',
+                        title:'编辑物料【'+materielTable.getSelectedRowData().mat_name+'】',
                         width:'900px',
-                        url:basePath+"/material/edit?id="+rowId+"&&doWhat='2'",
+                        url:basePath+"/material/edit?id="+rowId+"&&doWhat=2"
                        });
                 	break;
                 case "delete":
@@ -117,27 +116,18 @@
                     }
                     modals.confirm("是否要删除该行数据？",function(){
                         ajaxPost(basePath+"/material/delete/"+rowId,null,function(data){
-                            if(data.success){
-                                //modals.correct("已删除该数据");
-                                materielTable.reloadRowData();
-                            }else{
-                                modals.error("用户数据被引用，不可删除！");
-                            }
+                        	if(data.success){
+                        		materielTable.reloadData();
+                        	}
+                        	
+                  
                         });
                     })
                 	break;
             }
         });
+    	
         
-        $("#project_table tbody").on("dbclick", "tr", function(){
-        	var detailForm=$("#user-form").form();
-            detailForm.clearForm();
-            setTitle("查看用户【"+projectQueryTable.getSelectedRowData().name+"】")
-            $("#nav-tab-detail").click();
-            ajaxPost(basePath+"/projectQuery/get/"+projectQueryTable.getSelectedRowData().id,null,function(data){
-                detailForm.initFormData(data);
-            });
-		});
     });
     
     function setTitle(title){

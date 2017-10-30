@@ -1,17 +1,23 @@
+
 /**
  * 版权所有 (c) 2017，周庆博和他的朋友们有限公司
  */
 package com.radish.master.material.entity;
 
+import java.io.Serializable;
 import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import org.hibernate.annotations.GenericGenerator;
-import com.cnpc.framework.annotation.Header;
 
+import org.hibernate.annotations.GenericGenerator;
+
+import com.cnpc.framework.annotation.Header;
+import com.cnpc.framework.base.entity.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * 类说明
@@ -26,10 +32,17 @@ import com.cnpc.framework.annotation.Header;
  */
 @Entity
 @Table(name = "tbl_materiel")
-public class Materiel {
+@JsonIgnoreProperties(value = { "hibernateLazyInitializer", "handler", "fieldHandler" })
+public class Materiel implements Serializable{
 
-    private static final long serialVersionUID = -4535904106336743574L;
+   
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+
+	/**
      * 主键ID自动生成策略
      */
     @Id
@@ -53,7 +66,7 @@ public class Materiel {
     
     @Header(name = "单位")
     @Column(name = "unit")
-    private Date unit;
+    private String unit;
 
     @Header(name = "有效标识")
     @Column(name = "isValid")
@@ -69,7 +82,7 @@ public class Materiel {
 
     @Header(name = "创建时间")
     @Column(name = "create_time")
-    private String create_time;
+    private Date create_time;
 
     @Header(name = "修改人")
     @Column(name = "update_name")
@@ -81,7 +94,7 @@ public class Materiel {
 
     @Header(name = "修改时间")
     @Column(name = "update_time")
-    private String update_time;
+    private Date update_time;
 
     @Header(name = "上级节点ID")
     @Column(name = "parent_ID")
@@ -127,11 +140,11 @@ public class Materiel {
 		this.mat_standard = mat_standard;
 	}
 
-	public Date getUnit() {
+	public String getUnit() {
 		return unit;
 	}
 
-	public void setUnit(Date unit) {
+	public void setUnit(String unit) {
 		this.unit = unit;
 	}
 
@@ -159,11 +172,11 @@ public class Materiel {
 		this.create_name_ID = create_name_ID;
 	}
 
-	public String getCreate_time() {
+	public Date getCreate_time() {
 		return create_time;
 	}
 
-	public void setCreate_time(String create_time) {
+	public void setCreate_time(Date create_time) {
 		this.create_time = create_time;
 	}
 
@@ -183,11 +196,11 @@ public class Materiel {
 		this.update_name_ID = update_name_ID;
 	}
 
-	public String getUpdate_time() {
+	public Date getUpdate_time() {
 		return update_time;
 	}
 
-	public void setUpdate_time(String update_time) {
+	public void setUpdate_time(Date update_time) {
 		this.update_time = update_time;
 	}
 
@@ -238,7 +251,13 @@ public class Materiel {
 	public void setMat_name(String mat_name) {
 		this.mat_name = mat_name;
 	}
+
+	@Override
+	public String toString() {
+		return "Materiel [mat_standard=" + mat_standard + ", mat_name=" + mat_name + ", unit=" + unit + ", isValid="
+				+ isValid + "]";
+	}
     
-
-
+   
+    
 }
