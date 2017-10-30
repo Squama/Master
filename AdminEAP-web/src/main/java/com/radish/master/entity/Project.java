@@ -18,7 +18,7 @@ public class Project extends BaseEntity {
 	
 	@Header(name = "项目名称")
 	@Column(name = "project_name")
-	private String project_name;
+	private String projectName;
 	
 	@Header(name = "项目负责人")
 	@Column(name = "project_manager")
@@ -72,15 +72,15 @@ public class Project extends BaseEntity {
 		this.projectCode = projectCode;
 	}
 
-	public String getProject_name() {
-		return project_name;
-	}
+	public String getProjectName() {
+        return projectName;
+    }
 
-	public void setProject_name(String project_name) {
-		this.project_name = project_name;
-	}
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
+    }
 
-	public String getProjectManager() {
+    public String getProjectManager() {
 		return projectManager;
 	}
 
