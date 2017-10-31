@@ -4,6 +4,7 @@
      http://www.springframework.org/schema/beans/spring-beans-4.0.xsd"
        default-lazy-init="true">
 
+    <!-- Activiti引擎配置 -->
     <bean id="processEngineConfiguration" class="org.activiti.spring.SpringProcessEngineConfiguration">
         <property name="dataSource" ref="dataSource"/>
         <property name="transactionManager" ref="transactionManager"/>
@@ -71,10 +72,12 @@
     <!--解决部署的流程图连线文字显示的问题-->
     <bean id="customProcessDiagramGenerator" class="com.cnpc.framework.activiti.service.impl.CustomProcessDiagramGenerator"/>
 
+    <!-- Activiti引擎工厂 -->
     <bean id="processEngine" class="org.activiti.spring.ProcessEngineFactoryBean">
         <property name="processEngineConfiguration" ref="processEngineConfiguration"/>
     </bean>
 
+    <!-- Activiti的Service -->
     <bean id="objectMapper" class="com.fasterxml.jackson.databind.ObjectMapper"/>
     <bean id="identityService" factory-bean="processEngine" factory-method="getIdentityService"/>
     <bean id="formService" factory-bean="processEngine" factory-method="getFormService"/>
