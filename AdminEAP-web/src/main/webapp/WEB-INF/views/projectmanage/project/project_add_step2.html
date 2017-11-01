@@ -1,0 +1,207 @@
+<section class="content-header">
+    <h1>
+        <span>项目管理</span>
+        <small>新增</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
+        <li><a href="#">项目管理</a></li>
+        <li class="active">新增项目</li>
+    </ol>
+</section>
+
+    
+
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box box-info">
+                <div id="stepbar" class="add stepbar">
+                    <div>
+                        <div class="step stepdone">
+                            <span class="tip">1</span>
+                        </div>
+                        <div class="stepinfo">添加项目基本信息</div>
+                    </div>
+                    <div>
+                        <div class="step">
+                            <span class="tip">2</span>
+                        </div>
+                        <div class="stepinfo undoneinfo">上传项目文件（可选）</div>
+                    </div>
+                    <div>
+                        <div class="step stepundone">
+                            <span class="tip">3</span>
+                        </div>
+                        <div class="stepinfo undoneinfo">完成</div>
+                    </div>
+                </div>
+                <form id="project_form" name="project_form" class="form-horizontal">
+                    <div class="box-body">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">安全文明文件<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="hidden" name="fileIds" id="fileIds">
+		                            <div class="form-group">
+		                                <div class="btn btn-default btn-file" id="uploadFile">
+		                                    <i class="fa fa-paperclip"></i> 上传附件(Max. 10MB)
+		                                </div>
+		                            </div>
+		                            <div class="form-group" id="file_container">
+		                                <input type="file" name="file"  id="attachment">
+		                            </div> 
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">施工合同<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="hidden" name="fileIds" id="fileIds">
+		                            <div class="form-group">
+		                                <div class="btn btn-default btn-file" id="uploadFile">
+		                                    <i class="fa fa-paperclip"></i> 上传附件(Max. 10MB)
+		                                </div>
+		                            </div>
+		                            <div class="form-group" id="file_container">
+		                                <input type="file" name="file"  id="attachment">
+		                            </div> 
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">招标文件<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="hidden" name="fileIds" id="fileIds">
+		                            <div class="form-group">
+		                                <div class="btn btn-default btn-file" id="uploadFile">
+		                                    <i class="fa fa-paperclip"></i> 上传附件(Max. 10MB)
+		                                </div>
+		                            </div>
+		                            <div class="form-group" id="file_container">
+		                                <input type="file" name="file"  id="attachment">
+		                            </div> 
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">中标文件</label>
+                                <div class="col-sm-6">
+                                    <input type="hidden" name="fileIds" id="fileIds">
+		                            <div class="form-group">
+		                                <div class="btn btn-default btn-file" id="uploadFile">
+		                                    <i class="fa fa-paperclip"></i> 上传附件(Max. 10MB)
+		                                </div>
+		                            </div>
+		                            <div class="form-group" id="file_container">
+		                                <input type="file" name="file"  id="attachment">
+		                            </div> 
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">中标通知文件<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="hidden" name="fileIds" id="fileIds">
+		                            <div class="form-group">
+		                                <div class="btn btn-default btn-file" id="uploadFile">
+		                                    <i class="fa fa-paperclip"></i> 上传附件(Max. 10MB)
+		                                </div>
+		                            </div>
+		                            <div class="form-group" id="file_container">
+		                                <input type="file" name="file"  id="attachment">
+		                            </div> 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer text-center">
+                        <button type="button" class="btn btn-default" data-btn-type="prev">返回</button>
+                        <button type="submit" class="btn btn-primary ml10" data-btn-type="next">上传项目文件</button>
+                        <button type="submit" class="btn btn-success ml10" data-btn-type="save">保存并返回</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+    var labform;
+    var id = "${id?default(0)}";
+    console.log(id);
+    $(function () {
+        //初始化表单 
+        labform = $("#project_form").form({baseEntity:false});
+        //数据校验
+        $("#project_form").bootstrapValidator({
+            message: '请输入有效值',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            submitHandler: function () {
+                var action = $(this).attr('$submitButton').attr('data-btn-type');
+                var formData = labform.getFormSimpleData();
+                ajaxPost(basePath + '/project/save', formData, function (data) {
+                    console.log(data);
+                    if (data.success) {
+                        switch (action) {
+                            case "next":
+                                loadPage(basePath+"/project/uploadfile", data.data);
+                                break;
+                            case "save":
+                                loadPage(basePath+"/project/list");
+                                break;
+                        }
+                    } else {
+                        modals.error(data.message);
+                    }
+                });
+            },
+            fields: {
+                "projectCode": {
+                    validators: {
+                        notEmpty: {message: '项目编号不能为空'}
+                    }
+                },
+                "projectName": {
+                    validators: {
+                        notEmpty: {message: '项目名称不能为空'}
+                    }
+                },
+                "projectManagerName": {
+                    validators: {
+                        notEmpty: {message: '项目负责人不能为空'}
+                    }
+                }
+            }
+        });
+        //编辑回填
+        //初始化控件
+        labform.initComponent();
+    });
+    
+    $("#uploadFile").file({
+        title: "请上传附件",
+        fileinput: {
+            maxFileSize: 10240,
+            maxFileCount:3
+        },
+        fileIdContainer:"[name='fileIds']",
+        showContainer:'#attachment',
+        //显示文件类型 edit=可编辑  detail=明细 默认为明细
+        showType:'edit',
+        //弹出窗口 执行上传附件后的回调函数(window:false不调用此方法)
+        window:true,
+        callback:function(fileIds,oldfileIds){
+            //更新fileIds
+            console.log(fileIds);
+            this.showFiles({
+                fileIds:fileIds
+            });
+        }
+    });
+    
+    function setProjectManager(id, name){
+        $("#projectManager").val(id);
+        $("#projectManagerName").val(name);
+    }
+
+</script>

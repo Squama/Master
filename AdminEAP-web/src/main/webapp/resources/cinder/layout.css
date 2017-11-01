@@ -1,0 +1,8 @@
+.stepbar{width: 98%; float: left;margin-top: 16px;margin-left: 30%;height: 90px;}
+.stepbar div{width:160px;height: 40px;float: left;color: #00c0ef;}
+.stepbar .undoneinfo{color: #d5d5d5;}
+.stepbar .step{width: 160px;height: 38px;background:url(images/layout/step.png) center center no-repeat;text-align: center;}
+.stepbar .stepdone{background-image:url(images/layout/step_done.png);color: #ffffff;}
+.stepbar .stepundone{background-image:url(images/layout/step_undone.png);color: #ffffff;}
+.stepbar .step span{ margin-top: 9px;display: inline-block;}
+.stepbar .stepinfo{text-align: center;}

@@ -1,0 +1,159 @@
+<section class="content-header">
+    <h1>
+        <span>项目管理</span>
+        <small>新增</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
+        <li><a href="#">项目管理</a></li>
+        <li class="active">新增项目</li>
+    </ol>
+</section>
+
+    
+
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box box-info">
+	            <div id="stepbar" class="add stepbar">
+	                <div>
+	                    <div class="step">
+	                        <span class="tip">1</span>
+	                    </div>
+	                    <div class="stepinfo">添加项目基本信息</div>
+	                </div>
+	                <div>
+	                    <div class="step stepundone">
+	                        <span class="tip">2</span>
+	                    </div>
+	                    <div class="stepinfo undoneinfo">上传项目文件（可选）</div>
+	                </div>
+	                <div>
+	                    <div class="step stepundone">
+	                        <span class="tip">3</span>
+	                    </div>
+	                    <div class="stepinfo undoneinfo">完成</div>
+	                </div>
+	            </div>
+                <form id="project_form" name="project_form" class="form-horizontal">
+                    <div class="box-body">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">项目编号<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" id="projectCode" name="projectCode" placeholder="项目编号">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">项目名称<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" id="projectName" name="projectName" placeholder="项目名称">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">项目负责人<span style="color:red">*</span></label>
+			                    <div class="col-sm-5">
+			                        <input type="hidden" id="projectManager" name="projectManager" value="${user.id}">
+			                        <input type="text" class="form-control" id="projectManagerName" name="projectManagerName" readonly="readonly" placeholder="请选择负责人">
+			                    </div>
+			                    <div class="col-sm-2">
+			                        <button type="button" class="btn btn-primary" data-btn-type="selectManager">
+			                             <i class="fa fa-user"></i>&nbsp;选择
+			                        </button>
+			                    </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">备注</label>
+                                <div class="col-sm-6">
+                                    <textarea name="remark" id="remark" placeholder="请填写备注" class="form-control" rows="6"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer text-center">
+                        <button type="button" class="btn btn-default" data-btn-type="prev">返回</button>
+                        <button type="submit" class="btn btn-primary ml10" data-btn-type="next">上传项目文件</button>
+                        <button type="submit" class="btn btn-success ml10" data-btn-type="save">保存并返回</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+    var labform;
+    var id = "${id?default(0)}";
+    var projectEditCtrl = {
+        initButtonEvent: function () {
+            $("button[data-btn-type='selectManager']").click(function () {
+                var ids = $("#projectManager").val() || 0;
+                modals.openWin({
+                    winId: 'userSelectWin',
+                    url: basePath + '/user/select/0/' + ids + '/setProjectManager',
+                    width: '850px',
+                    title: "选择项目负责人"
+                })
+            });
+        }
+    }
+    $(function () {
+        //初始化表单 
+        labform = $("#project_form").form({baseEntity:false});
+        //数据校验
+        $("#project_form").bootstrapValidator({
+            message: '请输入有效值',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            submitHandler: function () {
+            	var action = $(this).attr('$submitButton').attr('data-btn-type');
+                var formData = labform.getFormSimpleData();
+                ajaxPost(basePath + '/project/save', formData, function (data) {
+                	console.log(data);
+                    if (data.success) {
+	                   	switch (action) {
+	                        case "next":
+	                        	loadPage(basePath+"/project/uploadfile", undefined, data.data);
+	                            break;
+	                        case "save":
+	                            loadPage(basePath+"/project/list");
+	                            break;
+	                    }
+                    } else {
+                        modals.error(data.message);
+                    }
+                });
+            },
+            fields: {
+                "projectCode": {
+                    validators: {
+                        notEmpty: {message: '项目编号不能为空'}
+                    }
+                },
+                "projectName": {
+                    validators: {
+                        notEmpty: {message: '项目名称不能为空'}
+                    }
+                },
+                "projectManagerName": {
+                    validators: {
+                        notEmpty: {message: '项目负责人不能为空'}
+                    }
+                }
+            }
+        });
+        //编辑回填
+        //初始化控件
+        labform.initComponent();
+        projectEditCtrl.initButtonEvent();
+    });
+    
+    function setProjectManager(id, name){
+    	$("#projectManager").val(id);
+    	$("#projectManagerName").val(name);
+    }
+
+</script>

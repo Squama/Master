@@ -11,12 +11,12 @@
  */
 //(function ($) {
 
-function loadPage(url, container) {
+function loadPage(url, container, params) {
     if (!container)
         container = "#mainDiv";
     if (!url.startWith(basePath))
         url = basePath + url;
-    jQuery(container).load(url, function (response, status, xhr) {
+    jQuery(container).load(url, params, function (response, status, xhr) {
         if (status == "success") {
             if (response) {
                 try {

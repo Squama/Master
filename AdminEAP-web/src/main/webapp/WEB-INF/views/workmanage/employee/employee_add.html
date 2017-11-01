@@ -37,6 +37,19 @@
 								</div>
 							</div>
 							<div class="form-group">
+                                <label for="telphone" class="col-sm-3 control-label">部门</label>
+
+                                <div class="col-sm-6">
+                                    <input type="hidden" name="deptId" id="deptId">
+                                    <input type="text" class="form-control" id="deptName" placeholder="所在部门">
+                                </div>
+                                <div class="col-sm-2">
+                                    <button type="button" class="btn btn-info" data-flag="org"><i
+                                            class="fa fa-sitemap"></i>&nbsp;选择
+                                    </button>
+                                </div>
+                            </div>
+							<div class="form-group">
 								<label for="telphone" class="col-sm-3 control-label">座机</label>
 
 								<div class="col-sm-8">
@@ -180,6 +193,14 @@ $(function() {
         }
     });
     form.initComponent();
+    //初始化部门选择器
+    $("button[data-flag='org']").org({
+        idField: $("#deptId"),
+        nameField: $("#deptName"),
+        title:'选择部门',
+        levels:3
+
+    })
 });
 
 function resetForm() {

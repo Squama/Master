@@ -4,10 +4,10 @@
     
     <query id="project_list" key="id" tableName="项目管理列表" className="com.radish.master.entity.Project" widthType="px">
         <column key="rowIndex" header="序号" width="80"/>
-        <column key="projectName" header="项目名" classType="String" allowSort="true" width="150"/>
-        <column key="projectLevel" header="项目级别" allowSort="true" width="150"/>
-        <column key="projectManager" header="负责人员工编号" classType="String" allowSort="true" width="150"/>
-        <column key="status" header="项目状态" allowSort="true" width="150"/>
+        <column key="projectCode" header="项目编号" allowSort="true" width="150"/>
+        <column key="projectName" header="项目名称" classType="String" allowSort="true" width="150"/>
+        <column key="projectManager" header="项目负责人" classType="String" allowSort="true" width="150"/>
+        <column key="status" header="项目状态" allowSort="true" width="150" render="10=新建,20=待编辑,30=待编辑"/>
     </query>
 
 </queryContext>
