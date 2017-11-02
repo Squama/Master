@@ -55,6 +55,7 @@
         title: "文件上传",
         //通用文件上传界面
         url: basePath + "/file/uploader",
+        getFileResultUrl: basePath+"/file/getFiles",
         //默认支持多文件上传
         multiple: true,
         //默认弹出附件上传窗口
@@ -102,9 +103,9 @@
         delete self.fileIdContainer;
         delete self.fileinput;
         
-        /*console.log(this.options);
-         console.log("=============");
-         console.log(self);*/
+        console.log(this.options);
+        console.log("=============");
+        console.log(self);
         
         modals.openWin({
             winId: that.options.winId,
@@ -128,6 +129,7 @@
 
     //调用成功后执行显示附件
     BaseFile.prototype.showFiles=function(options){
+    	console.log(options);
         options=options||{};
         if(!this.hasDisplayZone()){
             modals.error("请配置showContainer属性，并在容器下配置type=file的input组件");
@@ -291,7 +293,7 @@
 
     BaseFile.prototype.getFileResult=function(fileIds){
         var ret=null;
-        ajaxPost(basePath+"/file/getFiles",{fileIds:fileIds},function(result){
+        ajaxPost(this.options.getFileResultUrl,{fileIds:fileIds},function(result){
             ret=result;
         });
         return ret;

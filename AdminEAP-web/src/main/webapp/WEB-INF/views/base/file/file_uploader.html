@@ -63,6 +63,7 @@
             $("#sysfileIds").val(fileObj.options.fileIds);
             var result=fileObj.getFileResult(fileObj.options.fileIds);
             //ajaxPost(basePath+"/file/getFiles",{fileIds:fileObj.options.fileIds},function(result){
+            	console.log(result);
             preview=result.initialPreview;
             previewConfig=result.initialPreviewConfig;
             //});

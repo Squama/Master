@@ -95,6 +95,9 @@
                     title: "选择项目负责人"
                 })
             });
+            $("button[data-btn-type='prev']").click(function () {
+            	loadPage(basePath+"/project/list");
+            });
         }
     }
     $(function () {
@@ -112,10 +115,9 @@
             	var action = $(this).attr('$submitButton').attr('data-btn-type');
                 var formData = labform.getFormSimpleData();
                 ajaxPost(basePath + '/project/save', formData, function (data) {
-                	console.log(data);
                     if (data.success) {
 	                   	switch (action) {
-	                        case "next":
+	                    	case "next":
 	                        	loadPage(basePath+"/project/uploadfile", undefined, data.data);
 	                            break;
 	                        case "save":
