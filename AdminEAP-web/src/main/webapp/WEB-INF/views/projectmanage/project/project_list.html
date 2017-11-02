@@ -74,7 +74,7 @@
                 	detailForm.clearForm();
                     setTitle("查看项目【"+projectQueryTable.getSelectedRowData().name+"】")
                     $("#nav-tab-detail").click();
-                    ajaxPost(basePath+"/project/get/"+projectQueryTable.getSelectedRowData().id,null,function(data){
+                    ajaxPost(basePath+"/project/get?id="+projectQueryTable.getSelectedRowData().id,null,function(data){
                     	console.log(data);
                     	detailForm.initFormData(data);
                     });

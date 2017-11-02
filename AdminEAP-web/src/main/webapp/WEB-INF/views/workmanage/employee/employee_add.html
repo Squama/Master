@@ -1,3 +1,10 @@
+<link rel="stylesheet" href="${basePath}/resources/common/libs/fileinput/css/fileinput.min.css">
+<script src="${basePath}/resources/common/libs/fileinput/js/fileinput.js"></script>
+<script src="${basePath}/resources/common/libs/fileinput/js/locales/zh.js"></script>
+<!--BaseFile组件-->
+<script src="${basePath}/resources/common/js/base-file.js"></script>
+
+
 <section class="content-header">
 	<h1>
 		新增用户
@@ -101,6 +108,18 @@
 							</div>
 						</div>
 					</div>
+
+
+					<input type="hidden" name="fileIds" id="fileIds">
+					<div class="form-group" align="center">
+						<div class="btn btn-default btn-file" id="uploadFile">
+							<i class="fa fa-paperclip"></i> 上传劳务合同(Max. 10MB)
+						</div>
+					</div>
+					<div class="form-group" id="file_container">
+						<input type="file" name="file"  id="attachment">
+					</div>
+
 					<!-- /.box-body -->
 					<div class="box-footer text-center">
 						<!--以下两种方式提交验证,根据所需选择-->
@@ -202,6 +221,29 @@ $(function() {
 
     })
 });
+
+$("#uploadFile").file({
+    title: "请上传附件",
+    fileinput: {
+        maxFileSize: 10240,
+        maxFileCount:3
+    },
+    fileIdContainer:"[name='fileIds']",
+    showContainer:'#attachment',
+    //显示文件类型 edit=可编辑  detail=明细 默认为明细
+    showType:'edit',
+    //弹出窗口 执行上传附件后的回调函数(window:false不调用此方法)
+    window:true,
+    callback:function(fileIds,oldfileIds){
+        //更新fileIds
+        this.showFiles({
+            fileIds:fileIds
+        });
+    }
+});
+
+
+
 
 function resetForm() {
     form.clearForm();

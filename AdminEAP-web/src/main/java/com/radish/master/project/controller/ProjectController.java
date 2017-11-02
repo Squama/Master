@@ -3,23 +3,18 @@
  */
 package com.radish.master.project.controller;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.cnpc.framework.annotation.RefreshCSRFToken;
+import com.cnpc.framework.annotation.VerifyCSRFToken;
+import com.cnpc.framework.base.pojo.FileResult;
+import com.cnpc.framework.base.pojo.Result;
+import com.cnpc.framework.util.SecurityUtil;
+import com.cnpc.framework.utils.DateUtil;
+import com.cnpc.framework.utils.PropertiesUtil;
+import com.cnpc.framework.utils.StrUtil;
+import com.radish.master.entity.Project;
+import com.radish.master.entity.ProjectFileItem;
+import com.radish.master.service.ProjectService;
+import com.radish.master.system.GUID;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -32,21 +27,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.cnpc.framework.annotation.RefreshCSRFToken;
-import com.cnpc.framework.annotation.VerifyCSRFToken;
-import com.cnpc.framework.base.controller.UploaderController;
-import com.cnpc.framework.base.entity.SysFile;
-import com.cnpc.framework.base.pojo.FileResult;
-import com.cnpc.framework.base.pojo.Result;
-import com.cnpc.framework.util.SecurityUtil;
-import com.cnpc.framework.utils.DateUtil;
-import com.cnpc.framework.utils.FileUtil;
-import com.cnpc.framework.utils.PropertiesUtil;
-import com.cnpc.framework.utils.StrUtil;
-import com.radish.master.entity.Project;
-import com.radish.master.entity.ProjectFileItem;
-import com.radish.master.service.ProjectService;
-import com.radish.master.system.GUID;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.*;
 
 /**
  * @author dongy
@@ -109,10 +96,10 @@ public class ProjectController {
         return "projectmanage/project/project_add_step2";
     }
     
-    @RequestMapping(method = RequestMethod.POST, value = "/get")
+   @RequestMapping(method = RequestMethod.POST, value = "/get")
     @ResponseBody
     private Project getProject(String id) {
-
+        System.out.println("id= "+id);
         return projectService.get(Project.class, id);
     }
     
