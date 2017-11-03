@@ -366,7 +366,7 @@ public class UploaderController {
      */
     @RequestMapping(value="/getFiles",method = RequestMethod.POST)
     @ResponseBody
-    public FileResult getFiles(String fileIds,HttpServletRequest request){
+    public FileResult getFiles(String fileIds, String type, HttpServletRequest request){
         List<SysFile> fileList=new ArrayList<>();
         if(!StrUtil.isEmpty(fileIds)) {
             String[] fileIdArr = fileIds.split(",");
@@ -375,7 +375,12 @@ public class UploaderController {
             criteria.addOrder(Order.asc("createDateTime"));
             fileList = uploaderService.findByCriteria(criteria);
         }
-        return getPreivewSettings(fileList,request);
+        if(StrUtil.isEmpty(type)){
+            return getPreivewSettings(fileList,request);
+        }else{
+            return getPreivewSettingsPreview(fileList,request);
+        }
+        
     }
 
 
@@ -420,6 +425,40 @@ public class UploaderController {
         return fileResult;
     }
 
+    public FileResult getPreivewSettingsPreview(List<SysFile> fileList,HttpServletRequest request){
+        FileResult fileResult=new FileResult();
+        List<String> previews=new ArrayList<>();
+        List<FileResult.PreviewConfig> previewConfigs=new ArrayList<>();
+        //缓存当前的文件
+        String dirPath = request.getRealPath("/");
+        String[] fileArr=new String[fileList.size()];
+        int index=0;
+        for (SysFile sysFile : fileList) {
+            //上传后预览 TODO 该预览样式暂时不支持theme:explorer的样式，后续可以再次扩展
+            //如果其他文件可预览txt、xml、html、pdf等 可在此配置
+            if(FileUtil.isImage(dirPath+uploaderPath+File.separator+sysFile.getSavedName())) {
+                previews.add("<img src='." + sysFile.getFilePath().replace(File.separator, "/") + "' class='file-preview-image kv-preview-data' " +
+                        "style='width:auto;height:80px' alt='" + sysFile.getFileName() + " title='" + sysFile.getFileName() + "''>");
+            }else{
+                previews.add("<div class='kv-preview-data file-preview-other-frame'><div class='file-preview-other'>" +
+                        "<span class='file-other-icon'>"+getFileIcon(sysFile.getFileName())+"</span></div></div>");
+            }
+            //上传后预览配置
+            FileResult.PreviewConfig previewConfig=new FileResult.PreviewConfig();
+            previewConfig.setWidth("60px");
+            previewConfig.setCaption(sysFile.getFileName());
+            previewConfig.setKey(sysFile.getId());
+            // previewConfig.setUrl(request.getContextPath()+"/file/delete");
+            previewConfig.setExtra(new FileResult.PreviewConfig.Extra(sysFile.getId()));
+            previewConfig.setSize(sysFile.getFileSize());
+            previewConfigs.add(previewConfig);
+            fileArr[index++]=sysFile.getId();
+        }
+        fileResult.setInitialPreview(previews);
+        fileResult.setInitialPreviewConfig(previewConfigs);
+        fileResult.setFileIds(StrUtil.join(fileArr));
+        return fileResult;
+    }
 
 
 

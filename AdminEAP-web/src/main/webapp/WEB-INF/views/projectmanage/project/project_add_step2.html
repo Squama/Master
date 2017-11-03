@@ -1,6 +1,16 @@
 
 <link rel="stylesheet" href="${basePath}/resources/common/libs/fileinput/css/fileinput.min.css">
+<style>
 
+#projectaddstep2 .krajee-default.file-preview-frame .kv-file-content {
+    height: auto;
+}
+
+#projectaddstep2 .krajee-default .file-footer-caption {
+    width: 100px;
+}
+
+</style>
 
 <script src="${basePath}/resources/common/libs/fileinput/js/fileinput.js"></script>
 <script src="${basePath}/resources/common/libs/fileinput/js/locales/zh.js"></script>
@@ -20,7 +30,7 @@
 
     
 
-<section class="content">
+<section class="content" id="projectaddstep2">
     <div class="row">
         <div class="col-xs-12">
             <div class="box box-info">
@@ -203,17 +213,36 @@
     var fileinputDefaults = {
           maxFileSize: 102400,
           maxFileCount:3,
+          previewSettings: {
+              image: {width: "160px", height: "60px"},
+              text: {width: "213px", height: "160px"},
+              object: {width: "160px", height: "auto"},
+              pdf: {width: "160px", height: "160px"},
+              other: {width: "160px", height: "160px"}
+          },
+          previewZoomSettings: {
+              image: {width: "auto", height: "auto", 'max-width': "100%", 'max-height': "100%"},
+              text: {width: "100%", height: "100%", 'min-height': "480px"},
+              object: {width: "auto", height: "100%", 'min-height': "480px"},
+              pdf: {width: "100%", height: "100%", 'min-height': "480px"},
+              other: {width: "auto", height: "100%", 'min-height': "480px"}
+          },
           uploadUrl: basePath + "/project/uploadMultipleFile",
-          deleteUrl:"",
-          allowedPreviewTypes : false
+          deleteUrl: basePath + "/project/deletefile",
+          allowedPreviewTypes : ['image', 'object']
     }
     var defaults = {
           title: "请上传附件",
           getFileResultUrl: basePath+"/project/getFiles",
           fileinput: fileinputDefaults,
-          fileIdContainer:"[name='saftyfilefield']",
           showType:'detail',
-          window:true
+          window:true,
+          callback:function(fileIds,oldfileIds){
+              this.showFiles({
+                  fileIds:fileIds,
+                  type:'preview'
+              });
+          }
     }
     
     $("#saftyfileupload").file($.extend({}, defaults, {
@@ -222,12 +251,7 @@
             uploadExtraData: {"id":id,"fileField":"saftyFile"}
         }),
         showContainer:'#saftyfileattachment',
-        callback:function(fileIds,oldfileIds){
-            //更新fileIds
-            this.showFiles({
-                fileIds:fileIds
-            });
-        }
+        fileIdContainer:"[name='saftyfilefield']"
     }));
 
     $("#constructionfileupload").file($.extend({}, defaults, {
@@ -235,7 +259,8 @@
         fileinput:$.extend({}, fileinputDefaults, {
             uploadExtraData: {"id":id,"fileField":"constructionFile"}
         }),
-        showContainer:'#constructionfileattachment'
+        showContainer:'#constructionfileattachment',
+        fileIdContainer:"[name='constructionfilefield']"
     }));
 
     $("#bidsfileupload").file($.extend({}, defaults, {
@@ -243,7 +268,8 @@
         fileinput:$.extend({}, fileinputDefaults, {
             uploadExtraData: {"id":id,"fileField":"bidsFile"}
         }),
-        showContainer:'#bidsfileattachment'
+        showContainer:'#bidsfileattachment',
+        fileIdContainer:"[name='bidsfilefield']"
     }));
 
     $("#bidswinfileupload").file($.extend({}, defaults, {
@@ -251,7 +277,8 @@
         fileinput:$.extend({}, fileinputDefaults, {
             uploadExtraData: {"id":id,"fileField":"bidsWinFile"}
         }),
-        showContainer:'#bidswinfileattachment'
+        showContainer:'#bidswinfileattachment',
+        fileIdContainer:"[name='bidswinfilefield']"
     }));
 
     $("#bidswinnoticefileupload").file($.extend({}, defaults, {
@@ -259,7 +286,8 @@
         fileinput:$.extend({}, fileinputDefaults, {
             uploadExtraData: {"id":id,"fileField":"bidsWinNoticeFile"}
         }),
-        showContainer:'#bidswinnoticefileattachment'
+        showContainer:'#bidswinnoticefileattachment',
+        fileIdContainer:"[name='bidswinnoticefilefield']"
     }));
 
     $("#qualityfileupload").file($.extend({}, defaults, {
@@ -267,7 +295,8 @@
         fileinput:$.extend({}, fileinputDefaults, {
             uploadExtraData: {"id":id,"fileField":"qualityFile"}
         }),
-        showContainer:'#qualityfileattachment'
+        showContainer:'#qualityfileattachment',
+        fileIdContainer:"[name='qualityfilefield']"
     }));
     
     $("#costfileupload").file($.extend({}, defaults, {
@@ -275,7 +304,8 @@
         fileinput:$.extend({}, fileinputDefaults, {
             uploadExtraData: {"id":id,"fileField":"costFile"}
         }),
-        showContainer:'#costfileattachment'
+        showContainer:'#costfileattachment',
+        fileIdContainer:"[name='costfilefield']"
     }));
 
 
@@ -284,7 +314,8 @@
         fileinput:$.extend({}, fileinputDefaults, {
             uploadExtraData: {"id":id,"fileField":"scheduleFile"}
         }),
-        showContainer:'#schedulefileattachment'
+        showContainer:'#schedulefileattachment',
+        fileIdContainer:"[name='schedulefilefield']"
     }));
 
 </script>

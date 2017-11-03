@@ -9,6 +9,7 @@ import com.cnpc.framework.base.pojo.FileResult;
 import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.util.SecurityUtil;
 import com.cnpc.framework.utils.DateUtil;
+import com.cnpc.framework.utils.FileUtil;
 import com.cnpc.framework.utils.PropertiesUtil;
 import com.cnpc.framework.utils.StrUtil;
 import com.radish.master.entity.Project;
@@ -194,7 +195,7 @@ public class ProjectController {
      */
     @RequestMapping(value="/getFiles",method = RequestMethod.POST)
     @ResponseBody
-    public FileResult getFiles(String fileIds,HttpServletRequest request){
+    public FileResult getFiles(String fileIds, String type, HttpServletRequest request){
         List<ProjectFileItem> fileList=new ArrayList<>();
         if(!StrUtil.isEmpty(fileIds)) {
             String[] fileIdArr = fileIds.split(",");
@@ -203,7 +204,11 @@ public class ProjectController {
             criteria.addOrder(Order.asc("createDateTime"));
             fileList = projectService.findByCriteria(criteria);
         }
-        return getPreivewSettings(fileList,request);
+        if(StrUtil.isEmpty(type)){
+            return getPreivewSettings(fileList,request);
+        }else{
+            return getPreivewSettingsPreview(fileList,request);
+        }
     }
     
     /**
@@ -233,6 +238,40 @@ public class ProjectController {
             //上传后预览配置
             FileResult.PreviewConfig previewConfig=new FileResult.PreviewConfig();
             previewConfig.setWidth("120px");
+            previewConfig.setCaption(sysFile.getSourceName());
+            previewConfig.setKey(sysFile.getId());
+            previewConfig.setExtra(new FileResult.PreviewConfig.Extra(sysFile.getId()));
+            previewConfig.setSize(sysFile.getFileSize());
+            previewConfigs.add(previewConfig);
+            fileArr[index++]=sysFile.getId();
+        }
+        fileResult.setInitialPreview(previews);
+        fileResult.setInitialPreviewConfig(previewConfigs);
+        fileResult.setFileIds(StrUtil.join(fileArr));
+        return fileResult;
+    }
+    
+    public FileResult getPreivewSettingsPreview(List<ProjectFileItem> fileList, HttpServletRequest request){
+        FileResult fileResult=new FileResult();
+        List<String> previews=new ArrayList<>();
+        List<FileResult.PreviewConfig> previewConfigs=new ArrayList<>();
+        //缓存当前的文件
+        String[] fileArr=new String[fileList.size()];
+        int index=0;
+        for (ProjectFileItem sysFile : fileList) {
+            //上传后预览  该预览样式暂时不支持theme:explorer的样式，后续可以再次扩展
+            //如果其他文件可预览txt、xml、html、pdf等 可在此配置
+            String dirPath = request.getContextPath() + "/project/showImage?imageID=" + sysFile.getId();
+            if("jpg".equalsIgnoreCase(sysFile.getFileType()) || "jpeg".equalsIgnoreCase(sysFile.getFileType()) || "png".equalsIgnoreCase(sysFile.getFileType())) {
+                previews.add("<img src='"+dirPath+"' class='file-preview-image kv-preview-data' " +
+                        "style='width:auto;height:80px' alt='" + sysFile.getSourceName() + "' title='" + sysFile.getSourceName() + "''>");
+            }else{
+                previews.add("<div class='kv-preview-data file-preview-other-frame'><div class='file-preview-other'>" +
+                        "<span class='file-other-icon'>"+getFileIcon(sysFile.getSourceName())+"</span></div></div>");
+            }
+            //上传后预览配置
+            FileResult.PreviewConfig previewConfig=new FileResult.PreviewConfig();
+            previewConfig.setWidth("80px");
             previewConfig.setCaption(sysFile.getSourceName());
             previewConfig.setKey(sysFile.getId());
             previewConfig.setExtra(new FileResult.PreviewConfig.Extra(sysFile.getId()));
@@ -278,5 +317,14 @@ public class ProjectController {
         }
         
         return null;
+    }
+    
+    @RequestMapping(value="/deletefile",method = RequestMethod.POST)
+    @ResponseBody
+    public Result delete(String id,HttpServletRequest request){
+        ProjectFileItem item=this.getImageFile(id);
+        FileUtil.delFile(item.getFilePath());
+        projectService.delete(item);
+        return new Result();
     }
 }

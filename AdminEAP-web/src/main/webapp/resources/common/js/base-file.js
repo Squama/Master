@@ -103,9 +103,9 @@
         delete self.fileIdContainer;
         delete self.fileinput;
         
-        console.log(this.options);
-        console.log("=============");
-        console.log(self);
+        //console.log(this.options);
+        //console.log("=============");
+        //console.log(self);
         
         modals.openWin({
             winId: that.options.winId,
@@ -143,13 +143,14 @@
         //显示
         $(this.options.showContainer).show();
         var fileComponet=$(this.options.showContainer);
-        var fileResult=this.getFileResult(fileIds),preview=fileResult.initialPreview,previewConfig=fileResult.initialPreviewConfig,self=this;
+        var fileResult=this.getFileResult(fileIds, options.type),preview=fileResult.initialPreview,previewConfig=fileResult.initialPreviewConfig,self=this;
         //配置三类参数 edit=附件列表（可删除） detail=附件列表（显示） 可上传
         var defaultConfig={
             initialPreview:preview,
             initialPreviewConfig:previewConfig,
             previewFileIconSettings:this.previewFileIconSettings
         };
+        console.log(defaultConfig);
         var config;
         if(this.options.showType=="detail"){
             config=$.extend({},self.options.fileinput,defaultConfig,{
@@ -188,7 +189,7 @@
             modals.error("缺少配置，请检查");
             return;
         }
-        //console.log("config=========="+JSON.stringify(config));
+        console.log("config=========="+JSON.stringify(config));
         fileComponet.fileinput('destroy');
         fileComponet.fileinput(config).on("filedeleted",function (event,key) {
             var newfids=self.deleteFileIds(key,self.options.fileIds);
@@ -291,9 +292,9 @@
         }
     }
 
-    BaseFile.prototype.getFileResult=function(fileIds){
+    BaseFile.prototype.getFileResult=function(fileIds, type){
         var ret=null;
-        ajaxPost(this.options.getFileResultUrl,{fileIds:fileIds},function(result){
+        ajaxPost(this.options.getFileResultUrl,{fileIds:fileIds, type:type},function(result){
             ret=result;
         });
         return ret;
