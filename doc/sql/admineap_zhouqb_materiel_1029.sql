@@ -71,12 +71,16 @@ create table tbl_budget
 
 `approver_ID` varchar(64) NULL COMMENT '审核人ID',
 
-`isApprover` int(10) NULL COMMENT '审核标志（0：未审核；1：已审核）',
+`isApprover` varchar(64) NULL COMMENT '审核标志（0：未审核；1：已审核）',
 
 `edit_people_ID` varchar(64) NULL COMMENT '编辑人ID（供应渠道）',
 
-`isEdit` int(10) NULL COMMENT '编辑标志（0：未编辑；1已编辑）',
+`isEdit` varchar(64) NULL COMMENT '编辑标志（0：未编辑；1已编辑）',
 
+
+`create_date_time`   date NULL COMMENT '创建时间',
+`update_date_time`   date NULL COMMENT '编辑时间',
+`approver_date_time` date NULL COMMENT '审核时间',
 
 `reserve1` varchar(255) NULL COMMENT '预留字段1',
 
