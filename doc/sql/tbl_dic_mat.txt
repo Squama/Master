@@ -1,0 +1,22 @@
+INSERT INTO `admin`.`tbl_function` 
+(`id`, `create_date_time`, `deleted`, `update_date_time`, `version`, `code`, `functype`, `icon`, `levelCode`, `name`, `parent_id`, `remark`, `url`) VALUES ('402880eb5f620487015f620b2f580000', '2017-10-28 16:13:41', '0', '2017-10-28 16:14:18', '1', 'MATERIELS', '0', 'fa fa-home', '000042', '物料系统',NULL, NULL, NULL);
+INSERT INTO `admin`.`tbl_function` 
+(`id`, `create_date_time`, `deleted`, `update_date_time`, `version`, `code`, `functype`, `icon`, `levelCode`, `name`, `parent_id`, `remark`, `url`) VALUES ('402880e95f7cbdb3015f7cc3233c0000', '2017-11-02 20:44:44', '0', '2017-11-02 20:44:44', '0', 'DIC_MAT', '1', 'fa fa-map-signs', '000042000002', '物料分类管理', '402880eb5f620487015f620b2f580000', NULL, '/m
+at/tree');
+INSERT INTO `admin`.`tbl_function` 
+(`id`, `create_date_time`, `deleted`, `update_date_time`, `version`, `code`, `functype`, `icon`, `levelCode`, `name`, `parent_id`, `remark`, `url`) VALUES ('402880eb5f620487015f620de22f0001', '2017-10-28 16:16:37', '0', '2017-10-28 16:16:37', '0', 'MATERIEL_MANAGE', '1', 'fa fa-shopping-cart', '000042000001', '物料管理','402880eb5f620487015f620b2f580000', NULL, '/material/index');
+drop table if exists tbl_dic_mat
+create table tbl_dic_mat(
+ id varchar(36) NOT NULL,
+  create_date_time datetime DEFAULT NULL,
+  deleted int(11) DEFAULT NULL,
+  update_date_time datetime DEFAULT NULL,
+  version int(11) DEFAULT NULL,
+  code varchar(50) DEFAULT NULL,
+  levelCode varchar(36) DEFAULT NULL,
+  name varchar(50) DEFAULT NULL,
+  parent_id varchar(255) DEFAULT NULL,
+  remark longtext,
+  PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
