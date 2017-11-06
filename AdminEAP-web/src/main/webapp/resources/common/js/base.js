@@ -112,13 +112,13 @@ function ajaxPost(url, params, callback) {
     var headers = {};
     headers['CSRFToken'] = jQuery("#csrftoken").val();
 
-    console.log("before remove empty prop:");
-    console.log(params);
+    //console.log("before remove empty prop:");
+    //console.log(params);
     if (params && typeof params == "object") {
         params = deleteEmptyProp(params);
     }
-    console.log("after remove empty prop:");
-    console.log(params);
+    //console.log("after remove empty prop:");
+    //console.log(params);
 
     jQuery.ajax({
         type: 'post',

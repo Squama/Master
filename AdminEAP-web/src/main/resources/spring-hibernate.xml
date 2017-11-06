@@ -134,7 +134,7 @@ http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
 	</tx:advice>
 	<!-- 一般只对service层添加事务即可 -->
 	<aop:config expose-proxy="true">
-		<aop:pointcut id="transactionPointcut" expression="execution(* com.cnpc..*Service.*(..))" />
+		<aop:pointcut id="transactionPointcut" expression="(execution(* com.cnpc..*Service.*(..))) or (execution(* com.radish..*Service.*(..)))" />
 		<aop:advisor pointcut-ref="transactionPointcut"
 					 advice-ref="transactionAdvice" />
 	</aop:config>

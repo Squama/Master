@@ -14,9 +14,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.cnpc.framework.base.entity.User;
+import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.base.service.impl.BaseServiceImpl;
 import com.cnpc.framework.utils.PropertiesUtil;
-import com.radish.master.project.controller.ProjectController;
+import com.cnpc.framework.utils.StrUtil;
 import com.radish.master.service.ProjectService;
 import com.radish.master.system.FileHelper;
 
@@ -86,6 +88,18 @@ public class ProjectServiceImpl extends BaseServiceImpl implements ProjectServic
         }
         
         return new byte[0];
+    }
+
+    @Override
+    public Result getManagerName(String id) {
+        String name=this.redisDao.get("manager:"+id);
+        if(StrUtil.isEmpty(name)) {
+            User user=this.get(User.class,id);
+            redisDao.save("org:"+id,user.getName());
+            return new Result(true,user.getName(),"获取成功");
+        }else{
+            return new Result(true,name,"获取成功");
+        }
     }
 
     

@@ -7,6 +7,7 @@ import java.io.File;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.base.service.BaseService;
 
 /**
@@ -47,6 +48,8 @@ public interface ProjectService extends BaseService{
      * @return
      */
     public byte[] getImage(String path, String name);
+    
+    public Result getManagerName(String id);
     
     
 }

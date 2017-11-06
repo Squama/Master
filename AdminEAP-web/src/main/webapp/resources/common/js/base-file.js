@@ -56,6 +56,7 @@
         //通用文件上传界面
         url: basePath + "/file/uploader",
         getFileResultUrl: basePath+"/file/getFiles",
+        downloadFileUrl: basePath+"/file/download/",
         //默认支持多文件上传
         multiple: true,
         //默认弹出附件上传窗口
@@ -129,7 +130,7 @@
 
     //调用成功后执行显示附件
     BaseFile.prototype.showFiles=function(options){
-    	console.log(options);
+    	//console.log(options);
         options=options||{};
         if(!this.hasDisplayZone()){
             modals.error("请配置showContainer属性，并在容器下配置type=file的input组件");
@@ -150,7 +151,7 @@
             initialPreviewConfig:previewConfig,
             previewFileIconSettings:this.previewFileIconSettings
         };
-        console.log(defaultConfig);
+        //console.log(defaultConfig);
         var config;
         if(this.options.showType=="detail"){
             config=$.extend({},self.options.fileinput,defaultConfig,{
@@ -222,10 +223,11 @@
         if(!fileobj)
             fileobj=$(this.options.showContainer);
         var objs=$(fileobj).data('fileinput').$preview.find(".kv-preview-thumb .kv-file-down");
+        var url = this.options.downloadFileUrl;
         objs.unbind("click");
         objs.on("click",function(){
-           //点击下载
-            window.location.href=basePath+"/file/download/"+$(this).data("key");
+            //点击下载
+            window.location.href= url + $(this).data("key");
         });
     }
     /**

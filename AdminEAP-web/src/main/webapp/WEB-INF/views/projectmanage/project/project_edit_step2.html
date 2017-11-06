@@ -19,12 +19,12 @@
 <section class="content-header">
     <h1>
         <span>项目管理</span>
-        <small>新增</small>
+        <small>编辑</small>
     </h1>
     <ol class="breadcrumb">
         <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
         <li><a href="#">项目管理</a></li>
-        <li class="active">新增项目</li>
+        <li class="active">编辑项目</li>
     </ol>
 </section>
 
@@ -39,13 +39,13 @@
                         <div class="step stepdone">
                             <span class="tip">1</span>
                         </div>
-                        <div class="stepinfo">添加项目基本信息</div>
+                        <div class="stepinfo">编辑项目基本信息</div>
                     </div>
                     <div>
                         <div class="step">
                             <span class="tip">2</span>
                         </div>
-                        <div class="stepinfo undoneinfo">上传项目文件（可选）</div>
+                        <div class="stepinfo undoneinfo">管理项目文件（可选）</div>
                     </div>
                     <div>
                         <div class="step stepundone">
@@ -60,10 +60,10 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">安全文明文件<span style="color:red">*</span></label>
                                 <div class="col-sm-6">
-                                    <input type="hidden" name="saftyfilefield" id="saftyfilefield">
+                                    <input type="hidden" name="saftyFile" id="saftyFile">
                                     <div class="form-group">
                                         <div class="btn btn-default btn-file" id="saftyfileupload">
-                                            <i class="fa fa-paperclip"></i> 上传安全文明文件(最大. 100MB)
+                                            <i class="fa fa-paperclip"></i> 管理安全文明文件(最大. 100MB)
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -74,10 +74,10 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">施工合同<span style="color:red">*</span></label>
                                 <div class="col-sm-6">
-                                    <input type="hidden" name="constructionfilefield" id="constructionfilefield">
+                                    <input type="hidden" name="constructionFile" id="constructionFile">
                                     <div class="form-group">
                                         <div class="btn btn-default btn-file" id="constructionfileupload">
-                                            <i class="fa fa-paperclip"></i> 上传施工合同(最大. 100MB)
+                                            <i class="fa fa-paperclip"></i> 管理施工合同(最大. 100MB)
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -88,10 +88,10 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">招标文件<span style="color:red">*</span></label>
                                 <div class="col-sm-6">
-                                    <input type="hidden" name="bidsfilefield" id="bidsfilefield">
+                                    <input type="hidden" name="bidsFile" id="bidsFile">
                                     <div class="form-group">
                                         <div class="btn btn-default btn-file" id="bidsfileupload">
-                                            <i class="fa fa-paperclip"></i> 上传招标文件(最大. 100MB)
+                                            <i class="fa fa-paperclip"></i> 管理招标文件(最大. 100MB)
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -102,10 +102,10 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">中标文件<span style="color:red">*</span></label>
                                 <div class="col-sm-6">
-                                    <input type="hidden" name="bidswinfilefield" id="bidswinfilefield">
+                                    <input type="hidden" name="bidswinFile" id="bidswinFile">
                                     <div class="form-group">
                                         <div class="btn btn-default btn-file" id="bidswinfileupload">
-                                            <i class="fa fa-paperclip"></i> 上传中标文件(最大. 100MB)
+                                            <i class="fa fa-paperclip"></i> 管理中标文件(最大. 100MB)
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -116,10 +116,10 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">中标通知文件<span style="color:red">*</span></label>
                                 <div class="col-sm-6">
-                                    <input type="hidden" name="bidswinnoticefilefield" id="bidswinnoticefilefield">
+                                    <input type="hidden" name="bidswinnoticeFile" id="bidswinnoticeFile">
                                     <div class="form-group">
                                         <div class="btn btn-default btn-file" id="bidswinnoticefileupload">
-                                            <i class="fa fa-paperclip"></i> 上传中标通知文件(最大. 100MB)
+                                            <i class="fa fa-paperclip"></i> 管理中标通知文件(最大. 100MB)
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -130,10 +130,10 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">工程质量文件<span style="color:red">*</span></label>
                                 <div class="col-sm-6">
-                                    <input type="hidden" name="qualityfilefield" id="qualityfilefield">
+                                    <input type="hidden" name="qualityFile" id="qualityFile">
                                     <div class="form-group">
                                         <div class="btn btn-default btn-file" id="qualityfileupload">
-                                            <i class="fa fa-paperclip"></i> 上传工程质量文件(最大. 100MB)
+                                            <i class="fa fa-paperclip"></i> 管理工程质量文件(最大. 100MB)
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -144,10 +144,10 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">预算成本分析表<span style="color:red">*</span></label>
                                 <div class="col-sm-6">
-                                    <input type="hidden" name="costfilefield" id="costfilefield">
+                                    <input type="hidden" name="costFile" id="costFile">
                                     <div class="form-group">
                                         <div class="btn btn-default btn-file" id="costfileupload">
-                                            <i class="fa fa-paperclip"></i> 上传预算成本分析表(最大. 100MB)
+                                            <i class="fa fa-paperclip"></i> 管理预算成本分析表(最大. 100MB)
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -158,10 +158,10 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">工程进度文件<span style="color:red">*</span></label>
                                 <div class="col-sm-6">
-                                    <input type="hidden" name="schedulefilefield" id="schedulefilefield">
+                                    <input type="hidden" name="scheduleFile" id="scheduleFile">
                                     <div class="form-group">
                                         <div class="btn btn-default btn-file" id="schedulefileupload">
-                                            <i class="fa fa-paperclip"></i> 上传工程进度文件(最大. 100MB)
+                                            <i class="fa fa-paperclip"></i> 管理工程进度文件(最大. 100MB)
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -208,6 +208,12 @@
         });
         //初始化控件
         labform.initComponent();
+        //编辑回填
+        if(id!="0"){
+            ajaxPost(basePath+"/project/getStep2",{id:id},function(data){
+                labform.initFormData(data);
+            })
+        } 
     });
     
     var fileinputDefaults = {
@@ -237,13 +243,7 @@
           downloadFileUrl: basePath+"/project/download/",
           fileinput: fileinputDefaults,
           showType:'detail',
-          window:true,
-          callback:function(fileIds,oldfileIds){
-              this.showFiles({
-                  fileIds:fileIds,
-                  type:'preview'
-              });
-          }
+          window:true
     }
     
     $("#saftyfileupload").file($.extend({}, defaults, {
@@ -252,7 +252,7 @@
             uploadExtraData: {"id":id,"fileField":"saftyFile"}
         }),
         showContainer:'#saftyfileattachment',
-        fileIdContainer:"[name='saftyfilefield']"
+        fileIdContainer:"[name='saftyFile']"
     }));
 
     $("#constructionfileupload").file($.extend({}, defaults, {
@@ -261,7 +261,7 @@
             uploadExtraData: {"id":id,"fileField":"constructionFile"}
         }),
         showContainer:'#constructionfileattachment',
-        fileIdContainer:"[name='constructionfilefield']"
+        fileIdContainer:"[name='constructionFile']"
     }));
 
     $("#bidsfileupload").file($.extend({}, defaults, {
@@ -270,7 +270,7 @@
             uploadExtraData: {"id":id,"fileField":"bidsFile"}
         }),
         showContainer:'#bidsfileattachment',
-        fileIdContainer:"[name='bidsfilefield']"
+        fileIdContainer:"[name='bidsFile']"
     }));
 
     $("#bidswinfileupload").file($.extend({}, defaults, {
@@ -279,7 +279,7 @@
             uploadExtraData: {"id":id,"fileField":"bidsWinFile"}
         }),
         showContainer:'#bidswinfileattachment',
-        fileIdContainer:"[name='bidswinfilefield']"
+        fileIdContainer:"[name='bidswinFile']"
     }));
 
     $("#bidswinnoticefileupload").file($.extend({}, defaults, {
@@ -288,7 +288,7 @@
             uploadExtraData: {"id":id,"fileField":"bidsWinNoticeFile"}
         }),
         showContainer:'#bidswinnoticefileattachment',
-        fileIdContainer:"[name='bidswinnoticefilefield']"
+        fileIdContainer:"[name='bidswinnoticeFile']"
     }));
 
     $("#qualityfileupload").file($.extend({}, defaults, {
@@ -297,7 +297,7 @@
             uploadExtraData: {"id":id,"fileField":"qualityFile"}
         }),
         showContainer:'#qualityfileattachment',
-        fileIdContainer:"[name='qualityfilefield']"
+        fileIdContainer:"[name='qualityFile']"
     }));
     
     $("#costfileupload").file($.extend({}, defaults, {
@@ -306,7 +306,7 @@
             uploadExtraData: {"id":id,"fileField":"costFile"}
         }),
         showContainer:'#costfileattachment',
-        fileIdContainer:"[name='costfilefield']"
+        fileIdContainer:"[name='costFile']"
     }));
 
 
@@ -316,7 +316,7 @@
             uploadExtraData: {"id":id,"fileField":"scheduleFile"}
         }),
         showContainer:'#schedulefileattachment',
-        fileIdContainer:"[name='schedulefilefield']"
+        fileIdContainer:"[name='scheduleFile']"
     }));
 
 </script>

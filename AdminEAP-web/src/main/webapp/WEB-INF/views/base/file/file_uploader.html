@@ -59,16 +59,21 @@
         //以上注释方法封装到BaseFile中
         var preview=[];
         var previewConfig=[];
+        console.log(fileObj.options.fileIds);
         if(fileObj.options.fileIds){
-            $("#sysfileIds").val(fileObj.options.fileIds);
-            var result=fileObj.getFileResult(fileObj.options.fileIds);
-            //ajaxPost(basePath+"/file/getFiles",{fileIds:fileObj.options.fileIds},function(result){
-            	console.log(result);
+        	var fileIds = fileObj.options.fileIds;
+        	if(fileObj.options.batchFlag){
+        		ajaxPost(basePath+"/project/getFieldIds",{batchId:fileIds},function(result){
+        			fileIds = result.data;
+                });
+        	}
+       		$("#sysfileIds").val(fileIds);
+            var result=fileObj.getFileResult(fileIds);
             preview=result.initialPreview;
             previewConfig=result.initialPreviewConfig;
-            //});
+            console.log(result);
         }
-
+        
         //alert(initFileObj.options.title);
         //参数明细配置 参照api http://plugins.krajee.com/file-input#ajax-uploads
         $("#filecontainer").fileinput($.extend({
@@ -77,6 +82,7 @@
             previewFileIconSettings:fileObj.previewFileIconSettings
         },fileObj.getFileInputConfig())).on("fileuploaded",function (event,data,previewId,index) {
             addFileId(data.response.fileIds);
+            console.log(data);
             //绑定下载按钮事件
             fileObj.downloadHandler(this);
         }).on("filebatchuploadsuccess",function (event,data,previewId,index) {
