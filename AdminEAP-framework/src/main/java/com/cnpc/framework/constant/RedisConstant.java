@@ -44,6 +44,10 @@ public class RedisConstant {
      */
     public static final String ORG_PRE="org:";
     /**
+     * 物料分类缓存前缀
+     */
+    public static final String MAT_PRE="mat:";
+    /**
      * 消息缓存前缀
      */
     public static final String MESSAGE_PRE = "message:";
