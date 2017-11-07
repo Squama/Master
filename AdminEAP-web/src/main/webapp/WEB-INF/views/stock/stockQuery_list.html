@@ -1,4 +1,4 @@
-<!-- 以下代码为代码生成器生成，生成时间: 2017-10-17 13:45:37，作者：billjiang/475572229@qq.com-->
+
 <section class="content-header">
     <h1>
         库存查询
@@ -166,6 +166,7 @@
             var action = $(this).data("btn-type");
             var rowId = employeeQueryTable.getSelectedRowId();
             switch (action) {
+                <!--
                 case "detail":
                 	if(!rowId){
                         modals.info('请选择要查看的行');
@@ -181,7 +182,7 @@
                     	detailForm.initFormData(data);
                     });
                     break;
-
+                -->
                 case "add":
                     modals.openWin({
                         winId:winId,
@@ -192,16 +193,7 @@
                     break;
             }
         });
-        
-        $("#employee_table").on("dblclick", "tr", function(){
-        	var detailForm=$("#user-form").form();
-            detailForm.clearForm();
-            setTitle("查看用户【"+employeeQueryTable.getSelectedRowData().name+"】")
-            $("#nav-tab-detail").click();
-            ajaxPost(basePath+"/employeeQuery/get/"+employeeQueryTable.getSelectedRowData().id,null,function(data){
-                detailForm.initFormData(data);
-            });
-		});
+
     });
     
     function setTitle(title){
