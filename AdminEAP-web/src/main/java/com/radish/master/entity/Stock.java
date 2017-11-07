@@ -10,7 +10,7 @@ import javax.persistence.Table;
 import java.util.Date;
 
 @Entity
-@Table(name = "tbl_budget")
+@Table(name = "tbl_stock")
 public class Stock extends BaseEntity {
 
     private static final long serialVersionUID = -52018669648128138L;
