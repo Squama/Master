@@ -1,8 +1,8 @@
-package com.cnpc.framework.util;
+package com.cnpc.framework.utils;
 
 import com.cnpc.framework.base.entity.User;
 import com.cnpc.framework.base.service.UserService;
-import com.cnpc.framework.utils.SpringContextUtil;
+
 import org.apache.shiro.SecurityUtils;
 
 import javax.annotation.Resource;

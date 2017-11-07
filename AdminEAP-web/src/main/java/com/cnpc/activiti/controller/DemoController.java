@@ -2,7 +2,8 @@ package com.cnpc.activiti.controller;
 
 import com.cnpc.framework.activiti.service.RuntimePageService;
 import com.cnpc.framework.base.pojo.Result;
-import com.cnpc.framework.util.SecurityUtil;
+import com.cnpc.framework.utils.SecurityUtil;
+
 import org.activiti.engine.RuntimeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
