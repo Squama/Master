@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<queryContext xmlns="http://www.example.org/query" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.example.org/query query.xsd">
+<!--本xml片段为代码生成器生成，时间：2017-10-17 11:38:08-->
+	<query id="stock_list" key="id" tableName="库存信息列表" className="com.radish.master.entity.Stock" widthType="px">
+	        <column key="id" header="编号" classType="String" allowSort="true" width="150"/>
+	        <column key="budget_id" header="预算ID" classType="String" allowSort="true" width="150" />
+	        <column key="project_id" header="所属项目ID" classType="String" width="150"/>
+	        <column key="mat_id" header="物料ID" classType="String" width="150" />
+	        <column key="stock_num" header="本次库存" classType="java.lang.Integer" width="150"/>
+	        <column key="storage_person_id" header="入库人员ID" classType="String" width="150"/>
+	        <column key="storage_time" header="入库时间" classType="java.util.Date" operator="between" width="150" dateFormat="yyyy-mm-dd"/>
+	        <column key="usetype" header="操作类型" classType="String" width="150"/>
+	</query>
+</queryContext>

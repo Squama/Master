@@ -1,0 +1,234 @@
+<div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal" aria-hidden="true"><li class="fa fa-remove"></li></button>
+	<h5 class="modal-title">物料入库</h5>
+</div>
+
+<div class="modal-body">
+
+	<form id="stock-form" name="stock-form" class="form-horizontal">
+		<input type="hidden" name="id">
+		<!-- <input type='hidden' value='${CSRFToken}' id='csrftoken'> -->
+		<div class="box-body">
+			<div class="col-md-6">
+
+				<div class="form-group">
+					<label for="budget_ID" class="col-sm-3 control-label">预算编号</label>
+					<div class="col-sm-8">
+						<input type="text" class="form-control" id="budget_ID" name="budget_ID" placeholder="预算编号">
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="mat_name" class="col-sm-3 control-label">物料名称</label>
+					<div class="col-sm-8">
+						<input type="text" class="form-control" id="mat_name" name="mat_name" placeholder="物料名称">
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="sock_Num" class="col-sm-3 control-label">入库数量</label>
+					<div class="col-sm-8">
+						<input type="text" class="form-control" id="sock_Num" name="sock_Num" placeholder="入库数量">
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="unit" class="col-sm-3 control-label">单位</label>
+					<div class="col-sm-8">
+						<input type="text" class="form-control" id="unit" name="unit" placeholder="单位">
+					</div>
+				</div>
+			</div>
+
+
+			<div class="col-md-6">
+				<div class="form-group">
+					<label for="project_ID" class="col-sm-3 control-label">项目编号</label>
+					<div class="col-sm-8">
+						<input type="text" class="form-control" id="project_ID" name="project_ID" placeholder="项目编号">
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="mat_ID" class="col-sm-3 control-label">物料编号</label>
+					<div class="col-sm-8">
+						<input type="text" class="form-control" id="mat_ID" name="mat_ID" placeholder="物料编号">
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="mat_standard" class="col-sm-3 control-label">物料规格</label>
+					<div class="col-sm-8">
+						<input type="text" class="form-control" id="mat_standard" name="mat_standard" placeholder="物料规格">
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- /.box-body -->
+		<div class="box-footer text-right">
+			<!--以下两种方式提交验证,根据所需选择-->
+			<button type="button" class="btn btn-default" data-btn-type="cancel" data-dismiss="modal">取消</button>
+			<button type="submit" class="btn btn-primary" data-btn-type="save">提交</button>
+		</div>
+		<!-- /.box-footer -->
+	</form>
+
+</div>
+<script>
+    //tableId,queryId,conditionContainer
+    var form =null;
+
+    $(function() {
+        //初始化控件
+        form=$("#stock-form").form();
+        //数据校验
+        $("#stock-form").bootstrapValidator({
+            message : '请输入有效值',
+            feedbackIcons : {
+                valid : 'glyphicon glyphicon-ok',
+                invalid : 'glyphicon glyphicon-remove',
+                validating : 'glyphicon glyphicon-refresh'
+            },
+            submitHandler : function() {
+                modals.confirm('确认保存？', function() {
+                    //Save Data，对应'submit-提交'
+                    var params = form.getFormSimpleData();
+                    console.log(params);
+                    ajaxPost(basePath+'/stock/save', params, function(data) {
+                        if(data.success){
+                            modals.hideWin(winId);
+                            stockTable.reloadData();
+                            modals.info("数据保存成功");
+                        }
+                    });
+                });
+            },
+            fields : {
+                mat_name : {
+                    validators : {
+                        notEmpty : {
+                            message : '请输入物料名称'
+                        }
+                    }
+                },
+                mat_standard : {
+                    validators : {
+                        notEmpty : {
+                            message : '请选择物料规格'
+                        }
+                    }
+                },
+                unit : {
+                    validators : {
+                        notEmpty : {
+                            message : '请输入单位'
+                        },
+
+                    }
+                },
+                isValid : {
+                    validators : {
+                        notEmpty : {
+                            message : '请选择状态'
+                        }
+                    }
+                }
+            }
+        });
+        form.initComponent();
+
+        //设置ss1下拉框
+        setSS1();
+    });
+
+
+    function resetForm(){
+        form.clearForm();
+        $("#material-form").data('bootstrapValidator').resetForm();
+    }
+
+    function setSS1(){
+        ajaxPost(basePath+"/material/getFl?p_id=1029",null,function(data){
+            if(data.data){
+                var list = data.data;
+                var option;
+                for(var i=0;i<list.length;i++){
+
+                    option += "<option value='"+list[i].id+"'>"
+                        + list[i].name
+                        + "</option>";
+                }
+                $("#ss1").append(option);
+                changeSS2();
+            }
+        })
+    }
+    function changeSS2(){
+        $("#ss2").empty();
+        var p_id = $("#ss1").val();
+        ajaxPost(basePath+"/material/getFl?p_id="+p_id,null,function(data){
+            if(data.data){
+                var list = data.data;
+                var option;
+                if(list.length>0){
+                    $("#div2").css("display","")
+                }else{
+                    $("#div2").css("display","none")
+                }
+                for(var i=0;i<list.length;i++){
+
+                    option += "<option value='"+list[i].id+"'>"
+                        + list[i].name
+                        + "</option>";
+                }
+                $("#ss2").append(option);
+                changeSS3();
+            }
+        })
+    }
+    function changeSS3(){
+        $("#ss3").empty();
+        var p_id = $("#ss2").val();
+        ajaxPost(basePath+"/material/getFl?p_id="+p_id,null,function(data){
+            if(data.data){
+                var list = data.data;
+                var option;
+                if(list.length>0){
+                    $("#div3").css("display","")
+                }else{
+                    $("#div3").css("display","none")
+                }
+                for(var i=0;i<list.length;i++){
+
+                    option += "<option value='"+list[i].id+"'>"
+                        + list[i].name
+                        + "</option>";
+                }
+                $("#ss3").append(option);
+                changeSS4();
+            }
+        })
+    }
+    function changeSS4(){
+        $("#ss4").empty();
+        var p_id = $("#ss3").val();
+        ajaxPost(basePath+"/material/getFl?p_id="+p_id,null,function(data){
+            if(data.data){
+                var list = data.data;
+                var option;
+                if(list.length>0){
+                    $("#div4").css("display","")
+                }else{
+                    $("#div4").css("display","none")
+                }
+                for(var i=0;i<list.length;i++){
+
+                    option += "<option value='"+list[i].id+"'>"
+                        + list[i].name
+                        + "</option>";
+                }
+                $("#ss4").append(option);
+
+            }
+        })
+    }
+
+</script>
