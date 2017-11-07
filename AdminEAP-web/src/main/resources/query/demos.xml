@@ -2,7 +2,7 @@
 <queryContext xmlns="http://www.example.org/query" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:schemaLocation="http://www.example.org/query query.xsd">
     <!--本xml片段为代码生成器生成，时间：2017-02-10 11:44:41-->
-    <query id="generator" key="id" tableName="测试列表" className="com.cnpc.demos.entity.Generator" widthType="px">
+    <query id="generator" key="id" tableName="测试列表" className="com.cnpc.framework.base.entity.Generator" widthType="px">
         <column key="rowIndex" header="序号" width="80"/>
         <column key="name" header="姓名" width="150" operator="like" allowSort="true"/>
         <column key="code" header="编码" width="150"/>

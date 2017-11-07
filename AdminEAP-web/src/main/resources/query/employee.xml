@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <queryContext xmlns="http://www.example.org/query" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.example.org/query query.xsd">
 <!--本xml片段为代码生成器生成，时间：2017-10-17 11:38:08-->
-	<query id="employee" key="id" tableName="员工信息查询列表" className="com.radish.master.usu.entity.Employee" widthType="px">
-	        <column key="rowIndex" header="序号" width="80"/>
-	        <column key="id" header="编号" classType="String" allowSort="true" width="150"/>
-	        <column key="name" header="姓名" classType="String" allowSort="true" width="150" operator="like"/>
-	        <column key="sex" header="性别" classType="String" width="150"/>
-	        <column key="birthday" header="出生日期" classType="java.util.Date" operator="between" width="150" dateFormat="yyyy-mm-dd"/>
-	        <column key="nation" header="民族" classType="String" width="150"/>
-	        <column key="nativeplace" header="籍贯" classType="String" width="150"/>
-	        <column key="political" header="政治面貌" classType="String" width="150"/>
-	        <column key="marriage" header="婚姻状况" classType="String" width="150"/>
-	        <column key="birthplace" header="出生地" classType="String" width="150"/>
-	</query>
+    <query id="employee" key="id" tableName="员工信息查询列表" className="com.radish.master.entity.Employee" widthType="px">
+            <column key="rowIndex" header="序号" width="80"/>
+            <column key="id" header="编号" classType="String" allowSort="true" width="150"/>
+            <column key="name" header="姓名" classType="String" allowSort="true" width="150" operator="like"/>
+            <column key="sex" header="性别" classType="String" width="150"/>
+            <column key="birthday" header="出生日期" classType="java.util.Date" operator="between" width="150" dateFormat="yyyy-mm-dd"/>
+            <column key="nation" header="民族" classType="String" width="150"/>
+            <column key="nativeplace" header="籍贯" classType="String" width="150"/>
+            <column key="political" header="政治面貌" classType="String" width="150"/>
+            <column key="marriage" header="婚姻状况" classType="String" width="150"/>
+            <column key="birthplace" header="出生地" classType="String" width="150"/>
+    </query>
 
     
     <!-- 员工信息查询 -->
