@@ -24,7 +24,7 @@ import com.cnpc.framework.base.entity.BaseEntity;
  *
  */
 @Entity
-@Table(name = "Purchase_history")
+@Table(name = "tbl_purchase_history")
 public class Purchase_history  extends BaseEntity{
 
 
@@ -32,8 +32,8 @@ public class Purchase_history  extends BaseEntity{
 
 
   @Header(name = "物料编号")
-  @Column(name = "mat_number")
-  private String mat_number;
+  @Column(name = "mat_ID")
+  private String mat_ID;
 
   @Header(name = "物料名称")
   @Column(name = "mat_name")
@@ -52,8 +52,8 @@ public class Purchase_history  extends BaseEntity{
   private String purchase_name;
 
   @Header(name = "采购人员ID")
-  @Column(name = "purchase_name_id")
-  private String purchase_name_id;
+  @Column(name = "purchase_name_ID")
+  private String purchase_name_ID;
 
   @Header(name = "采购时间")
   @Column(name = "purchase_time")
@@ -64,8 +64,8 @@ public class Purchase_history  extends BaseEntity{
   private String project_name;
 
   @Header(name = "所属项目ID")
-  @Column(name = "project_id")
-  private String project_id;
+  @Column(name = "project_ID")
+  private String project_ID;
 
   @Header(name = "预留字段1")
   @Column(name = "reserve1")
@@ -81,12 +81,12 @@ public class Purchase_history  extends BaseEntity{
 
 
 
-  public String getMat_number() {
-    return mat_number;
+  public String getMat_ID() {
+    return mat_ID;
   }
 
-  public void setMat_number(String mat_number) {
-    this.mat_number = mat_number;
+  public void setMat_number(String mat_ID) {
+    this.mat_ID = mat_ID;
   }
 
   public String getMat_name() {
@@ -121,12 +121,12 @@ public class Purchase_history  extends BaseEntity{
     this.purchase_name = purchase_name;
   }
 
-  public String getPurchase_name_id() {
-    return purchase_name_id;
+  public String getPurchase_name_ID() {
+    return purchase_name_ID;
   }
 
-  public void setPurchase_name_id(String purchase_name_id) {
-    this.purchase_name_id = purchase_name_id;
+  public void setPurchase_name_ID(String purchase_name_ID) {
+    this.purchase_name_ID = purchase_name_ID;
   }
 
   public java.sql.Date getPurchase_time() {
@@ -145,12 +145,12 @@ public class Purchase_history  extends BaseEntity{
     this.project_name = project_name;
   }
 
-  public String getProject_id() {
-    return project_id;
+  public String getProject_ID() {
+    return project_ID;
   }
 
-  public void setProject_id(String project_id) {
-    this.project_id = project_id;
+  public void setProject_id(String project_ID) {
+    this.project_ID = project_ID;
   }
 
   public String getReserve1() {

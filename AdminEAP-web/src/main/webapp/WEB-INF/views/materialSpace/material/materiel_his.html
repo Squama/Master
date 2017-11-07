@@ -62,12 +62,15 @@
         </div>
         <!-- /.box-footer -->
     </form>
+    		<div style = "text-align:center;border:#ccc 1px solid;">
+
     <div class="dataTables_filter" id="searchDiv1" style="display: none">
-    <input type="search"  name="mat_ID" class="form-control" id="mat_ID" operator="eq" likeOption="true" style="display: none">
+    <input type="search"  name="mat_ID" class="form-control" id="mat_ID" operator="eq"  style="display: none">
     </div>
-	<div class="box-body">
+	<div class="box-body" >
         <table id="materiel_his" class="table table-bordered table-striped table-hover">
         </table>
+    </div>
     </div>
 </div>
 <script>
@@ -88,8 +91,8 @@
         	var ssflText;
         	var parent_id="";
         	var formdata;
-            ajaxPost(basePath+"/material/get",{id:id},function(data){
-              formdata = data.data;
+            ajaxPost(basePath+"/material/get",{id:id},function(result){
+              formdata = result.data;
               form.initFormData(formdata); 
             });
             parent_id =formdata.parent_ID;

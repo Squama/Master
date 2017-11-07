@@ -16,13 +16,14 @@
 	<!-- 物料历史采购表-->
 	<query id="materiel_his_list" key="id" tableName="历史采购列表" className="com.radish.master.entity.Purchase_history"
 		   pageSize="10"  widthType="px" order="id asc">
-		<column key="mat_ID" header="所属物料内码" width="50" allowSort="false" hidden="true"/>
-		<column key="project_ID" header="所属项目ID" width="50" allowSort="false" hidden="true"/>
-		<column key="purchase_name_ID" header="采购人员ID" width="50" allowSort="false" hidden="true"/>
+		<column key="mat_ID" header="所属物料内码" width="50"  hidden="true"/>
+		<column key="project_ID" header="所属项目ID" width="50"  hidden="true"/>
+		<column key="purchase_name_ID" header="采购人员ID" width="50" hidden="true"/>
+		<column key="mat_name" header="物料名称" operator="like" width="100"/>
 		<column key="supplier" header="供应商" operator="like" width="100"/>
 		<column key="price" header="单价" operator="eq" width="100"/>
-		<column key="purchase_time" header="采购时间" classType="java.util.Date" operator="between" width="150" dateFormat="yyyy-mm-dd"/>
-		<column key="project_name" header="所属项目" operator="like" width="150" allowSort="true" />
+		<column key="purchase_time" header="采购时间" classType="java.util.Date" operator="between" width="150" dateFormat="yyyy-mm-dd" allowSort="true"/>
+		<column key="project_name" header="所属项目" operator="like" width="150"  />
 		<column key="purchase_name" header="采购人员" align="left" width="100"  operator="like"/>
 	</query>
 	
