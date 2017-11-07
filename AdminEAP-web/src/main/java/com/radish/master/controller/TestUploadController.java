@@ -1,7 +1,7 @@
 /**
  * 版权所有 (c) 2017，周庆博和他的朋友们有限公司  
  */
-package com.radish.master.usu.controller;
+package com.radish.master.controller;
 
 import com.cnpc.framework.base.entity.SysFile;
 import com.cnpc.framework.base.service.UploaderService;

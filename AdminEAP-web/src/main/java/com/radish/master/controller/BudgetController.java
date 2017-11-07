@@ -1,12 +1,13 @@
-package com.radish.master.budget.controller;
+package com.radish.master.controller;
 
 
 import com.cnpc.demos.service.ContractService;
 import com.cnpc.framework.annotation.RefreshCSRFToken;
 import com.cnpc.framework.annotation.VerifyCSRFToken;
 import com.cnpc.framework.base.pojo.Result;
-import com.radish.master.budget.entity.Tbl_budget;
-import com.radish.master.budget.service.BudgetService;
+import com.radish.master.entity.Tbl_budget;
+import com.radish.master.service.BudgetService;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;

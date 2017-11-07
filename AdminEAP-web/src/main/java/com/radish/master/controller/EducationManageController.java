@@ -1,7 +1,7 @@
 /**
  * 版权所有 (c) 2017，中金支付有限公司  
  */
-package com.radish.master.usu.controller;
+package com.radish.master.controller;
 
 import java.util.Date;
 import java.util.List;

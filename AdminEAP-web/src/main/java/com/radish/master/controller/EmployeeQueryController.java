@@ -1,14 +1,13 @@
-package com.radish.master.usu.controller;
+package com.radish.master.controller;
 
-import com.cnpc.framework.annotation.RefreshCSRFToken;
-import com.cnpc.framework.annotation.VerifyCSRFToken;
-import com.cnpc.framework.base.entity.User;
-import com.cnpc.framework.base.pojo.Result;
-import com.cnpc.framework.base.service.BaseService;
-import com.cnpc.framework.base.service.UserRoleService;
-import com.cnpc.framework.base.service.UserService;
+import java.util.Date;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
 import com.cnpc.framework.utils.EncryptUtil;
 import com.cnpc.framework.utils.StrUtil;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,18 +15,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
+import com.cnpc.framework.base.service.BaseService;
+import com.cnpc.framework.base.service.UserRoleService;
+import com.cnpc.framework.base.service.UserService;
+import com.cnpc.framework.annotation.RefreshCSRFToken;
+import com.cnpc.framework.annotation.VerifyCSRFToken;
+import com.cnpc.framework.base.entity.User;
+import com.cnpc.framework.base.pojo.Result;
 
 /**
 * 员工信息查询管理控制器
-* @author jrn
-* 2017-10-17 13:41:51由代码生成器自动生成
+* @author dongy
 */
 @Controller
-@RequestMapping("/projectQuery")
-public class ProjectQueryController {
+@RequestMapping("/employeeQuery")
+public class EmployeeQueryController {
 
     @Resource
     private BaseService baseService;
@@ -42,37 +44,42 @@ public class ProjectQueryController {
 
     @RequestMapping(value="/list",method = RequestMethod.GET)
     public String list(){
-        return "workmanage/project/projectQuery_list";
+        return "workmanage/employee/employeeQuery_list";
     }
     
     @RequestMapping(value="/deletelist",method = RequestMethod.GET)
     public String deleteList(HttpServletRequest request){
         request.setAttribute("auditStatus", 20);
-        return "workmanage/project/projectQuery_list";
+        return "workmanage/employee/employeeQuery_list";
     }
     
     @RequestMapping(value="/manage",method = RequestMethod.GET)
     public String manage(){
-        return "workmanage/project/project_manage";
+        return "workmanage/employee/employee_manage";
     }
     
     @RefreshCSRFToken
     @RequestMapping(value="/add",method = RequestMethod.GET)
     public String add(){
-        return "workmanage/project/project_add";
+        return "workmanage/employee/employee_add";
     }
 
     @RefreshCSRFToken
     @RequestMapping(value="/edit",method = RequestMethod.GET)
     public String edit(String id,HttpServletRequest request){
         request.setAttribute("id", id);
-        return "workmanage/project/project_edit";
+        return "workmanage/employee/employee_edit";
+    }
+    
+    @RequestMapping(value="/audit",method = RequestMethod.GET)
+    public String audit(){
+        return "workmanage/employee/employee_audit";
     }
 
     @RequestMapping(value="/detail",method = RequestMethod.GET)
     public String detail(String id,HttpServletRequest request){
         request.setAttribute("id", id);
-        return "project/projectQuery_detail";
+        return "employee/employeeQuery_detail";
     }
 
     @RequestMapping(value="/get/{id}",method = RequestMethod.POST)
@@ -95,6 +102,7 @@ public class ProjectQueryController {
         if (StrUtil.isEmpty(user.getId())) {
             //设置初始密码
             user.setPassword(EncryptUtil.getPassword(initPassword,user.getLoginName()));
+            user.setAuditStatus("30");
             String userId = userService.save(user).toString();
             userRoleService.setRoleForRegisterUser(userId);
             //头像和用户管理
@@ -114,14 +122,12 @@ public class ProjectQueryController {
     @RequestMapping(value="/delete/{id}",method = RequestMethod.POST)
     @ResponseBody
     public Result delete(@PathVariable("id") String id){
-        User project=this.get(id);
-        try{
-            baseService.delete(project);
-            return new Result();
-        }
-        catch(Exception e){
-            return new Result(false,"该数据已经被引用，不可删除");
-        }
+        
+        User employee=this.get(id);
+        employee.setAuditStatus("20");
+        employee.setUpdateDateTime(new Date());
+        userService.update(employee);
+        return new Result();
     }
 
 

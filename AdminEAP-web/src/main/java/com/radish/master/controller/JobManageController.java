@@ -1,7 +1,7 @@
 /**
- * 版权所有 (c) 2017，中金支付有限公司  
+ * 版权所有 (c) 2017
  */
-package com.radish.master.usu.controller;
+package com.radish.master.controller;
 
 import java.util.Date;
 import java.util.List;
@@ -33,8 +33,8 @@ import com.cnpc.framework.utils.StrUtil;
 * 
 */
 @Controller
-@RequestMapping("/nationmanage")
-public class NationManageController {
+@RequestMapping("/jobmanage")
+public class JobManageController {
 
     @Resource
     private DictService dictService;
@@ -45,7 +45,7 @@ public class NationManageController {
     @RequestMapping(method = RequestMethod.GET, value = "/tree")
     private String list() {
 
-        return "workmanage/nationmanage/nation_tree";
+        return "workmanage/jobmanage/job_tree";
     }
 
     @RequestMapping(value = "/all", method = RequestMethod.POST)
@@ -65,7 +65,7 @@ public class NationManageController {
     @ResponseBody
     public List<TreeNode> getTreeData() {
 
-        return dictService.getTreeDataByCode("NATION");
+        return dictService.getTreeDataByCode("JOBS");
     }
 
     @RequestMapping(value = "/get/{id}", method = RequestMethod.POST)

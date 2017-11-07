@@ -1,7 +1,7 @@
 /**
  * Copyright © 2017 周庆博和他的朋友们有限公司
  */
-package com.radish.master.project.controller;
+package com.radish.master.controller;
 
 import com.cnpc.framework.annotation.RefreshCSRFToken;
 import com.cnpc.framework.annotation.VerifyCSRFToken;

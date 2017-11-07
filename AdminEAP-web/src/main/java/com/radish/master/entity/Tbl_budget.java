@@ -1,4 +1,4 @@
-package com.radish.master.budget.entity;
+package com.radish.master.entity;
 
 import com.cnpc.framework.annotation.Header;
 import com.cnpc.framework.base.entity.BaseEntity;

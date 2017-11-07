@@ -1,7 +1,7 @@
 /**
  * 版权所有 (c) 2017，周庆博和他的朋友们有限公司
  */
-package com.radish.master.material.entity;
+package com.radish.master.entity;
 
 
 import javax.persistence.Column;

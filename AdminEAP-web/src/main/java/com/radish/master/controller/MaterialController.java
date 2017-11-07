@@ -1,4 +1,4 @@
-package com.radish.master.material.controller;
+package com.radish.master.controller;
 
 import com.cnpc.framework.annotation.RefreshCSRFToken;
 import com.cnpc.framework.annotation.VerifyCSRFToken;
@@ -6,7 +6,8 @@ import com.cnpc.framework.base.entity.Dict;
 import com.cnpc.framework.base.entity.Mat;
 import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.base.service.BaseService;
-import com.radish.master.material.entity.Materiel;
+import com.radish.master.entity.Materiel;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
