@@ -1,7 +1,6 @@
-package com.cnpc.demos.entity;
+package com.cnpc.framework.base.entity;
 
 import com.cnpc.framework.annotation.Header;
-import com.cnpc.framework.base.entity.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.Column;

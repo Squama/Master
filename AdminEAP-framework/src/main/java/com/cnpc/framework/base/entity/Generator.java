@@ -1,8 +1,6 @@
-package com.cnpc.demos.entity;
+package com.cnpc.framework.base.entity;
 
 import com.cnpc.framework.annotation.Header;
-import com.cnpc.framework.base.entity.BaseEntity;
-import com.cnpc.framework.base.entity.Dict;
 
 import javax.persistence.*;
 import java.util.Date;

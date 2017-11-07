@@ -1,7 +1,6 @@
-package com.cnpc.demos.service;
+package com.cnpc.framework.base.service;
 
-import com.cnpc.demos.entity.Contract;
-import com.cnpc.framework.base.service.BaseService;
+import com.cnpc.framework.base.entity.Contract;
 
 public interface ContractService extends BaseService {
 

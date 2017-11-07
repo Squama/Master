@@ -1,9 +1,9 @@
-package com.cnpc.demos.service.impl;
+package com.cnpc.framework.base.service.impl;
 
-import com.cnpc.demos.entity.Contract;
-import com.cnpc.demos.service.ContractService;
 import com.cnpc.framework.base.dao.BaseDao;
-import com.cnpc.framework.base.service.impl.BaseServiceImpl;
+import com.cnpc.framework.base.entity.Contract;
+import com.cnpc.framework.base.service.ContractService;
+
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

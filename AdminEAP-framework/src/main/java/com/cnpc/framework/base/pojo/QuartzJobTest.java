@@ -1,4 +1,4 @@
-package com.cnpc.demos.pojo;
+package com.cnpc.framework.base.pojo;
 
 import com.cnpc.framework.utils.DateUtil;
 import org.quartz.Job;

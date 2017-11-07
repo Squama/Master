@@ -1,4 +1,4 @@
-package com.cnpc.activiti.pojo;
+package com.cnpc.framework.activiti.pojo;
 
 /**
  * Created by billJiang on 2017/7/4.

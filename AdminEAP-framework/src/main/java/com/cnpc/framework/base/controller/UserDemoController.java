@@ -1,4 +1,4 @@
-package com.cnpc.demos.controller;
+package com.cnpc.framework.base.controller;
 
 import javax.annotation.Resource;
 
@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.cnpc.demos.service.UserDemoService;
 import com.cnpc.framework.base.entity.User;
+import com.cnpc.framework.base.service.UserDemoService;
 
 /**
  * 人员增删改demo

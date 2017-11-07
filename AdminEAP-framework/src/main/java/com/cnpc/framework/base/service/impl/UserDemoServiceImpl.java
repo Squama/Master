@@ -1,10 +1,9 @@
-package com.cnpc.demos.service.impl;
+package com.cnpc.framework.base.service.impl;
 
 import org.springframework.stereotype.Service;
 
-import com.cnpc.demos.service.UserDemoService;
 import com.cnpc.framework.base.entity.User;
-import com.cnpc.framework.base.service.impl.BaseServiceImpl;
+import com.cnpc.framework.base.service.UserDemoService;
 
 /**
  * Created by HANZO on 2016/6/17.

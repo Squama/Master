@@ -1,4 +1,4 @@
-package com.cnpc.demos.controller;
+package com.cnpc.framework.base.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

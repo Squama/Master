@@ -1,10 +1,10 @@
-package com.cnpc.demos.controller;
+package com.cnpc.framework.base.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.cnpc.demos.entity.Generator;
 import com.cnpc.framework.annotation.RefreshCSRFToken;
 import com.cnpc.framework.annotation.VerifyCSRFToken;
 import com.cnpc.framework.base.entity.Dict;
+import com.cnpc.framework.base.entity.Generator;
 import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.base.service.BaseService;
 import com.cnpc.framework.utils.StrUtil;

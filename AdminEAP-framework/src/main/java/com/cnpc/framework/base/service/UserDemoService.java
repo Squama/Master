@@ -1,7 +1,6 @@
-package com.cnpc.demos.service;
+package com.cnpc.framework.base.service;
 
 import com.cnpc.framework.base.entity.User;
-import com.cnpc.framework.base.service.BaseService;
 
 /**
  * Created by HANZO on 2016/6/17.
