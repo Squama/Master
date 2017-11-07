@@ -53,7 +53,7 @@ public class Materiel implements Serializable {
     
     @Header(name = "单位")
     @Column(name = "unit")
-    private Date unit;
+    private String unit;
 
     @Header(name = "有效标识")
     @Column(name = "isValid")
@@ -127,11 +127,11 @@ public class Materiel implements Serializable {
 		this.mat_standard = mat_standard;
 	}
 
-	public Date getUnit() {
+	public String getUnit() {
 		return unit;
 	}
 
-	public void setUnit(Date unit) {
+	public void setUnit(String unit) {
 		this.unit = unit;
 	}
 

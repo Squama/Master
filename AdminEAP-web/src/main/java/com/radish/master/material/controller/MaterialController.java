@@ -3,6 +3,7 @@ package com.radish.master.material.controller;
 import com.cnpc.framework.annotation.RefreshCSRFToken;
 import com.cnpc.framework.annotation.VerifyCSRFToken;
 import com.cnpc.framework.base.entity.Dict;
+import com.cnpc.framework.base.entity.Mat;
 import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.base.service.BaseService;
 import com.radish.master.material.entity.Materiel;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -53,13 +56,27 @@ public class MaterialController {
         request.setAttribute("doWhat",request.getParameter("doWhat"));
         return prefix+"materiel_edit";
     }
+    @RefreshCSRFToken
+    @RequestMapping(value="/detail_his",method = RequestMethod.GET)
+    public String detail_his(String id,HttpServletRequest request){
+        request.setAttribute("id", id);
+        return prefix+"materiel_his";
+    }
     
     @RequestMapping(value="/getFl",method = RequestMethod.POST)
     @ResponseBody
     public Result getFl(HttpServletRequest request){
+    	List<Mat> m = new ArrayList<Mat>();
     	String parent_id = request.getParameter("p_id");
-    	String sql = " select * from tbl_dict where parent_id='"+parent_id+"'";
-    	List<Dict> list= baseService.findBySql(sql, Dict.class);
+    	String sql ="";
+    	if(parent_id==null){
+    		m = baseService.findBySql("select * from tbl_dic_mat where parent_id is null", Mat.class);
+    		sql = " select * from tbl_dic_mat where parent_id='"+m.get(0).getId()+"'";
+    	}else{
+    		sql = " select * from tbl_dic_mat where parent_id='"+parent_id+"'";
+    	}
+    	 
+    	List<Mat> list= baseService.findBySql(sql, Mat.class);
     	
     	Result r = new Result();
     	r.setData(list);
@@ -117,13 +134,14 @@ public class MaterialController {
     @ResponseBody
     public Result getSsfl(String parent_id){
     	String ssfl = "";
-    	Dict d1 = baseService.get(Dict.class, parent_id);
+    	Mat d1 = baseService.get(Mat.class, parent_id);
     	ssfl = d1.getName();
     	parent_id = d1.getParentId();
       	while(true){
       		parent_id = d1.getParentId();
-      		if(!"1029".equals(parent_id)){
-      			d1=baseService.get(Dict.class, parent_id);
+      		System.out.println(parent_id);
+      		if(parent_id!=null){
+      			d1=baseService.get(Mat.class, parent_id);
       			parent_id= d1.getParentId();
       			ssfl = d1.getName()+"-"+ssfl;
       		}else{

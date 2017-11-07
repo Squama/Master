@@ -1,0 +1,108 @@
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><li class="fa fa-remove"></li></button>
+    <h5 class="modal-title">查看物料采购记录</h5>
+</div>
+
+<div class="modal-body">
+
+    <form id="material-form" name="material-form" class="form-horizontal">
+        <input type="hidden" name="id">
+        <!-- <input type='hidden' value='${CSRFToken}' id='csrftoken'> -->
+       <div class="box-body">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="mat_name" class="col-sm-3 control-label">物料名称</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="mat_name" name="mat_name" placeholder="物料名称">
+                    </div>
+                    
+                </div>
+                
+                <div class="form-group">
+                    <label for="unit" class="col-sm-3 control-label">单位</label>
+
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="unit" name="unit" placeholder="单位">
+                    </div>
+                </div>
+           
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">所属分类<span style="color:red">*</span></label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="ssfl" name="ssfl" disabled="disabled">
+                    </div>
+                    </div>
+            </div>
+            <div class="col-md-6">
+            	<div class="form-group">
+                    <label for="mat_standard" class="col-sm-3 control-label">物料规格</label>
+
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="mat_standard" name="mat_standard" placeholder="物料规格">
+                    </div>
+                </div>
+                <div class="form-group">
+					<label class="col-sm-3 control-label">是否启用</label>
+
+					<div class="col-sm-8">
+						<label class="control-label"> 
+						   <input type="radio" name="isValid" data-flag="icheck" class="square-green" value="1"> 是
+						</label> &nbsp; 
+						<label class="control-label"> 
+						   <input type="radio" name="isValid" data-flag="icheck" class="square-green" value="0"> 否
+						</label>
+					</div>
+				</div>
+        </div>
+        <!-- /.box-body -->
+        <div class="box-footer text-right">
+            <!--以下两种方式提交验证,根据所需选择-->
+<!--             <button type="button" class="btn btn-default" data-btn-type="cancel" data-dismiss="modal">取消</button>
+ -->           
+        </div>
+        <!-- /.box-footer -->
+    </form>
+    <div class="dataTables_filter" id="searchDiv1" style="display: none">
+    <input type="search"  name="mat_ID" class="form-control" id="mat_ID" operator="eq" likeOption="true" style="display: none">
+    </div>
+	<div class="box-body">
+        <table id="materiel_his" class="table table-bordered table-striped table-hover">
+        </table>
+    </div>
+</div>
+<script>
+    var form =null;
+    var id="${id?default(0)}";
+   	var materielHis = "projectQueryWin";
+    $(function() {
+        //初始化控件
+        form=$("#material-form").form();
+        form.initComponent();
+        $("#mat_ID").val(id);
+        //填充历史采购列表
+       materielHis = new CommonTable("materiel_his", "materiel_his_list", "searchDiv1", null);
+        
+        //回填id      
+        if(id!="0"){
+        	
+        	var ssflText;
+        	var parent_id="";
+        	var formdata;
+            ajaxPost(basePath+"/material/get",{id:id},function(data){
+              formdata = data.data;
+              form.initFormData(formdata); 
+            });
+            parent_id =formdata.parent_ID;
+            ajaxPost(basePath+"/material/getSsfl",{"parent_id":parent_id},function(result){
+                	
+           			console.log(result.message);
+               		ssflText=result.message;
+               		$("#ssfl").val(ssflText);
+             });
+            	$('input,select,radio',$('form[name="material-form"]')).attr('disabled',true);
+            	
+            
+        } 
+    });
+    
+</script>
