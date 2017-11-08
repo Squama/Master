@@ -1,0 +1,100 @@
+INSERT INTO `admin`.`tbl_function` 
+(`id`, `create_date_time`, `deleted`, `update_date_time`, `version`, `code`, `functype`, `icon`, `levelCode`, `name`, `parent_id`, `remark`, `url`) VALUES ('402880eb5f620487015f620b2f580000', '2017-10-28 16:13:41', '0', '2017-10-28 16:14:18', '1', 'MATERIELS', '0', 'fa fa-home', '000042', '物料系统',NULL, NULL, NULL);
+INSERT INTO `admin`.`tbl_function` 
+(`id`, `create_date_time`, `deleted`, `update_date_time`, `version`, `code`, `functype`, `icon`, `levelCode`, `name`, `parent_id`, `remark`, `url`) VALUES ('402880e95f7cbdb3015f7cc3233c0000', '2017-11-02 20:44:44', '0', '2017-11-02 20:44:44', '0', 'DIC_MAT', '1', 'fa fa-map-signs', '000042000002', '物料分类管理', '402880eb5f620487015f620b2f580000', NULL, '/m
+at/tree');
+INSERT INTO `admin`.`tbl_function` 
+(`id`, `create_date_time`, `deleted`, `update_date_time`, `version`, `code`, `functype`, `icon`, `levelCode`, `name`, `parent_id`, `remark`, `url`) VALUES ('402880eb5f620487015f620de22f0001', '2017-10-28 16:16:37', '0', '2017-10-28 16:16:37', '0', 'MATERIEL_MANAGE', '1', 'fa fa-shopping-cart', '000042000001', '物料管理','402880eb5f620487015f620b2f580000', NULL, '/material/index');
+
+drop table if exists tbl_materiel;
+create table tbl_materiel 
+(
+   ID               VARCHAR(64)                   not null comment '物料内码',
+   mat_number                 VARCHAR(20)                   null comment '物料编号',
+    mat_name               VARCHAR(20)                   null comment '物料名称',
+   mat_standard                 VARCHAR(64)                   null comment '物料规格',
+   unit                   VARCHAR(64)                   null comment '单位',
+   isValid                 VARCHAR(2)                    null comment '有效标识',
+   create_name          VARCHAR(64)                   null comment '创建人',
+   create_name_ID        VARCHAR(64)                   null comment '创建人ID',
+   create_time          DATE                           null comment '创建时间',
+   update_name          VARCHAR(64)                   null comment '更新人',
+   update_name_ID       VARCHAR(64)                   null comment '更新人ID',
+   update_time          DATE                           null comment '更新时间',
+   parent_ID		VARCHAR(64)			null comment '上级节点ID',
+ type			VARCHAR(64)			null comment '节点类型',
+ reserve1       VARCHAR(64)				 null comment '预留字段1',
+reserve2       VARCHAR(64)			 null comment '预留字段2',
+reserve3       VARCHAR(64)			 null comment '预留字段3',
+   constraint PK_TBL_MATERIEL primary key (ID)
+);
+
+drop table if exists tbl_channel;
+
+create table tbl_channel 
+(
+ 
+ID               VARCHAR(64)                   	not null comment '采购渠道编码',
+ 
+mat_ID        VARCHAR(60)          null comment '所属物料内码',
+   
+mat_name               VARCHAR(20)                   null comment '物料名称',
+isValid                 VARCHAR(2)                    null comment '有效标识',
+   
+supplier                VARCHAR(64)                    null comment '供应商',
+  
+ price                DOUBLE                         null comment '单价',		 create_name          VARCHAR(64)                   null comment '创建人',
+   
+create_name_ID        VARCHAR(64)                   null comment '创建人ID',
+   
+create_time          DATE                           null comment '创建时间',
+   
+update_name          VARCHAR(64)                   null comment '更新人',
+   
+update_name_ID       VARCHAR(64)                   null comment '更新人ID',
+   
+update_time          DATE                           null comment '更新时间',
+	 
+reserve1       VARCHAR(64)		null comment '预留字段1',
+	 
+reserve2       VARCHAR(64)		 null comment '预留字段2',
+	 
+reserve3       VARCHAR(64)		 null comment '预留字段3',
+   
+constraint PK_TBL_CHANNEL primary key (ID)
+
+);
+
+drop table if exists tbl_purchase_history;
+
+create table tbl_purchase_history 
+(
+   
+ID               		VARCHAR(64)       not null comment '历史采购ID',
+   
+mat_ID           VARCHAR(64)                  null comment '所属物料内码',
+   
+mat_name             VARCHAR(64)                  null comment '物料名称',
+   
+supplier             VARCHAR(64)                    null comment '供应商',
+   
+price                DOUBLE                         null comment '单价',			purchase_name        VARCHAR(64)                   null comment '采购人员',
+   
+purchase_name_ID     VARCHAR(64)                   null comment '采购人员ID',
+   
+purchase_time        DATE                           null comment '采购时间',
+	 
+project_name	VARCHAR(64)		null comment '所属项目',
+   
+project_ID	VARCHAR(64)		null comment '所属项目ID',
+	 
+reserve1       			VARCHAR(64)			 null comment '预留字段1',
+	 
+reserve2      			  VARCHAR(64)		 null comment '预留字段2',
+	 
+reserve3       			VARCHAR(64)				 null comment '预留字段3',
+   
+constraint PK_TBL_PURCHASE_HISTORY primary key (ID)
+
+);
+
