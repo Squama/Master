@@ -164,7 +164,7 @@
         //绑定按钮事件
         $("button[data-btn-type]").click(function () {
             var action = $(this).data("btn-type");
-            var rowId = employeeQueryTable.getSelectedRowId();
+            var rowId = stockQueryTable.getSelectedRowId();
             switch (action) {
                 <!--
                 case "detail":
@@ -175,9 +175,9 @@
                 	console.log(rowId);
                 	var detailForm=$("#user-form").form();
                 	detailForm.clearForm();
-                    setTitle("查看用户【"+employeeQueryTable.getSelectedRowData().name+"】")
+                    setTitle("查看用户【"+stockQueryTable.getSelectedRowData().name+"】")
                     $("#nav-tab-detail").click();
-                    ajaxPost(basePath+"/employeeQuery/get/"+employeeQueryTable.getSelectedRowData().id,null,function(data){
+                    ajaxPost(basePath+"/employeeQuery/get/"+stockQueryTable.getSelectedRowData().id,null,function(data){
                     	console.log(data);
                     	detailForm.initFormData(data);
                     });

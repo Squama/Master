@@ -102,17 +102,17 @@
                 });
             },
             fields : {
+                budget_ID : {
+                    validators : {
+                        notEmpty : {
+                            message : '请输入预算编号'
+                        }
+                    }
+                },
                 mat_name : {
                     validators : {
                         notEmpty : {
                             message : '请输入物料名称'
-                        }
-                    }
-                },
-                mat_standard : {
-                    validators : {
-                        notEmpty : {
-                            message : '请选择物料规格'
                         }
                     }
                 },
@@ -124,10 +124,31 @@
 
                     }
                 },
-                isValid : {
+                sock_Num : {
                     validators : {
                         notEmpty : {
-                            message : '请选择状态'
+                            message : '请输入入库数量'
+                        }
+                    }
+                },
+                mat_ID : {
+                    validators : {
+                        notEmpty : {
+                            message : '请输入物料编号'
+                        }
+                    }
+                },
+                mat_standard : {
+                    validators : {
+                        notEmpty : {
+                            message : '请输入物料规格'
+                        }
+                    }
+                },
+                project_ID : {
+                    validators : {
+                        notEmpty : {
+                            message : '请输入项目编号'
                         }
                     }
                 }

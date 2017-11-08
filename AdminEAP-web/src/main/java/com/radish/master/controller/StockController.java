@@ -47,6 +47,7 @@ public class StockController {
     @RefreshCSRFToken
     @RequestMapping(value="/add",method = RequestMethod.GET)
     public String add(){
+        System.out.println("add....");
         return "stock/stock_add";
     }
 }
