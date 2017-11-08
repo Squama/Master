@@ -74,6 +74,11 @@ public class ProjectController {
         return "projectmanage/project/project_list";
     }
     
+    @RequestMapping(value="/query",method = RequestMethod.GET)
+    public String query(){
+        return "projectmanage/project/project_query_list";
+    }
+    
     @RefreshCSRFToken
     @RequestMapping(value="/add",method = RequestMethod.GET)
     public String add(){

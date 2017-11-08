@@ -1,0 +1,99 @@
+<section class="content-header">
+    <h1>
+        项目信息查询
+        <small>列表</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
+        <li><a href="#">项目信息</a></li>
+        <li class="active">项目信息查询</li>
+    </ol>
+</section>
+
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+        <div class="nav-tabs-custom">
+                <ul class="nav nav-tabs pull-right">
+                    <li><a href="#tab-content-edit" data-toggle="tab" id="nav-tab-detail"><i class="fa fa-edit"></i></a></li>
+                    <li class="active"><a href="#tab-content-list" data-toggle="tab" id="nav-tab-list"><i class="fa fa-list-ul"></i></a></li>
+                    <li class="pull-left header"><i class="fa fa-user"></i><small>项目列表</small></li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="tab-content-list">
+                        <div class="box">
+			                <!-- /.box-header -->
+			                <div class="dataTables_filter" id="searchDiv" style="display: none">
+			                   <input type="search" placeholder="请输入项目名" title="项目名" name="project_name" class="form-control" id="project_name" operator="like" likeOption="true">
+			                   <input type="search" placeholder="请输入责任人" title="责任人" name="charge_name" class="form-control" id="charge_name" operator="like" likeOption="true">
+			                    <div class="btn-group">
+			                        <button type="button" class="btn btn-primary" data-btn-type="search">查询</button>
+			                        <button type="button" class="btn btn-default" data-btn-type="reset">重置</button>
+			                    </div>
+			                </div>
+			                <div class="box-body">
+			                    <table id="project_query_table" class="table table-bordered table-striped table-hover">
+			                    </table>
+			                </div>
+		                </div>
+                    </div>
+                    <div class="tab-pane" id="tab-content-edit">
+                        <form id="user-form" name="user-form" class="form-horizontal">
+                        <input type="hidden" name="id">
+                        <input type="hidden" name="version">
+                        <input type="hidden" name="createDateTime" data-flag="date" data-format="yyyy-mm-dd hh:ii:ss">
+                        <input type="hidden" name="deleted">
+                        <div class="box box-info">
+                            <div class="box-header with-border">
+                                <span>
+                                    <i class="fa fa-edit">项目信息</i>
+                                </span>
+                            </div>
+	                        <div class="box-body">
+	                            <!-- 内容 -->
+	                        </div>
+                        </div>
+                        <div class="box box-success">
+                            <div class="box-header with-border">
+                                <span>
+                                    <i class="fa fa-files-o">项目文件信息</i>
+                                </span>
+                            </div>
+	                        <div class="box-body">
+	                            <!-- 内容 -->
+	                        </div>
+                        </div>
+                        </form>
+                        <!-- /.box -->
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    var form = $("#searchDiv").form({baseEntity: false}), initData={};
+    var projectQueryTable, winId = "projectQueryWin";
+    $(function (){
+        projectQueryTable = new CommonTable("project_query_table", "project_query_list", "searchDiv", null);
+        
+    });
+    
+    function fnRenderManager(value) {
+        if (value) {
+            var ret=value;
+            ajaxPost(basePath + "/project/show/"+value, null, function (data) {
+                ret=data.data;
+            })
+            return ret;
+        } else
+            return value;
+    }
+    
+    function fnRenderDetail(value) {
+        return "<a href='javascript:void(0)' onclick='showDetail(\"" + value + "\")'>详情</a>";
+    }
+    
+</script>
