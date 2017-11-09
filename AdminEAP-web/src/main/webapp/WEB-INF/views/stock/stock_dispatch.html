@@ -7,21 +7,18 @@
 
 	<form id="stock-form" name="stock-form" class="form-horizontal">
 		<input type="hidden" name="id">
-		<!-- <input type='hidden' value='${CSRFToken}' id='csrftoken'> -->
 		<div class="box-body">
 			<div class="col-md-6">
-
 				<div class="form-group">
 					<label for="budget_ID" class="col-sm-3 control-label">预算编号</label>
 					<div class="col-sm-8">
 						<input type="text" class="form-control" id="budget_ID" name="budget_ID" placeholder="请输入预算编号">
 					</div>
 				</div>
-
 				<div class="form-group">
-					<label for="mat_number" class="col-sm-3 control-label">物料编号</label>
+					<label for="mat_ID" class="col-sm-3 control-label">物料编号</label>
 					<div class="col-sm-8">
-						<input type="text" class="form-control" id="mat_number" name="mat_number" placeholder="请输入物料编号">
+						<input type="text" class="form-control" id="mat_ID" name="mat_ID" placeholder="请输入物料编号">
 					</div>
 				</div>
 				<div class="form-group">
@@ -30,9 +27,6 @@
 						<input type="text"  readonly="readonly" class="form-control" id="mat_name" name="mat_name" placeholder="- - - 自动生成 - - -">
 					</div>
 				</div>
-
-
-
 				<div class="form-group">
 					<label for="unit" class="col-sm-3 control-label">单位</label>
 					<div class="col-sm-8">
@@ -40,19 +34,17 @@
 					</div>
 				</div>
 				<div class="form-group">
-					<label for="stock_Num" class="col-sm-3 control-label">入库数量</label>
+					<label for="sock_Num" class="col-sm-3 control-label">入库数量</label>
 					<div class="col-sm-8">
-						<input type="text" class="form-control" id="stock_Num" name="stock_Num" placeholder="请输入入库数量">
+						<input type="text" class="form-control" id="sock_Num" name="sock_Num" placeholder="请输入入库数量">
 					</div>
 				</div>
 			</div>
-
-
 			<div class="col-md-6">
 				<div class="form-group">
 					<label for="project_ID" class="col-sm-3 control-label">项目编号</label>
 					<div class="col-sm-8">
-						<input type="text"  class="form-control" id="project_ID" name="project_ID" placeholder="- - - 自动生成 - - -">
+						<input type="text"  readonly="readonly"  class="form-control" id="project_ID" name="project_ID" placeholder="- - - 自动生成 - - -">
 					</div>
 				</div>
 				<div class="form-group">
@@ -82,7 +74,7 @@
 <script>
     //tableId,queryId,conditionContainer
     var form =null;
-
+    var id="${id?default(0)}";
     $(function() {
         //初始化控件
         form=$("#stock-form").form();
@@ -100,10 +92,9 @@
                     var params = form.getFormSimpleData();
                     console.log(params);
                     ajaxPost(basePath+'/stock/save', params, function(data) {
-                        alert(data.success());
                         if(data.success){
                             modals.hideWin(winId);
-                            stockQueryTable.reloadData();
+                            stockTable.reloadData();
                             modals.info("数据保存成功");
                         }
                     });
@@ -132,14 +123,14 @@
 
                     }
                 },
-                stock_Num : {
+                sock_Num : {
                     validators : {
                         notEmpty : {
                             message : '请输入入库数量'
                         }
                     }
                 },
-                mat_number : {
+                mat_ID : {
                     validators : {
                         notEmpty : {
                             message : '请输入物料编号'
@@ -153,7 +144,7 @@
                         }
                     }
                 },
-                project_ID1 : {
+                project_ID : {
                     validators : {
                         notEmpty : {
                             message : '请输入项目编号'
@@ -163,17 +154,23 @@
             }
         });
         form.initComponent();
-
+        //回填id
+		alert(id);
+        if(id!="0"){
+            ajaxPost(basePath+"/stock/get",{id:id},function(data){
+                form.initFormData(data);
+            })
+        }
     });
 
 
 
-    $("#mat_number").change(function(){
+    $("#mat_ID").change(function(){
         getMat();
     });
     function getMat(){
-        var mat_number = $("#mat_number").val();
-        ajaxPost(basePath+"/stock/getMateriel?mat_number="+mat_number,null,function(data){
+        var m_id = $("#mat_ID").val();
+        ajaxPost(basePath+"/stock/getMateriel?m_id="+m_id,null,function(data){
             if(data.data){
                 var list = data.data;
                 $("#mat_name").val(list[0].mat_name);

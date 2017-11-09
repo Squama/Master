@@ -140,7 +140,7 @@ public class MaterialController {
     	parent_id = d1.getParentId();
       	while(true){
       		parent_id = d1.getParentId();
-      		
+
       		if(parent_id!=null){
       			d1=baseService.get(Mat.class, parent_id);
       			parent_id= d1.getParentId();
@@ -148,7 +148,7 @@ public class MaterialController {
       		}else{
       			break;
       		}
-      		
+
       	}
       	
       	Result r = new Result();

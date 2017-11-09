@@ -29,7 +29,7 @@ public class Stock extends BaseEntity {
 
     @Header(name = "库存量")
     @Column(name = "stock_num")
-    private Long stock_num;
+    private Integer stock_num;
 
     @Header(name = "入库人员ID")
     @Column(name = "storage_person_id")
@@ -81,11 +81,11 @@ public class Stock extends BaseEntity {
         this.mat_id = mat_id;
     }
 
-    public Long getStock_num() {
+    public Integer getStock_num() {
         return stock_num;
     }
 
-    public void setStock_num(Long stock_num) {
+    public void setStock_num(Integer stock_num) {
         this.stock_num = stock_num;
     }
 
@@ -137,6 +137,5 @@ public class Stock extends BaseEntity {
         this.reserve3 = reserve3;
     }
 
-    public void setStock_num(Integer sock_num) {
-    }
+
 }
