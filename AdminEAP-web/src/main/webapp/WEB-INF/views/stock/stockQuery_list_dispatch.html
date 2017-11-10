@@ -153,7 +153,6 @@
                         modals.info('请选择要调度的行');
                         return false;
                     }
-                	console.log(rowId);
                     modals.openWin({
                         winId: winId,
                         title: '物料库存调度【' + stockQueryTable.getSelectedRowData().project_id + '】',
@@ -161,7 +160,7 @@
                         url: basePath + "/stock/dispatch?id=" + rowId
                     });
                     break;
-                case "dispatch":
+                case "dispatch28256":
                     modals.openWin({
                         winId:winId,
                         title:'调度出库',

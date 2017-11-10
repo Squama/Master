@@ -7,13 +7,13 @@ import com.cnpc.framework.base.service.BaseService;
 import com.cnpc.framework.utils.SecurityUtil;
 import com.radish.master.entity.Materiel;
 import com.radish.master.entity.Stock;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Date;
@@ -23,7 +23,7 @@ import java.util.List;
 @RequestMapping("/stock")
 public class StockController {
 
-    @Autowired
+    @Resource
     private BaseService baseService;
 
     @RequestMapping(value="/list",method = RequestMethod.GET)
@@ -87,7 +87,6 @@ public class StockController {
     @RequestMapping(value="/get/{id}",method = RequestMethod.POST)
     @ResponseBody
     public Stock get(@PathVariable("id") String id){
-        System.out.println("id....get:"+id);
         return baseService.get(Stock.class, id);
     }
 

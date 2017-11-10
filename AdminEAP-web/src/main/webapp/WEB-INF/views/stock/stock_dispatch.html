@@ -155,9 +155,8 @@
         });
         form.initComponent();
         //回填id
-		alert(id);
         if(id!="0"){
-            ajaxPost(basePath+"/stock/get",{id:id},function(data){
+            ajaxPost(basePath+"/stock/get/"+id,function(data){
                 form.initFormData(data);
             })
         }
