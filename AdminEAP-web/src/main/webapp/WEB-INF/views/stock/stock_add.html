@@ -100,7 +100,7 @@
                     var params = form.getFormSimpleData();
                     console.log(params);
                     ajaxPost(basePath+'/stock/save', params, function(data) {
-                        alert(data.success());
+                        console.log(data);
                         if(data.success){
                             modals.hideWin(winId);
                             stockQueryTable.reloadData();
@@ -173,7 +173,7 @@
     });
     function getMat(){
         var mat_number = $("#mat_number").val();
-        ajaxPost(basePath+"/stock/getMateriel?mat_number="+mat_number,null,function(data){
+        ajaxPost(basePath+"/stock/getMateriel?id="+mat_number,null,function(data){
             if(data.data){
                 var list = data.data;
                 $("#mat_name").val(list[0].mat_name);

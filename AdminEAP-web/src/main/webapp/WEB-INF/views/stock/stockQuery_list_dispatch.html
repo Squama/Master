@@ -146,7 +146,7 @@
         $("button[data-btn-type]").click(function () {
             var action = $(this).data("btn-type");
             var rowId = stockQueryTable.getSelectedRowId();
-
+            stockQueryTable.getSelectedRowData()
             switch (action) {
                 case "dispatch":
                 	if(!rowId){
