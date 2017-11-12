@@ -11,10 +11,9 @@ import javax.persistence.Table;
 @Table(name = "tbl_budget")
 public class Budget extends BaseEntity {
 
-    private static final Long serialVersionUID = 8933803158142753625L;
+	private static final long serialVersionUID = 2069100647149760698L;
 
-
-    @Header(name = "预算清单名")
+	@Header(name = "预算清单名")
     @Column(name = "budget_name")
     private String budget_name;
 
