@@ -4,11 +4,19 @@
 package com.radish.master.entity;
 
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.GenericGenerator;
+
 import com.cnpc.framework.annotation.Header;
 import com.cnpc.framework.base.entity.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * 类说明
@@ -23,17 +31,28 @@ import com.cnpc.framework.base.entity.BaseEntity;
  */
 @Entity
 @Table(name = "tbl_channel")
-public class Channel extends BaseEntity{
+@JsonIgnoreProperties(value = { "hibernateLazyInitializer", "handler", "fieldHandler" })
+public class Channel {
 
     private static final long serialVersionUID = 3309603144734703924L;
-
-  @Header(name = "物料编号")
-  @Column(name = "mat_number")
-  private String mat_number;
-
+    
+    @Id
+    @GenericGenerator(name = "id", strategy = "uuid")
+    @GeneratedValue(generator = "id")
+    @Column(name = "id", length = 36)
+    protected String id;
+    
+  @Header(name = "所属物料内码")
+  @Column(name = "mat_ID ")
+  private String mat_ID ;
+  
+  @Header(name = "物料名称")
+  @Column(name = "mat_name")
+  private String mat_name ;
+  
   @Header(name = "有效标志")
-  @Column(name = "isvalid")
-  private String isvalid;
+  @Column(name = "isValid")
+  private String isValid;
 
   @Header(name = "供应商")
   @Column(name = "supplier")
@@ -53,7 +72,7 @@ public class Channel extends BaseEntity{
 
   @Header(name = "创建时间")
   @Column(name = "create_time")
-  private java.sql.Date create_time;
+  private Date create_time;
 
   @Header(name = "更新人姓名")
   @Column(name = "update_name")
@@ -65,7 +84,7 @@ public class Channel extends BaseEntity{
 
   @Header(name = "更新时间")
   @Column(name = "update_time")
-  private java.sql.Date update_time;
+  private Date update_time;
 
   @Header(name = "预留字段1")
   @Column(name = "reserve1")
@@ -79,23 +98,41 @@ public class Channel extends BaseEntity{
   @Column(name = "reserve3")
   private String reserve3;
 
-  public String getMat_number() {
-    return mat_number;
-  }
+  public String getId() {
+		return id;
+	}
 
-  public void setMat_number(String mat_number) {
-    this.mat_number = mat_number;
-  }
+	public void setId(String id) {
+		this.id = id;
+	}
+	
+  public String getMat_ID() {
+	return mat_ID;
+}
 
-  public String getIsvalid() {
-    return isvalid;
-  }
+public void setMat_ID(String mat_ID) {
+	this.mat_ID = mat_ID;
+}
 
-  public void setIsvalid(String isvalid) {
-    this.isvalid = isvalid;
-  }
+public String getMat_name() {
+	return mat_name;
+}
 
-  public String getSupplier() {
+public void setMat_name(String mat_name) {
+	this.mat_name = mat_name;
+}
+
+
+
+  public String getIsValid() {
+	return isValid;
+}
+
+public void setIsValid(String isValid) {
+	this.isValid = isValid;
+}
+
+public String getSupplier() {
     return supplier;
   }
 
@@ -127,11 +164,11 @@ public class Channel extends BaseEntity{
     this.create_name_id = create_name_id;
   }
 
-  public java.sql.Date getCreate_time() {
+  public Date getCreate_time() {
     return create_time;
   }
 
-  public void setCreate_time(java.sql.Date create_time) {
+  public void setCreate_time(Date create_time) {
     this.create_time = create_time;
   }
 
@@ -151,11 +188,11 @@ public class Channel extends BaseEntity{
     this.update_name_id = update_name_id;
   }
 
-  public java.sql.Date getUpdate_time() {
+  public Date getUpdate_time() {
     return update_time;
   }
 
-  public void setUpdate_time(java.sql.Date update_time) {
+  public void setUpdate_time(Date update_time) {
     this.update_time = update_time;
   }
 

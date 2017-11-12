@@ -1,0 +1,332 @@
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><li class="fa fa-remove"></li></button>
+    <h5 class="modal-title">编辑物料采购记录</h5>
+</div>
+
+<div class="modal-body">
+
+    <form id="material-form" name="material-form" class="form-horizontal">
+    <input type="hidden" name="mat_id" id="mat_id">
+       <div class="box-body">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="mat_name" class="col-sm-3 control-label">物料名称</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="mat_name1" name="mat_name" placeholder="物料名称" disabled="disabled">
+                    </div>
+                    
+                </div>
+                
+                <div class="form-group">
+                    <label for="unit" class="col-sm-3 control-label">单位</label>
+
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="unit" name="unit" placeholder="单位" disabled="disabled">
+                    </div>
+                </div>
+           
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">所属分类<span style="color:red">*</span></label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="ssfl" name="ssfl" disabled="disabled">
+                    </div>
+                    </div>
+            </div>
+            <div class="col-md-6">
+            	<div class="form-group">
+                    <label for="mat_standard" class="col-sm-3 control-label">物料规格</label>
+
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="mat_standard" name="mat_standard" placeholder="物料规格" disabled="disabled">
+                    </div>
+                </div>
+                <div class="form-group">
+					<label class="col-sm-3 control-label">是否启用</label>
+
+					<div class="col-sm-8">
+						<label class="control-label"> 
+						   <input type="radio" name="isValid" data-flag="icheck" class="square-green" value="1" disabled="disabled"> 是
+						</label> &nbsp; 
+						<label class="control-label"> 
+						   <input type="radio" name="isValid" data-flag="icheck" class="square-green" value="0" disabled="disabled"> 否
+						</label>
+					</div>
+				</div>
+        </div>
+        <!-- /.box-body -->
+        <div class="box-footer text-right">       
+        </div>
+        <!-- /.box-footer -->
+    </form>
+     <form id="channel-form1" name="channel-form1" class="form-horizontal">
+     <input type="hidden" name="mat_name" >
+     <input type="hidden" name="c_id" id="id1">
+    	 <div class="col-md-6">
+    	  <div class="form-group">
+                    <label for="supplier" class="col-sm-3 control-label">供应商</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="supplier" name="supplier" placeholder="供应商">
+                    </div>
+                </div>
+           
+    	 </div>
+    	 
+    	 <div class="col-md-6">
+    	  <div class="form-group">
+                    <label for="price" class="col-sm-3 control-label">单价(元)</label>
+                    <div class="col-sm-8">
+                       <input type="text" class="form-control" id="price" name="price" placeholder="单价" >                    	
+                    </div>
+             <div class="" style="text-align: right;margin-right:12% ">
+           		 <button type="submit" class="btn btn-primary" data-btn-type="save" id="b_sub1">提交</button>
+ 
+       		 </div>
+          </div>
+        <div class="" style="text-align: center">
+             
+        </div>
+    	 </div>
+    </form>
+    <form id="channel-form2" name="channel-form2" class="form-horizontal">
+    <input type="hidden" name="mat_name" >
+    <input type="hidden" name="c_id" id="id2">
+    	 <div class="col-md-6">
+    	  <div class="form-group">
+                    <label for="supplier" class="col-sm-3 control-label">供应商</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="supplier" name="supplier" placeholder="供应商">
+                    </div>
+                </div>
+                
+           <div></div>
+    	 </div>
+    	 <div class="col-md-6">
+    	  <div class="form-group">
+                    <label for="price" class="col-sm-3 control-label">单价(元)</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="price" name="price" placeholder="单价">
+                     
+                    </div>
+                    <div class="" style="text-align: right;margin-right:12% ">
+           		 <button type="submit" class="btn btn-primary" data-btn-type="save" id="b_sub2">提交</button>
+
+       		 </div>
+                </div>
+        <div class="" style="text-align: right">
+        </div> 
+    	 </div>
+    </form>
+    <form id="channel-form3" name="channel-form3" class="form-horizontal">
+    	<input type="hidden" name="mat_name" >
+    	<input type="hidden" name="c_id" id="id3">
+    	 <div class="col-md-6">
+    	  <div class="form-group">
+                    <label for="supplier" class="col-sm-3 control-label">供应商</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="supplier" name="supplier" placeholder="供应商">
+                    </div>
+                </div>
+    	 </div>
+    	 <div class="col-md-6">
+    	  <div class="form-group">
+                    <label for="price" class="col-sm-3 control-label">单价(元)</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="price" name="price" placeholder="单价">
+                    </div>
+                    <div class="" style="text-align: right;margin-right:12% ">
+           		 <button type="submit" class="btn btn-primary" data-btn-type="save" id="b_sub3">提交</button>
+ 
+       		 </div>
+                </div>
+        
+    	 </div>
+    </form>
+</div>
+<script>
+    var form =null;
+    var id="${id?default(0)}";
+    var doWhat="${doWhat}"
+    $(function() {
+        //初始化控件
+        form =$("#material-form").form();
+        form1=$("#channel-form1").form();
+        form2=$("#channel-form2").form();
+        form3=$("#channel-form3").form();
+        form.initComponent();
+        //回填id      
+        if(id!="0"){
+        	var ssflText;
+        	var parent_id="";
+        	var formdata;
+            ajaxPost(basePath+"/material/get",{id:id},function(result){
+              formdata = result.data;
+              form.initFormData(formdata); 
+              $("#mat_id").val(formdata.id);
+            });
+            parent_id =formdata.parent_ID;
+            ajaxPost(basePath+"/material/getSsfl",{"parent_id":parent_id},function(result){
+               		ssflText=result.message;
+               		$("#ssfl").val(ssflText);
+             });         	
+            
+        } 
+        
+        $("#channel-form1").bootstrapValidator({
+            message : '请输入有效值',
+            feedbackIcons : {
+                valid : 'glyphicon glyphicon-ok',
+                invalid : 'glyphicon glyphicon-remove',
+                validating : 'glyphicon glyphicon-refresh'
+            },
+            submitHandler : function() {
+                modals.confirm('确认保存？', function() {
+                    //Save Data，对应'submit-提交'
+                    var params = form1.getFormSimpleData();
+                   
+                   ajaxPost(basePath+'/channel/save?mat_id='+$("#mat_id").val(), params, function(data, status) {
+                        if(data.success){
+                        	modals.hideWin(winId);
+                        	materielTable.reloadData();
+                        	modals.info("数据修改成功");
+                        	 
+                        }                
+                    }); 
+                })
+            },
+            fields : {
+            	supplier : {
+                    validators : {
+                        notEmpty : {
+                            message : '请输入供应商'
+                        }
+                    }
+                },
+                price : {
+                    validators : {
+                        notEmpty : {
+                            message : '请输入价格'
+                        },
+                		numeric: {message: '请输入数字'},
+                		between: {
+                            min:"0.1",
+                            max:"999999999",
+                            message: '价格无效'
+                        }
+
+
+                    }
+                }
+            }
+        });
+        
+        $("#channel-form2").bootstrapValidator({
+            message : '请输入有效值',
+            feedbackIcons : {
+                valid : 'glyphicon glyphicon-ok',
+                invalid : 'glyphicon glyphicon-remove',
+                validating : 'glyphicon glyphicon-refresh'
+            },
+            submitHandler : function() {
+                modals.confirm('确认保存？', function() {
+                    //Save Data，对应'submit-提交'
+                    var params = form2.getFormSimpleData();
+                    console.log(params);
+                   ajaxPost(basePath+'/channel/save?mat_id='+$("#mat_id").val(), params, function(data, status) {
+                        if(data.success){
+                        	modals.hideWin(winId);
+                        	materielTable.reloadData();
+                        	modals.info("数据修改成功");
+                        	 
+                        }                
+                    }); 
+                });
+            },
+            fields : {
+            	supplier : {
+                    validators : {
+                        notEmpty : {
+                            message : '请输入供应商'
+                        }
+                    }
+                },
+                price : {
+                    validators : {
+                        notEmpty : {
+                            message : '请输入价格'
+                        }
+                    }
+                }
+            }
+        });
+        
+        $("#channel-form3").bootstrapValidator({
+            message : '请输入有效值',
+            feedbackIcons : {
+                valid : 'glyphicon glyphicon-ok',
+                invalid : 'glyphicon glyphicon-remove',
+                validating : 'glyphicon glyphicon-refresh'
+            },
+            submitHandler : function() {
+                modals.confirm('确认保存？', function() {
+                    //Save Data，对应'submit-提交'
+                    var params = form3.getFormSimpleData();
+                    console.log(params);
+                  ajaxPost(basePath+'/channel/save?mat_id='+$("#mat_id").val(), params, function(data, status) {
+                        if(data.success){
+                        	modals.hideWin(winId);
+                        	materielTable.reloadData();
+                        	modals.info("数据修改成功");
+                        	 
+                        }                
+                    });
+                });
+            },
+            fields : {
+            	supplier : {
+                    validators : {
+                        notEmpty : {
+                            message : '请输入供应商'
+                        }
+                    }
+                },
+                price : {
+                    validators : {
+                        notEmpty : {
+                            message : '请输入价格'
+                        }
+                    }
+                }
+            }
+        });
+        //回填供应商
+        ajaxPost(basePath+"/channel/getChannelList",{mat_id:$("#mat_id").val()},function(result){
+            list = result.data;
+            if(list.length==1){
+            	form1.initFormData(list[0]);
+            	$("#id1").val(list[0].id);
+            }else if(list.length==2){
+            	form1.initFormData(list[0]);
+            	form2.initFormData(list[1]);
+            	$("#id1").val(list[0].id);
+            	$("#id2").val(list[1].id);
+            }else if(list.length==3){
+            	form1.initFormData(list[0]);
+            	form2.initFormData(list[1]);
+            	form3.initFormData(list[2]);
+            	$("#id1").val(list[0].id);
+            	$("#id2").val(list[1].id);
+            	$("#id3").val(list[2].id);
+            }
+          });
+        
+        if(doWhat=="1"){
+        	$('input,select,radio',$('form[name="material-form"]')).attr('disabled',true);
+        	$("#b_sub1").css("display","none")
+        	$("#b_sub2").css("display","none")
+        	$("#b_sub3").css("display","none")
+        	$(".modal-title").text("查看详情")
+        }
+        
+    });
+    
+</script>
