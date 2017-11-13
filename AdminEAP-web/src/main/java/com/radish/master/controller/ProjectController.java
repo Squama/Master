@@ -14,6 +14,7 @@ import com.cnpc.framework.utils.SecurityUtil;
 import com.cnpc.framework.utils.StrUtil;
 import com.radish.master.entity.Project;
 import com.radish.master.entity.ProjectFileItem;
+import com.radish.master.pojo.ProjectDetailVO;
 import com.radish.master.service.ProjectService;
 import com.radish.master.system.GUID;
 import org.hibernate.criterion.DetachedCriteria;
@@ -77,6 +78,35 @@ public class ProjectController {
     @RequestMapping(value="/query",method = RequestMethod.GET)
     public String query(){
         return "projectmanage/project/project_query_list";
+    }
+    
+    @RequestMapping(value="/detail/{id}",method = RequestMethod.POST)
+    @ResponseBody
+    public ProjectDetailVO detail(@PathVariable("id") String id){
+        Project project = this.getProject(id);
+        ProjectDetailVO pdv = new ProjectDetailVO();
+        
+        if(project != null){
+            pdv.setProjectCode(project.getProjectCode());
+            pdv.setProjectName(project.getProjectName());
+            pdv.setProjectManager(projectService.getManagerName(project.getProjectManager()).getData().toString());
+            pdv.setSaftyFileField(projectService.getFileField(project.getSaftyFile()));
+            pdv.setConstructionFileField(projectService.getFileField(project.getConstructionFile()));
+            pdv.setBidsFileField(projectService.getFileField(project.getBidsFile()));
+            pdv.setBidsWinFileField(projectService.getFileField(project.getBidsWinFile()));
+            pdv.setBidsWinNoticeFileField(projectService.getFileField(project.getBidsWinNoticeFile()));
+            pdv.setQualityFileField(projectService.getFileField(project.getQualityFile()));
+            pdv.setCostFileField(projectService.getFileField(project.getCostFile()));
+            pdv.setScheduleFileField(projectService.getFileField(project.getScheduleFile()));
+        }
+        
+        return pdv;
+    }
+    
+    @RequestMapping(value="/projectdetailfile", method = RequestMethod.GET)
+    public String projectdetailfile(String fields, HttpServletRequest request){
+        request.setAttribute("fields", fields);
+        return "projectmanage/project/project_query_file";
     }
     
     @RefreshCSRFToken

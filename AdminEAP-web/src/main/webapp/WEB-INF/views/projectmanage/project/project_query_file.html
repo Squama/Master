@@ -1,0 +1,41 @@
+<link rel="stylesheet" href="${basePath}/resources/common/libs/fileinput/css/fileinput.min.css">
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="col-md-12">
+                    <form id="project_file_form" name="project_file_form" class="form-horizontal" enctype="multipart/form-data">
+                        <input type="hidden" name="fileIds" id="fileIds">
+                        <div class="form-group" id="file_container">
+	                        <input type="file" name="file" class="file" id="attachment">
+	                    </div>
+                    </form>
+		        </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--用于附件上传回填使用-->
+<script src="${basePath}/resources/common/libs/fileinput/js/fileinput.min.js"></script>
+<script src="${basePath}/resources/common/libs/fileinput/js/locales/zh.js"></script>
+<script type="text/javascript" src="${basePath}/resources/common/js/base-file.js"/>
+<script>
+    var winId = "projectQueryWin";
+    var fields="${fields?default(0)}";
+    if(fields != 0) $('#fileIds').val(fields);
+    console.log(fields);
+    $(function (){
+    	$("#attachment").file({
+            title: "请上传附件",
+            fileinput: {
+                maxFileSize: 10240,
+                maxFileCount: 3
+            },
+            fileIdContainer: "[name='fileIds']",
+            getFileResultUrl: basePath+"/project/getFiles",
+            downloadFileUrl: basePath+"/project/download/",
+            showType: 'detail',
+            window: false
+        });
+    })
+</script>

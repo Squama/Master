@@ -1,5 +1,5 @@
 /**
- * 版权所有 (c) 2017，中金支付有限公司  
+ * 版权所有 (c) 2017，周庆博和他的朋友们有限公司  
  */
 package com.radish.master.controller;
 

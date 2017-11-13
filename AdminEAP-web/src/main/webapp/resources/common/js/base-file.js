@@ -190,7 +190,7 @@
             modals.error("缺少配置，请检查");
             return;
         }
-        console.log("config=========="+JSON.stringify(config));
+        //console.log("config=========="+JSON.stringify(config));
         fileComponet.fileinput('destroy');
         fileComponet.fileinput(config).on("filedeleted",function (event,key) {
             var newfids=self.deleteFileIds(key,self.options.fileIds);

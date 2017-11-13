@@ -1,0 +1,80 @@
+<section class="content-header">
+    <h1>
+        <span id="title"></span>
+        <small>列表</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
+        <li><a href="#">项目信息</a></li>
+        <li class="active"><span id="title"></span></li>
+    </ol>
+</section>
+
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <!-- /.box-header -->
+                <div class="dataTables_filter" id="searchDiv" style="display: none">
+                   <input type="search" placeholder="请输入项目名" title="项目名" name="projectName" class="form-control" id="projectName" operator="like" likeOption="true">
+                   <div class="btn-group">
+                       <button type="button" class="btn btn-primary" data-btn-type="search">查询</button>
+                       <button type="button" class="btn btn-default" data-btn-type="reset">重置</button>
+                   </div>
+                </div>
+                <div class="box-body">
+                    <table id="project_table" class="table table-bordered table-striped table-hover">
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    var form = $("#searchDiv").form({baseEntity: false});
+    var projectQueryTable, winId = "projectWin";
+    var itemCode,itemName,itemColumn;
+    $(function (){
+    	itemCode = "${itemCode}";
+    	itemName = "${itemName}";
+    	
+    	$('#title').html(itemName);
+    	
+    	$('<input>',{
+    		'type' : 'search',
+    		'name' : itemCode,
+    		'id' : itemCode,
+    		'operator' : 'not_null',
+    		'style' : 'display:none;'
+    	}).prependTo($('#searchDiv'));
+    	
+        projectQueryTable = new CommonTable("project_table", "project_list_file", "searchDiv", null);
+        
+    });
+    
+    function fnRenderManager(value) {
+        if (value) {
+            var ret=value;
+            ajaxPost(basePath + "/project/show/"+value, null, function (data) {
+                ret=data.data;
+            })
+            return ret;
+        } else
+            return value;
+    }
+    
+    function fnRenderDetail(value) {
+        return "<a href='javascript:void(0)' onclick='showDetail(\"" + value + "\")'>"+itemName+"</a>";
+    }
+    
+    function showDetail(rowId) {
+    	modals.openWin({
+            winId: "fileWin",
+            width: "900px",
+            url: basePath + "/projectfile/projectdetailfile?id=" + rowId + "&columnName=" + itemCode,
+            title: title
+        });
+    }
+    
+</script>

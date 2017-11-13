@@ -1,5 +1,5 @@
 /**
- * 版权所有 (c) 2017，中金支付有限公司  
+ * 版权所有 (c) 2017，周庆博和他的朋友们有限公司  
  */
 package com.radish.master.service;
 
@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.base.service.BaseService;
+import com.radish.master.pojo.ProjectDetailVO;
 
 /**
 * 类说明
@@ -50,6 +51,8 @@ public interface ProjectService extends BaseService{
     public byte[] getImage(String path, String name);
     
     public Result getManagerName(String id);
+    
+    public String getFileField(String batchNo);
     
     
 }

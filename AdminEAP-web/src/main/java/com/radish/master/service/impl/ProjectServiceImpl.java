@@ -1,5 +1,5 @@
 /**
- * 版权所有 (c) 2017，中金支付有限公司  
+ * 版权所有 (c) 2017，周庆博和他的朋友们有限公司  
  */
 package com.radish.master.service.impl;
 
@@ -8,6 +8,9 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +22,8 @@ import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.base.service.impl.BaseServiceImpl;
 import com.cnpc.framework.utils.PropertiesUtil;
 import com.cnpc.framework.utils.StrUtil;
+import com.radish.master.entity.ProjectFileItem;
+import com.radish.master.pojo.ProjectDetailVO;
 import com.radish.master.service.ProjectService;
 import com.radish.master.system.FileHelper;
 
@@ -100,6 +105,31 @@ public class ProjectServiceImpl extends BaseServiceImpl implements ProjectServic
         }else{
             return new Result(true,name,"获取成功");
         }
+    }
+
+    @Override
+    public String getFileField(String batchNo) {
+        String result = "";
+        
+        if(StrUtil.isEmpty(batchNo)){
+            return result;
+        }
+        
+        String hql = "from ProjectFileItem where batchNo=:batchNo";
+        Map<String, Object> params = new HashMap<>();
+        params.put("batchNo", batchNo);
+        List<ProjectFileItem> itemList = this.find(hql, params);
+        if(itemList.isEmpty()){
+            result = "";
+        }else{
+            StringBuilder sb = new StringBuilder();
+            for(int i=0;i<itemList.size();i++){
+                sb.append(",");
+                sb.append(itemList.get(i).getId());
+            }
+            result = sb.toString().substring(1);
+        }
+        return result;
     }
 
     

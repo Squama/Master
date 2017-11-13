@@ -38,31 +38,115 @@
 		                </div>
                     </div>
                     <div class="tab-pane" id="tab-content-edit">
-                        <form id="user-form" name="user-form" class="form-horizontal">
-                        <input type="hidden" name="id">
-                        <input type="hidden" name="version">
-                        <input type="hidden" name="createDateTime" data-flag="date" data-format="yyyy-mm-dd hh:ii:ss">
-                        <input type="hidden" name="deleted">
-                        <div class="box box-info">
-                            <div class="box-header with-border">
-                                <span>
-                                    <i class="fa fa-edit">项目信息</i>
-                                </span>
-                            </div>
-	                        <div class="box-body">
-	                            <!-- 内容 -->
+                        <form id="detail-form" name="detail-form" class="form-horizontal">
+	                        <input type="hidden" name="id">
+	                        <div class="box box-info">
+	                            <div class="box-header with-border">
+	                                <span>
+	                                    <i class="fa fa-edit">项目信息</i>
+	                                </span>
+	                            </div>
+		                        <div class="box-body">
+		                            <!-- 内容 -->
+		                            <div class="col-md-12">
+			                            <div class="form-group">
+			                                <label class="col-sm-3 control-label">项目编号<span style="color:red">*</span></label>
+			                                <div class="col-sm-6">
+			                                    <input type="text" class="form-control" id="projectCode" name="projectCode" readonly="readonly">
+			                                </div>
+			                            </div> 
+			                            <div class="form-group">
+			                                <label class="col-sm-3 control-label">项目名称<span style="color:red">*</span></label>
+			                                <div class="col-sm-6">
+			                                    <input type="text" class="form-control" id="projectName" name="projectName" readonly="readonly">
+			                                </div>
+			                            </div>
+			                            <div class="form-group">
+			                                <label class="col-sm-3 control-label">项目负责人<span style="color:red">*</span></label>
+			                                <div class="col-sm-5">
+			                                    <input type="text" class="form-control" id="projectManager" name="projectManager" readonly="readonly">
+			                                </div>
+			                            </div>
+			                        </div>
+		                        </div>
 	                        </div>
-                        </div>
-                        <div class="box box-success">
-                            <div class="box-header with-border">
-                                <span>
-                                    <i class="fa fa-files-o">项目文件信息</i>
-                                </span>
-                            </div>
-	                        <div class="box-body">
-	                            <!-- 内容 -->
+	                        <div class="box box-success">
+	                            <div class="box-header with-border">
+	                                <span>
+	                                    <i class="fa fa-files-o">项目文件信息</i>
+	                                </span>
+	                            </div>
+		                        <div class="box-body">
+		                            <!-- 内容 -->
+		                            <div class="form-group">
+	                                    <div class="col-sm-1">
+                                        </div>
+	                                    <div class="col-sm-1">
+	                                        <a class="btn btn-app">
+	                                           <span class="badge bg-yellow"></span>
+	                                           <i class="fa fa-bullhorn"></i>安全文明文件
+	                                           <input type="hidden" name="saftyFileField" id="saftyFileField"/>
+	                                        </a>
+	                                    </div>
+	                                    <div class="col-sm-1">
+                                            <a class="btn btn-app">
+                                               <span class="badge bg-yellow"></span>
+                                               <i class="fa fa-bullhorn"></i>施工合同
+                                               <input type="hidden" name="constructionFileField" id="constructionFileField"/>
+                                            </a>
+                                        </div>
+                                        <div class="col-sm-1">
+                                            <a class="btn btn-app">
+                                               <span class="badge bg-yellow"></span>
+                                               <i class="fa fa-bullhorn"></i>招标文件
+                                               <input type="hidden" name="bidsFileField" id="bidsFileField"/>
+                                            </a>
+                                        </div>
+                                        <div class="col-sm-1">
+                                            <a class="btn btn-app">
+                                               <span class="badge bg-yellow"></span>
+                                               <i class="fa fa-bullhorn"></i>中标文件
+                                               <input type="hidden" name="bidsWinFileField" id="bidsWinFileField"/>
+                                            </a>
+                                        </div>
+                                        <div class="col-sm-1">
+                                            <a class="btn btn-app">
+                                               <span class="badge bg-yellow"></span>
+                                               <i class="fa fa-bullhorn"></i>中标通知文件
+                                               <input type="hidden" name="bidsWinNoticeFileField" id="bidsWinNoticeFileField"/>
+                                            </a>
+                                        </div>
+                                        <div class="col-sm-1">
+                                            <a class="btn btn-app">
+                                               <span class="badge bg-yellow"></span>
+                                               <i class="fa fa-bullhorn"></i>工程质量文件
+                                               <input type="hidden" name="qualityFileField" id="qualityFileField"/>
+                                            </a>
+                                        </div>
+                                        <div class="col-sm-1">
+                                            <a class="btn btn-app">
+                                               <span class="badge bg-yellow"></span>
+                                               <i class="fa fa-bullhorn"></i>预算成本分析表
+                                               <input type="hidden" name="costFileField" id="costFileField"/>
+                                            </a>
+                                        </div>
+                                        <div class="col-sm-1">
+                                            <a class="btn btn-app">
+                                               <span class="badge bg-yellow"></span>
+                                               <i class="fa fa-bullhorn"></i>工程进度文件
+                                               <input type="hidden" name="scheduleFileField" id="scheduleFileField"/>
+                                            </a>
+                                        </div>
+                                        <div class="col-sm-1">
+                                            <a class="btn btn-app">
+                                               <span class="badge bg-yellow"></span>
+                                               <i class="fa fa-bullhorn"></i>其它文件
+                                               <input type="hidden" name="otherFileField" id="otherFileField"/>
+                                            </a>
+                                        </div>
+	                                </div> 
+		                        </div>
 	                        </div>
-                        </div>
                         </form>
                         <!-- /.box -->
                     </div>
@@ -76,8 +160,45 @@
 <script>
     var form = $("#searchDiv").form({baseEntity: false}), initData={};
     var projectQueryTable, winId = "projectQueryWin";
+    
+    var projectQueryObject = {
+    		showDetail: function (rowId) {
+    			var detailForm=$("#detail-form").form();
+                detailForm.clearForm();
+                setTitle("查看详情")
+                $("#nav-tab-detail").click();
+                ajaxPost(basePath+"/project/detail/"+rowId,null,function(data){
+                    detailForm.initFormData(data);
+                    $('.btn-app').each(function(){
+                    	var count = 0,
+                    	fields = $('input', $(this)).val();
+                    	if(fields != "") count = fields.split(',').length
+                    	if(count > 0){
+                    		$('.badge',$(this)).html(count);
+                    	}
+                    });
+                });
+            }
+    }
+    
     $(function (){
         projectQueryTable = new CommonTable("project_query_table", "project_query_list", "searchDiv", null);
+        
+        $("#nav-tab-list").on("click",function(){
+            setTitle("项目列表");
+        });
+        
+        $('.btn-app').on("click",function(){
+        	var fields = $('input', $(this)).val();
+        	if(fields == "") return false;
+        	var title = $(this).text();
+		    modals.openWin({
+			    winId: "fileWin",
+			    width: "900px",
+			    url: basePath + "/project/projectdetailfile?fields=" + encodeURI(fields),
+			    title: title
+		    });
+        });
         
     });
     
@@ -93,7 +214,11 @@
     }
     
     function fnRenderDetail(value) {
-        return "<a href='javascript:void(0)' onclick='showDetail(\"" + value + "\")'>详情</a>";
+        return "<a href='javascript:void(0)' onclick='projectQueryObject.showDetail(\"" + value + "\")'>详情</a>";
+    }
+    
+    function setTitle(title){
+        $("ul.nav-tabs li.header small").text(title);
     }
     
 </script>
