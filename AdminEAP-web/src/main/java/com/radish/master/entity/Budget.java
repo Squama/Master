@@ -3,6 +3,8 @@ package com.radish.master.entity;
 import com.cnpc.framework.annotation.Header;
 import com.cnpc.framework.base.entity.BaseEntity;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -11,127 +13,127 @@ import javax.persistence.Table;
 @Table(name = "tbl_budget")
 public class Budget extends BaseEntity {
 
-	private static final long serialVersionUID = 2069100647149760698L;
+    private static final long serialVersionUID = 5201916964951209848L;
 
-	@Header(name = "预算清单名")
-    @Column(name = "budget_name")
-    private String budget_name;
+    @Header(name="预算编码")
+    @Column(name="budget_no")
+    private String budgetNo;
 
-    @Header(name = "所属项目ID")
-    @Column(name = "project_id")
-    private String project_id;
+    @Header(name="预算信息名称")
+    @Column(name="budget_name")
+    private String budgetName;
 
-    @Header(name = "预算人员ID")
-    @Column(name = "budget_people_id")
-    private String budget_people_id;
+    @Header(name="所属项目")
+    @Column(name="project_id")
+    private String projectID;
 
-    @Header(name = "审核人ID")
-    @Column(name = "approver_id")
-    private String approver_id;
+    @Header(name="预算制单人员")
+    @Column(name="operator")
+    private String operator;
 
-    @Header(name = "审核标志")
-    @Column(name = "isApprover")
-    private Integer isApprover;
+    @Header(name="制单时间")
+    @Column(name="operate_time")
+    private Date operateTime;
 
-    @Header(name = "编辑人ID")
-    @Column(name = "edit_people_id")
-    private String edit_people_id;
+    @Header(name="审核人员")
+    @Column(name="checker")
+    private String checker;
 
-    @Header(name = "编辑标志")
-    @Column(name = "isEdit")
-    private Integer isEdit;
+    @Header(name="审核时间")
+    @Column(name="check_time")
+    private Date checkTime;
 
-    @Header(name = "预留字段1")
-    @Column(name = "reserve1")
-    private String reserve1;
+    @Header(name="供应渠道编辑人")
+    @Column(name="supplier_editer")
+    private String supplierEditer;
 
-    @Header(name = "预留字段1")
-    @Column(name = "reserve2")
-    private String reserve2;
+    @Header(name="编辑时间")
+    @Column(name="edit_time")
+    private Date editTime;
 
-    @Header(name = "预留字段1")
-    @Column(name = "reserve3")
-    private String reserve3;
+    @Header(name="状态")
+    @Column(name="status")
+    private String status;
 
-
-
-    public String getBudget_name() {
-        return budget_name;
+    public String getBudgetNo() {
+        return budgetNo;
     }
 
-    public void setBudget_name(String budget_name) {
-        this.budget_name = budget_name;
+    public void setBudgetNo(String budgetNo) {
+        this.budgetNo = budgetNo;
     }
 
-    public String getProject_id() {
-        return project_id;
+    public String getBudgetName() {
+        return budgetName;
     }
 
-    public void setProject_id(String project_id) {
-        this.project_id = project_id;
+    public void setBudgetName(String budgetName) {
+        this.budgetName = budgetName;
     }
 
-    public String getBudget_people_id() {
-        return budget_people_id;
+    public String getProjectID() {
+        return projectID;
     }
 
-    public void setBudget_people_id(String budget_people_id) {
-        this.budget_people_id = budget_people_id;
+    public void setProjectID(String projectID) {
+        this.projectID = projectID;
     }
 
-    public String getApprover_id() {
-        return approver_id;
+    public String getOperator() {
+        return operator;
     }
 
-    public void setApprover_id(String approver_id) {
-        this.approver_id = approver_id;
+    public void setOperator(String operator) {
+        this.operator = operator;
     }
 
-    public Integer getisApprover() {
-        return isApprover;
+    public Date getOperateTime() {
+        return operateTime;
     }
 
-    public void setisApprover(Integer isApprover) {
-        this.isApprover = isApprover;
+    public void setOperateTime(Date operateTime) {
+        this.operateTime = operateTime;
     }
 
-    public String getEdit_people_id() {
-        return edit_people_id;
+    public String getChecker() {
+        return checker;
     }
 
-    public void setEdit_people_id(String edit_people_id) {
-        this.edit_people_id = edit_people_id;
+    public void setChecker(String checker) {
+        this.checker = checker;
     }
 
-    public Integer getisEdit() {
-        return isEdit;
+    public Date getCheckTime() {
+        return checkTime;
     }
 
-    public void setisEdit(Integer isEdit) {
-        this.isEdit = isEdit;
+    public void setCheckTime(Date checkTime) {
+        this.checkTime = checkTime;
     }
 
-    public String getReserve1() {
-        return reserve1;
+    public String getSupplierEditer() {
+        return supplierEditer;
     }
 
-    public void setReserve1(String reserve1) {
-        this.reserve1 = reserve1;
+    public void setSupplierEditer(String supplierEditer) {
+        this.supplierEditer = supplierEditer;
     }
 
-    public String getReserve2() {
-        return reserve2;
+    public Date getEditTime() {
+        return editTime;
     }
 
-    public void setReserve2(String reserve2) {
-        this.reserve2 = reserve2;
+    public void setEditTime(Date editTime) {
+        this.editTime = editTime;
     }
 
-    public String getReserve3() {
-        return reserve3;
+    public String getStatus() {
+        return status;
     }
 
-    public void setReserve3(String reserve3) {
-        this.reserve3 = reserve3;
+    public void setStatus(String status) {
+        this.status = status;
     }
+
+
 }

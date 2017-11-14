@@ -93,7 +93,7 @@ public class StockController {
     public Result getProjectByBudget(HttpServletRequest request){
         String id = request.getParameter("id");
         Budget budget = baseService.get(Budget.class, id);
-        Project project = baseService.get(Project.class,budget.getProject_id());
+        Project project = baseService.get(Project.class,budget.getProjectID());
         return new Result(true,project,"获取成功");
     }
 

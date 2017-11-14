@@ -40,8 +40,8 @@ public class BudgetController {
     @ResponseBody
     private Result saveBudget(Budget tbl_budget, HttpServletRequest request) {
         if(tbl_budget.getId()==null) {
-            tbl_budget.setisApprover(0);
-            tbl_budget.setisEdit(0);
+            //tbl_budget.setisApprover(0);
+            //tbl_budget.setisEdit(0);
             budgetService.save(tbl_budget);
         }else {
             budgetService.update(tbl_budget);
