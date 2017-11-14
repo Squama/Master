@@ -42,8 +42,8 @@
                                     <button type="button" class="btn btn-default" data-btn-type="add">物料入库</button>
 			                    </div>
 			                </div>
-			                <div class="box-body">
-			                    <table id="stock_table" class="table table-bordered table-striped table-hover">
+			                <div class="box-body" >
+			                    <table id="stock_table" class="table table-bordered table-striped table-hover ">
 			                    </table>
 			                </div>
 			            </div>
@@ -110,14 +110,28 @@
        $("ul.nav-tabs li.header small").text(title);
     }
     
-    function fnRenderDept(value) {
+    function fnProjectName(value) {
         if (value) {
             var ret=value;
-            ajaxPost(basePath + "/org/show/"+value, null, function (data) {
+            ajaxPost(basePath + "/stock/showProject/"+value, null, function (data) {
+                console.log(data);
                 ret=data.data;
             })
             return ret;
         } else
             return value;
     }
+
+    function fnMatName(value) {
+        if (value) {
+            var ret=value;
+            ajaxPost(basePath + "/stock/showMat/"+value, null, function (data) {
+                console.log(data);
+                ret=data.data;
+            })
+            return ret;
+        } else
+            return value;
+    }
+
 </script>

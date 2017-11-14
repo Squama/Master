@@ -3,9 +3,11 @@
 <!--本xml片段为代码生成器生成，时间：2017-10-17 11:38:08-->
 	<query id="stock_list" key="id" tableName="库存信息列表" className="com.radish.master.entity.Stock" widthType="px">
 	        <column key="id" header="库存编号" classType="String" allowSort="true" width="150"/>
-	        <column key="budget_id" header="预算ID" classType="String" allowSort="true" width="150" />
-	        <column key="project_id" header="所属项目ID" classType="String" width="150"/>
-	        <column key="mat_id" header="物料ID" classType="String" width="150" />
+	        <column key="budget_id" header="预算编号" classType="String" allowSort="true" width="150" />
+	        <column key="project_id" header="所属项目编号" classType="String" width="150"/>
+		    <column key="project_id" header="所属项目" classType="String" allowSort="true" width="150" fnRender="fnProjectName"/>
+	        <column key="mat_id" header="物料编号" classType="String" width="150" />
+			<column key="mat_id" header="物料名" classType="String" width="150" fnRender="fnMatName"/>
 	        <column key="stock_num" header="当前库存" classType="java.lang.Integer" width="150"/>
 	        <column key="storage_person_id" header="入库人员ID" classType="String" width="150"/>
 	        <column key="storage_time" header="入库时间" classType="java.util.Date" operator="between" width="150" dateFormat="yyyy-mm-dd"/>

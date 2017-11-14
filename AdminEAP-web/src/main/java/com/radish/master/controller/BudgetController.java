@@ -5,7 +5,7 @@ import com.cnpc.framework.annotation.RefreshCSRFToken;
 import com.cnpc.framework.annotation.VerifyCSRFToken;
 import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.base.service.ContractService;
-import com.radish.master.entity.Tbl_budget;
+import com.radish.master.entity.Budget;
 import com.radish.master.service.BudgetService;
 
 import org.springframework.stereotype.Controller;
@@ -38,7 +38,7 @@ public class BudgetController {
     @VerifyCSRFToken
     @RequestMapping(method = RequestMethod.POST, value = "/save")
     @ResponseBody
-    private Result saveBudget(Tbl_budget tbl_budget, HttpServletRequest request) {
+    private Result saveBudget(Budget tbl_budget, HttpServletRequest request) {
         if(tbl_budget.getId()==null) {
             tbl_budget.setisApprover(0);
             tbl_budget.setisEdit(0);

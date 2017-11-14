@@ -187,4 +187,29 @@
         } else
             return value;
     }
+
+    function fnProjectName(value) {
+        if (value) {
+            var ret=value;
+            ajaxPost(basePath + "/stock/showProject/"+value, null, function (data) {
+                console.log(data);
+                ret=data.data;
+            })
+            return ret;
+        } else
+            return value;
+    }
+
+    function fnMatName(value) {
+        if (value) {
+            var ret=value;
+            ajaxPost(basePath + "/stock/showMat/"+value, null, function (data) {
+                console.log(data);
+                ret=data.data;
+            })
+            return ret;
+        } else
+            return value;
+    }
+
 </script>
