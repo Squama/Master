@@ -15,9 +15,6 @@ public class Stock extends BaseEntity {
 
     private static final long serialVersionUID = -52018669648128138L;
 
-    @Header(name = "预算ID")
-    @Column(name = "budget_id")
-    private String budget_id;
 
     @Header(name = "项目ID")
     @Column(name = "project_id")
@@ -55,15 +52,6 @@ public class Stock extends BaseEntity {
     @Column(name = "reserve3")
     private String reserve3;
 
-
-
-    public String getBudget_id() {
-        return budget_id;
-    }
-
-    public void setBudget_id(String budget_id) {
-        this.budget_id = budget_id;
-    }
 
     public String getProject_id() {
         return project_id;

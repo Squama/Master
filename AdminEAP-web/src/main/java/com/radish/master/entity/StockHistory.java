@@ -14,17 +14,15 @@ public class StockHistory extends BaseEntity {
 
 
     private static final long serialVersionUID = -137060175090754566L;
-    @Header(name = "库存ID")
-    @Column(name = "stock_id")
-    private String stock_id;
 
     @Header(name = "原项目库ID")
     @Column(name = "project_id")
     private String project_id;
 
-    @Header(name = "目标项目库ID")
-    @Column(name = "target_project_id")
-    private String target_project_id;
+
+    @Header(name = "预算ID")
+    @Column(name = "budget_id")
+    private String budget_id;
 
     @Header(name = "物料编号")
     @Column(name = "mat_id")
@@ -38,6 +36,10 @@ public class StockHistory extends BaseEntity {
     @Column(name = "usetpye")
     private String usetpye;
 
+    @Header(name = "库存操作数据源")
+    @Column(name = "stock_Source")
+    private String stock_Source;
+
     @Header(name = "操作人员ID")
     @Column(name = "operation_person_id")
     private String operation_person_id;
@@ -45,6 +47,10 @@ public class StockHistory extends BaseEntity {
     @Header(name = "操作时间")
     @Column(name = "operation_time")
     private Date operation_time;
+
+    @Header(name = "备注")
+    @Column(name = "remark")
+    private String remark;
 
     @Header(name = "预留字段1")
     @Column(name = "reserve1")
@@ -56,13 +62,6 @@ public class StockHistory extends BaseEntity {
     @Column(name = "reserve3")
     private String reserve3;
 
-    public String getStock_id() {
-        return stock_id;
-    }
-
-    public void setStock_id(String stock_id) {
-        this.stock_id = stock_id;
-    }
 
     public String getProject_id() {
         return project_id;
@@ -72,13 +71,6 @@ public class StockHistory extends BaseEntity {
         this.project_id = project_id;
     }
 
-    public String getTarget_project_id() {
-        return target_project_id;
-    }
-
-    public void setTarget_project_id(String target_project_id) {
-        this.target_project_id = target_project_id;
-    }
 
     public String getMat_id() {
         return mat_id;
@@ -143,4 +135,29 @@ public class StockHistory extends BaseEntity {
     public void setReserve3(String reserve3) {
         this.reserve3 = reserve3;
     }
+
+    public String getStock_Source() {
+        return stock_Source;
+    }
+
+    public void setStock_Source(String stock_Source) {
+        this.stock_Source = stock_Source;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    public String getBudget_id() {
+        return budget_id;
+    }
+
+    public void setBudget_id(String budget_id) {
+        this.budget_id = budget_id;
+    }
+
 }

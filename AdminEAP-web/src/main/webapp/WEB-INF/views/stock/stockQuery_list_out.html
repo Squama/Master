@@ -7,7 +7,7 @@
     <ol class="breadcrumb">
         <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
         <li><a href="#">库存信息</a></li>
-        <li class="active">库存信息查询</li>
+        <li class="active">库存出库</li>
     </ol>
 </section>
 
@@ -35,7 +35,7 @@
 			                    <div class="btn-group">
 			                        <button type="button" class="btn btn-primary" data-btn-type="search">查询</button>
 			                        <button type="button" class="btn btn-default" data-btn-type="reset">重置</button>
-                                    <button type="button" class="btn btn-primary" data-btn-type="dispatch">调度出库</button>
+                                    <button type="button" class="btn btn-primary" data-btn-type="out">消耗出库</button>
 			                    </div>
 			                </div>
 			                <div class="box-body">
@@ -62,9 +62,9 @@
             var rowId = stockQueryTable.getSelectedRowId();
             stockQueryTable.getSelectedRowData()
             switch (action) {
-                case "dispatch":
+                case "out":
                 	if(!rowId){
-                        modals.info('请选择要调度的行');
+                        modals.info('请选择要出库的行');
                         return false;
                     }
                     modals.openWin({
