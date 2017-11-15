@@ -78,7 +78,7 @@
             }
             columns.push(obj);
         }
-        // alert(JSON.stringify(columns));
+        //console.log(JSON.stringify(columns));
         var allowPaging = this.data.query.allowPaging;
         var rowId = this.data.query.key;
         this.table = $('#' + tableId).DataTable($.extend({
@@ -201,7 +201,7 @@
     CommonTable.prototype.fixHeaderWidth = function () {
         var _this = this;
         var width = $("#" + this.tableId).find("tbody tr:first").width();
-        console.log(width)
+        //console.log(width)
         if (width > 0) {
             //$("#"+_this.tableId+"_wrapper div.dataTables_scrollHeadInner table").css("width",width).parent().css("width",width);
             $("#" + this.tableId).find("tbody tr:first td").each(function (index, item) {
@@ -213,7 +213,7 @@
                 $("#" + _this.tableId + "_wrapper div.dataTables_scrollHeadInner table").css("width", width).parent().css("width", width);
                 $("#" + _this.tableId + "_wrapper div.dataTables_scrollHeadInner table").find("thead tr:first th").eq(index).css("width", $(item).width());
                 //}
-                console.log($(item).width());
+                //console.log($(item).width());
             })
         }
         else {
@@ -397,9 +397,9 @@
         };
         dataCache.data("pageInfo", pageInfo);
         var retData = null;
-        console.log("reqObj:");
-        console.log(reqParam);
-        console.log(JSON);
+        //console.log("reqObj:");
+        //console.log(reqParam);
+        //console.log(JSON);
         //注释以上部分，统一用ajaxPost处理，以便处理session超时（ajax请求超时）
         ajaxPost(basePath + "/query/loadData", {"reqObj": this.toJSONString(reqParam)}, function (result, status) {
             retData = result;
