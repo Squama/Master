@@ -38,7 +38,8 @@ CREATE TABLE `tbl_budget` (
   `supplier_editer` varchar(64) DEFAULT NULL,
   `edit_time` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   `status` varchar(4) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `budget_no_uq` (`budget_no`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE `tbl_budget_tx` (

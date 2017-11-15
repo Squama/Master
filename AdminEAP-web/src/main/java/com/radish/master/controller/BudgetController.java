@@ -17,7 +17,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 @Controller
-@RequestMapping("/budgetQuery")
+@RequestMapping("/budget")
 public class BudgetController {
 
     @Resource
@@ -29,8 +29,7 @@ public class BudgetController {
     @RefreshCSRFToken
     @RequestMapping(value="/add",method = RequestMethod.GET)
     public String add(){
-        System.out.println("add...");
-        return "materialSpace/budget/budget_add";
+        return "budgetmanage/budget/budget_edit";
     }
 
 
