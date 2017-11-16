@@ -81,7 +81,7 @@
 <script>
     //tableId,queryId,conditionContainer
     var form =null;
-
+    //var budget_ID = $("#budget_ID").val();
     $(function() {
         //初始化控件
         form=$("#stock-form").form();
@@ -113,6 +113,21 @@
                     validators : {
                         notEmpty : {
                             message : '请输入预算编号'
+                        },
+                        threshold :  6 , //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
+                        remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
+                            url: basePath+'/stock/validBudget',//验证地址
+                            message: '请输入有效的预算编号',//提示消息
+                            delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
+                            type: 'POST'//请求方式
+                            /**自定义提交数据，默认值提交当前input value
+                             *  data: function(validator) {
+                               return {
+                                   password: $('[name="passwordNameAttributeInYourForm"]').val(),
+                                   whatever: $('[name="whateverNameAttributeInYourForm"]').val()
+                               };
+                            }
+                             */
                         }
                     }
                 },
@@ -135,13 +150,21 @@
                     validators : {
                         notEmpty : {
                             message : '请输入入库数量'
-                        }
+                        }//后续添加上下线验证
+
                     }
                 },
                 mat_id : {
                     validators : {
                         notEmpty : {
                             message : '请输入物料编号'
+                        },
+                        threshold :  6 ,
+                        remote: {
+                            url: basePath+'/stock/validMateriel',//验证地址
+                            message: '请输入有效的物料编号',//提示消息
+                            delay :  2000,
+                            type: 'POST'
                         }
                     }
                 },
