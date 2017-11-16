@@ -1,12 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <queryContext xmlns="http://www.example.org/query" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.example.org/query query.xsd">
     
-    <query id="budget_list" key="id" tableName="成本预算列表" className="com.radish.master.entity.Budget" widthType="px">
+    <query id="budget_list" key="budgetNo" tableName="成本预算列表" className="com.radish.master.entity.Budget" widthType="px">
         <column key="rowIndex" header="序号" width="80"/>
         <column key="budgetNo" header="预算编码" allowSort="true" width="150"/>
         <column key="budgetName" header="预算名称" classType="String" allowSort="true" width="150"/>
         <column key="projectID" header="所属项目" classType="String" allowSort="true" width="150" fnRender="fnRenderProject"/>
         <column key="status" header="预算状态" allowSort="true" width="150" render="10=新建,20=制单待审核,30=审核待编辑,40=已完成"/>
+    </query>
+    
+    <query id="budget_tx_list_edit" key="id" tableName="成本预算明细" className="com.radish.master.entity.BudgetTx" widthType="px" pageSize="20">
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="budgetNo" header="所属预算" classType="String" width="150"/>
+        <column key="regionID" header="部位" classType="String" width="150"/>
+        <column key="matNumber" header="物料" classType="String" width="150"/>
+        <column key="matStandard" header="物料规格" classType="String" width="150"/>
+        <column key="unit" header="单位" classType="String" width="150"/>
+        <column key="quantity" header="数量" classType="String" width="150"/>
     </query>
     
 </queryContext>

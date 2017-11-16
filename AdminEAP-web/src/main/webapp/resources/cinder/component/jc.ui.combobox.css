@@ -1,0 +1,42 @@
+.jc-combobox-wrapper{
+    background: red;
+}
+
+.jc-combobox-container .combobox-input{
+    padding-left: 5px;
+    padding: 3px;
+    height: 19px;
+    width: 205px;
+    border: 1px solid #d5d5d5;
+    cursor: pointer;
+    background: url(images/combobox/dropdown.png) right center no-repeat;
+    background-origin:content-box;
+}
+
+.jc-combobox-dropdown-button{
+    width: 18px;
+    height:20px;
+    
+}
+
+.jc-combobox-dropdown{
+    /* width:20px; 
+    height:16px;
+    background:url(../images/dropdown.png) no-repeat; */
+    /*position: absolute;*/
+    top: 0;
+    bottom: 0;
+    margin-left: -1px;
+    padding: 0;
+    width: 2.2em;
+    background:#e6e6e6 url("images/ui-bg_glass_75_e6e6e6_1x400.png") 50% 50% repeat-x;
+}
+
+.jc-combobox-dropdown-span{
+    left: 50%;
+    margin-left: -8px;
+    position: absolute;
+    top: 50%;
+    margin-top: -8px;
+    background:url(../images/dropdown.png);
+}

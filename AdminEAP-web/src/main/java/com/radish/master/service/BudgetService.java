@@ -6,6 +6,8 @@ import com.radish.master.entity.Budget;
 
 public interface BudgetService extends BaseService {
 
-    Budget getBudgetByID(String ID);
+    Budget getBudgetByNo(String batchNo);
+    
+    Boolean checkTxUnique(String projectID, String regionID, String matNumber);
 
 }
