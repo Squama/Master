@@ -61,8 +61,20 @@ public class Channel {
   @Header(name = "单价")
   @Column(name = "price")
   private Double price;
+  
+  @Header(name = "所在地")
+  @Column(name = "area")
+  private String area;
+  
+  public String getArea() {
+	return area;
+}
 
-  @Header(name = "创建人姓名")
+public void setArea(String area) {
+	this.area = area;
+}
+
+@Header(name = "创建人姓名")
   @Column(name = "create_name")
   private String create_name;
 

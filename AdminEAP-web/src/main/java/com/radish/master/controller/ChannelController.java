@@ -22,7 +22,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Random;
 
 @Controller
 @RequestMapping("/channel")
@@ -44,6 +43,12 @@ public class ChannelController {
         request.setAttribute("id", id);
         request.setAttribute("doWhat",request.getParameter("doWhat"));
         return prefix+"channel_edit";
+    }
+    @RefreshCSRFToken
+    @RequestMapping(value="/chooseArea",method = RequestMethod.GET)
+    public String chooseArea(String box,HttpServletRequest request){
+        request.setAttribute("box", box);
+        return prefix+"chooseArea";
     }
 	
     @RefreshCSRFToken

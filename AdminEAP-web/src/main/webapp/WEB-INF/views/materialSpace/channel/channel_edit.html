@@ -58,9 +58,12 @@
         </div>
         <!-- /.box-footer -->
     </form>
+    
      <form id="channel-form1" name="channel-form1" class="form-horizontal">
+    
      <input type="hidden" name="mat_name" >
      <input type="hidden" name="c_id" id="id1">
+      <div class="box-body">
     	 <div class="col-md-6">
     	  <div class="form-group">
                     <label for="supplier" class="col-sm-3 control-label">供应商</label>
@@ -68,7 +71,12 @@
                         <input type="text" class="form-control" id="supplier" name="supplier" placeholder="供应商">
                     </div>
                 </div>
-           
+            <div class="form-group">
+                    <label for="area" class="col-sm-3 control-label">所在地</label>
+                    <div class="col-sm-8" >
+                        <input type="text" class="form-control" id="area1" name="area" placeholder="所在地" onclick="getArea(1)">
+                    </div>
+                </div>
     	 </div>
     	 
     	 <div class="col-md-6">
@@ -77,19 +85,22 @@
                     <div class="col-sm-8">
                        <input type="text" class="form-control" id="price" name="price" placeholder="单价" >                    	
                     </div>
-             <div class="" style="text-align: right;margin-right:12% ">
+             
+          </div>
+        <div class="form-group" style="text-align: center">
+        <label for="" class="col-sm-3 control-label"></label>
+             <div class="col-sm-8" style="text-align: right;">
            		 <button type="submit" class="btn btn-primary" data-btn-type="save" id="b_sub1">提交</button>
  
        		 </div>
-          </div>
-        <div class="" style="text-align: center">
-             
         </div>
+    	 </div>
     	 </div>
     </form>
     <form id="channel-form2" name="channel-form2" class="form-horizontal">
     <input type="hidden" name="mat_name" >
     <input type="hidden" name="c_id" id="id2">
+     <div class="box-body">
     	 <div class="col-md-6">
     	  <div class="form-group">
                     <label for="supplier" class="col-sm-3 control-label">供应商</label>
@@ -98,7 +109,12 @@
                     </div>
                 </div>
                 
-           <div></div>
+            <div class="form-group">
+                    <label for="area" class="col-sm-3 control-label">所在地</label>
+                    <div class="col-sm-8" >
+                        <input type="text" class="form-control" id="area2" name="area" placeholder="所在地" onclick="getArea(2)">
+                    </div>
+                </div>
     	 </div>
     	 <div class="col-md-6">
     	  <div class="form-group">
@@ -107,23 +123,34 @@
                         <input type="text" class="form-control" id="price" name="price" placeholder="单价">
                      
                     </div>
-                    <div class="" style="text-align: right;margin-right:12% ">
-           		 <button type="submit" class="btn btn-primary" data-btn-type="save" id="b_sub2">提交</button>
-
-       		 </div>
+                   
                 </div>
-        <div class="" style="text-align: right">
-        </div> 
+        <div class="form-group" style="text-align: center">
+        <label for="" class="col-sm-3 control-label"></label>
+             <div class="col-sm-8" style="text-align: right;">
+           		 <button type="submit" class="btn btn-primary" data-btn-type="save" id="b_sub2">提交</button>
+ 
+       		 </div>
+       		
+        </div>
+    	 </div>
     	 </div>
     </form>
     <form id="channel-form3" name="channel-form3" class="form-horizontal">
     	<input type="hidden" name="mat_name" >
     	<input type="hidden" name="c_id" id="id3">
+    	 <div class="box-body">
     	 <div class="col-md-6">
     	  <div class="form-group">
                     <label for="supplier" class="col-sm-3 control-label">供应商</label>
                     <div class="col-sm-8">
                         <input type="text" class="form-control" id="supplier" name="supplier" placeholder="供应商">
+                    </div>
+                </div>
+                 <div class="form-group">
+                    <label for="area" class="col-sm-3 control-label">所在地</label>
+                    <div class="col-sm-8" >
+                        <input type="text" class="form-control" id="area3" name="area" placeholder="所在地" onclick="getArea(3)">
                     </div>
                 </div>
     	 </div>
@@ -133,12 +160,16 @@
                     <div class="col-sm-8">
                         <input type="text" class="form-control" id="price" name="price" placeholder="单价">
                     </div>
-                    <div class="" style="text-align: right;margin-right:12% ">
+                   
+                </div>
+        <div class="form-group" style="text-align: center">
+        <label for="" class="col-sm-3 control-label"></label>
+             <div class="col-sm-8" style="text-align: right;">
            		 <button type="submit" class="btn btn-primary" data-btn-type="save" id="b_sub3">提交</button>
  
        		 </div>
-                </div>
-        
+        </div>
+    	 </div>
     	 </div>
     </form>
 </div>
@@ -185,7 +216,7 @@
                    
                    ajaxPost(basePath+'/channel/save?mat_id='+$("#mat_id").val(), params, function(data, status) {
                         if(data.success){
-                        	modals.hideWin(winId);
+                        	
                         	materielTable.reloadData();
                         	modals.info("数据修改成功");
                         	 
@@ -215,6 +246,13 @@
 
 
                     }
+                },
+                area : {
+                    validators : {
+                        notEmpty : {
+                            message : '请选择地区'
+                        }
+                    }
                 }
             }
         });
@@ -233,7 +271,7 @@
                     console.log(params);
                    ajaxPost(basePath+'/channel/save?mat_id='+$("#mat_id").val(), params, function(data, status) {
                         if(data.success){
-                        	modals.hideWin(winId);
+                        	
                         	materielTable.reloadData();
                         	modals.info("数据修改成功");
                         	 
@@ -255,6 +293,13 @@
                             message : '请输入价格'
                         }
                     }
+                },
+                area : {
+                    validators : {
+                        notEmpty : {
+                            message : '请选择地区'
+                        }
+                    }
                 }
             }
         });
@@ -273,7 +318,6 @@
                     console.log(params);
                   ajaxPost(basePath+'/channel/save?mat_id='+$("#mat_id").val(), params, function(data, status) {
                         if(data.success){
-                        	modals.hideWin(winId);
                         	materielTable.reloadData();
                         	modals.info("数据修改成功");
                         	 
@@ -293,6 +337,13 @@
                     validators : {
                         notEmpty : {
                             message : '请输入价格'
+                        }
+                    }
+                },
+                area : {
+                    validators : {
+                        notEmpty : {
+                            message : '请选择地区'
                         }
                     }
                 }
@@ -328,5 +379,15 @@
         }
         
     });
+    
+    function getArea(data){
+    	var url = basePath+"/channel/chooseArea?box="+data;
+    	modals.openWin({
+    		winId:"area",
+            title:"选择所在城区",
+            width:'600px',
+            url:url
+           });
+    }
     
 </script>
