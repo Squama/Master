@@ -175,7 +175,7 @@
     }
     
     function setSS1(){
-    	ajaxPost(basePath+"/material/getFl?p_id=1029",null,function(data){
+    	ajaxPost(basePath+"/material/getFl",null,function(data){
     		if(data.data){
     			var list = data.data;
     			var option;
@@ -190,7 +190,8 @@
     		}
     	})
     }
-    function changeSS2(){
+    function changeSS2(){ 
+    	
     	$("#ss2").empty();
     	var p_id = $("#ss1").val();
     	ajaxPost(basePath+"/material/getFl?p_id="+p_id,null,function(data){
