@@ -4,9 +4,9 @@ package com.radish.master.service.impl;
 import com.cnpc.framework.base.service.impl.BaseServiceImpl;
 
 import com.cnpc.framework.utils.SecurityUtil;
-import com.radish.master.entity.Budget;
 import com.radish.master.entity.Project;
 import com.radish.master.entity.Stock;
+import com.radish.master.entity.StockChannel;
 import com.radish.master.entity.StockHistory;
 import com.radish.master.service.StockService;
 import org.springframework.stereotype.Service;
@@ -28,7 +28,7 @@ public class StockServiceImpl extends BaseServiceImpl implements StockService {
         tockHistory.setMat_id(mat_ID);
         tockHistory.setStock_change_num(stockChangeNum);
         tockHistory.setStock_Source(stockSource);//目前填入预算编号， 后期晚上采购单后为采购单编号
-        tockHistory.setUsetpye(useTpye);//1:采购入库，2：调度变更，3.消耗出库
+        tockHistory.setUsetpye(useTpye);//1：采购入库 2：调度入库 3：消耗出库  4：调度出库
         tockHistory.setOperation_person_id(SecurityUtil.getUserId());
         tockHistory.setOperation_time(new Date());
         save(tockHistory);
@@ -64,6 +64,45 @@ public class StockServiceImpl extends BaseServiceImpl implements StockService {
             return list.get(0);
         }
         return null;
+    }
+
+    @Override
+    public Boolean saveChannel(String mat_ID, String project_ID, String channel_ID, int stockNum) {
+        StockChannel stockChannel = getStockChannel(mat_ID,project_ID,channel_ID);
+        if(stockChannel==null){
+            stockChannel = new StockChannel();
+            stockChannel.setMat_id(mat_ID);
+            stockChannel.setProject_id(project_ID);
+            stockChannel.setChannel_id(channel_ID);
+            stockChannel.setStock_num(stockNum);
+            save(stockChannel);
+        }else {
+            stockChannel.setStock_num(stockChannel.getStock_num()+stockNum);
+            update(stockChannel);
+        }
+        return true;
+    }
+
+    @Override
+    public List<StockChannel> getStockChannelList(String mat_ID, String project_ID) {
+        String sql = " select * from tbl_stock_channel where mat_id='" + mat_ID + "' and project_ID='" + project_ID + "'";
+        List<StockChannel> list = findBySql(sql, StockChannel.class);
+        if(list.size()>0){
+            return list;
+        }else {
+            return  null;
+        }
+    }
+
+    @Override
+    public StockChannel getStockChannel(String mat_ID, String project_ID, String channel_ID) {
+        String sql = " select * from tbl_stock_channel where mat_id='" + mat_ID + "' and project_ID='" + project_ID + "' and channel_id ='"+channel_ID+"'";
+        List<StockChannel> list = findBySql(sql, StockChannel.class);
+        if(list.size()>0){
+            return list.get(0);
+        }else {
+            return  null;
+        }
     }
 
 }

@@ -1,0 +1,61 @@
+
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><li class="fa fa-remove"></li></button>
+    <h5 class="modal-title">选择物料采购渠道</h5>
+</div>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="nav-tabs-custom">
+                <ul class="nav nav-tabs pull-right">
+                    <li class="pull-left header"><i class="fa fa-user"></i>
+                        <small>采购渠道列表</small></li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="tab-content-list">
+                        <div class="box">
+                            <!-- /.box-header -->
+
+                            <div class="dataTables_filter" id="searchDivC" style="display: none">
+                                <!--查询条件 style="display: none"-->
+                                <input type="search" title="物料编号" name="mat_ID"  class="form-control" id="mat_ID" operator="like" likeOption="true"  style="display: none">
+                                <input type="search"  title="有效标志" name="isValid" class="form-control" id="isValid" operator="like" likeOption="true"  style="display: none">
+                            </div>
+                            <div class="box-body" >
+                                <table id="stock_channel_table" class="table table-bordered table-striped table-hover ">
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="text-align: center">
+                        <button type="" class="btn btn-default" id="choose" onclick="doChoose()">确认</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+
+    var stockQueryTable, winId = "stockQueryWin";
+    var mat_id = $("#mat_id").val();
+    $(function () {
+        $("#mat_ID").val(mat_id);
+        $("#isValid").val("1");
+        stockQueryTable = new CommonTable("stock_channel_table", "channel_list", "searchDivC", null);
+    });
+
+    function doChoose(){
+    	//var data = $("#szcq option:selected").val();
+        var rowId = stockQueryTable.getSelectedRowId();
+        var data = stockQueryTable.getSelectedRowData();
+    	if(data){
+            parent.$("#channel").val(data.supplier);
+            parent.$("#price").val(data.price);
+/*            parent.$("#channel_id").val(data.id);*/
+    	}
+    	modals.hideWin("area");
+    }
+</script>

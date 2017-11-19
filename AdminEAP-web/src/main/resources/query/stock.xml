@@ -20,7 +20,7 @@
 	        <column key="stockNum" header="当前库存" classType="java.lang.Integer" width="150"/>
 	        <column key="storagePersonName" header="入库人员" classType="String" width="150"/>
 	        <column key="storageTime" header="入库时间" classType="Date" id="s.storage_time" operator="between" width="150" dateFormat="yyyy-mm-dd"/>
-	        <column key="useType" header="操作类型" classType="String" width="150"/>
+	        <column key="useType" header="操作类型" classType="String" width="150" render="1=采购入库,2=调度入库"/>
 	</query>
 
 	<query id="stock_history_list" key="id" tableName="历史库存信息列表" widthType="px">
@@ -42,10 +42,11 @@
 		<column key="matName" header="物料名" classType="String" width="150"/>
 		<column key="stockChangeNum" header="库存变更量" classType="java.lang.Integer" width="150"/>
 		<column key="unit" header="单位" classType="String" width="150"/>
-<!--		<column key="operationPersonID" header="操作人员编号" classType="String" width="150"/>-->
+		<!--<column key="operationPersonID" header="操作人员编号" classType="String" width="150"/>-->
 		<column key="userName" header="操作人员姓名" classType="String" width="150"/>
 		<column key="operationTime" header="操作时间" classType="Date" id="s.storage_time" operator="between" allowSort="true"  width="150" dateFormat="yyyy-mm-dd"/>
-		<column key="useTpye" header="操作类型" classType="String" width="150"/>
+		<column key="useTpye" header="操作类型" classType="String" width="150"  render="1=采购入库,2=调度入库,3=消耗出库,4=调度出库"/>
 		<column key="stockSource" header="来源/流向" classType="String" width="150"/>
 	</query>
+
 </queryContext>

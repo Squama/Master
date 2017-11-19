@@ -180,7 +180,19 @@
                 mb_budget_id : {
                     validators : {
                         notEmpty : {
-                            message : '请输入目标库项目编号'
+                            message : '请输入目标库预算编号'
+                        },
+                        stringLength: {/*长度提示*/
+                            min: 3,
+                            max: 9,
+                            message: '预算编号格式不正确'
+                        },
+                        threshold :  6 ,
+                        remote: {
+                            url: basePath+'/stock/validBudget',//验证地址
+                            message: '请输入有效的目标库预算编号',//提示消息
+                            delay :  2000,
+                            type: 'POST'
                         }
                     }
                 }

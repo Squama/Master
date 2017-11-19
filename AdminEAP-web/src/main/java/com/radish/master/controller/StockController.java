@@ -7,7 +7,6 @@ import com.cnpc.framework.base.service.BaseService;
 import com.cnpc.framework.utils.SecurityUtil;
 import com.radish.master.entity.*;
 import com.radish.master.pojo.ResultObj;
-import com.radish.master.service.ProjectService;
 import com.radish.master.service.StockService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -58,10 +57,11 @@ public class StockController {
     @ResponseBody
     public Result save(HttpServletRequest request){
         Stock stock = new Stock();
-        String id = request.getParameter("id");
         String mat_id = request.getParameter("mat_id");
         String project_ID = request.getParameter("mat_project_id");
+        String channel_ID = request.getParameter("channel");
         String budget_ID = request.getParameter("budget_ID");
+        int  stock_Num = Integer.parseInt(request.getParameter("stock_Num"));
         String sql = " select * from tbl_stock where mat_id='"+mat_id+"' and project_ID='"+project_ID+"'";
         List<Stock> list= baseService.findBySql(sql, Stock.class);
         if(list.size()==0){//同一种物料在一个项目下无记录，做新增
@@ -79,6 +79,8 @@ public class StockController {
             stock.setStock_num(stock.getStock_num()+Integer.parseInt(request.getParameter("stock_Num")));
             baseService.update(stock);
         }
+        //同步库存渠道表
+        stockService.saveChannel(mat_id ,project_ID,channel_ID,stock_Num);
         //新增历史库存记录
         stockService.saveHistory(budget_ID,request.getParameter("mat_id"),Integer.parseInt(request.getParameter("stock_Num")),"1",request.getParameter("budget_ID"),"");
         Result r = new Result();
@@ -91,22 +93,22 @@ public class StockController {
     @ResponseBody
     public Result saveDispatch(HttpServletRequest request){
 
-        Stock stock = new Stock();
         String mbBudgetID = request.getParameter("mb_budget_id");
         String budgetID = request.getParameter("budget_no");
         String mbProject_ID =  stockService.getProjectByBudget(mbBudgetID).getProjectCode();
         String project_ID = stockService.getProjectByBudget(budgetID).getProjectCode();
         String mat_id = request.getParameter("mat_ID");
-        String unit = request.getParameter("unit");
         String stockNum = request.getParameter("stock_Num");
-        String matStandard = request.getParameter("mat_standard");
 
         //原库存减少
         stockService.stockChange(project_ID,mat_id,Integer.parseInt(stockNum),2);
         //目标库存增加
         stockService.stockChange(mbProject_ID,mat_id,Integer.parseInt(stockNum),1);
-        stockService.saveHistory(budgetID,mat_id,Integer.parseInt(stockNum),"2",mbProject_ID,"");
-        stockService.saveHistory(mbBudgetID,mat_id,Integer.parseInt(stockNum),"3",project_ID,"");
+        stockService.saveHistory(budgetID,mat_id,Integer.parseInt(stockNum),"4",mbProject_ID,"");
+        stockService.saveHistory(mbBudgetID,mat_id,Integer.parseInt(stockNum),"2",project_ID,"");
+
+        //同步库存渠道表
+        //stockService.saveChannel(mat_id ,project_ID,channel_ID,stock_Num);
         Result r = new Result();
         r.setSuccess(true);
         return r;
@@ -146,6 +148,9 @@ public class StockController {
     public ResultObj validBudget(HttpServletRequest request){
 
         String id = request.getParameter("budget_ID");
+        if(id == null){
+            id = request.getParameter("mb_budget_id");
+        }
         String sql = "select p.project_name,p.project_code from tbl_project p ,tbl_budget b where b.project_id = p.project_code and b.budget_no = '"+id+"'";
         List list= baseService.findMapBySql(sql);
         if(list.size()!= 0){
@@ -198,6 +203,14 @@ public class StockController {
     public String edit(String id,HttpServletRequest request){
         request.setAttribute("id", id);
         return "stock/stock_dispatch";
+    }
+
+    //入库选择物料渠道
+    @RefreshCSRFToken
+    @RequestMapping(value="/getChannel",method = RequestMethod.GET)
+    public String getChannel(String mat_id,HttpServletRequest request){
+        request.setAttribute("mat_id", mat_id);
+        return "stock/chooseChannel";
     }
 
     @RequestMapping(value="/get/{id}",method = RequestMethod.POST)
