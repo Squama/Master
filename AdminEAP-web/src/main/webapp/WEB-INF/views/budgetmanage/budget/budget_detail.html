@@ -1,0 +1,80 @@
+<div class="modal-body">
+	<section class="content">
+	    <div class="row">
+	        <div class="col-xs-12">
+	            <form id="budget-form" name="budget-form" class="form-horizontal">
+			        <input type="hidden" name="id">
+		            <div class="box-body">
+		                <!-- 内容 -->
+		                <div class="col-md-12">
+		                    <div class="form-group">
+		                        <label class="col-sm-3 control-label">项目名称<span style="color:red">*</span></label>
+		                        <div class="col-sm-5">
+		                            <input type="text" class="form-control" id="projectID" name="projectID" readonly="readonly">
+		                        </div>
+		                    </div> 
+		                    <div class="form-group">
+		                        <label class="col-sm-3 control-label">预算名称<span style="color:red">*</span></label>
+		                        <div class="col-sm-5">
+		                            <input type="text" class="form-control" id="budgetName" name="budgetName" readonly="readonly">
+		                        </div>
+		                    </div>
+		                    <div class="form-group">
+		                        <label class="col-sm-3 control-label">预算编码<span style="color:red">*</span></label>
+		                        <div class="col-sm-5">
+		                            <input type="text" class="form-control" id="budgetNo" name="budgetNo" readonly="readonly">
+		                        </div>
+		                    </div>
+		                </div>
+		            </div>
+			        <div class="box box-success" id="budget_tx">
+			            <div class="dataTables_filter" id="searchDiv" style="text-align:center;height:1px;">
+	                       <input type="search" name="budgetNo" class="form-control" operator="eq" style="display:none;">
+	                       <div class="btn-group">
+	                           <button type="button" class="btn btn-primary" data-btn-type="search" id="refresh" style="display:none;">查询</button>
+	                       </div>
+	                    </div>
+			            <div class="box-body">
+			                <!-- 内容 -->
+			                <table id="budget_tx_table" class="table table-bordered table-striped table-hover">
+			                </table>
+			            </div>
+			        </div>
+		        </form>
+	        </div>
+	    </div>
+	</section>
+</div>
+
+<script>
+    var budgetform = $("#budget-form").form({baseEntity: false}), initData={};
+    var budgetTxTable, winId = "budgetAddWin";
+    
+    var budgetNo="${budgetNo?default(0)}";
+    initData.budgetNo = budgetNo;
+    budgetform.initFormData(initData);
+    
+    $(function (){
+        budgetTxTable = new CommonTable("budget_tx_table", "budget_tx_list_detail", "searchDiv", {
+            "ordering" : false,
+            "lengthChange": false,
+            "displayLength": 20,
+            "scrollY": "200px",
+            "scrollCollapse": true
+        });
+        
+        //编辑回填
+        if(budgetNo!="0"){
+            ajaxPost(basePath+"/budget/getbyno",{budgetNo:budgetNo},function(data){
+                budgetform.initFormData(data);
+                ajaxPost(basePath+"/project/get",{id:data.projectID},function(data){
+                    $('#projectID').val(data.name);
+                })
+            })
+        } 
+        //初始化控件
+        budgetform.initComponent();
+        
+    });
+    
+</script>

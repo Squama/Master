@@ -131,6 +131,8 @@ public class UserTaskController {
                 .getProcessInstanceId()).singleResult();
         String businessKey = processInstance.getBusinessKey();
 
+        request.setAttribute("businessKey", businessKey);
+        
         String formUrl = null;
 
         //获取业务url，外嵌表单展示,注入业务url 可通过local_form_url 设置，也可设置在formKey中

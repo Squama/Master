@@ -56,6 +56,8 @@ CREATE TABLE `tbl_budget_tx` (
   `mat_standard` varchar(50) DEFAULT NULL,
   `unit` varchar(50) DEFAULT NULL,
   `quantity` varchar(16) DEFAULT NULL,
+  `supplier` varchar(255) DEFAULT NULL,
+  `price` varchar(16) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 

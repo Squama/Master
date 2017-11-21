@@ -8,8 +8,6 @@ import com.cnpc.framework.base.entity.Generator;
 import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.base.service.BaseService;
 import com.cnpc.framework.utils.StrUtil;
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
-import java.util.List;
 
 /**
 * 测试管理控制器
@@ -34,6 +31,11 @@ public class GeneratorController {
     @RequestMapping(value="/list",method = RequestMethod.GET)
     public String list(){
         return "demos/generator_list";
+    }
+    
+    @RequestMapping(value="/test",method = RequestMethod.GET)
+    public String test(){
+        return "test/test";
     }
 
     @RefreshCSRFToken
