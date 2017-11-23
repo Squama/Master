@@ -83,7 +83,9 @@ public class ChannelController {
     @ResponseBody
     public Result save(String mat_id,Channel c,String c_id,HttpServletRequest request) throws UnsupportedEncodingException{
     	c.setId(null);
-    	c.setMat_ID(mat_id);
+    	Materiel m = baseService.get(Materiel.class, mat_id);
+    	
+    	c.setMat_ID(m.getMat_number());
     	c.setCreate_time(new Date());
     	
     	c.setIsValid("1");

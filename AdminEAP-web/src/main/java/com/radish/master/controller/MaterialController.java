@@ -2,12 +2,17 @@ package com.radish.master.controller;
 
 import com.cnpc.framework.annotation.RefreshCSRFToken;
 import com.cnpc.framework.annotation.VerifyCSRFToken;
+import com.cnpc.framework.base.dao.BaseDao;
 import com.cnpc.framework.base.entity.Dict;
 import com.cnpc.framework.base.entity.Mat;
 import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.base.service.BaseService;
 import com.radish.master.entity.Materiel;
 
+
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,8 +23,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 @Controller
@@ -30,6 +37,11 @@ public class MaterialController {
 	
 	@Autowired
 	private BaseService baseService;
+	@Autowired
+	private SessionFactory sessionFactory;
+	public Session getCurrentSession() {
+		return this.sessionFactory.getCurrentSession();
+	}
 	
 	@RequestMapping(value="/index",method = RequestMethod.GET)
 	public String index(){
@@ -105,14 +117,31 @@ public class MaterialController {
     		materiel.setParent_ID(ss4);
     	}
     	materiel.setCreate_time(new Date());
-    	//暂写随机数
+    	
+    	String mat_id = materiel.getParent_ID();
+    	Mat m = baseService.get(Mat.class, mat_id);
+    	String code = m.getCode();
+    	String[] strs = code.split("_");
+    	String str = strs[1];
+    	//拿到当前数据库数据的最大值
+    	List<String> list = baseService.find("select max(ma.mat_number) from com.radish.master.entity.Materiel ma where ma.mat_number like '"+str+"%'");
+    	if(list.get(0)==null){
+    		materiel.setMat_number(str+"100001");
+    	}else{
+    		String s= list.get(0);
+    		String num = s.substring(s.length()-6);
+    		int i = Integer.parseInt(num);
+    		i++;
+    		materiel.setMat_number(str+i);
+    	}
+    	/*//暂写随机数
     	Random ra = new Random();
-    	String s = "wl"+ra.nextInt(10000);
-    	materiel.setMat_number(s);
+    	String s = str+ra.nextInt(10000);
+    	materiel.setMat_number(s);*/
     	String id = (String)baseService.save(materiel);
     	Result r = new Result();
     	r.setSuccess(true);
-    	return new Result();
+    	return r;
     }
     @RequestMapping(value="/delete/{id}",method = RequestMethod.POST)
     @ResponseBody
@@ -172,4 +201,6 @@ public class MaterialController {
     	r.setSuccess(true);
     	return r;
     }
+    
+   
 }
