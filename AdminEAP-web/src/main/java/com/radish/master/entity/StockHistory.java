@@ -30,7 +30,7 @@ public class StockHistory extends BaseEntity {
 
     @Header(name = "变更数量")
     @Column(name = "stock_change_num")
-    private Integer stock_change_num;
+    private Double stock_change_num;
 
     @Header(name = "操作类型")
     @Column(name = "usetpye")
@@ -80,11 +80,11 @@ public class StockHistory extends BaseEntity {
         this.mat_id = mat_id;
     }
 
-    public Integer getStock_change_num() {
+    public Double getStock_change_num() {
         return stock_change_num;
     }
 
-    public void setStock_change_num(Integer stock_change_num) {
+    public void setStock_change_num(Double stock_change_num) {
         this.stock_change_num = stock_change_num;
     }
 

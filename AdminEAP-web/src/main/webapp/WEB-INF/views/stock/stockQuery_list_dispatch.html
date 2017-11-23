@@ -52,15 +52,15 @@
 
 <script>
 
-    var stockQueryTable, winId = "stockQueryWin";
+    var stockQueryTableD, winId = "stockQueryWin";
 
     $(function (){
-        stockQueryTable = new CommonTable("stock_table", "stock_list", "searchDiv", null);
+        stockQueryTableD = new CommonTable("stock_table", "stock_list", "searchDiv", null);
         //绑定按钮事件
         $("button[data-btn-type]").click(function () {
             var action = $(this).data("btn-type");
-            var rowId = stockQueryTable.getSelectedRowId();
-            stockQueryTable.getSelectedRowData()
+            var rowId = stockQueryTableD.getSelectedRowId();
+            stockQueryTableD.getSelectedRowData()
             switch (action) {
                 case "dispatch":
                 	if(!rowId){
@@ -69,7 +69,7 @@
                     }
                     modals.openWin({
                         winId: winId,
-                        title: '物料库存调度【' + stockQueryTable.getSelectedRowData().project_id + '】',
+                        title: '物料库存调度【' + stockQueryTableD.getSelectedRowData().project_id + '】',
                         width: '900px',
                         url: basePath + "/stock/dispatch?id=" + rowId
                     });

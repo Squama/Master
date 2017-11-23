@@ -23,7 +23,7 @@ public class StockChannel extends BaseEntity {
 
     @Header(name = "库存量")
     @Column(name = "stock_num")
-    private Integer stock_num;
+    private Double stock_num;
 
     @Header(name = "渠道编号")
     @Column(name = "channel_id")
@@ -57,11 +57,11 @@ public class StockChannel extends BaseEntity {
         this.mat_id = mat_id;
     }
 
-    public Integer getStock_num() {
+    public Double getStock_num() {
         return stock_num;
     }
 
-    public void setStock_num(Integer stock_num) {
+    public void setStock_num(Double stock_num) {
         this.stock_num = stock_num;
     }
 

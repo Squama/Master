@@ -19,8 +19,8 @@
 
                             <div class="dataTables_filter" id="searchDivC" style="display: none">
                                 <!--查询条件 style="display: none"-->
-                                <input type="search" title="物料编号" name="mat_ID"  class="form-control" id="mat_ID" operator="like" likeOption="true"  style="display: none">
-                                <input type="search"  title="有效标志" name="isValid" class="form-control" id="isValid" operator="like" likeOption="true"  style="display: none">
+                                <input type="search" title="物料编号" name="sc.mat_id"  class="form-control" id="mat_ID" operator="like" likeOption="true"  >
+                                <input type="search" title="物料编号" name="sc.project_id"  class="form-control" id="project_ID" operator="like" likeOption="true"  >
                             </div>
                             <div class="box-body" >
                                 <table id="stock_channel_table" class="table table-bordered table-striped table-hover ">
@@ -40,21 +40,19 @@
 <script>
     var channel_id = null;
     var stockQueryTable, winId = "stockQueryWin";
-    var mat_id = $("#mat_id").val();
+    var mat_id = "${mat_id?default(0)}";
+    var project_id = "${project_id?default(0)}";
     $(function () {
         $("#mat_ID").val(mat_id);
-        $("#isValid").val("1");
-        stockQueryTable = new CommonTable("stock_channel_table", "channel_list", "searchDivC", null);
+        $("#project_ID").val(project_id);
+        stockQueryTable = new CommonTable("stock_channel_table", "stock_channel_list", "searchDivC", null);
     });
-
     function doChoose(){
-    	//var data = $("#szcq option:selected").val();
-        channel_id = stockQueryTable.getSelectedRowId();
         var data = stockQueryTable.getSelectedRowData();
+        channel_id = data.id;
     	if(data){
             parent.$("#channel").val(data.supplier);
             parent.$("#price").val(data.price);
-/*            parent.$("#channel_id").val(data.id);*/
     	}
     	modals.hideWin("area");
     }

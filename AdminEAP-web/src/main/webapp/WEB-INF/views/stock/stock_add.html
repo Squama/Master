@@ -31,7 +31,7 @@
 
 
 				<div class="form-group">
-					<label for="channel" class="col-sm-3 control-label">采购渠道</label>
+					<label for="channel" class="col-sm-3 control-label">供应商</label>
 					<div class="col-sm-8">
 						<input type="text"  class="form-control" id="channel" name="channel" placeholder="请输入采购渠道" onclick="getChannel()">
 					</div>
@@ -110,7 +110,8 @@
                 modals.confirm('确认保存？', function() {
                     //Save Data，对应'submit-提交'
                     var params = form.getFormSimpleData();
-                    console.log(params);
+                    alert(channel_id);
+                    params.channel_id=channel_id;
                     ajaxPost(basePath+'/stock/save', params, function(data) {
                         console.log(data);
                         if(data.success){
@@ -225,8 +226,6 @@
 
     });
 
-
-
     $("#mat_id").change(function(){
         getMat();
     });
@@ -261,7 +260,6 @@
     }
 
     function getChannel(data){
-
         var mat_id = $("#mat_id").val();
         var url = basePath+"/stock/getChannel?mat_id="+mat_id;
         modals.openWin({

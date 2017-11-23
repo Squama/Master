@@ -30,7 +30,7 @@
 	<!-- 采购渠道-->
 	<query id="channel_list" key="id" tableName="物料渠道表" className="com.radish.master.entity.Channel" widthType="px">
 		<column key="rowIndex" header="序号" width="80"/>
-		<column key="id" header="ID" classType="String" allowSort="true" width="150" hidden="true"/>
+		<!--<column key="id" header="ID" classType="String" allowSort="true" width="150" hidden="true"/>-->
 		<column key="supplier" header="供应商" classType="String" allowSort="true" width="150"/>
 		<column key="area" header="供应商所在地" classType="String" width="150"/>
 		<column key="price" header="单价" classType="String" allowSort="true" width="150"/>

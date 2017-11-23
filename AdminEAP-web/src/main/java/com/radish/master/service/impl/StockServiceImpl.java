@@ -20,7 +20,7 @@ public class StockServiceImpl extends BaseServiceImpl implements StockService {
 
 
     @Override
-    public Boolean saveHistory(String budget_no, String mat_ID, int stockChangeNum, String useTpye, String stockSource, String remark) {
+    public Boolean saveHistory(String budget_no, String mat_ID, Double stockChangeNum, String useTpye, String stockSource, String remark) {
 
         StockHistory tockHistory = new StockHistory();
         tockHistory.setProject_id(getProjectByBudget(budget_no).getProjectCode());
@@ -36,7 +36,7 @@ public class StockServiceImpl extends BaseServiceImpl implements StockService {
     }
 
     @Override
-    public Boolean stockChange(String project_ID, String mat_ID, int stockChangeNum,int changeType) {
+    public Boolean stockChange(String project_ID, String mat_ID, Double stockChangeNum,int changeType) {
 
         String sql = " select * from tbl_stock where mat_id='"+mat_ID+"' and project_ID='"+project_ID+"'";
         List<Stock> list= findBySql(sql, Stock.class);
@@ -67,7 +67,7 @@ public class StockServiceImpl extends BaseServiceImpl implements StockService {
     }
 
     @Override
-    public Boolean saveChannel(String mat_ID, String project_ID, String channel_ID, int stockNum) {
+    public Boolean saveChannel(String mat_ID, String project_ID, String channel_ID, Double stockNum,int changeType) {
         StockChannel stockChannel = getStockChannel(mat_ID,project_ID,channel_ID);
         if(stockChannel==null){
             stockChannel = new StockChannel();
@@ -77,7 +77,11 @@ public class StockServiceImpl extends BaseServiceImpl implements StockService {
             stockChannel.setStock_num(stockNum);
             save(stockChannel);
         }else {
-            stockChannel.setStock_num(stockChannel.getStock_num()+stockNum);
+            if(changeType == 1){
+                stockChannel.setStock_num(stockChannel.getStock_num()+stockNum);
+            }else if(changeType==2){
+                stockChannel.setStock_num(stockChannel.getStock_num()-stockNum);
+            }
             update(stockChannel);
         }
         return true;
