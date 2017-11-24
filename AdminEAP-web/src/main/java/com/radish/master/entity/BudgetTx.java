@@ -58,6 +58,14 @@ public class BudgetTx extends BaseEntity {
     @Header(name = "数量")
     @Column(name = "quantity")
     private String quantity;
+    
+    @Header(name = "供应商")
+    @Column(name = "supplier")
+    private String supplier;
+    
+    @Header(name = "价格")
+    @Column(name= "price")
+    private String price;
 
     public String getBudgetNo() {
         return budgetNo;
@@ -121,6 +129,22 @@ public class BudgetTx extends BaseEntity {
 
     public void setQuantity(String quantity) {
         this.quantity = quantity;
+    }
+
+    public String getSupplier() {
+        return supplier;
+    }
+
+    public void setSupplier(String supplier) {
+        this.supplier = supplier;
+    }
+
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
     }
     
 }

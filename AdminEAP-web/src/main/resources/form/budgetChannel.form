@@ -1,0 +1,114 @@
+   <div class="form-group">
+       <label class="col-sm-3 control-label">项目名称<span style="color:red">*</span></label>
+       <div class="col-sm-5">
+           <input type="text" class="form-control" id="projectID" name="projectID" readonly="readonly">
+       </div>
+   </div> 
+   <div class="form-group">
+       <label class="col-sm-3 control-label">预算名称<span style="color:red">*</span></label>
+       <div class="col-sm-5">
+           <input type="text" class="form-control" id="budgetName" name="budgetName" readonly="readonly">
+       </div>
+   </div>
+   <div class="form-group">
+       <label class="col-sm-3 control-label">预算编码<span style="color:red">*</span></label>
+       <div class="col-sm-5">
+           <input type="text" class="form-control" id="budgetNo" name="budgetNo" readonly="readonly">
+       </div>
+   </div>
+<div class="box box-success" id="budget_tx">
+    <div class="dataTables_filter" id="searchDiv" style="text-align:center;height:1px;">
+       <input type="search" name="budgetNo" class="form-control" operator="eq" style="display:none;">
+       <div class="btn-group">
+           <button type="button" class="btn btn-primary" data-btn-type="search" id="refresh" style="display:none;">查询</button>
+       </div>
+    </div>
+    <div class="box-body">
+        <!-- 内容 -->
+        <table id="budget_tx_table" class="table table-bordered table-striped table-hover">
+        </table>
+    </div>
+</div>
+
+<script>
+    var budgetTxTable, budgetNo, initData={};
+    
+    var workflowCtrl = {
+        thisForm: null,
+        init: function (formId,businessKey) {
+            
+            this.thisForm = $("#" + formId).form({baseEntity: false});
+            budgetNo = businessKey;
+            initData.budgetNo = businessKey;
+            this.thisForm.initFormData(initData);
+            initBudgetChannel();
+            this.thisForm.initComponent();
+            this.bindClickEvent(formId);
+            return this.thisForm;
+        },
+        bindClickEvent: function (formId) {
+            var intervalid = setInterval(function () {
+                if ($("#agreeLabel div").hasClass("iradio_square-blue")) {
+                    $("input[name='approved']").on('ifChecked', function (e) {
+                        var value=$(this).val();
+                        if (value=="false") {
+                            $("#suggestion").val("");
+                            $("#suggestion").attr("placeholder","请填写拒绝原因");
+                        }
+                        if(value=="true"){
+                            $("#suggestion").val("同意");
+                            $("#suggestion").attr("placeholder","请填写审批说明");
+                        }
+                        var validator = $("#"+formId).data('bootstrapValidator');
+                        if (validator && validator.options.fields["suggestion"])
+                            validator.updateStatus("suggestion", 'NOT_VALIDATED', null).validateField("suggestion");
+                    });
+                    clearInterval(intervalid);
+                }
+            }, 100);
+        },
+        validators: function () {
+            var fields = {};
+            return fields;
+        },
+        showChannel: function(that, value){
+            var rowId = $(that).parent().parent().attr('id');
+            modals.openWin({
+                winId: "budgetChannelWin",
+                width: "500px",
+                url: basePath + "/budget/channel/"+rowId,
+                title: "选择渠道"
+            });
+        }
+    }
+    
+    function initBudgetChannel(){
+        budgetTxTable = new CommonTable("budget_tx_table", "budget_tx_list_channel", "searchDiv", {
+            "ordering" : false,
+            "lengthChange": false,
+            "displayLength": 20,
+            "scrollY": "200px",
+            "scrollCollapse": true
+        });
+        
+        //编辑回填
+        if(budgetNo!="0"){
+            ajaxPost(basePath+"/budget/getbyno",{budgetNo:budgetNo},function(data){
+                workflowCtrl.thisForm.initFormData(data);
+                ajaxPost(basePath+"/project/get",{id:data.projectID},function(data){
+                    $('#projectID').val(data.name);
+                })
+            })
+        } 
+    }
+    
+    function fnRenderChannel(value) {
+        if(value == null || value == ""){
+            return "<a href='javascript:void(0)' onclick='workflowCtrl.showChannel(this,\"" + value + "\")'>选择供应商</a>";
+        }else{
+            return value;
+        }
+        
+    }
+    
+</script>

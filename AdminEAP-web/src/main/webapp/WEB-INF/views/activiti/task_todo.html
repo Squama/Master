@@ -109,6 +109,7 @@
 <script>
     var processInstanceId = "${processInstanceId?default(0)}";
     var formUrl = "${formUrl?default(0)}";
+    var businessKey = "${businessKey?default(0)}";
     var taskCtrl = {
         loadBusinessForm: function () {
             if (formUrl != 0) {
@@ -142,17 +143,17 @@
                     });
                 },
             <#assign hasValidator=0>
-                <#list formProperties as field>
+               <#list formProperties as field>
                   <#if field.isRequired()>
-               <#assign hasValidator=1>
+                      <#assign hasValidator=1>
                   </#if>
-                </#list>
+               </#list>
                <#if hasValidator==1>
                 fields: {
                     <#list formProperties as field>
-                    <#if field.isRequired()>
-                    ${field.id}:{validators:{notEmpty:{message:'请填写${field.name}'}}},
-                    </#if>
+                        <#if field.isRequired()>
+                            ${field.id}:{validators:{notEmpty:{message:'请填写${field.name}'}}},
+                        </#if>
                     </#list>
                 }
                </#if>
@@ -172,8 +173,8 @@
         //通过formKey初始化表单，通用审批
         <#if formData??>
         loadTaskFormByFormKey:function(){
-            this.taskForm=workflowCtrl.init("task_form");
-            console.log(workflowCtrl.validators());
+            this.taskForm=workflowCtrl.init("task_form", businessKey);
+            console.log(this.taskForm);
             var self=this;
             $("#task_form").bootstrapValidator({
                 message: '请输入有效值',
@@ -183,6 +184,12 @@
                     validating: 'glyphicon glyphicon-refresh'
                 },
                 submitHandler: function (validator, taskform, submitButton) {
+                	console.log(taskform);
+                	if(!typeof(checkBeforeActiviti)=="undefined"){
+                		if(typeof(checkBeforeActiviti) == 'Function'){
+                			checkBeforeActiviti.call(this,businessKey);
+                		}
+                	}
                     modals.confirm('确认提交该流程？', function () {
                         // TODO 传参类型待定
                         var params = self.taskForm.getFormSimpleData();

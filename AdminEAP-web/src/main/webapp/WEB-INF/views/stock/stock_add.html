@@ -7,7 +7,6 @@
 
 	<form id="stock-form" name="stock-form" class="form-horizontal">
 		<input type="hidden" name="id">
-		<!-- <input type='hidden' value='${CSRFToken}' id='csrftoken'> -->
 		<div class="box-body">
 			<div class="col-md-6">
 				<div class="form-group">
@@ -16,7 +15,6 @@
 						<input type="text" class="form-control" id="budget_ID" name="budget_ID" placeholder="请输入预算编号">
 					</div>
 				</div>
-
 				<div class="form-group">
 					<label for="mat_id" class="col-sm-3 control-label">物料编号</label>
 					<div class="col-sm-8">
@@ -33,9 +31,9 @@
 
 
 				<div class="form-group">
-					<label for="unit" class="col-sm-3 control-label">单位</label>
+					<label for="channel" class="col-sm-3 control-label">供应商</label>
 					<div class="col-sm-8">
-						<input type="text"  readonly="readonly" class="form-control" id="unit" name="unit" placeholder="- - - 自动生成 - - -">
+						<input type="text"  class="form-control" id="channel" name="channel" placeholder="请输入采购渠道" onclick="getChannel()">
 					</div>
 				</div>
 				<div class="form-group">
@@ -64,6 +62,21 @@
 					<label for="mat_standard" class="col-sm-3 control-label">物料规格</label>
 					<div class="col-sm-8">
 						<input type="text" readonly="readonly" class="form-control" id="mat_standard" name="mat_standard" placeholder="- - - 自动生成 - - -">
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="price" class="col-sm-3 control-label">采购单价</label>
+					<div class="col-sm-8">
+						<input type="text"  class="form-control" readonly="readonly"  id="price" name="price" placeholder="- - - 自动生成 - - -">
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="unit" class="col-sm-3 control-label">单位</label>
+					<div class="col-sm-8">
+						<input type="text"  readonly="readonly" class="form-control" id="unit" name="unit" placeholder="- - - 自动生成 - - -">
+						<!--<input type="text"  readonly="readonly" class="form-control" id="channel_id" name="channel_id" style="display: none">-->
 					</div>
 				</div>
 			</div>
@@ -97,7 +110,8 @@
                 modals.confirm('确认保存？', function() {
                     //Save Data，对应'submit-提交'
                     var params = form.getFormSimpleData();
-                    console.log(params);
+                    alert(channel_id);
+                    params.channel_id=channel_id;
                     ajaxPost(basePath+'/stock/save', params, function(data) {
                         console.log(data);
                         if(data.success){
@@ -113,6 +127,11 @@
                     validators : {
                         notEmpty : {
                             message : '请输入预算编号'
+                        },
+                        stringLength: {/*长度提示*/
+                            min: 3,
+                            max: 9,
+                            message: '预算编号格式不正确'
                         },
                         threshold :  6 , //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
                         remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
@@ -159,6 +178,11 @@
                         notEmpty : {
                             message : '请输入物料编号'
                         },
+                        stringLength: {/*长度提示*/
+                            min: 3,
+                            max: 9,
+                            message: '物料编号格式不正确'
+                        },
                         threshold :  6 ,
                         remote: {
                             url: basePath+'/stock/validMateriel',//验证地址
@@ -182,13 +206,25 @@
                         }
                     }
                 }
+/*                channel : {
+                    validators : {
+                        notEmpty : {
+                            message : '请选择供应商'
+                        }
+                    }
+                },
+                price : {
+                    validators : {
+                        notEmpty : {
+                            message : '缺少物料单价'
+                        }
+                    }
+                }*/
             }
         });
         form.initComponent();
 
     });
-
-
 
     $("#mat_id").change(function(){
         getMat();
@@ -221,6 +257,17 @@
     function resetForm(){
         form.clearForm();
         $("#material-form").data('bootstrapValidator').resetForm();
+    }
+
+    function getChannel(data){
+        var mat_id = $("#mat_id").val();
+        var url = basePath+"/stock/getChannel?mat_id="+mat_id;
+        modals.openWin({
+            winId:"area",
+            title:"选择对应的采购渠道",
+            width:'600px',
+            url:url
+        });
     }
 
 

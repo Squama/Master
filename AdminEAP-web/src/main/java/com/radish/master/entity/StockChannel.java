@@ -1,20 +1,17 @@
 package com.radish.master.entity;
 
-
 import com.cnpc.framework.annotation.Header;
 import com.cnpc.framework.base.entity.BaseEntity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import java.util.Date;
 
 @Entity
-@Table(name = "tbl_stock")
-public class Stock extends BaseEntity {
+@Table(name = "tbl_stock_channel")
+public class StockChannel extends BaseEntity {
 
-    private static final long serialVersionUID = -52018669648128138L;
-
+    private static final long serialVersionUID = -5596718551580398549L;
 
     @Header(name = "项目ID")
     @Column(name = "project_id")
@@ -28,17 +25,9 @@ public class Stock extends BaseEntity {
     @Column(name = "stock_num")
     private Double stock_num;
 
-    @Header(name = "入库人员ID")
-    @Column(name = "storage_person_id")
-    private String storage_person_id;
-
-    @Header(name = "入库时间")
-    @Column(name = "storage_time")
-    private Date storage_time;
-
-    @Header(name = "操作类型")
-    @Column(name = "usetype")
-    private String usetype;
+    @Header(name = "渠道编号")
+    @Column(name = "channel_id")
+    private String channel_id;
 
     @Header(name = "预留字段1")
     @Column(name = "reserve1")
@@ -51,7 +40,6 @@ public class Stock extends BaseEntity {
     @Header(name = "预留字段3")
     @Column(name = "reserve3")
     private String reserve3;
-
 
     public String getProject_id() {
         return project_id;
@@ -77,28 +65,12 @@ public class Stock extends BaseEntity {
         this.stock_num = stock_num;
     }
 
-    public String getStorage_person_id() {
-        return storage_person_id;
+    public String getChannel_id() {
+        return channel_id;
     }
 
-    public void setStorage_person_id(String storage_person_id) {
-        this.storage_person_id = storage_person_id;
-    }
-
-    public Date getStorage_time() {
-        return storage_time;
-    }
-
-    public void setStorage_time(Date storage_time) {
-        this.storage_time = storage_time;
-    }
-
-    public String getUsetype() {
-        return usetype;
-    }
-
-    public void setUsetype(String usetype) {
-        this.usetype = usetype;
+    public void setChannel_id(String channel_id) {
+        this.channel_id = channel_id;
     }
 
     public String getReserve1() {
@@ -124,6 +96,4 @@ public class Stock extends BaseEntity {
     public void setReserve3(String reserve3) {
         this.reserve3 = reserve3;
     }
-
-
 }

@@ -82,9 +82,9 @@
                         </table>
 	                </div>
 	                <div class="box-footer text-center" id="budgetformsave">
-                        <button type="submit" class="btn btn-default" data-btn-type="prev">返回预算列表</button>
-                        <button type="submit" class="btn btn-primary ml10" data-btn-type="saveandback">保存并返回</button>
-                        <button type="submit" class="btn btn-success ml10" data-btn-type="start">提交流程</button>
+                        <button type="button" class="btn btn-default" data-btn-type="prev">返回预算列表</button>
+                        <button type="button" class="btn btn-primary ml10" data-btn-type="saveandback">保存并返回</button>
+                        <button type="button" class="btn btn-success ml10" data-btn-type="start">提交流程</button>
                     </div>
 	            </div>
 	        </form>
@@ -102,8 +102,26 @@
     budgettxform.initFormData(initData);
     
     var budgetAddObject = {
-            showDetail: function (rowId) {
+            deleteBudgetTx: function (rowId) {
             	
+            },
+            initButtonEvent: function () {
+                $("button[data-btn-type='prev']").click(function () {
+                	loadPage(basePath+"/budget/list");
+                });
+                $("button[data-btn-type='saveandback']").click(function () {
+                	loadPage(basePath+"/budget/list");
+                });
+                $("button[data-btn-type='start']").click(function () {
+                	var formData = budgetform.getFormSimpleData();
+                	ajaxPost(basePath + '/budget/start', formData, function (data) {
+                        if (data.success) {
+                        	modals.correct("流程已启动，请及时处理");
+                        } else {
+                            modals.error(data.message);
+                        }
+                    });
+                });
             }
     }
     
@@ -185,7 +203,6 @@
                 switch (action) {
 	                case "savetx":
 	                	ajaxPost(basePath + '/budget/savetx', formData, function (data) {
-	                        console.log(data);
                             if (data.success) {
                                budgetTxTable.table.page('first').draw(false);
                             } else {
@@ -193,12 +210,6 @@
                             }
                         });
 	                    break;
-	                case "saveandback":
-	                    loadPage(basePath+"/budget/list");
-	                    break;
-	                case "start":
-                        loadPage(basePath+"/budget/list");
-                        break;
 	            }
                 
             },
@@ -250,6 +261,7 @@
         //初始化控件
         budgetform.initComponent();
         budgettxform.initComponent();
+        budgetAddObject.initButtonEvent();
         
     });
     
@@ -262,6 +274,10 @@
             return ret;
         } else
             return value;
+    }
+    
+    function fnRenderDelete(value){
+    	return "<a href='javascript:void(0)' onclick='budgetAddObj.deleteBudgetTx(\"" + value + "\")'>删除</a>";
     }
     
 </script>

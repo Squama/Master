@@ -19,7 +19,7 @@
 <script>
     var workflowCtrl = {
         thisForm: null,
-        init: function (formId) {
+        init: function (formId,businessKey) {
             this.thisForm = $("#" + formId).form({baseEntity: false});
             this.thisForm.initComponent();
             this.bindClickEvent(formId);
