@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<queryContext xmlns="http://www.example.org/query" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.example.org/query query.xsd">
+
+	<!-- 责任考核表-->
+	<query id="dutycheck_list" key="id" tableName="责任考核列表" className="com.radish.master.entity.DutyCheck"
+		   pageSize="10"  widthType="px" order="id asc">
+		<column key="project_id" header="项目id" width="50" allowSort="false" hidden="true"/>
+		<column key="name" header="姓名" operator="like" width="100" allowSort="true"/>
+		<column key="unitName" header="单位名称" operator="like" width="100"/>
+		<column key="project_name" header="工程名称" operator="like" width="100"/>
+		<column key="check_name" header="考核人" operator="like" width="100"  />
+		<column key="check_time" header="考核时间"  classType="java.util.Date" operator="between" width="150" dateFormat="yyyy-mm-dd"/>
+	</query>
+	
+</queryContext>

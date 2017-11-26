@@ -1,0 +1,160 @@
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><li class="fa fa-remove"></li></button>
+    <h5 class="modal-title">录入考核结果</h5>
+</div>
+<div class="modal-body">
+
+    <form id="dutycheck-form" name="dutycheck-form" class="form-horizontal">
+     <input type="hidden" name="id">
+        <input type="hidden" name="project_id">
+        <div class="box-body">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="project_name1" class="col-sm-3 control-label">所在工程</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="project_name1" name="project_name" placeholder="所在工程">
+                    </div>
+                    
+                </div>
+                
+                <div class="form-group">
+                    <label for="name1" class="col-sm-3 control-label">姓名</label>
+
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="name1" name="name" placeholder="姓名">
+                    </div>
+                </div>
+           		 <div class="form-group">
+                    <label for="check_name" class="col-sm-3 control-label">考核人</label>
+
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="check_name" name="check_name" placeholder="考核人">
+                    </div>
+                </div>
+                
+                
+            </div>
+            <div class="col-md-6">
+            	<div class="form-group">
+                    <label for="unitName" class="col-sm-3 control-label">单位名称</label>
+
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="unitName" name="unitName" placeholder="单位名称">
+                    </div>
+                </div>
+                <div class="form-group">
+					<label for="duties1"  class="col-sm-3 control-label">职务</label>
+					 <div class="col-sm-8">
+                        <input type="text" class="form-control" id="duties1" name="duties" placeholder="职务">
+                    </div>
+				</div>
+				<div class="form-group">
+					<label  for="check_time1" class="col-sm-3 control-label">考核时间</label>
+				<div class=" col-sm-8">
+					<input class="form-control date-picker" id="check_time1" name="check_time"  data-flag="datepicker" data-format="yyyy-mm-dd"  placeholder="考核时间"  >
+				
+				</div>
+				</div>
+				
+            </div> 
+            <div class="form-group">
+                    <label for="check_result" class="col-sm-2 control-label">考核结果</label>
+
+                    <div class="col-sm-9">
+                        <textarea class="form-control" id="check_result" name="check_result" placeholder="请输入考核结果" rows="6"></textarea>
+                    </div>
+            </div>    
+             <div class="form-group">
+                    <label for="jc" class="col-sm-2 control-label">奖惩</label>
+
+                    <div class="col-sm-9">
+                        <textarea class="form-control" id="jc" name="jc" placeholder="请输入考核奖惩" rows="6"></textarea>
+                    </div>
+            </div>        
+        </div>
+        <!-- /.box-body -->
+        <div class="box-footer text-right">
+            <!--以下两种方式提交验证,根据所需选择-->
+            <button type="button" class="btn btn-default" data-btn-type="cancel" data-dismiss="modal">取消</button>
+            <button type="submit" class="btn btn-primary" data-btn-type="save">提交</button>
+        </div>
+        <!-- /.box-footer -->
+    </form>
+
+</div>
+
+<script>
+    //tableId,queryId,conditionContainer
+    var form =null;
+    
+    $(function() {
+        //初始化控件
+        form=$("#dutycheck-form").form();
+        //数据校验
+        $("#dutycheck-form").bootstrapValidator({
+            message : '请输入有效值',
+            feedbackIcons : {
+                valid : 'glyphicon glyphicon-ok',
+                invalid : 'glyphicon glyphicon-remove',
+                validating : 'glyphicon glyphicon-refresh'
+            },
+            submitHandler : function() {
+                modals.confirm('确认保存？', function() {
+                    //Save Data，对应'submit-提交'
+                    var params = form.getFormSimpleData();
+                    console.log(params);
+                     ajaxPost(basePath+'/material/save', params, function(data) {
+                        if(data.success){
+                        	modals.hideWin(winId);
+                        	materielTable.reloadData();
+                            modals.info("数据保存成功");
+                            
+                        }                
+                    });  
+                });
+            },
+            fields : {
+            	project_name : {
+                    validators : {
+                        notEmpty : {
+                            message : '请输入项目名字'
+                        }
+                    }
+                },
+                name : {
+                    validators : {
+                        notEmpty : {
+                            message : '请选择姓名'
+                        }
+                    }
+                },
+                check_name : {
+                    validators : {
+                        notEmpty : {
+                            message : '请输入考核人'
+                        },
+                       
+                    }
+                },
+                isValid : {
+                    validators : {
+                        notEmpty : {
+                            message : '请选择状态'
+                        }
+                    }
+                }
+            }
+        });
+        form.initComponent();
+        
+       
+    });
+    
+    
+    function resetForm(){
+        form.clearForm();
+        $("#dutycheck-form").data('bootstrapValidator').resetForm();
+    }
+    
+	
+</script>
