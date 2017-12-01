@@ -35,37 +35,37 @@ public class BudgetTx extends BaseEntity {
     @Column(name = "project_id")
     private String projectID;
 
-    @Header(name = "部位")
+    @Header(name = "部位ID")
     @Column(name = "region_id")
     private String regionID;
-
-    @Header(name = "物料编号")
-    @Column(name = "mat_number")
-    private String matNumber;
-
-    @Header(name = "物料名称")
-    @Column(name = "mat_name")
-    private String matName;
-
-    @Header(name = "物料规格")
-    @Column(name = "mat_standard")
-    private String matStandard;
-
-    @Header(name = "单位")
-    @Column(name = "unit")
-    private String unit;
-
-    @Header(name = "数量")
-    @Column(name = "quantity")
-    private String quantity;
     
-    @Header(name = "供应商")
-    @Column(name = "supplier")
-    private String supplier;
+    @Header(name = "部位名称")
+    @Column(name = "region_name")
+    private String regionName;
     
-    @Header(name = "价格")
-    @Column(name= "price")
-    private String price;
+    @Header(name = "部位特征描述")
+    @Column(name = "region_desc")
+    private String regionDesc;
+    
+    @Header(name = "计量单位")
+    @Column(name = "units")
+    private String units;
+    
+    @Header(name = "工程量")
+    @Column(name = "quantities")
+    private String quantities;
+    
+    @Header(name = "综合单价")
+    @Column(name = "comprehensive_price")
+    private String comprehensivePrice;
+    
+    @Header(name = "合价")
+    @Column(name = "unit_price")
+    private String unitPrice;
+    
+    @Header(name = "暂估价")
+    @Column(name = "provisional_price")
+    private String provisionalPrice;
 
     public String getBudgetNo() {
         return budgetNo;
@@ -91,60 +91,60 @@ public class BudgetTx extends BaseEntity {
         this.regionID = regionID;
     }
 
-    public String getMatNumber() {
-        return matNumber;
+    public String getRegionName() {
+        return regionName;
     }
 
-    public void setMatNumber(String matNumber) {
-        this.matNumber = matNumber;
+    public void setRegionName(String regionName) {
+        this.regionName = regionName;
     }
 
-    public String getMatName() {
-        return matName;
+    public String getRegionDesc() {
+        return regionDesc;
     }
 
-    public void setMatName(String matName) {
-        this.matName = matName;
+    public void setRegionDesc(String regionDesc) {
+        this.regionDesc = regionDesc;
     }
 
-    public String getMatStandard() {
-        return matStandard;
+    public String getUnits() {
+        return units;
     }
 
-    public void setMatStandard(String matStandard) {
-        this.matStandard = matStandard;
+    public void setUnits(String units) {
+        this.units = units;
     }
 
-    public String getUnit() {
-        return unit;
+    public String getQuantities() {
+        return quantities;
     }
 
-    public void setUnit(String unit) {
-        this.unit = unit;
+    public void setQuantities(String quantities) {
+        this.quantities = quantities;
     }
 
-    public String getQuantity() {
-        return quantity;
+    public String getComprehensivePrice() {
+        return comprehensivePrice;
     }
 
-    public void setQuantity(String quantity) {
-        this.quantity = quantity;
+    public void setComprehensivePrice(String comprehensivePrice) {
+        this.comprehensivePrice = comprehensivePrice;
     }
 
-    public String getSupplier() {
-        return supplier;
+    public String getUnitPrice() {
+        return unitPrice;
     }
 
-    public void setSupplier(String supplier) {
-        this.supplier = supplier;
+    public void setUnitPrice(String unitPrice) {
+        this.unitPrice = unitPrice;
     }
 
-    public String getPrice() {
-        return price;
+    public String getProvisionalPrice() {
+        return provisionalPrice;
     }
 
-    public void setPrice(String price) {
-        this.price = price;
+    public void setProvisionalPrice(String provisionalPrice) {
+        this.provisionalPrice = provisionalPrice;
     }
     
 }

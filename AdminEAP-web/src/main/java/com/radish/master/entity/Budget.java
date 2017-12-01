@@ -2,7 +2,6 @@ package com.radish.master.entity;
 
 import com.cnpc.framework.annotation.Header;
 import com.cnpc.framework.base.entity.BaseEntity;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.Date;
 
@@ -27,30 +26,38 @@ public class Budget extends BaseEntity {
     @Header(name="所属项目")
     @Column(name="project_id")
     private String projectID;
+    
+    @Header(name="预算总价")
+    @Column(name="budget_amount")
+    private String budgetAmount;
+    
+    @Header(name="消耗总价")
+    @Column(name="consume_amount")
+    private String consumeAmount;
 
-    @Header(name="预算制单人员")
+    @Header(name="预算导入人员")
     @Column(name="operator")
     private String operator;
 
-    @Header(name="制单时间")
+    @Header(name="导入时间")
     @Column(name="operate_time")
     private Date operateTime;
 
-    @Header(name="审核人员")
+    @Header(name="测算提交人员")
+    @Column(name="estimater")
+    private String estimater;
+    
+    @Header(name="测算提交时间")
+    @Column(name="estimate_time")
+    private String estimateTime;
+    
+    @Header(name="测算审核人员")
     @Column(name="checker")
     private String checker;
 
-    @Header(name="审核时间")
+    @Header(name="测算审核时间")
     @Column(name="check_time")
     private Date checkTime;
-
-    @Header(name="供应渠道编辑人")
-    @Column(name="supplier_editer")
-    private String supplierEditer;
-
-    @Header(name="编辑时间")
-    @Column(name="edit_time")
-    private Date editTime;
 
     @Header(name="状态")
     @Column(name="status")
@@ -80,6 +87,22 @@ public class Budget extends BaseEntity {
         this.projectID = projectID;
     }
 
+    public String getBudgetAmount() {
+        return budgetAmount;
+    }
+
+    public void setBudgetAmount(String budgetAmount) {
+        this.budgetAmount = budgetAmount;
+    }
+
+    public String getConsumeAmount() {
+        return consumeAmount;
+    }
+
+    public void setConsumeAmount(String consumeAmount) {
+        this.consumeAmount = consumeAmount;
+    }
+
     public String getOperator() {
         return operator;
     }
@@ -94,6 +117,22 @@ public class Budget extends BaseEntity {
 
     public void setOperateTime(Date operateTime) {
         this.operateTime = operateTime;
+    }
+
+    public String getEstimater() {
+        return estimater;
+    }
+
+    public void setEstimater(String estimater) {
+        this.estimater = estimater;
+    }
+
+    public String getEstimateTime() {
+        return estimateTime;
+    }
+
+    public void setEstimateTime(String estimateTime) {
+        this.estimateTime = estimateTime;
     }
 
     public String getChecker() {
@@ -112,22 +151,6 @@ public class Budget extends BaseEntity {
         this.checkTime = checkTime;
     }
 
-    public String getSupplierEditer() {
-        return supplierEditer;
-    }
-
-    public void setSupplierEditer(String supplierEditer) {
-        this.supplierEditer = supplierEditer;
-    }
-
-    public Date getEditTime() {
-        return editTime;
-    }
-
-    public void setEditTime(Date editTime) {
-        this.editTime = editTime;
-    }
-
     public String getStatus() {
         return status;
     }
@@ -135,6 +158,5 @@ public class Budget extends BaseEntity {
     public void setStatus(String status) {
         this.status = status;
     }
-
 
 }

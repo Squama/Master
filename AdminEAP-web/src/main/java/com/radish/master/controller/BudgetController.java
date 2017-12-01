@@ -91,13 +91,13 @@ public class BudgetController {
     @RequestMapping(method = RequestMethod.POST, value = "/savetx")
     @ResponseBody
     private Result saveBudgetTx(BudgetTx budgetTx, HttpServletRequest request) {
-        if(budgetService.checkTxUnique(budgetTx.getProjectID(), budgetTx.getRegionID(), budgetTx.getMatNumber())){
+        /*if(budgetService.checkTxUnique(budgetTx.getProjectID(), budgetTx.getRegionID(), budgetTx.getMatNumber())){
             budgetService.save(budgetTx);
             return new Result(true);
         }else{
             return new Result(false);
-        }
-        
+        }*/
+        return new Result(true);
     }
     
     @VerifyCSRFToken
@@ -112,7 +112,7 @@ public class BudgetController {
     public String channel(@PathVariable("id") String id,HttpServletRequest request) {
         BudgetTx budgetTx = budgetService.get(BudgetTx.class ,id);
         request.setAttribute("id", budgetTx.getId());
-        request.setAttribute("matID", budgetTx.getMatNumber());
+        //request.setAttribute("matID", budgetTx.getMatNumber());
         return "budgetmanage/budgetactiviti/budget_channel";
     }
     
@@ -122,8 +122,8 @@ public class BudgetController {
     private Result saveChannel(BudgetTx budgetTx, HttpServletRequest request) {
         BudgetTx budgetTxOld = budgetService.get(BudgetTx.class, budgetTx.getId());
         
-        budgetTxOld.setSupplier(budgetTx.getSupplier());
-        budgetTxOld.setPrice(budgetTx.getPrice());
+        //budgetTxOld.setSupplier(budgetTx.getSupplier());
+        //budgetTxOld.setPrice(budgetTx.getPrice());
         budgetTxOld.setUpdateDateTime(new Date());
         
         budgetService.save(budgetTxOld);
