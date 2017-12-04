@@ -1,0 +1,104 @@
+
+<link rel="stylesheet" href="${basePath}/resources/common/libs/fileinput/css/fileinput.min.css">
+<style>
+
+#projectaddstep2 .krajee-default.file-preview-frame .kv-file-content {
+    height: auto;
+}
+
+#projectaddstep2 .krajee-default .file-footer-caption {
+    width: 100px;
+}
+
+</style>
+
+<script src="${basePath}/resources/common/libs/fileinput/js/fileinput.js"></script>
+<script src="${basePath}/resources/common/libs/fileinput/js/locales/zh.js"></script>
+<!--BaseFile组件-->
+<script src="${basePath}/resources/common/js/base-file.js"></script>
+<section class="content-header">
+    <h1>
+        <span>项目管理</span>
+        <small>新增</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
+        <li><a href="#">项目管理</a></li>
+        <li class="active">新增项目</li>
+    </ol>
+</section>
+
+    
+
+<section class="content" id="projectaddstep2">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <span>
+                        <i class="fa fa-edit">导入预算表</i>
+                    </span>
+                </div>
+                <form id="project_form" name="project_form" class="form-horizontal">
+                    <div class="box-body">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">预算文件<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="file" name="budgetfileupload" id="budgetfileupload">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer text-center">
+                        <button type="submit" class="btn btn-default" data-btn-type="prev">返回列表</button>
+                        <button type="submit" class="btn btn-success ml10" data-btn-type="save">保存并返回</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+    var labform;
+    var id = "${id?default(0)}";
+    $(function () {
+        //初始化表单 
+        labform = $("#project_form").form({baseEntity:false});
+        //数据校验
+        $("#project_form").bootstrapValidator({
+            message: '请输入有效值',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            submitHandler: function () {
+                var action = $(this).attr('$submitButton').attr('data-btn-type');
+                switch (action) {
+                    case "prev":
+                        loadPage(basePath+"/project/list");
+                        break;
+                    case "save":
+                        loadPage(basePath+"/project/list");
+                        break;
+                }
+            }
+        });
+        //初始化控件
+        labform.initComponent();
+    });
+    
+    $.fn.fileinputLocales['zh'].msgValidationError = "请选择xls或xlsx格式的文件";
+    $.fn.fileinputLocales['zh'].uploadLabel = "导入";
+    
+    $("#budgetfileupload").fileinput({
+    	language: 'zh',
+    	uploadUrl: basePath + "/budget/import",
+    	allowedFileExtensions : ['xls', 'xlsx'],
+    	showPreview : false
+    });
+
+    
+
+</script>
