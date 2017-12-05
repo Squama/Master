@@ -7,10 +7,14 @@ import com.cnpc.framework.base.entity.User;
 import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.base.service.impl.BaseServiceImpl;
 import com.cnpc.framework.utils.SecurityUtil;
+import com.cnpc.framework.utils.StrUtil;
+import com.cnpc.tool.message.entity.MessageGroup;
 import com.radish.master.entity.Budget;
 import com.radish.master.entity.BudgetImport;
+import com.radish.master.pojo.Options;
 import com.radish.master.service.BudgetService;
 import com.radish.master.system.CodeException;
+import com.radish.master.system.GUID;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
@@ -20,6 +24,8 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.hibernate.type.StringType;
+import org.hibernate.type.Type;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -110,13 +116,24 @@ public class BudgetServiceImpl extends BaseServiceImpl implements BudgetService 
             
             List<BudgetImport> list = new ArrayList<BudgetImport>();
             
+            String group = "";
+            
             for(int i = 4; i<rows; i++){
                 Row row = sheet.getRow(i);
                 if(row != null){
                     BudgetImport bi = new BudgetImport();
                     
                     String quotaNo = getCellValue(row.getCell(0));
-                    bi.setQuotaNo(quotaNo);
+                    
+                    
+                    if(StrUtil.isEmpty(quotaNo)){
+                        bi.setId(GUID.genTxNo(16, true));
+                        if(group != bi.getId()){
+                            group = bi.getId();
+                        }
+                    }else{
+                        bi.setQuotaNo(quotaNo);
+                    }
                     
                     String quotaName = getCellValue(row.getCell(1));
                     bi.setQuotaName(quotaName);
@@ -145,9 +162,13 @@ public class BudgetServiceImpl extends BaseServiceImpl implements BudgetService 
                     String materielsUnitPrice = getCellValue(row.getCell(13));
                     bi.setMaterielsUnitPrice(materielsUnitPrice);
                     
+                    bi.setQuotaGroup(group);
+                    
                     list.add(bi);
                 }
             }
+            
+            this.batchSave(list);
             
             return rows - 1;
         }catch(Exception e){
@@ -197,6 +218,19 @@ public class BudgetServiceImpl extends BaseServiceImpl implements BudgetService 
             }
         }
         return value.trim();
+    }
+
+    @Override
+    public BudgetImport getGroupByNo(String group) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("quotaGroup", group);
+        return this.get("from BudgetImport where quotaNo IS NULL AND quotaGroup=:quotaGroup", params);
+    }
+
+    @Override
+    public List<Options> getProjectCombobox() {
+        return this.findMapBySql("select id value, project_name data from tbl_project", new Object[]{}, new Type[]{StringType.INSTANCE}, Options.class);
+        
     }
     
 }

@@ -39,9 +39,29 @@
                         <i class="fa fa-edit">导入预算表</i>
                     </span>
                 </div>
-                <form id="project_form" name="project_form" class="form-horizontal">
+                <form id="import_form" name="project_form" class="form-horizontal">
                     <div class="box-body">
                         <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">选择项目<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <select id="projectID" class="form-control select2" name="projectID">
+                                        <option selected="selected" value="">选择一个项目</option>
+		                            </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">预算名称<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" name="budgetName" id="budgetName">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">预算编号（生成）<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" name="budgetNo" id="budgetNo" readonly="readonly">
+                                </div>
+                            </div>
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">预算文件<span style="color:red">*</span></label>
                                 <div class="col-sm-6">
@@ -51,22 +71,73 @@
                         </div>
                     </div>
                     <div class="box-footer text-center">
-                        <button type="submit" class="btn btn-default" data-btn-type="prev">返回列表</button>
-                        <button type="submit" class="btn btn-success ml10" data-btn-type="save">保存并返回</button>
+                        <button type="submit" class="btn btn-default" data-btn-type="reset">清空</button>
                     </div>
                 </form>
+            </div>
+            <div class="box">
+                <div class="dataTables_filter" id="searchDiv" style="text-align:center;height:1px;">
+                    <input type="search" title="定额编号" name="quotaNo" class="form-control dn" id="quotaNo" operator="not_null" style="display:none;">
+                    <input type="search" title="批次" name="budgetNo" class="form-control dn" id="budgetNo" operator="eq" style="display:none;" value="1">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-primary dn" data-btn-type="search">查询</button>
+                        <button type="button" class="btn btn-default dn" data-btn-type="reset">重置</button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <table id="budget_import_table" class="table table-bordered table-striped table-hover">
+                    </table>
+                </div>
             </div>
         </div>
     </div>
 </section>
 <script>
-    var labform;
-    var id = "${id?default(0)}";
+    var importform,budgetImportTable;
+    var projectOptions = '${projectOptions?default(0)}',options=0;
+    if(projectOptions != 0){
+    	options = JSON.parse(projectOptions);
+    }
+    $(".select2").select2();
     $(function () {
+    	budgetImportTable = new CommonTable("budget_import_table", "budget_import_list", "searchDiv", {
+            "paging" : false,
+            "drawCallback": function ( settings ) {
+                var api = this.api();
+                var rows = api.rows( {page:'current'} ).nodes();
+                var last=null;
+     
+                api.column(12, {page:'current'} ).data().each( function ( group, i ) {
+                    if ( last !== group ) {
+                    	var ret = group;
+                    	ajaxPost(basePath + "/budgetimport/getgroup/"+group, null, function (data) {
+                            ret=data.data;
+                        });
+                    	console.log(ret);
+                        $(rows).eq( i ).before(
+                            '<tr class="group" id="'+ret.id+'" style="background-color:darkgrey;">'+
+                            '<td class="text-center" colspan="3">'+ret.quotaName+'</td>'+
+                            '<td class="text-center">'+ret.units+'</td>'+
+                            '<td class="text-center">'+ret.quantities+'</td>'+
+                            '<td class="text-center">'+ret.price+'</td>'+
+                            '<td class="text-center">'+ret.unitPrice+'</td>'+
+                            '<td class="text-center">'+ret.artificiality+'</td>'+
+                            '<td class="text-center">'+ret.materiels+'</td>'+
+                            '<td class="text-center">'+ret.mech+'</td>'+
+                            '<td class="text-center">'+ret.materielsUnitPrice+'</td>'+
+                            '</tr>'
+                        );
+     
+                        last = group;
+                    }
+                } );
+            }
+    	});
+    	
         //初始化表单 
-        labform = $("#project_form").form({baseEntity:false});
+        importform = $("#import_form").form({baseEntity:false});
         //数据校验
-        $("#project_form").bootstrapValidator({
+        $("#import_form").bootstrapValidator({
             message: '请输入有效值',
             feedbackIcons: {
                 valid: 'glyphicon glyphicon-ok',
@@ -76,17 +147,28 @@
             submitHandler: function () {
                 var action = $(this).attr('$submitButton').attr('data-btn-type');
                 switch (action) {
-                    case "prev":
-                        loadPage(basePath+"/project/list");
-                        break;
-                    case "save":
-                        loadPage(basePath+"/project/list");
+                    case "reset":
+                        loadPage(basePath+"/budgetimport/toimport");
                         break;
                 }
             }
         });
         //初始化控件
-        labform.initComponent();
+        importform.initComponent();
+        
+        if(options != 0){
+            for (var i = 0, len = options.length; i < len; i++) {
+                var option = options[i];
+                $('#projectID').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+            }
+        }
+        
+        $("#budgetName").on("focusout", function(){
+        	console.log($(this).val());
+        	ajaxPost(basePath + "/budgetimport/genno/"+$(this).val(), null, function (data) {
+                $('#budgetNo').val(data.message);
+            });
+        });
     });
     
     $.fn.fileinputLocales['zh'].msgValidationError = "请选择xls或xlsx格式的文件";
@@ -94,9 +176,14 @@
     
     $("#budgetfileupload").fileinput({
     	language: 'zh',
-    	uploadUrl: basePath + "/budget/import",
+    	uploadUrl: basePath + "/budgetimport/import",
     	allowedFileExtensions : ['xls', 'xlsx'],
     	showPreview : false
+    }).on("fileuploaded", function(event, data, previewId, index){
+    	console.log(event);
+    	console.log(data);
+    	console.log(previewId);
+    	console.log(index);
     });
 
     

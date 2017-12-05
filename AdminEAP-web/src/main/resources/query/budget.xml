@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <queryContext xmlns="http://www.example.org/query" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.example.org/query query.xsd">
     
+    <query id="budget_import_list" key="id" tableName="单位工程（概）预算表" className="com.radish.master.entity.BudgetImport" widthType="px" pageSize="2000">
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="quotaNo" header="定额编号" width="150"/>
+        <column key="quotaName" header="子目名称" width="150"/>
+        <column key="units" header="单位" width="150"/>
+        <column key="quantities" header="工程量" width="150"/>
+        <column key="price" header="单价" width="150"/>
+        <column key="unitPrice" header="合价" width="150"/>
+        <column key="artificiality" header="合价（人工）" width="150"/>
+        <column key="materiels" header="合价（材料）" width="150"/>
+        <column key="mech" header="合价（机械）" width="150"/>
+        <column key="materielsUnitPrice" header="主材合价" width="150"/>
+        <column key="quotaGroup" hidden="true" header="分组" width="80"/>
+    </query>
+    
     <query id="budget_list" key="budgetNo" tableName="成本预算列表" className="com.radish.master.entity.Budget" widthType="px">
         <column key="rowIndex" header="序号" width="80"/>
         <column key="budgetNo" header="预算编码" allowSort="true" width="150"/>

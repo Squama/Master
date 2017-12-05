@@ -13,9 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 
@@ -32,24 +30,13 @@ public class BudgetController {
     @Resource
     private BudgetService budgetService;
     
-    @RequestMapping(value="/toimport",method = RequestMethod.GET)
-    public String toImport(){
-        return "budgetmanage/budget/budget_import";
-    }
     
-    @RequestMapping(method = RequestMethod.POST, value = "/import")
-    @ResponseBody
-    public Result importExcel(@RequestParam(value = "budgetfileupload", required = false) MultipartFile budgetfileupload){
-        try{
-            budgetService.importExcel(budgetfileupload);
-        }catch (Exception e) {
-            return new Result(false,"导入失败");
-        }
-        
-        return new Result(true);
-    }
-
-    
+    /**
+     * 
+     * 新旧代码分界
+     * *************************************************************************
+     * 
+     */
     
     @RequestMapping(value="/list",method = RequestMethod.GET)
     public String list(){

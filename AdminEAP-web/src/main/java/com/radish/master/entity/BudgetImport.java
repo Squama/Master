@@ -11,6 +11,8 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import com.cnpc.framework.annotation.Header;
+
 /**
 * 类说明
 * 
@@ -32,25 +34,57 @@ public class BudgetImport {
     @Column(name = "id", length = 36)
     private String id;
     
+    @Header(name="定额编码")
+    @Column(name="quota_no")
     private String quotaNo;
     
+    @Header(name="子目名称")
+    @Column(name="quota_name")
     private String quotaName;
     
+    @Header(name="单位")
+    @Column(name="units")
     private String units;
     
+    @Header(name="工程量")
+    @Column(name="quantities")
     private String quantities;
     
+    @Header(name="单价")
+    @Column(name="price")
     private String price;
     
+    @Header(name="合价")
+    @Column(name="unit_price")
     private String unitPrice;
     
+    @Header(name="合价（人工）")
+    @Column(name="artificiality")
     private String artificiality;
     
+    @Header(name="合价（材料）")
+    @Column(name="materiels")
     private String materiels;
-    
+
+    @Header(name="合价（机械）")
+    @Column(name="mech")
     private String mech;
     
+    @Header(name="主材合价")
+    @Column(name="materiels_unit_price")
     private String materielsUnitPrice;
+    
+    @Header(name="分组")
+    @Column(name="quota_group")
+    private String quotaGroup;
+    
+    @Header(name="项目")
+    @Column(name="project_id")
+    private String projectID;
+    
+    @Header(name="预算")
+    @Column(name="budget_no")
+    private String budgetNo;
 
     public String getId() {
         return id;
@@ -139,6 +173,28 @@ public class BudgetImport {
     public void setMaterielsUnitPrice(String materielsUnitPrice) {
         this.materielsUnitPrice = materielsUnitPrice;
     }
-    
-    
+
+    public String getQuotaGroup() {
+        return quotaGroup;
+    }
+
+    public void setQuotaGroup(String quotaGroup) {
+        this.quotaGroup = quotaGroup;
+    }
+
+    public String getProjectID() {
+        return projectID;
+    }
+
+    public void setProjectID(String projectID) {
+        this.projectID = projectID;
+    }
+
+    public String getBudgetNo() {
+        return budgetNo;
+    }
+
+    public void setBudgetNo(String budgetNo) {
+        this.budgetNo = budgetNo;
+    }
 }
