@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.fastjson.JSONArray;
 import com.cnpc.framework.base.pojo.Result;
+import com.radish.master.entity.Budget;
 import com.radish.master.entity.BudgetImport;
 import com.radish.master.service.BudgetService;
 import com.radish.master.system.HanyuPinyinHelper;
@@ -51,9 +52,9 @@ public class BudgetImportController {
     
     @RequestMapping(method = RequestMethod.POST, value = "/import")
     @ResponseBody
-    public Result importExcel(@RequestParam(value = "budgetfileupload", required = false) MultipartFile budgetfileupload){
+    public Result importExcel(@RequestParam(value = "budgetfileupload", required = false) MultipartFile budgetfileupload, Budget budget){
         try{
-            budgetService.importExcel(budgetfileupload);
+            budgetService.importExcel(budgetfileupload, budget);
         }catch (Exception e) {
             return new Result(false,"导入失败");
         }

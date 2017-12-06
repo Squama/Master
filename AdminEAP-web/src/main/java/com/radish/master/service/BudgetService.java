@@ -23,7 +23,7 @@ public interface BudgetService extends BaseService {
      * *************************************************************
      */
     
-    public Integer importExcel(MultipartFile file) throws Exception;
+    public Integer importExcel(MultipartFile file, Budget budget) throws Exception;
     
     BudgetImport getGroupByNo(String group);
     

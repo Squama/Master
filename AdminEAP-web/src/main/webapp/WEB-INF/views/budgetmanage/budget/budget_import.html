@@ -18,13 +18,13 @@
 <script src="${basePath}/resources/common/js/base-file.js"></script>
 <section class="content-header">
     <h1>
-        <span>项目管理</span>
-        <small>新增</small>
+        <span>预算表</span>
+        <small>导入</small>
     </h1>
     <ol class="breadcrumb">
         <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
-        <li><a href="#">项目管理</a></li>
-        <li class="active">新增项目</li>
+        <li><a href="#">预算管理</a></li>
+        <li class="active">导入预算表</li>
     </ol>
 </section>
 
@@ -71,7 +71,7 @@
                         </div>
                     </div>
                     <div class="box-footer text-center">
-                        <button type="submit" class="btn btn-default" data-btn-type="reset">清空</button>
+                        <button type="button" class="btn btn-default" data-btn-type="reset">清空</button>
                     </div>
                 </form>
             </div>
@@ -113,7 +113,6 @@
                     	ajaxPost(basePath + "/budgetimport/getgroup/"+group, null, function (data) {
                             ret=data.data;
                         });
-                    	console.log(ret);
                         $(rows).eq( i ).before(
                             '<tr class="group" id="'+ret.id+'" style="background-color:darkgrey;">'+
                             '<td class="text-center" colspan="3">'+ret.quotaName+'</td>'+
@@ -131,7 +130,8 @@
                         last = group;
                     }
                 } );
-            }
+            },
+            "dom": '<"top"i>rt<"bottom"flp><"clear">'
     	});
     	
         //初始化表单 
@@ -145,11 +145,18 @@
                 validating: 'glyphicon glyphicon-refresh'
             },
             submitHandler: function () {
-                var action = $(this).attr('$submitButton').attr('data-btn-type');
-                switch (action) {
-                    case "reset":
-                        loadPage(basePath+"/budgetimport/toimport");
-                        break;
+                //nothing
+            },
+            fields: {
+                "projectID": {
+                    validators: {
+                        notEmpty: {message: '所属项目不能为空'}
+                    }
+                },
+                "budgetName": {
+                    validators: {
+                        notEmpty: {message: '预算名称不能为空'}
+                    }
                 }
             }
         });
@@ -164,10 +171,20 @@
         }
         
         $("#budgetName").on("focusout", function(){
-        	console.log($(this).val());
         	ajaxPost(basePath + "/budgetimport/genno/"+$(this).val(), null, function (data) {
                 $('#budgetNo').val(data.message);
             });
+        });
+        
+        $('#budgetfileupload').on('click', function(e){
+        	$("#import_form").data("bootstrapValidator").validate();
+        	if(!$("#import_form").data("bootstrapValidator").isValid()){
+        		e.preventDefault();
+        	}
+        });
+        
+        $("button[data-btn-type='reset']").click(function () {
+            loadPage(basePath+"/budgetimport/toimport");
         });
     });
     
@@ -177,15 +194,22 @@
     $("#budgetfileupload").fileinput({
     	language: 'zh',
     	uploadUrl: basePath + "/budgetimport/import",
+    	uploadExtraData : getFormData,
     	allowedFileExtensions : ['xls', 'xlsx'],
     	showPreview : false
     }).on("fileuploaded", function(event, data, previewId, index){
-    	console.log(event);
-    	console.log(data);
-    	console.log(previewId);
-    	console.log(index);
+    	$('#budgetNo',$('#searchDiv')).val(data.extra.budgetNo);
+    	budgetImportTable.reloadData();
+    	$('#projectID').attr("disabled","disabled");
+    	$('#budgetName').attr("disabled","disabled");
+    	setTimeout('disableFileInput()',500);
     });
-
     
-
+    function getFormData(){
+    	return importform.getFormSimpleData();
+    }
+    
+    function disableFileInput(){
+    	$("#budgetfileupload").fileinput('disable')
+    }
 </script>

@@ -93,7 +93,7 @@ public class BudgetServiceImpl extends BaseServiceImpl implements BudgetService 
     }
 
     @Override
-    public Integer importExcel(MultipartFile file) throws Exception {
+    public Integer importExcel(MultipartFile file, Budget budget) throws Exception {
         Workbook workbook = null;
         try{
             String fileName = file.getOriginalFilename();
@@ -163,12 +163,20 @@ public class BudgetServiceImpl extends BaseServiceImpl implements BudgetService 
                     bi.setMaterielsUnitPrice(materielsUnitPrice);
                     
                     bi.setQuotaGroup(group);
+                    bi.setBudgetNo(budget.getBudgetNo());
+                    bi.setProjectID(budget.getProjectID());
                     
                     list.add(bi);
                 }
             }
             
             this.batchSave(list);
+            
+            budget.setCreateDateTime(new Date());
+            budget.setOperateTime(new Date());
+            budget.setOperator(SecurityUtil.getUserId());
+            
+            this.save(budget);
             
             return rows - 1;
         }catch(Exception e){
