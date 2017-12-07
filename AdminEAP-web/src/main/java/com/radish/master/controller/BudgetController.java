@@ -7,6 +7,7 @@ import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.utils.SecurityUtil;
 import com.radish.master.entity.Budget;
 import com.radish.master.entity.BudgetTx;
+import com.radish.master.entity.Project;
 import com.radish.master.service.BudgetService;
 
 import org.springframework.stereotype.Controller;
@@ -30,6 +31,12 @@ public class BudgetController {
     @Resource
     private BudgetService budgetService;
     
+    @RequestMapping(method = RequestMethod.POST, value = "/getproject/{projectID}")
+    @ResponseBody
+    private Result getProject(@PathVariable("projectID") String projectID) {
+        Project project = budgetService.get(Project.class, projectID);
+        return new Result(true, project.getProjectName());
+    }
     
     /**
      * 
@@ -68,11 +75,7 @@ public class BudgetController {
         return "budgetmanage/budget/budget_edit";
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/getproject")
-    @ResponseBody
-    private Result getProject(Budget budget, HttpServletRequest request) {
-        return new Result(true);
-    }
+
 
     @RequestMapping(method = RequestMethod.POST, value = "/getbyno")
     @ResponseBody

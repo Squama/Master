@@ -17,6 +17,15 @@
         <column key="quotaGroup" hidden="true" header="分组" width="80"/>
     </query>
     
+    <query id="budget_estimate_list" key="budgetNo" tableName="待成本测算列表" className="com.radish.master.entity.Budget" widthType="px">
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="budgetNo" header="预算编码" allowSort="true" width="150"/>
+        <column key="budgetName" header="预算名称" classType="String" allowSort="true" width="150"/>
+        <column key="projectID" header="所属项目" classType="String" allowSort="true" width="150" fnRender="fnRenderProject"/>
+        <column key="status" header="预算状态" allowSort="true" width="150" render="10=新建,20=测算已提交,30=测算已完成"/>
+        <column key="budgetNo" header="操作" width="80" fnRender="fnRenderOperate"/>
+    </query>
+    
     <query id="budget_list" key="budgetNo" tableName="成本预算列表" className="com.radish.master.entity.Budget" widthType="px">
         <column key="rowIndex" header="序号" width="80"/>
         <column key="budgetNo" header="预算编码" allowSort="true" width="150"/>

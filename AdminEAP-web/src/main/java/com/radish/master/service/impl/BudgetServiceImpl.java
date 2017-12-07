@@ -175,6 +175,7 @@ public class BudgetServiceImpl extends BaseServiceImpl implements BudgetService 
             budget.setCreateDateTime(new Date());
             budget.setOperateTime(new Date());
             budget.setOperator(SecurityUtil.getUserId());
+            budget.setStatus("10");
             
             this.save(budget);
             
