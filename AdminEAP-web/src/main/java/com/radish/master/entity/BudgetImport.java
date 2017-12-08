@@ -85,6 +85,14 @@ public class BudgetImport {
     @Header(name="预算")
     @Column(name="budget_no")
     private String budgetNo;
+    
+    @Header(name="拆分合并标志")
+    @Column(name="order_no")
+    private String orderNo;
+    
+    @Header(name="行高标志")
+    @Column(name="col")
+    private String col;
 
     public String getId() {
         return id;
@@ -196,5 +204,21 @@ public class BudgetImport {
 
     public void setBudgetNo(String budgetNo) {
         this.budgetNo = budgetNo;
+    }
+
+    public String getOrderNo() {
+        return orderNo;
+    }
+
+    public void setOrderNo(String orderNo) {
+        this.orderNo = orderNo;
+    }
+
+    public String getCol() {
+        return col;
+    }
+
+    public void setCol(String col) {
+        this.col = col;
     }
 }
