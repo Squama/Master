@@ -28,4 +28,6 @@ public interface BudgetService extends BaseService {
     BudgetImport getGroupByNo(String group);
     
     List<Options> getProjectCombobox();
+    
+    List<BudgetImport> getBudgetImportList(String[] importIDs);
 }

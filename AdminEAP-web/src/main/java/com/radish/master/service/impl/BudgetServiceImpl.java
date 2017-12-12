@@ -8,7 +8,6 @@ import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.base.service.impl.BaseServiceImpl;
 import com.cnpc.framework.utils.SecurityUtil;
 import com.cnpc.framework.utils.StrUtil;
-import com.cnpc.tool.message.entity.MessageGroup;
 import com.radish.master.entity.Budget;
 import com.radish.master.entity.BudgetImport;
 import com.radish.master.pojo.Options;
@@ -27,7 +26,6 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.hibernate.type.StringType;
 import org.hibernate.type.Type;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.text.DecimalFormat;
@@ -240,6 +238,21 @@ public class BudgetServiceImpl extends BaseServiceImpl implements BudgetService 
     public List<Options> getProjectCombobox() {
         return this.findMapBySql("select id value, project_name data from tbl_project", new Object[]{}, new Type[]{StringType.INSTANCE}, Options.class);
         
+    }
+
+    @Override
+    public List<BudgetImport> getBudgetImportList(String[] importIDs) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        StringBuilder sb = new StringBuilder();
+        for(int i = 0; i < importIDs.length; i++){
+            sb.append("'");
+            sb.append(importIDs[i]);
+            sb.append("'");
+            sb.append(",");
+        }
+        sb.deleteCharAt(sb.length()-1);
+        params.put("importIDs", importIDs);
+        return this.find("from BudgetImport where id in (:importIDs)", params);
     }
     
 }

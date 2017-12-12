@@ -3,16 +3,27 @@
  */
 package com.radish.master.controller;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONArray;
+import com.cnpc.framework.base.pojo.Result;
 import com.radish.master.entity.Budget;
+import com.radish.master.entity.BudgetImport;
+import com.radish.master.entity.BudgetTx;
 import com.radish.master.service.BudgetService;
+import com.radish.master.system.CodeException;
+import com.radish.master.system.GUID;
 
 /**
 * 类说明
@@ -37,14 +48,45 @@ public class BudgetEstimateController {
         return "budgetmanage/budgetestimate/budget_estimate_list";
     }
     
-    @RequestMapping(value="/doestimate",method = RequestMethod.POST)
-    public String doEstimate(String budgetNo, String sourceUrl, HttpServletRequest request){
+    @RequestMapping(value="/toestimate",method = RequestMethod.POST)
+    public String toEstimate(String budgetNo, String sourceUrl, HttpServletRequest request){
         Budget budget = budgetService.getBudgetByNo(budgetNo);
         
         request.setAttribute("budget", JSONArray.toJSONString(budget));
         request.setAttribute("sourceUrl", sourceUrl);
         
         return "budgetmanage/budgetestimate/budget_estimate";
+    }
+    
+    @RequestMapping(value="/doestimate",method = RequestMethod.POST)
+    @ResponseBody
+    public Result doEstimate(String budgetNo, String[] choose, HttpServletRequest request) throws CodeException{
+        List<BudgetImport> importList = budgetService.getBudgetImportList(choose);
+        
+        List<BudgetTx> txList = new ArrayList<BudgetTx>();
+        
+        for(BudgetImport bi : importList){
+            BudgetTx bt = new BudgetTx();
+            BeanUtils.copyProperties(bi,bt);
+            
+            bt.setId(null);
+            bt.setRegionCode(bi.getQuotaNo());
+            bt.setRegionName(bi.getQuotaName());
+            bt.setCreateDateTime(new Date());
+            
+            bi.setOrderNo(GUID.genTxNo(16));
+            bi.setCol(null);
+            
+            bt.setOrderNo(bi.getOrderNo());
+            bt.setCol(bi.getCol());
+            
+            txList.add(bt);
+        }
+        
+        budgetService.batchUpdate(importList);
+        budgetService.batchSave(txList);
+        
+        return new Result(true);
     }
     
 }
