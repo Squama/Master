@@ -9,6 +9,7 @@ import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.base.service.BaseService;
 import com.radish.master.entity.Budget;
 import com.radish.master.entity.BudgetImport;
+import com.radish.master.entity.BudgetTx;
 import com.radish.master.pojo.Options;
 
 public interface BudgetService extends BaseService {
@@ -30,4 +31,6 @@ public interface BudgetService extends BaseService {
     List<Options> getProjectCombobox();
     
     List<BudgetImport> getBudgetImportList(String[] importIDs);
+    
+    BudgetTx getTxGroupByNo(String group);
 }

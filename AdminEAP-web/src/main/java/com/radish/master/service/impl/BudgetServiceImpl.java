@@ -10,6 +10,7 @@ import com.cnpc.framework.utils.SecurityUtil;
 import com.cnpc.framework.utils.StrUtil;
 import com.radish.master.entity.Budget;
 import com.radish.master.entity.BudgetImport;
+import com.radish.master.entity.BudgetTx;
 import com.radish.master.pojo.Options;
 import com.radish.master.service.BudgetService;
 import com.radish.master.system.CodeException;
@@ -253,6 +254,13 @@ public class BudgetServiceImpl extends BaseServiceImpl implements BudgetService 
         sb.deleteCharAt(sb.length()-1);
         params.put("importIDs", importIDs);
         return this.find("from BudgetImport where id in (:importIDs)", params);
+    }
+    
+    @Override
+    public BudgetTx getTxGroupByNo(String group) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("quotaGroup", group);
+        return this.get("from BudgetTx where regionCode IS NULL AND quotaGroup=:quotaGroup", params);
     }
     
 }

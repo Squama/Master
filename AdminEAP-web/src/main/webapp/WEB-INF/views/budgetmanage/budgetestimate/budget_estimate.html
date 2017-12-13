@@ -1,6 +1,9 @@
 <!-- Content Header (Page header) -->
+<link rel="stylesheet" href="${basePath}/resources/cinder/editor/dataTables.editor.css">
+<link rel="stylesheet" href="${basePath}/resources/cinder/editor/editor.dataTables.min.css">
 <style>
 .fixed-button-area{position:fixed;z-index:1;left:45%;}
+.DTE_Field_InputControl{color:black;}
 </style>
 
 <section class="content-header">
@@ -26,7 +29,7 @@
 	                        <button type="button" class="btn btn-success"  data-btn-type="estimate">测算</button>
 	                        <button type="button" class="btn btn-primary" data-btn-type="merge">合并</button>
 	                        <button type="button" class="btn btn-info" data-btn-type="split">拆分</button>
-	                        <button type="button" class="btn btn-warning" data-btn-type="revoke">撤回</button>
+	                        <!-- <button type="button" class="btn btn-warning" data-btn-type="revoke">撤回</button> -->
 	                    </div>
 	                </div>
 	                <div class="box-body">
@@ -51,9 +54,9 @@
     </div>
 </section>
 
-
+<script src="${basePath}/resources/cinder/editor/dataTables.editor.min.js"></script>
 <script>  
-    var importform;
+    var importform,estimateEditor;
     var budgetImportTable,budgetTxTable;
     var winId="budgetDoEstimateWin";
     var budgetNo = '${budgetNo?default("daoruyusuanceshi011712061254")}';
@@ -65,12 +68,6 @@
     
     //页面方法体
     var budgetEstimateObject = {
-            doSingleEstimate: function (budgetNo) {
-                loadPage(basePath+"/budget/estimate/dosingleestimate", undefined, {
-                    "budgetNo" : budgetNo,
-                    "sourceUrl" : "/budget/estimate/list"
-                });
-            },
             initButtonEvent:function(){
             	$("button[data-btn-type]").click(function () {
             		var action = $(this).attr('data-btn-type');
@@ -109,10 +106,44 @@
 	                    	break;
                    }
                 });
+            },
+            initEstimateModal:function(){
+                $("#budget_tx_table").on("dblclick", "tr", function(e){
+                	var id = $(this).attr('id'); 
+                    modals.openWin({
+                        winId: "estimateWin",
+                        width: "900px",
+                        url: basePath + "/budget/estimate/singleestimate?id=" + id,
+                        title: "测算"
+                    });
+                });
+            },
+            initEstimateEditor:function(){
+            	estimateEditor = new $.fn.dataTable.Editor( {
+                    ajax: basePath+"/budget/estimate/rowedit",
+                    table: "#budget_tx_table",
+                    idSrc:  'id',
+                    fields: [ 
+                        {
+                            label: "regionCode:",
+                            name: "regionCode",
+                            type:"text"
+                        }
+                    ]
+                } );
+                
+                console.log(estimateEditor);
+                
+                $('#budget_tx_table').on( 'click', 'tbody td:not(:first-child)', function (e) {
+                	estimateEditor.inline( this, {
+                        onBlur: 'submit'
+                    });
+                } );
             }
     }
     
     $(function() { 
+    	<!-- 初始化导入的预算表 -->
         budgetImportTable = new CommonTable("budget_import_table", "budget_estimate_left_list", "searchDivImport", {
             "createdRow": function( row, data, dataIndex ) {
                 if(data.col != null){
@@ -121,9 +152,38 @@
                 }
              },
              "dom": '<"top"i>rt<"bottom"flp><"clear">',
-             "paging" : false
+             "paging" : false,
+             "drawCallback": function ( settings ) {
+                 var api = this.api();
+                 var rows = api.rows( {page:'current'} ).nodes();
+                 var last=null;
+      
+                 api.column(11, {page:'current'} ).data().each( function ( group, i ) {
+                     if ( last !== group ) {
+                         var ret = group;
+                         ajaxPost(basePath + "/budgetimport/getgroup/"+group, null, function (data) {
+                             ret=data.data;
+                         });
+                         $(rows).eq( i ).before(
+                             '<tr class="group" id="'+ret.id+'" style="background-color:darkgrey;">'+
+                             '<td class="text-center" colspan="3">'+ret.quotaName+'</td>'+
+                             '<td class="text-center">'+ret.units+'</td>'+
+                             '<td class="text-center">'+ret.quantities+'</td>'+
+                             '<td class="text-center">'+ret.price+'</td>'+
+                             '<td class="text-center">'+ret.unitPrice+'</td>'+
+                             '<td class="text-center">'+ret.artificiality+'</td>'+
+                             '<td class="text-center">'+ret.materiels+'</td>'+
+                             '<td class="text-center">'+ret.mech+'</td>'+
+                             '<td class="text-center">'+ret.materielsUnitPrice+'</td>'+
+                             '</tr>'
+                         );
+      
+                         last = group;
+                     }
+                 } );
+             }
         });
-        
+        <!-- 初始化成本测算表  -->
         budgetTxTable = new CommonTable("budget_tx_table", "budget_estimate_right_list", "searchDivTx", {
             "createdRow": function( row, data, dataIndex ) {
             	if(data.col != null){
@@ -132,7 +192,36 @@
                 }
              },
              "dom": '<"top"i>rt<"bottom"flp><"clear">',
-             "paging" : false
+             "paging" : false,
+             "drawCallback": function ( settings ) {
+                 var api = this.api();
+                 var rows = api.rows( {page:'current'} ).nodes();
+                 var last=null;
+      
+                 api.column(11, {page:'current'} ).data().each( function ( group, i ) {
+                     if ( last !== group ) {
+                         var ret = group;
+                         ajaxPost(basePath + "/budget/estimate/getgroup/"+group, null, function (data) {
+                             ret=data.data;
+                         });
+                         $(rows).eq( i ).before(
+                             '<tr class="group" id="'+ret.id+'" style="background-color:darkgrey;">'+
+                             '<td class="text-center" colspan="3">'+ret.regionName+'</td>'+
+                             '<td class="text-center">'+ret.units+'</td>'+
+                             '<td class="text-center">'+ret.quantities+'</td>'+
+                             '<td class="text-center">'+ret.price+'</td>'+
+                             '<td class="text-center">'+ret.unitPrice+'</td>'+
+                             '<td class="text-center">'+ret.artificiality+'</td>'+
+                             '<td class="text-center">'+ret.materiels+'</td>'+
+                             '<td class="text-center">'+ret.mech+'</td>'+
+                             '<td class="text-center">'+ret.materielsUnitPrice+'</td>'+
+                             '</tr>'
+                         );
+      
+                         last = group;
+                     }
+                 } );
+             }
         });
 
         //初始化表单 
@@ -141,17 +230,18 @@
         importform.initComponent();
         
         budgetEstimateObject.initButtonEvent();
+        //budgetEstimateObject.initEstimateModal();
+        budgetEstimateObject.initEstimateEditor();
     })
 
     
-    function fnRenderOperate(value, type, rowObj){
-        var oper = "";
-        oper += "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='budgetEstimateObject.doSingleEstimate(\"" + value + "\")'>单笔测算</a>";
-        return oper;
-    }
-    
     function fnRenderCheckbox(value, type, rowObj){
     	var oper = "";
+        if(rowObj.orderNo==null || rowObj.orderNo=="")oper += "&nbsp;&nbsp;&nbsp;<input type='checkbox' name='choose' value ='"+value+"'>";
+        return oper;
+    }
+    function fnRenderCheckboxRight(value, type, rowObj){
+        var oper = "";
         oper += "&nbsp;&nbsp;&nbsp;<input type='checkbox' name='choose' value ='"+value+"'>";
         return oper;
     }

@@ -26,8 +26,8 @@
         <column key="budgetNo" header="操作" width="80" fnRender="fnRenderOperate"/>
     </query>
     
-    <query id="budget_estimate_left_list" key="id" tableName="预算表" className="com.radish.master.entity.BudgetImport" widthType="px" pageSize="2000" order="quotaGroup desc,orderNo asc">
-        <column key="id" header="选择" width="80" fnRender="fnRenderCheckbox"/>
+    <query id="budget_estimate_left_list" key="id" tableName="预算表" className="com.radish.master.entity.BudgetImport" widthType="px" pageSize="2000" order="quotaGroup asc,orderNo desc">
+        <column key="id" header="选择" width="10" fnRender="fnRenderCheckbox"/>
         <column key="quotaNo" header="定额编号" width="120"/>
         <column key="quotaName" header="子目名称" width="150"/>
         <column key="units" header="单位" width="100"/>
@@ -43,8 +43,8 @@
         <column key="col" hidden="true" header="行高" width="80"/>
     </query>
     
-    <query id="budget_estimate_right_list" key="id" tableName="成本测算表" className="com.radish.master.entity.BudgetTx" widthType="px" pageSize="2000" order="quotaGroup desc,orderNo asc">
-        <column key="id" header="选择" hidden="true" width="10" />
+    <query id="budget_estimate_right_list" key="id" tableName="成本测算表" className="com.radish.master.entity.BudgetTx" widthType="px" pageSize="2000" order="quotaGroup asc,orderNo desc">
+        <column key="rowIndex" header="序号" width="80"/>
         <column key="regionCode" header="定额编号" width="120"/>
         <column key="regionName" header="子目名称" width="150"/>
         <column key="units" header="单位" width="100"/>
@@ -58,6 +58,7 @@
         <column key="quotaGroup" hidden="true" header="分组" width="80"/>
         <column key="orderNo" hidden="true" header="拆分合并标志" width="80"/>
         <column key="col" hidden="true" header="行高" width="80"/>
+        <column key="id" header="id" hidden="true"/>
     </query>
     
     
