@@ -59,7 +59,11 @@
     var importform,estimateEditor;
     var budgetImportTable,budgetTxTable;
     var winId="budgetDoEstimateWin";
-    var budgetNo = '${budgetNo?default("daoruyusuanceshi011712061254")}';
+    var budgetNo = '${budgetNo?default(0)}';
+    var materiels = '${materiels?default(0)}';
+    if(materiels != 0){
+    	materiels = JSON.parse(materiels);
+    }
     
     if(budgetNo != 0){
     	$('#budgetNo',$('#searchDivImport')).val(budgetNo);	
@@ -112,7 +116,7 @@
                 	var id = $(this).attr('id'); 
                     modals.openWin({
                         winId: "estimateWin",
-                        width: "900px",
+                        width: "1100px",
                         url: basePath + "/budget/estimate/singleestimate?id=" + id,
                         title: "测算"
                     });
@@ -230,7 +234,7 @@
         importform.initComponent();
         
         budgetEstimateObject.initButtonEvent();
-        //budgetEstimateObject.initEstimateModal();
+        budgetEstimateObject.initEstimateModal();
         budgetEstimateObject.initEstimateEditor();
     })
 

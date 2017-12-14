@@ -11,6 +11,7 @@ import com.cnpc.framework.utils.StrUtil;
 import com.radish.master.entity.Budget;
 import com.radish.master.entity.BudgetImport;
 import com.radish.master.entity.BudgetTx;
+import com.radish.master.entity.Materiel;
 import com.radish.master.pojo.Options;
 import com.radish.master.service.BudgetService;
 import com.radish.master.system.CodeException;
@@ -261,6 +262,16 @@ public class BudgetServiceImpl extends BaseServiceImpl implements BudgetService 
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("quotaGroup", group);
         return this.get("from BudgetTx where regionCode IS NULL AND quotaGroup=:quotaGroup", params);
+    }
+
+    @Override
+    public Map<String, Materiel> getMatMap() {
+        List<Materiel> list = this.find("from Materiel where isValid = 1");
+        Map<String, Materiel> map = new HashMap<String, Materiel>();
+        for(Materiel mat : list){
+            map.put(mat.getMat_number(), mat);
+        }
+        return map;
     }
     
 }

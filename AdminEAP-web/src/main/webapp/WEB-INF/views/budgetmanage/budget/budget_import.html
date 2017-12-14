@@ -86,7 +86,6 @@
     if(projectOptions != 0){
     	options = JSON.parse(projectOptions);
     }
-    $(".select2").select2();
     $(function () {
     	budgetImportTable = new CommonTable("budget_import_table", "budget_import_list", "searchDiv", {
             "paging" : false,
@@ -156,6 +155,7 @@
                 var option = options[i];
                 $('#projectID').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
             }
+            $(".select2").select2();
         }
         
         $("#budgetName").on("focusout", function(){

@@ -61,6 +61,29 @@
         <column key="id" header="id" hidden="true"/>
     </query>
     
+    <query id="budget_tx_estimate_list" key="id" tableName="成本测算明细" widthType="px">
+            <sql>
+                <![CDATA[
+                  SELECT be.id id,bt.region_name quotaName,p.project_name projectName,
+				  b.budget_name budgetName,be.mat_number matNumber,be.mat_name matName,
+				  be.mat_standard matStandard,be.unit unit,be.quantity quantity
+				  FROM tbl_project p,tbl_budget b,tbl_budget_tx bt,tbl_budget_estimate be
+				  WHERE p.id = b.project_id AND b.budget_no = bt.budget_no AND bt.id = be.budget_tx_id
+				  AND 1=1
+                ]]>
+            </sql>
+            <column key="id" header="id" hidden="true"/>
+            <column key="rowIndex" header="序号"/>
+            <column key="quotaName" header="子目名称"/>
+            <column key="projectName" header="所属项目"/>
+            <column key="budgetName" header="所属预算"/>
+            <column key="matNumber" header="物料编号"/>
+            <column key="matName" header="物料名" />
+            <column key="matStandard" header="规格" />
+            <column key="unit" header="单位"/>
+            <column key="quantity" header="数量"/>
+            <column key="id" header="删除" fnRender="fnRenderDelete"/>
+    </query>
     
     <!-- 原预算表 -->
     <query id="budget_list" key="budgetNo" tableName="成本预算列表" className="com.radish.master.entity.Budget" widthType="px">

@@ -28,12 +28,12 @@ public class BudgetEstimate extends BaseEntity {
     private static final long serialVersionUID = -2888885202838810412L;
 
     @Header(name = "预算明细编号")
-    @Column(name = "budget_tx_no") 
-    private String budgetTxNo;
+    @Column(name = "budget_tx_id") 
+    private String budgetTxID;
     
     @Header(name = "项目编号")
-    @Column(name = "project_no") 
-    private String projectNo;
+    @Column(name = "project_id") 
+    private String projectID;
     
     @Header(name = "预算编号")
     @Column(name = "budget_no") 
@@ -67,20 +67,20 @@ public class BudgetEstimate extends BaseEntity {
     @Column(name= "price")
     private String price;
 
-    public String getBudgetTxNo() {
-        return budgetTxNo;
+    public String getBudgetTxID() {
+        return budgetTxID;
     }
 
-    public void setBudgetTxNo(String budgetTxNo) {
-        this.budgetTxNo = budgetTxNo;
+    public void setBudgetTxID(String budgetTxID) {
+        this.budgetTxID = budgetTxID;
     }
 
-    public String getProjectNo() {
-        return projectNo;
+    public String getProjectID() {
+        return projectID;
     }
 
-    public void setProjectNo(String projectNo) {
-        this.projectNo = projectNo;
+    public void setProjectID(String projectID) {
+        this.projectID = projectID;
     }
 
     public String getBudgetNo() {

@@ -57,6 +57,7 @@ public class BudgetEstimateController {
         
         request.setAttribute("budget", JSONArray.toJSONString(budget));
         request.setAttribute("sourceUrl", sourceUrl);
+        request.setAttribute("materiels", JSONArray.toJSONString(budgetService.getMatMap()));
         
         return "budgetmanage/budgetestimate/budget_estimate";
     }
@@ -127,6 +128,11 @@ public class BudgetEstimateController {
         re.setData(list);
         System.out.println(JSONArray.toJSONString(re));
         return JSONArray.toJSONString(re);
+    }
+    
+    @RequestMapping(value="/singleestimate",method = RequestMethod.GET)
+    public String singleEstimate(){
+        return "budgetmanage/budgetestimate/single_estimate";
     }
     
 }
