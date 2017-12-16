@@ -6,6 +6,7 @@ package com.radish.master.entity;
 import com.cnpc.framework.annotation.Header;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -66,6 +67,7 @@ public class DutyCheck implements Serializable {
     @Column(name = "isValid")
     private String isValid;
     
+    @DateTimeFormat(pattern="yyyy-MM-dd")
     @Header(name = "考核时间")
     @Column(name = "check_time")
     private Date check_time;
@@ -73,6 +75,14 @@ public class DutyCheck implements Serializable {
     @Header(name = "考核结果")
     @Column(name = "check_result")
     private String check_result;
+    
+    @Header(name = "扣减分数")
+    @Column(name = "deduction")
+    private Double deduction;
+    
+    @Header(name = "总得分")
+    @Column(name = "score")
+    private Double score;
     
     @Header(name = "奖惩")
     @Column(name = "jc")
@@ -212,6 +222,22 @@ public class DutyCheck implements Serializable {
 
 	public void setReserve3(String reserve3) {
 		this.reserve3 = reserve3;
+	}
+
+	public Double getDeduction() {
+		return deduction;
+	}
+
+	public void setDeduction(Double deduction) {
+		this.deduction = deduction;
+	}
+
+	public Double getScore() {
+		return score;
+	}
+
+	public void setScore(Double score) {
+		this.score = score;
 	}
 
 	

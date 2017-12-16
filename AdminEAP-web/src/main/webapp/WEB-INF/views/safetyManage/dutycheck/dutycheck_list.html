@@ -80,8 +80,7 @@
                          winId:winId,
                          title:'录入责任考核结果',
                          width:'900px',
-                         url:basePath+"/dutycheck/edit"
-                         
+                         url:basePath+"/dutycheck/edit"                         
                         });     
                 	break;
                 case "edit":
@@ -89,7 +88,7 @@
                         modals.info('请选择要编辑的行');
                         return false;
                     }
-                	console.log(rowId);
+                	
                     modals.openWin({
                         winId:winId,
                         title:'编辑责任考核结果',
@@ -103,7 +102,7 @@
                         return false;
                     }
                     modals.confirm("是否要删除该行数据？",function(){
-                        ajaxPost(basePath+"/material/delete/"+rowId,null,function(data){
+                        ajaxPost(basePath+"/dutycheck/delete?id="+rowId,null,function(data){
                         	if(data.success){
                         		dutycheckTable.reloadData();
                         	}

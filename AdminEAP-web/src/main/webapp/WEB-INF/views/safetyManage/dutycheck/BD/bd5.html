@@ -1,0 +1,136 @@
+     <style >
+     	table{
+     		font-family: verdana,arial,sans-serif;
+	     	font-size:11px;
+	     	color:#333333;
+	      	border-width: 1px;
+	      	border-color: #666666;
+	      	border-collapse: collapse;
+     	}
+     	th{
+     		 border-width: 1px;
+		     padding: 8px;
+		     border-style: solid;
+		     border-color: #666666;
+		     background-color: #dedede;
+     	}
+     	td{
+	     	 border-width: 1px;
+		     padding: 8px;
+		     border-style: solid;
+		     border-color: #666666;
+		     background-color: #ffffff;
+		     text-align: center
+     	}
+     	input{
+     		width:100%;
+     		text-align: center;
+     		font-size: 12px;
+     		border: none
+     	}
+     	span{
+     		font-size: 13px
+     	}
+	</style>
+ <body>
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><li class="fa fa-remove"></li></button>
+    <h5 class="modal-title">项目经理安全生产责任考核表</h5>
+</div>
+<div class="modal-body">
+ <form style="width:100%">
+ <div style="text-align: center">项目经理安全生产责任考核表</div>
+ <div style="margin: 2px 0 5px 20px">
+ 	<span  style="margin-right: 40%">施工单位：<input id="unitName" name="unitName"style="width:30%;text-align: left;"/></span>
+ 	<span>考核日期：<input id="check_time"name="check_time" style="width:15%;text-align: left;"/></span>	
+ </div>
+  <table cellSpacing=0 cellPadding=0  style="width:100%;table-layout:fixed;border-collapse:collapse">
+	<tr>
+		<th style="width:10%">序号</th>
+		<th style="width:20%">考核内容</th>
+		<th style="width:50%">扣分标准</th>
+		<th style="width:10%">应得标准</th>
+		<th style="width:10%">扣减分数</th>
+		<th style="width:10%">实得分数</th>
+	</tr>
+	<tr>
+		<td>1</td>
+		<td>贯彻安全<br>生产制度、<br>规程、规定</td>
+		<td>未传达上级有关的安全生产规程、规定、制度的扣15分；未及时传达的扣10分</td>
+		<td>15</td>
+		<td><input id = "col1" name="col1"/></td>
+		<td><input id = "sol1"name="sol1"/></td>
+	</tr>
+	<tr>
+		<td>2</td>
+		<td>项目安全技术<br>检查与贯彻</td>
+		<td>项目的安全技术措施未组织检查的扣5分；未呈报批准的扣4分；未负责贯彻实施的扣10分</td>
+		<td>10</td>
+		<td><input id = "col2" name="col2"/></td>
+		<td><input id = "sol2" name="sol2"/></td>
+	</tr>
+	<tr>
+		<td>3</td>
+		<td>每周安全制度落实</td>
+		<td>每周未计划，布置安全生产工作的扣5分；每周未检查安全生产工作落实情况的扣5分；每周未进行安全生产工作总结评比的扣5分</td>
+		<td>15</td>
+		<td><input id = "col3" name="col3"/></td>
+		<td><input id = "sol3" name="sol3"/></td>
+	</tr>
+	<tr>
+		<td>4</td>
+		<td>每周安全专业会议</td>
+		<td>每周无安全专业会议的扣10分；对检查出现的隐患未按原则解决的扣8分；未及时解决安全生产中存在问题的扣15分；未严格执行“管生产必须同时管安全”原则的扣15分</td>
+		<td>15</td>
+		<td><input id = "col4" name="col4"/></td>
+		<td><input id = "sol4" name="sol4"/></td>
+	</tr>
+	<tr>
+		<td>5</td>
+		<td>三级教育<br>周一教育</td>
+		<td>对职工未进行三级教育的扣15分；未进行周一教育的扣5分；对职工未进行思想教育的扣5分；奖惩未兑现的扣5分</td>
+		<td>10</td>
+		<td><input id = "col5" name="col5"/></td>
+		<td><input id = "sol5" name="sol5"/></td>
+	</tr>
+	<tr>
+		<td>6</td>
+		<td>工伤事故处理</td>
+		<td>发生工伤事故未及时上报的扣10分；发生事故而未能保护好现场的扣5分；未能提出改进措施的扣10分；未对责任人提出处理意见的扣10分</td>
+		<td>15</td>
+		<td><input id = "col6" name="col6"/></td>
+		<td><input id = "sol6" name="sol6"/></td>
+	</tr>
+	<tr>
+		<td>7</td>
+		<td>隐患整改</td>
+		<td>未能及时整改安检部门提出问题的扣10分；安全生产不在受控状态的扣10分；不支持安全员工作的扣5分</td>
+		<td>10</td>
+		<td><input id = "col7" name="col7"/></td>
+		<td><input id = "sol7" name="sol7"/></td>
+	</tr>
+	<tr>
+		<td>8</td>
+		<td>安全资料</td>
+		<td>安全资料未及时整理归档的扣10分</td>
+		<td>10</td>
+		<td><input id = "col8" name="col8"/></td>
+		<td><input id = "sol8" name="sol8"/></td>
+	</tr>
+	<tr>
+		<td colspan="2">合计</td>
+		<td></td>
+		<td>100</td>
+		<td><input id = "deduction"  name="deduction"/></td>
+		<td><input id = "score" name="score"/></td>
+	</tr>
+	<tr>
+		<td colspan="2">被考核人:<input id = "name" name="name"style="width:50%;text-align: left;"/></td>
+		<td colspan="4">考核人:<input id = "check_name" name="check_name" style="width:50%;text-align: left;"/></td>
+	</tr>
+</table>
+
+</form>
+</div>
+
+ </body>

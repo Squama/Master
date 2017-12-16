@@ -1,20 +1,24 @@
+<link rel="stylesheet" href="${basePath}/resources/common/libs/fileinput/css/fileinput.min.css">
+<script src="${basePath}/resources/common/libs/fileinput/js/fileinput.js"></script>
+<script src="${basePath}/resources/common/libs/fileinput/js/locales/zh.js"></script>
+<section class="content" id="projectaddstep2">
 <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><li class="fa fa-remove"></li></button>
     <h5 class="modal-title">录入考核结果</h5>
 </div>
 <div class="modal-body">
 
     <form id="dutycheck-form" name="dutycheck-form" class="form-horizontal">
-     <input type="hidden" name="id" id="id">
-        <input type="hidden" name="project_id">
+     <input type="hidden" name="id" id= "id">
         <div class="box-body">
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="project_name1" class="col-sm-3 control-label">所在工程</label>
                     <div class="col-sm-8">
-                        <input type="text" class="form-control" id="project_name1" name="project_name" placeholder="所在工程">
+                       <!--  <input type="text" class="form-control" id="project_name1" name="project_name" placeholder="所在工程" onclick="getProject()"> -->
+                    	<select id="project_id" class="form-control select2 " name="project_id" style="width:100%">
+                    		<option selected="selected" value="">选择一个项目</option>
+                    	</select>
                     </div>
-                    
                 </div>
                 
                 <div class="form-group">
@@ -51,7 +55,7 @@
                 <div class="form-group">
 					<label for="duties1"  class="col-sm-3 control-label">职务</label>
 					 <div class="col-sm-8">
-                        <input type="text" class="form-control" id="duties1" name="duties" placeholder="职务">
+                        <select type="text" class="form-control" id="duties1" name="duties" placeholder="职务"></select>
                     </div>
 				</div>
 				<div class="form-group">
@@ -68,7 +72,7 @@
                         <input type="text" class="form-control" id="score" name="score" placeholder="考核人">
                     </div>
                 </div>
-				
+				<div class="form-group"></div>
             </div> 
             <div class="form-group">
                     <label for="check_result" class="col-sm-2 control-label">考核结果</label>
@@ -88,17 +92,21 @@
         <!-- /.box-body -->
         <div class="box-footer text-right">
             <!--以下两种方式提交验证,根据所需选择-->
-            <button type="button" class="btn btn-default" data-btn-type="cancel" data-dismiss="modal">取消</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal" onclick="checkMX()">考核明细</button>
             <button type="submit" class="btn btn-primary" data-btn-type="save">提交</button>
         </div>
         <!-- /.box-footer -->
     </form>
 
 </div>
-
+</section>
 <script>
     //tableId,queryId,conditionContainer
     var form =null;
+    var projectOptions = '${projectOptions?default(0)}',options=0;
+    if(projectOptions != 0){
+    	options = JSON.parse(projectOptions);
+    }
     $(function() {
         //初始化控件
         form=$("#dutycheck-form").form();
@@ -117,8 +125,7 @@
           
                     	ajaxPost(basePath+'/dutycheck/saveOrUpdate', params, function(data) {
                             if(data.success){
-                            	modals.hideWin(winId);
-                            	dutycheckTable.reloadData();
+                            	$("#id").val(data.code);
                                 modals.info("数据保存成功");
                                 
                             }                
@@ -128,10 +135,10 @@
                 });
             },
             fields : {
-            	project_name : {
+            	project_id : {
                     validators : {
                         notEmpty : {
-                            message : '请输入项目名字'
+                            message : '请选择项目'
                         }
                     }
                 },
@@ -150,18 +157,68 @@
                        
                     }
                 },
-                isValid : {
+                unitName : {
                     validators : {
                         notEmpty : {
-                            message : '请选择状态'
+                            message : '请输入单位名称'
+                        }
+                    }
+                },
+                check_time : {
+                    validators : {
+                        notEmpty : {
+                            message : '请输入考核时间'
+                        }
+                    }
+                },
+                duties : {
+                    validators : {
+                        notEmpty : {
+                            message : '请选择职务'
                         }
                     }
                 }
             }
         });
         form.initComponent();
+        getRylx();
+        if(options != 0){
+            for (var i = 0, len = options.length; i < len; i++) {
+                var option = options[i];
+                $('#project_id').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+            }
+            $(".select2").select2();
+        }
     });
+    function checkMX(){
+    	var checkId = $("#id").val();
+    	if(checkId){
+    		modals.openWin({
+                winId:winId,
+                title:"考核明细录入",
+                width:'1200px',
+                url:basePath+"/dutycheck/checkMX?lx="+$("#duties1 option:selected").val()
+               });
+    	}else{
+    		modals.info("请先保存结果");
+    	}	
+    }
     
+    function getRylx(){
+    	ajaxPost(basePath+"/dutycheck/getRylx",null,function(data){
+    		if(data.data){
+    			var list = data.data;
+    			var option;
+    			for(var i=0;i<list.length;i++){
+    				
+    				option += "<option value='"+list[i].value+"'>"
+    				+ list[i].name
+    				+ "</option>";
+    			}
+    			$("#duties1").append(option);
+    		}
+    	})
+    }
     
     function resetForm(){
         form.clearForm();
