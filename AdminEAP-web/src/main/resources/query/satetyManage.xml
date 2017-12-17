@@ -5,6 +5,7 @@
 	<query id="dutycheck_list" key="id" tableName="责任考核列表" className="com.radish.master.entity.DutyCheck"
 		   pageSize="10"  widthType="px" order="id asc">
 		<column key="project_id" header="项目id" width="50" allowSort="false" hidden="true"/>
+		<column key="duties" header="职位" operator="like" width="100" render="1=总工程师,2=安全管理科,3=经理,4=生产副经理,5=项目经理,6=工长,7=技术负责人,8=安全员,9=质检员"/>
 		<column key="name" header="姓名" operator="like" width="100" allowSort="true"/>
 		<column key="unitName" header="单位名称" operator="like" width="100"/>
 		<column key="project_name" header="工程名称" operator="like" width="100"/>

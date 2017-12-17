@@ -41,7 +41,7 @@ public class CheckDetail implements Serializable {
     
     @Header(name = "考核表ID")
     @Column(name = "dutycheck_ID")
-    private Double dutycheck_ID;
+    private String dutycheck_ID;
     
     @Header(name = "扣分1")
     @Column(name = "col1")
@@ -125,11 +125,11 @@ public class CheckDetail implements Serializable {
 		this.id = id;
 	}
 
-	public Double getDutycheck_ID() {
+	public String getDutycheck_ID() {
 		return dutycheck_ID;
 	}
 
-	public void setDutycheck_ID(Double dutycheck_ID) {
+	public void setDutycheck_ID(String dutycheck_ID) {
 		this.dutycheck_ID = dutycheck_ID;
 	}
 

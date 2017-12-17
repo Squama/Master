@@ -38,11 +38,13 @@
     <h5 class="modal-title">质检员安全生产责任考核表</h5>
 </div>
 <div class="modal-body">
- <form style="width:100%">
+ <form style="width:100%"id="MxForm">
+  <input type="hidden" name="id" id="id">
+   <input type="hidden" name="dutycheck_ID" id="dutycheck_ID">
  <div style="text-align: center">质检员安全生产责任考核表</div>
  <div style="margin: 2px 0 5px 20px">
- 	<span  style="margin-right: 40%">施工单位：<input id="unitName"name="unitName" style="width:30%;text-align: left;"/></span>
- 	<span>考核日期：<input id="check_time"name="check_time" style="width:15%;text-align: left;"/></span>	
+ 	<span  style="margin-right: 40%">施工单位：<input id="unitName"name="unitName" style="width:30%;text-align: left;" readonly="readonly"/></span>
+ 	<span>考核日期：<input id="check_time"name="check_time" style="width:15%;text-align: left;"readonly="readonly"/></span>	
  </div>
   <table cellSpacing=0 cellPadding=0  style="width:100%;table-layout:fixed;border-collapse:collapse">
 	<tr>
@@ -97,16 +99,73 @@
 		<td colspan="2">合计</td>
 		<td></td>
 		<td>100</td>
-		<td><input id = "deduction"  name="deduction"/></td>
-		<td><input id = "score" name="score"/></td>
+		<td><input id = "deduction"  name="deduction" readonly="readonly"/></td>
+		<td><input id = "score" name="score" readonly="readonly"/></td>
 	</tr>
 	<tr>
-		<td colspan="2">被考核人:<input id = "name" name="name"style="width:50%;text-align: left;"/></td>
-		<td colspan="4">考核人:<input id = "check_name" name="check_name" style="width:50%;text-align: left;"/></td>
+		<td colspan="2">被考核人:<input id = "name" name="name"style="width:50%;text-align: left;" readonly="readonly"/></td>
+		<td colspan="4">考核人:<input id = "check_name" name="check_name" style="width:50%;text-align: left;" readonly="readonly"/></td>
 	</tr>
 </table>
-
+<!-- /.box-body -->
+        <div class="box-footer text-center">
+            <!--以下两种方式提交验证,根据所需选择-->
+            <button type="button" class="btn btn-default" data-btn-type="cancel" data-dismiss="modal">取消</button>
+            <button type="button" class="btn btn-primary" data-btn-type="save" id="save">提交</button>
+        </div>
+        <!-- /.box-footer -->
 </form>
 
 </div>
  </body>
+<script>
+ var id="${id}";
+ var cd='${cd?default(0)}';
+ 	$(function(){
+ 		var form=$("#MxForm").form();
+ 		$("#save").on("click",function(){
+ 			doSave();
+ 		});
+ 		if(cd){
+ 			var checkDetail = JSON.parse(cd);
+ 			form.initFormData(checkDetail); 
+ 		}
+ 		if(id){
+        	ajaxPost(basePath+"/dutycheck/load",{id:id},function(data){
+        		
+                formdata = data;
+                $("#dutycheck_ID").val(formdata.id);
+                formdata.id = null
+                formdata.check_time=jsonYearMonthDay(formdata.check_time);
+                form.initFormData(formdata); 
+              }); 
+        }
+ 		
+ 	})
+ 	
+ 	function doSave(){
+ 		var params = $("#MxForm").form().getFormSimpleData();
+ 		ajaxPost(basePath+'/dutycheck/saveMx', params, function(data) {
+            if(data.success){
+                modals.info("数据保存成功");
+                
+            }                
+        });
+ 	}
+ 	function jsonYearMonthDay(milliseconds) {
+		if(milliseconds == "" || milliseconds == undefined || milliseconds == null){
+			return "";
+		}else{
+			var datetime = new Date();
+			datetime.setTime(milliseconds);
+			var year = datetime.getFullYear();
+			var month = datetime.getMonth() + 1 < 10 ? "0"
+					+ (datetime.getMonth() + 1) : datetime.getMonth() + 1;
+			var date = datetime.getDate() < 10 ? "0" + datetime.getDate()
+					: datetime.getDate();
+			var hour=datetime.getHours(); 
+			var minute=datetime.getMinutes();
+			return year + "-" + month + "-" + date;
+		}
+	}
+ </script>

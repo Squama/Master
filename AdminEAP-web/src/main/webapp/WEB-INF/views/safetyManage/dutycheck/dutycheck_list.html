@@ -19,18 +19,17 @@
                 <div class="dataTables_filter" id="searchDiv" style="display: none">
                     <!--查询条件-->
                     <!--查询条件-->
-
+                   <select type="search" placeholder="请输入职务" title="职务" name="duties" class="form-control" id="duties" operator="like" likeOption="true" width="200px"><option value="">请选择职位</option></select>
                    <input type="search" placeholder="请输入项目名称" title="项目名称" name="project_name" class="form-control" id="project_name" operator="like" likeOption="true">
-                   <input type="search" placeholder="请输入职务" title="职务" name="duties" class="form-control" id="duties" operator="eq" likeOption="true">
                    <input type="search" placeholder="请输入被考核人" title="姓名" name="name" class="form-control" id="name" operator="like" likeOption="true">
-                   <input type="search" placeholder="请输入考核时间" title="考核时间" name="check_time" class="form-control" data-flag="datepicker" data-format="yyyy-mm-dd"id="check_time" operator="between" likeOption="true">
+<!--                    <input type="search" placeholder="请输入考核时间" title="考核时间" name="check_time" class="form-control" data-flag="datepicker" id="check_time" operator="between" likeOption="true"> -->
                     <div class="btn-group">
                         <button type="button" class="btn btn-primary" data-btn-type="search">查询</button>
                         <button type="button" class="btn btn-default" data-btn-type="reset">重置</button>
                     </div>
                     <div class="btn-group">
                         <button type="button" class="btn btn-default" data-btn-type="detail">查看考核结果</button>
-                    	<button type="button" class="btn btn-default" data-btn-type="add">录入考核结果</button>
+                    	<!-- <button type="button" class="btn btn-default" data-btn-type="add">录入考核结果</button> -->
                          <button type="button" class="btn btn-default" data-btn-type="edit" >编辑</button>
                         <button type="button" class="btn btn-default" data-btn-type="delete">删除</button>
                     </div>
@@ -114,6 +113,21 @@
                
             }
         });
-    	
+    	getRylx();
     });
+    function getRylx(){
+    	ajaxPost(basePath+"/dutycheck/getRylx",null,function(data){
+    		if(data.data){
+    			var list = data.data;
+    			var option;
+    			for(var i=0;i<list.length;i++){
+    				
+    				option += "<option value='"+list[i].value+"'>"
+    				+ list[i].name
+    				+ "</option>";
+    			}
+    			$("#duties").append(option);
+    		}
+    	})
+    }
 </script>

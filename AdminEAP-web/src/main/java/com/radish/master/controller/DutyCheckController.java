@@ -1,6 +1,11 @@
 package com.radish.master.controller;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -9,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONArray;
@@ -16,7 +22,9 @@ import com.cnpc.framework.base.entity.Dict;
 import com.cnpc.framework.base.entity.Mat;
 import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.base.service.BaseService;
+import com.radish.master.entity.CheckDetail;
 import com.radish.master.entity.DutyCheck;
+import com.radish.master.entity.Project;
 import com.radish.master.service.BudgetService;
 import com.radish.master.service.DutyCheckService;
 
@@ -53,13 +61,20 @@ public class DutyCheckController {
 		
 	}
 	@RequestMapping("/checkMX")
-	public String checkMX(String lx,HttpServletRequest request){
+	public String checkMX(String lx,HttpServletRequest request,@RequestParam("id")String id){
+		request.setAttribute("id", id);
+		List<CheckDetail> list = baseService.findBySql("select * from tbl_checkdetail  where dutycheck_ID='"+id+"'",CheckDetail.class);
+		if(list.size()>0){
+			request.setAttribute("cd", JSONArray.toJSONString(list.get(0)));
+		}
 		return prefix+"BD/bd"+lx;
 	}
-	@RequestMapping("/getProject")
-	public String getProject(){
-		return prefix+"getProject";
+	@RequestMapping("/checkmatch")
+	public String checkmatch(HttpServletRequest request){
+		request.setAttribute("projectOptions", JSONArray.toJSONString(budgetService.getProjectCombobox()));
+		return "/safetyManage/checkmatch/matchIndex";
 	}
+	
 	@RequestMapping("/saveOrUpdate")
 	@ResponseBody
 	public Result save(HttpServletRequest request,DutyCheck dc){
@@ -67,13 +82,14 @@ public class DutyCheckController {
 		Result r = new Result();
 		if(id==null){
 			dc.setIsValid("1");
+			String projectid = dc.getProject_id();
+			Project p = baseService.get(Project.class, projectid);
+			dc.setProject_name(p.getProjectName());
 			String i = dcs.save(dc);
 			r.setCode(i);
 		}else{
 			DutyCheck dcl = dcs.load(id);
 			dcl.setName(dc.getName());
-			dcl.setProject_id(dc.getProject_id());
-			dcl.setProject_name(dc.getProject_name());
 			dcl.setCheck_name(dc.getCheck_name());
 			dcl.setDeduction(dc.getDeduction());
 			dcl.setUnitName(dc.getUnitName());
@@ -83,6 +99,7 @@ public class DutyCheckController {
 			dcl.setCheck_result(dc.getCheck_result());
 			dcl.setJc(dc.getJc());
 			dcs.saveOrUpdate(dcl);
+			r.setCode(id);
 		}
 		
     	r.setSuccess(true);
@@ -117,4 +134,52 @@ public class DutyCheckController {
       	r.setData(list);
     	return r;
     }
+	
+	@RequestMapping("/saveMx")
+	@ResponseBody
+	public Result saveMx(HttpServletRequest request,CheckDetail cd){
+		String id = request.getParameter("id");
+		if(id==null){
+			baseService.save(cd);
+		}else{
+			baseService.update(cd);
+		}
+		Result r = new Result();
+		r.setSuccess(true);
+    	return r;
+	}
+	@RequestMapping("/getData")
+	@ResponseBody
+	public List<Map> getData(HttpServletRequest request,DutyCheck dc ){
+		List<Dict> d = baseService.findBySql("select * from tbl_dict  where code='PROJECT_ZRYLX'",Dict.class);
+		List<Dict> rylxs = baseService.findBySql("select * from tbl_dict where parent_id='"+d.get(0).getId()+"'",Dict.class);
+		Date check_time = dc.getCheck_time(); 
+		String projectid =  dc.getProject_id();
+		String sql = " ";
+		if(check_time!=null){
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			String s = sdf.format(check_time);
+			sql += " and check_time = '"+s+"'";
+		}
+		if(projectid!=null){
+			
+			sql +=" and project_id= '"+projectid+"'";
+		}
+		List<Map> result = new ArrayList<Map>();//查询结果集
+		List<Map> rypjf = new ArrayList<Map>();//职务平均分
+		for(Dict rylx:rylxs){
+			Map map = new HashMap();
+			List<DutyCheck> dls = baseService.findBySql(" select * from tbl_dutycheck where duties='"+rylx.getValue()+"' "+sql, DutyCheck.class);
+			Double zf = 0.0;
+			for(DutyCheck dl:dls){
+				zf +=dl.getScore() ; 
+			}
+			Double avg = zf/dls.size();
+			map.put("fs", avg);
+			map.put("rylx", rylx.getName());
+			rypjf.add(map);
+		}
+		
+		return rypjf;
+	}
 }
