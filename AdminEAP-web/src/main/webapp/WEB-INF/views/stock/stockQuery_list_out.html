@@ -1,7 +1,7 @@
 
 <section class="content-header">
     <h1>
-        库存调度
+        库存消耗
         <small>列表</small>
     </h1>
     <ol class="breadcrumb">
@@ -71,7 +71,7 @@
                         winId: winId,
                         title: '物料库存调度【' + stockQueryTable.getSelectedRowData().project_id + '】',
                         width: '900px',
-                        url: basePath + "/stock/dispatch?id=" + rowId
+                        url: basePath + "/stock/out?id=" + rowId
                     });
                     break;
                 case "dispatch28256":

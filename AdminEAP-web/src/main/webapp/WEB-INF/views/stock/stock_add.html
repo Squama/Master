@@ -5,35 +5,38 @@
 
 <div class="modal-body">
 
+	<!--<form id="stock-form" name="stock-form" class="form-horizontal">-->
 	<form id="stock-form" name="stock-form" class="form-horizontal">
 		<input type="hidden" name="id">
 		<div class="box-body">
 			<div class="col-md-6">
 				<div class="form-group">
-					<label for="budget_ID" class="col-sm-3 control-label">预算编号</label>
+					<label class="col-sm-3 control-label">采购单编号<span style="color:#ff0000">*</span></label>
 					<div class="col-sm-8">
-						<input type="text" class="form-control" id="budget_ID" name="budget_ID" placeholder="请输入预算编号">
+						<select id="purchaseID" class="form-control select2" name="purchaseID" style="width:100%">
+							<option selected="selected" value="">选择一个采购单</option>
+						</select>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label class="col-sm-3 control-label">物料名称<span style="color:#ff0000">*</span></label>
+					<div class="col-sm-8">
+						<select id="mat_name" class="form-control select2" name="mat_name" style="width:100%">
+							<option selected="selected" value="">选择一种物料</option>
+						</select>
 					</div>
 				</div>
 				<div class="form-group">
 					<label for="mat_id" class="col-sm-3 control-label">物料编号</label>
 					<div class="col-sm-8">
-						<input type="text" class="form-control" id="mat_id" name="mat_id" placeholder="请输入物料编号">
+						<input type="text"  readonly="readonly" class="form-control" id="mat_id" name="mat_id" placeholder="- - - 自动生成 - - -">
 					</div>
 				</div>
-				<div class="form-group">
-					<label for="mat_name" class="col-sm-3 control-label">物料名称</label>
-					<div class="col-sm-8">
-						<input type="text"  readonly="readonly" class="form-control" id="mat_name" name="mat_name" placeholder="- - - 自动生成 - - -">
-					</div>
-				</div>
-
-
-
 				<div class="form-group">
 					<label for="channel" class="col-sm-3 control-label">供应商</label>
 					<div class="col-sm-8">
-						<input type="text"  class="form-control" id="channel" name="channel" placeholder="请输入采购渠道" onclick="getChannel()">
+						<input type="text"  class="form-control" id="channel" readonly="readonly"  name="channel" placeholder="请输入采购渠道" onclick="getChannel()">
 					</div>
 				</div>
 				<div class="form-group">
@@ -45,12 +48,9 @@
 			</div>
 
 
+
 			<div class="col-md-6">
 				<div class="form-group">
-					<label for="mat_standard" class="col-sm-3 control-label">项目编号</label>
-					<div class="col-sm-8">
-						<input type="text" readonly="readonly" class="form-control" id="mat_project_id" name="mat_project_id" placeholder="- - - 自动生成 - - -">
-					</div>
 				</div>
 				<div class="form-group">
 					<label for="mat_project_name" class="col-sm-3 control-label">所属项目</label>
@@ -76,7 +76,6 @@
 					<label for="unit" class="col-sm-3 control-label">单位</label>
 					<div class="col-sm-8">
 						<input type="text"  readonly="readonly" class="form-control" id="unit" name="unit" placeholder="- - - 自动生成 - - -">
-						<!--<input type="text"  readonly="readonly" class="form-control" id="channel_id" name="channel_id" style="display: none">-->
 					</div>
 				</div>
 			</div>
@@ -92,12 +91,19 @@
 
 </div>
 <script>
-    //tableId,queryId,conditionContainer
+    var purchase_ID,mat_id,stockNum,channel_id,project_id;
     var form =null;
-    //var budget_ID = $("#budget_ID").val();
+    var projectOptions = '${purchaseOptions?default(0)}',options=0;
+    if(projectOptions != 0){
+        options = JSON.parse(projectOptions);
+    }
+
     $(function() {
         //初始化控件
         form=$("#stock-form").form();
+        importform = $("#import_form").form({baseEntity:false});
+        importform.initComponent();
+
         //数据校验
         $("#stock-form").bootstrapValidator({
             message : '请输入有效值',
@@ -108,10 +114,9 @@
             },
             submitHandler : function() {
                 modals.confirm('确认保存？', function() {
-                    //Save Data，对应'submit-提交'
                     var params = form.getFormSimpleData();
-                    alert(channel_id);
                     params.channel_id=channel_id;
+                    params.project_id = project_id;
                     ajaxPost(basePath+'/stock/save', params, function(data) {
                         console.log(data);
                         if(data.success){
@@ -130,7 +135,7 @@
                         },
                         stringLength: {/*长度提示*/
                             min: 3,
-                            max: 9,
+                            max: 90,
                             message: '预算编号格式不正确'
                         },
                         threshold :  6 , //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
@@ -167,10 +172,13 @@
                 },
                 stock_Num : {
                     validators : {
-                        notEmpty : {
-                            message : '请输入入库数量'
-                        }//后续添加上下线验证
-
+                        notEmpty: {message: '调度数量不能为空'},
+                        numeric: {message: '调度数量只能输入数字'},
+                        between: {
+                            min:"1",
+                            max:stockNum,
+                            message: '请填入有效的入库数量',
+                        }
                     }
                 },
                 mat_id : {
@@ -180,16 +188,17 @@
                         },
                         stringLength: {/*长度提示*/
                             min: 3,
-                            max: 9,
+                            max: 90,
                             message: '物料编号格式不正确'
-                        },
+                        }
+/*                        ,
                         threshold :  6 ,
                         remote: {
                             url: basePath+'/stock/validMateriel',//验证地址
                             message: '请输入有效的物料编号',//提示消息
                             delay :  2000,
                             type: 'POST'
-                        }
+                        }*/
                     }
                 },
                 mat_standard : {
@@ -198,68 +207,84 @@
                             message : '请输入物料规格'
                         }
                     }
-                },
-                mat_project_name : {
-                    validators : {
-                        notEmpty : {
-                            message : '请输入所属项目'
-                        }
-                    }
                 }
-/*                channel : {
-                    validators : {
-                        notEmpty : {
-                            message : '请选择供应商'
-                        }
-                    }
-                },
-                price : {
-                    validators : {
-                        notEmpty : {
-                            message : '缺少物料单价'
-                        }
-                    }
-                }*/
             }
         });
         form.initComponent();
-
+        if(options != 0){
+            for (var i = 0, len = options.length; i < len; i++) {
+                var option = options[i];
+                $('#purchaseID').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+            }
+            $(".select2").select2();
+        }
     });
 
-    $("#mat_id").change(function(){
+    $("#mat_name").change(function(){
         getMat();
     });
     function getMat(){
-        var mat_id = $("#mat_id").val();
-        ajaxPost(basePath+"/stock/getMateriel?id="+mat_id,null,function(data){
+        mat_id = $("#mat_name").val();
+        ajaxPost(basePath+"/stock/getMateriel?mat_id="+mat_id,null,function(data){
             if(data.data){
                 var m = data.data;
-                $("#mat_name").val(m.mat_name);
                 $("#mat_standard").val(m.mat_standard);
                 $("#unit").val(m.unit);
+                $("#mat_id").val(mat_id);
+            }
+        })
+        getChannelByPurchase();
+    }
+    function getChannelByPurchase(){
+        ajaxPost(basePath+"/stock/getChannelByPurchase?mat_id="+mat_id+"&purchase_id="+purchase_ID,null,function(data){
+            if(data.data){
+                $("#channel").val(data.data.channel_name);
+                $("#stock_Num").val(data.data.quantity);
+                $("#price").val(data.data.price);
+                stockNum = data.data.quantity;
+                channel_id = data.data.channel_id;
             }
         })
     }
 
-    $("#budget_ID").change(function(){
-        var budget_ID = $("#budget_ID").val();
-        ajaxPost(basePath+"/stock/getProjectByBudget?id="+budget_ID,null,function(data){
-            if(data.data){
-                var p = data.data;
-                $("#mat_project_name").val(p.project_name);
-                $("#mat_project_id").val(p.project_code);
+    $("#purchaseID").change(function(){
+        purchase_ID = $("#purchaseID").val();
+        ajaxPost(basePath+"/stock/getProjectByPurchase?id="+purchase_ID,null,function(data){
+            console.log(data.data[0]);
 
+            if(data.data){
+                var p = data.data[1];
+                $("#mat_project_name").val(p.projectName);
+                project_id = p.projectCode;
             }
+            /*初始化物料选择框*/
+            if(data.data[0] != "[]"){
+                var matOptions = data.data[0],moptions=0;
+                if(matOptions != 0){
+                    moptions = JSON.parse(matOptions);
+                }
+                if(moptions != 0){
+                    for (var i = 0, len = moptions.length; i < len; i++) {
+                        var option = moptions[i];
+                        $('#mat_name').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+                    }
+                    $(".select2").select2();
+                }
+			}else{
+                $('#mat_name').empty();
+                $('#mat_name').append("<option>选择一种物料</option>");
+                $("#mat_standard").val("- - - 自动生成 - - -");
+                $("#unit").val("- - - 自动生成 - - -");
+                $("#mat_id").val("- - - 自动生成 - - -");
+                $("#channel").val("- - - 自动生成 - - -");
+                $("#stock_Num").val("");
+                $("#price").val("");
+                modals.info("请选择有效的采购单");
+			}
         })
     });
 
-
-    function resetForm(){
-        form.clearForm();
-        $("#material-form").data('bootstrapValidator').resetForm();
-    }
-
-    function getChannel(data){
+/*    function getChannel(){
         var mat_id = $("#mat_id").val();
         var url = basePath+"/stock/getChannel?mat_id="+mat_id;
         modals.openWin({
@@ -268,7 +293,6 @@
             width:'600px',
             url:url
         });
-    }
-
+    }*/
 
 </script>

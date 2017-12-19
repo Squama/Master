@@ -1,37 +1,26 @@
 <div class="modal-header">
 	<button type="button" class="close" data-dismiss="modal" aria-hidden="true"><li class="fa fa-remove"></li></button>
-	<h5 class="modal-title">物料入库</h5>
+	<h5 class="modal-title">物料消耗</h5>
 </div>
 
 <div class="modal-body">
 
 	<form id="stock-form" name="stock-form" class="form-horizontal">
 		<input type="hidden" name="id">
-		<!-- <input type='hidden' value='${CSRFToken}' id='csrftoken'> -->
 		<div class="box-body">
 			<div class="col-md-6">
 				<div class="form-group">
-					<label for="budget_ID" class="col-sm-3 control-label">预算编号</label>
+					<label for="mb_budget_id" class="col-sm-3 control-label">采购单编号</label>
 					<div class="col-sm-8">
-						<input type="text" class="form-control" id="budget_ID" name="budget_ID" placeholder="请输入预算编号">
+						<input type="text" class="form-control" id="mb_budget_id" name="mb_budget_id" placeholder="请输入预算编号">
 					</div>
 				</div>
-
 				<div class="form-group">
 					<label for="mat_id" class="col-sm-3 control-label">物料编号</label>
 					<div class="col-sm-8">
-						<input type="text" class="form-control" id="mat_id" name="mat_id" placeholder="请输入物料编号">
+						<input type="text"  class="form-control" id="mat_id" name="mat_ID" placeholder="请输入物料编号">
 					</div>
 				</div>
-				<div class="form-group">
-					<label for="mat_name" class="col-sm-3 control-label">物料名称</label>
-					<div class="col-sm-8">
-						<input type="text"  readonly="readonly" class="form-control" id="mat_name" name="mat_name" placeholder="- - - 自动生成 - - -">
-					</div>
-				</div>
-
-
-
 				<div class="form-group">
 					<label for="unit" class="col-sm-3 control-label">单位</label>
 					<div class="col-sm-8">
@@ -39,31 +28,37 @@
 					</div>
 				</div>
 				<div class="form-group">
-					<label for="stock_Num" class="col-sm-3 control-label">入库数量</label>
+					<label for="stock_num" class="col-sm-3 control-label">入库数量</label>
 					<div class="col-sm-8">
-						<input type="text" class="form-control" id="stock_Num" name="stock_Num" placeholder="请输入入库数量">
+						<input type="text" class="form-control" id="stock_num" name="stock_Num" placeholder="请输入入库数量">
 					</div>
 				</div>
 			</div>
 
-
 			<div class="col-md-6">
 				<div class="form-group">
-					<label for="mat_standard" class="col-sm-3 control-label">项目编号</label>
+					<label for="project_id" class="col-sm-3 control-label">项目编号</label>
 					<div class="col-sm-8">
-						<input type="text" readonly="readonly" class="form-control" id="mat_project_id" name="mat_project_id" placeholder="- - - 自动生成 - - -">
+						<input type="text"  readonly="readonly" class="form-control" id="project_id" name="project_id" placeholder="- - - 自动生成 - - -">
 					</div>
 				</div>
+
 				<div class="form-group">
-					<label for="mat_project_name" class="col-sm-3 control-label">所属项目</label>
+					<label for="mat_name" class="col-sm-3 control-label">物料名称</label>
 					<div class="col-sm-8">
-						<input type="text" readonly="readonly" class="form-control" id="mat_project_name" name="mat_project_name" placeholder="- - - 自动生成 - - -">
+						<input type="text"  readonly="readonly" class="form-control" id="mat_name" name="mat_name" placeholder="- - - 自动生成 - - -">
 					</div>
 				</div>
 				<div class="form-group">
 					<label for="mat_standard" class="col-sm-3 control-label">物料规格</label>
 					<div class="col-sm-8">
 						<input type="text" readonly="readonly" class="form-control" id="mat_standard" name="mat_standard" placeholder="- - - 自动生成 - - -">
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="price" class="col-sm-3 control-label">物料单价</label>
+					<div class="col-sm-8">
+						<input type="text" readonly="readonly" class="form-control" id="price" name="price" placeholder="- - - 自动生成 - - -">
 					</div>
 				</div>
 			</div>
@@ -81,10 +76,20 @@
 <script>
     //tableId,queryId,conditionContainer
     var form =null;
-
+    var id="${id?default(0)}";
+    var stockNum = null;
+    var dq_project_id = null;
     $(function() {
         //初始化控件
         form=$("#stock-form").form();
+        //回填id
+        if(id!="0"){
+            ajaxPost(basePath+"/stock/get/"+id,null,function(data){
+                stockNum = data.stock_Num;
+                dq_project_id =data.project_ID;
+                form.initFormData(data);
+            })
+        }
         //数据校验
         $("#stock-form").bootstrapValidator({
             message : '请输入有效值',
@@ -95,24 +100,24 @@
             },
             submitHandler : function() {
                 modals.confirm('确认保存？', function() {
-                    //Save Data，对应'submit-提交'
                     var params = form.getFormSimpleData();
+                    params.channel_id = channel_id;
                     console.log(params);
-                    ajaxPost(basePath+'/stock/save', params, function(data) {
-                        console.log(data);
+                    ajaxPost(basePath+'/stock/saveDispatch', params, function(data) {
+                        console.log(data)
                         if(data.success){
                             modals.hideWin(winId);
-                            stockQueryTable.reloadData();
+                            stockQueryTableD.reloadData();
                             modals.info("数据保存成功");
                         }
                     });
                 });
             },
             fields : {
-                budget_ID : {
+                project_ID : {
                     validators : {
                         notEmpty : {
-                            message : '请输入预算编号'
+                            message : '请输入当前项目库'
                         }
                     }
                 },
@@ -131,17 +136,22 @@
 
                     }
                 },
-                stock_Num : {
-                    validators : {
-                        notEmpty : {
-                            message : '请输入入库数量'
-                        }
-                    }
-                },
-                mat_id : {
+                mat_ID : {
                     validators : {
                         notEmpty : {
                             message : '请输入物料编号'
+                        },
+
+                    }
+                },
+                stock_Num : {
+                    validators : {
+                        notEmpty: {message: '调度数量不能为空'},
+                        numeric: {message: '调度数量只能输入数字'},
+                        between: {
+                            min:"1",
+                            max:stockNum,
+                            message: '请填入有效得调度数量',
                         }
                     }
                 },
@@ -152,53 +162,78 @@
                         }
                     }
                 },
-                mat_project_name : {
+                mb_project : {
+                    trigger:"change",
                     validators : {
                         notEmpty : {
-                            message : '请输入所属项目'
+                            message : '请输入目标库'
+                        }
+                    }
+                },
+                channel : {
+                    validators : {
+                        notEmpty : {
+                            message : '请选择采购渠道'
+                        }
+                    }
+                },
+                price : {
+                    validators : {
+                        notEmpty : {
+                            message : '请输入物料单价'
+                        }
+                    }
+                },
+                mb_budget_id : {
+                    validators : {
+                        notEmpty : {
+                            message : '请输入目标库预算编号'
+                        },
+                        stringLength: {/*长度提示*/
+                            min: 3,
+                            max: 90,
+                            message: '预算编号格式不正确'
+                        },
+                        threshold :  6 ,
+                        remote: {
+                            url: basePath+'/stock/validBudget',//验证地址
+                            message: '请输入有效的目标库预算编号',//提示消息
+                            delay :  2000,
+                            type: 'POST'
                         }
                     }
                 }
             }
         });
         form.initComponent();
-
     });
 
-
-
-    $("#mat_id").change(function(){
-        getMat();
+    $("#mb_budget_id").change(function(){
+        getMatAndProject();
     });
-    function getMat(){
-        var mat_id = $("#mat_id").val();
-        ajaxPost(basePath+"/stock/getMateriel?id="+mat_id,null,function(data){
+    function getMatAndProject(){
+        var mb_budget_id = $("#mb_budget_id").val();
+        ajaxPost(basePath+"/stock/getProjectByBudget?id="+mb_budget_id,null,function(data){
             if(data.data){
-                var m = data.data;
-                $("#mat_name").val(m.mat_name);
-                $("#mat_standard").val(m.mat_standard);
-                $("#unit").val(m.unit);
+                var project = data.data;
+                $("#mb_project").val(project.project_name).change();
             }
         })
     }
-
-    $("#budget_ID").change(function(){
-        var budget_ID = $("#budget_ID").val();
-        ajaxPost(basePath+"/stock/getProjectByBudget?id="+budget_ID,null,function(data){
-            if(data.data){
-                var p = data.data;
-                $("#mat_project_name").val(p.project_name);
-                $("#mat_project_id").val(p.project_code);
-
-            }
-        })
-    });
-
-
     function resetForm(){
         form.clearForm();
         $("#material-form").data('bootstrapValidator').resetForm();
     }
 
+    function getChannel(data){
+        var mat_id = $("#mat_id").val();
+        var url = basePath+"/stock/getStockChannel?mat_id="+mat_id+"&project_id="+dq_project_id;
+        modals.openWin({
+            winId:"area",
+            title:"选择对应的采购渠道",
+            width:'600px',
+            url:url
+        });
+    }
 
 </script>

@@ -1,5 +1,6 @@
 package com.radish.master.controller;
 
+import com.alibaba.fastjson.JSONArray;
 import com.cnpc.framework.annotation.RefreshCSRFToken;
 import com.cnpc.framework.annotation.VerifyCSRFToken;
 import com.cnpc.framework.base.pojo.Result;
@@ -7,6 +8,7 @@ import com.cnpc.framework.base.service.BaseService;
 import com.cnpc.framework.utils.SecurityUtil;
 import com.radish.master.entity.*;
 import com.radish.master.pojo.ResultObj;
+import com.radish.master.service.BudgetService;
 import com.radish.master.service.StockService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,8 +18,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/stock")
@@ -27,6 +31,8 @@ public class StockController {
     private BaseService baseService;
     @Resource
     private StockService stockService;
+    @Resource
+    private BudgetService budgetService;
 
     @RefreshCSRFToken
     @RequestMapping(value="/list",method = RequestMethod.GET)
@@ -58,10 +64,9 @@ public class StockController {
     public Result save(HttpServletRequest request){
         Stock stock = new Stock();
         String mat_id = request.getParameter("mat_id");
-        String project_ID = request.getParameter("mat_project_id");
+        String project_ID = request.getParameter("project_id");
         String channel_ID = request.getParameter("channel_id");
-        String channel = request.getParameter("channel");
-        String budget_ID = request.getParameter("budget_ID");
+        //String channel = request.getParameter("channel");
         Double stockNum = Double.valueOf(request.getParameter("stock_Num")).doubleValue();
         String sql = " select * from tbl_stock where mat_id='"+mat_id+"' and project_ID='"+project_ID+"'";
         List<Stock> list= baseService.findBySql(sql, Stock.class);
@@ -83,7 +88,7 @@ public class StockController {
         //同步库存渠道表
         stockService.saveChannel(mat_id ,project_ID,channel_ID,stockNum,1);
         //新增历史库存记录
-        stockService.saveHistory(budget_ID,request.getParameter("mat_id"),stockNum,"1",request.getParameter("budget_ID"),"");
+        //stockService.saveHistory(budget_ID,request.getParameter("mat_id"),stockNum,"1",request.getParameter("budget_ID"),"");
         Result r = new Result();
         r.setSuccess(true);
         return r;
@@ -101,10 +106,10 @@ public class StockController {
         String mat_id = request.getParameter("mat_ID");
         Double stockNum = Double.valueOf(request.getParameter("stock_Num")).doubleValue();
         String channel_ID = request.getParameter("channel_id");
-        //原库存减少
-        stockService.stockChange(project_ID,mat_id,stockNum,2);
+        //原库存减少  //useType 1:采购入库，2：调度入库
+        stockService.stockChange(project_ID,mat_id,stockNum,2,"1");
         //目标库存增加
-        stockService.stockChange(mbProject_ID,mat_id,stockNum,1);
+        stockService.stockChange(mbProject_ID,mat_id,stockNum,1,"2");
 
         //同步库存渠道表 1:入库，2：出库
         stockService.saveChannel(mat_id ,project_ID,channel_ID,stockNum,2);
@@ -114,6 +119,28 @@ public class StockController {
         stockService.saveHistory(budgetID,mat_id,stockNum,"4",mbProject_ID,"");
         stockService.saveHistory(mbBudgetID,mat_id,stockNum,"2",project_ID,"");
 
+        Result r = new Result();
+        r.setSuccess(true);
+        return r;
+    }
+
+    @VerifyCSRFToken
+    @RequestMapping(value="/saveOut",method = RequestMethod.POST)
+    @ResponseBody
+    public Result saveOut(HttpServletRequest request){
+
+        String budgetID = request.getParameter("budget_no");
+        String project_ID = stockService.getProjectByBudget(budgetID).getProjectCode();
+        String mat_id = request.getParameter("mat_ID");
+        Double stockNum = Double.valueOf(request.getParameter("stock_Num")).doubleValue();
+        String channel_ID = request.getParameter("channel_id");
+
+        //原库存减少  //useType 1:采购入库，2：调度入库
+        stockService.stockChange(project_ID,mat_id,stockNum,2,"1");
+        //同步库存渠道表 1:入库，2：出库
+        stockService.saveChannel(mat_id ,project_ID,channel_ID,stockNum,2);
+        //历史变更
+        stockService.saveHistory(budgetID,mat_id,stockNum,"3","stockOut","");
 
         Result r = new Result();
         r.setSuccess(true);
@@ -125,7 +152,7 @@ public class StockController {
     @RequestMapping(value="/getMateriel",method = RequestMethod.POST)
     @ResponseBody
     public Result getMat(HttpServletRequest request){
-        String id = request.getParameter("id");
+        String id = request.getParameter("mat_id");
         String sql = " select * from tbl_materiel where mat_number='"+id+"'";
         List<Materiel> list= baseService.findBySql(sql, Materiel.class);
         if(list.size()!= 0){
@@ -135,9 +162,53 @@ public class StockController {
         }
     }
 
+    @RequestMapping(value="/getChannelByPurchase",method = RequestMethod.POST)
+    @ResponseBody
+    public Result getChannelByPurchase(HttpServletRequest request){
+        String mat_id = request.getParameter("mat_id");
+        String purchase_id = request.getParameter("purchase_id");
+        String sql = " select * from tbl_purchase_det where stock_type='1' and mat_id ='"+mat_id+"' and purchase_id='"+purchase_id+"'";
+        List list= baseService.findMapBySql(sql);
+        if(list.size()!= 0){
+            return new Result(true,list.get(0),"获取成功");
+        }else{
+            return new Result(false,null,"获取查询索引失败");
+        }
+    }
+
+    @RequestMapping(value="/getProjectByPurchase",method = RequestMethod.POST)
+    @ResponseBody
+    public Result getProjectByPurchase(HttpServletRequest request){
+        String id = request.getParameter("id");
+        Project project = stockService.getProjectByPurchase(id);
+        String matOptions = JSONArray.toJSONString(stockService.getMatCombobox(id));
+        List<Object> list = new ArrayList<Object>();
+        list.add(0,matOptions);
+        list.add(1,project);
+        if(project!= null){
+            return new Result(true,list,"获取成功");
+        }else{
+            return new Result(false,null,"获取查询索引失败");
+        }
+    }
+
+
     @RequestMapping(value="/getProjectByBudget",method = RequestMethod.POST)
     @ResponseBody
     public Result getProjectByBudget(HttpServletRequest request){
+        String id = request.getParameter("id");
+        String sql = "select p.project_name,p.project_code from tbl_project p ,tbl_budget b where b.project_id = p.project_code and b.budget_no = '"+id+"'";
+        List list= baseService.findMapBySql(sql);
+        if(list.size()!= 0){
+            return new Result(true,list.get(0),"获取成功");
+        }else{
+            return new Result(false,null,"获取查询索引失败");
+        }
+    }
+
+    @RequestMapping(value="/getPurchase",method = RequestMethod.POST)
+    @ResponseBody
+    public Result get(HttpServletRequest request){
         String id = request.getParameter("id");
         String sql = "select p.project_name,p.project_code from tbl_project p ,tbl_budget b where b.project_id = p.project_code and b.budget_no = '"+id+"'";
         List list= baseService.findMapBySql(sql);
@@ -157,7 +228,7 @@ public class StockController {
         if(id == null){
             id = request.getParameter("mb_budget_id");
         }
-        String sql = "select p.project_name,p.project_code from tbl_project p ,tbl_budget b where b.project_id = p.project_code and b.budget_no = '"+id+"'";
+        String sql = "select p.project_name,p.project_code from tbl_project p ,tbl_budget b where b.project_id = p.id and b.budget_no = '"+id+"'";
         List list= baseService.findMapBySql(sql);
         if(list.size()!= 0){
             return new ResultObj(true);
@@ -198,10 +269,11 @@ public class StockController {
 
     @RefreshCSRFToken
     @RequestMapping(value="/add",method = RequestMethod.GET)
-    public String add(){
+    public String add(HttpServletRequest request){
+        request.setAttribute("purchaseOptions", JSONArray.toJSONString(stockService.getPurchaseCombobox()));
+        //request.setAttribute("matOptions", JSONArray.toJSONString(stockService.getMatCombobox()));
         return "stock/stock_add";
     }
-
 
 
     @RefreshCSRFToken
@@ -209,6 +281,13 @@ public class StockController {
     public String edit(String id,HttpServletRequest request){
         request.setAttribute("id", id);
         return "stock/stock_dispatch";
+    }
+
+    @RefreshCSRFToken
+    @RequestMapping(value="/out",method = RequestMethod.GET)
+    public String out(String id,HttpServletRequest request){
+        request.setAttribute("id", id);
+        return "stock/stock_out";
     }
 
     //入库选择物料渠道,从渠道表中找
