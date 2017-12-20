@@ -25,7 +25,7 @@ import com.cnpc.framework.base.entity.BaseEntity;
  */
 @Entity
 @Table(name = "tbl_purchase_history")
-public class Purchase_history  extends BaseEntity{
+public class PurchaseHistory extends BaseEntity{
 
 
   private static final long serialVersionUID = 3147202737225081323L;

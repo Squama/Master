@@ -20,10 +20,6 @@ public class StockHistory extends BaseEntity {
     private String project_id;
 
 
-    @Header(name = "预算ID")
-    @Column(name = "budget_id")
-    private String budget_id;
-
     @Header(name = "物料编号")
     @Column(name = "mat_id")
     private String mat_id;
@@ -37,8 +33,8 @@ public class StockHistory extends BaseEntity {
     private String usetpye;
 
     @Header(name = "库存操作数据源")
-    @Column(name = "stock_Source")
-    private String stock_Source;
+    @Column(name = "operation_bill_ID")
+    private String operation_bill_ID;
 
     @Header(name = "操作人员ID")
     @Column(name = "operation_person_id")
@@ -136,13 +132,6 @@ public class StockHistory extends BaseEntity {
         this.reserve3 = reserve3;
     }
 
-    public String getStock_Source() {
-        return stock_Source;
-    }
-
-    public void setStock_Source(String stock_Source) {
-        this.stock_Source = stock_Source;
-    }
 
     public String getRemark() {
         return remark;
@@ -152,12 +141,11 @@ public class StockHistory extends BaseEntity {
         this.remark = remark;
     }
 
-    public String getBudget_id() {
-        return budget_id;
+    public String getOperation_bill_ID() {
+        return operation_bill_ID;
     }
 
-    public void setBudget_id(String budget_id) {
-        this.budget_id = budget_id;
+    public void setOperation_bill_ID(String operation_bill_ID) {
+        this.operation_bill_ID = operation_bill_ID;
     }
-
 }

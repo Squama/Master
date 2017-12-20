@@ -2,12 +2,8 @@ package com.radish.master.service.impl;
 
 
 import com.cnpc.framework.base.service.impl.BaseServiceImpl;
-
 import com.cnpc.framework.utils.SecurityUtil;
-import com.radish.master.entity.Project;
-import com.radish.master.entity.Stock;
-import com.radish.master.entity.StockChannel;
-import com.radish.master.entity.StockHistory;
+import com.radish.master.entity.*;
 import com.radish.master.pojo.Options;
 import com.radish.master.service.StockService;
 import org.hibernate.type.StringType;
@@ -23,14 +19,13 @@ public class StockServiceImpl extends BaseServiceImpl implements StockService {
 
 
     @Override
-    public Boolean saveHistory(String budget_no, String mat_ID, Double stockChangeNum, String useTpye, String stockSource, String remark) {
+    public Boolean saveHistory(String project_ID, String mat_ID, Double stockChangeNum, String useTpye, String stockSource, String remark) {
 
         StockHistory tockHistory = new StockHistory();
-        tockHistory.setProject_id(getProjectByBudget(budget_no).getProjectCode());
-        tockHistory.setBudget_id(budget_no);
+        tockHistory.setProject_id(project_ID);
         tockHistory.setMat_id(mat_ID);
         tockHistory.setStock_change_num(stockChangeNum);
-        tockHistory.setStock_Source(stockSource);//目前填入预算编号， 后期晚上采购单后为采购单编号
+        tockHistory.setOperation_bill_ID(stockSource);// 采购单/調度單/出庫單編號
         tockHistory.setUsetpye(useTpye);//1：采购入库 2：调度入库 3：消耗出库  4：调度出库
         tockHistory.setOperation_person_id(SecurityUtil.getUserId());
         tockHistory.setOperation_time(new Date());
@@ -63,6 +58,22 @@ public class StockServiceImpl extends BaseServiceImpl implements StockService {
             stock.setStorage_person_id(SecurityUtil.getUserId());
             stock.setStorage_time(new Date());
             this.save(stock);
+        }
+        return false;
+    }
+
+    @Override
+    public Boolean savePurchaseChange(String purchase_ID, String mat_ID, Double stockChangeNum) {
+        PurchaseDet pd = new PurchaseDet();
+        String sql = "select * from tbl_purchase_det where purchase_id = '"+purchase_ID+"' and mat_id='"+mat_ID+"'; ";
+        List<PurchaseDet> list= findBySql(sql, PurchaseDet.class);
+        if(list.size()>0){
+            pd = list.get(0);
+            if(pd.getQuantity()>=stockChangeNum){
+                pd.setSurplus_quantity(pd.getQuantity() - stockChangeNum);
+            }
+            this.save(pd);
+            return true;
         }
         return false;
     }
@@ -148,8 +159,7 @@ public class StockServiceImpl extends BaseServiceImpl implements StockService {
 
     @Override
     public List<Options> getMatCombobox(String purchase_ID) {
-        String sql = "select pud.mat_id value,m.mat_name data from tbl_purchase_det pud ,tbl_materiel m where pud.mat_id = m.mat_number and  pud.purchase_id ='"+purchase_ID+"'";
-        System.out.println(sql);
+        String sql = "select pud.mat_id value,m.mat_name data from tbl_purchase_det pud ,tbl_materiel m where pud.mat_id = m.mat_number and pud.surplus_quantity>=0 and pud.purchase_id ='"+purchase_ID+"'";
         return this.findMapBySql(sql, new Object[]{}, new Type[]{StringType.INSTANCE}, Options.class);
     }
 

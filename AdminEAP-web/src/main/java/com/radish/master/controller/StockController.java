@@ -21,7 +21,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 @RequestMapping("/stock")
@@ -31,8 +30,6 @@ public class StockController {
     private BaseService baseService;
     @Resource
     private StockService stockService;
-    @Resource
-    private BudgetService budgetService;
 
     @RefreshCSRFToken
     @RequestMapping(value="/list",method = RequestMethod.GET)
@@ -66,7 +63,7 @@ public class StockController {
         String mat_id = request.getParameter("mat_id");
         String project_ID = request.getParameter("project_id");
         String channel_ID = request.getParameter("channel_id");
-        //String channel = request.getParameter("channel");
+        String purchase_ID = request.getParameter("purchase_id");
         Double stockNum = Double.valueOf(request.getParameter("stock_Num")).doubleValue();
         String sql = " select * from tbl_stock where mat_id='"+mat_id+"' and project_ID='"+project_ID+"'";
         List<Stock> list= baseService.findBySql(sql, Stock.class);
@@ -88,7 +85,9 @@ public class StockController {
         //同步库存渠道表
         stockService.saveChannel(mat_id ,project_ID,channel_ID,stockNum,1);
         //新增历史库存记录
-        //stockService.saveHistory(budget_ID,request.getParameter("mat_id"),stockNum,"1",request.getParameter("budget_ID"),"");
+        stockService.saveHistory(project_ID,mat_id,stockNum,"1",purchase_ID,"");
+        //更新采购单余量
+        stockService.savePurchaseChange(project_ID,mat_id,stockNum);
         Result r = new Result();
         r.setSuccess(true);
         return r;
@@ -110,7 +109,6 @@ public class StockController {
         stockService.stockChange(project_ID,mat_id,stockNum,2,"1");
         //目标库存增加
         stockService.stockChange(mbProject_ID,mat_id,stockNum,1,"2");
-
         //同步库存渠道表 1:入库，2：出库
         stockService.saveChannel(mat_id ,project_ID,channel_ID,stockNum,2);
         stockService.saveChannel(mat_id ,mbProject_ID,channel_ID,stockNum,1);

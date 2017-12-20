@@ -13,7 +13,7 @@
 				<div class="form-group">
 					<label class="col-sm-3 control-label">采购单编号<span style="color:#ff0000">*</span></label>
 					<div class="col-sm-8">
-						<select id="purchaseID" class="form-control select2" name="purchaseID" style="width:100%">
+						<select id="purchase_id" class="form-control select2" name="purchase_id" style="width:100%">
 							<option selected="selected" value="">选择一个采购单</option>
 						</select>
 					</div>
@@ -214,7 +214,7 @@
         if(options != 0){
             for (var i = 0, len = options.length; i < len; i++) {
                 var option = options[i];
-                $('#purchaseID').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+                $('#purchase_id').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
             }
             $(".select2").select2();
         }
@@ -247,8 +247,8 @@
         })
     }
 
-    $("#purchaseID").change(function(){
-        purchase_ID = $("#purchaseID").val();
+    $("#purchase_id").change(function(){
+        purchase_ID = $("#purchase_id").val();
         ajaxPost(basePath+"/stock/getProjectByPurchase?id="+purchase_ID,null,function(data){
             console.log(data.data[0]);
 
