@@ -6,14 +6,14 @@ import com.cnpc.framework.base.entity.BaseEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.util.Date;
 
 
 @Entity
 @Table(name = "tbl_purchase_det")
 public class PurchaseDet extends BaseEntity {
 
-
-    private static final long serialVersionUID = 6048348516575055200L;
+    private static final long serialVersionUID = 5365926552161649689L;
 
     @Header(name = "采购单ID")
     @Column(name = "purchase_id")
@@ -45,15 +45,7 @@ public class PurchaseDet extends BaseEntity {
 
     @Header(name = "采购类型")
     @Column(name = "stock_type")
-    private Long stock_type;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
+    private String stock_type;
 
     public String getPurchase_id() {
         return purchase_id;
@@ -111,11 +103,11 @@ public class PurchaseDet extends BaseEntity {
         this.surplus_quantity = surplus_quantity;
     }
 
-    public Long getStock_type() {
+    public String getStock_type() {
         return stock_type;
     }
 
-    public void setStock_type(Long stock_type) {
+    public void setStock_type(String stock_type) {
         this.stock_type = stock_type;
     }
 }

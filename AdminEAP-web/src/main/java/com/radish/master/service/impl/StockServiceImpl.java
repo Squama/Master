@@ -63,17 +63,19 @@ public class StockServiceImpl extends BaseServiceImpl implements StockService {
     }
 
     @Override
-    public Boolean savePurchaseChange(String purchase_ID, String mat_ID, Double stockChangeNum) {
-        PurchaseDet pd = new PurchaseDet();
-        String sql = "select * from tbl_purchase_det where purchase_id = '"+purchase_ID+"' and mat_id='"+mat_ID+"'; ";
+    public Boolean savePurchaseChange(String purchase_ID, String mat_ID, Double stockChangeNum,String stockType) {
+
+        String sql = "select * from tbl_purchase_det where stock_type = '"+stockType+"' and purchase_id = '"+purchase_ID+"' and mat_id='"+mat_ID+"'; ";
         List<PurchaseDet> list= findBySql(sql, PurchaseDet.class);
         if(list.size()>0){
-            pd = list.get(0);
+            PurchaseDet pd = list.get(0);
             if(pd.getQuantity()>=stockChangeNum){
                 pd.setSurplus_quantity(pd.getQuantity() - stockChangeNum);
+                update(pd);
+                return true;
+            }else{
+                return false;
             }
-            this.save(pd);
-            return true;
         }
         return false;
     }
@@ -154,12 +156,13 @@ public class StockServiceImpl extends BaseServiceImpl implements StockService {
 
     @Override
     public List<Options> getPurchaseCombobox() {
-        return this.findMapBySql("select id value, id data from tbl_purchase", new Object[]{}, new Type[]{StringType.INSTANCE}, Options.class);
+        String sql = "select id value, id data from tbl_purchase";
+        return this.findMapBySql(sql, new Object[]{}, new Type[]{StringType.INSTANCE}, Options.class);
     }
 
     @Override
-    public List<Options> getMatCombobox(String purchase_ID) {
-        String sql = "select pud.mat_id value,m.mat_name data from tbl_purchase_det pud ,tbl_materiel m where pud.mat_id = m.mat_number and pud.surplus_quantity>=0 and pud.purchase_id ='"+purchase_ID+"'";
+    public List<Options> getMatCombobox(String purchase_ID ,String stockType) {
+        String sql = "select pud.mat_id value,m.mat_name data from tbl_purchase_det pud ,tbl_materiel m where  stock_type = '"+stockType+"' and pud.mat_id = m.mat_number and pud.surplus_quantity>0 and pud.purchase_id ='"+purchase_ID+"'";
         return this.findMapBySql(sql, new Object[]{}, new Type[]{StringType.INSTANCE}, Options.class);
     }
 

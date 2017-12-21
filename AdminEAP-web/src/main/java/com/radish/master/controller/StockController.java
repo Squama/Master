@@ -8,7 +8,6 @@ import com.cnpc.framework.base.service.BaseService;
 import com.cnpc.framework.utils.SecurityUtil;
 import com.radish.master.entity.*;
 import com.radish.master.pojo.ResultObj;
-import com.radish.master.service.BudgetService;
 import com.radish.master.service.StockService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -87,7 +86,8 @@ public class StockController {
         //新增历史库存记录
         stockService.saveHistory(project_ID,mat_id,stockNum,"1",purchase_ID,"");
         //更新采购单余量
-        stockService.savePurchaseChange(project_ID,mat_id,stockNum);
+        Boolean b = stockService.savePurchaseChange(purchase_ID,mat_id,stockNum,"1");
+
         Result r = new Result();
         r.setSuccess(true);
         return r;
@@ -179,7 +179,7 @@ public class StockController {
     public Result getProjectByPurchase(HttpServletRequest request){
         String id = request.getParameter("id");
         Project project = stockService.getProjectByPurchase(id);
-        String matOptions = JSONArray.toJSONString(stockService.getMatCombobox(id));
+        String matOptions = JSONArray.toJSONString(stockService.getMatCombobox(id,"1"));
         List<Object> list = new ArrayList<Object>();
         list.add(0,matOptions);
         list.add(1,project);
@@ -269,7 +269,6 @@ public class StockController {
     @RequestMapping(value="/add",method = RequestMethod.GET)
     public String add(HttpServletRequest request){
         request.setAttribute("purchaseOptions", JSONArray.toJSONString(stockService.getPurchaseCombobox()));
-        //request.setAttribute("matOptions", JSONArray.toJSONString(stockService.getMatCombobox()));
         return "stock/stock_add";
     }
 

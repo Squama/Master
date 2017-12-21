@@ -97,7 +97,7 @@
     if(projectOptions != 0){
         options = JSON.parse(projectOptions);
     }
-
+	console.log(stockNum);
     $(function() {
         //初始化控件
         form=$("#stock-form").form();
@@ -239,9 +239,9 @@
         ajaxPost(basePath+"/stock/getChannelByPurchase?mat_id="+mat_id+"&purchase_id="+purchase_ID,null,function(data){
             if(data.data){
                 $("#channel").val(data.data.channel_name);
-                $("#stock_Num").val(data.data.quantity);
+                $("#stock_Num").val(data.data.surplus_quantity);
                 $("#price").val(data.data.price);
-                stockNum = data.data.quantity;
+                stockNum = data.data.surplus_quantity;
                 channel_id = data.data.channel_id;
             }
         })
