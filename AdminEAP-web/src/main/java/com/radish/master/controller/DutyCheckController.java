@@ -182,4 +182,32 @@ public class DutyCheckController {
 		
 		return rypjf;
 	}
+	@RequestMapping("/getXmZwData")
+	@ResponseBody
+	public List<Map> getXmZwData(HttpServletRequest request,DutyCheck dc){
+		List<Project> proList = baseService.findBySql(" select * from tbl_project", Project.class);
+		String duty = dc.getDuties();
+		Date check_time = dc.getCheck_time(); 
+		String sql = " ";
+		if(check_time!=null){
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			String s = sdf.format(check_time);
+			sql += " and check_time = '"+s+"'";
+		}
+		List<Map> result = new ArrayList<Map>();//查询结果集
+		List<Map> rypjf = new ArrayList<Map>();//职务平均分
+		for(Project p :proList){
+			Map map = new HashMap();
+			List<DutyCheck> dls = baseService.findBySql(" select * from tbl_dutycheck where project_id='"+p.getId()+"' and duties='"+duty+"' "+sql, DutyCheck.class);
+			Double zf = 0.0;
+			for(DutyCheck dl:dls){
+				zf +=dl.getScore() ; 
+			}
+			Double avg = zf/dls.size();
+			map.put("proName", p.getProjectName());
+			map.put("avg", avg);
+			rypjf.add(map);
+		}
+		return rypjf;
+	}
 }
