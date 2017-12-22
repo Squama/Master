@@ -29,7 +29,7 @@ public class StockChannel extends BaseEntity {
     @Column(name = "channel_id")
     private String channel_id;
 
-    @Header(name = "渠道编号")
+    @Header(name = "单价")
     @Column(name = "price")
     private Double price;
 
