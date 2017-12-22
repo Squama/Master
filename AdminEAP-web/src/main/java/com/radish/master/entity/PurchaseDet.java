@@ -6,7 +6,6 @@ import com.cnpc.framework.base.entity.BaseEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import java.util.Date;
 
 
 @Entity
@@ -17,19 +16,19 @@ public class PurchaseDet extends BaseEntity {
 
     @Header(name = "采购单ID")
     @Column(name = "purchase_id")
-    private String purchase_id;
+    private String purchaseID;
 
     @Header(name = "物料ID")
     @Column(name = "mat_id")
-    private String mat_id;
+    private String matID;
 
     @Header(name = "渠道名")
     @Column(name = "channel_name")
-    private String channel_name;
+    private String channelName;
 
     @Header(name = "渠道ID")
     @Column(name = "channel_id")
-    private String channel_id;
+    private String channelID;
 
     @Header(name = "单价")
     @Column(name = "price")
@@ -41,42 +40,42 @@ public class PurchaseDet extends BaseEntity {
 
     @Header(name = "剩余采购量")
     @Column(name = "surplus_quantity")
-    private Double surplus_quantity;
+    private Double surplusQuantity;
 
     @Header(name = "采购类型")
     @Column(name = "stock_type")
-    private String stock_type;
+    private String stockType;
 
-    public String getPurchase_id() {
-        return purchase_id;
+    public String getPurchaseID() {
+        return purchaseID;
     }
 
-    public void setPurchase_id(String purchase_id) {
-        this.purchase_id = purchase_id;
+    public void setPurchaseID(String purchaseID) {
+        this.purchaseID = purchaseID;
     }
 
-    public String getMat_id() {
-        return mat_id;
+    public String getMatID() {
+        return matID;
     }
 
-    public void setMat_id(String mat_id) {
-        this.mat_id = mat_id;
+    public void setMatID(String matID) {
+        this.matID = matID;
     }
 
-    public String getChannel_name() {
-        return channel_name;
+    public String getChannelName() {
+        return channelName;
     }
 
-    public void setChannel_name(String channel_name) {
-        this.channel_name = channel_name;
+    public void setChannelName(String channelName) {
+        this.channelName = channelName;
     }
 
-    public String getChannel_id() {
-        return channel_id;
+    public String getChannelID() {
+        return channelID;
     }
 
-    public void setChannel_id(String channel_id) {
-        this.channel_id = channel_id;
+    public void setChannelID(String channelID) {
+        this.channelID = channelID;
     }
 
     public String getPrice() {
@@ -95,19 +94,20 @@ public class PurchaseDet extends BaseEntity {
         this.quantity = quantity;
     }
 
-    public Double getSurplus_quantity() {
-        return surplus_quantity;
+    public Double getSurplusQuantity() {
+        return surplusQuantity;
     }
 
-    public void setSurplus_quantity(Double surplus_quantity) {
-        this.surplus_quantity = surplus_quantity;
+    public void setSurplusQuantity(Double surplusQuantity) {
+        this.surplusQuantity = surplusQuantity;
     }
 
-    public String getStock_type() {
-        return stock_type;
+    public String getStockType() {
+        return stockType;
     }
 
-    public void setStock_type(String stock_type) {
-        this.stock_type = stock_type;
+    public void setStockType(String stockType) {
+        this.stockType = stockType;
     }
+    
 }
