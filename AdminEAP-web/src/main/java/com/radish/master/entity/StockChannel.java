@@ -29,6 +29,10 @@ public class StockChannel extends BaseEntity {
     @Column(name = "channel_id")
     private String channel_id;
 
+    @Header(name = "渠道编号")
+    @Column(name = "price")
+    private Double price;
+
     @Header(name = "预留字段1")
     @Column(name = "reserve1")
     private String reserve1;
@@ -71,6 +75,14 @@ public class StockChannel extends BaseEntity {
 
     public void setChannel_id(String channel_id) {
         this.channel_id = channel_id;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
     }
 
     public String getReserve1() {
