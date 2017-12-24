@@ -74,6 +74,10 @@ public class DutyCheckController {
 		request.setAttribute("projectOptions", JSONArray.toJSONString(budgetService.getProjectCombobox()));
 		return "/safetyManage/checkmatch/matchIndex";
 	}
+	@RequestMapping("/checkproject")
+	public String checkproject(HttpServletRequest request){
+		return "/safetyManage/checkmatch/matchIndex1";
+	}
 	
 	@RequestMapping("/saveOrUpdate")
 	@ResponseBody
@@ -201,9 +205,16 @@ public class DutyCheckController {
 			List<DutyCheck> dls = baseService.findBySql(" select * from tbl_dutycheck where project_id='"+p.getId()+"' and duties='"+duty+"' "+sql, DutyCheck.class);
 			Double zf = 0.0;
 			for(DutyCheck dl:dls){
-				zf +=dl.getScore() ; 
+				if(dl.getScore()!=null){
+					zf +=dl.getScore() ; 
+				}
+				
 			}
-			Double avg = zf/dls.size();
+			Double avg=0.0;
+			if(dls.size()>0){
+				avg = zf/dls.size();
+			}
+			
 			map.put("proName", p.getProjectName());
 			map.put("avg", avg);
 			rypjf.add(map);
