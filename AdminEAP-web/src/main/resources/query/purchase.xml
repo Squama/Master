@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<queryContext xmlns="http://www.example.org/query" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.example.org/query query.xsd">
+   <!-- 项目用料申请  --> 
+    <query id="budget_mat_apply_list" key="id" tableName="用料申请表" className="com.radish.master.entity.Purchase" widthType="px" pageSize="20">
+        <sql>
+            <![CDATA[
+              SELECT P.id,TP.project_name projectName,B.budget_name budgetName,U.`name` operator,
+              P.operate_time operateTime,P.`status` status
+              FROM tbl_purchase P,tbl_project TP,tbl_budget B,tbl_user U
+              WHERE 1=1 AND P.project_id = TP.id AND P.budget_no = B.budget_no AND P.operator = U.id
+            ]]>
+        </sql>
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="projectName" header="项目名称" width="150"/>
+        <column key="budgetName" header="预算名称" width="150"/>
+        <column key="operator" header="申请人" width="150"/>
+        <column key="operateTime" header="申请时间" width="150"/>
+        <column key="status" header="状态" width="150" render="10=新建,20=待编辑渠道,30=待审核,40=待采购,50=部分入库,60=已完成"/>
+    </query>
+</queryContext>
