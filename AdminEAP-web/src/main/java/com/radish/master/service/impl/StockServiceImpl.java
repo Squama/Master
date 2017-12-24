@@ -10,6 +10,7 @@ import org.hibernate.type.StringType;
 import org.hibernate.type.Type;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -69,8 +70,8 @@ public class StockServiceImpl extends BaseServiceImpl implements StockService {
         List<PurchaseDet> list= findBySql(sql, PurchaseDet.class);
         if(list.size()>0){
             PurchaseDet pd = list.get(0);
-            if(pd.getQuantity()>=stockChangeNum){
-                pd.setSurplus_quantity(pd.getQuantity() - stockChangeNum);
+            if(pd.getSurplusQuantity()>=stockChangeNum){
+                pd.setSurplusQuantity(pd.getSurplusQuantity() - stockChangeNum);
                 update(pd);
                 return true;
             }else{
@@ -104,7 +105,6 @@ public class StockServiceImpl extends BaseServiceImpl implements StockService {
     public Boolean saveChannel(String mat_ID, String project_ID, String channel_ID, Double stockNum,int changeType) {
         StockChannel stockChannel = getStockChannel(mat_ID,project_ID,channel_ID);
         List<StockChannel> cList = this.getStockChannelList(mat_ID,project_ID);
-
         if(stockChannel==null){
             stockChannel = new StockChannel();
             stockChannel.setMat_id(mat_ID);
@@ -155,8 +155,26 @@ public class StockServiceImpl extends BaseServiceImpl implements StockService {
     }
 
     @Override
-    public List<Options> getPurchaseCombobox() {
-        String sql = "select id value, id data from tbl_purchase";
+    public List getOutStockChannelPrice (String mat_ID, String project_ID, Double outNum){
+        List<StockChannel> list = this.getStockChannelList(mat_ID,project_ID);
+        List<StockChannel> oList = new ArrayList<StockChannel>();
+        if(list.size()>0){
+            for(int i=0;i<list.size();i++){
+                if(list.get(i).getStock_num() >= outNum){
+                    list.get(i).setStock_num(outNum);
+                    oList.add(list.get(i));
+                    return oList;
+                }else {
+                    outNum = outNum - list.get(i).getStock_num();
+                }
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public List<Options> getPurchaseCombobox(String stockType) {
+        String sql = "select p.id value, p.id data from tbl_purchase p , tbl_purchase_det pd where pd.purchase_id = p.id and pd.stock_type = '"+stockType+"' GROUP BY VALUE";
         return this.findMapBySql(sql, new Object[]{}, new Type[]{StringType.INSTANCE}, Options.class);
     }
 

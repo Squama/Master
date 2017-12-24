@@ -17,9 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Controller
 @RequestMapping("/stock")
@@ -78,7 +76,7 @@ public class StockController {
         }else{
             //同一种物料在一个项目下原有库存，更新数量
             stock = baseService.get(Stock.class,list.get(0).getId());
-            stock.setStock_num(stock.getStock_num()+Integer.parseInt(request.getParameter("stock_Num")));
+            stock.setStock_num(stock.getStock_num() + stockNum);
             baseService.update(stock);
         }
         //同步库存渠道表
@@ -109,6 +107,7 @@ public class StockController {
         stockService.stockChange(project_ID,mat_id,stockNum,2,"1");
         //目标库存增加
         stockService.stockChange(mbProject_ID,mat_id,stockNum,1,"2");
+
         //同步库存渠道表 1:入库，2：出库
         stockService.saveChannel(mat_id ,project_ID,channel_ID,stockNum,2);
         stockService.saveChannel(mat_id ,mbProject_ID,channel_ID,stockNum,1);
@@ -268,7 +267,7 @@ public class StockController {
     @RefreshCSRFToken
     @RequestMapping(value="/add",method = RequestMethod.GET)
     public String add(HttpServletRequest request){
-        request.setAttribute("purchaseOptions", JSONArray.toJSONString(stockService.getPurchaseCombobox()));
+        request.setAttribute("purchaseOptions", JSONArray.toJSONString(stockService.getPurchaseCombobox("1")));
         return "stock/stock_add";
     }
 
@@ -277,6 +276,7 @@ public class StockController {
     @RequestMapping(value="/dispatch",method = RequestMethod.GET)
     public String edit(String id,HttpServletRequest request){
         request.setAttribute("id", id);
+        request.setAttribute("purchaseOptions", JSONArray.toJSONString(stockService.getPurchaseCombobox("2")));
         return "stock/stock_dispatch";
     }
 
@@ -307,10 +307,23 @@ public class StockController {
     @RequestMapping(value="/get/{id}",method = RequestMethod.POST)
     @ResponseBody
     public Object get(@PathVariable("id") String id ,HttpServletRequest request){
-        String sql = "select s.project_ID, p.project_name, b.budget_no, s.stock_Num, s.mat_ID, m.mat_name, m.unit, m.mat_standard FROM tbl_stock s, tbl_materiel m, tbl_project p, tbl_budget b WHERE s.id = '"+ id+"' AND m.mat_number = s.mat_ID and s.project_ID = p.project_code and b.project_id = p.project_code";
-        System.out.println(sql);
-        List list= baseService.findMapBySql(sql);
+        String sql = "select s.project_ID, p.project_name, s.stock_Num, s.mat_ID, m.mat_name, m.unit, m.mat_standard FROM tbl_stock s, tbl_materiel m, tbl_project p WHERE s.id = '"+id+"' AND m.mat_number = s.mat_ID and s.project_ID = p.project_code";
+        List<Map<String, Object>> list = baseService.findMapBySql(sql);
+        //获取采购单价，完成组装
         if(list.size()!=0){
+            String mat_ID =list.get(0).get("mat_ID").toString();
+            String prproject_ID  = list.get(0).get("project_ID").toString();
+            Double Num =  Double.valueOf(list.get(0).get("stock_Num").toString());
+            String outStr ="";
+            //List<StockChannel> SCList = stockService.getOutStockChannelPrice(mat_ID,prproject_ID,Num);
+            List<StockChannel> SCList = stockService.getStockChannelList(mat_ID,prproject_ID);
+            for(int i=0;i<SCList.size();i++){
+                outStr += SCList.get(i).getPrice().toString()+"*"+SCList.get(i).getStock_num().toString();
+                if(i!=SCList.size()-1){
+                    outStr = outStr+", ";
+                }
+            }
+            list.get(0).put("price",outStr);
             return list.get(0);
         }else {
             return new Result(false,id,"获取查询索引失败");
