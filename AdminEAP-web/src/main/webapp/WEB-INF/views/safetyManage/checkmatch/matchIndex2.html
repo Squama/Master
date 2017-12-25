@@ -1,0 +1,180 @@
+<link rel="stylesheet" href="${basePath}/resources/common/libs/fileinput/css/fileinput.min.css">
+<script src="${basePath}/resources/common/libs/fileinput/js/fileinput.js"></script>
+<script src="${basePath}/resources/common/libs/fileinput/js/locales/zh.js"></script>
+ <script src="${basePath}/resources/common/libs/echarts/echarts.min.js"></script>
+    <script src="${basePath}/resources/common/libs/echarts/walden.js"></script>
+<section class="content-header">
+    <h1>
+        考核大比
+        <small>图表</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
+        <li><a href="#">工程质量安全管理</a></li>
+        <li class="active">特定项目比较</li>
+    </ol>
+</section>
+<section class="content" id="projectaddstep2">
+<div class="modal-body">
+<div class="">两个项目对比<span></span></div>
+       <div class="col-md-8">
+         <div class="form-group">
+	         <select id="project_id" class="form-control select2 " name="project_id" style="width:100%">
+	         	<option selected="selected" value="">选择一个项目</option>
+	         </select>
+	         
+	         <select id="project_id1" class="form-control select2 " name="project_id" style="width:100%">
+	         	<option selected="selected" value="">选择一个项目</option>
+	         </select>
+	         
+	         <input class="form-control date-picker" id="check_time1" name="check_time"  data-flag="datepicker" data-format="yyyy-mm-dd"  placeholder="考核时间"  >
+	    
+	         <button type="button" class="btn btn-primary" id="search1">查询</button>
+	         <div id="xmdchart" style="width:100%; height:320px">
+	         
+	         </div>
+	     </div>
+     </div>
+
+
+</div>
+
+</section>
+<script>
+var data1;
+var data2;
+var projectOptions = '${projectOptions?default(0)}',options=0;
+if(projectOptions != 0){
+	options = JSON.parse(projectOptions);
+}
+$(document).ready(function(){
+    
+	$("#search1").on("click",function() {
+    	loaddata1();
+	})
+	if(options != 0){
+        for (var i = 0, len = options.length; i < len; i++) {
+            var option = options[i];
+            $('#project_id').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+            $('#project_id1').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+
+        }
+        $(".select2").select2();
+    }
+});
+window.onresize = function(){
+    loaddata1();
+}
+
+function loaddata1(){
+	if(!$("#project_id").val()&&!$("#project_id1").val()){
+		modals.info('请选择对比项目');
+	}
+    $.ajax({
+        type : "get",
+        url : "dutycheck/getTwoXmData",
+        async : true,
+        dataType : 'json',
+        data:{
+        	project_id:$("#project_id").val(),
+        	project_id1:$("#project_id1").val(),
+        	check_time:$("#check_time1").val()
+        },
+        success : function(datas1) {
+            data1 = datas1;
+            xmd_build();
+        },complete:function(){
+			
+		}
+    });
+    
+}
+function xmd_build(){
+	debugger
+	var rylx=[];
+	var fs=[];
+	var fs1=[];
+	for (var y = 0; y < data1.length; y++) {
+		rylx.push(data1[y].rylx);
+        fs.push(data1[y].fs);
+        fs1.push(data1[y].fs1);
+    }
+	var esfchart1 = echarts.init(document.getElementById('xmdchart'), 'walden');
+	var option = {
+		    title: {
+		        text: ''
+		    },
+		    tooltip: {
+		        trigger: 'axis'
+		    },
+		    toolbox: {
+    	        feature: {
+    	            saveAsImage: {}
+    	        }
+    	    },
+		    legend: {
+		        data:[$("#project_id option:selected").text(),$("#project_id1 option:selected").text()]
+		    },
+		    xAxis:  {
+		        type: 'category',
+		        boundaryGap: false,
+		        data:rylx
+		    },
+		    yAxis: {
+		        type: 'value'
+		    },
+		    series: [
+		        {
+		            name:$("#project_id option:selected").text(),
+		            type:'line',
+		            data:fs,
+		            markPoint: {
+		                data: [
+		                    {type: 'max', name: '最大值'},
+		                    {type: 'min', name: '最小值'}
+		                ]
+		            },
+		            markLine: {
+		                data: [
+		                    {type: 'average', name: '平均值'}
+		                ]
+		            }
+		        },
+		        {
+		            name:$("#project_id1 option:selected").text(),
+		            type:'line',
+		            data:fs1,
+		            markPoint: {
+		                data: [
+		                    {type: 'max', name: '最大值'},
+		                    {type: 'min', name: '最小值'}
+		                ]
+		            },
+		            markLine: {
+		                data: [
+		                    {type: 'average', name: '平均值'},
+		                    [{
+		                        symbol: 'none',
+		                        x: '90%',
+		                        yAxis: 'max'
+		                    }, {
+		                        symbol: 'circle',
+		                        label: {
+		                            normal: {
+		                                position: 'start',
+		                                formatter: '最大值'
+		                            }
+		                        },
+		                        type: 'max',
+		                        name: '最高点'
+		                    }]
+		                ]
+		            }
+		        }
+		    ]
+		};
+
+    esfchart1.setOption(option);
+}
+
+</script>

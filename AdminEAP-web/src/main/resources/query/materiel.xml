@@ -14,7 +14,7 @@
 	</query>
 	
 	<!-- 物料历史采购表-->
-	<query id="materiel_his_list" key="id" tableName="历史采购列表" className="com.radish.master.entity.Purchase_history"
+	<query id="materiel_his_list" key="id" tableName="历史采购列表" className="com.radish.master.entity.PurchaseHistory"
 		   pageSize="10"  widthType="px" order="id asc">
 		<column key="mat_ID" header="所属物料内码" width="50"  hidden="true"/>
 		<column key="project_ID" header="所属项目ID" width="50"  hidden="true"/>
