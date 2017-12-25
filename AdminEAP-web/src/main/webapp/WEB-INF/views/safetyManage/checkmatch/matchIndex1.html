@@ -11,28 +11,26 @@
     <ol class="breadcrumb">
         <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
         <li><a href="#">工程质量安全管理</a></li>
-        <li class="active">同项目下职务分数对比</li>
+        <li class="active">项目之间分数比较</li>
     </ol>
 </section>
 <section class="content" id="projectaddstep2">
 <div class="modal-body">
-	<div class="">项目下各个职位平均分<span></span></div>
+<div class="">项目下各个职位平均分<span></span></div>
        <div class="col-md-8">
          <div class="form-group">
-	         <select id="project_id" class="form-control select2 " name="project_id" style="width:100%">
-	         	<option selected="selected" value="">选择一个项目</option>
-	         </select>
-	         <input class="form-control date-picker" id="check_time" name="check_time"  data-flag="datepicker" data-format="yyyy-mm-dd"  placeholder="考核时间"  >
+	         <select type="text" class="form-control" id="duties1" name="duties" placeholder="职务"></select>
+	         <input class="form-control date-picker" id="check_time1" name="check_time"  data-flag="datepicker" data-format="yyyy-mm-dd"  placeholder="考核时间"  >
 	    
-	         <button type="button" class="btn btn-primary" id="search">查询</button>
-	         <div id="esfchart" style="width:100%; height:320px">
+	         <button type="button" class="btn btn-primary" id="search1">查询</button>
+	         <div id="xmdchart" style="width:100%; height:320px">
 	         
 	         </div>
 	     </div>
      </div>
 
-</div>
 
+</div>
 
 </section>
 <script>
@@ -43,10 +41,11 @@ if(projectOptions != 0){
 	options = JSON.parse(projectOptions);
 }
 $(document).ready(function(){
-    loaddata();
- 
-    $("#search").on("click",function() {
-    	loaddata();
+	getRylx();
+    loaddata1();
+    
+	$("#search1").on("click",function() {
+    	loaddata1();
 	})
 	if(options != 0){
         for (var i = 0, len = options.length; i < len; i++) {
@@ -57,38 +56,36 @@ $(document).ready(function(){
     }
 });
 window.onresize = function(){
-    loaddata(); 
     loaddata1();
 }
-function loaddata(){
+
+function loaddata1(){
     $.ajax({
         type : "get",
-        url : "dutycheck/getData",
+        url : "dutycheck/getXmZwData",
         async : true,
         dataType : 'json',
         data:{
-        	project_id:$("#project_id").val(),
-        	check_time:$("#check_time").val()
+        	duties:$("#duties1 option:selected").val(),
+        	check_time:$("#check_time1").val()
         },
-        success : function(datas2) {
-            data2 = datas2;
-            esf_build();
+        success : function(datas1) {
+            data1 = datas1;
+            xmd_build();
         },complete:function(){
 			
 		}
     });
     
 }
-
-function esf_build(){
-    var rylx=[];
-    var fs = [];
-    for (var y = 0; y < data2.length; y++) {
-        rylx.push(data2[y].rylx);
-        fs.push(data2[y].fs);
-
+function xmd_build(){
+	var xm=[];
+	var fs=[];
+	for (var y = 0; y < data1.length; y++) {
+        xm.push(data1[y].proName);
+        fs.push(data1[y].avg);
     }
-    var esfchart = echarts.init(document.getElementById('esfchart'), 'walden');
+	var esfchart1 = echarts.init(document.getElementById('xmdchart'), 'walden');
     var option = {
         tooltip:{
             trigger:'axis',
@@ -108,7 +105,7 @@ function esf_build(){
         xAxis:[
             {
                 type:'category',
-                data:rylx
+                data:xm
             }
         ],
         yAxis:[
@@ -125,6 +122,22 @@ function esf_build(){
 
         ]
     };
-    esfchart.setOption(option);
+    esfchart1.setOption(option);
+}
+
+function getRylx(){
+	ajaxPost(basePath+"/dutycheck/getRylx",null,function(data){
+		if(data.data){
+			var list = data.data;
+			var option;
+			for(var i=0;i<list.length;i++){
+				
+				option += "<option value='"+list[i].value+"'>"
+				+ list[i].name
+				+ "</option>";
+			}
+			$("#duties1").append(option);
+		}
+	})
 }
 </script>

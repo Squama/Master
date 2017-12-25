@@ -18,9 +18,21 @@ public class PurchaseDet extends BaseEntity {
     @Column(name = "purchase_id")
     private String purchaseID;
 
+    @Header(name = "部位ID")
+    @Column(name = "region_id")
+    private String regionID;
+    
+    @Header(name = "部位名称")
+    @Column(name = "region_name")
+    private String regionName;
+    
     @Header(name = "物料ID")
     @Column(name = "mat_id")
     private String matID;
+    
+    @Header(name = "物料名称")
+    @Column(name = "mat_name")
+    private String matName;
 
     @Header(name = "渠道名")
     @Column(name = "channel_name")
@@ -53,8 +65,32 @@ public class PurchaseDet extends BaseEntity {
     public void setPurchaseID(String purchaseID) {
         this.purchaseID = purchaseID;
     }
+    
+    public String getRegionID() {
+		return regionID;
+	}
 
-    public String getMatID() {
+	public void setRegionID(String regionID) {
+		this.regionID = regionID;
+	}
+
+	public String getRegionName() {
+		return regionName;
+	}
+
+	public void setRegionName(String regionName) {
+		this.regionName = regionName;
+	}
+
+	public String getMatName() {
+		return matName;
+	}
+
+	public void setMatName(String matName) {
+		this.matName = matName;
+	}
+
+	public String getMatID() {
         return matID;
     }
 
