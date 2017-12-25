@@ -43,7 +43,7 @@ public class Channel {
     protected String id;
     
   @Header(name = "所属物料内码")
-  @Column(name = "mat_ID ")
+  @Column(name = "mat_ID")
   private String mat_ID;
 
   @Header(name = "物料名称")
