@@ -8,10 +8,9 @@ import com.radish.master.pojo.Options;
 import com.radish.master.service.StockService;
 import org.hibernate.type.StringType;
 import org.hibernate.type.Type;
-import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+
 import java.util.Date;
 import java.util.List;
 
@@ -66,7 +65,6 @@ public class StockServiceImpl extends BaseServiceImpl implements StockService {
 
     @Override
     public Boolean savePurchaseChange(String purchase_ID, String mat_ID, Double stockChangeNum,String stockType) {
-
         String sql = "select * from tbl_purchase_det where stock_type = '"+stockType+"' and purchase_id = '"+purchase_ID+"' and mat_id='"+mat_ID+"'; ";
         List<PurchaseDet> list= findBySql(sql, PurchaseDet.class);
         if(list.size()>0){
@@ -80,6 +78,16 @@ public class StockServiceImpl extends BaseServiceImpl implements StockService {
             }
         }
         return false;
+    }
+
+    @Override
+    public PurchaseDet getPurchaseByID(String id,String mat_id){
+        String sql = "select * from tbl_purchase_det where purchase_id = '"+id+"' and mat_number ='"+mat_id+"'";
+        List<PurchaseDet> list= findBySql(sql,PurchaseDet.class);
+        if(list.size()>0){
+            return list.get(0);
+        }
+        return null;
     }
 
     @Override
@@ -154,7 +162,7 @@ public class StockServiceImpl extends BaseServiceImpl implements StockService {
         }
     }
 
-//库存渠道保存（进出库，不包含调度）
+    //库存渠道保存（进出库，不包含调度）
     @Override
     public Boolean saveChannel(String mat_ID, String project_ID, String channel_ID, Double stockNum,int changeType) {
         StockChannel stockChannel = null;

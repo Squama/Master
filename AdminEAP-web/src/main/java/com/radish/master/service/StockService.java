@@ -23,7 +23,7 @@ public interface StockService extends BaseService {
     Boolean saveChannelDispatch(String mat_ID,String project_ID,String mbProject_ID,Double stockNum);
     List<StockChannel> getStockChannelList(String mat_ID, String project_ID);
     StockChannel getStockChannel(String mat_ID,String project_ID,String channel_ID);
-
+    PurchaseDet getPurchaseByID(String ID,String mat_id);
     List<Options> getPurchaseCombobox(String stockType);
     List<Options> getMatCombobox(String purchase_ID,String stockType);//stockType : 入库方式，1：采购入库，2：调度入库
 

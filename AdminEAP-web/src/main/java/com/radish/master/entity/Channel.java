@@ -44,11 +44,11 @@ public class Channel {
     
   @Header(name = "所属物料内码")
   @Column(name = "mat_ID ")
-  private String mat_ID ;
-  
+  private String mat_ID;
+
   @Header(name = "物料名称")
   @Column(name = "mat_name")
-  private String mat_name ;
+  private String mat_name;
   
   @Header(name = "有效标志")
   @Column(name = "isValid")

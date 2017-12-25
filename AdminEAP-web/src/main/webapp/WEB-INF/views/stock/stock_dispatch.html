@@ -9,12 +9,7 @@
 		<input type="hidden" name="id">
 		<div class="box-body">
 			<div class="col-md-6">
-<!--				<div class="form-group">
-					<label for="mb_budget_id" class="col-sm-3 control-label">调度单编号</label>
-					<div class="col-sm-8">
-						<input type="text" class="form-control" id="mb_budget_id" name="mb_budget_id" placeholder="请输入预算编号">
-					</div>
-				</div>-->
+
 				<div class="form-group">
 					<label class="col-sm-3 control-label">调度单编号<span style="color:#ff0000">*</span></label>
 					<div class="col-sm-8">
@@ -95,7 +90,7 @@
     var form =null;
     var id="${id?default(0)}";
     var stockNum = null;
-    var dq_project_id,mb_project_id;
+    var dq_project_id,mb_project_id,purchase_ID,mat_id;
     var projectOptions = '${purchaseOptions?default(0)}',options=0;
     if(projectOptions != 0){
         options = JSON.parse(projectOptions);
@@ -118,7 +113,38 @@
                 form.initFormData(data);
             })
         }
-        //数据校验
+        form.initComponent();
+    });
+
+    $("#mb_budget_id").change(function(){
+        getMatAndProject();
+    });
+    function getMatAndProject(){
+        var mb_budget_id = $("#mb_budget_id").val();
+        ajaxPost(basePath+"/stock/getProjectByBudget?id="+mb_budget_id,null,function(data){
+            if(data.data){
+                var project = data.data;
+                $("#mb_project").val(project.project_name).change();
+            }
+        })
+    }
+
+    $("#purchase_id").change(function(){
+        purchase_ID = $("#purchase_id").val();
+        mat_id = $("#mat_id").val();
+        ajaxPost(basePath+"/stock/getProjectByPurchase?id="+purchase_ID+"&mat_id="+mat_id,null,function(data){
+            if(data.data){
+                var p = data.data[1];
+                var pd = data.data[2];
+                $("#mb_project").val(p.projectName);
+                mb_project_id = p.projectCode;
+				if(pd.surplusQuantity < stockNum){
+                    stockNum = pd.surplusQuantity;
+                    $("#stock_num").val(stockNum);
+				}
+            }
+        })
+        //初始化数据校验
         $("#stock-form").bootstrapValidator({
             message : '请输入有效值',
             feedbackIcons : {
@@ -127,13 +153,11 @@
                 validating : 'glyphicon glyphicon-refresh'
             },
             submitHandler : function() {
-                console.log("mb_project_id: "+mb_project_id);
-                console.log("dq_project_id: "+dq_project_id);
-                console.log("stockNum: "+stockNum);
                 modals.confirm('确认保存？', function() {
                     var params = form.getFormSimpleData();
                     params.mb_project_id = mb_project_id;
                     params.dq_project_id = dq_project_id;
+                    params.purchase_id = purchase_ID;
                     ajaxPost(basePath+'/stock/saveDispatch', params, function(data) {
                         if(data.success){
                             modals.hideWin(winId);
@@ -185,13 +209,13 @@
                         }
                     }
                 },
-				mat_standard : {
-					validators : {
-						notEmpty : {
-							message : '请输入物料规格'
-						}
-					}
-				},
+                mat_standard : {
+                    validators : {
+                        notEmpty : {
+                            message : '请输入物料规格'
+                        }
+                    }
+                },
                 mb_project : {
                     trigger:"change",
                     validators : {
@@ -213,54 +237,9 @@
                             message : '请输入物料单价'
                         }
                     }
-                },
-/*                mb_budget_id : {
-                    validators : {
-                        notEmpty : {
-                            message : '请输入目标库预算编号'
-                        },
-                        stringLength: {/!*长度提示*!/
-                            min: 3,
-                            max: 90,
-                            message: '预算编号格式不正确'
-                        },
-                        threshold :  6 ,
-                        remote: {
-                            url: basePath+'/stock/validBudget',//验证地址
-                            message: '请输入有效的目标库预算编号',//提示消息
-                            delay :  2000,
-                            type: 'POST'
-                        }
-                    }
-                }*/
+                }
             }
         });
-        form.initComponent();
-    });
-
-    $("#mb_budget_id").change(function(){
-        getMatAndProject();
-    });
-    function getMatAndProject(){
-        var mb_budget_id = $("#mb_budget_id").val();
-        ajaxPost(basePath+"/stock/getProjectByBudget?id="+mb_budget_id,null,function(data){
-            if(data.data){
-                var project = data.data;
-                $("#mb_project").val(project.project_name).change();
-            }
-        })
-    }
-
-    $("#purchase_id").change(function(){
-        purchase_ID = $("#purchase_id").val();
-        ajaxPost(basePath+"/stock/getProjectByPurchase?id="+purchase_ID,null,function(data){
-            if(data.data){
-                var p = data.data[1];
-                $("#mb_project").val(p.projectName);
-                mb_project_id = p.projectCode;
-
-            }
-        })
     });
 
 </script>

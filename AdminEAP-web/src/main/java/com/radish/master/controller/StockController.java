@@ -100,17 +100,17 @@ public class StockController {
         Double stockNum = Double.valueOf(request.getParameter("stock_Num")).doubleValue();
         String mbProject_ID = request.getParameter("mb_project_id");
         String dqProject_ID = request.getParameter("dq_project_id");
+        String purchase_ID = request.getParameter("purchase_id");
 
         //原库存减少  //useType 1:采购入库，2：调度入库
         stockService.stockChange(dqProject_ID,mat_id,stockNum,2,"1");
         //目标库存增加
         stockService.stockChange(mbProject_ID,mat_id,stockNum,1,"2");
         //历史变更
-        stockService.saveHistory("",mat_id,stockNum,"4",mbProject_ID,"");
-        stockService.saveHistory("",mat_id,stockNum,"2",dqProject_ID,"");
+        stockService.saveHistory(mbProject_ID,mat_id,stockNum,"4",purchase_ID,"");
+        stockService.saveHistory(dqProject_ID,mat_id,stockNum,"2",purchase_ID,"");
         //库存渠道变更
-        //stockService.saveChannel(mat_id,mbProject_ID,)
-
+        stockService.saveChannelDispatch(mat_id,dqProject_ID,mbProject_ID,stockNum);
         Result r = new Result();
         r.setSuccess(true);
         return r;
@@ -172,11 +172,14 @@ public class StockController {
     @ResponseBody
     public Result getProjectByPurchase(HttpServletRequest request){
         String id = request.getParameter("id");
+        String mat_id = request.getParameter("mat_id");
         Project project = stockService.getProjectByPurchase(id);
+        PurchaseDet pd = stockService.getPurchaseByID(id,mat_id);
         String matOptions = JSONArray.toJSONString(stockService.getMatCombobox(id,"1"));
         List<Object> list = new ArrayList<Object>();
         list.add(0,matOptions);
         list.add(1,project);
+        list.add(2,pd);
         if(project!= null){
             return new Result(true,list,"获取成功");
         }else{
