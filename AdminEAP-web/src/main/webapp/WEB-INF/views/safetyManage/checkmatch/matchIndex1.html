@@ -19,7 +19,7 @@
 <div class="">项目下各个职位平均分<span></span></div>
        <div class="col-md-8">
          <div class="form-group">
-	         <select type="text" class="form-control" id="duties1" name="duties" placeholder="职务"></select>
+	        <!--  <select type="text" class="form-control" id="duties1" name="duties" placeholder="职务"></select> -->
 	         <input class="form-control date-picker" id="check_time1" name="check_time"  data-flag="datepicker" data-format="yyyy-mm-dd"  placeholder="考核时间"  >
 	    
 	         <button type="button" class="btn btn-primary" id="search1">查询</button>
@@ -70,6 +70,7 @@ function loaddata1(){
         	check_time:$("#check_time1").val()
         },
         success : function(datas1) {
+        	console.log(datas1);
             data1 = datas1;
             xmd_build();
         },complete:function(){
@@ -80,48 +81,55 @@ function loaddata1(){
 }
 function xmd_build(){
 	var xm=[];
-	var fs=[];
+	var rylx=[];
+	
+	var series=[];
 	for (var y = 0; y < data1.length; y++) {
         xm.push(data1[y].proName);
-        fs.push(data1[y].avg);
+        var fs=data1[y].fs;
+        var avg = [];
+        for(var x=0;x<fs.length;x++){
+        	rylx.push(fs[x].rylx);
+        	avg.push(fs[x].avg);
+        }
+        series.push({
+			name:data1[y].proName,
+            type:'line',
+            data:avg
+	});
     }
 	var esfchart1 = echarts.init(document.getElementById('xmdchart'), 'walden');
     var option = {
-        tooltip:{
-            trigger:'axis',
-            axisPointer:{
-                type:'shadow'
-            }
-        },
-        legend:{
-            data:['职务平均分']
-        },
-        grid:{
-            left:'30',
-            right:'4%',
-            bottom:'30',
-            containLabel:true
-        },
-        xAxis:[
-            {
-                type:'category',
-                data:xm
-            }
-        ],
-        yAxis:[
-            {
-                type:'value'
-            }
-        ],
-        series:[
-            {
-                name:'平均分',
-                type:'bar',
-                data:fs
-            },
-
-        ]
-    };
+    	    title: {
+    	        text: ''
+    	    },
+    	    tooltip: {
+    	        trigger: 'axis'
+    	    },
+    	    legend: {
+    	        data:xm
+    	    },
+    	    grid: {
+    	        left: '3%',
+    	        right: '4%',
+    	        bottom: '3%',
+    	        containLabel: true
+    	    },
+    	    toolbox: {
+    	        feature: {
+    	            saveAsImage: {}
+    	        }
+    	    },
+    	    xAxis: {
+    	        type: 'category',
+    	        boundaryGap: false,
+    	        data: rylx
+    	    },
+    	    yAxis: {
+    	        type: 'value'
+    	    },
+    	    series: series
+    	};
     esfchart1.setOption(option);
 }
 

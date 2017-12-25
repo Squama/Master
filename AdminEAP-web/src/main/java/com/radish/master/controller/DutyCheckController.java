@@ -78,6 +78,11 @@ public class DutyCheckController {
 	public String checkproject(HttpServletRequest request){
 		return "/safetyManage/checkmatch/matchIndex1";
 	}
+	@RequestMapping("/checkTwoProject")
+	public String checkTwoProject(HttpServletRequest request){
+		request.setAttribute("projectOptions", JSONArray.toJSONString(budgetService.getProjectCombobox()));
+		return "/safetyManage/checkmatch/matchIndex2";
+	}
 	
 	@RequestMapping("/saveOrUpdate")
 	@ResponseBody
@@ -202,23 +207,92 @@ public class DutyCheckController {
 		List<Map> rypjf = new ArrayList<Map>();//职务平均分
 		for(Project p :proList){
 			Map map = new HashMap();
-			List<DutyCheck> dls = baseService.findBySql(" select * from tbl_dutycheck where project_id='"+p.getId()+"' and duties='"+duty+"' "+sql, DutyCheck.class);
+			
+			List<Dict> d = baseService.findBySql("select * from tbl_dict  where code='PROJECT_ZRYLX'",Dict.class);
+			List<Dict> rylxs = baseService.findBySql("select * from tbl_dict where parent_id='"+d.get(0).getId()+"'",Dict.class);
+			List<Map> gzwpjf = new ArrayList<Map>();
+			for(Dict rylx:rylxs){
+				Map map1 = new HashMap();
+				List<DutyCheck> dls = baseService.findBySql(" select * from tbl_dutycheck where project_id='"+p.getId()+"' and duties='"+rylx.getValue()+"' "+sql, DutyCheck.class);
+				Double zf = 0.0;
+				for(DutyCheck dl:dls){
+					if(dl.getScore()!=null){
+						zf +=dl.getScore() ; 
+					}
+					
+				}
+				Double avg=0.0;
+				if(dls.size()>0){
+					avg = zf/dls.size();
+				}
+				map1.put("avg", avg);
+				map1.put("rylx", rylx.getName());
+				gzwpjf.add(map1);
+			
+			}
+			map.put("fs", gzwpjf);
+			map.put("proName", p.getProjectName());
+			
+			rypjf.add(map);
+		}
+		return rypjf;
+	}
+	@RequestMapping("/getTwoXmData")
+	@ResponseBody
+	public List<Map> getTwoXmData(HttpServletRequest request,DutyCheck dc ){
+		List<Dict> d = baseService.findBySql("select * from tbl_dict  where code='PROJECT_ZRYLX'",Dict.class);
+		List<Dict> rylxs = baseService.findBySql("select * from tbl_dict where parent_id='"+d.get(0).getId()+"'",Dict.class);
+		Date check_time = dc.getCheck_time(); 
+		String projectid =  dc.getProject_id();
+		String projectid1 = request.getParameter("project_id1");
+		String sql = " ";
+		String sql1=" ";
+		if(check_time!=null){
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			String s = sdf.format(check_time);
+			sql += " and check_time = '"+s+"'";
+			sql1 += " and check_time = '"+s+"'";
+		}
+		if(projectid!=null){
+			
+			sql +=" and project_id= '"+projectid+"'";
+		}
+		if(projectid1!=null){
+			
+			sql1 +=" and project_id= '"+projectid1+"'";
+		}
+		List<Map> result = new ArrayList<Map>();//查询结果集
+		List<Map> rypjf = new ArrayList<Map>();//职务平均分
+		for(Dict rylx:rylxs){
+			Map map = new HashMap();
+			//第一个项目
+			List<DutyCheck> dls = baseService.findBySql(" select * from tbl_dutycheck where duties='"+rylx.getValue()+"' "+sql, DutyCheck.class);
 			Double zf = 0.0;
 			for(DutyCheck dl:dls){
-				if(dl.getScore()!=null){
-					zf +=dl.getScore() ; 
-				}
-				
+				zf +=dl.getScore() ; 
 			}
-			Double avg=0.0;
+			Double avg = 0.0;
 			if(dls.size()>0){
 				avg = zf/dls.size();
 			}
 			
-			map.put("proName", p.getProjectName());
-			map.put("avg", avg);
+			//第二个项目
+			List<DutyCheck> dls1 = baseService.findBySql(" select * from tbl_dutycheck where duties='"+rylx.getValue()+"' "+sql1, DutyCheck.class);
+			Double zf1 = 0.0;
+			for(DutyCheck dl:dls1){
+				
+				zf1 +=dl.getScore() ; 
+			}
+			Double avg1 = 0.0;
+			if(dls1.size()>0){
+				avg1 = zf1/dls1.size();
+			}
+			map.put("fs", avg);
+			map.put("fs1", avg1);
+			map.put("rylx", rylx.getName());
 			rypjf.add(map);
 		}
+		
 		return rypjf;
 	}
 }
