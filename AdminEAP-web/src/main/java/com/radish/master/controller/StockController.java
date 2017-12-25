@@ -84,7 +84,7 @@ public class StockController {
         //新增历史库存记录
         stockService.saveHistory(project_ID,mat_id,stockNum,"1",purchase_ID,"");
         //更新采购单余量
-        Boolean b = stockService.savePurchaseChange(purchase_ID,mat_id,stockNum,"1");
+        stockService.savePurchaseChange(purchase_ID,mat_id,stockNum,"1");
 
         Result r = new Result();
         r.setSuccess(true);
@@ -96,25 +96,20 @@ public class StockController {
     @ResponseBody
     public Result saveDispatch(HttpServletRequest request){
 
-        String mbBudgetID = request.getParameter("mb_budget_id");
-        String budgetID = request.getParameter("budget_no");
-        String mbProject_ID =  stockService.getProjectByBudget(mbBudgetID).getProjectCode();
-        String project_ID = stockService.getProjectByBudget(budgetID).getProjectCode();
         String mat_id = request.getParameter("mat_ID");
         Double stockNum = Double.valueOf(request.getParameter("stock_Num")).doubleValue();
-        String channel_ID = request.getParameter("channel_id");
+        String mbProject_ID = request.getParameter("mb_project_id");
+        String dqProject_ID = request.getParameter("dq_project_id");
+
         //原库存减少  //useType 1:采购入库，2：调度入库
-        stockService.stockChange(project_ID,mat_id,stockNum,2,"1");
+        stockService.stockChange(dqProject_ID,mat_id,stockNum,2,"1");
         //目标库存增加
         stockService.stockChange(mbProject_ID,mat_id,stockNum,1,"2");
-
-        //同步库存渠道表 1:入库，2：出库
-        stockService.saveChannel(mat_id ,project_ID,channel_ID,stockNum,2);
-        stockService.saveChannel(mat_id ,mbProject_ID,channel_ID,stockNum,1);
-
         //历史变更
-        stockService.saveHistory(budgetID,mat_id,stockNum,"4",mbProject_ID,"");
-        stockService.saveHistory(mbBudgetID,mat_id,stockNum,"2",project_ID,"");
+        stockService.saveHistory("",mat_id,stockNum,"4",mbProject_ID,"");
+        stockService.saveHistory("",mat_id,stockNum,"2",dqProject_ID,"");
+        //库存渠道变更
+        //stockService.saveChannel(mat_id,mbProject_ID,)
 
         Result r = new Result();
         r.setSuccess(true);
@@ -263,7 +258,6 @@ public class StockController {
     }
 
 
-
     @RefreshCSRFToken
     @RequestMapping(value="/add",method = RequestMethod.GET)
     public String add(HttpServletRequest request){
@@ -312,11 +306,9 @@ public class StockController {
         //获取采购单价，完成组装
         if(list.size()!=0){
             String mat_ID =list.get(0).get("mat_ID").toString();
-            String prproject_ID  = list.get(0).get("project_ID").toString();
-            Double Num =  Double.valueOf(list.get(0).get("stock_Num").toString());
+            String project_ID  = list.get(0).get("project_ID").toString();
             String outStr ="";
-            //List<StockChannel> SCList = stockService.getOutStockChannelPrice(mat_ID,prproject_ID,Num);
-            List<StockChannel> SCList = stockService.getStockChannelList(mat_ID,prproject_ID);
+            List<StockChannel> SCList = stockService.getStockChannelList(mat_ID,project_ID);
             for(int i=0;i<SCList.size();i++){
                 outStr += SCList.get(i).getPrice().toString()+"*"+SCList.get(i).getStock_num().toString();
                 if(i!=SCList.size()-1){
@@ -358,15 +350,10 @@ public class StockController {
     public Result showMat(@PathVariable("id") String id) {
         if(id!= null){
             Materiel m = baseService.get(Materiel.class, id);
-           // Materiel m = baseService.getCacheByKey(id,Materiel.class);
             return new Result(true,m.getMat_name(),"获取成功");
         }else{
             return new Result(false,id,"获取查询索引失败");
         }
     }
-
     //库存历史查询
-
-
-
 }

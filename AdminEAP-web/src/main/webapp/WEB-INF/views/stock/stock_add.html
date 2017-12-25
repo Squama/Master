@@ -91,19 +91,32 @@
 
 </div>
 <script>
-    var purchase_ID,mat_id,stockNum,channel_id,project_id;
+    var purchase_ID,mat_id,channel_id,project_id,stockNum;
     var form =null;
     var projectOptions = '${purchaseOptions?default(0)}',options=0;
     if(projectOptions != 0){
         options = JSON.parse(projectOptions);
     }
-	console.log(stockNum);
     $(function() {
         //初始化控件
         form=$("#stock-form").form();
         importform = $("#import_form").form({baseEntity:false});
         importform.initComponent();
 
+
+        form.initComponent();
+        if(options != 0){
+            for (var i = 0, len = options.length; i < len; i++) {
+                var option = options[i];
+                $('#purchase_id').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+            }
+            $(".select2").select2();
+        }
+    });
+
+    $("#mat_name").change(function(){
+        getMat();
+        getChannelByPurchase();
         //数据校验
         $("#stock-form").bootstrapValidator({
             message : '请输入有效值',
@@ -118,7 +131,6 @@
                     params.channel_id=channel_id;
                     params.project_id = project_id;
                     ajaxPost(basePath+'/stock/save', params, function(data) {
-                        console.log(data);
                         if(data.success){
                             modals.hideWin(winId);
                             stockQueryTable.reloadData();
@@ -144,30 +156,7 @@
                             message: '请输入有效的预算编号',//提示消息
                             delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
                             type: 'POST'//请求方式
-                            /**自定义提交数据，默认值提交当前input value
-                             *  data: function(validator) {
-                               return {
-                                   password: $('[name="passwordNameAttributeInYourForm"]').val(),
-                                   whatever: $('[name="whateverNameAttributeInYourForm"]').val()
-                               };
-                            }
-                             */
                         }
-                    }
-                },
-                mat_name : {
-                    validators : {
-                        notEmpty : {
-                            message : '请输入物料名称'
-                        }
-                    }
-                },
-                unit : {
-                    validators : {
-                        notEmpty : {
-                            message : '请输入单位'
-                        },
-
                     }
                 },
                 stock_Num : {
@@ -191,37 +180,10 @@
                             max: 90,
                             message: '物料编号格式不正确'
                         }
-/*                        ,
-                        threshold :  6 ,
-                        remote: {
-                            url: basePath+'/stock/validMateriel',//验证地址
-                            message: '请输入有效的物料编号',//提示消息
-                            delay :  2000,
-                            type: 'POST'
-                        }*/
-                    }
-                },
-                mat_standard : {
-                    validators : {
-                        notEmpty : {
-                            message : '请输入物料规格'
-                        }
                     }
                 }
             }
         });
-        form.initComponent();
-        if(options != 0){
-            for (var i = 0, len = options.length; i < len; i++) {
-                var option = options[i];
-                $('#purchase_id').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
-            }
-            $(".select2").select2();
-        }
-    });
-
-    $("#mat_name").change(function(){
-        getMat();
     });
     function getMat(){
         mat_id = $("#mat_name").val();
@@ -233,7 +195,6 @@
                 $("#mat_id").val(mat_id);
             }
         })
-        getChannelByPurchase();
     }
     function getChannelByPurchase(){
         ajaxPost(basePath+"/stock/getChannelByPurchase?mat_id="+mat_id+"&purchase_id="+purchase_ID,null,function(data){
@@ -243,6 +204,7 @@
                 $("#price").val(data.data.price);
                 stockNum = data.data.surplus_quantity;
                 channel_id = data.data.channel_id;
+                console.log("stockNum 1:"+ stockNum);
             }
         })
     }
@@ -250,8 +212,6 @@
     $("#purchase_id").change(function(){
         purchase_ID = $("#purchase_id").val();
         ajaxPost(basePath+"/stock/getProjectByPurchase?id="+purchase_ID,null,function(data){
-            console.log(data.data[0]);
-
             if(data.data){
                 var p = data.data[1];
                 $("#mat_project_name").val(p.projectName);
