@@ -8,6 +8,7 @@ import com.radish.master.pojo.Options;
 import com.radish.master.service.StockService;
 import org.hibernate.type.StringType;
 import org.hibernate.type.Type;
+import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -59,8 +60,8 @@ public class StockServiceImpl extends BaseServiceImpl implements StockService {
             stock.setStorage_person_id(SecurityUtil.getUserId());
             stock.setStorage_time(new Date());
             this.save(stock);
+            return true;
         }
-        return false;
     }
 
     @Override
@@ -102,32 +103,77 @@ public class StockServiceImpl extends BaseServiceImpl implements StockService {
     }
 
     @Override
-    public Boolean saveChannel(String mat_ID, String project_ID, String channel_ID, Double stockNum,int changeType) {
-        StockChannel stockChannel = getStockChannel(mat_ID,project_ID,channel_ID);
+    public Channel getChannelByID(String channel_ID){
+        String sql = "select * from tbl_channel where id = '"+channel_ID+"'";
+        List<Channel> list = findBySql(sql,Channel.class);
+        if(list.size()>0){
+            return  list.get(0);
+        }
+        return  null;
+    }
+
+
+    //调度库存渠道保存
+    @Override
+    public Boolean saveChannelDispatch(String mat_ID,String project_ID,String mbProject_ID,Double stockNum){
         List<StockChannel> cList = this.getStockChannelList(mat_ID,project_ID);
+        StockChannel stockChannel = null;
+        for(int i= 0;i<cList.size();i++){
+            stockChannel = cList.get(i);
+            if(stockChannel.getStock_num()>=stockNum){
+                //目标库增加
+                addChannel(mat_ID,mbProject_ID,stockChannel.getChannel_id(),stockNum);
+                //当前库存减少
+                stockChannel.setStock_num(stockChannel.getStock_num()-stockNum);
+                update(stockChannel);
+                return true;
+            }else {
+                addChannel(mat_ID,mbProject_ID,stockChannel.getChannel_id(),stockNum);
+                stockNum = stockNum - stockChannel.getStock_num();
+                stockChannel.setStock_num(0.0);
+                update(stockChannel);
+            }
+        }
+        return true;
+    }
+
+    //库存渠道增加
+    private void addChannel(String mat_ID, String project_ID, String channel_ID,Double stockNum){
+        StockChannel stockChannel = getStockChannel(mat_ID,project_ID,channel_ID);
+        Double price = getChannelByID(channel_ID).getPrice();
         if(stockChannel==null){
             stockChannel = new StockChannel();
             stockChannel.setMat_id(mat_ID);
             stockChannel.setProject_id(project_ID);
             stockChannel.setChannel_id(channel_ID);
             stockChannel.setStock_num(stockNum);
+            stockChannel.setPrice(price);
             save(stockChannel);
-        }else {
-            if(changeType == 1){
-                stockChannel.setStock_num(stockChannel.getStock_num()+stockNum);
-            }else if(changeType==2){
-                for(int i= 0;i<cList.size();i++){
-                    stockChannel = cList.get(i);
-                    if(stockChannel.getStock_num()>stockNum){
-                        stockChannel.setStock_num(stockChannel.getStock_num()-stockNum);
-                    }else {
-                        stockNum = stockNum - stockChannel.getStock_num();
-                        stockChannel.setStock_num(0.0);
-                        update(stockChannel);
-                    }
+        }else{
+            stockChannel.setStock_num(stockChannel.getStock_num()+stockNum);
+        }
+    }
+
+//库存渠道保存（进出库，不包含调度）
+    @Override
+    public Boolean saveChannel(String mat_ID, String project_ID, String channel_ID, Double stockNum,int changeType) {
+        StockChannel stockChannel = null;
+        List<StockChannel> cList = this.getStockChannelList(mat_ID,project_ID);
+        if(changeType == 1){
+            addChannel(mat_ID,project_ID,channel_ID,stockNum);
+        }else if(changeType==2){
+            for(int i= 0;i<cList.size();i++){
+                stockChannel = cList.get(i);
+                if(stockChannel.getStock_num()>=stockNum){
+                    stockChannel.setStock_num(stockChannel.getStock_num()-stockNum);
+                    update(stockChannel);
+                    return true;
+                }else {
+                    stockNum = stockNum - stockChannel.getStock_num();
+                    stockChannel.setStock_num(0.0);
+                    update(stockChannel);
                 }
             }
-            update(stockChannel);
         }
         return true;
     }
@@ -152,24 +198,6 @@ public class StockServiceImpl extends BaseServiceImpl implements StockService {
         }else {
             return  null;
         }
-    }
-
-    @Override
-    public List getOutStockChannelPrice (String mat_ID, String project_ID, Double outNum){
-        List<StockChannel> list = this.getStockChannelList(mat_ID,project_ID);
-        List<StockChannel> oList = new ArrayList<StockChannel>();
-        if(list.size()>0){
-            for(int i=0;i<list.size();i++){
-                if(list.get(i).getStock_num() >= outNum){
-                    list.get(i).setStock_num(outNum);
-                    oList.add(list.get(i));
-                    return oList;
-                }else {
-                    outNum = outNum - list.get(i).getStock_num();
-                }
-            }
-        }
-        return null;
     }
 
     @Override

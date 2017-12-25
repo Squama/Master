@@ -9,18 +9,28 @@
 		<input type="hidden" name="id">
 		<div class="box-body">
 			<div class="col-md-6">
-				<div class="form-group">
-					<label for="mb_budget_id" class="col-sm-3 control-label">目标库预算编号</label>
+<!--				<div class="form-group">
+					<label for="mb_budget_id" class="col-sm-3 control-label">调度单编号</label>
 					<div class="col-sm-8">
 						<input type="text" class="form-control" id="mb_budget_id" name="mb_budget_id" placeholder="请输入预算编号">
 					</div>
-				</div>
+				</div>-->
 				<div class="form-group">
-					<label for="dq_budget_id" class="col-sm-3 control-label">当前库预算编号</label>
+					<label class="col-sm-3 control-label">调度单编号<span style="color:#ff0000">*</span></label>
 					<div class="col-sm-8">
-						<input type="text" class="form-control" readonly="readonly"  id="dq_budget_id" name="budget_no" placeholder="请输入预算编号">
+						<select id="purchase_id" class="form-control select2" name="purchase_id" style="width:100%">
+							<option selected="selected" value="">选择一个调度单</option>
+						</select>
 					</div>
 				</div>
+
+				<div class="form-group">
+					<label for="dq_project" class="col-sm-3 control-label">当前项目库</label>
+					<div class="col-sm-8">
+						<input type="text"  readonly="readonly"  class="form-control" id="dq_project" name="project_name" placeholder="- - - 自动生成 - - -">
+					</div>
+				</div>
+
 				<div class="form-group">
 					<label for="mat_id" class="col-sm-3 control-label">物料编号</label>
 					<div class="col-sm-8">
@@ -33,12 +43,6 @@
 						<input type="text"  readonly="readonly" class="form-control" id="unit" name="unit" placeholder="- - - 自动生成 - - -">
 					</div>
 				</div>
-<!--				<div class="form-group">
-					<label for="channel" class="col-sm-3 control-label">供应商</label>
-					<div class="col-sm-8">
-						<input type="text"  class="form-control" id="channel" name="channel" onclick="getChannel()">
-					</div>
-				</div>-->
 				<div class="form-group">
 					<label for="stock_num" class="col-sm-3 control-label">调度数量</label>
 					<div class="col-sm-8">
@@ -52,15 +56,10 @@
 				<div class="form-group">
 					<label for="mb_project" class="col-sm-3 control-label">目标项目库</label>
 					<div class="col-sm-8">
-						<input type="text"  class="form-control" id="mb_project" name="mb_project" placeholder="- - - 自动生成 - - -">
+						<input type="text"  class="form-control" id="mb_project" readonly="readonly" name="mb_project" placeholder="- - - 自动生成 - - -">
 					</div>
 				</div>
-				<div class="form-group">
-					<label for="dq_project" class="col-sm-3 control-label">当前项目库</label>
-					<div class="col-sm-8">
-						<input type="text"  readonly="readonly"  class="form-control" id="dq_project" name="project_name" placeholder="- - - 自动生成 - - -">
-					</div>
-				</div>
+
 				<div class="form-group">
 					<label for="mat_name" class="col-sm-3 control-label">物料名称</label>
 					<div class="col-sm-8">
@@ -74,7 +73,7 @@
 					</div>
 				</div>
 				<div class="form-group">
-					<label for="price" class="col-sm-3 control-label">物料单价</label>
+					<label for="price" class="col-sm-3 control-label">库存情况</label>
 					<div class="col-sm-8">
 						<input type="text" readonly="readonly" class="form-control" id="price" name="price" placeholder="- - - 自动生成 - - -">
 					</div>
@@ -96,8 +95,19 @@
     var form =null;
     var id="${id?default(0)}";
     var stockNum = null;
-    var dq_project_id = null;
+    var dq_project_id,mb_project_id;
+    var projectOptions = '${purchaseOptions?default(0)}',options=0;
+    if(projectOptions != 0){
+        options = JSON.parse(projectOptions);
+    }
     $(function() {
+        if(options != 0){
+            for (var i = 0, len = options.length; i < len; i++) {
+                var option = options[i];
+                $('#purchase_id').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+            }
+            $(".select2").select2();
+        }
         //初始化控件
         form=$("#stock-form").form();
         //回填id
@@ -117,12 +127,14 @@
                 validating : 'glyphicon glyphicon-refresh'
             },
             submitHandler : function() {
+                console.log("mb_project_id: "+mb_project_id);
+                console.log("dq_project_id: "+dq_project_id);
+                console.log("stockNum: "+stockNum);
                 modals.confirm('确认保存？', function() {
                     var params = form.getFormSimpleData();
-                    params.channel_id = channel_id;
-                    console.log(params);
+                    params.mb_project_id = mb_project_id;
+                    params.dq_project_id = dq_project_id;
                     ajaxPost(basePath+'/stock/saveDispatch', params, function(data) {
-                        console.log(data)
                         if(data.success){
                             modals.hideWin(winId);
                             stockQueryTableD.reloadData();
@@ -202,12 +214,12 @@
                         }
                     }
                 },
-                mb_budget_id : {
+/*                mb_budget_id : {
                     validators : {
                         notEmpty : {
                             message : '请输入目标库预算编号'
                         },
-                        stringLength: {/*长度提示*/
+                        stringLength: {/!*长度提示*!/
                             min: 3,
                             max: 90,
                             message: '预算编号格式不正确'
@@ -220,7 +232,7 @@
                             type: 'POST'
                         }
                     }
-                }
+                }*/
             }
         });
         form.initComponent();
@@ -238,20 +250,17 @@
             }
         })
     }
-    function resetForm(){
-        form.clearForm();
-        $("#material-form").data('bootstrapValidator').resetForm();
-    }
 
-    function getChannel(data){
-        var mat_id = $("#mat_id").val();
-        var url = basePath+"/stock/getStockChannel?mat_id="+mat_id+"&project_id="+dq_project_id;
-        modals.openWin({
-            winId:"area",
-            title:"选择对应的采购渠道",
-            width:'600px',
-            url:url
-        });
-    }
+    $("#purchase_id").change(function(){
+        purchase_ID = $("#purchase_id").val();
+        ajaxPost(basePath+"/stock/getProjectByPurchase?id="+purchase_ID,null,function(data){
+            if(data.data){
+                var p = data.data[1];
+                $("#mb_project").val(p.projectName);
+                mb_project_id = p.projectCode;
+
+            }
+        })
+    });
 
 </script>
