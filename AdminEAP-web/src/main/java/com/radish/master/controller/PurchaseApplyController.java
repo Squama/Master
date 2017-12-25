@@ -21,7 +21,10 @@ import com.cnpc.framework.annotation.VerifyCSRFToken;
 import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.utils.SecurityUtil;
 import com.cnpc.framework.utils.StrUtil;
+import com.radish.master.entity.Budget;
+import com.radish.master.entity.Project;
 import com.radish.master.entity.Purchase;
+import com.radish.master.entity.PurchaseDet;
 import com.radish.master.service.PurchaseService;
 
 /**
@@ -57,19 +60,36 @@ public class PurchaseApplyController {
     
     @RequestMapping(value="/edit",method = RequestMethod.GET)
     public String edit(String id, HttpServletRequest request){
-        request.setAttribute("id", id);
+        request.setAttribute("purchaseID", id);
         
         return "purchase/apply/apply_edit";
     }
     
-    @RequestMapping(value="/getbudget")
+    @RequestMapping(value="/getpurchase")
+    @ResponseBody
+    public Result getPurchase(String purchaseID){
+        Purchase purchase = purchaseService.get(Purchase.class, purchaseID);
+        
+        Project project = purchaseService.get(Project.class, purchase.getProjectID());
+        Budget budget = purchaseService.getBudgetByNo(purchase.getBudgetNo());
+        
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("regions", JSONArray.toJSONString(purchaseService.getRegionComboboxByBudgetNo(purchase.getBudgetNo())));
+        map.put("mats", JSONArray.toJSONString(purchaseService.getMatMap()));
+        map.put("projectName", project.getProjectName());
+        map.put("budgetName", budget.getBudgetName());
+        
+        return new Result(true, map);
+    }
+    
+    @RequestMapping(value="/getbudgetop")
     @ResponseBody
     public Result save(String projectID){
         return new Result(true, JSONArray.toJSONString(purchaseService.getBudgetComboboxByProject(projectID)));
     }
     
     @VerifyCSRFToken
-    @RequestMapping(value="/save")
+    @RequestMapping(method = RequestMethod.POST, value="/save")
     @ResponseBody
     public Result save(Purchase purchase, HttpServletRequest request){
         
@@ -90,7 +110,28 @@ public class PurchaseApplyController {
         
         Map<String, String> map = new HashMap<String, String>();
         map.put("id", purchase.getId());
+        map.put("regions", JSONArray.toJSONString(purchaseService.getRegionComboboxByBudgetNo(purchase.getBudgetNo())));
+        map.put("mats", JSONArray.toJSONString(purchaseService.getMatMap()));
+        
         return new Result(true, map);
+    }
+    
+    @VerifyCSRFToken
+    @RequestMapping(method = RequestMethod.POST, value="/savedet")
+    @ResponseBody
+    public Result saveDet(PurchaseDet purchaseDet, HttpServletRequest request){
+        purchaseDet.setCreateDateTime(new Date());
+        purchaseService.save(purchaseDet);
+        return new Result(true, "success");
+    }
+    
+    @VerifyCSRFToken
+    @RequestMapping(method = RequestMethod.POST, value="/deletedet")
+    @ResponseBody
+    public Result deleteDet(String id, HttpServletRequest request){
+        PurchaseDet purchaseDet = purchaseService.get(PurchaseDet.class, id);
+        purchaseService.delete(purchaseDet);
+        return new Result(true, "success");
     }
     
 }

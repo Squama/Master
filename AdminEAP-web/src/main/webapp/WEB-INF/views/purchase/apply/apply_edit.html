@@ -1,90 +1,76 @@
-<section class="content-header">
-    <h1>
-        预算管理
-        <small>新增</small>
-    </h1>
-    <ol class="breadcrumb">
-        <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
-        <li><a href="#">预算管理</a></li>
-        <li class="active">新增预算</li>
-    </ol>
-</section>
 
 <section class="content">
     <div class="row">
         <div class="col-xs-12">
             
-            <form id="budget-form" name="budget-form" class="form-horizontal">
+            <form id="purchase-form" name="purchase-form" class="form-horizontal">
                 <input type="hidden" name="id">
                 <div class="box box-info">
                     <div class="box-header with-border">
                         <span>
-                            <i class="fa fa-edit">添加预算信息</i>
+                            <i class="fa fa-edit">物料申请</i>
                         </span>
                     </div>
                     <div class="box-body">
                         <!-- 内容 -->
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">项目名称<span style="color:red">*</span></label>
+                                <label class="col-sm-3 control-label">选择项目<span style="color:red">*</span></label>
                                 <div class="col-sm-5">
-                                    <input type="text" class="form-control" id="projectID" name="projectID" >
-                                    <!--  <input type="text" class="form-control" id="projectCodeShow" name="projectCodeShow" > -->
+                                    <select id="projectID" class="form-control select2" name="projectID">
+                                        <option selected="selected" value="">选择一个项目</option>
+                                    </select>
                                 </div>
                             </div> 
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">预算名称<span style="color:red">*</span></label>
+                                <label class="col-sm-3 control-label">选择预算<span style="color:red">*</span></label>
                                 <div class="col-sm-5">
-                                    <input type="text" class="form-control" id="budgetName" name="budgetName" >
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">预算编码<span style="color:red">*</span></label>
-                                <div class="col-sm-5">
-                                    <input type="text" class="form-control" id="budgetNo" name="budgetNo">
+                                    <select id="budgetNo" class="form-control select2" name="budgetNo">
+                                        <option selected="selected" value="">选择一个预算</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="box-footer text-center" id="budgetformsave">
+                    <div class="box-footer text-center" id="purchaseformsave">
                         <button type="submit" class="btn btn-primary" data-btn-type="next">保存并编辑明细</button>
                     </div>
                 </div>
             </form>
-            <form id="budget-tx-form" name="budget-tx-form" class="form-horizontal">
-                <div class="box box-success dn" id="budget_tx">
+            <form id="purchase-det-form" name="purchase-det-form" class="form-horizontal">
+                <div class="box box-success dn" id="purchase_det">
                     <div class="box-header with-border">
                         <span>
-                            <i class="fa fa-files-o">编辑预算详情</i>
+                            <i class="fa fa-files-o">编辑申请详情</i>
                         </span>
                     </div>
                     <div class="dataTables_filter" style="text-align:center;margin-top:5px;">
-                       <input type="hidden" name="projectID">
-                       <input type="hidden" name="budgetNo">
-                       <input type="text" placeholder="请输入部位" title="部位" name="regionID" class="form-control" id="regionID" >
-                       <input type="text" placeholder="请选择物料" title="物料" name="matNumber" class="form-control" id="matNumber" >
-                       <input type="text" placeholder="规格" title="规格" name="matStandard" class="form-control" id="matStandard" >
-                       <input type="text" placeholder="单位" title="单位" name="unit" class="form-control" id="unit" >
-                       <input type="text" placeholder="请输入数量" title="数量" name="quantity" class="form-control" id="quantity" >
+                       <input type="hidden" name="purchaseID">
+                       <input type="hidden" name="regionName">
+                       <select id="regionID" class="form-control select2" name="regionID" style="width:200px;">
+                           <option selected="selected" value="">选择一个部位</option>
+                       </select>
+                       <input type="hidden" name="matName">
+                       <select id="matNumber" class="form-control select2" name="matNumber" style="width:150px;">
+                           <option selected="selected" value="">选择一个物料</option>
+                       </select>
+                       <input type="text" placeholder="规格" title="规格" name="matStandard" class="form-control" id="matStandard" readonly="readonly">
+                       <input type="text" placeholder="单位" title="单位" name="unit" class="form-control" id="unit" style="width:60px;" readonly="readonly">
+                       <input type="text" placeholder="数量" title="数量" name="quantity" class="form-control" id="quantity" style="width:100px;">
                        <div class="btn-group">
                            <button type="submit" class="btn btn-primary" data-btn-type="savetx">添加明细</button>
                        </div>
                     </div>
-                    <div class="dataTables_filter" id="searchDiv" style="text-align:center;height:1px;">
-                       <input type="search" name="budgetNo" class="form-control" operator="eq" style="display:none;">
+                    <div class="dataTables_filter" id="searchDivPDet" style="text-align:center;height:1px;">
+                       <input type="search" name="purchaseID" class="form-control" operator="eq" style="display:none;">
                        <div class="btn-group">
                            <button type="button" class="btn btn-primary" data-btn-type="search" id="refresh" style="display:none;">查询</button>
                        </div>
                     </div>
                     <div class="box-body">
                         <!-- 内容 -->
-                        <table id="budget_tx_table" class="table table-bordered table-striped table-hover">
+                        <table id="purchase_det_table" class="table table-bordered table-striped table-hover">
                         </table>
-                    </div>
-                    <div class="box-footer text-center" id="budgetformsave">
-                        <button type="button" class="btn btn-default" data-btn-type="prev">返回预算列表</button>
-                        <button type="button" class="btn btn-primary ml10" data-btn-type="saveandback">保存并返回</button>
-                        <button type="button" class="btn btn-success ml10" data-btn-type="start">提交流程</button>
                     </div>
                 </div>
             </form>
@@ -93,59 +79,66 @@
 </section>
 
 <script>
-    var budgetform = $("#budget-form").form({baseEntity: false}), initData={},
-    budgettxform = $("#budget-tx-form").form({baseEntity: false});
-    var budgetTxTable, winId = "budgetAddWin";
+    var purchaseform = $("#purchase-form").form({baseEntity: false}), initData={},
+    purchasedetform = $("#purchase-det-form").form({baseEntity: false}),options=0,bOptions=0,mats=0,regions=0;
+    var purchaseDetTable, winId = "purchaseDetWin";
     
-    var budgetNo="${budgetNo?default(0)}";
-    initData.budgetNo = budgetNo;
-    budgettxform.initFormData(initData);
+    var projectOptions = '${projectOptions?default(0)}';
+    if(projectOptions != 0){
+        options = JSON.parse(projectOptions);
+    }
     
-    var budgetAddObject = {
-            deleteBudgetTx: function (rowId) {
-                
-            },
-            initButtonEvent: function () {
-                $("button[data-btn-type='prev']").click(function () {
-                    loadPage(basePath+"/budget/list");
-                });
-                $("button[data-btn-type='saveandback']").click(function () {
-                    loadPage(basePath+"/budget/list");
-                });
-                $("button[data-btn-type='start']").click(function () {
-                    var formData = budgetform.getFormSimpleData();
-                    ajaxPost(basePath + '/budget/start', formData, function (data) {
-                        if (data.success) {
-                            modals.correct("流程已启动，请及时处理");
-                        } else {
-                            modals.error(data.message);
-                        }
-                    });
+    var purchaseID="${purchaseID?default(0)}";
+    initData.purchaseID = purchaseID;
+    purchasedetform.initFormData(initData);
+    
+    var purchaseDetObject = {
+            deletePurchaseDet: function (rowId) {
+            	ajaxPost(basePath + '/purchase/apply/deletedet', {id:rowId}, function (data) {
+                    if (data.success) {
+                    	purchaseDetTable.table.page('first').draw(false);
+                    } else {
+                        modals.error(data.message);
+                    }
                 });
             }
     }
     
     $(function (){
-        /**
-        Jc().combobox($('input[name="projectCodeShow"]'),{
-            serviceUrl : basePath + '/budget/getproject',
-            readonly:true,
-            onSelect: function (suggestion) {
-                $('input[name="projectCode"]').val(suggestion.data);
-                //getTitleForMigration();
-            }
-        });
-        */
-        
-        budgetTxTable = new CommonTable("budget_tx_table", "budget_tx_list_edit", "searchDiv", {
+    	purchaseDetTable = new CommonTable("purchase_det_table", "purchase_det_apply_edit", "searchDivPDet", {
             "ordering" : false,
             "lengthChange": false,
             "displayLength": 20,
             "scrollY": "200px",
             "scrollCollapse": true
         });
+    	
+        if(options != 0){
+            for (var i = 0, len = options.length; i < len; i++) {
+                var option = options[i];
+                $('#projectID').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+            }
+            
+            $('#projectID').select2();
+            
+            $('#projectID').bind("change", function () {
+                var projectID = $(this).val();
+
+                ajaxPost(basePath+"/purchase/apply/getbudgetop",{projectID:projectID},function(data){
+                    var budgetOptions = data.message;
+                    bOptions = JSON.parse(budgetOptions);
+                    $('#budgetNo').empty();
+                    $('#budgetNo').append('<option selected="selected" value="">选择一个预算</option>');
+                    for (var i = 0, len = bOptions.length; i < len; i++) {
+                        var bOption = bOptions[i];
+                        $('#budgetNo').append("<option value=\"" + bOption.value + "\">" + bOption.data + "</option>");
+                    }
+                    $('#budgetNo').select2();
+                })
+            }); 
+        }
         
-        $("#budget-form").bootstrapValidator({
+        $("#purchase-form").bootstrapValidator({
             message: '请输入有效值',
             feedbackIcons: {
                 valid: 'glyphicon glyphicon-ok',
@@ -153,18 +146,22 @@
                 validating: 'glyphicon glyphicon-refresh'
             },
             submitHandler: function () {
-                var action = $(this).attr('$submitButton').attr('data-btn-type');
-                var formData = budgetform.getFormSimpleData();
-                ajaxPost(basePath + '/budget/save', formData, function (data) {
+                var formData = purchaseform.getFormSimpleData();
+                ajaxPost(basePath + '/purchase/apply/save', formData, function (data) {
                     if (data.success) {
-                        initData.projectID = data.data.projectID;
-                        initData.budgetNo = data.data.budgetNo;
-                        budgettxform.initFormData(initData);
-                        $('#budget_tx').show();
-                        $('#budgetformsave').hide();
+                    	
+                    	mats = JSON.parse(data.data.mats);
+                    	regions = JSON.parse(data.data.regions);
+                    	
+                    	initRegions(regions);
+                    	initMats(mats);
+                    	
+                        initData.purchaseID = data.data.id;
+                        purchasedetform.initFormData(initData);
+                        $('#purchase_det').show();
+                        $('#purchaseformsave').hide();
                         
                         $('#projectID').attr("disabled","disabled");
-                        $('#budgetName').attr("disabled","disabled");
                         $('#budgetNo').attr("disabled","disabled");
                     } else {
                         modals.error(data.message);
@@ -177,20 +174,15 @@
                         notEmpty: {message: '项目不能为空'}
                     }
                 },
-                "budgetCode": {
+                "budgetNo": {
                     validators: {
-                        notEmpty: {message: '预算编码不能为空'}
-                    }
-                },
-                "budgetName": {
-                    validators: {
-                        notEmpty: {message: '预算名称不能为空'}
+                        notEmpty: {message: '预算不能为空'}
                     }
                 }
             }
         });
         
-        $("#budget-tx-form").bootstrapValidator({
+        $("#purchase-det-form").bootstrapValidator({
             message: '请输入有效值',
             feedbackIcons: {
                 valid: 'glyphicon glyphicon-ok',
@@ -198,19 +190,14 @@
                 validating: 'glyphicon glyphicon-refresh'
             },
             submitHandler: function () {
-                var action = $(this).attr('$submitButton').attr('data-btn-type');
-                var formData = budgettxform.getFormSimpleData();
-                switch (action) {
-                    case "savetx":
-                        ajaxPost(basePath + '/budget/savetx', formData, function (data) {
-                            if (data.success) {
-                               budgetTxTable.table.page('first').draw(false);
-                            } else {
-                               modals.error(data.message);
-                            }
-                        });
-                        break;
-                }
+                var formData = purchasedetform.getFormSimpleData();
+                ajaxPost(basePath + '/purchase/apply/savedet', formData, function (data) {
+                    if (data.success) {
+                        purchaseDetTable.table.page('first').draw(false);
+                    } else {
+                        modals.error(data.message);
+                    }
+                });
                 
             },
             fields: {
@@ -224,16 +211,6 @@
                         notEmpty: {message: '物料编码不能为空'}
                     }
                 },
-                "matStandard": {
-                    validators: {
-                        notEmpty: {message: '物料规格不能为空'}
-                    }
-                },
-                "unit": {
-                    validators: {
-                        notEmpty: {message: '物料单位不能为空'}
-                    }
-                },
                 "quantity": {
                     validators: {
                         notEmpty: {message: '物料数量不能为空'}
@@ -242,42 +219,86 @@
             }
         });
         //编辑回填
-        if(budgetNo!="0"){
-            ajaxPost(basePath+"/budget/getbyno",{budgetNo:budgetNo},function(data){
-                budgetform.initFormData(data);
-                $('#budget_tx').show();
-                $('#budgetformsave').hide();
+        if(purchaseID != 0){
+            ajaxPost(basePath+"/purchase/apply/getpurchase",{purchaseID:purchaseID},function(data){
+                console.log(data);
+                mats = JSON.parse(data.data.mats);
+                regions = JSON.parse(data.data.regions);
                 
-                $('#projectID').attr("disabled","disabled");
-                $('#budgetName').attr("disabled","disabled");
-                $('#budgetNo').attr("disabled","disabled");
-                ajaxPost(basePath+"/project/get",{id:data.projectID},function(data){
-                    $('#projectID').val(data.name);
-                })
+                initRegions(regions);
+                initMats(mats);
+                
+                $('#purchase_det').show();
+                $('#purchaseformsave').hide();
+                
+                var projectName = data.data.projectName;
+                var budgetName = data.data.budgetName;
+                
+                var projectArea = $('#projectID').parent();
+                projectArea.empty();
+                $('<input>',{
+                	"value" : projectName,
+                	"type" : "text",
+                	"class" : "form-control",
+                	"readonly" : "readonly"
+                }).appendTo(projectArea);
+                
+                var budgetArea = $('#budgetNo').parent();
+                budgetArea.empty();
+                $('<input>',{
+                    "value" : budgetName,
+                    "type" : "text",
+                    "class" : "form-control",
+                    "readonly" : "readonly"
+                }).appendTo(budgetArea);
             })
         } 
         
-        
         //初始化控件
-        budgetform.initComponent();
-        budgettxform.initComponent();
-        budgetAddObject.initButtonEvent();
+        purchaseform.initComponent();
+        purchasedetform.initComponent();
         
     });
     
-    function fnRenderManager(value) {
-        if (value) {
-            var ret=value;
-            ajaxPost(basePath + "/project/show/"+value, null, function (data) {
-                ret=data.data;
-            })
-            return ret;
-        } else
-            return value;
+    function fnRenderDelete(value){
+        return "<a href='javascript:void(0)' onclick='purchaseDetObject.deletePurchaseDet(\"" + value + "\")'>删除</a>";
     }
     
-    function fnRenderDelete(value){
-        return "<a href='javascript:void(0)' onclick='budgetAddObj.deleteBudgetTx(\"" + value + "\")'>删除</a>";
+    function initRegions(regions){
+        if(regions != 0){
+            for (var i = 0, len = regions.length; i < len; i++) {
+                var option = regions[i];
+                $('#regionID').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+            }
+            
+            $('#regionID').select2();
+            
+            $('#regionID').bind("change", function () {
+            	var regionName = $(this).find("option:selected").text();
+            	$('input[name="regionName"]').val(regionName);
+            });
+        }
+    }
+    
+    function initMats(mats){
+        if(mats != 0){
+            for (mat in mats.map) {
+                var option = mats.map[mat];
+                $('#matNumber').append("<option value=\"" + option.mat_number + "\">" + option.mat_name + "</option>");
+            }
+            
+            $('#matNumber').select2();
+            
+            $('#matNumber').bind("change", function () {
+                var matID = $(this).val();
+                var mat = mats.map[matID];
+                
+                $('input[name="matName"]').val(mat.mat_name);
+                $('#matStandard').val(mat.mat_standard);
+                $('#unit').val(mat.unit);
+                
+            });
+        }
     }
     
 </script>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <queryContext xmlns="http://www.example.org/query" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.example.org/query query.xsd">
    <!-- 项目用料申请  --> 
-    <query id="budget_mat_apply_list" key="id" tableName="用料申请表" className="com.radish.master.entity.Purchase" widthType="px" pageSize="20">
+    <query id="budget_mat_apply_list" key="id" tableName="用料申请表" widthType="px" pageSize="20">
         <sql>
             <![CDATA[
               SELECT P.id,TP.project_name projectName,B.budget_name budgetName,U.`name` operator,
@@ -18,4 +18,16 @@
         <column key="operateTime" header="申请时间" width="150"/>
         <column key="status" header="状态" width="150" render="10=新建,20=待编辑渠道,30=待审核,40=待采购,50=部分入库,60=已完成"/>
     </query>
+    
+    <query id="purchase_det_apply_edit" key="id" tableName="采购申请明细" className="com.radish.master.entity.PurchaseDet" widthType="px" pageSize="20">
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="regionName" header="部位" classType="String" width="150"/>
+        <column key="matName" header="物料" classType="String" width="150"/>
+        <column key="matStandard" header="物料规格" classType="String" width="150"/>
+        <column key="unit" header="单位" classType="String" width="150"/>
+        <column key="quantity" header="数量" classType="String" width="150"/>
+        <column key="id" header="删除" width="80" fnRender="fnRenderDelete"/>
+    </query>
+    
+    
 </queryContext>

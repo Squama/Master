@@ -1,12 +1,12 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
-            用户管理 <small>列表</small>
+            采购管理 <small>列表</small>
         </h1>
         <ol class="breadcrumb">
             <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
-            <li><a href="#">系统管理</a></li>
-            <li class="active">用户管理</li>
+            <li><a href="#">采购管理</a></li>
+            <li class="active">用料申请</li>
         </ol>
     </section> 
 
@@ -57,12 +57,13 @@
                 case 'add':
                        modals.openWin({
                         winId:winId,
-                        title:'新增用户',
-                        width:'900px',
-                        url:basePath+"/purchase/apply/add"
-                        /*, hideFunc:function(){
-                            modals.info("hide me");
+                        title:'用料申请',
+                        width:'1000px',
+                        url:basePath+"/purchase/apply/add",
+                        hideFunc:function(){
+                        	budgetApplyTable.reloadData();
                         },
+                        /*
                         showFunc:function(){
                             modals.info("show me");
                         } */
@@ -75,9 +76,9 @@
                     }
                     modals.openWin({
                         winId:winId,
-                        title:'编辑用户【'+userTable.getSelectedRowData().name+'】',
-                        width:'900px',
-                        url:basePath+"/employeeQuery/edit?id="+rowId,
+                        title:'编辑申请',
+                        width:'1000px',
+                        url:basePath+"/purchase/apply/edit?id="+rowId,
                        });
                    break;
                 case 'delete':

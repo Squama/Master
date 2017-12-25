@@ -27,12 +27,20 @@ public class PurchaseDet extends BaseEntity {
     private String regionName;
     
     @Header(name = "物料ID")
-    @Column(name = "mat_id")
-    private String matID;
+    @Column(name = "mat_number")
+    private String matNumber;
     
     @Header(name = "物料名称")
     @Column(name = "mat_name")
     private String matName;
+    
+    @Header(name = "物料规格")
+    @Column(name = "mat_standard")
+    private String matStandard;
+    
+    @Header(name = "物料单位")
+    @Column(name = "unit")
+    private String unit;
 
     @Header(name = "渠道名")
     @Column(name = "channel_name")
@@ -90,12 +98,12 @@ public class PurchaseDet extends BaseEntity {
 		this.matName = matName;
 	}
 
-	public String getMatID() {
-        return matID;
+	public String getMatNumber() {
+        return matNumber;
     }
 
-    public void setMatID(String matID) {
-        this.matID = matID;
+    public void setMatNumber(String matNumber) {
+        this.matNumber = matNumber;
     }
 
     public String getChannelName() {
@@ -144,6 +152,22 @@ public class PurchaseDet extends BaseEntity {
 
     public void setStockType(String stockType) {
         this.stockType = stockType;
+    }
+
+    public String getMatStandard() {
+        return matStandard;
+    }
+
+    public void setMatStandard(String matStandard) {
+        this.matStandard = matStandard;
+    }
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
     }
     
 }
