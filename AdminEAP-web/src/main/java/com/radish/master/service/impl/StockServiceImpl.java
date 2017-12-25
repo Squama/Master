@@ -123,7 +123,7 @@ public class StockServiceImpl extends BaseServiceImpl implements StockService {
             if(stockChannel.getStock_num()>=stockNum){
                 //目标库增加
                 addChannel(mat_ID,mbProject_ID,stockChannel.getChannel_id(),stockNum);
-                //当前库存减少
+                //当前库存减少的
                 stockChannel.setStock_num(stockChannel.getStock_num()-stockNum);
                 update(stockChannel);
                 return true;
