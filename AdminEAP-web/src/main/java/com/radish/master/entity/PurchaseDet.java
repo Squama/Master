@@ -66,6 +66,10 @@ public class PurchaseDet extends BaseEntity {
     @Column(name = "stock_type")
     private String stockType;
 
+    @Header(name = "存储状态")
+    @Column(name = "status")
+    private String status;
+
     public String getPurchaseID() {
         return purchaseID;
     }
@@ -169,5 +173,12 @@ public class PurchaseDet extends BaseEntity {
     public void setUnit(String unit) {
         this.unit = unit;
     }
-    
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 }
