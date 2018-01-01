@@ -7,7 +7,7 @@
     <ol class="breadcrumb">
         <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
         <li><a href="#">库存信息</a></li>
-        <li class="active">库存出库</li>
+        <li class="active">库存消耗</li>
     </ol>
 </section>
 
@@ -26,12 +26,10 @@
 			                <!-- /.box-header -->
 			                <div class="dataTables_filter" id="searchDiv" style="display: none">
 			                    <!--查询条件-->
+			                     <input type="search" placeholder="请输入库存编号" title="库存编号" name="s.id" class="form-control" id="stockid" operator="like" likeOption="true">
 			                   <input type="search" placeholder="请输入项目名" title="项目名" name="p.project_name" class="form-control" id="project_name" operator="like" likeOption="true">
                                <input type="search" placeholder="请输入预算编号" title="预算编号" name="s.budget_ID" class="form-control" id="budget_id" operator="like" likeOption="true">
-			                   <div class="input-group">
-			                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-			                        <input type="search" placeholder="请输入入库日期" title="入库日期" name="storage_time" data-flag="datepicker" class="form-control" data-format="yyyy-mm-dd">
-			                    </div>
+			                    <input type="search" placeholder="请输入入库人员" title="入库人员" name="u.`name`" class="form-control" operator="like" likeOption="true">
 			                    <div class="btn-group">
 			                        <button type="button" class="btn btn-primary" data-btn-type="search">查询</button>
 			                        <button type="button" class="btn btn-default" data-btn-type="reset">重置</button>

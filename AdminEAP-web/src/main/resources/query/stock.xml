@@ -34,7 +34,7 @@
 		        ]]>
 		</sql>
 		<column key="rowIndex" header="序号" width="50" allowSort="false"/>
-		<column key="id" header="库存流水号" classType="String" allowSort="true" width="150"/>
+		<column key="id" header="库存编号" classType="String" allowSort="true" width="150"/>
 		<column key="projectID" header="所属项目编号" classType="String" width="150"/>
 		<column key="projectName" header="所属项目" classType="String" allowSort="true" width="150"/>
 		<column key="budgetID" header="所属预算编号" classType="String" width="150"/>
