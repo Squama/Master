@@ -18,7 +18,7 @@
                 <ul class="nav nav-tabs pull-right">
                     <li><a href="#tab-content-edit" data-toggle="tab" id="nav-tab-detail"><i class="fa fa-edit"></i></a></li>
                     <li class="active"><a href="#tab-content-list" data-toggle="tab" id="nav-tab-list"><i class="fa fa-list-ul"></i></a></li>
-                    <li class="pull-left header"><i class="fa fa-user"></i><small>物料申请单列表</small></li>
+                    <li class="pull-left header"><i class="fa fa-user"></i><small>物料消耗列表</small></li>
                 </ul>
                 <div class="tab-content">
                     <div class="tab-pane active" id="tab-content-list">
@@ -26,15 +26,12 @@
 			                <!-- /.box-header -->
 			                <div class="dataTables_filter" id="searchDiv" style="display: none">
 			                    <!--查询条件-->
-			                     <input type="search" placeholder="请输入库存编号" title="库存编号" name="s.id" class="form-control" id="stockid" operator="like" likeOption="true">
-			                   <input type="search" placeholder="请输入项目名" title="项目名" name="p.project_name" class="form-control" id="project_name" operator="like" likeOption="true">
-                               <input type="search" placeholder="请输入预算编号" title="物料申请单编号" name="s.budget_ID" class="form-control" id="budget_id" operator="like" likeOption="true">
-			                   <div class="input-group">
-			                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-			                        <input type="search" placeholder="请输入入库日期" title="入库日期" name="storage_time" data-flag="datepicker" class="form-control" data-format="yyyy-mm-dd">
-			                    </div>
-                               <input type="search" placeholder="请输入预算编号" title="预算编号" name="s.budget_ID" class="form-control" id="budget_id" operator="like" likeOption="true">
-			                    <input type="search" placeholder="请输入入库人员" title="入库人员" name="u.`name`" class="form-control" operator="like" likeOption="true">
+			                   <select placeholder="请输入项目名" name="p.project_name" class="form-control select2" id="project_name" operator="like" likeOption="true" style="width:20%">
+                               	<option selected="selected" value="">选择一个项目</option>
+                               </select>
+                               <select  placeholder="请输入预算编号" name="t.budget_no" class="form-control select2" id="budget_id" operator="like" likeOption="true" style="width:20%">
+			                  	<option selected="selected" value="">选择一个预算</option>
+			                   </select>
 			                    <div class="btn-group">
 			                        <button type="button" class="btn btn-primary" data-btn-type="search">查询</button>
 			                        <button type="button" class="btn btn-default" data-btn-type="reset">重置</button>
@@ -56,7 +53,14 @@
 <script>
 
     var stockQueryTable, winId = "stockQueryWin";
-
+    var xms = '${xm?default(0)}',xm=0;
+    if(xms != 0){
+    	xm = JSON.parse(xms);
+    }
+    var bgs = '${bg?default(0)}',bg=0;
+    if(bgs != 0){
+    	bg = JSON.parse(bgs);
+    }
     $(function (){
         stockQueryTable = new CommonTable("stock_table", "stock_out_list", "searchDiv", null);
         //绑定按钮事件
@@ -83,7 +87,21 @@
                     break;
             }
         });
-
+        if(xm != 0){
+            for (var i = 0, len = xm.length; i < len; i++) {
+                var x = xm[i];
+                $('#project_name').append("<option value=\"" + x.data + "\">" + x.data + "</option>");
+            }
+            $(".select2").select2();
+        }
+        
+        if(bg != 0){
+            for (var i = 0, len = bg.length; i < len; i++) {
+                var x = bg[i];
+                $('#budget_id').append("<option value=\"" + x.data + "\">" + x.data + "</option>");
+            }
+            $(".select2").select2();
+        }
     });
 
 </script>

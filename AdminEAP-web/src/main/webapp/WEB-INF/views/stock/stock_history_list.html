@@ -26,10 +26,16 @@
                             <!-- /.box-header -->
                             <div class="dataTables_filter" id="searchDiv" style="display: none">
                                 <!--查询条件-->
-                                <input type="search" placeholder="请输入历史编号" title="库存编号" name="s.id" class="form-control" id="budget_id" operator="like" likeOption="true">
-                                <input type="search" placeholder="请输入项目名" title="项目名" name="p.project_name" class="form-control" id="project_name" operator="like" likeOption="true">
-                                <input type="search" placeholder="请输入项目编号" title="预算编号" name="s.project_ID" class="form-control" id="budget_id" operator="like" likeOption="true">
-                                <input type="search" placeholder="请输入预算编号" title="预算编号" name="s.budget_ID" class="form-control" id="budget_id" operator="like" likeOption="true">
+                                
+                                <select type="search" placeholder="请输入项目名"  name="p.project_name" class="form-control select2" id="project_name" operator="like" likeOption="true"  style =" width:20%">
+                                	<option selected="selected" value="">选择一个项目</option>
+                                </select>
+                                <select type="search" placeholder="请输入项目编号" name="s.project_ID" class="form-control select2" id="project_code" operator="like" likeOption="true" style =" width:20%">
+                               		<option selected="selected" value="">选择一个项目编号</option>
+                                </select>
+                                <select type="search" placeholder="请输入物料编号" title="物料编号" name="s.mat_ID" class="form-control select2"  id="mat_id" operator="like" likeOption="true"  style =" width:20%">
+                              	<option selected="selected" value="">选择一个物料</option>
+                              </select>
                                 <div class="btn-group">
                                     <button type="button" class="btn btn-primary" data-btn-type="search">查询</button>
                                     <button type="button" class="btn btn-default" data-btn-type="reset">重置</button>
@@ -58,8 +64,18 @@
 <script>
     var form = $("#searchDiv").form({baseEntity: false}), initData={};
     var auditStatus="${auditStatus?default(10)}";
-
-
+    var xms = '${xm?default(0)}',xm=0;
+    if(xms != 0){
+    	xm = JSON.parse(xms);
+    }
+    var sts = '${st?default(0)}',st=0;
+    if(sts != 0){
+    	st = JSON.parse(sts);
+    }
+    var mats = '${mat?default(0)}',mat=0;
+    if(mats != 0){
+    	mat = JSON.parse(mats);
+    }
     var stockQueryTable, winId = "stockQueryWin";
     $(function (){
         stockQueryTable = new CommonTable("stock_table", "stock_history_list", "searchDiv", null);
@@ -100,7 +116,28 @@
                     break;
             }
         });
-
+        if(xm != 0){
+            for (var i = 0, len = xm.length; i < len; i++) {
+                var x = xm[i];
+                $('#project_name').append("<option value=\"" + x.data + "\">" + x.data + "</option>");
+                $('#project_code').append("<option value=\"" + x.value + "\">" + x.value + "</option>");
+            }
+            $(".select2").select2();
+        }
+        if(st != 0){
+            for (var i = 0, len = st.length; i < len; i++) {
+                var s = st[i];
+                $('#budget_id').append("<option value=\"" + s.value + "\">" + s.data + "</option>");
+            }
+            $(".select2").select2();
+        }
+        if(mat != 0){
+            for (var i = 0, len = mat.length; i < len; i++) {
+                var m = mat[i];
+                $('#mat_id').append("<option value=\"" + m.value + "\">" + m.data + "</option>");
+            }
+            $(".select2").select2();
+        }
     });
 
     function setTitle(title){

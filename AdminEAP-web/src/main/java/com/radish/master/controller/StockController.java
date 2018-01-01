@@ -7,8 +7,12 @@ import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.base.service.BaseService;
 import com.cnpc.framework.utils.SecurityUtil;
 import com.radish.master.entity.*;
+import com.radish.master.pojo.Options;
 import com.radish.master.pojo.ResultObj;
 import com.radish.master.service.StockService;
+
+import org.hibernate.type.StringType;
+import org.hibernate.type.Type;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,25 +34,49 @@ public class StockController {
 
     @RefreshCSRFToken
     @RequestMapping(value="/list",method = RequestMethod.GET)
-    public String list(){
+    public String list(HttpServletRequest request){
+    	List st = baseService.findMapBySql("select id value, id data from tbl_stock", new Object[]{}, new Type[]{StringType.INSTANCE}, Options.class);
+    	List xm = baseService.findMapBySql("select id value, project_name data from tbl_project", new Object[]{}, new Type[]{StringType.INSTANCE}, Options.class);
+
+    	request.setAttribute("st", JSONArray.toJSONString(st));
+    	request.setAttribute("xm", JSONArray.toJSONString(xm));
         return "stock/stockQuery_list";
     }
 
     @RefreshCSRFToken
     @RequestMapping(value="/list_dispatch",method = RequestMethod.GET)
-    public String dispatch(){
+    public String dispatch(HttpServletRequest request){
+    	List st = baseService.findMapBySql("select id value, id data from tbl_stock", new Object[]{}, new Type[]{StringType.INSTANCE}, Options.class);
+    	List xm = baseService.findMapBySql("select id value, project_name data from tbl_project", new Object[]{}, new Type[]{StringType.INSTANCE}, Options.class);
+    	List mat = baseService.findMapBySql("select mat_number value, mat_number data from tbl_materiel", new Object[]{}, new Type[]{StringType.INSTANCE}, Options.class);
+
+    	request.setAttribute("st", JSONArray.toJSONString(st));
+    	request.setAttribute("xm", JSONArray.toJSONString(xm));
+    	request.setAttribute("mat", JSONArray.toJSONString(mat));
         return "stock/stockQuery_list_dispatch";
     }
 
     @RefreshCSRFToken
     @RequestMapping(value="/list_out",method = RequestMethod.GET)
-    public String out(){
+    public String out(HttpServletRequest request){
+    	List xm = baseService.findMapBySql("select id value, project_name data from tbl_project", new Object[]{}, new Type[]{StringType.INSTANCE}, Options.class);
+    	List bg = baseService.findMapBySql("select budget_no value, budget_no data from tbl_budget", new Object[]{}, new Type[]{StringType.INSTANCE}, Options.class);
+    	
+    	request.setAttribute("xm", JSONArray.toJSONString(xm));
+    	request.setAttribute("bg", JSONArray.toJSONString(bg));
         return "stock/stockQuery_list_out";
     }
 
     @RefreshCSRFToken
     @RequestMapping(value="/list_history",method = RequestMethod.GET)
-    public String stockHistory(){
+    public String stockHistory( HttpServletRequest request){
+    	List st = baseService.findMapBySql("select id value, id data from tbl_stock", new Object[]{}, new Type[]{StringType.INSTANCE}, Options.class);
+    	List xm = baseService.findMapBySql("select project_code value, project_name data from tbl_project", new Object[]{}, new Type[]{StringType.INSTANCE}, Options.class);
+    	List mat = baseService.findMapBySql("select mat_number value, mat_number data from tbl_materiel", new Object[]{}, new Type[]{StringType.INSTANCE}, Options.class);
+
+    	request.setAttribute("st", JSONArray.toJSONString(st));
+    	request.setAttribute("xm", JSONArray.toJSONString(xm));
+    	request.setAttribute("mat", JSONArray.toJSONString(mat));
         return "stock/stock_history_list";
     }
 
