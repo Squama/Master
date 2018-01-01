@@ -65,7 +65,7 @@
 	<query id="stock_out_list" key="id" tableName="物料申请单列表" widthType="px">
 		<sql>
 			<![CDATA[
-			select t.id id, t.create_date_time createTime, p.project_name projectName,t.budget_no budgetNo from tbl_purchase t ,tbl_project p where t.project_id = p.id and t.status='10'
+			select t.id id, t.create_date_time createTime, p.project_name projectName,t.budget_no budgetNo from tbl_purchase t ,tbl_project p where 1=1 and t.project_id = p.id and t.status='10'
 			]]>
 		</sql>
 		<column key="rowIndex" header="序号" width="50" allowSort="false"/>

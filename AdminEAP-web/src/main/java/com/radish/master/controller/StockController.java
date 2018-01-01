@@ -60,7 +60,7 @@ public class StockController {
     @RequestMapping(value="/list_out",method = RequestMethod.GET)
     public String out(HttpServletRequest request){
     	List xm = baseService.findMapBySql("select id value, project_name data from tbl_project", new Object[]{}, new Type[]{StringType.INSTANCE}, Options.class);
-    	List bg = baseService.findMapBySql("select budget_no value, budget_no data from tbl_budget", new Object[]{}, new Type[]{StringType.INSTANCE}, Options.class);
+    	List bg = baseService.findMapBySql("select id value, id data from tbl_purchase", new Object[]{}, new Type[]{StringType.INSTANCE}, Options.class);
     	
     	request.setAttribute("xm", JSONArray.toJSONString(xm));
     	request.setAttribute("bg", JSONArray.toJSONString(bg));
