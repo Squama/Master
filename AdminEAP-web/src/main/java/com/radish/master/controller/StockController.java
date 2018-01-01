@@ -111,6 +111,8 @@ public class StockController {
         stockService.saveHistory(dqProject_ID,mat_id,stockNum,"2",purchase_ID,"");
         //库存渠道变更
         stockService.saveChannelDispatch(mat_id,dqProject_ID,mbProject_ID,stockNum);
+        //更新采购单余量
+        stockService.savePurchaseChange(purchase_ID,mat_id,stockNum,"2");
         Result r = new Result();
         r.setSuccess(true);
         return r;
@@ -119,23 +121,27 @@ public class StockController {
     @VerifyCSRFToken
     @RequestMapping(value="/saveOut",method = RequestMethod.POST)
     @ResponseBody
-    public Result saveOut(HttpServletRequest request){
+    public Result saveOut(String id,HttpServletRequest request){
+        String purchaseID = id;
+        PurchaseDet pd ;
+        Purchase p = stockService.getPurchaseByID(purchaseID);
+        List<PurchaseDet> list = stockService.getPurchaseDetList(purchaseID);
+        for (int i = 0; i <list.size() ; i++) {
+            pd = list.get(i);
+            //原库存减少  //changeType 1:入库，2：出库
+            stockService.stockChange(p.getProjectID(),pd.getMatNumber(),pd.getQuantity(),2,"1");
+            //同步库存渠道表 1:入库，2：出库
+            stockService.saveChannel(pd.getMatNumber(),p.getProjectID(),"",pd.getQuantity(),2);
+            //历史变更
+            stockService.saveHistory(purchaseID,pd.getMatNumber(),pd.getQuantity(),"3","stockOut","");
+        }
+        //更新申请单明细状态
+        String sql= "update tbl_purchase_det set status = '2' where purchase_id = '"+purchaseID+"'";
+        String sql1="update tbl_purchase set status = '20' where id = '"+purchaseID+"'";
+        baseService.executeSql(sql);
+        baseService.executeSql(sql1);
 
-        String budgetID = request.getParameter("budget_no");
-        String project_ID = stockService.getProjectByBudget(budgetID).getProjectCode();
-        String mat_id = request.getParameter("mat_ID");
-        Double stockNum = Double.valueOf(request.getParameter("stock_Num")).doubleValue();
-        String channel_ID = request.getParameter("channel_id");
-
-        //原库存减少  //useType 1:采购入库，2：调度入库
-        stockService.stockChange(project_ID,mat_id,stockNum,2,"1");
-        //同步库存渠道表 1:入库，2：出库
-        stockService.saveChannel(mat_id ,project_ID,channel_ID,stockNum,2);
-        //历史变更
-        stockService.saveHistory(budgetID,mat_id,stockNum,"3","stockOut","");
-
-        Result r = new Result();
-        r.setSuccess(true);
+        Result r = new Result(true,null,"获取成功");
         return r;
     }
 
@@ -174,7 +180,7 @@ public class StockController {
         String id = request.getParameter("id");
         String mat_id = request.getParameter("mat_id");
         Project project = stockService.getProjectByPurchase(id);
-        PurchaseDet pd = stockService.getPurchaseByID(id,mat_id);
+        PurchaseDet pd = stockService.getPurchaseDetByID(id,mat_id);
         String matOptions = JSONArray.toJSONString(stockService.getMatCombobox(id,"1"));
         List<Object> list = new ArrayList<Object>();
         list.add(0,matOptions);

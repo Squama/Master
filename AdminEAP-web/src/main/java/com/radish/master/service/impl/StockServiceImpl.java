@@ -81,7 +81,7 @@ public class StockServiceImpl extends BaseServiceImpl implements StockService {
     }
 
     @Override
-    public PurchaseDet getPurchaseByID(String id,String mat_id){
+    public PurchaseDet getPurchaseDetByID(String id,String mat_id){
         String sql = "select * from tbl_purchase_det where purchase_id = '"+id+"' and mat_number ='"+mat_id+"'";
         List<PurchaseDet> list= findBySql(sql,PurchaseDet.class);
         if(list.size()>0){
@@ -108,6 +108,17 @@ public class StockServiceImpl extends BaseServiceImpl implements StockService {
             return list.get(0);
         }
         return null;
+    }
+
+    @Override
+    public Purchase getPurchaseByID(String purchase_ID){
+        String sql = "select * from tbl_purchase  where id = '"+purchase_ID+"'";
+        List<Purchase> list= findBySql(sql, Purchase.class);
+        if(list.size()>0) {
+            return list.get(0);
+        }
+        return null;
+
     }
 
     @Override
@@ -165,7 +176,7 @@ public class StockServiceImpl extends BaseServiceImpl implements StockService {
     //库存渠道保存（进出库，不包含调度）
     @Override
     public Boolean saveChannel(String mat_ID, String project_ID, String channel_ID, Double stockNum,int changeType) {
-        StockChannel stockChannel = null;
+        StockChannel stockChannel ;
         List<StockChannel> cList = this.getStockChannelList(mat_ID,project_ID);
         if(changeType == 1){
             addChannel(mat_ID,project_ID,channel_ID,stockNum);
@@ -175,7 +186,7 @@ public class StockServiceImpl extends BaseServiceImpl implements StockService {
                 if(stockChannel.getStock_num()>=stockNum){
                     stockChannel.setStock_num(stockChannel.getStock_num()-stockNum);
                     update(stockChannel);
-                    return true;
+                    break;
                 }else {
                     stockNum = stockNum - stockChannel.getStock_num();
                     stockChannel.setStock_num(0.0);
@@ -183,6 +194,7 @@ public class StockServiceImpl extends BaseServiceImpl implements StockService {
                 }
             }
         }
+
         return true;
     }
 
@@ -190,6 +202,17 @@ public class StockServiceImpl extends BaseServiceImpl implements StockService {
     public List<StockChannel> getStockChannelList(String mat_ID, String project_ID) {
         String sql = " select * from tbl_stock_channel where mat_id='" + mat_ID + "' and project_ID='" + project_ID + "' ORDER BY create_date_time ";
         List<StockChannel> list = findBySql(sql, StockChannel.class);
+        if(list.size()>0){
+            return list;
+        }else {
+            return  null;
+        }
+    }
+
+    @Override
+    public List<PurchaseDet> getPurchaseDetList(String purchaseID){
+        String sql = " select * from tbl_purchase_det where purchase_id='"+purchaseID+"'";
+        List<PurchaseDet> list = findBySql(sql, PurchaseDet.class);
         if(list.size()>0){
             return list;
         }else {
