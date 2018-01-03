@@ -134,4 +134,11 @@ public class PurchaseApplyController {
         return new Result(true, "success");
     }
     
+    @VerifyCSRFToken
+    @RequestMapping(value = "/start", method = RequestMethod.POST)
+    @ResponseBody
+    public Result start(String id) {
+        return purchaseService.startPurchaseApplyFlow(purchaseService.get(Purchase.class, id),"purchaseApply");
+    }
+    
 }

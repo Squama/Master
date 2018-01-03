@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONArray;
+import com.cnpc.framework.annotation.VerifyCSRFToken;
 import com.cnpc.framework.base.pojo.Result;
 import com.radish.master.entity.Budget;
 import com.radish.master.entity.BudgetImport;
@@ -53,9 +54,9 @@ public class BudgetEstimateController {
     
     @RequestMapping(value="/toestimate",method = RequestMethod.POST)
     public String toEstimate(String budgetNo, String sourceUrl, HttpServletRequest request){
-        Budget budget = budgetService.getBudgetByNo(budgetNo);
+        //Budget budget = budgetService.getBudgetByNo(budgetNo);
         
-        request.setAttribute("budget", JSONArray.toJSONString(budget));
+        request.setAttribute("budgetNo", budgetNo);
         request.setAttribute("sourceUrl", sourceUrl);
         request.setAttribute("materiels", JSONArray.toJSONString(budgetService.getMatMap()));
         
@@ -133,6 +134,18 @@ public class BudgetEstimateController {
     @RequestMapping(value="/singleestimate",method = RequestMethod.GET)
     public String singleEstimate(){
         return "budgetmanage/budgetestimate/single_estimate";
+    }
+    
+    @VerifyCSRFToken
+    @RequestMapping(value = "/start", method = RequestMethod.POST)
+    @ResponseBody
+    public Result start(String budgetNo) {
+        return budgetService.startEstimateFlow(budgetService.getBudgetByNo(budgetNo),"estimateApprove");
+    }
+    
+    @RequestMapping(value="/comparedetail",method = RequestMethod.GET)
+    public String compareDetail(){
+        return "budgetmanage/budgetestimate/budget_estimate_list";
     }
     
 }

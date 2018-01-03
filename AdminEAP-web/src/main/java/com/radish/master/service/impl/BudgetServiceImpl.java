@@ -273,5 +273,30 @@ public class BudgetServiceImpl extends BaseServiceImpl implements BudgetService 
         }
         return map;
     }
+
+    @Override
+    public Result startEstimateFlow(Budget budget, String processDefinitionKey) {
+        budget.setStatus("20");
+        budget.setUpdateDateTime(new Date());
+        
+        this.update(budget);
+        
+        //给流程起个名字
+        User user = SecurityUtil.getUser();
+        String name = user.getName() + "申请测算审批：" + budget.getBudgetName() + "，所属项目：" + budget.getProjectID();
+        
+        //businessKey
+        String businessKey = budget.getBudgetNo();
+        
+        //配置流程变量
+        Map<String, Object> variables = new HashMap<>();
+        variables.put(Constants.VAR_APPLYUSER_NAME, user.getName());
+        variables.put(Constants.VAR_BUSINESS_KEY, budget.getBudgetNo());
+        
+        
+        //启动流程
+        return runtimePageService.startProcessInstanceByKey(processDefinitionKey, name, variables,
+                user.getId(), businessKey);
+    }
     
 }

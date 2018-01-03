@@ -37,4 +37,6 @@ public interface BudgetService extends BaseService {
     BudgetTx getTxGroupByNo(String group);
     
     Map<String, Materiel> getMatMap();
+    
+    public Result startEstimateFlow(Budget budget, String processDefinitionKey);
 }

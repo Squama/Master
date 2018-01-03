@@ -5,8 +5,10 @@ package com.radish.master.service;
 
 import java.util.List;
 
+import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.base.service.BaseService;
 import com.radish.master.entity.Budget;
+import com.radish.master.entity.Purchase;
 import com.radish.master.pojo.MatMap;
 import com.radish.master.pojo.Options;
 
@@ -35,4 +37,6 @@ public interface PurchaseService extends BaseService{
     MatMap getMatMap();
     
     Budget getBudgetByNo(String batchNo);
+    
+    public Result startPurchaseApplyFlow(Purchase purchase, String processDefinitionKey);
 }
