@@ -73,14 +73,14 @@ public class StockServiceImpl extends BaseServiceImpl implements StockService {
                 pd.setSurplusQuantity(pd.getSurplusQuantity() - stockChangeNum);
                 if(pd.getSurplusQuantity()==0){
                     pd.setStatus("60");
+                    update(pd);
                     list = getPurchaseDetList(purchase_ID);
-                    if(list.size()==0){
+                    if(list==null){
                         Purchase p = getPurchaseByID(purchase_ID);
                         p.setStatus("60");
                         update(p);
                     }
                 }
-                update(pd);
                 return true;
             }else{
                 return false;
@@ -221,7 +221,7 @@ public class StockServiceImpl extends BaseServiceImpl implements StockService {
 
     @Override
     public List<PurchaseDet> getPurchaseDetList(String purchaseID){
-        String sql = " select * from tbl_purchase_det where status <> '60' and purchase_id='"+purchaseID+"'";
+        String sql = " select * from tbl_purchase_det  where status <> '60' and purchase_id='"+purchaseID+"'";
         List<PurchaseDet> list = findBySql(sql, PurchaseDet.class);
         if(list.size()>0){
             return list;
