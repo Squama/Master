@@ -75,6 +75,10 @@ public class Purchase extends BaseEntity {
     @Header(name = "状态")
     @Column(name = "status")
     private String status;
+    
+    @Header(name = "采购单名称")
+    @Column(name = "purchase_name")
+    private String purchaseName;
 
     public String getProjectID() {
         return projectID;
@@ -164,4 +168,11 @@ public class Purchase extends BaseEntity {
         this.status = status;
     }
 
+    public String getPurchaseName() {
+        return purchaseName;
+    }
+
+    public void setPurchaseName(String purchaseName) {
+        this.purchaseName = purchaseName;
+    }
 }
