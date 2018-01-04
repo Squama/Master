@@ -3,6 +3,7 @@
  */
 package com.radish.master.service.impl;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -23,6 +24,7 @@ import com.cnpc.framework.utils.SecurityUtil;
 import com.radish.master.entity.Budget;
 import com.radish.master.entity.Materiel;
 import com.radish.master.entity.Purchase;
+import com.radish.master.entity.PurchaseDet;
 import com.radish.master.pojo.MatMap;
 import com.radish.master.pojo.Options;
 import com.radish.master.service.PurchaseService;
@@ -56,7 +58,7 @@ public class PurchaseServiceImpl extends BaseServiceImpl implements PurchaseServ
 
     @Override
     public List<Options> getBudgetComboboxByProject(String projectID) {
-        return this.findMapBySql("select budget_no value, budget_name data from tbl_budget where project_id=?", new Object[]{projectID}, new Type[]{StringType.INSTANCE}, Options.class);
+        return this.findMapBySql("select budget_no value, budget_name data from tbl_budget where project_id=? AND status=30", new Object[]{projectID}, new Type[]{StringType.INSTANCE}, Options.class);
     }
 
     @Override
@@ -86,13 +88,31 @@ public class PurchaseServiceImpl extends BaseServiceImpl implements PurchaseServ
 
     @Override
     public Result startPurchaseApplyFlow(Purchase purchase, String processDefinitionKey) {
+        User user = SecurityUtil.getUser();
+        
+        Budget budget = this.getBudgetByNo(purchase.getBudgetNo());
+        
+        /*List<PurchaseDet> detList = this.getPurchaseDetList(purchase.getId());
+        
+        BigDecimal sum = new BigDecimal("0");
+        
+        for(PurchaseDet det : detList){
+            BigDecimal price = new BigDecimal(det.getPrice());
+            BigDecimal quantity = new BigDecimal(det.getQuantity());
+            
+            sum = sum.add(quantity.multiply(price));
+            
+        }*/
+        
         purchase.setStatus("20");
         purchase.setUpdateDateTime(new Date());
+        //purchase.setApplyAmount(sum.toPlainString());
+        purchase.setPurchaseName("【" + user.getName() + "】申请" + budget.getBudgetName());
         
         this.update(purchase);
         
         //给流程起个名字
-        User user = SecurityUtil.getUser();
+        
         String name = user.getName() + "申请预算用料：" + purchase.getBudgetNo() + "，所属项目：" + purchase.getProjectID();
         
         //businessKey
@@ -108,5 +128,12 @@ public class PurchaseServiceImpl extends BaseServiceImpl implements PurchaseServ
         //启动流程
         return runtimePageService.startProcessInstanceByKey(processDefinitionKey, name, variables,
                 user.getId(), businessKey);
+    }
+    
+    @Override
+    public List<PurchaseDet> getPurchaseDetList(String id) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("id", id);
+        return this.find("from PurchaseDet where purchaseID = :id", params);
     }
 }

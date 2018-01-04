@@ -59,6 +59,9 @@ public class Budget extends BaseEntity {
     @Column(name="check_time")
     private Date checkTime;
 
+    /**
+     * 10=新建,20=测算已提交,30=测算已完成
+     */
     @Header(name="状态")
     @Column(name="status")
     private String status;

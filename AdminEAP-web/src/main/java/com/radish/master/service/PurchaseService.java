@@ -9,6 +9,7 @@ import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.base.service.BaseService;
 import com.radish.master.entity.Budget;
 import com.radish.master.entity.Purchase;
+import com.radish.master.entity.PurchaseDet;
 import com.radish.master.pojo.MatMap;
 import com.radish.master.pojo.Options;
 
@@ -39,4 +40,6 @@ public interface PurchaseService extends BaseService{
     Budget getBudgetByNo(String batchNo);
     
     public Result startPurchaseApplyFlow(Purchase purchase, String processDefinitionKey);
+    
+    public List<PurchaseDet> getPurchaseDetList(String id);
 }
