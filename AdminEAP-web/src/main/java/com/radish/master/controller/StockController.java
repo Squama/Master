@@ -164,8 +164,8 @@ public class StockController {
             stockService.saveHistory(purchaseID,pd.getMatNumber(),pd.getQuantity(),"3","stockOut","");
         }
         //更新申请单明细状态
-        String sql= "update tbl_purchase_det set status = '2' where purchase_id = '"+purchaseID+"'";
-        String sql1="update tbl_purchase set status = '20' where id = '"+purchaseID+"'";
+        String sql= "update tbl_purchase_det set status = '99' where purchase_id = '"+purchaseID+"'";
+        String sql1="update tbl_purchase set status = '99' where id = '"+purchaseID+"'";
         baseService.executeSql(sql);
         baseService.executeSql(sql1);
 
@@ -193,7 +193,7 @@ public class StockController {
     public Result getChannelByPurchase(HttpServletRequest request){
         String mat_id = request.getParameter("mat_id");
         String purchase_id = request.getParameter("purchase_id");
-        String sql = " select * from tbl_purchase_det where stock_type='1' and mat_id ='"+mat_id+"' and purchase_id='"+purchase_id+"'";
+        String sql = " select * from tbl_purchase_det where stock_type='1' and mat_number ='"+mat_id+"' and purchase_id='"+purchase_id+"'";
         List list= baseService.findMapBySql(sql);
         if(list.size()!= 0){
             return new Result(true,list.get(0),"获取成功");
@@ -301,7 +301,6 @@ public class StockController {
         request.setAttribute("purchaseOptions", JSONArray.toJSONString(stockService.getPurchaseCombobox("1")));
         return "stock/stock_add";
     }
-
 
     @RefreshCSRFToken
     @RequestMapping(value="/dispatch",method = RequestMethod.GET)

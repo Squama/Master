@@ -115,7 +115,7 @@
     });
 
     $("#mat_name").change(function(){
-        getMat();
+        //getMat();
         getChannelByPurchase();
         //数据校验
         $("#stock-form").bootstrapValidator({
@@ -197,14 +197,18 @@
         })
     }
     function getChannelByPurchase(){
+        mat_id = $("#mat_name").val();
         ajaxPost(basePath+"/stock/getChannelByPurchase?mat_id="+mat_id+"&purchase_id="+purchase_ID,null,function(data){
+            console.log(data)
             if(data.data){
                 $("#channel").val(data.data.channel_name);
                 $("#stock_Num").val(data.data.surplus_quantity);
                 $("#price").val(data.data.price);
+                $("#mat_standard").val(data.data.mat_standard);
+                $("#unit").val(data.data.unit);
+                $("#mat_id").val(data.data.mat_number);
                 stockNum = data.data.surplus_quantity;
                 channel_id = data.data.channel_id;
-                console.log("stockNum 1:"+ stockNum);
             }
         })
     }
@@ -212,6 +216,7 @@
     $("#purchase_id").change(function(){
         purchase_ID = $("#purchase_id").val();
         ajaxPost(basePath+"/stock/getProjectByPurchase?id="+purchase_ID,null,function(data){
+
             if(data.data){
                 var p = data.data[1];
                 $("#mat_project_name").val(p.projectName);
@@ -219,6 +224,7 @@
             }
             /*初始化物料选择框*/
             if(data.data[0] != "[]"){
+                console.log(data.data)
                 var matOptions = data.data[0],moptions=0;
                 if(matOptions != 0){
                     moptions = JSON.parse(matOptions);
@@ -243,16 +249,5 @@
 			}
         })
     });
-
-/*    function getChannel(){
-        var mat_id = $("#mat_id").val();
-        var url = basePath+"/stock/getChannel?mat_id="+mat_id;
-        modals.openWin({
-            winId:"area",
-            title:"选择对应的采购渠道",
-            width:'600px',
-            url:url
-        });
-    }*/
 
 </script>

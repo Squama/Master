@@ -65,12 +65,21 @@ public class StockServiceImpl extends BaseServiceImpl implements StockService {
 
     @Override
     public Boolean savePurchaseChange(String purchase_ID, String mat_ID, Double stockChangeNum,String stockType) {
-        String sql = "select * from tbl_purchase_det where stock_type = '"+stockType+"' and purchase_id = '"+purchase_ID+"' and mat_id='"+mat_ID+"'; ";
+        String sql = "select * from tbl_purchase_det where status = '50' and stock_type = '"+stockType+"' and purchase_id = '"+purchase_ID+"' and mat_number='"+mat_ID+"'; ";
         List<PurchaseDet> list= findBySql(sql, PurchaseDet.class);
         if(list.size()>0){
             PurchaseDet pd = list.get(0);
             if(pd.getSurplusQuantity()>=stockChangeNum){
                 pd.setSurplusQuantity(pd.getSurplusQuantity() - stockChangeNum);
+                if(pd.getSurplusQuantity()==0){
+                    pd.setStatus("60");
+                    list = getPurchaseDetList(purchase_ID);
+                    if(list.size()==0){
+                        Purchase p = getPurchaseByID(purchase_ID);
+                        p.setStatus("60");
+                        update(p);
+                    }
+                }
                 update(pd);
                 return true;
             }else{
@@ -145,7 +154,7 @@ public class StockServiceImpl extends BaseServiceImpl implements StockService {
                 //当前库存减少的
                 stockChannel.setStock_num(stockChannel.getStock_num()-stockNum);
                 update(stockChannel);
-                return true;
+                break;
             }else {
                 addChannel(mat_ID,mbProject_ID,stockChannel.getChannel_id(),stockNum);
                 stockNum = stockNum - stockChannel.getStock_num();
@@ -170,6 +179,7 @@ public class StockServiceImpl extends BaseServiceImpl implements StockService {
             save(stockChannel);
         }else{
             stockChannel.setStock_num(stockChannel.getStock_num()+stockNum);
+            update(stockChannel);
         }
     }
 
@@ -211,7 +221,7 @@ public class StockServiceImpl extends BaseServiceImpl implements StockService {
 
     @Override
     public List<PurchaseDet> getPurchaseDetList(String purchaseID){
-        String sql = " select * from tbl_purchase_det where purchase_id='"+purchaseID+"'";
+        String sql = " select * from tbl_purchase_det where status <> '60' and purchase_id='"+purchaseID+"'";
         List<PurchaseDet> list = findBySql(sql, PurchaseDet.class);
         if(list.size()>0){
             return list;
@@ -233,13 +243,13 @@ public class StockServiceImpl extends BaseServiceImpl implements StockService {
 
     @Override
     public List<Options> getPurchaseCombobox(String stockType) {
-        String sql = "select p.id value, p.id data from tbl_purchase p , tbl_purchase_det pd where pd.purchase_id = p.id and pd.stock_type = '"+stockType+"' GROUP BY VALUE";
+        String sql = "select p.id value, p.purchase_name data from tbl_purchase p , tbl_purchase_det pd where pd.purchase_id = p.id and p.status = '50' and pd.stock_type = '"+stockType+"' GROUP BY VALUE";
         return this.findMapBySql(sql, new Object[]{}, new Type[]{StringType.INSTANCE}, Options.class);
     }
 
     @Override
     public List<Options> getMatCombobox(String purchase_ID ,String stockType) {
-        String sql = "select pud.mat_id value,m.mat_name data from tbl_purchase_det pud ,tbl_materiel m where  stock_type = '"+stockType+"' and pud.mat_id = m.mat_number and pud.surplus_quantity>0 and pud.purchase_id ='"+purchase_ID+"'";
+        String sql = "select pud.mat_number value,m.mat_name data from tbl_purchase_det pud ,tbl_materiel m where  stock_type = '"+stockType+"' and pud.mat_number = m.mat_number and pud.surplus_quantity>0 and pud.purchase_id ='"+purchase_ID+"'";
         return this.findMapBySql(sql, new Object[]{}, new Type[]{StringType.INSTANCE}, Options.class);
     }
 

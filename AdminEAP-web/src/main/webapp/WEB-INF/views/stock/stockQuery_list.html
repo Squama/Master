@@ -88,23 +88,6 @@
             var action = $(this).data("btn-type");
             var rowId = stockQueryTable.getSelectedRowId();
             switch (action) {
-                /**
-                 case "detail":
-                 if(!rowId){
-                        modals.info('请选择要查看的行');
-                        return false;
-                    }
-                 console.log(rowId);
-                 var detailForm=$("#user-form").form();
-                 detailForm.clearForm();
-                 setTitle("查看用户【"+employeeQueryTable.getSelectedRowData().name+"】")
-                 $("#nav-tab-detail").click();
-                 ajaxPost(basePath+"/employeeQuery/get/"+employeeQueryTable.getSelectedRowData().id,null,function(data){
-                    	console.log(data);
-                    	detailForm.initFormData(data);
-                    });
-                 break;
-                 **/
                 case "add":
                     modals.openWin({
                         winId:winId,
@@ -134,30 +117,6 @@
 
     function setTitle(title){
         $("ul.nav-tabs li.header small").text(title);
-    }
-
-    function fnProjectName(value) {
-        if (value) {
-            var ret=value;
-            ajaxPost(basePath + "/stock/showProject/"+value, null, function (data) {
-                console.log(data);
-                ret=data.data;
-            })
-            return ret;
-        } else
-            return value;
-    }
-
-    function fnMatName(value) {
-        if (value) {
-            var ret=value;
-            ajaxPost(basePath + "/stock/showMat/"+value, null, function (data) {
-                console.log(data);
-                ret=data.data;
-            })
-            return ret;
-        } else
-            return value;
     }
 
 </script>
