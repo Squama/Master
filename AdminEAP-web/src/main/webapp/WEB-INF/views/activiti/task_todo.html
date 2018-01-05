@@ -109,7 +109,11 @@
 <script>
     var processInstanceId = "${processInstanceId?default(0)}";
     var formUrl = "${formUrl?default(0)}";
+    var validateFormUrl = "${validateFormUrl?default(0)}";
     var businessKey = "${businessKey?default(0)}";
+    console.log(formUrl);
+    console.log(validateFormUrl);
+    console.log(businessKey);
     var taskCtrl = {
         loadBusinessForm: function () {
             if (formUrl != 0) {
@@ -185,10 +189,13 @@
                 },
                 submitHandler: function (validator, taskform, submitButton) {
                 	console.log(taskform);
-                	if(!typeof(checkBeforeActiviti)=="undefined"){
-                		if(typeof(checkBeforeActiviti) == 'Function'){
-                			checkBeforeActiviti.call(this,businessKey);
-                		}
+                	if(validateFormUrl != 0){
+                		ajaxPost(basePath + validateFormUrl, {businessKey:businessKey}, function (data, status) {
+                            if (!data.success) {
+                            	modals.error(data.message);
+                            	return false;
+                            }
+                        });
                 	}
                     modals.confirm('确认提交该流程？', function () {
                         // TODO 传参类型待定
@@ -197,6 +204,8 @@
                         ajaxPost(basePath + '/activiti/task/complete/${taskId}', params, function (data, status) {
                             if (data.success) {
                                 self.gotolist();
+                            }else{
+                            	modals.error(data.message);
                             }
                         });
                     });

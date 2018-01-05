@@ -121,6 +121,7 @@ public class PurchaseApplyController {
     @ResponseBody
     public Result saveDet(PurchaseDet purchaseDet, HttpServletRequest request){
         purchaseDet.setCreateDateTime(new Date());
+        purchaseDet.setSurplusQuantity(purchaseDet.getQuantity());
         purchaseService.save(purchaseDet);
         return new Result(true, "success");
     }

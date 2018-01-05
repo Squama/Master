@@ -70,7 +70,7 @@ public class Purchase extends BaseEntity {
     private Date checkTime;
 
     /**
-     * 10-新建 20-待编辑渠道 30-待审核 40-待采购 50-部分入库 60-已完成
+     * 10-新建 20-待审核 30-待编辑渠道  40-待采购 50-部分入库 60-已完成
      */
     @Header(name = "状态")
     @Column(name = "status")

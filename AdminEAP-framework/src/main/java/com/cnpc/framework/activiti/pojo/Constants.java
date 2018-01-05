@@ -35,6 +35,8 @@ public class Constants {
     //固定流程变量
     //业务表单url变量
     public static final String VAR_FORM_URL="local_form_url";
+    //校验外联表单url变量
+    public static final String VAR_VALI_FORM_URL="validate_form_url";
     //用户名
     public static final String VAR_APPLYUSER_NAME="applyUserName";
     //启动用户Id

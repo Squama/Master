@@ -134,15 +134,20 @@ public class UserTaskController {
         request.setAttribute("businessKey", businessKey);
         
         String formUrl = null;
+        String validateFromUrl = null;
 
         //获取业务url，外嵌表单展示,注入业务url 可通过local_form_url 设置，也可设置在formKey中
         for (FormProperty formProperty : formProperties) {
             if (formProperty.getId().equals(Constants.VAR_FORM_URL)) {
                 formUrl = formProperty.getValue();
-                if (!StrUtil.isEmpty(formUrl)) {
-                    if (!formUrl.endsWith(businessKey)) {
-                        formUrl = formUrl + businessKey;
-                    }
+                if (!StrUtil.isEmpty(formUrl) && !formUrl.endsWith(businessKey)) {
+                    formUrl = formUrl + businessKey;
+                }
+            }
+            if(formProperty.getId().equals(Constants.VAR_VALI_FORM_URL)){
+                validateFromUrl = formProperty.getValue();
+                if (!StrUtil.isEmpty(validateFromUrl) && !validateFromUrl.endsWith(businessKey)) {
+                    validateFromUrl = validateFromUrl;
                 }
             }
         }
@@ -156,6 +161,9 @@ public class UserTaskController {
 
         if (!StrUtil.isEmpty(formUrl)) {
             request.setAttribute("formUrl", formUrl);
+        }
+        if (!StrUtil.isEmpty(validateFromUrl)) {
+            request.setAttribute("validateFormUrl", validateFromUrl);
         }
         request.setAttribute("formName", processInstance.getName());
 
