@@ -187,7 +187,7 @@ public class StockServiceImpl extends BaseServiceImpl implements StockService {
     @Override
     public Boolean saveChannel(String mat_ID, String project_ID, String channel_ID, Double stockNum,int changeType) {
         StockChannel stockChannel ;
-        List<StockChannel> cList = this.getStockChannelList(mat_ID,project_ID);
+        List<StockChannel> cList = this.getStockChannelList(mat_ID,project_ID);//按时间排序
         if(changeType == 1){
             addChannel(mat_ID,project_ID,channel_ID,stockNum);
         }else if(changeType==2){
@@ -204,19 +204,14 @@ public class StockServiceImpl extends BaseServiceImpl implements StockService {
                 }
             }
         }
-
         return true;
     }
 
     @Override
     public List<StockChannel> getStockChannelList(String mat_ID, String project_ID) {
-        String sql = " select * from tbl_stock_channel where mat_id='" + mat_ID + "' and project_ID='" + project_ID + "' ORDER BY create_date_time ";
+        String sql = "select * from tbl_stock_channel where mat_id='" + mat_ID + "' and project_ID='" + project_ID + "' ORDER BY create_date_time ";
         List<StockChannel> list = findBySql(sql, StockChannel.class);
-        if(list.size()>0){
-            return list;
-        }else {
-            return  null;
-        }
+        return list;
     }
 
     @Override
@@ -251,6 +246,44 @@ public class StockServiceImpl extends BaseServiceImpl implements StockService {
     public List<Options> getMatCombobox(String purchase_ID ,String stockType) {
         String sql = "select pud.mat_number value,m.mat_name data from tbl_purchase_det pud ,tbl_materiel m where  stock_type = '"+stockType+"' and pud.mat_number = m.mat_number and pud.surplus_quantity>0 and pud.purchase_id ='"+purchase_ID+"'";
         return this.findMapBySql(sql, new Object[]{}, new Type[]{StringType.INSTANCE}, Options.class);
+    }
+
+
+    public  List<StockChannel> getStockChannelOutList(String projectCode,String matNumber,Double outNum){
+        List<StockChannel> cList = getStockChannelList(matNumber,projectCode);//按入库时间排序
+        List<StockChannel> oList = null;
+        for(int i= 0;i<cList.size();i++){
+            StockChannel stockChannel = new StockChannel();
+            Double totalFrozen_num;
+            stockChannel = cList.get(i);
+            if(stockChannel.getAvailable_num()>=outNum){
+                totalFrozen_num = stockChannel.getFrozen_num()+outNum;//库存累计冻结
+                stockChannel.setFrozen_num(outNum);
+                stockChannel.setAvailable_num(stockChannel.getAvailable_num()-outNum);
+                oList.add(stockChannel);
+                //更新数据库，冻结量累加，可用量扣除
+                stockChannel.setFrozen_num(totalFrozen_num);
+                update(stockChannel);
+                break;
+            }else{
+                totalFrozen_num = stockChannel.getStock_num();
+                stockChannel.setFrozen_num(stockChannel.getAvailable_num());
+                stockChannel.setAvailable_num(0.0);
+                outNum = outNum - stockChannel.getAvailable_num();
+                oList.add(stockChannel);
+                //库存累计冻结
+                stockChannel.setFrozen_num(totalFrozen_num);
+                update(stockChannel);
+            }
+        }
+        //总库总表更新
+        String sql = " select * from tbl_stocl where mat_id='" + matNumber + "' and project_ID='" + projectCode + "'";
+        List<Stock> list = findBySql(sql, Stock.class);
+        Stock stock = list.get(0);
+        stock.setFrozen_num(stock.getFrozen_num()+outNum);
+        stock.setAvailable_num(stock.getAvailable_num()-outNum);
+        update(stock);
+        return oList;
     }
 
 }

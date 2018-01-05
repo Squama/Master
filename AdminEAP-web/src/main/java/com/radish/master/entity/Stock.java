@@ -28,6 +28,14 @@ public class Stock extends BaseEntity {
     @Column(name = "stock_num")
     private Double stock_num;
 
+    @Header(name = "冻结库存量")
+    @Column(name = "frozen_num")
+    private Double frozen_num;
+
+    @Header(name = "可用库存量")
+    @Column(name = "available_num")
+    private Double available_num;
+
     @Header(name = "入库人员ID")
     @Column(name = "storage_person_id")
     private String storage_person_id;
@@ -75,6 +83,22 @@ public class Stock extends BaseEntity {
 
     public void setStock_num(Double stock_num) {
         this.stock_num = stock_num;
+    }
+
+    public Double getFrozen_num() {
+        return frozen_num;
+    }
+
+    public void setFrozen_num(Double frozen_num) {
+        this.frozen_num = frozen_num;
+    }
+
+    public Double getAvailable_num() {
+        return available_num;
+    }
+
+    public void setAvailable_num(Double available_num) {
+        this.available_num = available_num;
     }
 
     public String getStorage_person_id() {

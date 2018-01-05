@@ -25,6 +25,14 @@ public class StockChannel extends BaseEntity {
     @Column(name = "stock_num")
     private Double stock_num;
 
+    @Header(name = "冻结库存量")
+    @Column(name = "frozen_num")
+    private Double frozen_num;
+
+    @Header(name = "可用库存量")
+    @Column(name = "available_num")
+    private Double available_num;
+
     @Header(name = "渠道编号")
     @Column(name = "channel_id")
     private String channel_id;
@@ -63,6 +71,22 @@ public class StockChannel extends BaseEntity {
 
     public Double getStock_num() {
         return stock_num;
+    }
+
+    public Double getFrozen_num() {
+        return frozen_num;
+    }
+
+    public void setFrozen_num(Double frozen_num) {
+        this.frozen_num = frozen_num;
+    }
+
+    public Double getAvailable_num() {
+        return available_num;
+    }
+
+    public void setAvailable_num(Double available_num) {
+        this.available_num = available_num;
     }
 
     public void setStock_num(Double stock_num) {

@@ -35,4 +35,7 @@ public interface StockService extends BaseService {
     Project getProjectByPurchase(String purchase_ID);
     Purchase getPurchaseByID(String purchase_ID);
 
+    //获取物料调度列表
+    //参数：String projectCode：项目编号,String matNumber：物料编号,Double stockNum：调度数量
+    List<StockChannel> getStockChannelOutList(String projectCode,String matNumber,Double outNum);
 }

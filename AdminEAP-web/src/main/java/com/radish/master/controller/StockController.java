@@ -32,6 +32,7 @@ public class StockController {
     @Resource
     private StockService stockService;
 
+
     @RefreshCSRFToken
     @RequestMapping(value="/list",method = RequestMethod.GET)
     public String list(HttpServletRequest request){
