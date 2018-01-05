@@ -60,11 +60,18 @@ public class StockController {
     @RefreshCSRFToken
     @RequestMapping(value="/list_out",method = RequestMethod.GET)
     public String out(HttpServletRequest request){
-    	List xm = baseService.findMapBySql("select id value, project_name data from tbl_project", new Object[]{}, new Type[]{StringType.INSTANCE}, Options.class);
-    	List bg = baseService.findMapBySql("select id value, id data from tbl_purchase", new Object[]{}, new Type[]{StringType.INSTANCE}, Options.class);
-    	
-    	request.setAttribute("xm", JSONArray.toJSONString(xm));
-    	request.setAttribute("bg", JSONArray.toJSONString(bg));
+        List xm = baseService.findMapBySql("select id value, project_name data from tbl_project", new Object[]{}, new Type[]{StringType.INSTANCE}, Options.class);
+        List bg = baseService.findMapBySql("select id value, id data from tbl_purchase", new Object[]{}, new Type[]{StringType.INSTANCE}, Options.class);
+
+        request.setAttribute("xm", JSONArray.toJSONString(xm));
+        request.setAttribute("bg", JSONArray.toJSONString(bg));
+        return "stock/stockQuery_list_out";
+    }
+
+    @RefreshCSRFToken
+    @RequestMapping(value="/test",method = RequestMethod.GET)
+    public String test(HttpServletRequest request){
+        List<StockChannel> list = stockService.getStockChannelOutList("PTEST01","GG100001",500.0);
         return "stock/stockQuery_list_out";
     }
 
@@ -98,6 +105,8 @@ public class StockController {
             stock.setProject_id(project_ID);
             stock.setMat_id(request.getParameter("mat_id"));
             stock.setStock_num(stockNum);
+            stock.setFrozen_num(0.0);
+            stock.setAvailable_num(stockNum);
             stock.setUsetype("1");//1:采购入库，2：调度入库
             stock.setStorage_person_id(SecurityUtil.getUserId());
             stock.setStorage_time(new Date());
@@ -106,6 +115,7 @@ public class StockController {
             //同一种物料在一个项目下原有库存，更新数量
             stock = baseService.get(Stock.class,list.get(0).getId());
             stock.setStock_num(stock.getStock_num() + stockNum);
+            stock.setAvailable_num(stock.getAvailable_num()+stockNum);
             baseService.update(stock);
         }
         //同步库存渠道表

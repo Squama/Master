@@ -11,6 +11,7 @@ import org.hibernate.type.Type;
 import org.springframework.stereotype.Service;
 
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -43,18 +44,22 @@ public class StockServiceImpl extends BaseServiceImpl implements StockService {
             stock = list.get(0);
             if(changeType==1){
                 stockChangeNum = stock.getStock_num()+stockChangeNum;
+                stock.setAvailable_num(stock.getAvailable_num()+stockChangeNum);
             }else if(changeType==2){
                 stockChangeNum = stock.getStock_num()-stockChangeNum;
+                stock.setAvailable_num(stock.getAvailable_num()-stockChangeNum);
             }else{
                 return false;
             }
-            list.get(0).setStock_num(stockChangeNum);
+            stock.setStock_num(stockChangeNum);
             this.update(stock);
             return true;
         }else{
             stock.setProject_id(project_ID);
             stock.setMat_id(mat_ID);
             stock.setStock_num(stockChangeNum);
+            stock.setAvailable_num(stockChangeNum);
+            stock.setFrozen_num(0.0);
             stock.setUsetype(useType);//1:采购入库，2：调度入库
             stock.setStorage_person_id(SecurityUtil.getUserId());
             stock.setStorage_time(new Date());
@@ -175,10 +180,13 @@ public class StockServiceImpl extends BaseServiceImpl implements StockService {
             stockChannel.setProject_id(project_ID);
             stockChannel.setChannel_id(channel_ID);
             stockChannel.setStock_num(stockNum);
+            stockChannel.setAvailable_num(stockNum);
             stockChannel.setPrice(price);
+            stockChannel.setFrozen_num(0.0);
             save(stockChannel);
         }else{
             stockChannel.setStock_num(stockChannel.getStock_num()+stockNum);
+            stockChannel.setAvailable_num(stockChannel.getAvailable_num()+stockNum);
             update(stockChannel);
         }
     }
@@ -195,11 +203,13 @@ public class StockServiceImpl extends BaseServiceImpl implements StockService {
                 stockChannel = cList.get(i);
                 if(stockChannel.getStock_num()>=stockNum){
                     stockChannel.setStock_num(stockChannel.getStock_num()-stockNum);
+                    stockChannel.setAvailable_num(stockChannel.getAvailable_num()-stockNum);
                     update(stockChannel);
                     break;
                 }else {
                     stockNum = stockNum - stockChannel.getStock_num();
                     stockChannel.setStock_num(0.0);
+                    stockChannel.setAvailable_num(0.0);
                     update(stockChannel);
                 }
             }
@@ -248,12 +258,12 @@ public class StockServiceImpl extends BaseServiceImpl implements StockService {
         return this.findMapBySql(sql, new Object[]{}, new Type[]{StringType.INSTANCE}, Options.class);
     }
 
-
+    @Override
     public  List<StockChannel> getStockChannelOutList(String projectCode,String matNumber,Double outNum){
         List<StockChannel> cList = getStockChannelList(matNumber,projectCode);//按入库时间排序
-        List<StockChannel> oList = null;
+        List<StockChannel> oList = new ArrayList<StockChannel>();
+        StockChannel stockChannel = new StockChannel();
         for(int i= 0;i<cList.size();i++){
-            StockChannel stockChannel = new StockChannel();
             Double totalFrozen_num;
             stockChannel = cList.get(i);
             if(stockChannel.getAvailable_num()>=outNum){
@@ -263,13 +273,13 @@ public class StockServiceImpl extends BaseServiceImpl implements StockService {
                 oList.add(stockChannel);
                 //更新数据库，冻结量累加，可用量扣除
                 stockChannel.setFrozen_num(totalFrozen_num);
-                update(stockChannel);
+                this.update(stockChannel);
                 break;
             }else{
+                outNum = outNum - stockChannel.getAvailable_num();
                 totalFrozen_num = stockChannel.getStock_num();
                 stockChannel.setFrozen_num(stockChannel.getAvailable_num());
                 stockChannel.setAvailable_num(0.0);
-                outNum = outNum - stockChannel.getAvailable_num();
                 oList.add(stockChannel);
                 //库存累计冻结
                 stockChannel.setFrozen_num(totalFrozen_num);
@@ -277,13 +287,12 @@ public class StockServiceImpl extends BaseServiceImpl implements StockService {
             }
         }
         //总库总表更新
-        String sql = " select * from tbl_stocl where mat_id='" + matNumber + "' and project_ID='" + projectCode + "'";
+        String sql = " select * from tbl_stock where mat_id='" + matNumber + "' and project_ID='" + projectCode + "'";
         List<Stock> list = findBySql(sql, Stock.class);
         Stock stock = list.get(0);
         stock.setFrozen_num(stock.getFrozen_num()+outNum);
         stock.setAvailable_num(stock.getAvailable_num()-outNum);
-        update(stock);
+        this.update(stock);
         return oList;
     }
-
 }
