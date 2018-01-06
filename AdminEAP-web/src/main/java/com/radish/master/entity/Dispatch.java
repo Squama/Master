@@ -4,6 +4,8 @@
 package com.radish.master.entity;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 import com.cnpc.framework.annotation.Header;
 import com.cnpc.framework.base.entity.BaseEntity;
@@ -12,6 +14,8 @@ import com.cnpc.framework.base.entity.BaseEntity;
  * @author tonyd
  *
  */
+@Entity
+@Table(name = "tbl_dispatch")
 public class Dispatch extends BaseEntity{
 
 	private static final long serialVersionUID = -6144122188053470798L;
