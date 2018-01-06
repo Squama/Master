@@ -69,6 +69,7 @@ window.onresize = function(){
 function loaddata1(){
 	if(!$("#project_id").val()&&!$("#project_id1").val()){
 		modals.info('请选择对比项目');
+		return false;
 	}
     $.ajax({
         type : "get",
@@ -90,7 +91,6 @@ function loaddata1(){
     
 }
 function xmd_build(){
-	debugger
 	var rylx=[];
 	var fs=[];
 	var fs1=[];

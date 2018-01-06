@@ -70,6 +70,13 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <label for="telphone" class="col-sm-3 control-label">职务</label>
+
+                    <div class="col-sm-8">
+                        <select type="text" class="form-control" id="job" name="jobId" placeholder="所在部门" ></select>
+                    </div>
+                </div>
+                <div class="form-group">
                     <label for="mobile" class="col-sm-3 control-label">手机</label>
 
                     <div class="col-sm-8">
@@ -182,9 +189,23 @@
             levels:3
 
         })
+        ajaxPost(basePath+"/employeeQuery/getRylx",null,function(data){
+		if(data.data){
+			var list = data.data;
+			var option = "<option></option>";
+			for(var i=0;i<list.length;i++){
+				
+				option += "<option value='"+list[i].id+"'>"
+				+ list[i].name
+				+ "</option>";
+			}
+			$("#job").append(option);
+		}
+	}) 
         //回填id      
         if(id!="0"){
             ajaxPost(basePath+"/employeeQuery/get",{id:id},function(data){
+            	console.log(data)
                 form.initFormData(data);
             })
         } 

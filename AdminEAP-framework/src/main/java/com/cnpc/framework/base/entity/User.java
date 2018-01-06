@@ -73,6 +73,10 @@ public class User extends BaseEntity {
     @Column(name="dept_id")
     private String deptId;
 
+    @Header(name="职位ID")
+    @Column(name="job_id")
+    private String jobId;
+    
     @Header(name="审核状态")
     @Column(name="audit_status")
     private String auditStatus;
@@ -234,5 +238,13 @@ public class User extends BaseEntity {
     public void setAuditStatus(String auditStatus) {
         this.auditStatus = auditStatus;
     }
+
+	public String getJobId() {
+		return jobId;
+	}
+
+	public void setJobId(String jobId) {
+		this.jobId = jobId;
+	}
     
 }

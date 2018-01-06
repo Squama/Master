@@ -5,10 +5,11 @@ import com.cnpc.framework.annotation.VerifyCSRFToken;
 import com.cnpc.framework.base.dao.BaseDao;
 import com.cnpc.framework.base.entity.Dict;
 import com.cnpc.framework.base.entity.Mat;
+import com.cnpc.framework.base.entity.User;
 import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.base.service.BaseService;
+import com.cnpc.framework.utils.SecurityUtil;
 import com.radish.master.entity.Materiel;
-
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.security.auth.Subject;
 import javax.servlet.http.HttpServletRequest;
 
 import java.util.ArrayList;
@@ -138,6 +140,8 @@ public class MaterialController {
     	Random ra = new Random();
     	String s = str+ra.nextInt(10000);
     	materiel.setMat_number(s);*/
+    	User u = SecurityUtil.getUser();
+    	materiel.setCreate_name(u.getName());
     	String id = (String)baseService.save(materiel);
     	Result r = new Result();
     	r.setSuccess(true);

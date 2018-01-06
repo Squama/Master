@@ -1,6 +1,7 @@
 package com.radish.master.controller;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -20,6 +21,7 @@ import com.cnpc.framework.base.service.UserRoleService;
 import com.cnpc.framework.base.service.UserService;
 import com.cnpc.framework.annotation.RefreshCSRFToken;
 import com.cnpc.framework.annotation.VerifyCSRFToken;
+import com.cnpc.framework.base.entity.Dict;
 import com.cnpc.framework.base.entity.User;
 import com.cnpc.framework.base.pojo.Result;
 
@@ -129,7 +131,15 @@ public class EmployeeQueryController {
         userService.update(employee);
         return new Result();
     }
-
+    @RequestMapping(value="/getRylx",method = RequestMethod.POST)
+    @ResponseBody
+    public Result getRylx(){
+		List<Dict> d = baseService.findBySql("select * from tbl_dict  where code='JOBS'",Dict.class);
+    	List<Dict> list = baseService.findBySql("select * from tbl_dict where parent_id='"+d.get(0).getId()+"'",Dict.class);
+      	Result r = new Result();
+      	r.setData(list);
+    	return r;
+    }
 
 
 }

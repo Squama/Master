@@ -2,10 +2,20 @@
 <script src="${basePath}/resources/common/libs/fileinput/js/fileinput.js"></script>
 <script src="${basePath}/resources/common/libs/fileinput/js/locales/zh.js"></script>
 <section class="content" id="projectaddstep2">
-<div class="modal-header">
-    <h5 class="modal-title">录入考核结果</h5>
-</div>
-<div class="modal-body">
+<section class="content-header">
+	<h1>
+		录入考核成绩
+	</h1>
+	<ol class="breadcrumb">
+		<li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
+		<li><a href="#">工程质量安全管理</a></li>
+		<li class="active">录入考核成绩</li>
+	</ol>
+</section>
+<section class="content">
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="box">
 
     <form id="dutycheck-form" name="dutycheck-form" class="form-horizontal">
      <input type="hidden" name="id" id= "id">
@@ -22,17 +32,21 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="name1" class="col-sm-3 control-label">姓名</label>
+                    <label for="name1" class="col-sm-3 control-label">被考核人</label>
 
                     <div class="col-sm-8">
-                        <input type="text" class="form-control" id="name1" name="name" placeholder="姓名">
+                   		<select id="use_id" class="form-control select2 "  name="name" style="width:100%" onchange="setRy()">
+                    		<option selected="selected" value="">选择一个人员</option>
+                    	</select>
                     </div>
                 </div>
            		 <div class="form-group">
                     <label for="check_name" class="col-sm-3 control-label">考核人</label>
 
                     <div class="col-sm-8">
-                        <input type="text" class="form-control" id="check_name" name="check_name" placeholder="考核人">
+                   		<select id="check_name" class="form-control select2 "  name="check_name" style="width:100%" >
+                    		<option selected="selected" value="">选择一个人员</option>
+                    	</select>
                     </div>
                 </div>
                 <div class="form-group">
@@ -97,7 +111,8 @@
         </div>
         <!-- /.box-footer -->
     </form>
-
+</div>
+</div>
 </div>
 </section>
 <script>
@@ -105,6 +120,14 @@
     var projectOptions = '${projectOptions?default(0)}',options=0;
     if(projectOptions != 0){
     	options = JSON.parse(projectOptions);
+    }
+    var users = '${users?default(0)}',use=0;
+    if(users != 0){
+    	use = JSON.parse(users);
+    }
+    var checkers = '${checker?default(0)}',check=0;
+    if(checkers != 0){
+    	check = JSON.parse(checkers);
     }
     $(function() {
         //初始化控件
@@ -188,7 +211,24 @@
             }
             $(".select2").select2();
         }
+        if(use != 0){
+            for (var i = 0, len = use.length; i < len; i++) {
+                var u = use[i];
+                $('#use_id').append("<option value='" + u.name + "' jid='"+u.jobId+"'>" + u.name + "</option>");
+            }
+            $(".select2").select2();
+        }
+        if(check != 0){
+            for (var i = 0, len = check.length; i < len; i++) {
+                var c = check[i];
+                $('#check_name').append("<option value='" + c.name + "' jid='"+c.jobId+"'>" + c.name + "</option>");
+            }
+            $(".select2").select2();
+        }
     });
+    function setRy(){
+    	$("#duties1").val($("#use_id option:selected").attr("jid"));
+    }
     function checkMX(){
     	var checkId = $("#id").val();
     	if(checkId){
@@ -196,7 +236,7 @@
                 winId:"mx",
                 title:"考核明细录入",
                 width:'1200px',
-                url:basePath+"/dutycheck/checkMX?lx="+$("#duties1 option:selected").val()+"&id="+checkId
+                url:basePath+"/dutycheck/checkMX?lx="+$("#duties1 option:selected").attr("jvalue")+"&id="+checkId
                });
     	}else{
     		modals.info("请先保存结果");
@@ -210,7 +250,7 @@
     			var option;
     			for(var i=0;i<list.length;i++){
     				
-    				option += "<option value='"+list[i].value+"'>"
+    				option += "<option  value='"+list[i].id+"' jvalue='"+list[i].value+"'>"
     				+ list[i].name
     				+ "</option>";
     			}

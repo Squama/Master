@@ -10,6 +10,8 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.hibernate.type.StringType;
+import org.hibernate.type.Type;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSONArray;
 import com.cnpc.framework.base.entity.Dict;
 import com.cnpc.framework.base.entity.Mat;
+import com.cnpc.framework.base.entity.User;
 import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.base.service.BaseService;
 import com.radish.master.entity.CheckDetail;
@@ -47,6 +50,12 @@ public class DutyCheckController {
 	@RequestMapping("/addIndex")
 	public String addIndex(HttpServletRequest request){
 		request.setAttribute("projectOptions", JSONArray.toJSONString(budgetService.getProjectCombobox()));
+		List<User> ul = baseService.findMapBySql("select u.name name ,u.id id , u.job_id jobId from tbl_user u , tbl_org o where u.dept_id = o.id and o.code like 'PROJECT%' ", new Object[]{}, new Type[]{StringType.INSTANCE}, User.class);
+		request.setAttribute("users", JSONArray.toJSONString(ul));
+		
+		List<User> ul1 = baseService.findMapBySql("select u.name name ,u.id id , u.job_id jobId from tbl_user u , tbl_org o where u.dept_id = o.id ", new Object[]{}, new Type[]{StringType.INSTANCE}, User.class);
+		request.setAttribute("checker", JSONArray.toJSONString(ul1));
+		
 		return prefix+"dutycheck_addIndex";
 	}
 	@RequestMapping("/edit")
@@ -90,6 +99,11 @@ public class DutyCheckController {
 		String id = request.getParameter("id");
 		Result r = new Result();
 		if(id==null){
+			String duty = dc.getDuties();
+			if(duty!=null){
+				Dict d = baseService.get(Dict.class, duty);
+				dc.setDuties(d.getValue());
+			}
 			dc.setIsValid("1");
 			String projectid = dc.getProject_id();
 			Project p = baseService.get(Project.class, projectid);
@@ -137,8 +151,8 @@ public class DutyCheckController {
 	@RequestMapping(value="/getRylx",method = RequestMethod.POST)
     @ResponseBody
     public Result getRylx(){
-		List<Dict> d = baseService.findBySql("select * from tbl_dict  where code='PROJECT_ZRYLX'",Dict.class);
-    	List<Dict> list = baseService.findBySql("select * from tbl_dict where parent_id='"+d.get(0).getId()+"'",Dict.class);
+		List<Dict> d = baseService.findBySql("select * from tbl_dict  where code='JOBS'",Dict.class);
+    	List<Dict> list = baseService.findBySql("select * from tbl_dict where parent_id='"+d.get(0).getId()+"' and code like'PROJECT%'",Dict.class);
       	Result r = new Result();
       	r.setData(list);
     	return r;
@@ -160,8 +174,9 @@ public class DutyCheckController {
 	@RequestMapping("/getData")
 	@ResponseBody
 	public List<Map> getData(HttpServletRequest request,DutyCheck dc ){
-		List<Dict> d = baseService.findBySql("select * from tbl_dict  where code='PROJECT_ZRYLX'",Dict.class);
-		List<Dict> rylxs = baseService.findBySql("select * from tbl_dict where parent_id='"+d.get(0).getId()+"'",Dict.class);
+		List<Dict> d = baseService.findBySql("select * from tbl_dict  where code='JOBS'",Dict.class);
+    	List<Dict> rylxs = baseService.findBySql("select * from tbl_dict where parent_id='"+d.get(0).getId()+"' and code like'PROJECT%'",Dict.class);
+		
 		Date check_time = dc.getCheck_time(); 
 		String projectid =  dc.getProject_id();
 		String sql = " ";
@@ -208,8 +223,8 @@ public class DutyCheckController {
 		for(Project p :proList){
 			Map map = new HashMap();
 			
-			List<Dict> d = baseService.findBySql("select * from tbl_dict  where code='PROJECT_ZRYLX'",Dict.class);
-			List<Dict> rylxs = baseService.findBySql("select * from tbl_dict where parent_id='"+d.get(0).getId()+"'",Dict.class);
+			List<Dict> d = baseService.findBySql("select * from tbl_dict  where code='JOBS'",Dict.class);
+	    	List<Dict> rylxs = baseService.findBySql("select * from tbl_dict where parent_id='"+d.get(0).getId()+"' and code like'PROJECT%'",Dict.class);
 			List<Map> gzwpjf = new ArrayList<Map>();
 			for(Dict rylx:rylxs){
 				Map map1 = new HashMap();
@@ -240,8 +255,8 @@ public class DutyCheckController {
 	@RequestMapping("/getTwoXmData")
 	@ResponseBody
 	public List<Map> getTwoXmData(HttpServletRequest request,DutyCheck dc ){
-		List<Dict> d = baseService.findBySql("select * from tbl_dict  where code='PROJECT_ZRYLX'",Dict.class);
-		List<Dict> rylxs = baseService.findBySql("select * from tbl_dict where parent_id='"+d.get(0).getId()+"'",Dict.class);
+		List<Dict> d = baseService.findBySql("select * from tbl_dict  where code='JOBS'",Dict.class);
+    	List<Dict> rylxs = baseService.findBySql("select * from tbl_dict where parent_id='"+d.get(0).getId()+"' and code like'PROJECT%'",Dict.class);
 		Date check_time = dc.getCheck_time(); 
 		String projectid =  dc.getProject_id();
 		String projectid1 = request.getParameter("project_id1");
