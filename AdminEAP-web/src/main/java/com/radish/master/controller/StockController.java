@@ -71,8 +71,12 @@ public class StockController {
     @RefreshCSRFToken
     @RequestMapping(value="/test",method = RequestMethod.GET)
     public String test(HttpServletRequest request){
-        List<StockChannel> list = stockService.getStockChannelOutList("PTEST01","GG100001",500.0);
-        return "stock/stockQuery_list_out";
+        //List<StockChannel> list = stockService.getStockChannelOutList("PTEST01","GG100001",500.0);
+        String sql = "select * from tbl_stock_channel where  mat_id = 'GJ100001'";
+        List<StockChannel> list = baseService.findBySql(sql,StockChannel.class);
+        //stockService.thawStockChannel(list);
+        stockService.getStockChannelFrozenList("402880e860c947ea0160ca0239670000","GG100001",500.0);
+        return "stock/stock_history_list";
     }
 
     @RefreshCSRFToken
@@ -92,18 +96,20 @@ public class StockController {
     @RequestMapping(value="/save",method = RequestMethod.POST)
     @ResponseBody
     public Result save(HttpServletRequest request){
-        Stock stock = new Stock();
+
         String mat_id = request.getParameter("mat_id");
         String project_ID = request.getParameter("project_id");
         String channel_ID = request.getParameter("channel_id");
         String purchase_ID = request.getParameter("purchase_id");
         Double stockNum = Double.valueOf(request.getParameter("stock_Num")).doubleValue();
+        stockService.saveOneStock(mat_id,project_ID,channel_ID,purchase_ID,stockNum);
+        /*Stock stock = new Stock();
         String sql = " select * from tbl_stock where mat_id='"+mat_id+"' and project_ID='"+project_ID+"'";
         List<Stock> list= baseService.findBySql(sql, Stock.class);
         if(list.size()==0){//同一种物料在一个项目下无记录，做新增
             //新增库存记录（入库）
             stock.setProject_id(project_ID);
-            stock.setMat_id(request.getParameter("mat_id"));
+            stock.setMat_id(mat_id);
             stock.setStock_num(stockNum);
             stock.setFrozen_num(0.0);
             stock.setAvailable_num(stockNum);
@@ -124,7 +130,7 @@ public class StockController {
         stockService.saveHistory(project_ID,mat_id,stockNum,"1",purchase_ID,"");
         //更新采购单余量
         stockService.savePurchaseChange(purchase_ID,mat_id,stockNum,"1");
-
+*/
         Result r = new Result();
         r.setSuccess(true);
         return r;

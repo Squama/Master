@@ -24,10 +24,15 @@ public class Dispatch extends BaseEntity{
     @Column(name="purchase_id")
 	private String purchaseID;
 	
-	@Header(name="项目ID")
-    @Column(name="project_id")
-	private String projectID;
-	
+	@Header(name="物料源库项目ID")
+    @Column(name="source_project_id")
+	private String sourceProjectID;
+
+
+	@Header(name="目标库项目ID")
+	@Column(name="target_project_id")
+	private String targetProjectID;
+
 	@Header(name="调度单状态")
     @Column(name="status")
 	private String status;
@@ -40,12 +45,20 @@ public class Dispatch extends BaseEntity{
 		this.purchaseID = purchaseID;
 	}
 
-	public String getProjectID() {
-		return projectID;
+	public String getSourceProjectID() {
+		return sourceProjectID;
 	}
 
-	public void setProjectID(String projectID) {
-		this.projectID = projectID;
+	public void setSourceProjectID(String sourceProjectID) {
+		this.sourceProjectID = sourceProjectID;
+	}
+
+	public String getTargetProjectID() {
+		return targetProjectID;
+	}
+
+	public void setTargetProjectID(String targetProjectID) {
+		this.targetProjectID = targetProjectID;
 	}
 
 	public String getStatus() {

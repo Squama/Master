@@ -185,17 +185,6 @@
             }
         });
     });
-    function getMat(){
-        mat_id = $("#mat_name").val();
-        ajaxPost(basePath+"/stock/getMateriel?mat_id="+mat_id,null,function(data){
-            if(data.data){
-                var m = data.data;
-                $("#mat_standard").val(m.mat_standard);
-                $("#unit").val(m.unit);
-                $("#mat_id").val(mat_id);
-            }
-        })
-    }
     function getChannelByPurchase(){
         mat_id = $("#mat_name").val();
         ajaxPost(basePath+"/stock/getChannelByPurchase?mat_id="+mat_id+"&purchase_id="+purchase_ID,null,function(data){
@@ -220,7 +209,7 @@
             if(data.data){
                 var p = data.data[1];
                 $("#mat_project_name").val(p.projectName);
-                project_id = p.projectCode;
+                project_id = p.id;
             }
             /*初始化物料选择框*/
             if(data.data[0] != "[]"){

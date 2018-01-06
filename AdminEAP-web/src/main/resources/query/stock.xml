@@ -4,11 +4,11 @@
 	<query id="stock_list" key="id" tableName="库存信息列表" widthType="px">
 			<sql>
 		        <![CDATA[
-		          SELECT s.ID  id, s.project_ID projectID, p.project_name projectName,
+		          SELECT s.ID  id, p.project_code projectID, p.project_name projectName,
                   s.mat_ID matID, m.mat_name matName, s.stock_Num stockNum,u.`name` storagePersonName, 
                   s.storage_time storageTime, s.useType useType FROM
                   tbl_stock s, tbl_materiel m, tbl_project p, tbl_user u
-                  WHERE 1=1 and s.project_ID = p.project_code AND s.mat_ID = m.mat_number AND s.storage_person_ID = u.id
+                  WHERE 1=1 and s.project_ID = p.id AND s.mat_ID = m.mat_number AND s.storage_person_ID = u.id
 		        ]]>
 		    </sql>
 		    <column key="rowIndex" header="序号" width="50" allowSort="false"/>
