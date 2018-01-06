@@ -313,11 +313,11 @@ public class ModelOperationController {
             String basePath = request.getRealPath("/");
             String fileName = modelData.getKey() + ".bpmn20.model.zip";
             String zipFileName = DIR_PATH + File.separator + fileName;
-            File file = new File(basePath + File.separator + zipFileName);
+            File file = new File(/*basePath + File.separator + */zipFileName);
             if (file.exists()) {
                 file.delete();
             }
-            String zipPath = FileUtil.generateZipFile(basePath, zipFileName, xml.getData().toString(),
+            String zipPath = FileUtil.generateZipFile("", zipFileName, xml.getData().toString(),
                     image.getData().toString());
             InputStream inputStream = new FileInputStream(zipPath);
             ZipInputStream zipInputStream = new ZipInputStream(inputStream);
@@ -465,7 +465,7 @@ public class ModelOperationController {
 
                 ByteArrayInputStream in = new ByteArrayInputStream(bpmnBytes);
                 String fileName = model.getKey() + ".model.bpmn";
-                String realPath = dirPath /*+ File.separator */+ DIR_PATH + File.separator + fileName;
+                String realPath = /*dirPath + File.separator + */DIR_PATH + File.separator + fileName;
                 File file = new File(realPath);
                 if (file.exists()) {
                     file.delete();
@@ -476,7 +476,7 @@ public class ModelOperationController {
             } else {
                 byte[] pngBytes = repositoryService.getModelEditorSourceExtra(modelId);
                 String fileName = model.getKey() + ".model.png";
-                String realPath = dirPath /*+ File.separator*/ + DIR_PATH + File.separator + fileName;
+                String realPath = /*dirPath + File.separator + */DIR_PATH + File.separator + fileName;
                 File file = new File(realPath);
                 if (file.exists()) {
                     file.delete();

@@ -8,6 +8,7 @@ import java.util.List;
 import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.base.service.BaseService;
 import com.radish.master.entity.Budget;
+import com.radish.master.entity.Dispatch;
 import com.radish.master.entity.Purchase;
 import com.radish.master.entity.PurchaseDet;
 import com.radish.master.pojo.MatMap;
@@ -42,4 +43,8 @@ public interface PurchaseService extends BaseService{
     public Result startPurchaseApplyFlow(Purchase purchase, String processDefinitionKey);
     
     public List<PurchaseDet> getPurchaseDetList(String id);
+    
+    Dispatch getDispatchByProAndPur(String sourceProjectID, String targetProjectID, String purchaseID);
+    
+    public void executeDispatch(String projectID, String id, String matID, String num);
 }

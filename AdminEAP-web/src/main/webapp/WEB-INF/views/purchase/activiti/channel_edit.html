@@ -1,0 +1,120 @@
+<div class="modal-body">
+	<section class="content">
+	    <div class="row">
+	        <div class="col-xs-12">
+	            <form id="purchase-det-form" name="purchase-det-form" class="form-horizontal">
+			        <input type="hidden" name="id">
+		            <div class="box-body">
+		                <!-- 内容 -->
+		                <div class="col-md-12">
+		                    <div class="form-group">
+		                        <label class="col-sm-3 control-label">项目名称<span style="color:red">*</span></label>
+		                        <div class="col-sm-5">
+		                            <input type="text" class="form-control" id="projectName" name="projectName" readonly="readonly">
+		                        </div>
+		                    </div> 
+		                    <div class="form-group">
+		                        <label class="col-sm-3 control-label">预算名称<span style="color:red">*</span></label>
+		                        <div class="col-sm-5">
+		                            <input type="text" class="form-control" id="budgetName" name="budgetName" readonly="readonly">
+		                        </div>
+		                    </div>
+		                    <div class="form-group">
+		                        <label class="col-sm-3 control-label">申请单<span style="color:red">*</span></label>
+		                        <div class="col-sm-5">
+		                            <input type="text" class="form-control" id="purchaseName" name="purchaseName" readonly="readonly">
+		                        </div>
+		                    </div>
+		                </div>
+		            </div>
+			        <div class="box box-success">
+			            <div class="dataTables_filter" id="searchDiv" style="text-align:center;height:1px;">
+	                       <input type="search" name="purchaseID" class="form-control" operator="eq" style="display:none;">
+	                       <div class="btn-group">
+	                           <button type="button" class="btn btn-primary" data-btn-type="search" id="refresh" style="display:none;">查询</button>
+	                       </div>
+	                    </div>
+			            <div class="box-body">
+			                <table id=purchase_det_table class="table table-bordered table-striped table-hover">
+			                </table>
+			            </div>
+			        </div>
+		        </form>
+	        </div>
+	    </div>
+	</section>
+</div>
+
+<script>
+    var purchaseDetTable, initData={};
+    var purchaseID = "${purchaseID?default(0)}";
+    
+    var workflowCtrl = {
+        thisForm: null,
+        init: function (formId,businessKey) {
+            
+            this.thisForm = $("#" + formId).form({baseEntity: false});
+            initData.purchaseID = purchaseID;
+            this.thisForm.initFormData(initData);
+            initPurchaseDetChannel();
+            this.thisForm.initComponent();
+            return this.thisForm;
+        },
+        showChannel: function(that, value){
+            var rowId = $(that).parent().parent().attr('id');
+            modals.openWin({
+                winId: "purchaseDetChannelWin",
+                width: "700px",
+                url: basePath + "/purchase/apply/choose/"+rowId,
+                title: "选择渠道"
+            });
+        },
+        deleteChannel: function(that, value){
+            var rowId = $(that).parent().parent().attr('id');
+        	ajaxPost(basePath + '/purchase/apply/deletechannelstock', {id:rowId}, function (data) {
+                if (data.success) {
+                   purchaseDetTable.reloadRowData(id);
+                } else {
+                   modals.error(data.message);
+                }
+            });
+        }
+    }
+    
+    function initPurchaseDetChannel(){
+    	purchaseDetTable = new CommonTable("purchase_det_table", "purchase_det_channel_edit_list", "searchDiv", {
+            "ordering" : false,
+            "lengthChange": false,
+            "displayLength": 20,
+            "scrollY": "300px",
+            "scrollCollapse": true
+        });
+        
+        //编辑回填
+        if(purchaseID!="0"){
+            ajaxPost(basePath+"/purchase/apply/getbyid",{purchaseID:purchaseID},function(data){
+                workflowCtrl.thisForm.initFormData(data.data);
+                console.log($('purchaseID').val());
+            })
+        } 
+    }
+    
+    function fnRenderChannel(value, type, rowObj) {
+    	
+    	if(rowObj.stockType == "2"){
+    		return "<a href='javascript:void(0)' onclick='workflowCtrl.deleteChannel(this,\"" + rowObj.id + "\")'>取消调度</a>";
+    	}
+    	
+        if(value == null || value == ""){
+            return "<a href='javascript:void(0)' onclick='workflowCtrl.showChannel(this,\"" + rowObj.id + "\")'>选择供应商</a>";
+        }else{
+        	return "<a href='javascript:void(0)' onclick='workflowCtrl.showChannel(this,\"" + rowObj.id + "\")'>更换供应商</a>";
+        }
+        
+    }
+    
+    $(function(){
+    	workflowCtrl.init("purchase-det-form", purchaseID);
+    })
+    
+</script>

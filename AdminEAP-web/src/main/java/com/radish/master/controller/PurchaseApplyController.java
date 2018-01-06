@@ -12,6 +12,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -44,7 +45,7 @@ public class PurchaseApplyController {
     
     @Resource
     private PurchaseService purchaseService;
-
+    
     @RequestMapping(value="/list",method = RequestMethod.GET)
     public String list(){
         return "purchase/apply/apply_list";
@@ -92,8 +93,6 @@ public class PurchaseApplyController {
     @RequestMapping(method = RequestMethod.POST, value="/save")
     @ResponseBody
     public Result save(Purchase purchase, HttpServletRequest request){
-        
-        
         if(StrUtil.isEmpty(purchase.getId())){
             purchase.setOperator(SecurityUtil.getUserId());
             purchase.setOperateTime(new Date());
@@ -140,6 +139,77 @@ public class PurchaseApplyController {
     @ResponseBody
     public Result start(String id) {
         return purchaseService.startPurchaseApplyFlow(purchaseService.get(Purchase.class, id),"purchaseApply");
+    }
+    
+    @RequestMapping(value = "/getbyid")
+    @ResponseBody
+    private Result getDetByID(PurchaseDet purchaseDet, HttpServletRequest request) {
+    	Map<String, String> map = new HashMap<String, String>();
+    	Purchase purchase = purchaseService.get(Purchase.class, purchaseDet.getPurchaseID());
+    	Project project = purchaseService.get(Project.class, purchase.getProjectID());
+    	Budget budget = purchaseService.getBudgetByNo(purchase.getBudgetNo());
+    	
+    	map.put("projectName", project.getProjectName());
+    	map.put("budgetName", budget.getBudgetName());
+    	map.put("purchaseName", purchase.getPurchaseName());
+    	map.put("purchaseID", purchase.getId());
+    	
+        return new Result(true, map);
+    }
+    
+    @RequestMapping(value="/channeledit/{id}",method = RequestMethod.GET)
+    public String channelEdit(@PathVariable("id") String id, HttpServletRequest request){
+        request.setAttribute("purchaseID", id);
+        
+        return "purchase/activiti/channel_edit";
+    }
+    
+    @RequestMapping(value="/choose/{id}",method = RequestMethod.GET)
+    public String channelChoose(@PathVariable("id") String id, HttpServletRequest request){
+        request.setAttribute("purchaseDetID", id);
+        PurchaseDet det = purchaseService.get(PurchaseDet.class, id);
+        request.setAttribute("matID", det.getMatNumber());
+        request.setAttribute("count", det.getQuantity());
+        request.setAttribute("dispatchStatus", det.getDispatchStatus());
+        
+        return "purchase/activiti/choose_channel";
+    }
+    
+    @VerifyCSRFToken
+    @RequestMapping(method = RequestMethod.POST, value = "/savechannel")
+    @ResponseBody
+    private Result saveChannel(PurchaseDet purchaseDet, HttpServletRequest request) {
+    	PurchaseDet purchaseDetOld = purchaseService.get(PurchaseDet.class, purchaseDet.getId());
+        
+        //budgetTxOld.setSupplier(budgetTx.getSupplier());
+        //budgetTxOld.setPrice(budgetTx.getPrice());
+    	
+    	purchaseDetOld.setChannelID(purchaseDet.getChannelID());
+    	purchaseDetOld.setChannelName(purchaseDet.getChannelName());
+    	purchaseDetOld.setPrice(purchaseDet.getPrice());
+    	purchaseDetOld.setStockType("1");
+    	purchaseDetOld.setUpdateDateTime(new Date());
+        
+    	purchaseService.save(purchaseDetOld);
+        
+        return new Result(true);
+    }
+    
+    @VerifyCSRFToken
+    @RequestMapping(method = RequestMethod.POST, value = "/savechannelstock")
+    @ResponseBody
+    private Result saveChannelStock(String projectID, String id, String matID, String num, HttpServletRequest request) {
+    	purchaseService.executeDispatch(projectID, id, matID, num);
+    	
+        return new Result(true);
+    }
+    
+    @RequestMapping(method = RequestMethod.POST, value="/validatechannel")
+    @ResponseBody
+    public Result validateChannel(String id, HttpServletRequest request){
+        PurchaseDet purchaseDet = purchaseService.get(PurchaseDet.class, id);
+        purchaseService.delete(purchaseDet);
+        return new Result(false, "未编辑完");
     }
     
 }

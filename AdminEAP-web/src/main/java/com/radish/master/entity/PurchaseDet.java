@@ -69,6 +69,10 @@ public class PurchaseDet extends BaseEntity {
     @Header(name = "存储状态")
     @Column(name = "status")
     private String status;
+    
+    @Header(name = "已有部分被调度标识")
+    @Column(name = "dispatch_status")
+    private String dispatchStatus;
 
     public String getPurchaseID() {
         return purchaseID;
@@ -181,4 +185,12 @@ public class PurchaseDet extends BaseEntity {
     public void setStatus(String status) {
         this.status = status;
     }
+
+	public String getDispatchStatus() {
+		return dispatchStatus;
+	}
+
+	public void setDispatchStatus(String dispatchStatus) {
+		this.dispatchStatus = dispatchStatus;
+	}
 }

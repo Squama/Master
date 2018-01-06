@@ -1,0 +1,24 @@
+<div class="form-group">
+    <label class="control-label col-xs-3">审批意见</label>
+    <div class="col-xs-7">
+        <textarea name="suggestion" id="suggestion" placeholder="请填写审批意见" class="form-control">已完成</textarea>
+    </div>
+</div>
+<script>
+    var workflowCtrl = {
+        thisForm: null,
+        init: function (formId,businessKey) {
+            this.thisForm = $("#" + formId).form({baseEntity: false});
+            this.thisForm.initComponent();
+            return this.thisForm;
+        },
+        validators: function () {
+            var fields = {
+                suggestion: {validators: {notEmpty: {message: "请选择审批意见"}}}
+
+            };
+            return fields;
+        }
+    }
+
+</script>
