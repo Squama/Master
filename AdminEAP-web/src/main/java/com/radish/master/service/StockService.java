@@ -38,5 +38,6 @@ public interface StockService extends BaseService {
     //获取物料调度列表
     //参数：String projectCode：项目编号,String matNumber：物料编号,Double stockNum：调度数量
     List<StockChannel> getStockChannelFrozenList(String projectID,String matNumber,Double outNum);
+    //库存解冻
     Boolean thawStockChannel(List<StockChannel> list);
 }
