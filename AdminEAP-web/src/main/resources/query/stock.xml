@@ -4,7 +4,7 @@
 	<query id="stock_list" key="id" tableName="库存信息列表" widthType="px">
 			<sql>
 		        <![CDATA[
-		          SELECT s.ID  id, p.project_code projectID, p.project_name projectName,
+		          SELECT s.ID  id, p.project_code projectCode,p.id projectId, p.project_name projectName,
                   s.mat_ID matID, m.mat_name matName, s.stock_Num stockNum,u.`name` storagePersonName, 
                   s.storage_time storageTime, s.useType useType FROM
                   tbl_stock s, tbl_materiel m, tbl_project p, tbl_user u
@@ -13,7 +13,7 @@
 		    </sql>
 		    <column key="rowIndex" header="序号" width="50" allowSort="false"/>
 	        <column key="id" header="库存编号" classType="String" allowSort="true" width="150"/>
-	        <column key="projectID" header="所属项目编号" classType="String" width="150"/>
+	        <column key="projectCode" header="所属项目编号" classType="String" width="150"/>
 		    <column key="projectName" header="所属项目" classType="String" allowSort="true" width="150"/>
 	        <column key="matID" header="物料编号" classType="String" width="150" />
 			<column key="matName" header="物料名" classType="String" width="150"/>
@@ -74,6 +74,27 @@
 		<column key="projectName" header="所属项目名" classType="String"  width="150" />
 		<column key="budgetNo" header="所属预算编号" classType="String"  width="150" />
 	</query>
-
+	
+	<query id="dispatchDetail_list" key="id" tableName="调度单明细" widthType="px">
+			<sql>
+		        <![CDATA[
+		          SELECT 
+		          dd.id id ,dd.dispatch_id dispatch_id,dd.quantity quantity ,c.mat_Id matNumber ,c.mat_name matName , c.supplier supplier ,
+		          c.price price ,c.area area ,m.unit unit
+		          FROM
+                  tbl_channel c ,tbl_dispatch_detail dd ,tbl_materiel m
+                  WHERE 1=1 and dd.channel_id = c.id and m.mat_number = c.mat_ID 
+		        ]]>
+		    </sql>
+		    <column key="rowIndex" header="序号" width="50" allowSort="false"/>
+	        <column key="id" header="调度单明细id" classType="String" hidden="true"/>
+	        <column key="matName" header="物料名称" classType="String" width="150" allowSort="true"/>
+		    <column key="matNumber" header="物料编号" classType="String"  width="150"/>
+	        <column key="unit" header="单位" classType="String" width="150"/>
+	        <column key="supplier" header="供应商" classType="String" width="150" />
+			<column key="price" header="价格" classType="java.lang.Double" width="150"/>
+	        <column key="quantity" header="数量" classType="String" width="150"/>
+	        <column key="area" header="地区" classType="String" width="150"/>
+	</query>
 
 </queryContext>

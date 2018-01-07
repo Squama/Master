@@ -16,7 +16,6 @@
         <div class="col-xs-12">
             <div class="nav-tabs-custom">
                 <ul class="nav nav-tabs pull-right">
-                    <li><a href="#tab-content-edit" data-toggle="tab" id="nav-tab-detail"><i class="fa fa-edit"></i></a></li>
                     <li class="active"><a href="#tab-content-list" data-toggle="tab" id="nav-tab-list"><i class="fa fa-list-ul"></i></a></li>
                     <li class="pull-left header"><i class="fa fa-user"></i><small>库存列表</small></li>
                 </ul>
@@ -40,6 +39,7 @@
 			                    <div class="btn-group">
 			                        <button type="button" class="btn btn-primary" data-btn-type="search">查询</button>
 			                        <button type="button" class="btn btn-default" data-btn-type="reset">重置</button>
+			                        <button type="button" class="btn btn-primary" data-btn-type="dispatchIn">调度入库</button>
                                     <button type="button" class="btn btn-primary" data-btn-type="dispatch">调度出库</button>
 			                    </div>
 			                </div>
@@ -77,26 +77,26 @@
         $("button[data-btn-type]").click(function () {
             var action = $(this).data("btn-type");
             var rowId = stockQueryTableD.getSelectedRowId();
-            stockQueryTableD.getSelectedRowData()
+            var row  = stockQueryTableD.getSelectedRowData()
             switch (action) {
                 case "dispatch":
                 	if(!rowId){
                         modals.info('请选择要调度的行');
                         return false;
                     }
-                    modals.openWin({
+                     modals.openWin({
                         winId: winId,
-                        title: '物料库存调度【' + stockQueryTableD.getSelectedRowData().project_id + '】',
+                        title: '物料库存调度出库【' + stockQueryTableD.getSelectedRowData().project_id + '】',
                         width: '900px',
-                        url: basePath + "/stock/dispatch?id=" + rowId
-                    });
+                        url: basePath + "/stock/dispatch?id=" + rowId+"&lx=ck&projectId="+row.projectId
+                    }); 
                     break;
-                case "dispatch28256":
+                case "dispatchIn":
                     modals.openWin({
                         winId:winId,
-                        title:'调度出库',
+                        title:'物料库存调度入库',
                         width:'900px',
-                        url:basePath+"/stock/dispatch"
+                        url:basePath+"/stock/dispatch?id="+rowId+"&lx=rk&projectId="+row.projectId
                     });
                     break;
             }

@@ -1,6 +1,7 @@
 package com.radish.master.service;
 
 
+import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.base.service.BaseService;
 import com.radish.master.entity.Project;
 import com.radish.master.entity.*;
@@ -40,4 +41,11 @@ public interface StockService extends BaseService {
     List<StockChannel> getStockChannelFrozenList(String projectID,String matNumber,Double outNum);
     //库存解冻
     Boolean thawStockChannel(List<StockChannel> list);
+    /**
+		 * 调度单入库 lx=rk/出库lx=ck 
+		 * @author 王志浩
+		 * @创建时间 2018年1月7日 下午4:39:38
+		 * @return
+		 */
+    Result doDispatch(String lx,String dispatchId);
 }

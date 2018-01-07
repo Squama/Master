@@ -11,6 +11,8 @@ import com.radish.master.pojo.Options;
 import com.radish.master.pojo.ResultObj;
 import com.radish.master.service.StockService;
 
+import jdk.nashorn.internal.ir.RuntimeNode.Request;
+
 import org.hibernate.type.StringType;
 import org.hibernate.type.Type;
 import org.springframework.stereotype.Controller;
@@ -318,15 +320,63 @@ public class StockController {
         request.setAttribute("purchaseOptions", JSONArray.toJSONString(stockService.getPurchaseCombobox("1")));
         return "stock/stock_add";
     }
-
+    /**
+		 * 物料库存调度跳转页面
+		 * @author 王志浩
+		 * @创建时间 2018年1月7日 下午2:37:07
+		 * @return
+		 */
     @RefreshCSRFToken
     @RequestMapping(value="/dispatch",method = RequestMethod.GET)
     public String edit(String id,HttpServletRequest request){
         request.setAttribute("id", id);
-        request.setAttribute("purchaseOptions", JSONArray.toJSONString(stockService.getPurchaseCombobox("2")));
+        String lx = request.getParameter("lx");
+        String projectId = request.getParameter("projectId");
+        if("ck".equals(lx)){//出库，项目id为根项目
+        	List<Options> ld = baseService.findMapBySql(" select d.id value,p.purchase_name data from tbl_dispatch d ,tbl_purchase p where d.purchase_id = p.id and d.status<>'60' and p.status = '20' and d.source_project_id ='"+projectId+"'", new Object[]{}, new Type[]{StringType.INSTANCE},Options.class);
+        	request.setAttribute("purchaseOptions", JSONArray.toJSONString(ld));
+        }else if("rk".equals(lx)){//入库，项目id为目标项目
+        	List<Options> ld = baseService.findMapBySql(" select d.id value,p.purchase_name data from tbl_dispatch d ,tbl_purchase p where d.purchase_id = p.id and d.status<>'60' and p.status = '20' and d.target_project_id ='"+projectId+"'", new Object[]{}, new Type[]{StringType.INSTANCE},Options.class);
+        	request.setAttribute("purchaseOptions", JSONArray.toJSONString(ld));
+        }
+        request.setAttribute("lx", lx);
         return "stock/stock_dispatch";
     }
-
+    /**
+		 * 
+		 * @author 调度单数据
+		 * @创建时间 2018年1月7日 下午2:37:35
+		 * @return
+		 */
+    @RequestMapping("/getFormAndList")
+    @ResponseBody
+    public Map<String,String> getFormAndList(HttpServletRequest request){
+    	String dispatchId = request.getParameter("dispatchId");
+    	Dispatch d = baseService.get(Dispatch.class, dispatchId);
+    	//获取目标及来源项目名称
+    	String targetProjectID = d.getTargetProjectID();
+    	Project mb = baseService.get(Project.class, targetProjectID);
+    	String sourceProjectID = d.getSourceProjectID();
+    	Project ly = baseService.get(Project.class, sourceProjectID);
+    	Map<String,String> map = new HashMap<String, String>();
+    	map.put("ly", ly.getProjectName());
+    	map.put("mb", mb.getProjectName());
+    	return map;
+    }
+    /**
+		 * 调度单入库 lx=rk/出库lx=ck 
+		 * @author 王志浩
+		 * @创建时间 2018年1月7日 下午4:35:36
+		 * @return
+		 */
+    @RequestMapping("/doDispatch")
+    @ResponseBody
+    public Result doDispatch(HttpServletRequest request){
+    	String lx = request.getParameter("lx");//调度类型
+    	String dispatchId = request.getParameter("dispatchId");//调度单id
+    	Result r = stockService.doDispatch(lx, dispatchId);
+    	return r;
+    }
     @RefreshCSRFToken
     @RequestMapping(value="/out",method = RequestMethod.GET)
     public String out(String id,HttpServletRequest request){

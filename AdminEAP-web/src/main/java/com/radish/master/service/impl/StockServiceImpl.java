@@ -1,6 +1,7 @@
 package com.radish.master.service.impl;
 
 
+import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.base.service.impl.BaseServiceImpl;
 import com.cnpc.framework.utils.SecurityUtil;
 import com.radish.master.entity.*;
@@ -350,5 +351,32 @@ public class StockServiceImpl extends BaseServiceImpl implements StockService {
             update(stock);
         }
         return true;
+    }
+    /**
+		 * 调度单入库 lx=rk/出库lx=ck 
+		 * dispatchId 调度单id
+		 * @author 王志浩
+		 * @创建时间 2018年1月7日 下午4:42:33
+		 * @return
+		 */
+    public Result doDispatch(String lx,String dispatchId){
+    	Dispatch d = baseDao.get(Dispatch.class, dispatchId);
+    	String sql = " select * from tbl_dispatch_detail where dispatch_id ='"+dispatchId+"'";
+    	//来源库id
+    	String lyid = d.getSourceProjectID();
+    	//目标库id
+    	String mbid = d.getTargetProjectID();
+    	//调度单明细list
+    	List<DispatchDetail> mxList = findBySql(sql, DispatchDetail.class);
+    	//遍历明细，执行相关入库出库操作操作
+    	for(DispatchDetail mx : mxList){
+    		
+    	}
+    	//申请单信息
+    	String purchase_id = d.getPurchaseID();
+    	Purchase p = baseDao.get(Purchase.class,purchase_id);
+    	
+    	
+    	return new Result();
     }
 }
