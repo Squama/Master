@@ -9,20 +9,16 @@
 		<input type="hidden" name="id">
 		<div class="box-body">
 			<div class="col-md-6">
-
-				<div class="form-group">
-					<label class="col-sm-3 control-label">调度单编号<span style="color:#ff0000">*</span></label>
-					<div class="col-sm-8">
-						<select id="purchase_id" class="form-control select2"  style="width:100%">
-							<option selected="selected" value=" ">选择一个调度单</option>
-						</select>
-					</div>
-				</div>
-
 				<div class="form-group">
 					<label for="dq_project" class="col-sm-3 control-label">来源项目库</label>
 					<div class="col-sm-8">
 						<input type="text"  readonly="readonly"  class="form-control" id="dq_project" name="project_name" placeholder="- - - 自动生成 - - -">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-3 control-label">调度单编号</label>
+					<div class="col-sm-8">
+						<input id="purchase_id" class="form-control"  style="width:100%" readonly="readonly" >
 					</div>
 				</div>
 			</div>
@@ -61,52 +57,40 @@
 <script>
     //tableId,queryId,conditionContainer
     var form =null;
-    var id="${id?default(0)}";
+    var dispatchId="${dispatchId?default(0)}";
     var lx="${lx?default(0)}";
-    var projectOptions = '${purchaseOptions?default(0)}',options=0;
-    if(projectOptions != 0){
-        options = JSON.parse(projectOptions);
-    }
+    var ly="${ly?default(0)}";
+    var mb="${mb?default(0)}";
+    var pname="${pname?default(0)}";
     $(function() {
     	if(lx=="ck"){
     		$(".modal-title").text("库存物料出库");
     	}else if(lx="rk"){
     		$(".modal-title").text("库存物料入库");
     	}
-        if(options != 0){
-            for (var i = 0, len = options.length; i < len; i++) {
-                var option = options[i];
-                $('#purchase_id').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
-            }
-            $(".select2").select2();
-        }
         //初始化控件
         form=$("#stock-form").form();
         form.initComponent();
-        
-        $("#purchase_id").change(function(){
-            getFormAndList();
+        $("#dq_project").val(ly);
+        $("#mb_project").val(mb);
+        $("#purchase_id").val(pname);
+        $("#dispatch_id1").val(dispatchId);
+        var stockQueryTableS = new CommonTable("dispatchDetail_table", "dispatchDetail_list", "searchDiv1", null);
+       	//调度点击监听
+        $("button[data-btn-type]").click(function () {
+            var action = $(this).data("btn-type");
+            switch (action) {
+                case "doDis":
+                		ajaxPost(basePath+"/stock/doDispatch?dispatchId="+dispatchId+"&lx="+lx,null,function(data){
+                			modals.info("快去写后台代码。");
+                        }) 
+                    break;
+            }
         });
     });
-    $("#dispatch_id1").val("null1");
-    var stockQueryTableS = new CommonTable("dispatchDetail_table", "dispatchDetail_list", "searchDiv1", null);
-   	//调度点击监听
-    $("button[data-btn-type]").click(function () {
-        var action = $(this).data("btn-type");
-        switch (action) {
-            case "doDis":
-            	if($("#purchase_id option:selected").val()){//调度单id
-            		ajaxPost(basePath+"/stock/doDispatch?dispatchId="+$("#purchase_id option:selected").val()+"&lx="+lx,null,function(data){
-            			modals.info("快去写后台代码。");
-                    }) 
-            	}else{
-            		modals.info('请选择一张调度单');
-            	}
-                break;
-        }
-    });
     
-    function getFormAndList(){
+    
+    /* function getFormAndList(){
         var dispatchId = $("#purchase_id option:selected").val();
         if(dispatchId){
         	$("#dispatch_id1").val(dispatchId);
@@ -121,6 +105,6 @@
         }
         stockQueryTableS.reloadData();
        
-    }
+    } */
 
 </script>

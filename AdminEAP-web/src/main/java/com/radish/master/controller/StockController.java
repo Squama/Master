@@ -49,14 +49,23 @@ public class StockController {
     @RefreshCSRFToken
     @RequestMapping(value="/list_dispatch",method = RequestMethod.GET)
     public String dispatch(HttpServletRequest request){
-    	List st = baseService.findMapBySql("select id value, id data from tbl_stock", new Object[]{}, new Type[]{StringType.INSTANCE}, Options.class);
+    	List dd = baseService.findMapBySql("select d.id value, p.purchase_name data from tbl_dispatch d , tbl_purchase p where d.purchase_id = p.id and d.status='10'", new Object[]{}, new Type[]{StringType.INSTANCE}, Options.class);
     	List xm = baseService.findMapBySql("select id value, project_name data from tbl_project", new Object[]{}, new Type[]{StringType.INSTANCE}, Options.class);
-    	List mat = baseService.findMapBySql("select mat_number value, mat_number data from tbl_materiel", new Object[]{}, new Type[]{StringType.INSTANCE}, Options.class);
-
-    	request.setAttribute("st", JSONArray.toJSONString(st));
+    	
+    	request.setAttribute("dd", JSONArray.toJSONString(dd));
     	request.setAttribute("xm", JSONArray.toJSONString(xm));
-    	request.setAttribute("mat", JSONArray.toJSONString(mat));
         return "stock/stockQuery_list_dispatch";
+    }
+    
+    @RefreshCSRFToken
+    @RequestMapping(value="/list_dispatch_rk",method = RequestMethod.GET)
+    public String dispatchRk(HttpServletRequest request){
+    	List dd = baseService.findMapBySql("select d.id value, p.purchase_name data from tbl_dispatch d , tbl_purchase p where d.purchase_id = p.id and d.status='20'", new Object[]{}, new Type[]{StringType.INSTANCE}, Options.class);
+    	List xm = baseService.findMapBySql("select id value, project_name data from tbl_project", new Object[]{}, new Type[]{StringType.INSTANCE}, Options.class);
+    	
+    	request.setAttribute("dd", JSONArray.toJSONString(dd));
+    	request.setAttribute("xm", JSONArray.toJSONString(xm));
+        return "stock/stockQuery_list_dispatchRk";
     }
 
     @RefreshCSRFToken
@@ -329,39 +338,17 @@ public class StockController {
     @RefreshCSRFToken
     @RequestMapping(value="/dispatch",method = RequestMethod.GET)
     public String edit(String id,HttpServletRequest request){
-        request.setAttribute("id", id);
+        request.setAttribute("dispatchId", id);
         String lx = request.getParameter("lx");
-        String projectId = request.getParameter("projectId");
-        if("ck".equals(lx)){//出库，项目id为根项目
-        	List<Options> ld = baseService.findMapBySql(" select d.id value,p.purchase_name data from tbl_dispatch d ,tbl_purchase p where d.purchase_id = p.id and d.status<>'60' and p.status = '20' and d.source_project_id ='"+projectId+"'", new Object[]{}, new Type[]{StringType.INSTANCE},Options.class);
-        	request.setAttribute("purchaseOptions", JSONArray.toJSONString(ld));
-        }else if("rk".equals(lx)){//入库，项目id为目标项目
-        	List<Options> ld = baseService.findMapBySql(" select d.id value,p.purchase_name data from tbl_dispatch d ,tbl_purchase p where d.purchase_id = p.id and d.status<>'60' and p.status = '20' and d.target_project_id ='"+projectId+"'", new Object[]{}, new Type[]{StringType.INSTANCE},Options.class);
-        	request.setAttribute("purchaseOptions", JSONArray.toJSONString(ld));
-        }
         request.setAttribute("lx", lx);
+        Dispatch d = baseService.get(Dispatch.class, id);
+        Project ly = baseService.get(Project.class,d.getSourceProjectID());
+        Project mb = baseService.get(Project.class, d.getTargetProjectID());
+        Purchase p = baseService.get(Purchase.class, d.getPurchaseID());
+        request.setAttribute("ly", ly.getProjectName());
+        request.setAttribute("mb", mb.getProjectName());
+        request.setAttribute("pname",p.getPurchaseName());
         return "stock/stock_dispatch";
-    }
-    /**
-		 * 
-		 * @author 调度单数据
-		 * @创建时间 2018年1月7日 下午2:37:35
-		 * @return
-		 */
-    @RequestMapping("/getFormAndList")
-    @ResponseBody
-    public Map<String,String> getFormAndList(HttpServletRequest request){
-    	String dispatchId = request.getParameter("dispatchId");
-    	Dispatch d = baseService.get(Dispatch.class, dispatchId);
-    	//获取目标及来源项目名称
-    	String targetProjectID = d.getTargetProjectID();
-    	Project mb = baseService.get(Project.class, targetProjectID);
-    	String sourceProjectID = d.getSourceProjectID();
-    	Project ly = baseService.get(Project.class, sourceProjectID);
-    	Map<String,String> map = new HashMap<String, String>();
-    	map.put("ly", ly.getProjectName());
-    	map.put("mb", mb.getProjectName());
-    	return map;
     }
     /**
 		 * 调度单入库 lx=rk/出库lx=ck 
@@ -377,6 +364,8 @@ public class StockController {
     	Result r = stockService.doDispatch(lx, dispatchId);
     	return r;
     }
+    
+    
     @RefreshCSRFToken
     @RequestMapping(value="/out",method = RequestMethod.GET)
     public String out(String id,HttpServletRequest request){
