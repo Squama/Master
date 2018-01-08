@@ -41,11 +41,14 @@ public interface StockService extends BaseService {
     List<StockChannel> getStockChannelFrozenList(String projectID,String matNumber,Double outNum);
     //库存解冻
     Boolean thawStockChannel(List<StockChannel> list);
+    //库存冻结生效
+    Boolean stockFrozenTakeEffect(String dispatchId);
+
     /**
 		 * 调度单入库 lx=rk/出库lx=ck 
 		 * @author 王志浩
 		 * @创建时间 2018年1月7日 下午4:39:38
 		 * @return
-		 */
+	*/
     Result doDispatch(String lx,String dispatchId);
 }

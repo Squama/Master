@@ -85,7 +85,7 @@ public class StockController {
         //List<StockChannel> list = stockService.getStockChannelOutList("PTEST01","GG100001",500.0);
         String sql = "select * from tbl_stock_channel where  mat_id = 'GJ100001'";
         List<StockChannel> list = baseService.findBySql(sql,StockChannel.class);
-        stockService.thawStockChannel(list);
+        //stockService.thawStockChannel(list);
         stockService.getStockChannelFrozenList("402880e860c947ea0160ca0239670000","GG100001",500.0);
         return "stock/stock_history_list";
     }
@@ -147,7 +147,7 @@ public class StockController {
         return r;
     }
 
-    @VerifyCSRFToken
+   /* @VerifyCSRFToken
     @RequestMapping(value="/saveDispatch",method = RequestMethod.POST)
     @ResponseBody
     public Result saveDispatch(HttpServletRequest request){
@@ -172,7 +172,7 @@ public class StockController {
         Result r = new Result();
         r.setSuccess(true);
         return r;
-    }
+    }*/
 
     @VerifyCSRFToken
     @RequestMapping(value="/saveOut",method = RequestMethod.POST)

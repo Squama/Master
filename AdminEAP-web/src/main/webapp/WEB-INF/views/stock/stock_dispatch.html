@@ -82,7 +82,11 @@
             switch (action) {
                 case "doDis":
                 		ajaxPost(basePath+"/stock/doDispatch?dispatchId="+dispatchId+"&lx="+lx,null,function(data){
-                			modals.info("快去写后台代码。");
+                            if(data.success){
+                                modals.hideWin(winId);
+                                stockQueryTableD.reloadData();
+                                modals.info("数据保存成功");
+                            }
                         }) 
                     break;
             }

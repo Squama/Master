@@ -22,6 +22,19 @@ import java.util.List;
 public class StockServiceImpl extends BaseServiceImpl implements StockService {
 
     Arith arith = new Arith();
+
+    /**
+     * 新增库存操作日志
+     * project_ID 调度单id
+     * mat_ID 物料编号
+     * stockChangeNum 变化数量
+     * useTpye 使用类型1：采购入库 2：调度入库 3：消耗出库  4：调度出库
+     * stockSource 库存变化来源:采购单/調度單/出库单
+     * remark
+     * @author 周庆博
+     * @创建时间 2018年1月7日 下午4:42:33
+     * @return
+     */
     @Override
     public Boolean saveHistory(String project_ID, String mat_ID, Double stockChangeNum, String useTpye, String stockSource, String remark) {
         StockHistory tockHistory = new StockHistory();
@@ -35,9 +48,21 @@ public class StockServiceImpl extends BaseServiceImpl implements StockService {
         save(tockHistory);
         return true;
     }
+
+    /**
+     * 单个物料采购入库
+     * project_ID 调度单id
+     * mat_id 物料编号
+     * channel_ID 采购渠道编号
+     * stockNum 变化数量
+     * stockSource 采购单编号
+     * remark
+     * @author 周庆博
+     * @创建时间 2018年1月7日 下午4:42:33
+     * @return
+     */
     @Override
     public Boolean saveOneStock(String mat_id,String project_ID,String channel_ID,String purchase_ID,Double stockNum){
-
         Stock stock = new Stock();
         String sql = " select * from tbl_stock where mat_id='"+mat_id+"' and project_ID='"+project_ID+"'";
         List<Stock> list= findBySql(sql, Stock.class);
@@ -68,6 +93,17 @@ public class StockServiceImpl extends BaseServiceImpl implements StockService {
         return true;
     }
 
+    /**
+     * 库存总表变化
+     * project_ID 调度单id
+     * mat_id 物料编号
+     * stockChangeNum 变化数量
+     * useType 使用类型：1：采购入库，2：调度入库
+     * changeType 变化类型1：增加库存 ，2：减少库存
+     * @author 周庆博
+     * @创建时间 2018年1月7日 下午4:42:33
+     * @return
+     */
     @Override
     public Boolean stockChange(String project_ID, String mat_ID, Double stockChangeNum,int changeType,String useType) {
         Stock stock =new Stock();
@@ -100,7 +136,16 @@ public class StockServiceImpl extends BaseServiceImpl implements StockService {
             return true;
         }
     }
-
+    /**
+     * 采购单入库更新（部分入库）
+     * purchase_ID 采购单id
+     * mat_id 物料编号
+     * stockChangeNum 变化数量
+     * stockType 变化类型1：增加库存 ，2：减少库存
+     * @author 周庆博
+     * @创建时间 2018年1月7日 下午4:42:33
+     * @return
+     */
     @Override
     public Boolean savePurchaseChange(String purchase_ID, String mat_ID, Double stockChangeNum,String stockType) {
         String sql = "select * from tbl_purchase_det where status = '50' and stock_type = '"+stockType+"' and purchase_id = '"+purchase_ID+"' and mat_number='"+mat_ID+"'; ";
@@ -291,6 +336,16 @@ public class StockServiceImpl extends BaseServiceImpl implements StockService {
         return this.findMapBySql(sql, new Object[]{}, new Type[]{StringType.INSTANCE}, Options.class);
     }
 
+    /**
+     * 调度单生成物料冻结
+     * projectID 项目库id
+     * matNumber 物料编号
+     * outNum 冻结数量
+     * @author 周庆博
+     * @创建时间 2018年1月7日 下午4:42:33
+     * @return
+     */
+
     @Override
     public  List<StockChannel> getStockChannelFrozenList(String projectID,String matNumber,Double outNum){
         Double totalOut = outNum;
@@ -329,7 +384,14 @@ public class StockServiceImpl extends BaseServiceImpl implements StockService {
         update(stock);
         return oList;
     }
-
+    /**
+     * 调度单生解冻
+     * List<StockChannel> 解冻库存渠道列表
+     * getFrozen_num，getMat_id，getProject_id，getChannel_id等信息为必要信息
+     * @author 周庆博
+     * @创建时间 2018年1月7日 下午4:42:33
+     * @return
+     */
     @Override
     public Boolean thawStockChannel(List<StockChannel> list){
         for (int i = 0; i < list.size(); i++) {
@@ -352,6 +414,55 @@ public class StockServiceImpl extends BaseServiceImpl implements StockService {
         }
         return true;
     }
+
+    /**
+     * 调度冻结生效
+     * List<StockChannel> 解冻库存渠道列表
+     * getFrozen_num，getMat_id，getProject_id，getChannel_id等信息为必要信息
+     * @author 周庆博
+     * @创建时间 2018年1月7日 下午4:42:33
+     * @return
+     */
+    public  Boolean stockFrozenTakeEffect(String dispatchId){
+        Dispatch dispatch = baseDao.get(Dispatch.class, dispatchId);
+        //调度单明细list
+        String sql = " select * from tbl_dispatch_detail where dispatch_id ='"+dispatchId+"'";
+        List<DispatchDetail> mxList = findBySql(sql, DispatchDetail.class);
+        //来源库id
+        String sourceProjectID = dispatch.getSourceProjectID();
+        //目标库id
+        String targetProjectID = dispatch.getTargetProjectID();
+        //遍历明细，执行相关入库出库操作操作
+        for (int i = 0; i < mxList.size(); i++) {
+            DispatchDetail dispatchDetail = mxList.get(i);
+            String channelID = dispatchDetail.getChannelID();
+            String matID = dispatchDetail.getMatNumber();
+            Double quantity = dispatchDetail.getQuantity();
+            //原库存冻结生效stock/stockChannel
+            sql = " select * from tbl_stock where mat_id='"+matID+"' and project_ID='"+sourceProjectID+"'";
+            Stock stock;
+            List<Stock> stockList = findBySql(sql ,Stock.class);
+            if(stockList!=null){
+                stock = stockList.get(0);
+                stock.setFrozen_num(arith.sub(stock.getFrozen_num(),quantity));
+                stock.setStock_num(arith.sub(stock.getStock_num(),quantity));
+                update(stock);
+            }
+            StockChannel stockChannel = getStockChannel(matID,sourceProjectID,channelID);
+            stockChannel.setFrozen_num(arith.sub(stockChannel.getFrozen_num(),quantity));
+            stockChannel.setStock_num(arith.sub(stockChannel.getStock_num(),quantity));
+            update(stockChannel);
+            saveHistory(sourceProjectID,matID,quantity,"4",dispatchId,"");
+
+            //目标库存入库
+            stockChange(targetProjectID, matID,quantity, 1, "2");
+            saveChannel(matID,targetProjectID,channelID,quantity,1);
+            saveHistory(targetProjectID,matID,quantity,"2",dispatchId,"");
+        }
+        dispatch.setStatus("60");//调度完成，调度单状态更新为已完成
+        update(dispatch);
+        return true;
+    }
     /**
 		 * 调度单入库 lx=rk/出库lx=ck 
 		 * dispatchId 调度单id
@@ -361,22 +472,20 @@ public class StockServiceImpl extends BaseServiceImpl implements StockService {
 		 */
     public Result doDispatch(String lx,String dispatchId){
     	Dispatch d = baseDao.get(Dispatch.class, dispatchId);
-    	String sql = " select * from tbl_dispatch_detail where dispatch_id ='"+dispatchId+"'";
-    	//来源库id
-    	String lyid = d.getSourceProjectID();
-    	//目标库id
-    	String mbid = d.getTargetProjectID();
-    	//调度单明细list
-    	List<DispatchDetail> mxList = findBySql(sql, DispatchDetail.class);
-    	//遍历明细，执行相关入库出库操作操作
-    	for(DispatchDetail mx : mxList){
-    		
-    	}
-    	//申请单信息
-    	String purchase_id = d.getPurchaseID();
-    	Purchase p = baseDao.get(Purchase.class,purchase_id);
-    	
-    	
-    	return new Result();
+
+    	if(lx.equals("ck")){
+            d.setStatus("20");//更新调度单状态：已出库
+            update(d);
+        }else if(lx.equals("rk")){
+    	    //调度单冻结生效
+            stockFrozenTakeEffect(dispatchId);
+            //申请单信息
+            String purchase_id = d.getPurchaseID();
+            Purchase p = baseDao.get(Purchase.class,purchase_id);
+            p.setStatus("50");//更新申请单状态：已入库
+            update(p);
+        }
+        Result r = new Result(true,null,"获取成功");
+        return r;
     }
 }
