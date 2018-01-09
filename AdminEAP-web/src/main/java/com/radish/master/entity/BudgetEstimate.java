@@ -59,14 +59,6 @@ public class BudgetEstimate extends BaseEntity {
     @Column(name = "quantity")
     private String quantity;
     
-    @Header(name = "供应商")
-    @Column(name = "supplier")
-    private String supplier;
-    
-    @Header(name = "价格")
-    @Column(name= "price")
-    private String price;
-
     public String getBudgetTxID() {
         return budgetTxID;
     }
@@ -131,20 +123,4 @@ public class BudgetEstimate extends BaseEntity {
         this.quantity = quantity;
     }
 
-    public String getSupplier() {
-        return supplier;
-    }
-
-    public void setSupplier(String supplier) {
-        this.supplier = supplier;
-    }
-
-    public String getPrice() {
-        return price;
-    }
-
-    public void setPrice(String price) {
-        this.price = price;
-    }
-    
 }
