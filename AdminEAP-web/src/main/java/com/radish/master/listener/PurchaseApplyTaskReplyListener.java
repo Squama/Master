@@ -31,11 +31,13 @@ public class PurchaseApplyTaskReplyListener implements TaskListener {
         if(EVENTNAME_COMPLETE.equals(eventName)){
              String businessKey = delegateTask.getVariable(Constants.VAR_BUSINESS_KEY).toString();
              BaseService baseService = (BaseService)SpringUtil.getObject("baseActServer");
+             //数量超预算审核不通过
              if("false".equalsIgnoreCase(delegateTask.getVariable("approved").toString())){
                  Purchase purchase = baseService.get(Purchase.class, businessKey);
                  purchase.setStatus("10");
                  baseService.save(purchase);
              }else{
+                 //审核通过
                  Purchase purchase = baseService.get(Purchase.class, businessKey);
                  purchase.setStatus("30");
                  baseService.save(purchase);

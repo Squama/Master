@@ -204,6 +204,15 @@ public class PurchaseApplyController {
         return new Result(true);
     }
     
+    @VerifyCSRFToken
+    @RequestMapping(method = RequestMethod.POST, value = "/cancelchannelstock")
+    @ResponseBody
+    private Result cancelChannelStock(String id, HttpServletRequest request) {
+        purchaseService.cancelDispatch(id);
+        
+        return new Result(true);
+    }
+    
     @RequestMapping(method = RequestMethod.POST, value="/validatechannel")
     @ResponseBody
     public Result validateChannel(String id, HttpServletRequest request){

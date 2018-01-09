@@ -20,6 +20,13 @@ public class DispatchDetail extends BaseEntity{
 
 	private static final long serialVersionUID = -4047955577096808803L;
 
+	/**
+	 * 用于取消调度
+	 */
+	@Header(name="采购明细编号")
+    @Column(name="purchase_det_id")
+	private String purchaseDetID;
+	
 	@Header(name="调度单编号")
     @Column(name="dispatch_id")
 	private String dispatchID;
@@ -79,5 +86,12 @@ public class DispatchDetail extends BaseEntity{
 	public void setQuantity(double quantity) {
 		this.quantity = quantity;
 	}
-	
+
+    public String getPurchaseDetID() {
+        return purchaseDetID;
+    }
+
+    public void setPurchaseDetID(String purchaseDetID) {
+        this.purchaseDetID = purchaseDetID;
+    }
 }

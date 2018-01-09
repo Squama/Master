@@ -102,27 +102,13 @@ public class PurchaseServiceImpl extends BaseServiceImpl implements PurchaseServ
         
         Budget budget = this.getBudgetByNo(purchase.getBudgetNo());
         
-        /*List<PurchaseDet> detList = this.getPurchaseDetList(purchase.getId());
-        
-        BigDecimal sum = new BigDecimal("0");
-        
-        for(PurchaseDet det : detList){
-            BigDecimal price = new BigDecimal(det.getPrice());
-            BigDecimal quantity = new BigDecimal(det.getQuantity());
-            
-            sum = sum.add(quantity.multiply(price));
-            
-        }*/
-        
         purchase.setStatus("20");
         purchase.setUpdateDateTime(new Date());
-        //purchase.setApplyAmount(sum.toPlainString());
         purchase.setPurchaseName("【" + user.getName() + "】申请" + budget.getBudgetName());
         
         this.update(purchase);
         
         //给流程起个名字
-        
         String name = user.getName() + "申请预算用料：" + purchase.getBudgetNo() + "，所属项目：" + purchase.getProjectID();
         
         //businessKey
@@ -132,7 +118,7 @@ public class PurchaseServiceImpl extends BaseServiceImpl implements PurchaseServ
         Map<String, Object> variables = new HashMap<>();
         variables.put(Constants.VAR_APPLYUSER_NAME, user.getName());
         variables.put(Constants.VAR_BUSINESS_KEY, businessKey);
-        variables.put("isAudit", "false");
+        variables.put("isAudit", "true");
         
         
         //启动流程
@@ -155,6 +141,24 @@ public class PurchaseServiceImpl extends BaseServiceImpl implements PurchaseServ
         params.put("purchaseID", purchaseID);
         return this.get("from Dispatch where sourceProjectID=:sourceProjectID AND targetProjectID=:targetProjectID AND purchaseID=:purchaseID", params);
 	}
+	
+    @Override
+    public List<DispatchDetail> getDispatchDetailList(String dispatchID, String purchaseDetID) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("dispatchID", dispatchID);
+        params.put("purchaseDetID", purchaseDetID);
+        return this.find("from DispatchDetail where dispatchID = :dispatchID AND purchaseDetID = : purchaseDetID", params);
+    }
+    
+    @Override
+    public PurchaseDet getPurchaseDetOri(String purchaseID, String regionID, String MatNumber){
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("purchaseID", purchaseID);
+        params.put("regionID", regionID);
+        params.put("MatNumber", MatNumber);
+        return this.get("from PurchaseDet where purchaseID=:purchaseID AND regionID=:regionID AND MatNumber=:MatNumber AND stockType <> '2'", params);
+    }
+    
 
 	@Override
 	public void executeDispatch(String projectID, String id, String matID, String num) {
@@ -183,6 +187,7 @@ public class PurchaseServiceImpl extends BaseServiceImpl implements PurchaseServ
     		detail.setMatNumber(matID);
     		detail.setPrice(channel.getPrice());
     		detail.setQuantity(channel.getFrozen_num());
+    		detail.setPurchaseDetID(purchaseDetOld.getId());
     		BigDecimal price = new BigDecimal(channel.getPrice());
     		BigDecimal quantity = new BigDecimal(channel.getFrozen_num());
     		sum = sum.add(price.multiply(quantity));
@@ -225,4 +230,39 @@ public class PurchaseServiceImpl extends BaseServiceImpl implements PurchaseServ
     	}
 		
 	}
+	
+	@Override
+    public void cancelDispatch(String id) {
+	    //获取原调度信息
+	    PurchaseDet purchaseDetOld = this.get(PurchaseDet.class, id);
+        Purchase purchase = this.get(Purchase.class,purchaseDetOld.getPurchaseID());
+        
+        Dispatch dispatch = this.getDispatchByProAndPur(purchase.getProjectID(), purchase.getProjectID(), purchaseDetOld.getPurchaseID());
+        
+        List<DispatchDetail> detailList = this.getDispatchDetailList(dispatch.getId(), purchaseDetOld.getId());
+        
+        List<StockChannel> list = new ArrayList<StockChannel>();
+        
+        for(DispatchDetail detail : detailList){
+            StockChannel channel = new StockChannel();
+            channel.setChannel_id(detail.getChannelID());
+            channel.setProject_id(dispatch.getSourceProjectID());
+            channel.setMat_id(purchaseDetOld.getMatNumber());
+            channel.setFrozen_num(detail.getQuantity());
+        }
+	    
+        if(stockService.thawStockChannel(list)){
+            //加回原来的
+            PurchaseDet detOriginal = this.getPurchaseDetOri(purchaseDetOld.getPurchaseID(), purchaseDetOld.getRegionID(), purchaseDetOld.getMatNumber());
+            BigDecimal numCancel = new BigDecimal(purchaseDetOld.getQuantity());
+            detOriginal.setQuantity(numCancel.add(new BigDecimal(detOriginal.getQuantity())).doubleValue());
+            detOriginal.setSurplusQuantity(detOriginal.getQuantity());
+            
+            this.update(detOriginal);
+            //删掉现在的
+            
+            this.delete(purchaseDetOld);
+            
+        }
+    }
 }

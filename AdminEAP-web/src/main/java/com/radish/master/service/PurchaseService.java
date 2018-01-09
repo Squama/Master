@@ -9,6 +9,7 @@ import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.base.service.BaseService;
 import com.radish.master.entity.Budget;
 import com.radish.master.entity.Dispatch;
+import com.radish.master.entity.DispatchDetail;
 import com.radish.master.entity.Purchase;
 import com.radish.master.entity.PurchaseDet;
 import com.radish.master.pojo.MatMap;
@@ -46,5 +47,11 @@ public interface PurchaseService extends BaseService{
     
     Dispatch getDispatchByProAndPur(String sourceProjectID, String targetProjectID, String purchaseID);
     
+    public List<DispatchDetail> getDispatchDetailList(String dispatchID, String purchaseDetID);
+    
+    public PurchaseDet getPurchaseDetOri(String purchaseID, String regionID, String MatNumber);
+    
     public void executeDispatch(String projectID, String id, String matID, String num);
+    
+    public void cancelDispatch(String id);
 }

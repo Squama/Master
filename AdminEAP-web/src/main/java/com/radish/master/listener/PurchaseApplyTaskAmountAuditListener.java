@@ -3,12 +3,18 @@
  */
 package com.radish.master.listener;
 
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.activiti.engine.delegate.DelegateTask;
 import org.activiti.engine.delegate.TaskListener;
 
 import com.cnpc.framework.activiti.pojo.Constants;
 import com.cnpc.framework.base.service.BaseService;
 import com.radish.master.entity.Purchase;
+import com.radish.master.entity.PurchaseDet;
 import com.radish.master.system.SpringUtil;
 
 /**
@@ -18,13 +24,12 @@ import com.radish.master.system.SpringUtil;
 * Modify Information:
 * Author        Date          Description
 * ============ =========== ============================
-* dongyan      2018年1月4日    Create this file
+* dongyan      2018年1月9日    Create this file
 * </pre>
 * 
 */
 
-public class PurchaseApplyTaskResubListener implements TaskListener {
-
+public class PurchaseApplyTaskAmountAuditListener implements TaskListener {
     @Override
     public void notify(DelegateTask delegateTask) {
         String eventName = delegateTask.getEventName();
@@ -32,21 +37,31 @@ public class PurchaseApplyTaskResubListener implements TaskListener {
             String businessKey = delegateTask.getVariable(Constants.VAR_BUSINESS_KEY).toString();
             BaseService baseService = (BaseService)SpringUtil.getObject("baseActServer");
             Purchase purchase = baseService.get(Purchase.class, businessKey);
-            baseService.save(purchase); 
-            if("false".equalsIgnoreCase(delegateTask.getVariable("approved").toString())){
-                //此处放弃之后，是不是应该把申请单数据删除，并加回申请数量？
-                purchase.setStatus("10");
-            }else if("true".equalsIgnoreCase(delegateTask.getVariable("approved").toString())){
-                purchase.setStatus("20");
-                //判断是否数量超限，更新变量
-                //TODO 判断方法
-                delegateTask.setVariable("isAudit", "false");
-            }
             
+            if("false".equalsIgnoreCase(delegateTask.getVariable("approved").toString())){
+                //渠道再编辑
+                purchase.setStatus("35");
+            }else if("true".equalsIgnoreCase(delegateTask.getVariable("approved").toString())){
+                delegateTask.setVariable("isAmountAudit", "false");
+                purchase.setStatus("40");
+                Map<String, Object> params = new HashMap<String, Object>();
+                params.put("id", purchase.getId());
+                List<PurchaseDet> detList = baseService.find("from PurchaseDet where purchaseID = :id", params);
+                
+                BigDecimal sum = new BigDecimal("0");
+                
+                for(PurchaseDet det : detList){
+                    BigDecimal price = new BigDecimal(det.getPrice());
+                    BigDecimal quantity = new BigDecimal(det.getQuantity());
+                    
+                    sum = sum.add(quantity.multiply(price));
+                    
+                }
+                
+                purchase.setApplyAmount(sum.toPlainString());
+            }
             baseService.save(purchase);
-             
         }
 
     }
-
 }

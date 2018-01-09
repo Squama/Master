@@ -71,7 +71,7 @@
         },
         deleteChannel: function(that, value){
             var rowId = $(that).parent().parent().attr('id');
-        	ajaxPost(basePath + '/purchase/apply/deletechannelstock', {id:rowId}, function (data) {
+        	ajaxPost(basePath + '/purchase/apply/cancelchannelstock', {id:rowId}, function (data) {
                 if (data.success) {
                    purchaseDetTable.reloadRowData(id);
                 } else {
