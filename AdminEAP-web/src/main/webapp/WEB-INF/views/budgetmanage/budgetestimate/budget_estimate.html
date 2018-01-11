@@ -81,7 +81,7 @@
             	$("button[data-btn-type]").click(function () {
             		var action = $(this).attr('data-btn-type');
             		var length = $('input[name="choose"]:checked').length;
-                    if(length < 1 && action != 'revoke' && action != 'start'){
+                    if(length < 1 && action != 'revoke' && action != 'start' && action != 'submitTask'){
                         modals.info('请勾选要测算的行');
                         return false;
                     }

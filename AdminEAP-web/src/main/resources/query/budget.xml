@@ -29,7 +29,7 @@
     <query id="budget_estimate_left_list" key="id" tableName="预算表" className="com.radish.master.entity.BudgetImport" widthType="px" pageSize="2000" order="quotaGroup asc,orderNo desc">
         <column key="id" header="选择" width="10" fnRender="fnRenderCheckbox"/>
         <column key="quotaNo" header="定额编号" width="120"/>
-        <column key="quotaName" header="子目名称" width="150"/>
+        <column key="quotaName" header="子目名称" width="150" enableTooltip="true" maxLen="8"/>
         <column key="units" header="单位" width="100"/>
         <column key="quantities" header="工程量" width="100"/>
         <column key="price" header="单价" width="100"/>
@@ -46,7 +46,7 @@
     <query id="budget_estimate_right_list" key="id" tableName="成本测算表" className="com.radish.master.entity.BudgetTx" widthType="px" pageSize="2000" order="quotaGroup asc,orderNo desc">
         <column key="rowIndex" header="序号" width="80"/>
         <column key="regionCode" header="定额编号" width="120"/>
-        <column key="regionName" header="子目名称" width="150"/>
+        <column key="regionName" header="子目名称" width="150" enableTooltip="true" maxLen="8"/>
         <column key="units" header="单位" width="100"/>
         <column key="quantities" header="工程量" width="100"/>
         <column key="price" header="单价" width="100"/>
