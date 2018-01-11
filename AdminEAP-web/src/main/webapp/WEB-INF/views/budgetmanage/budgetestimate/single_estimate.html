@@ -7,7 +7,7 @@
     <div class="row">
         <div class="col-xs-12">
             <form id="budget-tx-info-form" name="budget-tx-info-form" class="form-horizontal">
-                <input type="hidden" name="id">
+                <input type="hidden" name="budgetTxID">
                 <input type="hidden" name="projectID">
                 <input type="hidden" name="budgetNo">
                 <div class="box box-info">
@@ -49,7 +49,7 @@
                        </div>
                     </div>
                     <div class="dataTables_filter" id="searchDivTxEstimate" style="text-align:center;height:1px;">
-                       <input type="search" name="be.budget_tx_id" id="budgetTxNo" class="form-control" operator="eq" style="display:none;">
+                       <input type="search" name="be.budget_tx_id" id="budgetTxID" class="form-control" operator="eq" style="display:none;">
                        <div class="btn-group">
                            <button type="button" class="btn btn-primary" data-btn-type="search" id="refresh" style="display:none;">查询</button>
                        </div>
@@ -69,8 +69,8 @@
     var budgettxinfoform = $("#budget-tx-info-form").form({baseEntity: false}), initData={},
     budgetTxEstimateTable,options;
     
-    var budgetTxNo="${budgetTxNo?default('40280cac604dc2d501604dc4ef9c0003')}";
-    $('#budgetTxNo').val(budgetTxNo);
+    var budgetTxID="${budgetTxID?default('0')}";
+    $('#budgetTxID',$('#searchDivTxEstimate')).val(budgetTxID);
     budgettxinfoform.initFormData(initData);
     
     if(materiels != 0){
@@ -93,9 +93,15 @@
 
     
     
-    var budgetAddObject = {
-            deleteBudgetTx: function (rowId) {
-                
+    var budgetEstimateObject = {
+            deleteBudgetEstimate: function (rowId) {
+            	ajaxPost(basePath + '/budget/estimate/delete', {id:rowId}, function (data) {
+                    if (data.success) {
+                        budgetTxEstimateTable.reloadData();
+                    } else {
+                        modals.error(data.message);
+                    }
+                });
             }
     }
     
@@ -117,18 +123,10 @@
             },
             submitHandler: function () {
                 var action = $(this).attr('$submitButton').attr('data-btn-type');
-                var formData = budgetform.getFormSimpleData();
-                ajaxPost(basePath + '/budget/save', formData, function (data) {
+                var formData = budgettxinfoform.getFormSimpleData();
+                ajaxPost(basePath + '/budget/estimate/save', formData, function (data) {
                     if (data.success) {
-                        initData.projectID = data.data.projectID;
-                        initData.budgetNo = data.data.budgetNo;
-                        budgettxform.initFormData(initData);
-                        $('#budget_tx').show();
-                        $('#budgetformsave').hide();
-                        
-                        $('#projectID').attr("disabled","disabled");
-                        $('#budgetName').attr("disabled","disabled");
-                        $('#budgetNo').attr("disabled","disabled");
+                    	budgetTxEstimateTable.reloadData();
                     } else {
                         modals.error(data.message);
                     }
@@ -148,6 +146,19 @@
             }
         });
         
+        //编辑回填
+        if(budgetTxID!="0"){
+            ajaxPost(basePath+"/budget/estimate/getbytxid",{budgetTxID:budgetTxID},function(data){
+            	data.data.budgetTx.budgetTxID=data.data.budgetTx.id;
+            	data.data.budgetTx.projectName=data.data.projectName;
+            	data.data.budgetTx.budgetName=data.data.budgetName;
+            	budgettxinfoform.initFormData(data.data.budgetTx);
+                
+                $('#projectName').attr("disabled","disabled");
+                $('#budgetName').attr("disabled","disabled");
+            })
+        } 
+        
         //初始化控件
         budgettxinfoform.initComponent();
         
@@ -155,7 +166,7 @@
     
     
     function fnRenderDelete(value){
-        return "<a href='javascript:void(0)' onclick='budgetAddObj.deleteBudgetTx(\"" + value + "\")'>删除</a>";
+        return "<a href='javascript:void(0)' onclick='budgetEstimateObject.deleteBudgetEstimate(\"" + value + "\")'>删除</a>";
     }
     
 </script>

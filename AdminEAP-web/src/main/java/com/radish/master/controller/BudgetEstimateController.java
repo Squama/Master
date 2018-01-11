@@ -6,7 +6,9 @@ package com.radish.master.controller;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -21,8 +23,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSONArray;
 import com.cnpc.framework.annotation.VerifyCSRFToken;
 import com.cnpc.framework.base.pojo.Result;
+import com.cnpc.framework.utils.SecurityUtil;
+import com.radish.master.entity.Budget;
+import com.radish.master.entity.BudgetEstimate;
 import com.radish.master.entity.BudgetImport;
 import com.radish.master.entity.BudgetTx;
+import com.radish.master.entity.Project;
 import com.radish.master.pojo.RowEdit;
 import com.radish.master.service.BudgetService;
 import com.radish.master.system.CodeException;
@@ -131,8 +137,60 @@ public class BudgetEstimateController {
     }
     
     @RequestMapping(value="/singleestimate",method = RequestMethod.GET)
-    public String singleEstimate(){
+    public String singleEstimate(HttpServletRequest request, String id){
+        request.setAttribute("budgetTxID", id);
+        
         return "budgetmanage/budgetestimate/single_estimate";
+    }
+    
+    @RequestMapping(method = RequestMethod.POST, value = "/getbytxid")
+    @ResponseBody
+    private Result getBudgetByNo(String budgetTxID) {
+        BudgetTx tx = budgetService.get(BudgetTx.class,budgetTxID);
+        
+        Project project = budgetService.get(Project.class, tx.getProjectID());
+        
+        Budget budget = budgetService.getBudgetByNo(tx.getBudgetNo());
+        
+        
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("budgetTx", tx);
+        map.put("projectName", project.getProjectName());
+        map.put("budgetName", budget.getBudgetName());
+        
+        return new Result(true, map);
+    }
+    
+    @VerifyCSRFToken
+    @RequestMapping(method = RequestMethod.POST, value = "/save")
+    @ResponseBody
+    private Result saveBudgetEstimate(BudgetEstimate budgetEstimate, HttpServletRequest request) {
+        budgetService.save(budgetEstimate);
+        return new Result(true);
+    }
+    
+    @RequestMapping(method = RequestMethod.POST, value = "/delete")
+    @ResponseBody
+    private Result deleteBudgetEstimate(String id, HttpServletRequest request) {
+        BudgetEstimate budgetEstimate = budgetService.get(BudgetEstimate.class, id);
+        budgetService.delete(budgetEstimate);
+        return new Result(true);
+    }
+    
+    
+    @RequestMapping(method = RequestMethod.GET, value="/auditlist/{budgetNo}")
+    private String toAudit(@PathVariable("budgetNo") String budgetNo, HttpServletRequest request) {
+        request.setAttribute("budgetNo", budgetNo);
+        return "budgetmanage/budgetactiviti/audit_list";
+    }
+    
+    
+    @RequestMapping(method = RequestMethod.GET, value="/backtoedit/{budgetNo}")
+    private String toEditAgain(@PathVariable("budgetNo") String budgetNo, HttpServletRequest request) {
+        request.setAttribute("budgetNo", budgetNo);
+        request.setAttribute("materiels", JSONArray.toJSONString(budgetService.getMatMap()));
+        
+        return "budgetmanage/budgetestimate/budget_estimate";
     }
     
     @VerifyCSRFToken
