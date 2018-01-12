@@ -54,7 +54,7 @@
 
     BaseForm.prototype.initSelect2 = function () {
         $(this.select2Element).select2({
-            minimumResultsForSearch: Infinity
+            minimumResultsForSearch: 1
         });
     }
 
