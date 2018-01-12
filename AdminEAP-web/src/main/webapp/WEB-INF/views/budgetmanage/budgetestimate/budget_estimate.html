@@ -71,8 +71,11 @@
     if(budgetNo != 0){
     	$('#budgetNo',$('#searchDivImport')).val(budgetNo);	
     	$('#budgetNo',$('#searchDivTx')).val(budgetNo); 
-    	$("button[data-btn-type='start']").hide();
     	$('.content-header').hide();
+    }
+    
+    if(sourceUrl == 0){
+    	$("button[data-btn-type='start']").hide();
     }
     
     //页面方法体

@@ -79,13 +79,14 @@ public class PurchaseApplyController {
         map.put("mats", JSONArray.toJSONString(purchaseService.getMatMap()));
         map.put("projectName", project.getProjectName());
         map.put("budgetName", budget.getBudgetName());
+        map.put("budgetNo", budget.getBudgetNo());
         
         return new Result(true, map);
     }
     
     @RequestMapping(value="/getbudgetop")
     @ResponseBody
-    public Result save(String projectID){
+    public Result getBudgetOp(String projectID){
         return new Result(true, JSONArray.toJSONString(purchaseService.getBudgetComboboxByProject(projectID)));
     }
     
@@ -219,6 +220,12 @@ public class PurchaseApplyController {
         PurchaseDet purchaseDet = purchaseService.get(PurchaseDet.class, id);
         purchaseService.delete(purchaseDet);
         return new Result(false, "未编辑完");
+    }
+    
+    @RequestMapping(value="/getregionmat")
+    @ResponseBody
+    public Result getRegionMat(String budgetNo, String regionID){
+        return new Result(true, JSONArray.toJSONString(purchaseService.getMatComboboxByRegion(budgetNo, regionID)));
     }
     
 }

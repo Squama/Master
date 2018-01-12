@@ -37,6 +37,8 @@ public interface PurchaseService extends BaseService{
     
     List<Options> getRegionComboboxByBudgetNo(String budgetNo);
     
+    MatMap getMatComboboxByRegion(String budgetNo, String regionID);
+    
     MatMap getMatMap();
     
     Budget getBudgetByNo(String batchNo);

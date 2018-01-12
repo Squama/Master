@@ -66,6 +66,8 @@ public class PurchaseApplyTaskCompleteListener implements TaskListener {
                 purchase.setApplyAmount(sum.toPlainString());
             }
             baseService.save(purchase);
+            
+            //TODO 更新调度表到20
         }
 
     }

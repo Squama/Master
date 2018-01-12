@@ -84,7 +84,7 @@
     $.fn.modal.Constructor.prototype.enforceFocus =function(){};
     var purchaseform = $("#purchase-form").form({baseEntity: false}), initData={},
     purchasedetform = $("#purchase-det-form").form({baseEntity: false}),options=0,bOptions=0,mats=0,regions=0;
-    var purchaseDetTable, winId = "purchaseDetWin";
+    var purchaseDetTable, winId = "purchaseDetWin", budgetNo=0;
     
     var projectOptions = '${projectOptions?default(0)}';
     if(projectOptions != 0){
@@ -137,6 +137,11 @@
                         var bOption = bOptions[i];
                         $('#budgetNo').append("<option value=\"" + bOption.value + "\">" + bOption.data + "</option>");
                     }
+                    
+                    $('#budgetNo').bind("change", function(){
+                    	budgetNo = $(this).val();
+                    });
+                    
                     $('#budgetNo').select2();
                 })
             }); 
@@ -225,7 +230,6 @@
         //编辑回填
         if(purchaseID != 0){
             ajaxPost(basePath+"/purchase/apply/getpurchase",{purchaseID:purchaseID},function(data){
-                console.log(data);
                 mats = JSON.parse(data.data.mats);
                 regions = JSON.parse(data.data.regions);
                 
@@ -237,6 +241,8 @@
                 
                 var projectName = data.data.projectName;
                 var budgetName = data.data.budgetName;
+                
+                budgetNo = data.data.budgetNo;
                 
                 var projectArea = $('#projectID').parent();
                 projectArea.empty();
@@ -280,18 +286,31 @@
             $('#regionID').bind("change", function () {
             	var regionName = $(this).find("option:selected").text();
             	$('input[name="regionName"]').val(regionName);
+            	
+                var regionID = $(this).val();
+                
+                if(budgetNo != 0){
+                    ajaxPost(basePath+"/purchase/apply/getregionmat",{budgetNo:budgetNo,regionID:regionID},function(data){
+                        initMats(JSON.parse(data.message));
+                    })
+                }
             });
         }
     }
     
     function initMats(mats){
         if(mats != 0){
+        	$('#matNumber').empty();
+            $('#matNumber').append('<option selected="selected" value="">选择一个物料</option>');
+            
             for (mat in mats.map) {
                 var option = mats.map[mat];
                 $('#matNumber').append("<option value=\"" + option.mat_number + "\">" + option.mat_name + "</option>");
             }
             
             $('#matNumber').select2();
+            
+            $('#matNumber').unbind("change");
             
             $('#matNumber').bind("change", function () {
                 var matID = $(this).val();
