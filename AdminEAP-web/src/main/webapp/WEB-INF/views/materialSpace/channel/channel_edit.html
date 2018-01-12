@@ -218,10 +218,7 @@
                 validating : 'glyphicon glyphicon-refresh'
             },
             submitHandler : function() {
-                modals.confirm('确认保存？', function() {
-                    //Save Data，对应'submit-提交'
                     var params = form1.getFormSimpleData();
-                   
                    ajaxPost(basePath+'/channel/save?mat_id='+$("#mat_id").val(), params, function(data, status) {
                         if(data.success){
                         	
@@ -230,7 +227,6 @@
                         	 
                         }                
                     }); 
-                })
             },
             fields : {
             	supplier : {
@@ -273,10 +269,7 @@
                 validating : 'glyphicon glyphicon-refresh'
             },
             submitHandler : function() {
-                modals.confirm('确认保存？', function() {
-                    //Save Data，对应'submit-提交'
                     var params = form2.getFormSimpleData();
-                    console.log(params);
                    ajaxPost(basePath+'/channel/save?mat_id='+$("#mat_id").val(), params, function(data, status) {
                         if(data.success){
                         	
@@ -285,7 +278,7 @@
                         	 
                         }                
                     }); 
-                });
+             
             },
             fields : {
             	supplier : {
@@ -320,10 +313,7 @@
                 validating : 'glyphicon glyphicon-refresh'
             },
             submitHandler : function() {
-                modals.confirm('确认保存？', function() {
-                    //Save Data，对应'submit-提交'
-                    var params = form3.getFormSimpleData();
-                    console.log(params);
+                  var params = form3.getFormSimpleData();
                   ajaxPost(basePath+'/channel/save?mat_id='+$("#mat_id").val(), params, function(data, status) {
                         if(data.success){
                         	materielTable.reloadData();
@@ -331,7 +321,7 @@
                         	 
                         }                
                     });
-                });
+           
             },
             fields : {
             	supplier : {
