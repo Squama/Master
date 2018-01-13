@@ -30,7 +30,7 @@
 				s.stock_change_Num stockChangeNum,	s.useTpye useTpye,	s.operation_person_ID operationPersonID,	u.`name` userName,
 				s.operation_time operationTime, s.stock_Source stockSource
 				FROM	tbl_stock_history s,	tbl_project p,	tbl_materiel m,	tbl_user u
-				WHERE	1=1 and s.project_ID = p.project_code	AND s.mat_ID = m.mat_number	AND s.operation_person_ID = u.id
+				WHERE	1=1 and s.project_ID = p.id	AND s.mat_ID = m.mat_number	AND s.operation_person_ID = u.id
 		        ]]>
 		</sql>
 		<column key="rowIndex" header="序号" width="50" allowSort="false"/>

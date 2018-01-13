@@ -41,7 +41,8 @@ public class StockServiceImpl extends BaseServiceImpl implements StockService {
         tockHistory.setProject_id(project_ID);
         tockHistory.setMat_id(mat_ID);
         tockHistory.setStock_change_num(stockChangeNum);
-        tockHistory.setOperation_bill_ID(stockSource);// 采购单/調度單/出庫單編號
+        tockHistory.setOperation_bill_ID(stockSource); //.set/ 采购单/調度單/出庫單編號
+        tockHistory.setStockSource(stockSource);//库存操作来源
         tockHistory.setUsetpye(useTpye);//1：采购入库 2：调度入库 3：消耗出库  4：调度出库
         tockHistory.setOperation_person_id(SecurityUtil.getUserId());
         tockHistory.setOperation_time(new Date());
@@ -425,13 +426,16 @@ public class StockServiceImpl extends BaseServiceImpl implements StockService {
      */
     public  Boolean stockFrozenTakeEffect(String dispatchId){
         Dispatch dispatch = baseDao.get(Dispatch.class, dispatchId);
+
         //调度单明细list
         String sql = " select * from tbl_dispatch_detail where dispatch_id ='"+dispatchId+"'";
         List<DispatchDetail> mxList = findBySql(sql, DispatchDetail.class);
         //来源库id
         String sourceProjectID = dispatch.getSourceProjectID();
+        Project tp = baseDao.get(Project.class, sourceProjectID);
         //目标库id
         String targetProjectID = dispatch.getTargetProjectID();
+        Project sp = baseDao.get(Project.class, targetProjectID);
         //遍历明细，执行相关入库出库操作操作
         for (int i = 0; i < mxList.size(); i++) {
             DispatchDetail dispatchDetail = mxList.get(i);
@@ -452,12 +456,12 @@ public class StockServiceImpl extends BaseServiceImpl implements StockService {
             stockChannel.setFrozen_num(arith.sub(stockChannel.getFrozen_num(),quantity));
             stockChannel.setStock_num(arith.sub(stockChannel.getStock_num(),quantity));
             update(stockChannel);
-            saveHistory(sourceProjectID,matID,quantity,"4",dispatchId,"");
+            saveHistory(sourceProjectID,matID,quantity,"4",tp.getProjectName(),"");
 
             //目标库存入库
             stockChange(targetProjectID, matID,quantity, 1, "2");
             saveChannel(matID,targetProjectID,channelID,quantity,1);
-            saveHistory(targetProjectID,matID,quantity,"2",dispatchId,"");
+            saveHistory(targetProjectID,matID,quantity,"2",sp.getProjectName(),"");
         }
         dispatch.setStatus("60");//调度完成，调度单状态更新为已完成
         update(dispatch);

@@ -44,6 +44,10 @@ public class StockHistory extends BaseEntity {
     @Column(name = "operation_time")
     private Date operation_time;
 
+    @Header(name = "操作时间")
+    @Column(name = "stock_source")
+    private String stockSource;
+
     @Header(name = "备注")
     @Column(name = "remark")
     private String remark;
@@ -132,6 +136,13 @@ public class StockHistory extends BaseEntity {
         this.reserve3 = reserve3;
     }
 
+    public String getStockSource() {
+        return stockSource;
+    }
+
+    public void setStockSource(String stockSource) {
+        this.stockSource = stockSource;
+    }
 
     public String getRemark() {
         return remark;
