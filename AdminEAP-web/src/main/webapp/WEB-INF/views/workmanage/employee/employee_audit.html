@@ -55,19 +55,20 @@
                 var action = $(this).attr('data-btn-type');
                 var rowId=userTable.getSelectedRowId();
                 switch (action) {
-                case 'add':
-                       modals.openWin({
-                        winId:winId,
-                        title:'新增用户',
-                        width:'900px',
-                        url:basePath+"/employeeQuery/edit"
-                        /*, hideFunc:function(){
-                            modals.info("hide me");
-                        },
-                        showFunc:function(){
-                            modals.info("show me");
-                        } */
-                       });                        
+                case 'audit':
+                	if(!rowId){
+                        modals.info('请选择要审核的行');
+                        return false;
+                    }
+                    modals.confirm("是否确认审核通过？",function(){
+                        ajaxPost(basePath+"/employeeQuery/auditResult/"+rowId,null,function(data){
+                            if(data.success){
+                                userTable.reloadRowData();
+                            }else{
+                                modals.error("用户数据被引用，不可删除！");
+                            }
+                        });
+                    })                      
                     break;
                 case 'edit':
                     if(!rowId){

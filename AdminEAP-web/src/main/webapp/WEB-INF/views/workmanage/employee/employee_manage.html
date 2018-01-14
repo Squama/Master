@@ -86,7 +86,7 @@
                         modals.info('请选择要删除的行');
                         return false;
                     }
-                    modals.confirm("是否要删除该行数据？",function(){
+                    modals.confirm("是否要删除该员工？",function(){
                         ajaxPost(basePath+"/employeeQuery/delete/"+rowId,null,function(data){
                             if(data.success){
                                 //modals.correct("已删除该数据");

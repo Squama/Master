@@ -23,6 +23,7 @@ import com.cnpc.framework.annotation.RefreshCSRFToken;
 import com.cnpc.framework.annotation.VerifyCSRFToken;
 import com.cnpc.framework.base.entity.Dict;
 import com.cnpc.framework.base.entity.User;
+import com.cnpc.framework.base.entity.UserRole;
 import com.cnpc.framework.base.pojo.Result;
 
 /**
@@ -114,8 +115,10 @@ public class EmployeeQueryController {
             if(oldUser.getLoginName().equals(user.getLoginName())){
                oldUser.setPassword(EncryptUtil.getPassword(initPassword,user.getLoginName()));
             }
+            String status = oldUser.getAuditStatus();
             BeanUtils.copyProperties(user,oldUser);
             oldUser.setUpdateDateTime(new Date());
+            oldUser.setAuditStatus(status);
             userService.update(oldUser);
         }
         return new Result(true);
@@ -140,6 +143,23 @@ public class EmployeeQueryController {
       	r.setData(list);
     	return r;
     }
-
+    @RequestMapping(value="/auditResult/{id}",method = RequestMethod.POST)
+    @ResponseBody
+    public Result auditResult(@PathVariable("id") String id){
+        
+        User employee=this.get(id);
+        if("20".equals(employee.getAuditStatus())){//离职
+        	List<UserRole> r = baseService.findBySql("select * from tbl_user_role  where userID='"+id+"'",UserRole.class);
+        	for(UserRole u:r){
+        		userService.delete(u);
+        	}
+        	userService.delete(employee);
+        	return new Result();
+        }else if("30".equals(employee.getAuditStatus())){//入职
+        	employee.setAuditStatus("10");
+        }
+        userService.update(employee);
+        return new Result();
+    }
 
 }
