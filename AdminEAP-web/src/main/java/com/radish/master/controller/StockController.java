@@ -447,5 +447,40 @@ public class StockController {
             return new Result(false,id,"获取查询索引失败");
         }
     }
-    //库存历史查询
+  //初始化库存物料页面
+    @RequestMapping("/showStockMat")
+    public String showStockMat(HttpServletRequest request) {
+    	
+        return "stock/stockAdd_list";
+    }
+  //初始化库存物料弹框
+    @RequestMapping("/addMat")
+    public String addMat(HttpServletRequest request) {
+    	List xm = baseService.findMapBySql("select id value, project_name data from tbl_project", new Object[]{}, new Type[]{StringType.INSTANCE}, Options.class);
+    	List mat = baseService.findMapBySql("select id value, mat_name data from tbl_materiel", new Object[]{}, new Type[]{StringType.INSTANCE}, Options.class);
+
+    	request.setAttribute("xm", JSONArray.toJSONString(xm));
+    	request.setAttribute("mat", JSONArray.toJSONString(mat));
+        return "stock/stock_stockAddMat_Edit";
+    }
+    //获取渠道信息
+    @RequestMapping("/getQdInfo")
+    @ResponseBody
+    public Map<String,Object> getQdInfo(HttpServletRequest request){
+    	String matid = request.getParameter("matid");
+    	Materiel m = baseService.get(Materiel.class, matid);
+    	List<Channel> cl = baseService.findBySql("select * from tbl_channel where mat_ID='"+m.getMat_number()+"' and isValid='1'", Channel.class);
+    	Map<String ,Object> map = new HashMap<String,Object>();
+    	map.put("mat", m);
+    	map.put("cl", cl);
+    	return map;
+    }
+    //物料初始化入库
+    @RequestMapping("/addCshMat")
+    @ResponseBody
+    public Result addCshMat(HttpServletRequest request,Stock s){
+    	Materiel m = baseService.get(Materiel.class, s.getMat_id());
+    	stockService.initializationStock(m.getMat_number(), s.getProject_id(), request.getParameter("channel_id"), s.getStock_num());
+    	return new Result();
+    }
 }
