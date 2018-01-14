@@ -5,8 +5,10 @@ package com.radish.master.service;
 
 import java.util.List;
 
+import com.cnpc.framework.base.pojo.PageInfo;
 import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.base.service.BaseService;
+import com.cnpc.framework.query.entity.QueryCondition;
 import com.radish.master.entity.Budget;
 import com.radish.master.entity.Dispatch;
 import com.radish.master.entity.DispatchDetail;
@@ -14,6 +16,7 @@ import com.radish.master.entity.Purchase;
 import com.radish.master.entity.PurchaseDet;
 import com.radish.master.pojo.MatMap;
 import com.radish.master.pojo.Options;
+import com.radish.master.pojo.PurchaseApplyAudit;
 
 /**
 * 类说明
@@ -56,4 +59,8 @@ public interface PurchaseService extends BaseService{
     public void executeDispatch(String projectID, String id, String matID, String num);
     
     public void cancelDispatch(String id);
+    
+    List<PurchaseApplyAudit> getQuantityAuditList(QueryCondition condition, PageInfo pageInfo);
+    
+    List<PurchaseApplyAudit> getAmountAuditList(QueryCondition condition, PageInfo pageInfo);
 }
