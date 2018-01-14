@@ -43,7 +43,7 @@ public class StockServiceImpl extends BaseServiceImpl implements StockService {
         tockHistory.setStock_change_num(stockChangeNum);
         tockHistory.setOperation_bill_ID(stockSource); //.set/ 采购单/調度單/出庫單編號
         tockHistory.setStockSource(stockSource);//库存操作来源
-        tockHistory.setUsetpye(useTpye);//1：采购入库 2：调度入库 3：消耗出库  4：调度出库
+        tockHistory.setUsetpye(useTpye);//1：采购入库 2：调度入库 3：消耗出库  4：调度出库  5：初始库存
         tockHistory.setOperation_person_id(SecurityUtil.getUserId());
         tockHistory.setOperation_time(new Date());
         save(tockHistory);
@@ -93,6 +93,50 @@ public class StockServiceImpl extends BaseServiceImpl implements StockService {
         savePurchaseChange(purchase_ID,mat_id,stockNum,"1");
         return true;
     }
+
+    /**
+     * 初始化库存入库
+     * project_ID 调度单id
+     * mat_id 物料编号
+     * channel_ID 采购渠道编号
+     * stockNum 变化数量
+     * stockSource 采购单编号
+     * remark
+     * @author 周庆博
+     * @创建时间 2018年1月7日 下午4:42:33
+     * @return
+     */
+    @Override
+    public Boolean initializationStock(String mat_id,String project_ID,String channel_ID,Double stockNum){
+        Stock stock = new Stock();
+        String sql = " select * from tbl_stock where mat_id='"+mat_id+"' and project_ID='"+project_ID+"'";
+        List<Stock> list= findBySql(sql, Stock.class);
+        if(list.size()==0){//同一种物料在一个项目下无记录，做新增
+            //新增库存记录（入库）
+            stock.setProject_id(project_ID);
+            stock.setMat_id(mat_id);
+            stock.setStock_num(stockNum);
+            stock.setFrozen_num(0.0);
+            stock.setAvailable_num(stockNum);
+            stock.setUsetype("5");//1:采购入库，2：调度入库
+            stock.setStorage_person_id(SecurityUtil.getUserId());
+            stock.setStorage_time(new Date());
+            save(stock);
+        }else{
+            //同一种物料在一个项目下原有库存，更新数量
+            stock = get(Stock.class,list.get(0).getId());
+            stock.setStock_num(arith.add(stock.getStock_num() ,stockNum));
+            stock.setAvailable_num(arith.add(stock.getAvailable_num(),stockNum));
+            update(stock);
+        }
+        //同步库存渠道表
+        saveChannel(mat_id ,project_ID,channel_ID,stockNum,1);
+        //新增历史库存记录
+        saveHistory(project_ID,mat_id,stockNum,"5","","");
+        return true;
+    }
+
+
 
     /**
      * 库存总表变化
