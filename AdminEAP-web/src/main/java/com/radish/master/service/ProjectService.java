@@ -9,7 +9,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.base.service.BaseService;
-import com.radish.master.pojo.ProjectDetailVO;
 
 /**
 * 类说明

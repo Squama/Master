@@ -476,10 +476,10 @@ public class StockServiceImpl extends BaseServiceImpl implements StockService {
         List<DispatchDetail> mxList = findBySql(sql, DispatchDetail.class);
         //来源库id
         String sourceProjectID = dispatch.getSourceProjectID();
-        Project tp = baseDao.get(Project.class, sourceProjectID);
+        Project sp = baseDao.get(Project.class, sourceProjectID);
         //目标库id
         String targetProjectID = dispatch.getTargetProjectID();
-        Project sp = baseDao.get(Project.class, targetProjectID);
+        Project tp = baseDao.get(Project.class, targetProjectID);
         //遍历明细，执行相关入库出库操作操作
         for (int i = 0; i < mxList.size(); i++) {
             DispatchDetail dispatchDetail = mxList.get(i);

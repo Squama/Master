@@ -69,4 +69,31 @@
         <column key="matID" header="选择供应商" classType="String" width="100" fnRender="fnRenderChoose"/>
     </query>
     
+    <!-- 数量超限审核列表 -->
+    <query id="quantity_audit_list" key="id" tableName="数量超限" widthType="px" service="purchaseService" method="getQuantityAuditList"
+           simpleSearch="false" className="com.radish.master.pojo.PurchaseApplyAudit">
+        <column key="id" header="编号" hidden="true"/>
+        <column key="rowIndex" header="序号" width="70"/>
+        <column key="budget_no" header="no" hidden="true"/>
+        <column key="region_name" header="部位" align="left" width="100"/>
+        <column key="mat_number" header="物料编码"  width="100"/>
+        <column key="mat_name" header="物料名称" width="100"/>
+        <column key="mat_standard" header="物料规格" width="100"/>
+        <column key="budget" header="预算量" align="right" width="100"/>
+        <column key="cost" header="已消耗" align="right" width="100"/>
+        <column key="apply" header="本次申请" align="right" width="100"/>
+    </query>
+    
+    <!-- 金额超限审核列表 -->
+    <query id="amount_audit_list" key="id" tableName="金额超限" widthType="px" service="purchaseService" method="getAmountAuditList"
+           simpleSearch="false" className="com.radish.master.pojo.PurchaseApplyAudit">
+        <column key="id" header="编号" hidden="true"/>
+        <column key="rowIndex" header="序号" width="70"/>
+        <column key="budget_no" header="no" hidden="true"/>
+        <column key="region_name" header="部位" align="left" width="100"/>
+        <column key="budget" header="预算量" align="right" width="100"/>
+        <column key="cost" header="已消耗" align="right" width="100"/>
+        <column key="apply" header="本次申请" align="right" width="100"/>
+    </query>
+    
 </queryContext>

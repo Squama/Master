@@ -51,6 +51,16 @@ public class PurchaseApplyController {
         return "purchase/apply/apply_list";
     }
     
+    @RequestMapping(value="/testT",method = RequestMethod.GET)
+    public String testQ(){
+        return "purchase/apply/test_quantity_list";
+    }
+    
+    @RequestMapping(value="/testA",method = RequestMethod.GET)
+    public String testA(){
+        return "purchase/apply/test_amount_list";
+    }
+    
     @RequestMapping(value="/add",method = RequestMethod.GET)
     public String add(HttpServletRequest request){
         request.setAttribute("projectOptions", JSONArray.toJSONString(purchaseService.getProjectCombobox()));
