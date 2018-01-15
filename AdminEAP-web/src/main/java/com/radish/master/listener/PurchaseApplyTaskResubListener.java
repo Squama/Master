@@ -3,12 +3,17 @@
  */
 package com.radish.master.listener;
 
+import java.math.BigDecimal;
+import java.util.List;
+
 import org.activiti.engine.delegate.DelegateTask;
 import org.activiti.engine.delegate.TaskListener;
 
 import com.cnpc.framework.activiti.pojo.Constants;
 import com.cnpc.framework.base.service.BaseService;
 import com.radish.master.entity.Purchase;
+import com.radish.master.pojo.PurchaseApplyAudit;
+import com.radish.master.service.PurchaseService;
 import com.radish.master.system.SpringUtil;
 
 /**
@@ -39,8 +44,22 @@ public class PurchaseApplyTaskResubListener implements TaskListener {
             }else if("true".equalsIgnoreCase(delegateTask.getVariable("approved").toString())){
                 purchase.setStatus("20");
                 //判断是否数量超限，更新变量
-                //TODO 判断方法
-                delegateTask.setVariable("isAudit", "false");
+                PurchaseService purchaseService = (PurchaseService)SpringUtil.getObject("purchaseActServer");
+                List<PurchaseApplyAudit> list = purchaseService.getQuantityList(businessKey);
+                String result = "false";
+                for(int i=0;i<list.size();i++){
+                    
+                    BigDecimal budgetCount = new BigDecimal(list.get(i).getBudget()==null?"0":list.get(i).getCost());
+                    BigDecimal costCount = new BigDecimal(list.get(i).getCost()==null?"0":list.get(i).getCost());
+                    BigDecimal applyCount = new BigDecimal(list.get(i).getApply());
+                    
+                    if(applyCount.add(costCount).compareTo(budgetCount) != -1){
+                        result = "true";
+                        break;
+                    }
+                    
+                }
+                delegateTask.setVariable("isAudit", result);
             }
             
             baseService.save(purchase);

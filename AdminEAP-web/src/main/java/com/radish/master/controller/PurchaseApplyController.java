@@ -61,6 +61,18 @@ public class PurchaseApplyController {
         return "purchase/apply/test_amount_list";
     }
     
+    @RequestMapping(value="/auditquantity/{id}",method = RequestMethod.GET)
+    public String auditquantity(@PathVariable("id") String id, HttpServletRequest request){
+        
+        return "purchase/activiti/quantity_audit";
+    }
+    
+    @RequestMapping(value="/auditamount/{id}",method = RequestMethod.GET)
+    public String auditamount(@PathVariable("id") String id, HttpServletRequest request){
+        
+        return "purchase/activiti/amount_audit";
+    }
+    
     @RequestMapping(value="/add",method = RequestMethod.GET)
     public String add(HttpServletRequest request){
         request.setAttribute("projectOptions", JSONArray.toJSONString(purchaseService.getProjectCombobox()));
@@ -228,7 +240,7 @@ public class PurchaseApplyController {
     @ResponseBody
     public Result validateChannel(String id, HttpServletRequest request){
         PurchaseDet purchaseDet = purchaseService.get(PurchaseDet.class, id);
-        purchaseService.delete(purchaseDet);
+        //purchaseService.delete(purchaseDet);
         return new Result(false, "未编辑完");
     }
     

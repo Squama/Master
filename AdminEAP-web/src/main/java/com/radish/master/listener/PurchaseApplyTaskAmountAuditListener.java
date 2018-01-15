@@ -13,8 +13,10 @@ import org.activiti.engine.delegate.TaskListener;
 
 import com.cnpc.framework.activiti.pojo.Constants;
 import com.cnpc.framework.base.service.BaseService;
+import com.radish.master.entity.Dispatch;
 import com.radish.master.entity.Purchase;
 import com.radish.master.entity.PurchaseDet;
+import com.radish.master.service.PurchaseService;
 import com.radish.master.system.SpringUtil;
 
 /**
@@ -42,26 +44,14 @@ public class PurchaseApplyTaskAmountAuditListener implements TaskListener {
                 //渠道再编辑
                 purchase.setStatus("35");
             }else if("true".equalsIgnoreCase(delegateTask.getVariable("approved").toString())){
-                delegateTask.setVariable("isAmountAudit", "false");
                 purchase.setStatus("40");
-                Map<String, Object> params = new HashMap<String, Object>();
-                params.put("id", purchase.getId());
-                List<PurchaseDet> detList = baseService.find("from PurchaseDet where purchaseID = :id", params);
-                
-                BigDecimal sum = new BigDecimal("0");
-                
-                for(PurchaseDet det : detList){
-                    BigDecimal price = new BigDecimal(det.getPrice());
-                    BigDecimal quantity = new BigDecimal(det.getQuantity());
-                    
-                    sum = sum.add(quantity.multiply(price));
-                    
-                }
-                
-                purchase.setApplyAmount(sum.toPlainString());
+                //更新调度表到20
+                PurchaseService purchaseService = (PurchaseService)SpringUtil.getObject("purchaseActServer");
+                Dispatch dispatch = purchaseService.getDispatchByProAndPur("402880e860c947ea0160ca0239670000", purchase.getProjectID(), purchase.getId());
+                dispatch.setStatus("20");
+                purchaseService.save(dispatch);
             }
             baseService.save(purchase);
-            //TODO 更新调度表到20
         }
 
     }

@@ -135,8 +135,22 @@ public class PurchaseServiceImpl extends BaseServiceImpl implements PurchaseServ
         Map<String, Object> variables = new HashMap<>();
         variables.put(Constants.VAR_APPLYUSER_NAME, user.getName());
         variables.put(Constants.VAR_BUSINESS_KEY, businessKey);
-        //TODO数量超限判断
-        variables.put("isAudit", "true");
+        //数量超限判断
+        List<PurchaseApplyAudit> list = this.getQuantityList(businessKey);
+        String result = "false";
+        for(int i=0;i<list.size();i++){
+            
+            BigDecimal budgetCount = new BigDecimal(list.get(i).getBudget()==null?"0":list.get(i).getCost());
+            BigDecimal costCount = new BigDecimal(list.get(i).getCost()==null?"0":list.get(i).getCost());
+            BigDecimal applyCount = new BigDecimal(list.get(i).getApply());
+            
+            if(applyCount.add(costCount).compareTo(budgetCount) != -1){
+                result = "true";
+                break;
+            }
+            
+        }
+        variables.put("isAudit", result);
         
         
         //启动流程
@@ -255,7 +269,7 @@ public class PurchaseServiceImpl extends BaseServiceImpl implements PurchaseServ
 	    PurchaseDet purchaseDetOld = this.get(PurchaseDet.class, id);
         Purchase purchase = this.get(Purchase.class,purchaseDetOld.getPurchaseID());
         
-        Dispatch dispatch = this.getDispatchByProAndPur(purchase.getProjectID(), purchase.getProjectID(), purchaseDetOld.getPurchaseID());
+        Dispatch dispatch = this.getDispatchByProAndPur("402880e860c947ea0160ca0239670000", purchase.getProjectID(), purchaseDetOld.getPurchaseID());
         
         List<DispatchDetail> detailList = this.getDispatchDetailList(dispatch.getId(), purchaseDetOld.getId());
         
@@ -291,46 +305,8 @@ public class PurchaseServiceImpl extends BaseServiceImpl implements PurchaseServ
         if (condition != null) {
             id = condition.getConditionMap().get("id").toString();
         }
-		StringBuilder sb = new StringBuilder();
-		sb.append("SELECT PUR.id, PUR.budget_no, ORI.region_name, PUR.mat_number, PUR.mat_name, PUR.mat_standard, ORI.budget, COST.cost, PUR.apply FROM ");
-		sb.append("(SELECT PD.id,P.budget_no, PD.region_id, PD.mat_number, PD.mat_name, PD.mat_standard, SUM(PD.quantity) apply ");
-		sb.append("FROM tbl_purchase P, tbl_purchase_det PD ");
-		sb.append("WHERE PD.purchase_id = P.id AND P.id = ? ");
-		sb.append("GROUP BY P.budget_no, PD.mat_number, PD.mat_name, PD.mat_standard, PD.region_id) PUR ");
-		sb.append("LEFT JOIN");
-		sb.append("(SELECT BT.budget_no, BT.region_code, BT.region_name, BE.mat_number, BE.mat_name, BE.mat_standard, BE.quantity budget ");
-		sb.append("FROM tbl_budget_tx BT, tbl_budget_estimate BE ");
-		sb.append("WHERE BT.id = BE.budget_tx_id) ORI ");
-		sb.append("ON PUR.budget_no = ORI.budget_no AND PUR.region_id = ORI.region_code AND PUR.mat_number = ORI.mat_number ");
-		sb.append("LEFT JOIN");
-		sb.append("(SELECT P.budget_no, PD.region_id, PD.mat_number, PD.mat_name, PD.mat_standard, SUM(PD.quantity) cost ");
-		sb.append("FROM tbl_purchase P, tbl_purchase_det PD ");
-		sb.append("WHERE PD.purchase_id = P.id AND P.id != ? ");
-		sb.append("GROUP BY P.budget_no, PD.mat_number, PD.mat_name, PD.mat_standard, PD.region_id) COST ");
-		sb.append("ON COST.budget_no = ORI.budget_no AND COST.region_id = ORI.region_code AND COST.mat_number = ORI.mat_number ");
-		sb.append("ORDER BY PUR.region_id ");
 		
-		/*SELECT PUR.id, PUR.budget_no, ORI.region_name, PUR.mat_number, PUR.mat_name, PUR.mat_standard, ORI.budget, COST.cost, PUR.apply FROM
-		(SELECT PD.id,P.budget_no, PD.region_id, PD.mat_number, PD.mat_name, PD.mat_standard, SUM(PD.quantity) apply
-		FROM tbl_purchase P, tbl_purchase_det PD
-		WHERE PD.purchase_id = P.id AND P.id = '40280c9460e9746f0160e97f17880035'
-		GROUP BY P.budget_no, PD.mat_number, PD.mat_name, PD.mat_standard, PD.region_id) PUR
-		LEFT JOIN
-		(SELECT BT.budget_no, BT.region_code, BT.region_name, BE.mat_number, BE.mat_name, BE.mat_standard, BE.quantity budget
-		FROM tbl_budget_tx BT, tbl_budget_estimate BE
-		WHERE BT.id = BE.budget_tx_id) ORI
-		ON PUR.budget_no = ORI.budget_no AND PUR.region_id = ORI.region_code AND PUR.mat_number = ORI.mat_number
-		LEFT JOIN
-		(SELECT P.budget_no, PD.region_id, PD.mat_number, PD.mat_name, PD.mat_standard, SUM(PD.quantity) cost
-		FROM tbl_purchase P, tbl_purchase_det PD
-		WHERE PD.purchase_id = P.id AND P.id != '40280c9460e9746f0160e97f17880035'
-		GROUP BY P.budget_no, PD.mat_number, PD.mat_name, PD.mat_standard, PD.region_id) COST
-		ON COST.budget_no = ORI.budget_no AND COST.region_id = ORI.region_code AND COST.mat_number = ORI.mat_number
-		ORDER BY PUR.region_id*/
-
-		List<PurchaseApplyAudit> list = this.findMapBySql(sb.toString(), new Object[]{id, id}, new Type[]{StringType.INSTANCE, StringType.INSTANCE}, null);
-		
-		return list;
+		return this.getQuantityList(id);
 	}
 
 	@Override
@@ -338,47 +314,91 @@ public class PurchaseServiceImpl extends BaseServiceImpl implements PurchaseServ
 		String id = null;
         if (condition != null) {
             id = condition.getConditionMap().get("id").toString();
-            System.out.println(id);
         }
-		StringBuilder sb = new StringBuilder();
-		sb.append("SELECT PUR.id, PUR.budget_no, ORI.region_name, ORI.budget, COST.cost, PUR.apply FROM ");
-		sb.append("(SELECT PD.id,P.budget_no, PD.region_id, SUM(PD.quantity*PD.price) apply ");
-		sb.append("FROM tbl_purchase P, tbl_purchase_det PD ");
-		sb.append("WHERE PD.purchase_id = P.id AND P.id = ? ");
-		sb.append("GROUP BY P.budget_no, PD.region_id) PUR ");
-		sb.append("LEFT JOIN");
-		sb.append("(SELECT budget_no, region_code, region_name, unit_price AS budget ");
-		sb.append("FROM tbl_budget_tx) ORI ");
-		sb.append("ON PUR.budget_no = ORI.budget_no AND PUR.region_id = ORI.region_code  ");
-		sb.append("LEFT JOIN");
-		sb.append("(SELECT PD.id,P.budget_no, PD.region_id, SUM(PD.quantity*PD.price) cost  ");
-		sb.append("FROM tbl_purchase P, tbl_purchase_det PD ");
-		sb.append("WHERE PD.purchase_id = P.id AND P.id != ? ");
-		sb.append("GROUP BY P.budget_no, PD.region_id) COST ");
-		sb.append("ON COST.budget_no = ORI.budget_no AND COST.region_id = ORI.region_code ");
-		sb.append("ORDER BY PUR.region_id ");
 		
-		// TODO Auto-generated method stub
-		/*SELECT PUR.id, PUR.budget_no, ORI.region_name, ORI.budget, COST.cost, PUR.apply FROM
-		(SELECT PD.id,P.budget_no, PD.region_id, SUM(PD.quantity*PD.price) apply
-		FROM tbl_purchase P, tbl_purchase_det PD
-		WHERE PD.purchase_id = P.id AND P.id = '40280c9460e9746f0160e97f17880035'
-		GROUP BY P.budget_no, PD.region_id) PUR
-		LEFT JOIN
-		(SELECT budget_no, region_code, region_name, unit_price AS budget
-		FROM tbl_budget_tx) ORI
-		ON PUR.budget_no = ORI.budget_no AND PUR.region_id = ORI.region_code 
-		LEFT JOIN
-		(SELECT PD.id,P.budget_no, PD.region_id, SUM(PD.quantity*PD.price) cost
-		FROM tbl_purchase P, tbl_purchase_det PD
-		WHERE PD.purchase_id = P.id AND P.id != '40280c9460e9746f0160e97f17880035'
-		GROUP BY P.budget_no, PD.region_id) COST
-		ON COST.budget_no = ORI.budget_no AND COST.region_id = ORI.region_code 
-		ORDER BY PUR.region_id*/
-
-
-		List<PurchaseApplyAudit> list = this.findMapBySql(sb.toString(), new Object[]{id, id}, new Type[]{StringType.INSTANCE, StringType.INSTANCE}, null);
-		
-		return list;
+		return this.getAmountList(id);
+	}
+	
+	@Override
+	public List<PurchaseApplyAudit> getQuantityList(String purchaseID){
+	    StringBuilder sb = new StringBuilder();
+        sb.append("SELECT PUR.id, PUR.budget_no, ORI.region_name, PUR.mat_number, PUR.mat_name, PUR.mat_standard, ORI.budget, COST.cost, PUR.apply FROM ");
+        sb.append("(SELECT PD.id,P.budget_no, PD.region_id, PD.mat_number, PD.mat_name, PD.mat_standard, SUM(PD.quantity) apply ");
+        sb.append("FROM tbl_purchase P, tbl_purchase_det PD ");
+        sb.append("WHERE PD.purchase_id = P.id AND P.id = ? ");
+        sb.append("GROUP BY P.budget_no, PD.mat_number, PD.mat_name, PD.mat_standard, PD.region_id) PUR ");
+        sb.append("LEFT JOIN");
+        sb.append("(SELECT BT.budget_no, BT.region_code, BT.region_name, BE.mat_number, BE.mat_name, BE.mat_standard, BE.quantity budget ");
+        sb.append("FROM tbl_budget_tx BT, tbl_budget_estimate BE ");
+        sb.append("WHERE BT.id = BE.budget_tx_id) ORI ");
+        sb.append("ON PUR.budget_no = ORI.budget_no AND PUR.region_id = ORI.region_code AND PUR.mat_number = ORI.mat_number ");
+        sb.append("LEFT JOIN");
+        sb.append("(SELECT P.budget_no, PD.region_id, PD.mat_number, PD.mat_name, PD.mat_standard, SUM(PD.quantity) cost ");
+        sb.append("FROM tbl_purchase P, tbl_purchase_det PD ");
+        sb.append("WHERE PD.purchase_id = P.id AND P.id != ? ");
+        sb.append("GROUP BY P.budget_no, PD.mat_number, PD.mat_name, PD.mat_standard, PD.region_id) COST ");
+        sb.append("ON COST.budget_no = ORI.budget_no AND COST.region_id = ORI.region_code AND COST.mat_number = ORI.mat_number ");
+        sb.append("ORDER BY PUR.region_id ");
+        
+        /*SELECT PUR.id, PUR.budget_no, ORI.region_name, PUR.mat_number, PUR.mat_name, PUR.mat_standard, ORI.budget, COST.cost, PUR.apply FROM
+        (SELECT PD.id,P.budget_no, PD.region_id, PD.mat_number, PD.mat_name, PD.mat_standard, SUM(PD.quantity) apply
+        FROM tbl_purchase P, tbl_purchase_det PD
+        WHERE PD.purchase_id = P.id AND P.id = '40280c9460e9746f0160e97f17880035'
+        GROUP BY P.budget_no, PD.mat_number, PD.mat_name, PD.mat_standard, PD.region_id) PUR
+        LEFT JOIN
+        (SELECT BT.budget_no, BT.region_code, BT.region_name, BE.mat_number, BE.mat_name, BE.mat_standard, BE.quantity budget
+        FROM tbl_budget_tx BT, tbl_budget_estimate BE
+        WHERE BT.id = BE.budget_tx_id) ORI
+        ON PUR.budget_no = ORI.budget_no AND PUR.region_id = ORI.region_code AND PUR.mat_number = ORI.mat_number
+        LEFT JOIN
+        (SELECT P.budget_no, PD.region_id, PD.mat_number, PD.mat_name, PD.mat_standard, SUM(PD.quantity) cost
+        FROM tbl_purchase P, tbl_purchase_det PD
+        WHERE PD.purchase_id = P.id AND P.id != '40280c9460e9746f0160e97f17880035'
+        GROUP BY P.budget_no, PD.mat_number, PD.mat_name, PD.mat_standard, PD.region_id) COST
+        ON COST.budget_no = ORI.budget_no AND COST.region_id = ORI.region_code AND COST.mat_number = ORI.mat_number
+        ORDER BY PUR.region_id*/
+        
+        return this.findMapBySql(sb.toString(), new Object[]{purchaseID, purchaseID}, new Type[]{StringType.INSTANCE, StringType.INSTANCE}, null);
+	}
+	
+	@Override
+	public List<PurchaseApplyAudit> getAmountList(String purchaseID){
+	       StringBuilder sb = new StringBuilder();
+	        sb.append("SELECT PUR.id, PUR.budget_no, ORI.region_name, ORI.budget, COST.cost, PUR.apply FROM ");
+	        sb.append("(SELECT PD.id,P.budget_no, PD.region_id, SUM(PD.quantity*PD.price) apply ");
+	        sb.append("FROM tbl_purchase P, tbl_purchase_det PD ");
+	        sb.append("WHERE PD.purchase_id = P.id AND P.id = ? ");
+	        sb.append("GROUP BY P.budget_no, PD.region_id) PUR ");
+	        sb.append("LEFT JOIN");
+	        sb.append("(SELECT budget_no, region_code, region_name, unit_price AS budget ");
+	        sb.append("FROM tbl_budget_tx) ORI ");
+	        sb.append("ON PUR.budget_no = ORI.budget_no AND PUR.region_id = ORI.region_code  ");
+	        sb.append("LEFT JOIN");
+	        sb.append("(SELECT PD.id,P.budget_no, PD.region_id, SUM(PD.quantity*PD.price) cost  ");
+	        sb.append("FROM tbl_purchase P, tbl_purchase_det PD ");
+	        sb.append("WHERE PD.purchase_id = P.id AND P.id != ? ");
+	        sb.append("GROUP BY P.budget_no, PD.region_id) COST ");
+	        sb.append("ON COST.budget_no = ORI.budget_no AND COST.region_id = ORI.region_code ");
+	        sb.append("ORDER BY PUR.region_id ");
+	        
+	        // TODO Auto-generated method stub
+	        /*SELECT PUR.id, PUR.budget_no, ORI.region_name, ORI.budget, COST.cost, PUR.apply FROM
+	        (SELECT PD.id,P.budget_no, PD.region_id, SUM(PD.quantity*PD.price) apply
+	        FROM tbl_purchase P, tbl_purchase_det PD
+	        WHERE PD.purchase_id = P.id AND P.id = '40280c9460e9746f0160e97f17880035'
+	        GROUP BY P.budget_no, PD.region_id) PUR
+	        LEFT JOIN
+	        (SELECT budget_no, region_code, region_name, unit_price AS budget
+	        FROM tbl_budget_tx) ORI
+	        ON PUR.budget_no = ORI.budget_no AND PUR.region_id = ORI.region_code 
+	        LEFT JOIN
+	        (SELECT PD.id,P.budget_no, PD.region_id, SUM(PD.quantity*PD.price) cost
+	        FROM tbl_purchase P, tbl_purchase_det PD
+	        WHERE PD.purchase_id = P.id AND P.id != '40280c9460e9746f0160e97f17880035'
+	        GROUP BY P.budget_no, PD.region_id) COST
+	        ON COST.budget_no = ORI.budget_no AND COST.region_id = ORI.region_code 
+	        ORDER BY PUR.region_id*/
+	        
+	        return this.findMapBySql(sb.toString(), new Object[]{purchaseID, purchaseID}, new Type[]{StringType.INSTANCE, StringType.INSTANCE}, null);
 	}
 }

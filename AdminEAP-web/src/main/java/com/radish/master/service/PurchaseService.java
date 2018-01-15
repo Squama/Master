@@ -63,4 +63,8 @@ public interface PurchaseService extends BaseService{
     List<PurchaseApplyAudit> getQuantityAuditList(QueryCondition condition, PageInfo pageInfo);
     
     List<PurchaseApplyAudit> getAmountAuditList(QueryCondition condition, PageInfo pageInfo);
+    
+    public List<PurchaseApplyAudit> getAmountList(String purchaseID);
+    
+    public List<PurchaseApplyAudit> getQuantityList(String purchaseID);
 }

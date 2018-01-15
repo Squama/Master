@@ -13,8 +13,11 @@ import org.activiti.engine.delegate.TaskListener;
 
 import com.cnpc.framework.activiti.pojo.Constants;
 import com.cnpc.framework.base.service.BaseService;
+import com.radish.master.entity.Dispatch;
 import com.radish.master.entity.Purchase;
 import com.radish.master.entity.PurchaseDet;
+import com.radish.master.pojo.PurchaseApplyAudit;
+import com.radish.master.service.PurchaseService;
 import com.radish.master.system.SpringUtil;
 
 /**
@@ -64,10 +67,34 @@ public class PurchaseApplyTaskCompleteListener implements TaskListener {
                 }
                 
                 purchase.setApplyAmount(sum.toPlainString());
+                
+                //判断金额超限
+                PurchaseService purchaseService = (PurchaseService)SpringUtil.getObject("purchaseActServer");
+                List<PurchaseApplyAudit> list = purchaseService.getAmountList(businessKey);
+                String result = "false";
+                for(int i=0;i<list.size();i++){
+                    
+                    BigDecimal budgetCount = new BigDecimal(list.get(i).getBudget()==null?"0":list.get(i).getCost());
+                    BigDecimal costCount = new BigDecimal(list.get(i).getCost()==null?"0":list.get(i).getCost());
+                    BigDecimal applyCount = new BigDecimal(list.get(i).getApply());
+                    
+                    if(applyCount.add(costCount).compareTo(budgetCount) != -1){
+                        result = "true";
+                        break;
+                    }
+                    
+                }
+                delegateTask.setVariable("isAudit", result);
+                //不超限就更新审核标志false并更新调度表20
+                if(result == "false"){
+                    // 更新调度表到20
+                    Dispatch dispatch = purchaseService.getDispatchByProAndPur("402880e860c947ea0160ca0239670000", purchase.getProjectID(), purchase.getId());
+                    dispatch.setStatus("20");
+                    purchaseService.save(dispatch);
+                }
             }
             baseService.save(purchase);
             
-            //TODO 更新调度表到20
         }
 
     }

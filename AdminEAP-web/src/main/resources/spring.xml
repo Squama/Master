@@ -36,5 +36,6 @@ http://www.springframework.org/schema/context/spring-context-4.0.xsd">
 
     <bean id="springUtil" class="com.radish.master.system.SpringUtil"/>
     <bean id="baseActServer" class=" com.cnpc.framework.base.service.impl.BaseServiceImpl"></bean>
+    <bean id="purchaseActServer" class=" com.radish.master.service.impl.PurchaseServiceImpl"></bean>
 
 </beans>
