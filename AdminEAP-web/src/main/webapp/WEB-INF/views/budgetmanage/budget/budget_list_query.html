@@ -1,12 +1,12 @@
 <!-- Content Header (Page header) -->
 <section class="content-header">
     <h1>
-        预算信息管理 <small>列表</small>
+        预算信息查询 <small>列表</small>
     </h1>
     <ol class="breadcrumb">
         <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
         <li><a href="#">预算管理</a></li>
-        <li class="active">预算信息管理</li>
+        <li class="active">预算信息查询</li>
     </ol>
 </section> 
 
@@ -71,7 +71,8 @@
     }
     
     function fnRenderDetail(value) {
-        return "<a href='javascript:void(0)' onclick='budgetQueryObj.showDetail(\"" + value + "\")'>详情</a>";
+    	return "";
+        //return "<a href='javascript:void(0)' onclick='budgetQueryObj.showDetail(\"" + value + "\")'>详情</a>";
     }
     
 </script>
