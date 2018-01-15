@@ -135,6 +135,7 @@ public class PurchaseServiceImpl extends BaseServiceImpl implements PurchaseServ
         Map<String, Object> variables = new HashMap<>();
         variables.put(Constants.VAR_APPLYUSER_NAME, user.getName());
         variables.put(Constants.VAR_BUSINESS_KEY, businessKey);
+        //TODO数量超限判断
         variables.put("isAudit", "true");
         
         

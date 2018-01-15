@@ -17,11 +17,7 @@
             <div class="box">
                 <!-- /.box-header -->
                 <div class="dataTables_filter" id="searchDiv">
-                    <input placeholder="请输入预算名称" name="id" class="form-control" type="search" value="40280c9460e9746f0160e97f17880035" /> 
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-primary"   data-btn-type="search">查询</button>
-                        <button type="button" class="btn btn-default" data-btn-type="reset">重置</button>
-                    </div>
+                    <input placeholder="请输入预算名称" name="id" class="form-control" type="search" value="40280c9460e9746f0160e97f17880035" style="display:none;"/> 
                 </div>
                 <div class="box-body">
                     <table id="budget_table" class="table table-bordered table-striped table-hover">
@@ -43,7 +39,15 @@
     
     $(function() { 
         //init table and fill data
-        budgetTable = new CommonTable("budget_table", "quantity_audit_list", "searchDiv");
+        budgetTable = new CommonTable("budget_table", "quantity_audit_list", "searchDiv", {
+        	"ordering" : false,
+            "lengthChange": false,
+            "displayLength": 20,
+            "scrollY": "500px",
+            "paging" : false,
+            "dom": '',
+            "scrollCollapse": true
+        });
 
     })
 
