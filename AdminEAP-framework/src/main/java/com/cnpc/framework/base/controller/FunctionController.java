@@ -4,6 +4,8 @@ import com.cnpc.framework.base.entity.Function;
 import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.base.pojo.TreeNode;
 import com.cnpc.framework.base.service.FunctionService;
+import com.cnpc.framework.base.service.RoleService;
+import com.cnpc.framework.utils.SecurityUtil;
 import com.cnpc.framework.utils.StrUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Controller
 @RequestMapping(value = "/function")
@@ -21,6 +24,9 @@ public class FunctionController {
 
     @Resource
     private FunctionService functionService;
+    
+    @Resource
+    private RoleService roleService;
 
     /**
      * 用户列表
@@ -37,6 +43,15 @@ public class FunctionController {
 
         String hql = "from Function order by levelCode asc";
         return functionService.find(hql.toString());
+    }
+    
+    @RequestMapping(value = "/rolefunc", method = RequestMethod.POST)
+    @ResponseBody
+    public List<Function> getRoleFunc() {
+
+        String userId = SecurityUtil.getUserId();
+        Set<String> roles = roleService.getRoleCodeSet(userId);
+        return functionService.getFunctionList(roles, userId);
     }
 
 
