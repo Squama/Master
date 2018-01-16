@@ -51,7 +51,12 @@ public class FunctionController {
 
         String userId = SecurityUtil.getUserId();
         Set<String> roles = roleService.getRoleCodeSet(userId);
-        return functionService.getFunctionList(roles, userId);
+        if(roles.contains("ADMIN")){
+            return this.getAll();
+        }else{
+            return functionService.getFunctionList(roles, userId);
+        }
+        
     }
 
 
