@@ -1,7 +1,7 @@
 <!--login_page_identity-->
 <!--以上文件注释不可去掉，校验文件首页用,详见base.js的jquery.fn.load-->
 <!DOCTYPE html>
-<html>
+<html style="background:url(${basePath}/resources/common/images/login_01.png) fixed no-repeat center center;background-size:cover">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -32,77 +32,58 @@
     <script src="${basePath}/resources/common/libs/respond/respond.min.js"></script>
     <![endif]-->
 </head>
-<body class="hold-transition login-page">
-<div class="login-box">
-    <!--
-    <div class="login-logo">
-        <a href="#"><b>Admin</b>EAP</a>
-    </div>
-    -->
-    <div class="login-logo">
-        <img src="/resources/common/images/logo_red_03.png" width="220px" height="50px" alt="AdminEAP">
-    </div>
-    <!-- /.login-logo -->
-    <div class="login-box-body">
-        <p class="login-box-msg">测试账号 test/bill</p>
-
-        <form action="${basePath}/login" method="post" id="login-form">
-            <div class="form-group has-feedback">
-                <input type="text" class="form-control"  name="userName" placeholder="请输入登录邮箱/登录名">
-                <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
-            </div>
-            <div class="form-group has-feedback">
-                <input type="password" class="form-control" name="password" placeholder="请输入密码">
-                <span class="glyphicon glyphicon-lock form-control-feedback"></span>
-            </div>
-            <div class="row">
-                <div class="col-xs-6">
-                    <div class="checkbox icheck">
-                        <label>
-                            <input type="checkbox" name="rememberMe"> 记住用户
-                        </label>
-                    </div>
-                </div>
-                <!-- /.col -->
-                <div class="col-xs-6">
-                    <div class="checkbox pull-right">
-                        <a href="#">忘记密码</a>
-                        <span>&nbsp;/&nbsp;</span>
-                        <a href="${basePath}/register" class="text-center">注册</a>
-                    </div>
-                </div>
-                <!-- /.col -->
-            </div>
-            <div class="row">
-                <div class="col-xs-12">
-                    <button type="submit" class="btn btn-danger btn-block btn-flat">登 录</button>
-                </div>
-            </div>
-        </form>
-
-
-        <div class="social-auth-links" style="margin-bottom: 0px;">
-            <div class="row">
-                <div class="col-xs-5">
-                    <div class="text-left" style="margin-top: 5px;">快速登录</div>
-                </div>
-                <div class="col-xs-7">
-                    <div class="text-right">
-                        <!--<a class="btn btn-social-icon btn-primary"><i class="fa fa-qq"></i></a>
-                        <a class="btn btn-social-icon btn-success"><i class="fa fa-wechat"></i></a>
-                        <a class="btn btn-social-icon btn-warning"><i class="fa fa-weibo"></i></a>
-                        <a class="btn btn-social-icon btn-info"><i class="fa fa-github"></i></a>-->
-                        <#list oAuthServices as oauth>
-                            <a class="btn btn-social-icon ${oauth.btnClass}" href="${oauth.authorizationUrl}"><i class="fa fa-${oauth.oAuthType}"></i></a>
-                        </#list>
-                    </div>
-                </div>
-            </div>
-            <!-- /.social-auth-links -->
-        </div>
-        <!-- /.login-box-body -->
-    </div>
-    <!-- /.login-box -->
+<body class="hold-transition login-page" style="background:none;">
+<div>
+	<div class="login-box">
+	    <!--
+	    <div class="login-logo">
+	        <a href="#"><b>Admin</b>EAP</a>
+	    </div>
+	    -->
+	    <div class="login-logo" style="margin-bottom:0px;background-color:white;">
+	        <img src="${basePath}/resources/common/images/logo_red_03.png" width="220px" height="50px" alt="AdminEAP">
+	    </div>
+	    <!-- /.login-logo -->
+	    <div class="login-box-body">
+	        <p class="login-box-msg">试用版</p>
+	
+	        <form action="${basePath}/login" method="post" id="login-form">
+	            <div class="form-group has-feedback">
+	                <input type="text" class="form-control"  name="userName" placeholder="请输入登录邮箱/登录名">
+	                <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+	            </div>
+	            <div class="form-group has-feedback">
+	                <input type="password" class="form-control" name="password" placeholder="请输入密码">
+	                <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+	            </div>
+	            <div class="row">
+	                <div class="col-xs-6">
+	                    <div class="checkbox icheck">
+	                        <label>
+	                            <input type="checkbox" name="rememberMe"> 记住用户
+	                        </label>
+	                    </div>
+	                </div>
+	                <!-- /.col -->
+	                <div class="col-xs-6">
+	                    <div class="checkbox pull-right">
+	                        <a href="#">忘记密码</a>
+	                        <span>&nbsp;/&nbsp;</span>
+	                        <a href="${basePath}/register" class="text-center">注册</a>
+	                    </div>
+	                </div>
+	                <!-- /.col -->
+	            </div>
+	            <div class="row">
+	                <div class="col-xs-12">
+	                    <button type="submit" class="btn btn-danger btn-block btn-flat">登 录</button>
+	                </div>
+	            </div>
+	        </form>
+	        <!-- /.login-box-body -->
+	    </div>
+	    <!-- /.login-box -->
+	</div>
 </div>
     <!-- jQuery 2.2.3 -->
     <script src="${basePath}/resources/adminlte/plugins/jQuery/jquery-2.2.3.min.js"></script>
