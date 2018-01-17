@@ -25,8 +25,6 @@ http://www.springframework.org/schema/context/spring-context-4.0.xsd">
     <context:component-scan base-package="com.radish.framework.aop"/>
     <!--数据库配置与事务-->
     <import resource="classpath:spring-hibernate.xml"/>
-    <!--自动任务quartz配置-->
-    <import resource="classpath:spring-quartz.xml"/>
     <!--安全框架shiro配置-->
     <import resource="classpath:spring-shiro.xml"/>
     <!--缓存框架redis配置-->

@@ -43,7 +43,7 @@ public class EmployeeQueryController {
     @Resource
     private UserRoleService userRoleService;
     
-    private final static String initPassword= "silabo";
+    private final static String initPassword= "123456";
 
     @RequestMapping(value="/list",method = RequestMethod.GET)
     public String list(){

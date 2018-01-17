@@ -72,56 +72,56 @@ public class ProjectFileController {
     
     @RequestMapping(value="/safty",method = RequestMethod.GET)
     public String safty(HttpServletRequest request){
-        request.setAttribute(ITEMCODE, "saftyFile");
+        request.setAttribute(ITEMCODE, "safty_file");
         request.setAttribute(ITEMNAME, "安全文明文件");
         return RESPONSEURL;
     }
     
     @RequestMapping(value="/construction",method = RequestMethod.GET)
     public String construction(HttpServletRequest request){
-        request.setAttribute(ITEMCODE, "constructionFile");
+        request.setAttribute(ITEMCODE, "construction_file");
         request.setAttribute(ITEMNAME, "施工合同");
         return RESPONSEURL;
     }
     
     @RequestMapping(value="/bids",method = RequestMethod.GET)
     public String bids(HttpServletRequest request){
-        request.setAttribute(ITEMCODE, "bidsFile");
+        request.setAttribute(ITEMCODE, "bids_file");
         request.setAttribute(ITEMNAME, "招标文件");
         return RESPONSEURL;
     }
     
     @RequestMapping(value="/bidswin",method = RequestMethod.GET)
     public String bidsWin(HttpServletRequest request){
-        request.setAttribute(ITEMCODE, "bidsWinFile");
+        request.setAttribute(ITEMCODE, "bids_win_file");
         request.setAttribute(ITEMNAME, "中标文件");
         return RESPONSEURL;
     }
     
     @RequestMapping(value="/bidswinnotice",method = RequestMethod.GET)
     public String bidsWinNotice(HttpServletRequest request){
-        request.setAttribute(ITEMCODE, "bidsWinNoticeFile");
+        request.setAttribute(ITEMCODE, "bids_win_notice_file");
         request.setAttribute(ITEMNAME, "中标通知文件");
         return RESPONSEURL;
     }
     
     @RequestMapping(value="/quality",method = RequestMethod.GET)
     public String quality(HttpServletRequest request){
-        request.setAttribute(ITEMCODE, "qualityFile");
+        request.setAttribute(ITEMCODE, "quality_file");
         request.setAttribute(ITEMNAME, "工程质量文件");
         return RESPONSEURL;
     }
     
     @RequestMapping(value="/cost",method = RequestMethod.GET)
     public String cost(HttpServletRequest request){
-        request.setAttribute(ITEMCODE, "costFile");
+        request.setAttribute(ITEMCODE, "cost_file");
         request.setAttribute(ITEMNAME, "预算成本分析表");
         return RESPONSEURL;
     }
     
     @RequestMapping(value="/schedule",method = RequestMethod.GET)
     public String schedule(HttpServletRequest request){
-        request.setAttribute(ITEMCODE, "scheduleFile");
+        request.setAttribute(ITEMCODE, "schedule_file");
         request.setAttribute(ITEMNAME, "工程进度文件");
         return RESPONSEURL;
     }
