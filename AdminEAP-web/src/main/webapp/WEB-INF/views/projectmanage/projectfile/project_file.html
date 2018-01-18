@@ -38,13 +38,14 @@
     $(function (){
     	itemCode = "${itemCode}";
     	itemName = "${itemName}";
+    	itemColumn = "${itemColumn}";
     	
     	$('#title').html(itemName);
     	
     	$('<input>',{
     		'type' : 'search',
-    		'name' : itemCode,
-    		'id' : itemCode,
+    		'name' : itemColumn,
+    		'id' : itemColumn,
     		'operator' : 'not_null',
     		'style' : 'display:none;'
     	}).prependTo($('#searchDiv'));
