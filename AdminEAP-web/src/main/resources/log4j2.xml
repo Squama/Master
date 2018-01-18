@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Configuration status="INFO" monitorInterval="600">
+    <Properties>
+        <property name="ModuleName">admineap</property>
+    </Properties>
+
+    <Appenders>
+        <Console name="ConsoleAppender">
+            <PatternLayout pattern="|%d{yyyy-MM-dd HH:mm:ss.SSS}|%5p|%5t|%l|%m%n" />
+        </Console>
+
+        <RollingRandomAccessFile name="SystemAppender"
+            filename="/logs/radish/${ModuleName}/${ModuleName}.log"
+            filepattern="/logs/radish/${ModuleName}/$${date:yyyy-MM-dd}/${ModuleName}.log.%d{yyyy-MM-dd-HHmmss}-%i.log">
+            <PatternLayout pattern="|%d{yyyy-MM-dd HH:mm:ss.SSS}|%5p|%5t|%l|%m%n" />
+            <Policies>
+                <TimeBasedTriggeringPolicy modulate="true" interval="3600" />
+                <SizeBasedTriggeringPolicy size="64MB" />
+            </Policies>
+            <DefaultRolloverStrategy max="1000" />
+        </RollingRandomAccessFile>
+    </Appenders>
+
+    <Loggers>
+        <AsyncLogger name="system" additivity="false" level="INFO" includeLocation="true">
+            <AppenderRef ref="SystemAppender" />
+        </AsyncLogger>
+        
+        <AsyncLogger name="dao" additivity="false" level="INFO" includeLocation="true">
+            <AppenderRef ref="SystemAppender" />
+        </AsyncLogger>
+
+        <AsyncLogger name="console" additivity="false" level="INFO" includeLocation="true">
+            <AppenderRef ref="SystemAppender" />
+            <AppenderRef ref="ConsoleAppender" />
+        </AsyncLogger>
+        
+        <AsyncLogger name="org.hibernate.SQL" additivity="false" level="INFO" includeLocation="true">
+            <AppenderRef ref="SystemAppender" />
+        </AsyncLogger>
+        
+        <AsyncRoot level="INFO" includeLocation="true">
+            <AppenderRef ref="SystemAppender" />
+        </AsyncRoot>
+        
+    </Loggers>
+</Configuration>
