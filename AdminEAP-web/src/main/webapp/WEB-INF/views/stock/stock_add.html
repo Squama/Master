@@ -27,6 +27,16 @@
 						</select>
 					</div>
 				</div>
+
+				<div class="form-group">
+					<label class="col-sm-3 control-label">使用部位<span style="color:#ff0000">*</span></label>
+					<div class="col-sm-8">
+						<select id="region" class="form-control select2" name="region" style="width:100%">
+							<option selected="selected" value="">选择一种使用部位</option>
+						</select>
+					</div>
+				</div>
+
 				<div class="form-group">
 					<label for="mat_id" class="col-sm-3 control-label">物料编号</label>
 					<div class="col-sm-8">
@@ -46,8 +56,6 @@
 					</div>
 				</div>
 			</div>
-
-
 
 			<div class="col-md-6">
 				<div class="form-group">
@@ -91,7 +99,7 @@
 
 </div>
 <script>
-    var purchase_ID,mat_id,channel_id,project_id,stockNum;
+    var purchase_ID,mat_id,channel_id,project_id,stockNum,region_id;
     var form =null;
     var projectOptions = '${purchaseOptions?default(0)}',options=0;
     if(projectOptions != 0){
@@ -102,7 +110,6 @@
         form=$("#stock-form").form();
         importform = $("#import_form").form({baseEntity:false});
         importform.initComponent();
-
 
         form.initComponent();
         if(options != 0){
@@ -115,7 +122,7 @@
     });
 
     $("#mat_name").change(function(){
-        //getMat();
+        setRegion();
         getChannelByPurchase();
         //数据校验
         $("#stock-form").bootstrapValidator({
@@ -130,6 +137,7 @@
                     var params = form.getFormSimpleData();
                     params.channel_id=channel_id;
                     params.project_id = project_id;
+                    params.region_id =  $("#region").val();
                     ajaxPost(basePath+'/stock/save', params, function(data) {
                         if(data.success){
                             modals.hideWin(winId);
@@ -185,10 +193,16 @@
             }
         });
     });
+
+    $("#region").change(function(){
+        getChannelByPurchase();
+    });
+
+
     function getChannelByPurchase(){
+        region_id = $("#region").val();
         mat_id = $("#mat_name").val();
-        ajaxPost(basePath+"/stock/getChannelByPurchase?mat_id="+mat_id+"&purchase_id="+purchase_ID,null,function(data){
-            console.log(data)
+        ajaxPost(basePath+"/stock/getChannelByPurchase?mat_id="+mat_id+"&purchase_id="+purchase_ID+"&region_id="+region_id,null,function(data){
             if(data.data){
                 $("#channel").val(data.data.channel_name);
                 $("#stock_Num").val(data.data.surplus_quantity);
@@ -202,6 +216,22 @@
         })
     }
 
+    function setRegion(){
+        var purchase_id = $("#purchase_id option:selected").val();
+        var mat_id = $("#mat_name option:selected").val();
+        ajaxPost(basePath + "/stock/getRegionInfo?purchase_id="+purchase_id+"&mat_id="+mat_id, null, function (data) {
+            console.log(data);
+            var region = data.region;
+            console.log(region);
+            $("#region").empty();
+            for(var i = 0;i<region.length;i++){
+                var option = region[i];
+                $('#region').append("<option value=\"" + option.regionID + "\">" + option.regionName + "</option>");
+            }
+        })
+    }
+
+
     $("#purchase_id").change(function(){
         purchase_ID = $("#purchase_id").val();
         ajaxPost(basePath+"/stock/getProjectByPurchase?id="+purchase_ID,null,function(data){
@@ -213,7 +243,7 @@
             }
             /*初始化物料选择框*/
             if(data.data[0] != "[]"){
-                console.log(data.data)
+
                 var matOptions = data.data[0],moptions=0;
                 if(matOptions != 0){
                     moptions = JSON.parse(matOptions);

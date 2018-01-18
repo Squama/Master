@@ -63,7 +63,7 @@ public class StockServiceImpl extends BaseServiceImpl implements StockService {
      * @return
      */
     @Override
-    public Boolean saveOneStock(String mat_id,String project_ID,String channel_ID,String purchase_ID,Double stockNum){
+    public Boolean saveOneStock(String mat_id,String project_ID,String channel_ID,String purchase_ID,Double stockNum,String region_ID){
         Stock stock = new Stock();
         String sql = " select * from tbl_stock where mat_id='"+mat_id+"' and project_ID='"+project_ID+"'";
         List<Stock> list= findBySql(sql, Stock.class);
@@ -90,7 +90,7 @@ public class StockServiceImpl extends BaseServiceImpl implements StockService {
         //新增历史库存记录
         saveHistory(project_ID,mat_id,stockNum,"1",purchase_ID,"");
         //更新采购单余量
-        savePurchaseChange(purchase_ID,mat_id,stockNum,"1");
+        savePurchaseChange(purchase_ID,mat_id,stockNum,"1", region_ID);
         return true;
     }
 
@@ -192,8 +192,8 @@ public class StockServiceImpl extends BaseServiceImpl implements StockService {
      * @return
      */
     @Override
-    public Boolean savePurchaseChange(String purchase_ID, String mat_ID, Double stockChangeNum,String stockType) {
-        String sql = "select * from tbl_purchase_det where status = '50' and stock_type = '"+stockType+"' and purchase_id = '"+purchase_ID+"' and mat_number='"+mat_ID+"'; ";
+    public Boolean savePurchaseChange(String purchase_ID, String mat_ID, Double stockChangeNum,String stockType,String region_ID) {
+        String sql = "select * from tbl_purchase_det where status = '50' and stock_type = '"+stockType+"' and purchase_id = '"+purchase_ID+"' and mat_number='"+mat_ID+"' and region_id = '"+region_ID+"';";
         List<PurchaseDet> list= findBySql(sql, PurchaseDet.class);
         if(list.size()>0){
             PurchaseDet pd = list.get(0);
@@ -377,7 +377,7 @@ public class StockServiceImpl extends BaseServiceImpl implements StockService {
 
     @Override
     public List<Options> getMatCombobox(String purchase_ID ,String stockType) {
-        String sql = "select pud.mat_number value,m.mat_name data from tbl_purchase_det pud ,tbl_materiel m where  stock_type = '"+stockType+"' and pud.mat_number = m.mat_number and pud.surplus_quantity>0 and pud.purchase_id ='"+purchase_ID+"'";
+        String sql = "select pud.mat_number value,m.mat_name data from tbl_purchase_det pud ,tbl_materiel m where  stock_type = '"+stockType+"' and pud.mat_number = m.mat_number and pud.surplus_quantity>0 and pud.purchase_id ='"+purchase_ID+"' group by pud.mat_number";
         return this.findMapBySql(sql, new Object[]{}, new Type[]{StringType.INSTANCE}, Options.class);
     }
 

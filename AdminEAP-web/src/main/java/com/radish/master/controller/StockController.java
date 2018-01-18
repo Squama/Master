@@ -112,8 +112,9 @@ public class StockController {
         String project_ID = request.getParameter("project_id");
         String channel_ID = request.getParameter("channel_id");
         String purchase_ID = request.getParameter("purchase_id");
+        String region_ID = request.getParameter("region_id");
         Double stockNum = Double.valueOf(request.getParameter("stock_Num")).doubleValue();
-        stockService.saveOneStock(mat_id,project_ID,channel_ID,purchase_ID,stockNum);
+        stockService.saveOneStock(mat_id,project_ID,channel_ID,purchase_ID,stockNum,region_ID);
         /*Stock stock = new Stock();
         String sql = " select * from tbl_stock where mat_id='"+mat_id+"' and project_ID='"+project_ID+"'";
         List<Stock> list= baseService.findBySql(sql, Stock.class);
@@ -221,7 +222,8 @@ public class StockController {
     public Result getChannelByPurchase(HttpServletRequest request){
         String mat_id = request.getParameter("mat_id");
         String purchase_id = request.getParameter("purchase_id");
-        String sql = " select * from tbl_purchase_det where stock_type='1' and mat_number ='"+mat_id+"' and purchase_id='"+purchase_id+"'";
+        String region_id = request.getParameter("region_id");
+        String sql = " select * from tbl_purchase_det where stock_type='1' and region_id ='"+region_id+"' and mat_number ='"+mat_id+"' and purchase_id='"+purchase_id+"'";
         List list= baseService.findMapBySql(sql);
         if(list.size()!= 0){
             return new Result(true,list.get(0),"获取成功");
@@ -479,6 +481,18 @@ public class StockController {
     	map.put("cl", cl);
     	return map;
     }
+    //获取部位列表
+    @RequestMapping("/getRegionInfo")
+    @ResponseBody
+    public Map<String,Object> getRegionInfo(HttpServletRequest request){
+        String mat_id = request.getParameter("mat_id");
+        String purchase_id = request.getParameter("purchase_id");
+        List<PurchaseDet> region = baseService.findBySql("select * from tbl_purchase_det where purchase_id = '"+purchase_id+"' and mat_number = '"+mat_id+"' and stock_type=1 and status = '50'; ", PurchaseDet.class);
+        Map<String ,Object> map = new HashMap<String,Object>();
+        map.put("region", region);
+        return map;
+    }
+
     //物料初始化入库
     @RequestMapping("/addCshMat")
     @ResponseBody

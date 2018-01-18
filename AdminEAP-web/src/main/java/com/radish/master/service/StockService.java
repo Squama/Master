@@ -16,9 +16,9 @@ public interface StockService extends BaseService {
     Boolean stockChange(String project_ID,String mat_ID,Double stockChangeNum,int changeType,String useType);
 
     //采购单入库数量变更
-    Boolean savePurchaseChange(String purchase_ID,String mat_ID,Double stockChangeNum,String stockType);
+    Boolean savePurchaseChange(String purchase_ID,String mat_ID,Double stockChangeNum,String stockType,String region_ID);
     Project getProjectByBudget(String budget_ID);
-    Boolean saveOneStock(String mat_id,String project_ID,String channel_ID,String purchase_ID,Double stockNum);
+    Boolean saveOneStock(String mat_id,String project_ID,String channel_ID,String purchase_ID,Double stockNum,String region_ID);
     Boolean initializationStock(String mat_id,String project_ID,String channel_ID,Double stockNum);
     //库存采购渠道变更操作
     Channel getChannelByID(String channel_ID);
