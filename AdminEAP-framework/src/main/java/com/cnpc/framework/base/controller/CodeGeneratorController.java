@@ -53,7 +53,6 @@ public class CodeGeneratorController {
         GenerateSetting setting = new GenerateSetting();
         String realPath = request.getRealPath("/");
         if(StrUtil.isEmpty(realPath)){
-            System.out.println("realPath is null:请在开发环境中使用该功能");
             setting.setIsExistQuery("2");
             return setting;
         }
@@ -329,7 +328,6 @@ public class CodeGeneratorController {
                     fileName=setting.getHtmlPrefix()+"_list.html";
                     FreeMarkerUtil.generateFile("list.html", setting.getHtmlPath() + File.separator + fileName, setting);
                 } else if (htmlType.equals("addUpdate")) {
-                    // System.out.println(FreeMarkerUtil.getTemplatePath("addUpdate.html"));
                     setting.setTitle("新增/编辑" + setting.getModelName());
                     fileName = setting.getHtmlPrefix() + "_edit.html";
                     FreeMarkerUtil.generateFile("edit.html", setting.getHtmlPath() + File.separator + fileName, setting);

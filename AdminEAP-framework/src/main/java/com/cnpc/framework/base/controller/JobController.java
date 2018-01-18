@@ -78,7 +78,6 @@ public class JobController {
     @ResponseBody
     public Result save(String job) throws SchedulerException,ClassNotFoundException{
         ScheduleJob scheduleJob= JSON.parseObject(job, ScheduleJob.class);
-        System.out.println(DateUtil.format(scheduleJob.getStartTime(),DateUtil.formatStr_yyyyMMddHHmmss));
         jobService.scheduleSingleJob(scheduleJob);
         return new Result();
     }
@@ -87,7 +86,6 @@ public class JobController {
     @ResponseBody
     public ScheduleJob getJob(ScheduleJob scheduleJob) throws SchedulerException{
         List<ScheduleJob> jobList=jobService.getScheduleJob(scheduleJob);
-        System.out.println(scheduleJob.getJobName()+"_"+scheduleJob.getJobGroup()+"  size:"+jobList.size());
         return jobList.get(0);
     }
     @RequestMapping("/getRunningJoblist")

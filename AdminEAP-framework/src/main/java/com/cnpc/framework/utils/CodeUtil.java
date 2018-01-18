@@ -5,17 +5,6 @@ import java.text.DecimalFormat;
 public class CodeUtil {
 
 
-	public static void main(String[] args) {
-
-		System.out.println(nextCode("000001", null, 6));
-		System.out.println(nextCode("","001",3));
-		System.out.println(nextCode("000001", "00000100009", 6));
-		System.out.println(nextCode("syc", "sya2016012", 7));
-		System.out.println(nextCode("syb", "sya2016030", 7));
-		System.out.println(nextCode("2016", "2016099", 3));
-	}
-
-
 	/**
 	 * 根据当前编号和前缀生成下一个编号
 	 *

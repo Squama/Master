@@ -84,7 +84,6 @@ public class FreeMarkerUtil {
 		File fdir = new File(dir);
 		if (!fdir.exists()) {
 			if (!fdir.mkdirs()) {
-				System.out.println("创建目录" + fdir.getAbsolutePath() + "失败");
 				return;
 			}
 		}

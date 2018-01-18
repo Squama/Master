@@ -37,7 +37,6 @@ public class SystemFilter implements Filter {
 
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
-        System.out.println(request.getRequestURL());
         String basePath = request.getContextPath();
         request.setAttribute("basePath", basePath);
         request.setAttribute("isauth",SecurityUtils.getSubject().isAuthenticated());

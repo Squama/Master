@@ -23,7 +23,6 @@ public class JsonObjectMapper extends ObjectMapper {
             @Override
             public void serialize(Object value, JsonGenerator jg, SerializerProvider sp) throws IOException, JsonProcessingException {
                 jg.writeString("");
-                System.out.println("-----------------------------hello world");
             }
         });
 

@@ -352,8 +352,6 @@ public class DateUtil {
 
     public static void main(String[] args) {
         try {
-            System.out.println(new DateUtil().parseToDate("2012-10-11 22:22"));
-            System.out.println(format(new Date(),"yyyyMMddHHmmss"));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1105,7 +1103,6 @@ public class DateUtil {
 
             return hours;
         } catch (Exception ee) {
-            System.out.println(ee);
             return 0;
         }
     }
@@ -1125,7 +1122,6 @@ public class DateUtil {
             long minute = (d2.getTime() - d1.getTime()) / 1000 / 60;
             return minute;
         } catch (Exception ee) {
-            System.out.println(ee);
             return 0;
         }
     }

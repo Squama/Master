@@ -46,7 +46,6 @@ public class ObjectUtil {
                 method = obj.getClass().getMethod(methodName(str, "get"));
                 obj = method.invoke(obj);
             }
-            // System.out.println("value:"+value);
             return obj;
         } catch (Exception e) {
             return null;
@@ -73,7 +72,6 @@ public class ObjectUtil {
                     obj = method.invoke(obj);
                 method = obj.getClass().getMethod(methodName(str, "get"));
             }
-            // System.out.println("value:"+value);
             return ObjectToString(obj, method, format);
 
         } catch (Exception e) {
@@ -100,7 +98,6 @@ public class ObjectUtil {
                 getMethod = obj.getClass().getMethod(methodName(str, "get"));
                 setMethod = obj.getClass().getMethod(methodName(str, "set"), getMethod.getReturnType());
             }
-            // System.out.println("value:"+value);
             if (value == null || StrUtil.isEmpty(value.toString()))
                 value = null;
             else {
@@ -128,7 +125,6 @@ public class ObjectUtil {
     /*
      * public static void main(String[] args) { JIANG jiang = new JIANG(); try {
      * Object object = ObjectSetValue(jiang, "name", "test");
-     * System.out.println(jiang.getPolitic()); } catch (Exception e) { // TODO
      * Auto-generated catch block e.printStackTrace(); }
      * 
      * }

@@ -11,6 +11,5 @@ import org.activiti.engine.delegate.ExecutionListener;
 public class TrainExecutionEndByUserListener implements ExecutionListener {
     @Override
     public void notify(DelegateExecution execution) throws Exception {
-        System.out.println("----------TrainTaskCompleteByUserListener被调用--------------");
     }
 }

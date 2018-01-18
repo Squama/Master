@@ -82,7 +82,6 @@ public class FileUtil {
                 int length;
                 while ((byteread = inStream.read(buffer)) != -1) {
                     bytesum += byteread; //字节数 文件大小
-                    System.out.println(bytesum);
                     fs.write(buffer, 0, byteread);
                 }
                 inStream.close();
@@ -90,7 +89,6 @@ public class FileUtil {
             }
             return bytesum;
         } catch (Exception e) {
-            System.out.println("复制单个文件操作出错");
             e.printStackTrace();
             return 0;
         }
@@ -130,7 +128,6 @@ public class FileUtil {
             myDelFile.delete();
 
         } catch (Exception e) {
-            System.out.println("删除文件操作出错");
             e.printStackTrace();
         }
 
@@ -145,11 +142,9 @@ public class FileUtil {
             Image image = ImageIO.read(new File(name));
             if (image == null) {
                 valid = false;
-                System.out.println("The file" + name + "could not be opened , it is not an image");
             }
         } catch (IOException ex) {
             valid = false;
-            System.out.println("The file" + name + "could not be opened , an error occurred.");
         }
         return valid;
     }

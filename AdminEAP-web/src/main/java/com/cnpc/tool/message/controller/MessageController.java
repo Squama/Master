@@ -47,7 +47,6 @@ public class MessageController {
     //收件箱
     @RequestMapping(value = "/inbox", method = RequestMethod.GET)
     public String inbox() {
-        //System.out.println(SecurityUtils.getSubject().getSession());
         return "tool/message/message_inbox";
     }
 

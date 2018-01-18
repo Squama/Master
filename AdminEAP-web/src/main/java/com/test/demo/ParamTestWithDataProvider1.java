@@ -21,7 +21,6 @@ public class ParamTestWithDataProvider1 {
 	// This test will run 4 times since we have 5 parameters defined
 	@Test(dataProvider = "test1")
 	public void testPrimeNumberChecker(Integer inputNumber, Boolean expectedResult) {
-		System.out.println(inputNumber + " " + expectedResult);
 		Assert.assertEquals(expectedResult, primeNumberChecker.validate(inputNumber));
 	}
 }

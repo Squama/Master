@@ -31,8 +31,6 @@ public class CSRFInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
-        System.out.println("---------->" + request.getRequestURI());
-        //System.out.println(request.getHeader("X-Requested-With"));
         // 提交表单token 校验
         HandlerMethod handlerMethod = (HandlerMethod) handler;
         Method method = handlerMethod.getMethod();

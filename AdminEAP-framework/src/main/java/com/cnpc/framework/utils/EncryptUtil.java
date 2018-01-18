@@ -79,13 +79,5 @@ public class EncryptUtil {
         return password_salt;
     }
 
-    public static void main(String[] args) {
-
-        System.out.println(getPassword("bill","test"));
-        System.out.println(getPassword("123456","test-java"));
-        System.out.println(getPassword("123456","Activiti-UserA"));
-
-    }
-
 
 }

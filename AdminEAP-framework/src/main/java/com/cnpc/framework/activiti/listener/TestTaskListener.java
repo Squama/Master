@@ -10,8 +10,8 @@ import org.activiti.engine.delegate.TaskListener;
 public class TestTaskListener implements TaskListener {
     @Override
     public void notify(DelegateTask delegateTask) {
-        System.out.println("test TaskListener begin----------------");
-        System.out.println(delegateTask.getName());
-        System.out.println(delegateTask.getAssignee());
+        //System.out.println("test TaskListener begin----------------");
+        //System.out.println(delegateTask.getName());
+        //System.out.println(delegateTask.getAssignee());
     }
 }

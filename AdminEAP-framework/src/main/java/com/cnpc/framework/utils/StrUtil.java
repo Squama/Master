@@ -1145,11 +1145,6 @@ public class StrUtil {
         }
     }
 
-    public static void main(String[] args) {
-        System.out.println(encrypt("111111"));
-        System.out.println(disencrypt("5d-3f-3f-3f-3f-3f-3f"));
-    }
-
     /**
      * 字符转ASC
      *

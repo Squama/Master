@@ -260,7 +260,6 @@ public class TaskPageServiceImpl extends BaseServiceImpl implements TaskPageServ
         }
         //任务完成后，由TaskCreatedListener设置委托
 
-        System.out.println(formData);
         return new Result(true);
     }
 

@@ -72,7 +72,7 @@ public class VacationTest extends BaseTest {
     public void testFlow(String key, String userId, String groupId, String approver, Long days, String result) {
         //----------------设置流程启动人----------------
         identityService.setAuthenticatedUserId(userId);
-        System.out.println("设置流程启动人：" + userId);
+        //System.out.println("设置流程启动人：" + userId);
 
         //-----------------流程启动---------------------
         // 根据ID启动
@@ -81,7 +81,7 @@ public class VacationTest extends BaseTest {
         ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(key, "业务表的id");
         //设置流程实例名称
         runtimeService.setProcessInstanceName(processInstance.getId(), "流程实例名称设置：");
-        System.out.println("根据key启动最新的流程,流程定义ID：" + processInstance.getProcessDefinitionId());
+        //System.out.println("根据key启动最新的流程,流程定义ID：" + processInstance.getProcessDefinitionId());
 
         //----------------获取流程启动人-----------------
         /*
@@ -90,13 +90,13 @@ public class VacationTest extends BaseTest {
         String assign=runtimeService.getVariable(processInstance.getProcessInstanceId(),initiator).toString();
         */
         String startUserId = runtimePageService.getStartUserId(processInstance);
-        System.out.println("获取流程启动人：" + startUserId);
+        //System.out.println("获取流程启动人：" + startUserId);
 
         //----------------发起人填报申请（可和启动配置在一起）-----------------
         //查询发起人的流程
         Task task = taskService.createTaskQuery().processInstanceId(processInstance.getProcessInstanceId()).taskAssignee(startUserId).singleResult();
         //通过taskId获取流程启动人
-        System.out.println("通过taskId获取流程启动人:" + runtimePageService.getStartUserId(task.getId()));
+        //System.out.println("通过taskId获取流程启动人:" + runtimePageService.getStartUserId(task.getId()));
 
         Map<String, Object> vactionVars = new HashMap<>();
         vactionVars.put("days", days);
@@ -111,7 +111,7 @@ public class VacationTest extends BaseTest {
         //通过用户组获取任务
         List<Task> taskGroups = taskService.createTaskQuery().processDefinitionId(processInstance.getProcessDefinitionId()).
                 taskCandidateGroup(groupId).list();
-        System.out.println("用户组审批：" + taskGroups.size());
+        //System.out.println("用户组审批：" + taskGroups.size());
         //通过taskCandidateOrAssigned获取审批人，taskInvoledUser可获取委托人与代理人相关流程
         List<Task> tasks = taskService.createTaskQuery().processDefinitionId(processInstance.getProcessDefinitionId()).
                 taskCandidateOrAssigned(approver).list();
@@ -124,7 +124,7 @@ public class VacationTest extends BaseTest {
             List<FormProperty> list = formService.getTaskFormData(task1.getId()).getFormProperties();
             if (!list.isEmpty()) {
                 for (FormProperty formProperty : list) {
-                    System.out.println(formProperty.getId() + "     " + formProperty.getName() + "      " + formProperty.getValue());
+                    //System.out.println(formProperty.getId() + "     " + formProperty.getName() + "      " + formProperty.getValue());
                 }
             }
             //审批

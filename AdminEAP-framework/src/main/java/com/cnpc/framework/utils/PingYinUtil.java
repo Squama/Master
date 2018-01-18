@@ -19,11 +19,6 @@ public class PingYinUtil {
 	 * @param inputString
 	 * @return
 	 */
-/*	public static void main(String[] args){
-		System.out.println(PingYinUtil.getPingYin("性别"));
-		System.out.println(PingYinUtil.getFirstSpell("性别"));
-		System.out.println(PingYinUtil.getFullSpell("性别"));
-	}*/
 	public static String getPingYin(String inputString) {
 		HanyuPinyinOutputFormat format = new HanyuPinyinOutputFormat();
 		format.setCaseType(HanyuPinyinCaseType.LOWERCASE);

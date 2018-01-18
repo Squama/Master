@@ -40,7 +40,7 @@ public class TaskCreatedListener implements EventHandler {
         ActivitiEntityEventImpl activitiEvent = (ActivitiEntityEventImpl) event;
         TaskEntity taskEntity = (TaskEntity) activitiEvent.getEntity();
         //------------------------获取委托人-----------------------------
-        System.out.println("----------------任务创建----------------"+taskEntity.getId());
+        //System.out.println("----------------任务创建----------------"+taskEntity.getId());
         /**
          * 原来使用repositoryService.getProcessDefinitionQuery() 但是取到的category不对，所以改成如下方式获取流程定义
          */
@@ -50,8 +50,7 @@ public class TaskCreatedListener implements EventHandler {
             //指定了受理人后代理
             String attorney=delegateService.getAttorneyByAssignee(taskEntity.getAssignee(),processDefinition.getCategory());
             if(!StrUtil.isEmpty(attorney)) {
-                System.out.println("------受理人任务委托------任务ID:"+taskEntity.getId()+"委托人:"+taskEntity.getAssignee()+";" +
-                        "被委托人ID:"+attorney);
+                //System.out.println("------受理人任务委托------任务ID:"+taskEntity.getId()+"委托人:"+taskEntity.getAssignee()+";" + "被委托人ID:"+attorney);
                 taskEntity.delegate(attorney);
                 //TODO MESSAGE
             }
@@ -63,8 +62,7 @@ public class TaskCreatedListener implements EventHandler {
                 String assignee=userIds.iterator().next();
                 String attorney=delegateService.getAttorneyByAssignee(assignee,processDefinition.getCategory());
                 if(!StrUtil.isEmpty(attorney)) {
-                    System.out.println("------候选人任务委托------任务ID:"+taskEntity.getId()+"委托人:"+taskEntity.getAssignee()
-                            +";被委托人ID:"+attorney);
+                    //System.out.println("------候选人任务委托------任务ID:"+taskEntity.getId()+"委托人:"+taskEntity.getAssignee() +";被委托人ID:"+attorney);
                     taskService.claim(taskEntity.getId(),assignee);
                     taskEntity.delegate(attorney);
                     //TODO MESSAGE

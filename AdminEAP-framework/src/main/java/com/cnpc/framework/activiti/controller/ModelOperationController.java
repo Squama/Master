@@ -128,8 +128,9 @@ public class ModelOperationController {
     @RequestMapping(value = "/model/test", method = RequestMethod.POST)
     @ResponseBody
     public Result testModel(ModelVo vo) {
-        System.out.println("test empty value:===========" + vo.getId());
+/*        System.out.println("test empty value:===========" + vo.getId());
         System.out.println("test empty value:===========" + vo.getCategory());
+*/        
         return new Result(true);
     }
 

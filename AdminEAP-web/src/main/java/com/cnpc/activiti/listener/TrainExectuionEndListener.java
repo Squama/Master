@@ -12,6 +12,5 @@ public class TrainExectuionEndListener implements ExecutionListener {
     @Override
     public void notify(DelegateExecution execution) throws Exception {
        //TODO
-        System.out.println("------------------TrainExectuionEndListener:流程正常结束---------------");
     }
 }

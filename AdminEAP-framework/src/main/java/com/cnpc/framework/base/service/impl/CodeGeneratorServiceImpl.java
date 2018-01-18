@@ -44,7 +44,6 @@ public class CodeGeneratorServiceImpl extends BaseServiceImpl implements CodeGen
             maxCode=CodeUtil.nextCode(parentCode,maxCode,6);
             return maxCode;
         } catch (Exception ex) {
-            System.out.println(ex.getMessage().toString());
             logger.error("生成levelCode失败，错误信息为："+ex.getMessage().toString());
             return null;
         }

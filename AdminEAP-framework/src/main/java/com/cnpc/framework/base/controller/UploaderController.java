@@ -213,7 +213,6 @@ public class UploaderController {
     @ResponseBody
     public FileResult uploadMultipleFile(@RequestParam(value = "file", required = false) MultipartFile[] files,
                                          HttpServletRequest request, HttpServletResponse response) throws IOException {
-        System.out.println("the num of file:"+files.length);
 
         FileResult msg = new FileResult();
 
@@ -233,7 +232,6 @@ public class UploaderController {
                         dir.mkdirs();
                     //这样也可以上传同名文件了
                     String filePrefixFormat="yyyyMMddHHmmssS";
-                    System.out.println(DateUtil.format(new Date(),filePrefixFormat));
                     String savedName=DateUtil.format(new Date(),filePrefixFormat)+"_"+file.getOriginalFilename();
                     String filePath=dir.getAbsolutePath() + File.separator + savedName;
                     File serverFile = new File(filePath);
