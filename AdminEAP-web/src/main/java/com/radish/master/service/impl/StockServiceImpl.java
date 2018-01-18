@@ -199,7 +199,7 @@ public class StockServiceImpl extends BaseServiceImpl implements StockService {
             PurchaseDet pd = list.get(0);
             if(pd.getSurplusQuantity()>=stockChangeNum){
                 pd.setSurplusQuantity(arith.sub(pd.getSurplusQuantity() ,stockChangeNum));
-                if(pd.getSurplusQuantity()==0){
+                if(pd.getSurplusQuantity()<=0.0){
                     pd.setStatus("60");
                     update(pd);
                     list = getPurchaseDetList(purchase_ID);
