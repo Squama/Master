@@ -46,6 +46,7 @@
             	modals.confirm("是否要提交审批？",function(){
                     ajaxPost(basePath + '/purchase/apply/start', {id:purchaseID}, function (data) {
                         if (data.success) {
+                        	budgetApplyTable.reloadData();
                             modals.correct("流程已启动，请及时处理");
                         } else {
                             modals.error(data.message);

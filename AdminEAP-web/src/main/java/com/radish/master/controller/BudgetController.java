@@ -38,6 +38,20 @@ public class BudgetController {
         return new Result(true, project.getProjectName());
     }
     
+    @RequestMapping(value="/toquantitydetail",method = RequestMethod.GET)
+    public String toQuantityDetail(String budgetNo, HttpServletRequest request){
+    	request.setAttribute("budgetNo", budgetNo);
+    	
+        return "budgetmanage/budgetactiviti/budget_quantity_list";
+    }
+    
+    @RequestMapping(value="/toamountdetail",method = RequestMethod.GET)
+    public String toAmountDetail(String budgetNo, HttpServletRequest request){
+    	request.setAttribute("budgetNo", budgetNo);
+    	
+        return "budgetmanage/budgetactiviti/budget_amount_list";
+    }
+    
     /**
      * 
      * 新旧代码分界

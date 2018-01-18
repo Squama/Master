@@ -1,18 +1,24 @@
 /**
  * 
  */
-package com.radish.master.pojo;
+package com.radish.master.entity;
 
 import java.io.Serializable;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
 
 /**
  * @author tonyd
  *
  */
+@Entity
 public class PurchaseApplyAudit implements Serializable{
 
 	private static final long serialVersionUID = -804124931262764039L;
 	
+	@Id
 	private String id;
 	private String budget_no;
 	private String region_name;

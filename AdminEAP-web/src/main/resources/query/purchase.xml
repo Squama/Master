@@ -71,7 +71,7 @@
     
     <!-- 数量超限审核列表 -->
     <query id="quantity_audit_list" key="id" tableName="数量超限" widthType="px" service="purchaseService" method="getQuantityAuditList"
-           simpleSearch="false" className="com.radish.master.pojo.PurchaseApplyAudit">
+           simpleSearch="false" className="com.radish.master.entity.PurchaseApplyAudit">
         <column key="id" header="编号" hidden="true"/>
         <column key="rowIndex" header="序号" width="70"/>
         <column key="budget_no" header="no" hidden="true"/>
@@ -86,7 +86,7 @@
     
     <!-- 金额超限审核列表 -->
     <query id="amount_audit_list" key="id" tableName="金额超限" widthType="px" service="purchaseService" method="getAmountAuditList"
-           simpleSearch="false" className="com.radish.master.pojo.PurchaseApplyAudit">
+           simpleSearch="false" className="com.radish.master.entity.PurchaseApplyAudit">
         <column key="id" header="编号" hidden="true"/>
         <column key="rowIndex" header="序号" width="70"/>
         <column key="budget_no" header="no" hidden="true"/>

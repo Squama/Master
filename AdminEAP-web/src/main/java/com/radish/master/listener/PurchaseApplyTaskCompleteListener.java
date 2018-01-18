@@ -15,8 +15,8 @@ import com.cnpc.framework.activiti.pojo.Constants;
 import com.cnpc.framework.base.service.BaseService;
 import com.radish.master.entity.Dispatch;
 import com.radish.master.entity.Purchase;
+import com.radish.master.entity.PurchaseApplyAudit;
 import com.radish.master.entity.PurchaseDet;
-import com.radish.master.pojo.PurchaseApplyAudit;
 import com.radish.master.service.PurchaseService;
 import com.radish.master.system.SpringUtil;
 
@@ -74,7 +74,7 @@ public class PurchaseApplyTaskCompleteListener implements TaskListener {
                 String result = "false";
                 for(int i=0;i<list.size();i++){
                     
-                    BigDecimal budgetCount = new BigDecimal(list.get(i).getBudget()==null?"0":list.get(i).getCost());
+                    BigDecimal budgetCount = new BigDecimal(list.get(i).getBudget()==null?"0":list.get(i).getBudget());
                     BigDecimal costCount = new BigDecimal(list.get(i).getCost()==null?"0":list.get(i).getCost());
                     BigDecimal applyCount = new BigDecimal(list.get(i).getApply());
                     

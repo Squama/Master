@@ -13,10 +13,10 @@ import com.radish.master.entity.Budget;
 import com.radish.master.entity.Dispatch;
 import com.radish.master.entity.DispatchDetail;
 import com.radish.master.entity.Purchase;
+import com.radish.master.entity.PurchaseApplyAudit;
 import com.radish.master.entity.PurchaseDet;
 import com.radish.master.pojo.MatMap;
 import com.radish.master.pojo.Options;
-import com.radish.master.pojo.PurchaseApplyAudit;
 
 /**
 * 类说明
@@ -63,6 +63,10 @@ public interface PurchaseService extends BaseService{
     List<PurchaseApplyAudit> getQuantityAuditList(QueryCondition condition, PageInfo pageInfo);
     
     List<PurchaseApplyAudit> getAmountAuditList(QueryCondition condition, PageInfo pageInfo);
+    
+    public List<PurchaseApplyAudit> getAmountListMap(String purchaseID);
+    
+    public List<PurchaseApplyAudit> getQuantityListMap(String purchaseID);
     
     public List<PurchaseApplyAudit> getAmountList(String purchaseID);
     
