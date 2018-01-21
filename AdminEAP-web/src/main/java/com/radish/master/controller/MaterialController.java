@@ -10,6 +10,7 @@ import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.base.service.BaseService;
 import com.cnpc.framework.utils.SecurityUtil;
 import com.radish.master.entity.Materiel;
+import com.radish.master.entity.Sign;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -205,6 +206,29 @@ public class MaterialController {
     	r.setSuccess(true);
     	return r;
     }
+    /**
+		 * 弹出符号页面
+		 * @author wangzhihao
+		 * @创建时间 2018年1月21日 下午10:28:14
+		 * @return
+		 */
+    @RequestMapping("/getFh")
+    public String getFh(){
+    	return prefix+"getFh";
+    }
     
+    @RequestMapping(value="/getFhBtn",method = RequestMethod.POST)
+    @ResponseBody
+    public Result getFhBtn(HttpServletRequest request){
+    	List<Sign> m = new ArrayList<Sign>();
+    	String sql =" select * from tbl_sign ";
+    	
+    	 
+    	List<Sign> list= baseService.findBySql(sql, Sign.class);
+    	
+    	Result r = new Result();
+    	r.setData(list);
+    	return r;
+    }
    
 }

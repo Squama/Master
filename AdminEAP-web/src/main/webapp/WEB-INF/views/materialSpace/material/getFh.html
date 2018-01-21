@@ -1,0 +1,37 @@
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><li class="fa fa-remove"></li></button>
+    <h5 class="modal-title">符号框</h5>
+</div>
+
+<div class="modal-body">
+
+    <form id="fh-form" name="" class="form-horizontal">
+        <div class="box-body" id="btnDiv">
+            </div>
+		
+    </form>
+
+</div>
+<script>
+    var form =null;
+    
+    $(function() {
+    	 //初始化控件
+        form=$("#fh-form").form();
+        ajaxPost(basePath+"/material/getFhBtn",null,function(data){
+    		if(data.data){
+    			var list = data.data;
+    			var option ="";
+    			for(var i=0;i<list.length;i++){
+    				option += '<button type="button" class="btn btn-default" onclick="fh(this)" value="'+list[i].value+'">'+list[i].value+'</button>';
+    			}
+    			$("#btnDiv").append(option);
+    		}
+    	})
+    });
+    function fh(obj){
+    	var gg = $("#mat_standard").val();
+    	$("#mat_standard").val(gg+obj.value);
+    	modals.hideWin("fh");
+    }
+</script>

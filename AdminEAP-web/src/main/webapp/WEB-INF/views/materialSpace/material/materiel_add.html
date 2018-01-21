@@ -54,9 +54,10 @@
             	<div class="form-group">
                     <label for="mat_standard" class="col-sm-3 control-label">物料规格</label>
 
-                    <div class="col-sm-8">
+                    <div class="col-sm-6">
                         <input type="text" class="form-control" id="mat_standard" name="mat_standard" placeholder="物料规格">
                     </div>
+                    <button type="button" class="btn btn-default" id = "getFh">符号</button>
                 </div>
                 <div class="form-group">
 					<label class="col-sm-3 control-label">是否启用</label>
@@ -166,9 +167,17 @@
         
         //设置ss1下拉框
         setSS1();
+        $("#getFh").on("click",function(){getFh()})
     });
     
-    
+    function getFh(){
+    	modals.openWin({
+            winId:"fh",
+            title:'符号按钮',
+            width:'400px',
+            url:basePath+"/material/getFh"
+           });
+    }
     function resetForm(){
         form.clearForm();
         $("#material-form").data('bootstrapValidator').resetForm();
