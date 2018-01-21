@@ -464,7 +464,7 @@ public class PurchaseServiceImpl extends BaseServiceImpl implements PurchaseServ
 	@Override
 	public List<PurchaseApplyAudit> getAmountList(String purchaseID) {
 		StringBuilder sb = new StringBuilder();
-		sb.append("SELECT PUR.id, PUR.budget_no, ORI.region_name, ORI.budget, COST.cost, PUR.apply FROM ");
+		sb.append("SELECT PUR.id, PUR.budget_no, ORI.region_name, ORI.budget, COST.cost, PUR.apply, '' mat_name, '' mat_number, '' mat_standard FROM ");
 		sb.append("(SELECT PD.id,P.budget_no, PD.region_id, SUM(PD.quantity*PD.price) apply ");
 		sb.append("FROM tbl_purchase P, tbl_purchase_det PD ");
 		sb.append("WHERE PD.purchase_id = P.id AND P.id = :purchaseID ");

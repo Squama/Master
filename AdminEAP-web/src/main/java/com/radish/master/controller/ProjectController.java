@@ -223,10 +223,16 @@ public class ProjectController {
         List<ProjectFileItem> fileList=new ArrayList<>();
         
         Project project = this.getProject(id);
-        String batchNo = GUID.getTxNo();
-        String methodStr = "set"+fileField.toUpperCase().substring(0, 1)+fileField.substring(1);
-        Method method = Project.class.getMethod(methodStr,new Class[]{String.class});
-        method.invoke(project, batchNo);
+        
+        String methodStrGet = "get"+fileField.toUpperCase().substring(0, 1)+fileField.substring(1);
+        Method methodGet = Project.class.getMethod(methodStrGet);
+        String batchNo = (String) methodGet.invoke(project);
+        if(StrUtil.isEmpty(batchNo)){
+        	batchNo = GUID.getTxNo();
+            String methodStr = "set"+fileField.toUpperCase().substring(0, 1)+fileField.substring(1);
+            Method method = Project.class.getMethod(methodStr,new Class[]{String.class});
+            method.invoke(project, batchNo);
+        }
         
         for (int i = 0; i < files.length; i++) {
             MultipartFile file = files[i];

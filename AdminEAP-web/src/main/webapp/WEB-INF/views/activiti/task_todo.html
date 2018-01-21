@@ -178,7 +178,6 @@
         <#if formData??>
         loadTaskFormByFormKey:function(){
             this.taskForm=workflowCtrl.init("task_form", businessKey);
-            console.log(this.taskForm);
             var self=this;
             $("#task_form").bootstrapValidator({
                 message: '请输入有效值',
@@ -189,6 +188,7 @@
                 },
                 submitHandler: function (validator, taskform, submitButton) {
                 	console.log(taskform);
+                	console.log("validateFormUrl" + validateFormUrl);
                 	if(validateFormUrl != 0){
                 		ajaxPost(basePath + validateFormUrl, {businessKey:businessKey}, function (data, status) {
                             if (!data.success) {
@@ -201,6 +201,9 @@
                         // TODO 传参类型待定
                         var params = self.taskForm.getFormSimpleData();
                         $.extend(params,self.collectExtFormData());
+                        if(params.approved == undefined){
+                        	params.approved = 'true';
+                        }
                         ajaxPost(basePath + '/activiti/task/complete/${taskId}', params, function (data, status) {
                             if (data.success) {
                                 self.gotolist();

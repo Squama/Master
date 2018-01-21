@@ -200,6 +200,7 @@
             var newfids=self.addFileIds(data.response.fileIds,self.options.fileIds);
             self.options.fileIds=newfids;
             self.updateFileIds();
+            console.log(1);
             //otherActionButtons绑定事件 下载按钮绑定
             self.downloadHandler(this);
         }).on("filebatchuploadsuccess",function (event,data,previewId,index) {
