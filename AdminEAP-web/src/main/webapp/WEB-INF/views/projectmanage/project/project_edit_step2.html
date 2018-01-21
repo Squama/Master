@@ -102,7 +102,7 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">中标文件<span style="color:red">*</span></label>
                                 <div class="col-sm-6">
-                                    <input type="hidden" name="bidswinFile" id="bidswinFile">
+                                    <input type="hidden" name="bidsWinFile" id="bidsWinFile">
                                     <div class="form-group">
                                         <div class="btn btn-default btn-file" id="bidswinfileupload">
                                             <i class="fa fa-paperclip"></i> 管理中标文件(最大. 100MB)
@@ -116,7 +116,7 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">中标通知文件<span style="color:red">*</span></label>
                                 <div class="col-sm-6">
-                                    <input type="hidden" name="bidswinnoticeFile" id="bidswinnoticeFile">
+                                    <input type="hidden" name="bidsWinNoticeFile" id="bidsWinNoticeFile">
                                     <div class="form-group">
                                         <div class="btn btn-default btn-file" id="bidswinnoticefileupload">
                                             <i class="fa fa-paperclip"></i> 管理中标通知文件(最大. 100MB)
@@ -211,6 +211,7 @@
         //编辑回填
         if(id!="0"){
             ajaxPost(basePath+"/project/getStep2",{id:id},function(data){
+            	console.log(data);
                 labform.initFormData(data);
             })
         } 
@@ -243,7 +244,14 @@
           downloadFileUrl: basePath+"/project/download/",
           fileinput: fileinputDefaults,
           showType:'detail',
-          window:true
+          window:true,
+          callback:function(fileIds,oldfileIds){
+              //更新fileIds
+              this.showFiles({
+                  fileIds:fileIds,
+                  type:'preview'
+              });
+          }
     }
     
     $("#saftyfileupload").file($.extend({}, defaults, {
@@ -279,7 +287,7 @@
             uploadExtraData: {"id":id,"fileField":"bidsWinFile"}
         }),
         showContainer:'#bidswinfileattachment',
-        fileIdContainer:"[name='bidswinFile']"
+        fileIdContainer:"[name='bidsWinFile']"
     }));
 
     $("#bidswinnoticefileupload").file($.extend({}, defaults, {
@@ -288,7 +296,7 @@
             uploadExtraData: {"id":id,"fileField":"bidsWinNoticeFile"}
         }),
         showContainer:'#bidswinnoticefileattachment',
-        fileIdContainer:"[name='bidswinnoticeFile']"
+        fileIdContainer:"[name='bidsWinNoticeFile']"
     }));
 
     $("#qualityfileupload").file($.extend({}, defaults, {
