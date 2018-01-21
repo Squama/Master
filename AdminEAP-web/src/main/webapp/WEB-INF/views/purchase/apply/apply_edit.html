@@ -310,9 +310,9 @@
             
             $('#matNumber').select2();
             
-            $('#matNumber').unbind("change");
+            $('#matNumber').unbind("change.purchaseApply");
             
-            $('#matNumber').bind("change", function () {
+            $('#matNumber').bind("change.purchaseApply", function () {
                 var matID = $(this).val();
                 var mat = mats.map[matID];
                 

@@ -6,6 +6,7 @@ package com.radish.master.controller;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -86,6 +87,25 @@ public class PurchaseApplyController {
         request.setAttribute("purchaseID", id);
         
         return "purchase/apply/apply_edit";
+    }
+    
+    @RequestMapping(value="/delete/{id}",method = RequestMethod.POST)
+    @ResponseBody
+    public Result delete(@PathVariable("id") String id){
+        
+        Purchase purchase = purchaseService.get(Purchase.class, id);
+        if(!"10".equals(purchase.getStatus())){
+        	return new Result(false);
+        }else{
+        	List<PurchaseDet> list = purchaseService.getPurchaseDetList(id);
+        	
+        	for(PurchaseDet det : list){
+        		purchaseService.delete(det);
+        	}
+        	
+        	purchaseService.delete(purchase);
+        }
+        return new Result(true);
     }
     
     @RequestMapping(value="/getpurchase")

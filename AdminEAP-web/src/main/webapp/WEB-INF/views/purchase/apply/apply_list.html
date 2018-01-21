@@ -99,7 +99,7 @@
                     ajaxPost(basePath+"/purchase/apply/delete/"+rowId,null,function(data){
                         if(data.success){
                             //modals.correct("已删除该数据");
-                            userTable.reloadRowData();
+                            budgetApplyTable.reloadRowData();
                         }else{
                             modals.error("用户数据被引用，不可删除！");
                         }

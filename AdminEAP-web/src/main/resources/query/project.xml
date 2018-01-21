@@ -5,11 +5,12 @@
     <query id="project_list" key="id" tableName="项目管理列表" widthType="px">
         <sql>
             <![CDATA[
-              SELECT project_code projectCode, project_name projectName, name projectManager, status 
+              SELECT p.id id,project_code projectCode, project_name projectName, name projectManager, status 
               FROM tbl_project p, tbl_user u
               WHERE p.project_manager = u.id AND 1=1
             ]]>
         </sql>
+        <column key="id" hidden="true" header="id" width="80"/>
         <column key="rowIndex" header="序号" width="80"/>
         <column key="projectCode" header="项目编号" allowSort="true" width="150"/>
         <column key="projectName" header="项目名称" classType="String" allowSort="true" width="150"/>
@@ -17,7 +18,7 @@
         <column key="status" header="项目状态" allowSort="true" width="150" render="10=新建,20=待编辑,30=待编辑"/>
     </query>
     
-    <query id="project_query_list" key="id" tableName="项目管理列表" widthType="px">
+    <query id="project_query_list" key="id" tableName="项目查询列表" widthType="px">
         <sql>
             <![CDATA[
               SELECT project_code projectCode, project_name projectName, name projectManager, status, p.id id 
