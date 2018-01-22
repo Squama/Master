@@ -252,7 +252,11 @@
             uploadExtraData: {"id":id,"fileField":"saftyFile"}
         }),
         showContainer:'#saftyfileattachment',
-        fileIdContainer:"[name='saftyfilefield']"
+        fileIdContainer:"[name='saftyFile']",
+        extraPreviewConfig:{
+            "projectID":id,
+            "fileField":"saftyFile"
+        }
     }));
 
     $("#constructionfileupload").file($.extend({}, defaults, {
@@ -261,7 +265,11 @@
             uploadExtraData: {"id":id,"fileField":"constructionFile"}
         }),
         showContainer:'#constructionfileattachment',
-        fileIdContainer:"[name='constructionfilefield']"
+        fileIdContainer:"[name='constructionFile']",
+        extraPreviewConfig:{
+            "projectID":id,
+            "fileField":"constructionFile"
+        }
     }));
 
     $("#bidsfileupload").file($.extend({}, defaults, {
@@ -270,7 +278,11 @@
             uploadExtraData: {"id":id,"fileField":"bidsFile"}
         }),
         showContainer:'#bidsfileattachment',
-        fileIdContainer:"[name='bidsfilefield']"
+        fileIdContainer:"[name='bidsFile']",
+        extraPreviewConfig:{
+            "projectID":id,
+            "fileField":"bidsFile"
+        }
     }));
 
     $("#bidswinfileupload").file($.extend({}, defaults, {
@@ -279,7 +291,11 @@
             uploadExtraData: {"id":id,"fileField":"bidsWinFile"}
         }),
         showContainer:'#bidswinfileattachment',
-        fileIdContainer:"[name='bidswinfilefield']"
+        fileIdContainer:"[name='bidsWinFile']",
+        extraPreviewConfig:{
+            "projectID":id,
+            "fileField":"bidsWinFile"
+        }
     }));
 
     $("#bidswinnoticefileupload").file($.extend({}, defaults, {
@@ -288,7 +304,11 @@
             uploadExtraData: {"id":id,"fileField":"bidsWinNoticeFile"}
         }),
         showContainer:'#bidswinnoticefileattachment',
-        fileIdContainer:"[name='bidswinnoticefilefield']"
+        fileIdContainer:"[name='bidsWinNoticeFile']",
+        extraPreviewConfig:{
+            "projectID":id,
+            "fileField":"bidsWinNoticeFile"
+        }
     }));
 
     $("#qualityfileupload").file($.extend({}, defaults, {
@@ -297,7 +317,11 @@
             uploadExtraData: {"id":id,"fileField":"qualityFile"}
         }),
         showContainer:'#qualityfileattachment',
-        fileIdContainer:"[name='qualityfilefield']"
+        fileIdContainer:"[name='qualityFile']",
+        extraPreviewConfig:{
+            "projectID":id,
+            "fileField":"qualityFile"
+        }
     }));
     
     $("#costfileupload").file($.extend({}, defaults, {
@@ -306,7 +330,11 @@
             uploadExtraData: {"id":id,"fileField":"costFile"}
         }),
         showContainer:'#costfileattachment',
-        fileIdContainer:"[name='costfilefield']"
+        fileIdContainer:"[name='costFile']",
+        extraPreviewConfig:{
+            "projectID":id,
+            "fileField":"costFile"
+        }
     }));
 
 
@@ -316,7 +344,11 @@
             uploadExtraData: {"id":id,"fileField":"scheduleFile"}
         }),
         showContainer:'#schedulefileattachment',
-        fileIdContainer:"[name='schedulefilefield']"
+        fileIdContainer:"[name='scheduleFile']",
+        extraPreviewConfig:{
+            "projectID":id,
+            "fileField":"scheduleFile"
+        }
     }));
 
 </script>

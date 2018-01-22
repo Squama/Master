@@ -211,7 +211,6 @@
         //编辑回填
         if(id!="0"){
             ajaxPost(basePath+"/project/getStep2",{id:id},function(data){
-            	console.log(data);
                 labform.initFormData(data);
             })
         } 
@@ -260,7 +259,11 @@
             uploadExtraData: {"id":id,"fileField":"saftyFile"}
         }),
         showContainer:'#saftyfileattachment',
-        fileIdContainer:"[name='saftyFile']"
+        fileIdContainer:"[name='saftyFile']",
+        extraPreviewConfig:{
+        	"projectID":id,
+        	"fileField":"saftyFile"
+        }
     }));
 
     $("#constructionfileupload").file($.extend({}, defaults, {
@@ -269,7 +272,11 @@
             uploadExtraData: {"id":id,"fileField":"constructionFile"}
         }),
         showContainer:'#constructionfileattachment',
-        fileIdContainer:"[name='constructionFile']"
+        fileIdContainer:"[name='constructionFile']",
+        extraPreviewConfig:{
+            "projectID":id,
+            "fileField":"constructionFile"
+        }
     }));
 
     $("#bidsfileupload").file($.extend({}, defaults, {
@@ -278,7 +285,11 @@
             uploadExtraData: {"id":id,"fileField":"bidsFile"}
         }),
         showContainer:'#bidsfileattachment',
-        fileIdContainer:"[name='bidsFile']"
+        fileIdContainer:"[name='bidsFile']",
+        extraPreviewConfig:{
+            "projectID":id,
+            "fileField":"bidsFile"
+        }
     }));
 
     $("#bidswinfileupload").file($.extend({}, defaults, {
@@ -287,7 +298,11 @@
             uploadExtraData: {"id":id,"fileField":"bidsWinFile"}
         }),
         showContainer:'#bidswinfileattachment',
-        fileIdContainer:"[name='bidsWinFile']"
+        fileIdContainer:"[name='bidsWinFile']",
+        extraPreviewConfig:{
+            "projectID":id,
+            "fileField":"bidsWinFile"
+        }
     }));
 
     $("#bidswinnoticefileupload").file($.extend({}, defaults, {
@@ -296,7 +311,11 @@
             uploadExtraData: {"id":id,"fileField":"bidsWinNoticeFile"}
         }),
         showContainer:'#bidswinnoticefileattachment',
-        fileIdContainer:"[name='bidsWinNoticeFile']"
+        fileIdContainer:"[name='bidsWinNoticeFile']",
+        extraPreviewConfig:{
+            "projectID":id,
+            "fileField":"bidsWinNoticeFile"
+        }
     }));
 
     $("#qualityfileupload").file($.extend({}, defaults, {
@@ -305,7 +324,11 @@
             uploadExtraData: {"id":id,"fileField":"qualityFile"}
         }),
         showContainer:'#qualityfileattachment',
-        fileIdContainer:"[name='qualityFile']"
+        fileIdContainer:"[name='qualityFile']",
+        extraPreviewConfig:{
+            "projectID":id,
+            "fileField":"qualityFile"
+        }
     }));
     
     $("#costfileupload").file($.extend({}, defaults, {
@@ -314,7 +337,11 @@
             uploadExtraData: {"id":id,"fileField":"costFile"}
         }),
         showContainer:'#costfileattachment',
-        fileIdContainer:"[name='costFile']"
+        fileIdContainer:"[name='costFile']",
+        extraPreviewConfig:{
+            "projectID":id,
+            "fileField":"costFile"
+        }
     }));
 
 
@@ -324,7 +351,11 @@
             uploadExtraData: {"id":id,"fileField":"scheduleFile"}
         }),
         showContainer:'#schedulefileattachment',
-        fileIdContainer:"[name='scheduleFile']"
+        fileIdContainer:"[name='scheduleFile']",
+        extraPreviewConfig:{
+            "projectID":id,
+            "fileField":"scheduleFile"
+        }
     }));
 
 </script>

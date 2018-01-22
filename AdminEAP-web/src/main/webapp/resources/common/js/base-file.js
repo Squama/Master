@@ -138,13 +138,14 @@
         }
         var fileIds=options.fileIds||this.options.fileIds;
         if(!fileIds&&this.options.window){
-           $(this.options.showContainer).hide();
+            $(this.options.showContainer).hide();
+            $(this.options.showContainer).prev().hide();
             return;
         }
         //显示
         $(this.options.showContainer).show();
         var fileComponet=$(this.options.showContainer);
-        var fileResult=this.getFileResult(fileIds, options.type),preview=fileResult.initialPreview,previewConfig=fileResult.initialPreviewConfig,self=this;
+        var fileResult=this.getFileResult(fileIds, options.type, this.options.extraPreviewConfig),preview=fileResult.initialPreview,previewConfig=fileResult.initialPreviewConfig,self=this;
         //配置三类参数 edit=附件列表（可删除） detail=附件列表（显示） 可上传
         var defaultConfig={
             initialPreview:preview,
@@ -200,7 +201,6 @@
             var newfids=self.addFileIds(data.response.fileIds,self.options.fileIds);
             self.options.fileIds=newfids;
             self.updateFileIds();
-            console.log(1);
             //otherActionButtons绑定事件 下载按钮绑定
             self.downloadHandler(this);
         }).on("filebatchuploadsuccess",function (event,data,previewId,index) {
@@ -295,9 +295,16 @@
         }
     }
 
-    BaseFile.prototype.getFileResult=function(fileIds, type){
+    BaseFile.prototype.getFileResult=function(fileIds, type, extra){
         var ret=null;
-        ajaxPost(this.options.getFileResultUrl,{fileIds:fileIds, type:type},function(result){
+        var params = {};
+        if(extra != undefined){
+            params = extra;
+        }
+        params.fileIds = fileIds;
+        params.type = type;
+        //console.log(params);
+        ajaxPost(this.options.getFileResultUrl,params,function(result){
             ret=result;
         });
         return ret;

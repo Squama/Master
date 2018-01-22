@@ -184,7 +184,7 @@ public class ProjectController {
                 name = name.substring(0,1).toUpperCase()+name.substring(1);
                 Method m = project.getClass().getMethod("get"+name);
                 String value = (String) m.invoke(project);
-                if(value != null){
+                if(!StrUtil.isEmpty(value)){
                     List<ProjectFileItem> fileList=new ArrayList<>();
                     DetachedCriteria criteria = DetachedCriteria.forClass(ProjectFileItem.class);
                     criteria.add(Restrictions.eq("batchNo", value));
@@ -195,9 +195,11 @@ public class ProjectController {
                         sb.append(",");
                         sb.append(fileList.get(i).getId());
                     }
-                    value = sb.toString().substring(1);
-                    Method s = project.getClass().getMethod("set"+name,new Class[]{String.class});
-                    s.invoke(project, value);
+                    if(!fileList.isEmpty()){
+                        value = sb.toString().substring(1);
+                        Method s = project.getClass().getMethod("set"+name,new Class[]{String.class});
+                        s.invoke(project, value);
+                    }
                 }
             }
         }
@@ -288,7 +290,7 @@ public class ProjectController {
             msg.setErrorkeys(arr);
         }
         projectService.update(project);
-        FileResult preview=getPreivewSettings(fileList, request);
+        FileResult preview=getPreivewSettings(fileList, id, fileField, request);
         msg.setInitialPreview(preview.getInitialPreview());
         msg.setInitialPreviewConfig(preview.getInitialPreviewConfig());
         msg.setFileIds(preview.getFileIds());
@@ -318,7 +320,7 @@ public class ProjectController {
      */
     @RequestMapping(value="/getFiles",method = RequestMethod.POST)
     @ResponseBody
-    public FileResult getFiles(String fileIds, String type, HttpServletRequest request){
+    public FileResult getFiles(String fileIds, String type, String projectID, String fileField, HttpServletRequest request){
         List<ProjectFileItem> fileList=new ArrayList<>();
         if(!StrUtil.isEmpty(fileIds)) {
             String[] fileIdArr = fileIds.split(",");
@@ -328,9 +330,9 @@ public class ProjectController {
             fileList = projectService.findByCriteria(criteria);
         }
         if(StrUtil.isEmpty(type)){
-            return getPreivewSettings(fileList,request);
+            return getPreivewSettings(fileList,projectID,fileField,request);
         }else{
-            return getPreivewSettingsPreview(fileList,request);
+            return getPreivewSettingsPreview(fileList,projectID,fileField,request);
         }
     }
     
@@ -340,7 +342,7 @@ public class ProjectController {
      * @param request
      * @return initialPreiview initialPreviewConfig fileIds
      */
-    public FileResult getPreivewSettings(List<ProjectFileItem> fileList, HttpServletRequest request){
+    public FileResult getPreivewSettings(List<ProjectFileItem> fileList, String projectID, String fileField, HttpServletRequest request){
         FileResult fileResult=new FileResult();
         List<String> previews=new ArrayList<>();
         List<FileResult.PreviewConfig> previewConfigs=new ArrayList<>();
@@ -363,7 +365,7 @@ public class ProjectController {
             previewConfig.setWidth("120px");
             previewConfig.setCaption(sysFile.getSourceName());
             previewConfig.setKey(sysFile.getId());
-            previewConfig.setExtra(new FileResult.PreviewConfig.Extra(sysFile.getId()));
+            previewConfig.setExtra(new FileResult.PreviewConfig.Extra(projectID, fileField));
             previewConfig.setSize(sysFile.getFileSize());
             previewConfigs.add(previewConfig);
             fileArr[index++]=sysFile.getId();
@@ -374,7 +376,7 @@ public class ProjectController {
         return fileResult;
     }
     
-    public FileResult getPreivewSettingsPreview(List<ProjectFileItem> fileList, HttpServletRequest request){
+    public FileResult getPreivewSettingsPreview(List<ProjectFileItem> fileList, String projectID, String fileField, HttpServletRequest request){
         FileResult fileResult=new FileResult();
         List<String> previews=new ArrayList<>();
         List<FileResult.PreviewConfig> previewConfigs=new ArrayList<>();
@@ -397,7 +399,7 @@ public class ProjectController {
             previewConfig.setWidth("80px");
             previewConfig.setCaption(sysFile.getSourceName());
             previewConfig.setKey(sysFile.getId());
-            previewConfig.setExtra(new FileResult.PreviewConfig.Extra(sysFile.getId()));
+            previewConfig.setExtra(new FileResult.PreviewConfig.Extra(projectID, fileField));
             previewConfig.setSize(sysFile.getFileSize());
             previewConfigs.add(previewConfig);
             fileArr[index++]=sysFile.getId();
@@ -444,11 +446,8 @@ public class ProjectController {
     
     @RequestMapping(value="/deletefile",method = RequestMethod.POST)
     @ResponseBody
-    public Result delete(String id,HttpServletRequest request){
-        ProjectFileItem item=this.getImageFile(id);
-        FileUtil.delFile(item.getFilePath());
-        projectService.delete(item);
-        return new Result();
+    public Result delete(String projectID, String fileField, String key, HttpServletRequest request){
+        return projectService.deleteFileItem(projectID, fileField, key);
     }
     
     @RequestMapping(value="/download/{id}",method = RequestMethod.GET)

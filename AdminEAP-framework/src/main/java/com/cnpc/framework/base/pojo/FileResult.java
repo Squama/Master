@@ -42,11 +42,18 @@ public class FileResult {
 
         public static class Extra{
             String id;
+            String projectID;
+            String fileField;
             public Extra(){
 
             }
             public Extra(String id){
                 this.id=id;
+            }
+            
+            public Extra(String projectID, String fileField){
+                this.projectID=projectID;
+                this.fileField=fileField;
             }
 
             public String getId() {
@@ -56,6 +63,23 @@ public class FileResult {
             public void setId(String id) {
                 this.id = id;
             }
+            
+            public String getProjectID() {
+                return projectID;
+            }
+            
+            public void setProjectID(String projectID) {
+                this.projectID = projectID;
+            }
+            
+            public String getFileField() {
+                return fileField;
+            }
+            
+            public void setFileField(String fileField) {
+                this.fileField = fileField;
+            }
+            
         }
 
         public void setSize(Long size) {
