@@ -53,5 +53,7 @@ public interface ProjectService extends BaseService{
     
     public String getFileField(String batchNo);
     
+    public Result deleteFileItem(String projectID, String fileField, String key);
+    
     
 }

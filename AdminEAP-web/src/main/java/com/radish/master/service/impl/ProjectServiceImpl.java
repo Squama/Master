@@ -7,6 +7,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -20,8 +22,10 @@ import org.springframework.web.multipart.MultipartFile;
 import com.cnpc.framework.base.entity.User;
 import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.base.service.impl.BaseServiceImpl;
+import com.cnpc.framework.utils.FileUtil;
 import com.cnpc.framework.utils.PropertiesUtil;
 import com.cnpc.framework.utils.StrUtil;
+import com.radish.master.entity.Project;
 import com.radish.master.entity.ProjectFileItem;
 import com.radish.master.pojo.ProjectDetailVO;
 import com.radish.master.service.ProjectService;
@@ -130,6 +134,33 @@ public class ProjectServiceImpl extends BaseServiceImpl implements ProjectServic
             result = sb.toString().substring(1);
         }
         return result;
+    }
+
+    @Override
+    public Result deleteFileItem(String projectID, String fileField, String key) {
+        ProjectFileItem item=this.get(ProjectFileItem.class, key);
+        String batchNo = item.getBatchNo();
+        FileUtil.delFile(item.getFilePath());
+        this.delete(item);
+        
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("batchNo", batchNo);
+        List<ProjectFileItem> list =  this.find("from ProjectFileItem where batchNo = :batchNo", params);
+        
+        if(list.isEmpty()){
+            Project project = this.get(Project.class, projectID);
+            String methodStr = "set"+fileField.toUpperCase().substring(0, 1)+fileField.substring(1);
+            Method method;
+            try {
+                method = Project.class.getMethod(methodStr,new Class[]{String.class});
+                method.invoke(project, new Object[]{null});
+            } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+                return new Result(false, e.getMessage());
+            }
+            this.update(project);
+        }
+        
+        return new Result(true);
     }
 
     

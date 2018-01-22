@@ -68,7 +68,7 @@
                 });
         	}
        		$("#sysfileIds").val(fileIds);
-            var result=fileObj.getFileResult(fileIds);
+            var result=fileObj.getFileResult(fileIds,fileObj.options.type,fileObj.options.extraPreviewConfig);
             preview=result.initialPreview;
             previewConfig=result.initialPreviewConfig;
             console.log(result);
