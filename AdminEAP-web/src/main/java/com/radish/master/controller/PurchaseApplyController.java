@@ -89,6 +89,13 @@ public class PurchaseApplyController {
         return "purchase/apply/apply_edit";
     }
     
+    @RequestMapping(value="/edit/{id}",method = RequestMethod.GET)
+    public String editActiviti(@PathVariable("id") String id, HttpServletRequest request){
+        request.setAttribute("purchaseID", id);
+        
+        return "purchase/apply/apply_edit";
+    }
+    
     @RequestMapping(value="/delete/{id}",method = RequestMethod.POST)
     @ResponseBody
     public Result delete(@PathVariable("id") String id){

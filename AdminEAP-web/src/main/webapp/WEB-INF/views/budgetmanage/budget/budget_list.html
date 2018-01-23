@@ -56,7 +56,7 @@
             	modals.openWin({
                     winId: winId,
                     width: "1000px",
-                    url: basePath+"/budget/toqamountdetail?budgetNo=" + budgetNo
+                    url: basePath+"/budget/toamountdetail?budgetNo=" + budgetNo
                 });
             }
     }
@@ -112,7 +112,7 @@
         var oper = "";
         if(rowObj.status == '测算已完成'){
             oper += "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='budgetManageObject.quantityDetail(\"" + rowObj.budgetNo + "\")'>数量消耗</a>";
-            oper += "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='budgetManageObject.quantityDetail(\"" + rowObj.budgetNo + "\")'>金额消耗</a>";
+            oper += "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='budgetManageObject.amountDetail(\"" + rowObj.budgetNo + "\")'>金额消耗</a>";
         }
         return oper;
     }

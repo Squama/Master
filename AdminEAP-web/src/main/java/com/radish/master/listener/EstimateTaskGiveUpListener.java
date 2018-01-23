@@ -37,7 +37,7 @@ public class EstimateTaskGiveUpListener implements TaskListener {
              Map<String, Object> params = new HashMap<String, Object>();
              params.put("budgetNo", businessKey);
              Budget budget = baseService.get("from Budget where budgetNo=:budgetNo", params);
-             budget.setStatus("10");
+             budget.setStatus("15");
              baseService.save(budget);
         }
 

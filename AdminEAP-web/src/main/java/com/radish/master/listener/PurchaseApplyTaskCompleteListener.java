@@ -80,17 +80,20 @@ public class PurchaseApplyTaskCompleteListener implements TaskListener {
                     
                     if(applyCount.add(costCount).compareTo(budgetCount) != -1){
                         result = "true";
+                        purchase.setStatus("35");
                         break;
                     }
                     
                 }
-                delegateTask.setVariable("isAudit", result);
+                delegateTask.setVariable("isAmountAudit", result);
                 //不超限就更新审核标志false并更新调度表20
                 if(result == "false"){
                     // 更新调度表到20
                     Dispatch dispatch = purchaseService.getDispatchByProAndPur("402880e860c947ea0160ca0239670000", purchase.getProjectID(), purchase.getId());
-                    dispatch.setStatus("20");
-                    purchaseService.save(dispatch);
+                    if(dispatch != null){
+                    	dispatch.setStatus("20");
+                        purchaseService.save(dispatch);
+                    }
                 }
             }
             baseService.save(purchase);

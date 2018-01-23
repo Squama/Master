@@ -17,7 +17,7 @@
         <column key="budgetName" header="预算名称" width="150"/>
         <column key="operator" header="申请人" width="150"/>
         <column key="operateTime" header="申请时间" classType="java.util.Date" dateFormat="yyyy-mm-dd" width="150"/>
-        <column key="status" header="状态" width="150" render="10=新建,20=待编辑渠道,30=待审核,40=待采购,50=部分入库,60=已完成"/>
+        <column key="status" header="状态" width="150" render="10=新建,15=待调整,20=待审核,30=待编辑渠道,35=金额超限审核,40=待采购,50=部分入库,60=已完成"/>
         <column key="id" header="操作" width="80" fnRender="fnRenderOperate"/>
     </query>
     
