@@ -48,8 +48,10 @@ public class PurchaseApplyTaskAmountAuditListener implements TaskListener {
                 //更新调度表到20
                 PurchaseService purchaseService = (PurchaseService)SpringUtil.getObject("purchaseActServer");
                 Dispatch dispatch = purchaseService.getDispatchByProAndPur("402880e860c947ea0160ca0239670000", purchase.getProjectID(), purchase.getId());
-                dispatch.setStatus("20");
-                purchaseService.save(dispatch);
+                if(dispatch != null){
+                    dispatch.setStatus("20");
+                    purchaseService.save(dispatch);
+                }
             }
             baseService.save(purchase);
         }
