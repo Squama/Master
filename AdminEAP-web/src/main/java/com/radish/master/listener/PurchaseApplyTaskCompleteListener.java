@@ -66,7 +66,7 @@ public class PurchaseApplyTaskCompleteListener implements TaskListener {
                     
                 }
                 
-                purchase.setApplyAmount(sum.toPlainString());
+                purchase.setApplyAmount(sum.setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
                 
                 //判断金额超限
                 PurchaseService purchaseService = (PurchaseService)SpringUtil.getObject("purchaseActServer");
