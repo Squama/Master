@@ -501,4 +501,14 @@ public class StockController {
     	stockService.initializationStock(m.getMat_number(), s.getProject_id(), request.getParameter("channel_id"), s.getStock_num());
     	return new Result();
     }
+    /**
+		 * 跳转新增物料框
+		 * @author wangzhihao
+		 * @创建时间 2018年2月28日 下午7:53:34
+		 * @return
+		 */
+    @RequestMapping("/addMatIndex")
+    public String addMatIndex(HttpServletRequest request){
+    	return "stock/addMat";
+    }
 }

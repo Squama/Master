@@ -9,6 +9,7 @@ import com.cnpc.framework.base.entity.User;
 import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.base.service.BaseService;
 import com.cnpc.framework.utils.SecurityUtil;
+import com.radish.master.entity.Channel;
 import com.radish.master.entity.Materiel;
 import com.radish.master.entity.Sign;
 
@@ -228,6 +229,63 @@ public class MaterialController {
     	
     	Result r = new Result();
     	r.setData(list);
+    	return r;
+    }
+    /**
+		 * 在库存初始化页面新增物料增加弹框
+		 * @author wangzhihao
+		 * @创建时间 2018年3月1日 下午8:17:43
+		 * @return
+		 */
+    @RequestMapping(value="/saveInStock",method = RequestMethod.POST)
+    @ResponseBody
+    public Result saveInStock(HttpServletRequest request,Materiel materiel,Channel c){
+    	String ss1 = request.getParameter("ss1");
+    	String ss2 = request.getParameter("ss2");
+    	String ss3 = request.getParameter("ss3");
+    	String ss4 = request.getParameter("ss4");
+    	if(ss1!=null){
+    		materiel.setParent_ID(ss1);
+    	}
+    	if(ss2!=null){
+    		materiel.setParent_ID(ss2);
+    	}
+    	if(ss3!=null){
+    		materiel.setParent_ID(ss3);
+    	}
+    	if(ss4!=null){
+    		materiel.setParent_ID(ss4);
+    	}
+    	materiel.setCreate_time(new Date());
+    	
+    	String mat_id = materiel.getParent_ID();
+    	Mat m = baseService.get(Mat.class, mat_id);
+    	String code = m.getCode();
+    	String[] strs = code.split("_");
+    	String str = strs[1];
+    	//拿到当前数据库数据的最大值
+    	List<String> list = baseService.find("select max(ma.mat_number) from com.radish.master.entity.Materiel ma where ma.mat_number like '"+str+"%'");
+    	if(list.get(0)==null){
+    		materiel.setMat_number(str+"100001");
+    	}else{
+    		String s= list.get(0);
+    		String num = s.substring(s.length()-6);
+    		int i = Integer.parseInt(num);
+    		i++;
+    		materiel.setMat_number(str+i);
+    	}
+    	User u = SecurityUtil.getUser();
+    	materiel.setCreate_name(u.getName());
+    	String id = (String)baseService.save(materiel);
+    	//保存渠道
+    	c.setId(null);
+    	c.setMat_ID(materiel.getMat_number());
+    	c.setCreate_time(new Date());
+    	c.setIsValid("1");
+    	baseService.save(c);
+    	
+    	Result r = new Result();
+    	r.setSuccess(true);
     	return r;
     }
    
