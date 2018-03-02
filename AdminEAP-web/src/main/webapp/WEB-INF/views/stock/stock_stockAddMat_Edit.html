@@ -79,6 +79,7 @@
 			<!--以下两种方式提交验证,根据所需选择-->
 			<button type="button" class="btn btn-default" data-btn-type="cancel" data-dismiss="modal">取消</button>
 			<button type="submit" class="btn btn-primary" data-btn-type="save">提交</button>
+			<button type="button" class="btn btn-primary" data-btn-type="addMat" id = "addMat">新增物料种类</button>
 		</div>
 		<!-- /.box-footer -->
 	</form>
@@ -172,7 +173,18 @@
         $('#mat_id').on("change",function(){
         	setQd();
         })
+        $("#addMat").on("click",function(){addMat()})
     });
+    //新增物料种类按钮
+    function addMat(){
+    	var url = basePath+"/stock/addMatIndex";
+    	modals.openWin({
+    		winId:winId,
+            title:"新增物料种类",
+            width:'800px',
+            url:url
+           });
+    }
     function setQd(){
     	var matid = $("#mat_id option:selected").val();
     	ajaxPost(basePath + "/stock/getQdInfo?matid="+matid, null, function (data) {
