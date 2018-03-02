@@ -13,11 +13,11 @@
 
 </div>
 <script>
-    var form =null;
+    var formFH =null;
     
     $(function() {
-    	 //初始化控件
-        form=$("#fh-form").form();
+    	//初始化控件
+        formFH=$("#fh-form").form();
         ajaxPost(basePath+"/material/getFhBtn",null,function(data){
     		if(data.data){
     			var list = data.data;

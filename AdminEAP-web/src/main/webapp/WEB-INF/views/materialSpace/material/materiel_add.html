@@ -120,7 +120,6 @@
                 modals.confirm('确认保存？', function() {
                     //Save Data，对应'submit-提交'
                     var params = form.getFormSimpleData();
-                    console.log(params);
                      ajaxPost(basePath+'/material/save', params, function(data) {
                         if(data.success){
                         	modals.hideWin(winId);
