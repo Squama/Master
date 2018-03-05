@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<queryContext xmlns="http://www.example.org/query" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.example.org/query query.xsd">
+    
+    <query id="labor_list" key="id" tableName="劳务合同列表" className="com.radish.master.entity.Labor" widthType="px">
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="projectName" header="项目名称" classType="String" allowSort="true" width="150"/>
+        <column key="constructionTeam" header="施工班组" classType="String" allowSort="true" width="150"/>
+        <column key="contractName" header="合同名称" classType="String" width="150"/>
+        <column key="contractPrice" header="合同总价" classType="String" allowSort="true" width="150"/>
+        <column key="constructionManager" header="施工负责人" classType="String" allowSort="true" width="150"/>
+    </query>
+    
+    <query id="volume_list" key="id" tableName="工程量上报列表" widthType="px">
+        <sql>
+            <![CDATA[
+              SELECT pv.id id, pv.project_name projectName, l.contract_name contractName,
+		      l.construction_team constructionTeam, pv.start_time startTime, pv.end_time endTime,
+			  pv.engineer_money engineerMoney, pv.volume volume, pv.`status` status
+			  FROM tbl_project_volume pv, tbl_labor l
+			  WHERE pv.labor_id = l.id AND 1=1
+            ]]>
+        </sql>
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="projectName" header="项目名称" classType="String" allowSort="true" width="150"/>
+        <column key="contractName" header="合同名称" classType="String" allowSort="true" width="150"/>
+        <column key="constructionTeam" header="施工班组" classType="String" width="150"/>
+        <column key="startTime" header="起始时间" classType="String" width="150"/>
+        <column key="endTime" header="结束时间" classType="String" width="150"/>
+        <column key="engineerMoney" header="应付工程款" classType="String" width="150"/>
+        <column key="volume" header="工程量" classType="String" width="150"/>
+        <column key="status" header="状态" allowSort="true" width="150" render="10=提交审核,20=质量员,30=安全员,40=分管施工员,50=施工负责人,60=预算负责人,70=总负责人,80=财务负责人,90=已完成"/>
+    </query>
+
+</queryContext>

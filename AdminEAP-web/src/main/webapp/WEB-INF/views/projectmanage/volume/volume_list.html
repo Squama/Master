@@ -1,12 +1,12 @@
 <section class="content-header">
     <h1>
-        劳务合同
+        工程量上报
         <small>列表</small>
     </h1>
     <ol class="breadcrumb">
         <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
         <li><a href="#">项目信息</a></li>
-        <li class="active">劳务合同</li>
+        <li class="active">工程量上报</li>
     </ol>
 </section>
 
@@ -16,8 +16,7 @@
             <div class="box">
                 <!-- /.box-header -->
                 <div class="dataTables_filter" id="searchDiv" style="display: none">
-                   <input type="search" placeholder="请输入项目名" title="项目名" name="projectName" class="form-control" id="project_name" operator="like" likeOption="true">
-                   <input type="search" placeholder="请输入责任人" title="责任人" name="constructionManager" class="form-control" id="charge_name" operator="like" likeOption="true">
+                   <input type="search" placeholder="请输入项目名" title="项目名" name="projectName" class="form-control" id="projectName" operator="like" likeOption="true">
                     <div class="btn-group">
                         <button type="button" class="btn btn-primary" data-btn-type="search">查询</button>
                         <button type="button" class="btn btn-default" data-btn-type="reset">重置</button>
@@ -28,7 +27,7 @@
                     </div>
                 </div>
                 <div class="box-body">
-                    <table id="labor_table" class="table table-bordered table-striped table-hover">
+                    <table id="volume_table" class="table table-bordered table-striped table-hover">
                     </table>
                 </div>
             </div>
@@ -38,24 +37,24 @@
 
 <script>
     var form = $("#searchDiv").form({baseEntity: false}), initData={};
-    var laborTable, winId = "laborWin";
+    var volumeTable, winId = "volumeWin";
     $(function (){
-    	laborTable = new CommonTable("labor_table", "labor_list", "searchDiv", null);
+    	volumeTable = new CommonTable("volume_table", "volume_list", "searchDiv", null);
         
         //绑定按钮事件
         $("button[data-btn-type]").click(function () {
             var action = $(this).data("btn-type");
-            var rowId = laborTable.getSelectedRowId();
+            var rowId = volumeTable.getSelectedRowId();
             switch (action) {
                 case "edit":
                     if(!rowId){
                         modals.info('请选择要编辑的行');
                         return false;
                     }
-                    loadPage(basePath+"/labor/edit/" +rowId);
+                    loadPage(basePath+"/projectvolume/edit/" +rowId);
                     break;
                 case "add":
-                    loadPage(basePath+"/labor/add");
+                    loadPage(basePath+"/projectvolume/add");
                     break;
             }
         });
