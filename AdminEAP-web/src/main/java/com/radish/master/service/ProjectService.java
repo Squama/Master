@@ -4,11 +4,14 @@
 package com.radish.master.service;
 
 import java.io.File;
+import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
 import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.base.service.BaseService;
+import com.radish.master.entity.ProjectVolume;
+import com.radish.master.pojo.Options;
 
 /**
 * 类说明
@@ -54,6 +57,10 @@ public interface ProjectService extends BaseService{
     public String getFileField(String batchNo);
     
     public Result deleteFileItem(String projectID, String fileField, String key);
+    
+    List<Options> getLaborComboboxByProject(String projectID);
+    
+    public Result startVolumeFlow(ProjectVolume projectVolume, String processDefinitionKey);
     
     
 }

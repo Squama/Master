@@ -18,13 +18,13 @@
 <script src="${basePath}/resources/common/js/base-file.js"></script>
 <section class="content-header">
     <h1>
-        <span>项目管理</span>
-        <small>编辑</small>
+        <span>劳务合同</span>
+        <small>新增</small>
     </h1>
     <ol class="breadcrumb">
         <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
         <li><a href="#">项目管理</a></li>
-        <li class="active">编辑项目</li>
+        <li class="active">新增劳务合同</li>
     </ol>
 </section>
 
@@ -39,13 +39,13 @@
                         <div class="step stepdone">
                             <span class="tip">1</span>
                         </div>
-                        <div class="stepinfo">编辑项目基本信息</div>
+                        <div class="stepinfo">添加合同基本信息</div>
                     </div>
                     <div>
                         <div class="step">
                             <span class="tip">2</span>
                         </div>
-                        <div class="stepinfo undoneinfo">管理项目文件（可选）</div>
+                        <div class="stepinfo undoneinfo">上传劳务合同</div>
                     </div>
                     <div>
                         <div class="step stepundone">
@@ -54,118 +54,27 @@
                         <div class="stepinfo undoneinfo">完成</div>
                     </div>
                 </div>
-                <form id="project_form" name="project_form" class="form-horizontal">
+                <form id="labor_form" name="project_form" class="form-horizontal">
+                    <input type="hidden" name="id" id="id">
                     <div class="box-body">
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">安全文明文件<span style="color:red">*</span></label>
+                                <label class="col-sm-3 control-label">合同总价<span style="color:red">*</span></label>
                                 <div class="col-sm-6">
-                                    <input type="hidden" name="saftyFile" id="saftyFile">
-                                    <div class="form-group">
-                                        <div class="btn btn-default btn-file" id="saftyfileupload">
-                                            <i class="fa fa-paperclip"></i> 管理安全文明文件(最大. 100MB)
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="file" name="file"  id="saftyfileattachment">
-                                    </div> 
+                                    <input type="text" class="form-control" id="contractPrice" name="contractPrice" placeholder="合同总价">
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">施工合同<span style="color:red">*</span></label>
+                                <label class="col-sm-3 control-label">劳务合同<span style="color:red">*</span></label>
                                 <div class="col-sm-6">
-                                    <input type="hidden" name="constructionFile" id="constructionFile">
+                                    <input type="hidden" name="contractFile" id="contractFile">
                                     <div class="form-group">
-                                        <div class="btn btn-default btn-file" id="constructionfileupload">
-                                            <i class="fa fa-paperclip"></i> 管理施工合同(最大. 100MB)
+                                        <div class="btn btn-default btn-file" id="contractfileupload">
+                                            <i class="fa fa-paperclip"></i> 上传劳务合同(最大. 100MB)
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <input type="file" name="file"  id="constructionfileattachment">
-                                    </div> 
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">招标文件<span style="color:red">*</span></label>
-                                <div class="col-sm-6">
-                                    <input type="hidden" name="bidsFile" id="bidsFile">
-                                    <div class="form-group">
-                                        <div class="btn btn-default btn-file" id="bidsfileupload">
-                                            <i class="fa fa-paperclip"></i> 管理招标文件(最大. 100MB)
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="file" name="file"  id="bidsfileattachment">
-                                    </div> 
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">中标文件<span style="color:red">*</span></label>
-                                <div class="col-sm-6">
-                                    <input type="hidden" name="bidsWinFile" id="bidsWinFile">
-                                    <div class="form-group">
-                                        <div class="btn btn-default btn-file" id="bidswinfileupload">
-                                            <i class="fa fa-paperclip"></i> 管理中标文件(最大. 100MB)
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="file" name="file"  id="bidswinfileattachment">
-                                    </div> 
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">中标通知文件<span style="color:red">*</span></label>
-                                <div class="col-sm-6">
-                                    <input type="hidden" name="bidsWinNoticeFile" id="bidsWinNoticeFile">
-                                    <div class="form-group">
-                                        <div class="btn btn-default btn-file" id="bidswinnoticefileupload">
-                                            <i class="fa fa-paperclip"></i> 管理中标通知文件(最大. 100MB)
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="file" name="file"  id="bidswinnoticefileattachment">
-                                    </div> 
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">工程质量文件<span style="color:red">*</span></label>
-                                <div class="col-sm-6">
-                                    <input type="hidden" name="qualityFile" id="qualityFile">
-                                    <div class="form-group">
-                                        <div class="btn btn-default btn-file" id="qualityfileupload">
-                                            <i class="fa fa-paperclip"></i> 管理工程质量文件(最大. 100MB)
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="file" name="file"  id="qualityfileattachment">
-                                    </div> 
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">预算成本分析表<span style="color:red">*</span></label>
-                                <div class="col-sm-6">
-                                    <input type="hidden" name="costFile" id="costFile">
-                                    <div class="form-group">
-                                        <div class="btn btn-default btn-file" id="costfileupload">
-                                            <i class="fa fa-paperclip"></i> 管理预算成本分析表(最大. 100MB)
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="file" name="file"  id="costfileattachment">
-                                    </div> 
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">工程进度文件<span style="color:red">*</span></label>
-                                <div class="col-sm-6">
-                                    <input type="hidden" name="scheduleFile" id="scheduleFile">
-                                    <div class="form-group">
-                                        <div class="btn btn-default btn-file" id="schedulefileupload">
-                                            <i class="fa fa-paperclip"></i> 管理工程进度文件(最大. 100MB)
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="file" name="file"  id="schedulefileattachment">
+                                        <input type="file" name="contractfileattachment" id="contractfileattachment">
                                     </div> 
                                 </div>
                             </div>
@@ -185,9 +94,9 @@
     var id = "${id?default(0)}";
     $(function () {
         //初始化表单 
-        labform = $("#project_form").form({baseEntity:false});
+        form = $("#labor_form").form({baseEntity:false});
         //数据校验
-        $("#project_form").bootstrapValidator({
+        $("#labor_form").bootstrapValidator({
             message: '请输入有效值',
             feedbackIcons: {
                 valid: 'glyphicon glyphicon-ok',
@@ -198,27 +107,43 @@
                 var action = $(this).attr('$submitButton').attr('data-btn-type');
                 switch (action) {
                     case "prev":
-                        loadPage(basePath+"/project/list");
+                        loadPage(basePath+"/labor/list");
                         break;
                     case "save":
-                        loadPage(basePath+"/project/list");
+                        var formData = form.getFormSimpleData();
+                        formData.id = id;
+                        ajaxPost(basePath + '/labor/savecontract', formData, function (data) {
+                            if (data.success) {
+                                loadPage(basePath+"/labor/list");
+                            } else {
+                                modals.error(data.message);
+                            }
+                        });
+                        
                         break;
+                }
+            },
+            fields: {
+                "contractPrice": {
+                    validators: {
+                        notEmpty: {message: '合同总价不能为空'}
+                    }
                 }
             }
         });
         //初始化控件
-        labform.initComponent();
+        form.initComponent();
         //编辑回填
         if(id!="0"){
-            ajaxPost(basePath+"/project/getStep2",{id:id},function(data){
-                labform.initFormData(data);
+            ajaxPost(basePath+"/labor/getStep2",{id:id},function(data){
+                form.initFormData(data);
             })
-        } 
+        }
     });
     
     var fileinputDefaults = {
           maxFileSize: 102400,
-          maxFileCount:3,
+          maxFileCount:1,
           previewSettings: {
               image: {width: "160px", height: "60px"},
               text: {width: "213px", height: "160px"},
@@ -233,7 +158,7 @@
               pdf: {width: "100%", height: "100%", 'min-height': "480px"},
               other: {width: "auto", height: "100%", 'min-height': "480px"}
           },
-          uploadUrl: basePath + "/project/uploadMultipleFile",
+          uploadUrl: basePath + "/labor/uploadMultipleFile",
           deleteUrl: basePath + "/project/deletefile",
           allowedPreviewTypes : ['image', 'object']
     }
@@ -245,7 +170,6 @@
           showType:'detail',
           window:true,
           callback:function(fileIds,oldfileIds){
-              //更新fileIds
               this.showFiles({
                   fileIds:fileIds,
                   type:'preview'
@@ -253,109 +177,17 @@
           }
     }
     
-    $("#saftyfileupload").file($.extend({}, defaults, {
-        title:"请上传安全文明文件",
+    $("#contractfileupload").file($.extend({}, defaults, {
+        title:"请上传劳务合同",
         fileinput:$.extend({}, fileinputDefaults, {
-            uploadExtraData: {"id":id,"fileField":"saftyFile"}
+            uploadExtraData: {"id":id}
         }),
-        showContainer:'#saftyfileattachment',
-        fileIdContainer:"[name='saftyFile']",
+        showContainer:'#contractfileattachment',
+        fileIdContainer:"[name='contractFile']",
         extraPreviewConfig:{
-            "projectID":id,
-            "fileField":"saftyFile"
+            "fileField":"contractFile"
         }
     }));
 
-    $("#constructionfileupload").file($.extend({}, defaults, {
-        title:"请上传施工合同",
-        fileinput:$.extend({}, fileinputDefaults, {
-            uploadExtraData: {"id":id,"fileField":"constructionFile"}
-        }),
-        showContainer:'#constructionfileattachment',
-        fileIdContainer:"[name='constructionFile']",
-        extraPreviewConfig:{
-            "projectID":id,
-            "fileField":"constructionFile"
-        }
-    }));
-
-    $("#bidsfileupload").file($.extend({}, defaults, {
-        title:"请上传招标文件",
-        fileinput:$.extend({}, fileinputDefaults, {
-            uploadExtraData: {"id":id,"fileField":"bidsFile"}
-        }),
-        showContainer:'#bidsfileattachment',
-        fileIdContainer:"[name='bidsFile']",
-        extraPreviewConfig:{
-            "projectID":id,
-            "fileField":"bidsFile"
-        }
-    }));
-
-    $("#bidswinfileupload").file($.extend({}, defaults, {
-        title:"请上传中标文件",
-        fileinput:$.extend({}, fileinputDefaults, {
-            uploadExtraData: {"id":id,"fileField":"bidsWinFile"}
-        }),
-        showContainer:'#bidswinfileattachment',
-        fileIdContainer:"[name='bidsWinFile']",
-        extraPreviewConfig:{
-            "projectID":id,
-            "fileField":"bidsWinFile"
-        }
-    }));
-
-    $("#bidswinnoticefileupload").file($.extend({}, defaults, {
-        title:"请上传中标通知文件",
-        fileinput:$.extend({}, fileinputDefaults, {
-            uploadExtraData: {"id":id,"fileField":"bidsWinNoticeFile"}
-        }),
-        showContainer:'#bidswinnoticefileattachment',
-        fileIdContainer:"[name='bidsWinNoticeFile']",
-        extraPreviewConfig:{
-            "projectID":id,
-            "fileField":"bidsWinNoticeFile"
-        }
-    }));
-
-    $("#qualityfileupload").file($.extend({}, defaults, {
-        title:"请上传工程质量文件",
-        fileinput:$.extend({}, fileinputDefaults, {
-            uploadExtraData: {"id":id,"fileField":"qualityFile"}
-        }),
-        showContainer:'#qualityfileattachment',
-        fileIdContainer:"[name='qualityFile']",
-        extraPreviewConfig:{
-            "projectID":id,
-            "fileField":"qualityFile"
-        }
-    }));
-    
-    $("#costfileupload").file($.extend({}, defaults, {
-        title:"请上传预算成本分析表",
-        fileinput:$.extend({}, fileinputDefaults, {
-            uploadExtraData: {"id":id,"fileField":"costFile"}
-        }),
-        showContainer:'#costfileattachment',
-        fileIdContainer:"[name='costFile']",
-        extraPreviewConfig:{
-            "projectID":id,
-            "fileField":"costFile"
-        }
-    }));
-
-
-    $("#schedulefileupload").file($.extend({}, defaults, {
-        title:"请上传工程进度文件",
-        fileinput:$.extend({}, fileinputDefaults, {
-            uploadExtraData: {"id":id,"fileField":"scheduleFile"}
-        }),
-        showContainer:'#schedulefileattachment',
-        fileIdContainer:"[name='scheduleFile']",
-        extraPreviewConfig:{
-            "projectID":id,
-            "fileField":"scheduleFile"
-        }
-    }));
 
 </script>

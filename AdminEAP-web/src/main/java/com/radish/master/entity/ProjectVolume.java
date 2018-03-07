@@ -3,9 +3,13 @@
  */
 package com.radish.master.entity;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 import com.cnpc.framework.annotation.Header;
 import com.cnpc.framework.base.entity.BaseEntity;
@@ -37,11 +41,13 @@ public class ProjectVolume extends BaseEntity {
 
     @Header(name = "施工开始时间")
     @Column(name = "start_time")
-    private String startTime;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date startTime;
 
     @Header(name = "施工结束时间")
     @Column(name = "end_time")
-    private String endTime;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date endTime;
 
     @Header(name = "劳务合同ID")
     @Column(name = "labor_id")
@@ -78,19 +84,19 @@ public class ProjectVolume extends BaseEntity {
         this.projectName = projectName;
     }
 
-    public String getStartTime() {
+    public Date getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(String startTime) {
+    public void setStartTime(Date startTime) {
         this.startTime = startTime;
     }
 
-    public String getEndTime() {
+    public Date getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(String endTime) {
+    public void setEndTime(Date endTime) {
         this.endTime = endTime;
     }
 

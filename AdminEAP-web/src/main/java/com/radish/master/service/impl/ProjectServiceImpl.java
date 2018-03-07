@@ -14,20 +14,29 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
+
+import org.hibernate.type.StringType;
+import org.hibernate.type.Type;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.cnpc.framework.activiti.pojo.Constants;
+import com.cnpc.framework.activiti.service.RuntimePageService;
 import com.cnpc.framework.base.entity.User;
 import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.base.service.impl.BaseServiceImpl;
 import com.cnpc.framework.utils.FileUtil;
 import com.cnpc.framework.utils.PropertiesUtil;
+import com.cnpc.framework.utils.SecurityUtil;
 import com.cnpc.framework.utils.StrUtil;
+import com.radish.master.entity.Labor;
 import com.radish.master.entity.Project;
 import com.radish.master.entity.ProjectFileItem;
-import com.radish.master.pojo.ProjectDetailVO;
+import com.radish.master.entity.ProjectVolume;
+import com.radish.master.pojo.Options;
 import com.radish.master.service.ProjectService;
 import com.radish.master.system.FileHelper;
 
@@ -44,6 +53,9 @@ import com.radish.master.system.FileHelper;
 */
 @Service("projectService")
 public class ProjectServiceImpl extends BaseServiceImpl implements ProjectService {
+    
+    @Resource
+    private RuntimePageService runtimePageService;
     
     private static Logger logger= LoggerFactory.getLogger(ProjectServiceImpl.class);
     
@@ -161,6 +173,36 @@ public class ProjectServiceImpl extends BaseServiceImpl implements ProjectServic
         }
         
         return new Result(true);
+    }
+
+    @Override
+    public List<Options> getLaborComboboxByProject(String projectID) {
+        return this.findMapBySql("select id value, contract_name data from tbl_labor where project_id=?", new Object[] {projectID},
+                new Type[] { StringType.INSTANCE }, Options.class);
+    }
+
+    @Override
+    public Result startVolumeFlow(ProjectVolume projectVolume, String processDefinitionKey) {
+        User user = SecurityUtil.getUser();
+
+        Labor labor = this.get(Labor.class, projectVolume.getLaborID());
+        projectVolume.setStatus("20");
+
+        this.update(projectVolume);
+
+        String name = "项目：" + projectVolume.getProjectName() + "合同：" + labor.getContractName() + "工程量上报";
+
+        // businessKey
+        String businessKey = projectVolume.getId();
+
+        // 配置流程变量
+        Map<String, Object> variables = new HashMap<>();
+        variables.put(Constants.VAR_APPLYUSER_NAME, user.getName());
+        variables.put(Constants.VAR_BUSINESS_KEY, businessKey);
+
+        // 启动流程
+        return runtimePageService.startProcessInstanceByKey(processDefinitionKey, name, variables, user.getId(),
+                businessKey);
     }
 
     

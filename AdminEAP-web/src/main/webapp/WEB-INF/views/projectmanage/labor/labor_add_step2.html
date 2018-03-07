@@ -18,13 +18,13 @@
 <script src="${basePath}/resources/common/js/base-file.js"></script>
 <section class="content-header">
     <h1>
-        <span>项目管理</span>
+        <span>劳务合同</span>
         <small>新增</small>
     </h1>
     <ol class="breadcrumb">
         <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
         <li><a href="#">项目管理</a></li>
-        <li class="active">新增项目</li>
+        <li class="active">新增劳务合同</li>
     </ol>
 </section>
 
@@ -60,20 +60,20 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">合同总价<span style="color:red">*</span></label>
                                 <div class="col-sm-6">
-                                    <input type="text" class="form-control" id="contractName" name="contractName" placeholder="合同总价">
+                                    <input type="text" class="form-control" id="contractPrice" name="contractPrice" placeholder="合同总价">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">劳务合同<span style="color:red">*</span></label>
                                 <div class="col-sm-6">
-                                    <input type="hidden" name="saftyfilefield" id="saftyfilefield">
+                                    <input type="hidden" name="contractfilefield" id="contractfilefield">
                                     <div class="form-group">
-                                        <div class="btn btn-default btn-file" id="saftyfileupload">
-                                            <i class="fa fa-paperclip"></i> 上传安全文明文件(最大. 100MB)
+                                        <div class="btn btn-default btn-file" id="contractfileupload">
+                                            <i class="fa fa-paperclip"></i> 上传劳务合同(最大. 100MB)
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <input type="file" name="file"  id="saftyfileattachment">
+                                        <input type="file" name="contractfileattachment" id="contractfileattachment">
                                     </div> 
                                 </div>
                             </div>
@@ -95,7 +95,7 @@
         //初始化表单 
         form = $("#labor_form").form({baseEntity:false});
         //数据校验
-        $("#project_form").bootstrapValidator({
+        $("#labor_form").bootstrapValidator({
             message: '请输入有效值',
             feedbackIcons: {
                 valid: 'glyphicon glyphicon-ok',
@@ -110,6 +110,7 @@
                         break;
                     case "save":
                     	var formData = form.getFormSimpleData();
+                    	formData.id = id;
                     	ajaxPost(basePath + '/labor/savecontract', formData, function (data) {
                             if (data.success) {
                             	loadPage(basePath+"/labor/list");
@@ -120,6 +121,13 @@
                         
                         break;
                 }
+            },
+            fields: {
+                "contractPrice": {
+                    validators: {
+                        notEmpty: {message: '合同总价不能为空'}
+                    }
+                }
             }
         });
         //初始化控件
@@ -128,7 +136,7 @@
     
     var fileinputDefaults = {
           maxFileSize: 102400,
-          maxFileCount:3,
+          maxFileCount:1,
           previewSettings: {
               image: {width: "160px", height: "60px"},
               text: {width: "213px", height: "160px"},
@@ -143,7 +151,7 @@
               pdf: {width: "100%", height: "100%", 'min-height': "480px"},
               other: {width: "auto", height: "100%", 'min-height': "480px"}
           },
-          uploadUrl: basePath + "/project/uploadMultipleFile",
+          uploadUrl: basePath + "/labor/uploadMultipleFile",
           deleteUrl: basePath + "/project/deletefile",
           allowedPreviewTypes : ['image', 'object']
     }
@@ -162,16 +170,15 @@
           }
     }
     
-    $("#saftyfileupload").file($.extend({}, defaults, {
+    $("#contractfileupload").file($.extend({}, defaults, {
         title:"请上传劳务合同",
         fileinput:$.extend({}, fileinputDefaults, {
-            uploadExtraData: {"id":id,"fileField":"saftyFile"}
+            uploadExtraData: {"id":id}
         }),
-        showContainer:'#saftyfileattachment',
-        fileIdContainer:"[name='saftyFile']",
+        showContainer:'#contractfileattachment',
+        fileIdContainer:"[name='contractFile']",
         extraPreviewConfig:{
-            "projectID":id,
-            "fileField":"saftyFile"
+            "fileField":"contractFile"
         }
     }));
 
