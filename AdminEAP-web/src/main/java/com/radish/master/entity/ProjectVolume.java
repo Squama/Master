@@ -28,7 +28,7 @@ import com.cnpc.framework.base.entity.BaseEntity;
 @Entity
 @Table(name = "tbl_project_volume")
 public class ProjectVolume extends BaseEntity {
-    
+
     private static final long serialVersionUID = 5693322660504020063L;
 
     @Header(name = "项目ID")
@@ -62,7 +62,7 @@ public class ProjectVolume extends BaseEntity {
     private String volume;
 
     /**
-     * 10-提交审核 20-质量员 30-安全员 40-分管施工员 50-施工负责人 60-预算负责人 70-总负责人 80-财务负责人 90-已完成
+     * 10-提交审核 20-综合审核 30-施工负责人 40-预算负责人 50-总负责人 60-财务负责人 70-已完成
      */
     @Header(name = "状态")
     @Column(name = "status")
@@ -131,5 +131,5 @@ public class ProjectVolume extends BaseEntity {
     public void setStatus(String status) {
         this.status = status;
     }
-    
+
 }

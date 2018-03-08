@@ -29,7 +29,7 @@
         <column key="startTime" header="起始时间" classType="String" width="150" dateFormat="yyyy-mm-dd"/>
         <column key="endTime" header="结束时间" classType="String" width="150" dateFormat="yyyy-mm-dd"/>
         <column key="engineerMoney" header="应付工程款" classType="String" width="150"/>
-        <column key="status" header="审核状态" allowSort="true" width="150" render="10=新建,20=质量员,30=安全员,40=分管施工员,50=施工负责人,60=预算负责人,70=总负责人,80=财务负责人,90=已完成"/>
+        <column key="status" header="审核状态" allowSort="true" width="150" render="10=新建,20=综合审核,30=施工负责人,40=预算负责人,50=总负责人,60=财务负责人,70=已完成"/>
         <column key="id" header="操作" width="80" fnRender="fnRenderVolume"/>
     </query>
 

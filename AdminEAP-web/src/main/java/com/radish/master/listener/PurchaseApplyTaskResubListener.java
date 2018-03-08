@@ -37,7 +37,6 @@ public class PurchaseApplyTaskResubListener implements TaskListener {
             String businessKey = delegateTask.getVariable(Constants.VAR_BUSINESS_KEY).toString();
             BaseService baseService = (BaseService)SpringUtil.getObject("baseActServer");
             Purchase purchase = baseService.get(Purchase.class, businessKey);
-            baseService.save(purchase); 
             if("false".equalsIgnoreCase(delegateTask.getVariable("approved").toString())){
                 //此处放弃之后，是不是应该把申请单数据删除，并加回申请数量？
                 purchase.setStatus("10");
