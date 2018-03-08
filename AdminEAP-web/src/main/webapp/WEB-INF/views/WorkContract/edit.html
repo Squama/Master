@@ -1,0 +1,283 @@
+<link rel="stylesheet" href="${basePath}/resources/common/libs/fileinput/css/fileinput.min.css">
+<style>
+
+#projectaddstep2 .krajee-default.file-preview-frame .kv-file-content {
+    height: auto;
+}
+
+#projectaddstep2 .krajee-default .file-footer-caption {
+    width: 100px;
+}
+
+</style>
+<script src="${basePath}/resources/common/libs/fileinput/js/fileinput.js"></script>
+<script src="${basePath}/resources/common/libs/fileinput/js/locales/zh.js"></script>
+<!--BaseFile组件-->
+<script src="${basePath}/resources/common/js/base-file.js"></script>
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><li class="fa fa-remove"></li></button>
+    <h5 class="modal-title">合同详情</h5>
+</div>
+<div class="modal-body" style="max-height:500px;overflow-y:auto;">
+
+    <form id="contract-form" name="contract-form" class="form-horizontal">
+     <input type="hidden" name="id" id= "id">
+        <div class="box-body">
+            <div class="col-md-6">
+                
+                <div class="form-group">
+                    <label for="newUserId1" class="col-sm-3 control-label">签约人</label>
+
+                    <div class="col-sm-8">
+                   		<select id="newUserId1" class="form-control select2 "  name="newUserId" style="width:100%" >
+                    		<option selected="selected" value="">选择一个人员</option>
+                    	</select>
+                    </div>
+                </div>
+           		 <div class="form-group">
+					<label  for="startDate" class="col-sm-3 control-label">开始时间</label>
+					<div class=" col-sm-8">
+					<input class="form-control date-picker" id="startDate" name="startDate"  data-flag="datepicker" data-format="yyyy-mm-dd"  placeholder="开始时间"  >
+				
+				</div>
+				</div>
+                <div class="form-group">
+					<label  for="qyDate" class="col-sm-3 control-label">签约时间</label>
+					<div class=" col-sm-8">
+					<input class="form-control date-picker" id="qyDate" name="qyDate"  data-flag="datepicker" data-format="yyyy-mm-dd"  placeholder="签约时间"  >
+				
+				</div>
+				</div>
+                
+            </div>
+            <div class="col-md-6">
+            	
+                <div class="form-group">
+                    <label for="oldUserId1" class="col-sm-3 control-label">负责签约人</label>
+
+                    <div class="col-sm-8">
+                   		<select id="oldUserId1" class="form-control select2 "  name="oldUserId" style="width:100%" >
+                    		<option selected="selected" value="">选择一个人员</option>
+                    	</select>
+                    </div>
+                </div>
+				<div class="form-group">
+					<label  for="endDate" class="col-sm-3 control-label">结束时间</label>
+					<div class=" col-sm-8">
+						<input class="form-control date-picker" id="endDate" name="endDate"  data-flag="datepicker" data-format="yyyy-mm-dd"  placeholder="结束时间"  >
+				
+					</div>
+				</div>
+				<div class="form-group">
+                    <label  for="contract_number" class="col-sm-3 control-label">合同编号</label>
+					<div class=" col-sm-8">
+						<input class="form-control " id="contract_number" name="contract_number"   placeholder="合同编号"  >
+				
+					</div>
+                </div>
+            </div> 
+            <div class="form-group">
+                    <label for="items" class="col-sm-2 control-label">特殊条款</label>
+
+                    <div class="col-sm-9">
+                        <textarea class="form-control" id="items" name="items" placeholder="请输入特殊条款" rows="6"></textarea>
+                    </div>
+            </div>    
+             <div class="form-group">
+                    <label for="remark" class="col-sm-2 control-label">备注</label>
+
+                    <div class="col-sm-9">
+                        <textarea class="form-control" id="remark" name="remark" placeholder="请输入备注" rows="6"></textarea>
+                    </div>
+            </div>        
+        </div>
+        		<input type="hidden" name="fileId" id="fileId">
+					<div class="form-group" align="center" id="wjscid">
+						<div class="btn btn-default btn-file" id="uploadFile">
+							<i class="fa fa-paperclip"></i> 上传劳务合同(Max. 10MB)
+						</div>
+					</div>
+					<div class="form-group" id="file_container">
+						<input type="file" name="file"  id="attachment">
+					</div>
+        <!-- /.box-body -->
+        <div class="box-footer text-center">
+            <!--以下两种方式提交验证,根据所需选择-->
+            <button type="submit" class="btn btn-primary" data-btn-type="save" id="b_sub">提交</button>
+        </div>
+        <!-- /.box-footer -->
+    </form>
+</div>
+<script>
+    var form =null;
+    var user = '${uses?default(0)}',u=0;
+    if(user != 0){
+    	u = JSON.parse(user);
+    }
+    var id="${id}";
+    var doWhat="${doWhat}"
+    $(function() {
+        //初始化控件
+        form=$("#contract-form").form();
+        //数据校验
+        $("#contract-form").bootstrapValidator({
+            message : '请输入有效值',
+            feedbackIcons : {
+                valid : 'glyphicon glyphicon-ok',
+                invalid : 'glyphicon glyphicon-remove',
+                validating : 'glyphicon glyphicon-refresh'
+            },
+            submitHandler : function() {
+                modals.confirm('确认保存？', function() {
+                    //Save Data，对应'submit-提交'
+                    var params = form.getFormSimpleData();
+                    	ajaxPost(basePath+'/workcontract/update', params, function(data) {
+                            if(data.success){
+                            	modals.hideWin(winId);
+                            	dutycheckTable.reloadData();
+                                modals.info("数据保存成功");
+                                
+                            }                
+                        }); 
+              
+                     
+                });
+            },
+            fields : {
+            	newUserId : {
+                    validators : {
+                        notEmpty : {
+                            message : '请选择签约人'
+                        }
+                    }
+                },
+                oldUserId : {
+                    validators : {
+                        notEmpty : {
+                            message : '请选择负责签约人'
+                        }
+                    }
+                },
+                startDate : {
+                    validators : {
+                        notEmpty : {
+                            message : '请输入开始时间'
+                        },
+                       
+                    }
+                },
+                endDate : {
+                    validators : {
+                        notEmpty : {
+                            message : '请输入结束时间'
+                        }
+                    }
+                },
+                qyDate : {
+                    validators : {
+                        notEmpty : {
+                            message : '请输入签约时间'
+                        }
+                    }
+                }
+            }
+        });
+        form.initComponent();
+        if(u != 0){
+            for (var i = 0,len = u.length; i < len; i++) {
+                var us = u[i];
+                $('#newUserId1').append("<option value='" + us.id + "'>" + us.name + "</option>");
+                $('#oldUserId1').append("<option value='" + us.id + "'>" + us.name + "</option>");
+            }
+            $(".select2").select2();
+        }
+        if(doWhat=="1"){
+        	$('input,select,textarea',$('form[name="dutycheck-form"]')).attr('disabled',true);
+        	$("#b_sub").css("display","none");
+        	$("#wjscid").css("display","none");
+        	$(".modal-title").text("查看详情")
+        }
+        load();
+        
+    });
+    function load(){
+    	ajaxPost(basePath+'/workcontract/load?id='+id, {}, function(data) {
+            console.log(data.data);
+            formdata = data.data;
+            form.initFormData(formdata); 
+                            
+        }); 
+    }
+    function resetForm(){
+        form.clearForm();
+        $("#contract-form").data('bootstrapValidator').resetForm();
+    }
+    var fileinputDefaults = {
+            maxFileSize: 102400,
+            maxFileCount:3,
+            previewSettings: {
+                image: {width: "160px", height: "60px"},
+                text: {width: "213px", height: "160px"},
+                object: {width: "160px", height: "auto"},
+                pdf: {width: "160px", height: "160px"},
+                other: {width: "160px", height: "160px"}
+            },
+            previewZoomSettings: {
+                image: {width: "auto", height: "auto", 'max-width': "100%", 'max-height': "100%"},
+                text: {width: "100%", height: "100%", 'min-height': "480px"},
+                object: {width: "auto", height: "100%", 'min-height': "480px"},
+                pdf: {width: "100%", height: "100%", 'min-height': "480px"},
+                other: {width: "auto", height: "100%", 'min-height': "480px"}
+            },
+            uploadUrl: basePath + "/workcontract/uploadMultipleFile",
+            deleteUrl: basePath + "/workcontract/deletefile",
+            allowedPreviewTypes : ['image', 'object']
+      }
+      var defaults = {
+            title: "请上传附件",
+            getFileResultUrl: basePath+"/workcontract/getFiles",
+            downloadFileUrl: basePath+"/workcontract/download/",
+            fileinput: fileinputDefaults,
+            showType:'detail',
+            window:true,
+            callback:function(fileId,oldfileIds){
+                this.showFiles({
+                    fileIds:fileId,
+                    type:'preview'
+                });
+            }
+      }
+      
+      $("#uploadFile").file($.extend({}, defaults, {
+          title:"请上传附件",
+          fileinput:$.extend({}, fileinputDefaults, {
+              uploadExtraData: {"fileField":"fileId"}
+          }),
+          showContainer:'#attachment',
+          fileIdContainer:"[name='fileId']",
+          extraPreviewConfig:{
+              "fileField":"fileId"
+          }
+      }));
+    
+    /* $("#uploadFile").file({
+        title: "请上传附件",
+        fileinput: {
+            maxFileSize: 10240,
+            maxFileCount:3
+        },
+        fileIdContainer:"[name='fileId']",
+        showContainer:'#attachment',
+        //显示文件类型 edit=可编辑  detail=明细 默认为明细
+        showType:'edit',
+        //弹出窗口 执行上传附件后的回调函数(window:false不调用此方法)
+        window:true,
+        callback:function(fileId,oldfileIds){
+            //更新fileIds
+            this.showFiles({
+                fileIds:fileId
+            });
+        }
+    }); */
+	
+</script>

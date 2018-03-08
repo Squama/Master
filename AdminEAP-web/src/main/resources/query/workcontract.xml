@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<queryContext xmlns="http://www.example.org/query" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.example.org/query query.xsd">
+<!--本xml片段为代码生成器生成，时间：2017-10-17 11:38:08-->
+    
+    <query id="workcontract_list_file" key="id" tableName="劳务合同列表" widthType="px">
+        <sql>
+            <![CDATA[
+              SELECT ht.id id , ht.startDate startDate , ht.endDate endDate ,ht.qyDate qyDate , ht.file_name file_name ,
+              ht.fileId fileId ,new.name newname ,old.name oldname ,ht.newUserId newUserId ,ht.oldUserId oldUserId 
+              FROM tbl_usercontract ht, tbl_user new ,tbl_user old
+              WHERE 1=1 and ht.newUserId = new.id and ht.oldUserId = old.id
+            ]]>
+        </sql>
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="newUserId" header="签约人id" width="50"  hidden="true"/>
+        <column key="oldUserId" header="负责签约人id" width="50"  hidden="true"/>
+        <column key="newname" header="签约人" classType="String" operator="like"  allowSort="true" width="150"/>
+        <column key="oldname" header="负责签约人" classType="String" operator="like"  allowSort="true" width="150"/>
+        <column key="startDate" header="开始时间" classType="String" allowSort="true" width="150"/>
+        <column key="endDate" header="结束时间" classType="String" allowSort="true" width="150"/>
+        <column key="qyDate" header="签约时间" classType="String" allowSort="true" width="150"/>
+        <column key="fileId" header="查看附件" width="100" fnRender="fnRenderDetail"/>
+    </query>
+
+</queryContext>
