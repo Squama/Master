@@ -112,7 +112,7 @@
     var validateFormUrl = "${validateFormUrl?default(0)}";
     var businessKey = "${businessKey?default(0)}";
     console.log(formUrl);
-    console.log(validateFormUrl);
+    console.log("validateFormUrl" + validateFormUrl);
     console.log(businessKey);
     var taskCtrl = {
         loadBusinessForm: function () {
@@ -193,25 +193,42 @@
                 		ajaxPost(basePath + validateFormUrl, {businessKey:businessKey}, function (data, status) {
                             if (!data.success) {
                             	modals.error(data.message);
-                            	return false;
+                            }else{
+                            	modals.confirm('确认提交该流程？', function () {
+                                    // TODO 传参类型待定
+                                    var params = self.taskForm.getFormSimpleData();
+                                    $.extend(params,self.collectExtFormData());
+                                    if(params.approved == undefined){
+                                        params.approved = 'true';
+                                    }
+                                    ajaxPost(basePath + '/activiti/task/complete/${taskId}', params, function (data, status) {
+                                        if (data.success) {
+                                            self.gotolist();
+                                        }else{
+                                            modals.error(data.message);
+                                        }
+                                    });
+                                });
                             }
+                        });
+                	}else{
+                		modals.confirm('确认提交该流程？', function () {
+                            // TODO 传参类型待定
+                            var params = self.taskForm.getFormSimpleData();
+                            $.extend(params,self.collectExtFormData());
+                            if(params.approved == undefined){
+                                params.approved = 'true';
+                            }
+                            ajaxPost(basePath + '/activiti/task/complete/${taskId}', params, function (data, status) {
+                                if (data.success) {
+                                    self.gotolist();
+                                }else{
+                                    modals.error(data.message);
+                                }
+                            });
                         });
                 	}
-                    modals.confirm('确认提交该流程？', function () {
-                        // TODO 传参类型待定
-                        var params = self.taskForm.getFormSimpleData();
-                        $.extend(params,self.collectExtFormData());
-                        if(params.approved == undefined){
-                        	params.approved = 'true';
-                        }
-                        ajaxPost(basePath + '/activiti/task/complete/${taskId}', params, function (data, status) {
-                            if (data.success) {
-                                self.gotolist();
-                            }else{
-                            	modals.error(data.message);
-                            }
-                        });
-                    });
+                    
                 },
                 fields:workflowCtrl.validators()
             });

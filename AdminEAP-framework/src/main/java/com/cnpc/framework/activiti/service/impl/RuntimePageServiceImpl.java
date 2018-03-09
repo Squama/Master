@@ -37,6 +37,7 @@ import org.activiti.engine.impl.pvm.process.ActivityImpl;
 import org.activiti.engine.impl.scripting.ScriptingEngines;
 import org.activiti.engine.impl.task.TaskDefinition;
 import org.activiti.engine.repository.ProcessDefinition;
+import org.activiti.engine.runtime.Execution;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.runtime.ProcessInstanceQuery;
 import org.activiti.engine.task.Task;
@@ -557,8 +558,11 @@ public class RuntimePageServiceImpl extends BaseServiceImpl implements RuntimePa
                     @Override
                     public String execute(CommandContext commandContext) {
                         String retNames = "";
-                        ExecutionEntity execution = (ExecutionEntity) runtimeService.createExecutionQuery().processInstanceId
-                                (processInstanceId).singleResult();
+                        /*ExecutionEntity execution = (ExecutionEntity) runtimeService.createExecutionQuery().processInstanceId
+                                (processInstanceId).singleResult();*/
+                        List<Execution> executionList = runtimeService.createExecutionQuery().processInstanceId
+                                (processInstanceId).list();
+                        ExecutionEntity execution = (ExecutionEntity) executionList.get(0);
                         TaskDefinition taskDefinition = (TaskDefinition) activity.getProperties().get("taskDefinition");
                         if (taskDefinition == null)
                             return retNames;

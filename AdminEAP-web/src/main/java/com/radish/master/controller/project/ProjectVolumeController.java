@@ -69,6 +69,26 @@ public class ProjectVolumeController {
         return "projectmanage/volume/volume_edit";
     }
     
+    @RefreshCSRFToken
+    @RequestMapping(value="/detail/{id}",method = RequestMethod.GET)
+    public String detail(@PathVariable("id") String id,HttpServletRequest request,HttpServletResponse response) {
+        request.setAttribute("id", id);
+        request.setAttribute("projectOptions", JSONArray.toJSONString(budgetService.getProjectCombobox()));
+        return "projectmanage/volume/volume_detail";
+    }
+    
+    @RequestMapping(value="/check",method = RequestMethod.POST)
+    @ResponseBody
+    public Result check(String businessKey){
+        ProjectVolume pv = projectService.get(ProjectVolume.class, businessKey);
+        
+        if("20".equals(pv.getStatus())){
+            return new Result(false,"质量员、安全员和施工员尚未全部同意！！");
+        }else{
+            return new Result(true);
+        }
+    }
+    
     @RequestMapping(value="/getlabor")
     @ResponseBody
     public Result getLabor(String projectID){
