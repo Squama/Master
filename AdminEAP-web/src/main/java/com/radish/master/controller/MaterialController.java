@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.security.auth.Subject;
 import javax.servlet.http.HttpServletRequest;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -281,6 +282,8 @@ public class MaterialController {
     	c.setId(null);
     	c.setMat_ID(materiel.getMat_number());
     	c.setCreate_time(new Date());
+    	Double price = c.getPrice();
+    	c.setPrice(new BigDecimal(price).setScale(6, BigDecimal.ROUND_HALF_UP).doubleValue());
     	c.setIsValid("1");
     	baseService.save(c);
     	
@@ -288,5 +291,20 @@ public class MaterialController {
     	r.setSuccess(true);
     	return r;
     }
-   
+    
+    @RequestMapping(value="/isHaveMat",method = RequestMethod.POST)
+    @ResponseBody
+    public Result isHaveMat(HttpServletRequest request,Materiel m){
+    	String name = m.getMat_name();
+    	String unit = m.getUnit();
+    	String gg = m.getMat_standard();
+    	List<Materiel> ms = baseService.findBySql("select * from tbl_materiel where mat_standard='"+gg+"' and mat_name='"+name+"' and unit='"+unit+"'",Materiel.class);
+    	Result r = new Result();
+    	if(ms.size()>0){
+    		r.setMessage("ishave");
+    	}else{
+    		r.setSuccess(true);
+    	}
+    	return r;
+    }
 }

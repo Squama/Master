@@ -47,6 +47,10 @@ public class Stock extends BaseEntity {
     @Header(name = "操作类型")
     @Column(name = "usetype")
     private String usetype;
+    
+    @Header(name = "备注")
+    @Column(name = "remark")
+    private String remark;
 
     @Header(name = "预留字段1")
     @Column(name = "reserve1")
@@ -61,7 +65,15 @@ public class Stock extends BaseEntity {
     private String reserve3;
 
 
-    public String getProject_id() {
+    public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
+	public String getProject_id() {
         return project_id;
     }
 

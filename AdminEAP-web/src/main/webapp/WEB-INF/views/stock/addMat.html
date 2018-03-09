@@ -147,6 +147,25 @@
                 modals.confirm('确认保存？', function() {
                     //Save Data，对应'submit-提交'
                     var params = form1.getFormSimpleData();
+                    var isHave = "";
+                    //添加判断，数据库是否已存在物料--名称 规格 单位
+                    $.ajax({
+					 	async: false,
+						type : "post",
+						url : basePath+'/material/isHaveMat',
+						data:params,
+						dataType : 'json',
+						success : function(data) {
+							if(data.message){
+								isHave = "isHave";
+							}
+						}
+					});
+                    if(isHave){
+                    	 modals.info("已录入相同名称、规格、单位一样的物料");
+                    	return ;
+                    }
+                    
                      ajaxPost(basePath+'/material/saveInStock', params, function(data) {
                         if(data.success){
                             modals.info("物料保存成功");
@@ -195,13 +214,6 @@
                     validators : {
                         notEmpty : {
                             message : '请输入价格'
-                        }
-                    }
-                },
-                area : {
-                    validators : {
-                        notEmpty : {
-                            message : '请选择地区'
                         }
                     }
                 }

@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -87,7 +88,8 @@ public class ChannelController {
     	
     	c.setMat_ID(m.getMat_number());
     	c.setCreate_time(new Date());
-    	
+    	Double price = c.getPrice();
+    	c.setPrice(new BigDecimal(price).setScale(6, BigDecimal.ROUND_HALF_UP).doubleValue());
     	c.setIsValid("1");
     	String id = (String)baseService.save(c);
     	if(c_id!=null){

@@ -498,7 +498,7 @@ public class StockController {
     @ResponseBody
     public Result addCshMat(HttpServletRequest request,Stock s){
     	Materiel m = baseService.get(Materiel.class, s.getMat_id());
-    	stockService.initializationStock(m.getMat_number(), s.getProject_id(), request.getParameter("channel_id"), s.getStock_num());
+    	stockService.initializationStock(m.getMat_number(), s.getProject_id(), request.getParameter("channel_id"), s.getStock_num(),s.getRemark());
     	return new Result();
     }
     /**

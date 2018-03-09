@@ -4,6 +4,7 @@
 package com.radish.master.entity;
 
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -157,7 +158,8 @@ public String getSupplier() {
   }
 
   public void setPrice(Double price) {
-    this.price = price;
+	 
+    this.price =price ;
   }
 
   public String getCreate_name() {

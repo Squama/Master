@@ -87,6 +87,10 @@
                     }); 
                     break;
                 case "dispatchIn":
+                	if(!rowId){
+                        modals.info('请选择要调度的行');
+                        return false;
+                    }
                     modals.openWin({
                         winId:winId,
                         title:'物料库存调度入库',

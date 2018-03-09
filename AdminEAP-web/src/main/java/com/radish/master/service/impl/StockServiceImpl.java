@@ -107,7 +107,7 @@ public class StockServiceImpl extends BaseServiceImpl implements StockService {
      * @return
      */
     @Override
-    public Boolean initializationStock(String mat_id,String project_ID,String channel_ID,Double stockNum){
+    public Boolean initializationStock(String mat_id,String project_ID,String channel_ID,Double stockNum,String remark){
         Stock stock = new Stock();
         String sql = " select * from tbl_stock where mat_id='"+mat_id+"' and project_ID='"+project_ID+"'";
         List<Stock> list= findBySql(sql, Stock.class);
@@ -121,12 +121,14 @@ public class StockServiceImpl extends BaseServiceImpl implements StockService {
             stock.setUsetype("5");//1:采购入库，2：调度入库
             stock.setStorage_person_id(SecurityUtil.getUserId());
             stock.setStorage_time(new Date());
+            stock.setRemark(remark);
             save(stock);
         }else{
             //同一种物料在一个项目下原有库存，更新数量
             stock = get(Stock.class,list.get(0).getId());
             stock.setStock_num(arith.add(stock.getStock_num() ,stockNum));
             stock.setAvailable_num(arith.add(stock.getAvailable_num(),stockNum));
+            stock.setRemark(remark);
             update(stock);
         }
         //同步库存渠道表

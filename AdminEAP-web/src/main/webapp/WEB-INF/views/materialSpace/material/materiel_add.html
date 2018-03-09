@@ -120,6 +120,25 @@
                 modals.confirm('确认保存？', function() {
                     //Save Data，对应'submit-提交'
                     var params = form.getFormSimpleData();
+                    var isHave = "";
+                    //添加判断，数据库是否已存在物料--名称 规格 单位
+                    $.ajax({
+					 	async: false,
+						type : "post",
+						url : basePath+'/material/isHaveMat',
+						data:params,
+						dataType : 'json',
+						success : function(data) {
+							if(data.message){
+								isHave = "isHave";
+							}
+						}
+					});
+                    if(isHave){
+                    	 modals.info("已录入相同名称、规格、单位一样的物料");
+                    	return ;
+                    }
+                    
                      ajaxPost(basePath+'/material/save', params, function(data) {
                         if(data.success){
                         	modals.hideWin(winId);

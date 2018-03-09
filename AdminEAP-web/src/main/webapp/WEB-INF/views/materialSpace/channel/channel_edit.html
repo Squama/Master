@@ -221,8 +221,7 @@
                     var params = form1.getFormSimpleData();
                    ajaxPost(basePath+'/channel/save?mat_id='+$("#mat_id").val(), params, function(data, status) {
                         if(data.success){
-                        	
-                        	materielTable.reloadData();
+                        	$("#id1").val(data.code);
                         	modals.info("数据修改成功");
                         	 
                         }                
@@ -250,13 +249,6 @@
 
 
                     }
-                },
-                area : {
-                    validators : {
-                        notEmpty : {
-                            message : '请选择地区'
-                        }
-                    }
                 }
             }
         });
@@ -273,7 +265,7 @@
                    ajaxPost(basePath+'/channel/save?mat_id='+$("#mat_id").val(), params, function(data, status) {
                         if(data.success){
                         	
-                        	materielTable.reloadData();
+                        	$("#id2").val(data.code);
                         	modals.info("数据修改成功");
                         	 
                         }                
@@ -294,13 +286,6 @@
                             message : '请输入价格'
                         }
                     }
-                },
-                area : {
-                    validators : {
-                        notEmpty : {
-                            message : '请选择地区'
-                        }
-                    }
                 }
             }
         });
@@ -316,7 +301,7 @@
                   var params = form3.getFormSimpleData();
                   ajaxPost(basePath+'/channel/save?mat_id='+$("#mat_id").val(), params, function(data, status) {
                         if(data.success){
-                        	materielTable.reloadData();
+                        	$("#id3").val(data.code);
                         	modals.info("数据修改成功");
                         	 
                         }                
@@ -335,13 +320,6 @@
                     validators : {
                         notEmpty : {
                             message : '请输入价格'
-                        }
-                    }
-                },
-                area : {
-                    validators : {
-                        notEmpty : {
-                            message : '请选择地区'
                         }
                     }
                 }
