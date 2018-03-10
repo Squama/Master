@@ -3,14 +3,17 @@
  */
 package com.radish.master.controller.project;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.activiti.engine.task.TaskQuery;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,9 +21,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONArray;
+import com.cnpc.framework.activiti.pojo.ActivityVo;
+import com.cnpc.framework.activiti.pojo.TaskVo;
+import com.cnpc.framework.activiti.service.RuntimePageService;
+import com.cnpc.framework.activiti.service.TaskPageService;
 import com.cnpc.framework.annotation.RefreshCSRFToken;
 import com.cnpc.framework.annotation.VerifyCSRFToken;
+import com.cnpc.framework.base.pojo.PageInfo;
 import com.cnpc.framework.base.pojo.Result;
+import com.cnpc.framework.query.entity.QueryCondition;
 import com.cnpc.framework.utils.StrUtil;
 import com.radish.master.entity.Labor;
 import com.radish.master.entity.ProjectVolume;
@@ -47,6 +56,12 @@ public class ProjectVolumeController {
     
     @Resource
     private BudgetService budgetService;
+    
+    @Resource
+    private TaskPageService taskPageService;
+    
+    @Resource
+    private RuntimePageService runtimePageService;
     
     @RequestMapping(value="/list",method = RequestMethod.GET)
     public String list(){
@@ -93,6 +108,68 @@ public class ProjectVolumeController {
     @ResponseBody
     public Result getLabor(String projectID){
         return new Result(true, JSONArray.toJSONString(projectService.getLaborComboboxByProject(projectID)));
+    }
+    
+    @RequestMapping(value="/getpingxing")
+    @ResponseBody
+    public Result getPX(String id){
+    	
+    	List<Map<String, Object>> conditions = new ArrayList<Map<String, Object>>();
+    	Map<String, String> map = new HashMap<String, String>();
+    	String zhiliang = "info";
+    	String zhiliangsugg = "info";
+    	String anquan = "info";
+    	String anquansugg = "info";
+    	String shigong = "info";
+    	String shigongsugg = "info";
+    	
+    	Map<String, Object> condition = new HashMap<String, Object>();
+    	condition.put("key", "businessKey");
+    	condition.put("value", id);
+    	
+    	conditions.add(condition);
+    	
+    	QueryCondition q = new QueryCondition();
+    	q.setConditions(conditions);
+    	
+    	List<TaskVo> taskVOList = taskPageService.getTaskToDoList(q, new PageInfo());
+    	if(taskVOList.size() > 0){
+        	List<Map<String, Object>> conditionsR = new ArrayList<Map<String, Object>>();
+        	
+        	Map<String, Object> conditionR = new HashMap<String, Object>();
+        	conditionR.put("key", "processInstanceId");
+        	conditionR.put("value", taskVOList.get(0).getProcessInstanceId());
+        	
+        	conditionsR.add(conditionR);
+        	
+        	QueryCondition qc = new QueryCondition();
+        	qc.setConditions(conditionsR);
+        	
+    		List<ActivityVo> list = runtimePageService.getActivityList(qc, new PageInfo());
+    		for(ActivityVo vo : list){
+    			if(vo.getActivityState() == "0"){
+    				if("zhiliang".equals(vo.getActivityId())){
+        				zhiliang=vo.getApproved();
+        				zhiliangsugg=vo.getSuggestion();
+        			}else if("anquan".equals(vo.getActivityId())){
+        				anquan=vo.getApproved();
+        				anquansugg=vo.getSuggestion();
+        			}else if("shigong".equals(vo.getActivityId())){
+        				shigong=vo.getApproved();
+        				shigongsugg=vo.getSuggestion();
+        			}
+    			}
+    		}
+    		
+    	}
+    	map.put("zhiliang", zhiliang);
+    	map.put("zhiliangsugg", zhiliangsugg);
+    	map.put("anquan", anquan);
+    	map.put("anquansugg", anquansugg);
+    	map.put("shigong", shigong);
+    	map.put("shigongsugg", shigongsugg);
+    	
+        return new Result(true, map);
     }
     
     @RequestMapping(value="/getlaborinfo")
