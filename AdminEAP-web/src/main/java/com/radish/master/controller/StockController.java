@@ -456,7 +456,10 @@ public class StockController {
   //初始化库存物料页面
     @RequestMapping("/showStockMat")
     public String showStockMat(HttpServletRequest request) {
-    	
+    	List st = baseService.findMapBySql("select id value, id data from tbl_stock", new Object[]{}, new Type[]{StringType.INSTANCE}, Options.class);
+    	List xm = baseService.findMapBySql("select project_code value, project_name data from tbl_project", new Object[]{}, new Type[]{StringType.INSTANCE}, Options.class);
+    	request.setAttribute("xm", JSONArray.toJSONString(xm));
+    	request.setAttribute("st", JSONArray.toJSONString(st));
         return "stock/stockAdd_list";
     }
   //初始化库存物料弹框
