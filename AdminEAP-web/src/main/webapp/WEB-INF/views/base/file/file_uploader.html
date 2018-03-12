@@ -33,7 +33,6 @@
     //来自调用页面的配置，通过spring参数跳转获取参数 因为get方式传输 所以参数长度有限，可以使用data("file")获取对象
     //config.winId=fileObj.options.winId   config.callback/config.fileIds 获取不到 得用fileObj.options.fileIds
     var config =${config};
-    console.log(config);
     var fileObj;
     $(function () {
         //多文件上传
@@ -59,7 +58,6 @@
         //以上注释方法封装到BaseFile中
         var preview=[];
         var previewConfig=[];
-        console.log(fileObj.options.fileIds);
         if(fileObj.options.fileIds){
         	var fileIds = fileObj.options.fileIds;
         	if(fileObj.options.batchFlag){
@@ -71,7 +69,6 @@
             var result=fileObj.getFileResult(fileIds,fileObj.options.type,fileObj.options.extraPreviewConfig);
             preview=result.initialPreview;
             previewConfig=result.initialPreviewConfig;
-            console.log(result);
         }
         
         //alert(initFileObj.options.title);
@@ -82,7 +79,6 @@
             previewFileIconSettings:fileObj.previewFileIconSettings
         },fileObj.getFileInputConfig())).on("fileuploaded",function (event,data,previewId,index) {
             addFileId(data.response.fileIds);
-            console.log(data);
             //绑定下载按钮事件
             fileObj.downloadHandler(this);
         }).on("filebatchuploadsuccess",function (event,data,previewId,index) {

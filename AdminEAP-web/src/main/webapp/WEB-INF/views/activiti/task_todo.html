@@ -111,9 +111,9 @@
     var formUrl = "${formUrl?default(0)}";
     var validateFormUrl = "${validateFormUrl?default(0)}";
     var businessKey = "${businessKey?default(0)}";
-    console.log(formUrl);
-    console.log("validateFormUrl" + validateFormUrl);
-    console.log(businessKey);
+    //console.log(formUrl);
+    //console.log("validateFormUrl" + validateFormUrl);
+    //console.log(businessKey);
     var taskCtrl = {
         loadBusinessForm: function () {
             if (formUrl != 0) {
@@ -187,8 +187,8 @@
                     validating: 'glyphicon glyphicon-refresh'
                 },
                 submitHandler: function (validator, taskform, submitButton) {
-                	console.log(taskform);
-                	console.log("validateFormUrl" + validateFormUrl);
+                	//console.log(taskform);
+                	//console.log("validateFormUrl" + validateFormUrl);
                 	if(validateFormUrl != 0){
                 		ajaxPost(basePath + validateFormUrl, {businessKey:businessKey}, function (data, status) {
                             if (!data.success) {

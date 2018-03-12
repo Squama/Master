@@ -97,8 +97,6 @@
             });
             parent_id =formdata.parent_ID;
             ajaxPost(basePath+"/material/getSsfl",{"parent_id":parent_id},function(result){
-                	
-           			console.log(result.message);
                		ssflText=result.message;
                		$("#ssfl").val(ssflText);
              });

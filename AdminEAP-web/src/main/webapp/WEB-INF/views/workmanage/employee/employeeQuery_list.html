@@ -1,12 +1,12 @@
 <!-- 以下代码为代码生成器生成，生成时间: 2017-10-17 13:45:37，作者：billjiang/475572229@qq.com-->
 <section class="content-header">
     <h1>
-        员工信息查询
+        员工信息
         <small>列表</small>
     </h1>
     <ol class="breadcrumb">
         <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
-        <li><a href="#">员工信息</a></li>
+        <li><a href="#">办公管理</a></li>
         <li class="active">员工信息查询</li>
     </ol>
 </section>
@@ -18,14 +18,11 @@
                 <ul class="nav nav-tabs pull-right">
                     <li><a href="#tab-content-edit" data-toggle="tab" id="nav-tab-detail"><i class="fa fa-edit"></i></a></li>
                     <li class="active"><a href="#tab-content-list" data-toggle="tab" id="nav-tab-list"><i class="fa fa-list-ul"></i></a></li>
-                    <li class="pull-left header"><i class="fa fa-user"></i><small>员工列表</small></li>
                 </ul>
                 <div class="tab-content">
                     <div class="tab-pane active" id="tab-content-list">
-			            <div class="box">
 			                <!-- /.box-header -->
 			                <div class="dataTables_filter" id="searchDiv" style="display: none">
-			                    <!--查询条件-->
 			                    <!--查询条件-->
 			                   <input type="search"  title="审核" name = "auditStatus" id="audit_status" value="10" style="display:none">
 			                   <input type="search" placeholder="请输入姓名" title="姓名" name="name" class="form-control" id="name" operator="like" likeOption="true">
@@ -50,7 +47,6 @@
 			                    <table id="employee_table" class="table table-bordered table-striped table-hover">
 			                    </table>
 			                </div>
-			            </div>
 		            </div>
 		            <div class="tab-pane" id="tab-content-edit">
                         <div class="box box-info">
@@ -173,7 +169,6 @@
                     setTitle("查看用户【"+employeeQueryTable.getSelectedRowData().name+"】")
                     $("#nav-tab-detail").click();
                     ajaxPost(basePath+"/employeeQuery/get/"+employeeQueryTable.getSelectedRowData().id,null,function(data){
-                    	console.log(data);
                     	detailForm.initFormData(data);
                     });
                     break;
