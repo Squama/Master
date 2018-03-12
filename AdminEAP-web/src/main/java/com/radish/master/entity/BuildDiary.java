@@ -6,6 +6,7 @@ package com.radish.master.entity;
 import com.cnpc.framework.annotation.Header;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -114,9 +115,17 @@ public class BuildDiary implements Serializable {
     @Column(name = "jcsncd")
     private String jcsncd;
     
+    @Header(name = "停工工日")
+    @Column(name = "tggr")
+    private String tggr;
+    
     @Header(name = "停工原因")
     @Column(name = "tgyy")
     private String tgyy;
+    
+    @Header(name = "班组人员调动情况")
+    @Column(name = "ryddqk")
+    private String ryddqk;
     
     @Header(name = "设计变更情况")
     @Column(name = "sjbgqk")
@@ -138,9 +147,17 @@ public class BuildDiary implements Serializable {
     @Column(name = "yhqkjl")
     private String yhqkjl;
     
-    @Header(name = "试块送压记录")
-    @Column(name = "sksyjl")
-    private String sksyjl;
+    @Header(name = "试块送压砼数")
+    @Column(name = "sksyts")
+    private String sksyts;
+    
+    @Header(name = "试块送压砼数")
+    @Column(name = "sksyzs")
+    private String sksyzs;
+    
+    @Header(name = "砂浆组数")
+    @Column(name = "sjzs")
+    private String sjzs;
     
     @Header(name = "试块送压部位及强度")
     @Column(name = "sksybwqd")
@@ -170,9 +187,22 @@ public class BuildDiary implements Serializable {
     @Column(name = "cljcjl")
     private String cljcjl;
     
+    @DateTimeFormat(pattern="yyyy-MM-dd")
     @Header(name = "日志日期")
     @Column(name = "rzdate")
     private Date rzdate;
+
+    @Header(name = "备注")
+    @Column(name = "remark")
+    private String remark;
+    
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
 
 	public String getId() {
 		return id;
@@ -390,12 +420,30 @@ public class BuildDiary implements Serializable {
 		this.yhqkjl = yhqkjl;
 	}
 
-	public String getSksyjl() {
-		return sksyjl;
+	
+
+	public String getSksyts() {
+		return sksyts;
 	}
 
-	public void setSksyjl(String sksyjl) {
-		this.sksyjl = sksyjl;
+	public void setSksyts(String sksyts) {
+		this.sksyts = sksyts;
+	}
+
+	public String getSksyzs() {
+		return sksyzs;
+	}
+
+	public void setSksyzs(String sksyzs) {
+		this.sksyzs = sksyzs;
+	}
+
+	public String getSjzs() {
+		return sjzs;
+	}
+
+	public void setSjzs(String sjzs) {
+		this.sjzs = sjzs;
 	}
 
 	public String getSksybwqd() {
@@ -460,6 +508,22 @@ public class BuildDiary implements Serializable {
 
 	public void setRzdate(Date rzdate) {
 		this.rzdate = rzdate;
+	}
+
+	public String getTggr() {
+		return tggr;
+	}
+
+	public void setTggr(String tggr) {
+		this.tggr = tggr;
+	}
+
+	public String getRyddqk() {
+		return ryddqk;
+	}
+
+	public void setRyddqk(String ryddqk) {
+		this.ryddqk = ryddqk;
 	}
     
     

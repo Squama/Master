@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<queryContext xmlns="http://www.example.org/query" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.example.org/query query.xsd">
+<!--本xml片段为代码生成器生成，时间：2017-10-17 11:38:08-->
+    
+    <query id="builddiary_list" key="id" tableName="施工日志" widthType="px">
+        <sql>
+            <![CDATA[
+              SELECT d.id id ,d.rzdate rzdate,p.project_name projectName,p.id pid ,u.name usename ,u.id uid 
+              FROM tbl_builddiary d, tbl_user u ,tbl_project p
+              WHERE d.userid = u.id and p.id=d.xmid AND 1=1
+            ]]>
+        </sql>
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="projectName" header="项目名称" classType="String" allowSort="true" width="150"/>
+        <column key="usename" header="编写人员" classType="String" allowSort="true" width="150"/>
+        <column key="rzdate" header="编写日期" classType="String" allowSort="true" width="150"/>
+    </query>
+    
+   
+
+</queryContext>

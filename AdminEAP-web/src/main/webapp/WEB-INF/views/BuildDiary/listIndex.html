@@ -1,13 +1,13 @@
 <!-- 以下代码为代码生成器生成，生成时间: 2017-10-17 13:45:37，作者：billjiang/475572229@qq.com-->
 <section class="content-header">
     <h1>
-        员工劳务合同查询
+        施工日志管理
         <small>列表</small>
     </h1>
     <ol class="breadcrumb">
         <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
-        <li><a href="#">办公管理</a></li>
-        <li class="active">员工劳务合同管理</li>
+        <li><a href="#">施工日志</a></li>
+        <li class="active">施工日志管理</li>
     </ol>
 </section>
 
@@ -19,11 +19,9 @@
                 <div class="dataTables_filter" id="searchDiv1" style="display: none">
                     <!--查询条件-->
                     <!--查询条件-->
-                    <select type="search" placeholder="请输入签约人" title="签约人" name="new.name" class="form-control select2" id="newUserId2" operator="like" likeOption="true"  style =" width:20%">
-                  		<option selected="selected" value="">选择签约人</option>
-                    </select>
-                    <select type="search" placeholder="请输入负责签约人" title="负责签约人" name="old.name" class="form-control select2" id="oldUserId2" operator="like" likeOption="true"  style =" width:20%">
-                  		<option selected="selected" value="">选择负责签约人</option>
+                    <input type="search" name="u.id" class="form-control" id="useid" operator="like" likeOption="true" style="display: none">
+                    <select type="search" placeholder="请选择所属项目" title="所属项目" name="p.id" class="form-control select2" id="xm" operator="like" likeOption="true"  style =" width:20%">
+                  		<option selected="selected" value="">选择所属项目</option>
                     </select>
                     <div class="btn-group">
                         <button type="button" class="btn btn-primary" data-btn-type="search">查询</button>
@@ -48,17 +46,15 @@
 <script>
     var form = $("#searchDiv1").form({baseEntity: false}), initData={};
     
-    var emps = '${use?default(0)}',emp=0;
-    if(emps != 0){
-    	emp = JSON.parse(emps);
+    var xms = '${xm?default(0)}',xm=0;
+    if(xms != 0){
+    	xm = JSON.parse(xms);
     }
-
+	var useid =  '${useid?default(0)}';
     var dutycheckTable, winId = "projectQueryWin";
     $(function (){
-    	dutycheckTable = new CommonTable("lwContract_table", "workcontract_list_file", "searchDiv1");
-        
-        
-        
+    	$("#useid").val(useid);
+    	dutycheckTable = new CommonTable("lwContract_table", "builddiary_list", "searchDiv1");
         //绑定按钮事件
         $("button[data-btn-type]").click(function () {
             var action = $(this).data("btn-type");
@@ -70,15 +66,14 @@
                         return false;
                     }
                 	
-                	loadPage(basePath+"/workcontract/edit?id="+rowId+"&&doWhat=1");
+                	loadPage(basePath+"/builddiary/edit?id=" +rowId+"&doWhat=1");
                     break;
                 case "edit":
                 	if(!rowId){
                         modals.info('请选择要编辑的行');
                         return false;
                     }
-                	loadPage(basePath+"/workcontract/edit?id="+rowId+"&&doWhat=2");
-                    
+                	loadPage(basePath+"/builddiary/edit?id=" +rowId+"&doWhat=2");
                 	break;
                 case "delete":
                 	if(!rowId){
@@ -86,7 +81,7 @@
                         return false;
                     }
                     modals.confirm("是否要删除该行数据？",function(){
-                        ajaxPost(basePath+"/workcontract/delete?id="+rowId,null,function(data){
+                        ajaxPost(basePath+"/builddiary/delete?id="+rowId,null,function(data){
                         	if(data.success){
                         		dutycheckTable.reloadData();
                         	}
@@ -98,30 +93,12 @@
                
             }
         });
-        if(emp != 0){
-            for (var i = 0,len = emp.length; i < len; i++) {
-                var e = emp[i];
-                $('#newUserId2').append("<option value='" + e.name + "'>" + e.name + "</option>");
-                $('#oldUserId2').append("<option value='" + e.name + "'>" + e.name + "</option>");
+        if(xm != 0){
+            for (var i = 0,len = xm.length; i < len; i++) {
+                var x = xm[i];
+                $('#xm').append("<option value='" + x.value + "'>" + x.data + "</option>");
             }
             $(".select2").select2();
         }
     });
-    function fnRenderDetail(value) {
-    	if(value){
-    		return "<a href='javascript:void(0)' onclick='showDetail(\"" + value + "\")'>查看附件</a>";
-    	}else{
-    		return "";
-    	}
-        
-    }
-    
-    function showDetail(fileId) {
-    	modals.openWin({
-            winId: "fileWin",
-            width: "900px",
-            url: basePath + "/workcontract/projectdetailfile?id=" + fileId ,
-            title: "查看附件"
-        });
-    }
 </script>

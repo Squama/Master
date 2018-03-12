@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style >
+     	table{
+     		font-family: verdana,arial,sans-serif;
+	     	font-size:11px;
+	     	color:#333333;
+	      	border-width: 1px;
+	      	border-color: #666666;
+	      	border-collapse: collapse;
+     	}
+     	th{
+     		 border-width: 1px;
+		     padding: 8px;
+		     border-style: solid;
+		     border-color: #666666;
+		     background-color: #dedede;
+		     font-size: 12px
+     	}
+     	td{
+	     	 border-width: 1px;
+		     padding: 8px;
+		     border-style: solid;
+		     border-color: #666666;
+		     background-color: #ffffff;
+		     text-align: center
+     	}
+     	input{
+     		width:100%;
+     		text-align: left;
+     		font-size: 12px;
+     		border: none
+     	}
+     	span{
+     		font-size: 13px
+     	}
+     	textarea{
+     		width:100%;
+     		text-align: left;
+     		font-size: 12px;
+     		border: none;
+     	}
+	</style>
+</head>
+<body>
+	<form style="width:100%" id="RzForm">
+  <input type="hidden" name="id" id="id">
+   <input type="hidden" name="userid" id="userid">
+ <div style="text-align: center">施工日志表</div>
+ <div style="margin: 2px 0 5px 20px">
+ 	<span>天气:<input id="weather"name="weather" style="width:10%;text-align: left;" /></span>
+ 	<span>气温<input id="airTemp"name="airTemp" style="width:10%;text-align: left;"/>℃</span>
+ 	<span>风力<input id="wind"name="wind" style="width:10%;text-align: left;"/>级</span>
+ 	<span style="margin-right: 5%">风向<input id="windFx"name="windFx" style="width:10%;text-align: left;"/></span>	
+ 	<span>所属项目<input id="xmid"name="xmid" style="width:10%;text-align: left;" /></span>
+ 	<span>人员<input id="username"name="username" style="width:10%;text-align: left;" /></span>
+ 	<span>日期<input id="rzdate"name="rzdate" style="width:10%;text-align: left;" /></span>
+ </div>
+  <table cellSpacing=0 cellPadding=0  style="width:100%;table-layout:fixed;border-collapse:collapse">
+	<tr style="display: none">
+		<th style="width:10%"></th>
+		<td style="width:15%"></th>
+		<th style="width:10%"></th>
+		<td style="width:15%"></th>
+		<th style="width:10%"></th>
+		<td style="width:15%"></th>
+		<td style="width:10%"></th>
+		<td style="width:15%"></th>
+	</tr>
+	<tr>
+		<th colspan="1">施工内容、部位、进度</th>
+		<td colspan="7">
+			<textarea id="sgnr" name ="sgnr" rows="3" ></textarea>
+		</td>
+	</tr>
+	<tr>
+		<th >隐蔽工程验收参与者</th>
+		<td>
+			<textarea id="ysName" name ="ysName" rows="3" ></textarea>
+		</td>
+		<th>验收部位、问题</th>
+		<td colspan="5">
+			<textarea id="yswt" name ="yswt" rows="3" ></textarea>
+		</td>
+	</tr>
+	<tr>
+		<th >今日试块制作（砂浆/砼）(组)</th>
+		<td>
+			<input id="sk_count" name ="sk_count" />
+		</td>
+		<th>强度等级</th>
+		<td >
+			<input id="skqd" name ="skqd"/>
+		</td>
+		<th>部位</th>
+		<td colspan="3">
+			<input id="skbw" name ="skbw"/>
+		</td>
+	</tr>
+	<tr>
+		<th >试块送压砼数(砼)(数据库记得改哦哦哦哦哦哦哦)</th>
+		<td>
+			<input id="sksyts" name ="sksyts"/>
+		</td>
+		<th>试块送压组数(组)</th>
+		<td >
+			<input id="sksyzs" name ="sksyzs"/>
+		</td>
+		<th>砂浆组数(组)</th>
+		<td>
+			<input id="sjzs" name ="sjzs"/>
+		</td>
+		<th>试块部位及强度等级</th>
+		<td><input id="sksybwqd" name ="sksybwqd"/></td>
+	</tr>
+	<tr>
+		<th colspan="1">试压报告</th>
+		<td colspan="7">
+			<textarea id="sksybg" name ="sksybg" rows="3" ></textarea>
+		</td>
+	</tr>
+	<tr>
+		<th colspan="1">质量自检存在问题</th>
+		<td colspan="3">
+			<textarea id="zjwt" name ="zjwt" rows="3" ></textarea>
+		</td>
+		<th colspan="1">改进措施</th>
+		<td colspan="3">
+			<textarea id="zjgjcs" name ="zjgjcs" rows="3" ></textarea>
+		</td>
+	</tr>
+	<tr>
+		<th colspan="1">安全设施检查记录<br>(安全网、安全带、安全帽、井架、电闸、水门)</th>
+		<td colspan="1">
+			<textarea id="jcjl" name ="jcjl" rows="3" ></textarea>
+		</td>
+		<th>安全事故记录</th>
+		<td colspan="5">
+			<textarea id="sgjl" name ="sgjl" rows="3" ></textarea>
+		</td>
+	</tr>
+	<tr>
+		<th>进场水泥(吨)</th>
+		<td>
+			<input id="jcsn_count" name ="jcsn_count"/>
+		</td>
+		<th>用于部位</th>
+		<td>
+			<input id="jcsnbw" name ="jcsnbw"/>
+		</td>
+		<th>水泥产地</th>
+		<td>
+			<input id="jcsncd" name ="jcsncd"/>
+		</td>
+		<th>水泥标号</th>
+		<td>
+			<input id="jcsnbh" name ="jcsnbh"/>
+		</td>
+	</tr>
+	<tr>
+		<th >停工工日（加字段）</th>
+		<td>
+			<textarea id="tggr" name ="tggr" rows="3" ></textarea>
+		</td>
+		<th>停工原因</th>
+		<td colspan="5">
+			<textarea id="tgyy" name ="tgyy" rows="3" ></textarea>
+		</td>
+	</tr>
+	<tr>
+		<th >施工班组调出入人员情况</th>
+		<td colspan="7">
+			<textarea id="ryddqk" name ="ryddqk" rows="3" ></textarea>
+		</td>
+	</tr>
+	<tr>
+		<th >工程设计变更情况<br>（通知及发文单位）</th>
+		<td colspan="7">
+			<textarea id="sjbgqk" name ="sjbgqk" rows="3" ></textarea>
+		</td>
+	</tr>
+	<tr>
+		<th >室内（外）土方回填质量情况(负责人)</th>
+		<td colspan="7">
+			<textarea id="tfhtqk" name ="tfhtqk" rows="3" ></textarea>
+		</td>
+	</tr>
+	<tr>
+		<th >基础或楼面放线抄平记录（参加人）</th>
+		<td colspan="7">
+			<textarea id="fxcpjl" name ="fxcpjl" rows="3" ></textarea>
+		</td>
+	</tr>
+	<tr>
+		<th >对班组的技术交底记录（参加人）</th>
+		<td colspan="7">
+			<textarea id="jsjdjl" name ="jsjdjl" rows="3" ></textarea>
+		</td>
+	</tr>
+	<tr>
+		<th >对砼结构、试块、水泥地面浇水养护情况</th>
+		<td colspan="7">
+			<textarea id="yhqkjl" name ="yhqkjl" rows="3" ></textarea>
+		</td>
+	</tr>
+	<tr>
+		<th >材料设备丢失或水泥淋雨损失(责任者)</th>
+		<td colspan="7">
+			<textarea id="dsjl" name ="dsjl" rows="3" ></textarea>
+		</td>
+	</tr>
+	<tr>
+		<th >打架斗殴、违反纪律记录</th>
+		<td colspan="7">
+			<textarea id="wjjl" name ="wjjl" rows="3" ></textarea>
+		</td>
+	</tr>
+	<tr>
+		<th >重要会议或现场记录</th>
+		<td colspan="7">
+			<textarea id="hyjl" name ="hyjl" rows="3" ></textarea>
+		</td>
+	</tr>
+	<tr>
+		<th >机械损坏记录</th>
+		<td colspan="7">
+			<textarea id="jxshjl" name ="jxshjl" rows="3" ></textarea>
+		</td>
+	</tr>
+	<tr>
+		<th >进场砖、砂、石质量控制情况</th>
+		<td colspan="7">
+			<textarea id="cljcjl" name ="cljcjl" rows="3" ></textarea>
+		</td>
+	</tr>
+	<tr>
+		<th >备注</th>
+		<td colspan="7">
+		<textarea id="remark" name ="remark" rows="6" >单位工程施工日志，要从定位放线开始，即工人进场后，每天记好日志。
+施工日志的内容很多，有天气    气温    ℃风力     级‘风向也有施工内容部位、进度；
+有隐蔽工程验收部位、验收人员及存在问题。
+也有当日砂浆和砼试块制作记录和质量、安全情况记录以及当日进场材料、停工、停水、停电和人员调出调入及设计变更、试块试压、材料检验、材料丢失、打架斗殴、机械调出调入和损坏的情况记录、现场和参加人员会议及备忘录或附图等。
+尽管施工日志内容齐全，包罗万象，但填写时，发生什么填写什么。
+尤其记录好且准确。砂浆及砼试块的留置和试块以及水泥进场时间和数量，这都与保证资料的核查有直接关系，因此不可忽视。
+施工日志要按土建、水暖安装、电气工程而分别装订成册，并单独装入档案盒（袋）备查。</textarea>
+		</td>
+	</tr>
+</table>
+
+</form>
+</body>
+</html>
