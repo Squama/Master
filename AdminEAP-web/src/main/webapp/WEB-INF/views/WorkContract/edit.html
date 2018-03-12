@@ -202,7 +202,6 @@
     });
     function load(){
     	ajaxPost(basePath+'/workcontract/load?id='+id, {}, function(data) {
-            console.log(data.data);
             formdata = data.data;
             form.initFormData(formdata); 
                             

@@ -94,7 +94,6 @@
         if(purchaseID!="0"){
             ajaxPost(basePath+"/purchase/apply/getbyid",{purchaseID:purchaseID},function(data){
                 workflowCtrl.thisForm.initFormData(data.data);
-                console.log($('purchaseID').val());
             })
         } 
     }

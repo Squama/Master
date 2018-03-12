@@ -120,7 +120,6 @@
         var treeData = null;
         ajaxPost(basePath + "/function/treeData", null, function (data) {
             treeData = data;
-            console.log(JSON.stringify(treeData));
         });
         $("#tree").treeview({
             data: treeData,

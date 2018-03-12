@@ -98,8 +98,6 @@
     }
     
     function fnRenderOperate(value, type, rowObj){
-    	console.log(type);
-    	console.log(rowObj);
         var oper = "";
         if(rowObj.status == '新建'){
             oper += "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='budgetEstimateObject.doEstimate(\"" + value + "\")'>成本测算</a>";

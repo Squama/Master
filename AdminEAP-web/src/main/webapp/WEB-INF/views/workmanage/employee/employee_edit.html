@@ -205,7 +205,6 @@
         //回填id      
         if(id!="0"){
             ajaxPost(basePath+"/employeeQuery/get",{id:id},function(data){
-            	console.log(data)
                 form.initFormData(data);
             })
         } 
