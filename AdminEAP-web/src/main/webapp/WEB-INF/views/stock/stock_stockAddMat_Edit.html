@@ -121,7 +121,7 @@
                     ajaxPost(basePath+'/stock/addCshMat', params, function(data, status) {
                         if(data.success){
                         	modals.hideWin(winId);
-                        	materielTable.reloadData();
+                        	stockQueryTable.reloadData();
                         	modals.info("数据修改成功");
                         	 
                         }                

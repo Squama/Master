@@ -190,7 +190,7 @@ public class WorkContractController {
                 InputStream in = null;
                 OutputStream out = null;
                 try {
-                    File dir = new File(dirPath+uploaderPath);
+                    File dir = new File(uploaderPath);
                     if (!dir.exists())
                         dir.mkdirs();
                     //这样也可以上传同名文件了
@@ -260,7 +260,7 @@ public class WorkContractController {
         for (HtFile sysFile : fileList) {
             //上传后预览 TODO 该预览样式暂时不支持theme:explorer的样式，后续可以再次扩展
             //如果其他文件可预览txt、xml、html、pdf等 可在此配置
-            if(FileUtil.isImage(dirPath+uploaderPath+File.separator+sysFile.getSavedName())) {
+            if(FileUtil.isImage(uploaderPath+File.separator+sysFile.getSavedName())) {
                 previews.add("<img src='." + sysFile.getFilePath().replace(File.separator, "/") + "' class='file-preview-image kv-preview-data' " +
                         "style='width:auto;height:160px' alt='" + sysFile.getFileName() + " title='" + sysFile.getFileName() + "''>");
             }else{
@@ -298,7 +298,7 @@ public class WorkContractController {
     public Result delete(String id, HttpServletRequest request){
     	HtFile sysFile=baseService.get(HtFile.class,id);
         String dirPath=request.getRealPath("/");
-        FileUtil.delFile(dirPath+uploaderPath+File.separator+sysFile.getSavedName());
+        FileUtil.delFile(uploaderPath+File.separator+sysFile.getSavedName());
         baseService.delete(sysFile);
         List<WorkContract> wcs = baseService.findBySql("select * from tbl_usercontract  where fileId ='"+id+"'", WorkContract.class);
         if(wcs.size()>0){
@@ -321,7 +321,7 @@ public class WorkContractController {
         try {
             // PrintWriter out = response.getWriter();
             if (sysfile != null)
-                file = new File(request.getRealPath("/")+sysfile.getFilePath());
+                file = new File(sysfile.getFilePath());
             if (file != null && file.exists() && file.isFile()) {
                 long filelength = file.length();
                 is = new FileInputStream(file);
@@ -390,7 +390,7 @@ public class WorkContractController {
         for (HtFile sysFile : fileList) {
             //上传后预览 TODO 该预览样式暂时不支持theme:explorer的样式，后续可以再次扩展
             //如果其他文件可预览txt、xml、html、pdf等 可在此配置
-            if(FileUtil.isImage(dirPath+uploaderPath+File.separator+sysFile.getSavedName())) {
+            if(FileUtil.isImage(uploaderPath+File.separator+sysFile.getSavedName())) {
                 previews.add("<img src='." + sysFile.getFilePath().replace(File.separator, "/") + "' class='file-preview-image kv-preview-data' " +
                         "style='width:auto;height:80px' alt='" + sysFile.getFileName() + " title='" + sysFile.getFileName() + "''>");
             }else{
