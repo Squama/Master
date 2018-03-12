@@ -16,9 +16,9 @@
 <script src="${basePath}/resources/common/js/base-file.js"></script>
 <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><li class="fa fa-remove"></li></button>
-    <h5 class="modal-title">合同详情</h5>
+    <h5 class="modal-title"></h5>
 </div>
-<div class="modal-body" style="max-height:500px;overflow-y:auto;">
+<div class="modal-body" style="max-height:100%;overflow-y:auto;">
 
     <form id="contract-form" name="contract-form" class="form-horizontal">
      <input type="hidden" name="id" id= "id">
@@ -101,9 +101,10 @@
 						<input type="file" name="file"  id="attachment">
 					</div>
         <!-- /.box-body -->
-        <div class="box-footer text-center">
+        <div class="" style="text-align: center;position:fixed; height:50px;width:100%;bottom:40px;">
             <!--以下两种方式提交验证,根据所需选择-->
             <button type="submit" class="btn btn-primary" data-btn-type="save" id="b_sub">提交</button>
+            <button type="button" class="btn btn-default" data-btn-type="prev">返回</button>
         </div>
         <!-- /.box-footer -->
     </form>
@@ -116,6 +117,14 @@
     }
     var id="${id}";
     var doWhat="${doWhat}"
+    
+   	var editCtrl = {
+           initButtonEvent: function () {
+               $("button[data-btn-type='prev']").click(function () {
+                   loadPage(basePath+"/workcontract/list");
+               });
+           }
+       }
     $(function() {
         //初始化控件
         form=$("#contract-form").form();
@@ -195,13 +204,14 @@
         	$('input,select,textarea',$('form[name="dutycheck-form"]')).attr('disabled',true);
         	$("#b_sub").css("display","none");
         	$("#wjscid").css("display","none");
-        	$(".modal-title").text("查看详情")
         }
         load();
+        editCtrl.initButtonEvent();
         
     });
     function load(){
     	ajaxPost(basePath+'/workcontract/load?id='+id, {}, function(data) {
+            
             formdata = data.data;
             form.initFormData(formdata); 
                             
