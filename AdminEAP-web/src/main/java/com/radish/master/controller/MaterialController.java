@@ -129,7 +129,7 @@ public class MaterialController {
     	String[] strs = code.split("_");
     	String str = strs[1];
     	//拿到当前数据库数据的最大值
-    	List<String> list = baseService.find("select max(ma.mat_number) from com.radish.master.entity.Materiel ma where ma.mat_number like '"+str+"%'");
+    	List<String> list = baseService.find("select max(ma.mat_number) from com.radish.master.entity.Materiel ma where ma.mat_number like '"+str+"1%'");
     	if(list.get(0)==null){
     		materiel.setMat_number(str+"100001");
     	}else{
@@ -265,7 +265,7 @@ public class MaterialController {
     	String[] strs = code.split("_");
     	String str = strs[1];
     	//拿到当前数据库数据的最大值
-    	List<String> list = baseService.find("select max(ma.mat_number) from com.radish.master.entity.Materiel ma where ma.mat_number like '"+str+"%'");
+    	List<String> list = baseService.find("select max(ma.mat_number) from com.radish.master.entity.Materiel ma where ma.mat_number like '"+str+"1%'");
     	if(list.get(0)==null){
     		materiel.setMat_number(str+"100001");
     	}else{
