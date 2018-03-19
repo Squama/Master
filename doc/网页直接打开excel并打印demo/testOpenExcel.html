@@ -1,0 +1,17 @@
+<html>
+
+<body>
+	<a href="file:\\D:\silabo\Database.xlsx" target="_blank" onclick="openmydoc('file:\\D:\silabo\Database.xlsx');" type="activxobject(excel.application)">文档</a>
+</body>
+
+<script> 
+function openmydoc(path)
+
+{ 
+var doc=new ActiveXObject("Excel.Application"); 
+doc.visible=true; 
+doc.Documents.Open(path); 
+} 
+</script> 
+
+</html>
