@@ -83,6 +83,16 @@
     <listener>
         <listener-class>com.cnpc.framework.listener.WebappListener</listener-class>
     </listener>
+    
+    <!-- ureport -->
+    <servlet>
+	   <servlet-name>ureportServlet</servlet-name>
+	   <servlet-class>com.bstek.ureport.console.UReportServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+	   <servlet-name>ureportServlet</servlet-name>
+	   <url-pattern>/ureport/*</url-pattern>
+	</servlet-mapping>
     <!-- springMVC拦截 -->
     <servlet>
         <description>spring mvc servlet</description>
