@@ -98,7 +98,7 @@
         if(bg != 0){
             for (var i = 0, len = bg.length; i < len; i++) {
                 var x = bg[i];
-                $('#budget_id').append("<option value=\"" + x.data + "\">" + x.data + "</option>");
+                $('#budget_id').append("<option value=\"" + x.id + "\">" + x.data + "</option>");
             }
             $(".select2").select2();
         }
