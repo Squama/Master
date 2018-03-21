@@ -129,15 +129,16 @@ public class MaterialController {
     	String[] strs = code.split("_");
     	String str = strs[1];
     	//拿到当前数据库数据的最大值
-    	List<String> list = baseService.find("select max(ma.mat_number) from com.radish.master.entity.Materiel ma where ma.mat_number like '"+str+"1%'");
-    	if(list.get(0)==null){
-    		materiel.setMat_number(str+"100001");
+    	List<String> list = baseService.find("select max(mat.reserve1) from com.radish.master.entity.Materiel mat");
+    	if("".equals(list.get(0))){
+    		materiel.setMat_number(str+"100105");
+    		materiel.setReserve1("100105");
     	}else{
     		String s= list.get(0);
-    		String num = s.substring(s.length()-6);
-    		int i = Integer.parseInt(num);
+    		int i = Integer.parseInt(s);
     		i++;
     		materiel.setMat_number(str+i);
+    		materiel.setReserve1(i+"");
     	}
     	/*//暂写随机数
     	Random ra = new Random();
@@ -265,15 +266,16 @@ public class MaterialController {
     	String[] strs = code.split("_");
     	String str = strs[1];
     	//拿到当前数据库数据的最大值
-    	List<String> list = baseService.find("select max(ma.mat_number) from com.radish.master.entity.Materiel ma where ma.mat_number like '"+str+"1%'");
-    	if(list.get(0)==null){
-    		materiel.setMat_number(str+"100001");
+    	List<String> list = baseService.find("select max(mat.reserve1) from com.radish.master.entity.Materiel mat");
+    	if("".equals(list.get(0))){
+    		materiel.setMat_number(str+"100105");
+    		materiel.setReserve1("100105");
     	}else{
     		String s= list.get(0);
-    		String num = s.substring(s.length()-6);
-    		int i = Integer.parseInt(num);
+    		int i = Integer.parseInt(s);
     		i++;
     		materiel.setMat_number(str+i);
+    		materiel.setReserve1(i+"");
     	}
     	User u = SecurityUtil.getUser();
     	materiel.setCreate_name(u.getName());
