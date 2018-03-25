@@ -88,7 +88,8 @@ public class LaborController {
     }
     
     @RequestMapping(value="/list",method = RequestMethod.GET)
-    public String list(){
+    public String list(HttpServletRequest request){
+    	request.setAttribute("projectOptions", JSONArray.toJSONString(budgetService.getProjectCombobox()));
         return "projectmanage/labor/labor_list";
     }
     

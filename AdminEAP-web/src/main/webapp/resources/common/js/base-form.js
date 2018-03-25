@@ -367,7 +367,7 @@
                     var is_select2 = $(elem).hasClass("select2");
                     if (is_select2) {
                         $(elem).select2({
-                            minimumResultsForSearch: Infinity
+                            minimumResultsForSearch: 1
                         }).val(value).trigger("change");
                         var validator = form.data('bootstrapValidator');
                         if (validator && validator.options.fields[el_name])

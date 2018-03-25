@@ -16,7 +16,9 @@
             <div class="box">
                 <!-- /.box-header -->
                 <div class="dataTables_filter" id="searchDiv" style="display: none">
-                   <input type="search" placeholder="请输入项目名" title="项目名" name="projectName" class="form-control" id="project_name" operator="like" likeOption="true">
+                   <select id="projectID" class="form-control select2" name="projectID" style="width:200px;" operator="eq">
+                    	<option selected="selected" value="">选择一个项目</option>
+                    </select>
                    <input type="search" placeholder="请输入责任人" title="责任人" name="constructionManager" class="form-control" id="charge_name" operator="like" likeOption="true">
                     <div class="btn-group">
                         <button type="button" class="btn btn-primary" data-btn-type="search">查询</button>
@@ -39,6 +41,10 @@
 <script>
     var form = $("#searchDiv").form({baseEntity: false}), initData={};
     var laborTable, winId = "laborWin";
+    var projectOptions = '${projectOptions?default(0)}',options=0;
+    if(projectOptions != 0){
+    	options = JSON.parse(projectOptions);
+    }
     $(function (){
     	laborTable = new CommonTable("labor_table", "labor_list", "searchDiv", null);
         
@@ -59,6 +65,14 @@
                     break;
             }
         });
+        
+        if(options != 0){
+            for (var i = 0, len = options.length; i < len; i++) {
+                var option = options[i];
+                $('#projectID').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+            }
+            $(".select2").select2();
+        }
     });
     
 </script>

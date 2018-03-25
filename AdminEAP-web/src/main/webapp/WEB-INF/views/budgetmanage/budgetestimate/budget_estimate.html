@@ -180,6 +180,11 @@
                  var last=null;
       
                  api.column(11, {page:'current'} ).data().each( function ( group, i ) {
+                	 if(!group){
+                		 modals.confirm("预算导入格式有误，无法正常完成测算！！",function(){
+                			 loadPage(basePath+"/budget/estimate/list");
+	                     });
+                	 }
                      if ( last !== group ) {
                          var ret = group;
                          ajaxPost(basePath + "/budgetimport/getgroup/"+group, null, function (data) {

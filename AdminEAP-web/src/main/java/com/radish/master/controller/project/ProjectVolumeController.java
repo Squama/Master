@@ -64,7 +64,8 @@ public class ProjectVolumeController {
     private RuntimePageService runtimePageService;
     
     @RequestMapping(value="/list",method = RequestMethod.GET)
-    public String list(){
+    public String list(HttpServletRequest request){
+    	request.setAttribute("projectOptions", JSONArray.toJSONString(budgetService.getProjectCombobox()));
         return "projectmanage/volume/volume_list";
     }
     

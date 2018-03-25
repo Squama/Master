@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.cnpc.framework.utils.EncryptUtil;
 import com.cnpc.framework.utils.StrUtil;
+import com.radish.master.system.SpringUtil;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Controller;
@@ -112,13 +113,11 @@ public class EmployeeQueryController {
             userService.updateUserAvatar(user, request.getRealPath("/"));
         } else {
             User oldUser=this.getUser(user.getId());
-            if(oldUser.getLoginName().equals(user.getLoginName())){
-               oldUser.setPassword(EncryptUtil.getPassword(initPassword,user.getLoginName()));
+            if(!oldUser.getLoginName().equals(user.getLoginName())){
+            	oldUser.setPassword(EncryptUtil.getPassword(initPassword,user.getLoginName()));
             }
-            String status = oldUser.getAuditStatus();
-            BeanUtils.copyProperties(user,oldUser);
+            SpringUtil.copyPropertiesIgnoreNull(user, oldUser);
             oldUser.setUpdateDateTime(new Date());
-            oldUser.setAuditStatus(status);
             userService.update(oldUser);
         }
         return new Result(true);
