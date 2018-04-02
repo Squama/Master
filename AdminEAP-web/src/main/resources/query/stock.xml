@@ -40,7 +40,7 @@
 		<column key="projectName" header="所属项目" classType="String" allowSort="true" width="150"/>
 		<column key="matID" header="物料编号" classType="String" width="150" />
 		<column key="matName" header="物料名" classType="String" width="150"/>
-		<column key="stockChangeNum" header="库存变更量" classType="java.lang.Integer" width="150"/>
+		<column key="stockChangeNum" header="库存变更量" classType="java.lang .Integer" width="150"/>
 		<column key="unit" header="单位" classType="String" width="150"/>
 		<!--<column key="operationPersonID" header="操作人员编号" classType="String" width="150"/>-->
 		<column key="userName" header="操作人员姓名" classType="String" width="150"/>

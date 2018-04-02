@@ -14,6 +14,7 @@ import javax.net.ssl.TrustManager;
 
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
+import com.cnpc.framework.utils.PropertiesUtil;
 import com.radish.master.pojo.AccessToken;
 
 
@@ -32,6 +33,9 @@ import com.radish.master.pojo.AccessToken;
 public final class WeChatUtil {
 
     
+    private static final String CORP_ID = PropertiesUtil.getValue("CORPID");
+    private static final String GET_TOKEN_URL = PropertiesUtil.getValue("GETTOKEN_URL");
+    
     private WeChatUtil(){
         
     }
@@ -46,15 +50,10 @@ public final class WeChatUtil {
      * @return
      * @throws CodeException
      */
-    public static AccessToken getAccessToken() throws CodeException {
+    public static AccessToken getAccessToken(String sceret) throws CodeException {
         AccessToken accessToken = null;
         
-         String requestUrl =
-         "https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=wx236955107f128137&corpsecret=EZdTczFeJAVzqtTd9DPI6Zc0_lI"
-         + "gSN3uVq4cHIkrwpKcCYm2h8myFJ2TpeJx-msb";
-         
-        //String requestUrl = SystemEnvironment.GETTOKEN_URL.replace("CORPID", SystemEnvironment.CORPID).replace("CORPSECRET", SystemEnvironment.CORPSECRET);
-        /** submitGet(requestUrl); **/
+        String requestUrl = GET_TOKEN_URL.replace("CORPID", CORP_ID).replace("SECRET", sceret);
         JSONObject jsonObject = httpRequest(requestUrl, "GET", null);
         // 如果请求成功
         if (null != jsonObject) {

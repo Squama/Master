@@ -36,6 +36,8 @@
 			                    <div class="btn-group">
 			                        <button type="button" class="btn btn-default" data-btn-type="detail">查看详情</button>
                             		<button type="button" class="btn btn-default" data-btn-type="edit" >编辑物料供应商</button>
+			                    	<!-- <button type="button" class="btn btn-default" data-btn-type="print" >例子打印</button>
+			                    -->
 			                    </div>
 			                </div>
 			                <div class="box-body">
@@ -90,6 +92,15 @@
                         width:'900px',
                         url:basePath+"/channel/edit?id="+rowId+"&&doWhat=2"
                        });
+                	break;
+                case "print":
+                	if(!rowId){
+                		modals.info("请选择要打印的物料");
+                		return false;
+                	}
+                	 var url = basePath+"/ureport/preview?_u=file:11.ureport.xml&_t=1,2,3,5&id="+materielTable.getSelectedRowData().mat_number;
+                	 window.open(url);
+
                 	break;
             }
         });
