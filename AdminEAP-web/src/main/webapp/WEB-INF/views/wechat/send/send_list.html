@@ -1,0 +1,114 @@
+<section class="content-header">
+    <h1>
+        发送微信
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
+        <li><a href="#">发送微信</a></li>
+        <li class="active">发消息</li>
+    </ol>
+</section>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <form id="wechat-send-form" name="wechat-send-form" class="form-horizontal">
+                    <div class="box-body">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">选择应用<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <select id="configID" class="form-control select2" name="configID">
+                                        <option selected="selected" value="">选择一个应用</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="telphone" class="col-sm-3 control-label">座机</label>
+                                <div class="col-sm-6">
+                                    <textarea class="form-control" id="content" name="content" rows="8" cols="100"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- /.box-body -->
+                    <div class="box-footer text-center">
+                        <!--以下两种方式提交验证,根据所需选择-->
+                        <button type="button" class="btn btn-default" data-btn-type="cancel" data-dismiss="modal">取消</button>
+                        <button type="submit" class="btn btn-primary" data-btn-type="save">提交</button>
+                    </div>
+                    <!-- /.box-footer -->
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<script>
+//tableId,queryId,conditionContainer
+var form = null;
+var options = '${agentOptions?default(0)}';
+
+if(options != 0){
+    options = JSON.parse(options);
+}
+console.log(options);
+$(function() {
+    //初始化控件
+    form = $("#wechat-send-form").form();
+    //数据校验
+    $("#wechat-send-form").bootstrapValidator({
+        message: '请输入有效值',
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        submitHandler: function(validator, userform, submitButton) {
+	        var params = form.getFormSimpleData();
+	        ajaxPost(basePath + '/wechat/send/dosend',params,function(data, status) {
+	            if (data.success) {
+	                form.clearForm();
+	                modals.correct("发送成功！");
+	            }else{
+	            	modals.error("发送失败！！");
+	            }
+	        });
+        },
+        fields: {
+        	configID: {
+                validators: {
+                    notEmpty: {
+                        message: '请选择应用'
+                    }
+                }
+            },
+            content: {
+                validators: {
+                    notEmpty: {
+                        message: '请输入消息内容'
+                    }
+                }
+            }
+        }
+    });
+    form.initComponent();
+    
+    if(options != 0){
+        for (var i = 0, len = options.length; i < len; i++) {
+            var option = options[i];
+            $('#configID').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+        }
+        $("#configID").select2();
+    }
+});
+
+
+function resetForm() {
+    form.clearForm();
+    $("#wechat-send-form").data('bootstrapValidator').resetForm();
+}
+</script>
