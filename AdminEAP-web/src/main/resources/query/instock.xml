@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<queryContext xmlns="http://www.example.org/query" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.example.org/query query.xsd">
+<!--本xml片段为代码生成器生成，时间：2017-10-17 11:38:08-->
+	<query id="instock_list" key="id" tableName="入库信息关联采购信息列表" widthType="px">
+			<sql>
+		        <![CDATA[
+		          SELECT ins.number number,ins.instock_name instock_name,ins.status status,ins.create_date_time createtime,
+		          u.name bname,p.project_name pname,cg.purchase_name cgname,ins.id id 
+		          FROM
+                  tbl_Instock ins, tbl_project p, tbl_user u,tbl_purchase cg
+                  WHERE 1=1 and ins.projectId = p.id AND ins.buyer_id=u.id AND ins.purchaseId=cg.id 
+		        ]]>
+		    </sql>
+		    <column key="rowIndex" header="序号" width="50" allowSort="false"/>
+	        <column key="id" header="入库单编号" classType="String" allowSort="true" width="150" hidden="true"/>
+		    <column key="pname" header="所属项目" classType="String" allowSort="true" width="150"/>
+		    <column key="cgname" header="关联采购单名称" classType="String" allowSort="true" width="150"/>
+	        <column key="instock_name" header="入库名称" classType="String" width="150" operator="like" />
+			<column key="number" header="入库编号" classType="String" width="150" operator="like" />
+	        <column key="bname" header="交货人" classType="String" width="150"/>
+	        <column key="createtime" header="创建时间" classType="Date"  operator="between" width="150" dateFormat="yyyy-mm-dd"/>
+	        <column key="status" header="入库单状态" classType="String" width="150" render="10=新建(待核对),20=已核对(待入库),30=已入库"/>
+	</query>
+	
+	<query id="instock_list_hd" key="id" tableName="入库核对列表" widthType="px">
+			<sql>
+		        <![CDATA[
+		          SELECT ins.number number,ins.instock_name instock_name,ins.status status,ins.create_date_time createtime,
+		          u.name bname,p.project_name pname,cg.purchase_name cgname,ins.id id 
+		          FROM
+                  tbl_Instock ins, tbl_project p, tbl_user u,tbl_purchase cg
+                  WHERE 1=1 and ins.projectId = p.id AND ins.buyer_id=u.id AND ins.purchaseId=cg.id AND ins.status=10
+		        ]]>
+		    </sql>
+		    <column key="rowIndex" header="序号" width="50" allowSort="false"/>
+	        <column key="id" header="入库单编号" classType="String" allowSort="true" width="150" hidden="true"/>
+		    <column key="pname" header="所属项目" classType="String" allowSort="true" width="150"/>
+		    <column key="cgname" header="关联采购单名称" classType="String" allowSort="true" width="150"/>
+	        <column key="instock_name" header="入库名称" classType="String" width="150" operator="like" />
+			<column key="number" header="入库编号" classType="String" width="150" operator="like" />
+	        <column key="bname" header="交货人" classType="String" width="150"/>
+	        <column key="createtime" header="创建时间" classType="Date"  operator="between" width="150" dateFormat="yyyy-mm-dd"/>
+	        <column key="status" header="入库单状态" classType="String" width="150" render="10=新建(待核对),20=已核对(待入库),30=已入库"/>
+	</query>
+	
+	<query id="instock_list_rk" key="id" tableName="入库单入库列表" widthType="px">
+			<sql>
+		        <![CDATA[
+		          SELECT ins.number number,ins.instock_name instock_name,ins.status status,ins.create_date_time createtime,
+		          u.name bname,p.project_name pname,cg.purchase_name cgname,ins.id id 
+		          FROM
+                  tbl_Instock ins, tbl_project p, tbl_user u,tbl_purchase cg
+                  WHERE 1=1 and ins.projectId = p.id AND ins.buyer_id=u.id AND ins.purchaseId=cg.id AND ins.status in(20,30)
+		        ]]>
+		    </sql>
+		    <column key="rowIndex" header="序号" width="50" allowSort="false"/>
+	        <column key="id" header="入库单编号" classType="String" allowSort="true" width="150" hidden="true"/>
+		    <column key="pname" header="所属项目" classType="String" allowSort="true" width="150"/>
+		    <column key="cgname" header="关联采购单名称" classType="String" allowSort="true" width="150"/>
+	        <column key="instock_name" header="入库名称" classType="String" width="150" operator="like" />
+			<column key="number" header="入库编号" classType="String" width="150" operator="like" />
+	        <column key="bname" header="交货人" classType="String" width="150"/>
+	        <column key="createtime" header="创建时间" classType="Date"  operator="between" width="150" dateFormat="yyyy-mm-dd"/>
+	        <column key="status" header="入库单状态" classType="String" width="150" render="10=新建(待核对),20=已核对(待入库),30=已入库"/>
+	</query>
+	
+	<query id="purchase_det_instock" key="id" tableName="采购单明细"  widthType="px" pageSize="20">
+		<sql>
+		        <![CDATA[
+		          SELECT mx.*  
+		          FROM
+                  tbl_purchase_det mx 
+                  WHERE 1=1 and mx.surplus_quantity>0 
+		        ]]>
+		    </sql>
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="mat_name" header="物料" classType="String" width="150"/>
+        <column key="mat_standard" header="物料规格" classType="String" width="150"/>
+        <column key="unit" header="单位" classType="String" width="150"/>
+        <column key="price" header="价格(元)" classType="String" width="150"/>
+        <column key="quantity" header="采购数量" classType="String" width="150"/>
+        <column key="surplus_quantity" header="剩余可入库数量" classType="String" width="150"/>
+        <column key="id" header="采购单id" classType="String" allowSort="true" width="150" hidden="true"/>
+    </query>
+    
+    <query id="instock_det_list" key="id" tableName="入库单明细" className="com.radish.master.entity.InstockDet" widthType="px" pageSize="20">
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="id" header="入库单id" classType="String" allowSort="true" width="150" hidden="true"/>
+        <column key="matName" header="物料" classType="String" width="150"/>
+        <column key="matStandard" header="物料规格" classType="String" width="150"/>
+        <column key="unit" header="单位" classType="String" width="150"/>
+        <column key="price" header="价格(元)" classType="String" width="150"/>
+        <column key="rkl" header="入库量" classType="String" width="150"/>
+        <column key="id" header="操作" width="80" fnRender="fnRenderDelete"/>
+    </query>
+	
+	<query id="instock_det_list_ck" key="id" tableName="入库单明细(查看)" className="com.radish.master.entity.InstockDet" widthType="px" pageSize="20">
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="id" header="入库单id" classType="String" allowSort="true" width="150" hidden="true"/>
+        <column key="matName" header="物料" classType="String" width="150"/>
+        <column key="matStandard" header="物料规格" classType="String" width="150"/>
+        <column key="unit" header="单位" classType="String" width="150"/>
+        <column key="price" header="价格(元)" classType="String" width="150"/>
+        <column key="rkl" header="入库量" classType="String" width="150"/>
+    </query>
+</queryContext>

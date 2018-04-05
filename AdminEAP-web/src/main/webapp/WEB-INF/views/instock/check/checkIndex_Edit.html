@@ -1,0 +1,300 @@
+<script type="text/javascript">
+ $.fn.modal.Constructor.prototype.enforceFocus = function () {};
+ </script>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            
+            <form id="instock-form" name="instock-form" class="form-horizontal">
+                <input type="hidden" name="id">
+                <div class="box box-info">
+                    <div class="box-header with-border">
+                        <span>
+                            <i class="fa fa-edit">核对入库单</i>
+                        </span>
+                    </div>
+                    <div class="box-body">
+                        <!-- 内容 -->
+                        <div class="col-md-6">
+			                <div class="form-group">
+                                <label class="col-sm-3 control-label">所属采购单<span style="color:red">*</span></label>
+                                <div class="col-sm-8">
+                                    <select id="purchaseId" class="form-control select2" name="purchaseId">
+                                        <option selected="selected" value="">选择一个采购单</option>
+                                    </select>
+                                </div>
+                            </div> 
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">交货人<span style="color:red">*</span></label>
+                                <div class="col-sm-8">
+                                    <select id="buyer_id" class="form-control select2" name="buyer_id">
+                                        <option selected="selected" value="">选择一个人员</option>
+                                    </select>
+                                </div>
+                            </div> 
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">核对人</label>
+                                <div class="col-sm-8">
+									<select id="checker_id" class="form-control select2" name="checker_id">
+                                        <option selected="selected" value="">选择一个人员</option>
+                                    </select>
+                                </div>
+                            </div>
+		            	</div>
+		            	<div class="col-md-6">
+		            		<div class="form-group">
+                                <label class="col-sm-3 control-label">入库单名称<span style="color:red">*</span></label>
+                                <div class="col-sm-8">
+                                     <input type="text" class="form-control" id="instock_name" name="instock_name" placeholder="入库单名称">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">入库单编号<span style="color:red">*</span></label>
+                                <div class="col-sm-8">
+                                     <input type="text" class="form-control" id="number" name="number" placeholder="入库单编号" readonly="readonly">
+                                </div>
+                            </div>
+		            	</div>
+                    </div>
+                </div>
+            </form>
+            <form id="purchase-det-form" name="purchase-det-form" class="form-horizontal">
+                <div class="box box-success dn" id="instock_det">
+                    <div class="box-header with-border">
+                        <span>
+                            <i class="fa fa-files-o">采购单详情</i>
+                        </span>
+                    </div>
+                    <!-- 采购单详情 -->
+                    <div class="dataTables_filter" id="searchDivPDet" >
+                       <input type="search" id="purchaseID" name="mx.purchase_id" class="form-control" operator="eq" style="display:none;">
+                      <input  id="sl" name="sl" class="form-control" placeholder="请输入入库数量">
+                       <div class="btn-group">
+                           <button type="button" class="btn btn-primary" data-btn-type="search" id="refresh" style="display:none;">查询</button>
+                           <button type="button" class="btn btn-primary" data-btn-type="addStock" >添加至入库单</button>
+                       </div>
+                    </div>
+                    <div class="box-body">
+                        <!-- 内容 -->
+                        <table id="purchase_det_table" class="table table-bordered table-striped table-hover">
+                        </table>
+                    </div>
+                     <div class="box-header with-border">
+                        <span>
+                            <i class="fa fa-files-o">入库单详情</i>
+                        </span>
+                    </div>
+                    <!-- 入库单详情 -->
+                    <div class="dataTables_filter" id="searchDivSDet" style="text-align:center;height:1px;">
+                       <input type="search" id="instockID" name="instockId" class="form-control" operator="eq" style="display:none;">
+                       <div class="btn-group">
+                           <button type="button" class="btn btn-primary" data-btn-type="search" id="refresh" style="display:none;">查询</button>
+                       </div>
+                    </div>
+                    <div class="box-body">
+                        <!-- 内容 -->
+                        <table id="instock_det_table" class="table table-bordered table-striped table-hover">
+                        </table>
+                    </div>
+                </div>
+            </form>
+            <div class="box-footer text-center" >
+                <button type="button" class="btn btn-primary" data-btn-type="doCheck">核对确认完成</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    $.fn.modal.Constructor.prototype.enforceFocus =function(){};
+    var purchaseform = $("#instock-form").form({baseEntity: false}), initData={},
+    options=0,uOptions=0;
+    var purchaseDetTable;
+    var instockDetTable;
+    
+    var pOptions = '${purchaseOptions?default(0)}';
+    if(pOptions != 0){
+        options = JSON.parse(pOptions);
+    }
+    var userOptions = '${userOptions?default(0)}';
+    if(userOptions != 0){
+        uOptions = JSON.parse(userOptions);
+    }
+	var instockId = '${instockId?default(0)}';
+    var hdname ='${hdname}';
+    var instockDetObject = {
+            deleteDet: function (rowId) {
+            	ajaxPost(basePath + '/instock/deleteStockDet', {id:rowId}, function (data) {
+                    if (data.success) {
+                    	 $("#sl").val("");
+                    	purchaseDetTable.table.page('first').draw(false);
+                    	instockDetTable.table.page('first').draw(false);
+                    } else {
+                        modals.error(data.message);
+                    }
+                });
+            }
+    }
+    
+    $(function (){
+    	
+        if(options != 0){
+            for (var i = 0, len = options.length; i < len; i++) {
+                var option = options[i];
+                $('#purchaseId').append("<option value=\"" + option.id + "\">" + option.name + "</option>");
+            }
+            
+            $('#purchaseId').select2();
+        }
+        if(uOptions != 0){
+            for (var i = 0, len = uOptions.length; i < len; i++) {
+                var option = uOptions[i];
+                $('#buyer_id').append("<option value=\"" + option.id + "\">" + option.name + "</option>");
+                
+                $('#checker_id').append("<option value=\"" + option.id + "\">" + option.name + "</option>");
+            }
+            $('#checker_id').select2();
+            $('#buyer_id').select2();
+        }
+        
+        $("#instock-form").bootstrapValidator({
+            message: '请输入有效值',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            submitHandler: function () {
+                var formData = purchaseform.getFormSimpleData();
+                ajaxPost(basePath + '/instock/save', formData, function (data) {
+                    if (data.success) {
+                    	$("#number").val(data.data.number);
+                    	
+                        $('#instock_det').show();
+                        $('#formsave').hide();
+                        
+                        $('#purchaseId').attr("disabled","disabled");
+                        $('#buyer_id').attr("disabled","disabled");
+                        $('#instock_name').attr("disabled","disabled");
+                        
+                        $("#purchaseID").val(data.data.purchaseId);
+                        $("#instockID").val(data.data.id);
+                        //初始化两个列表
+                        purchaseDetTable.reloadRowData();
+                        instockDetTable.reloadRowData();
+                    } else {
+                        modals.error(data.message);
+                    }
+                });
+            },
+            fields: {
+                "purchaseId": {
+                    validators: {
+                        notEmpty: {message: '采购单不能为空'}
+                    }
+                },
+                "buyer_id": {
+                    validators: {
+                        notEmpty: {message: '交货人不能为空'}
+                    }
+                },
+                "instock_name": {
+                    validators: {
+                        notEmpty: {message: '采购单名称不能为空'}
+                    }
+                }
+            }
+        });
+        //编辑回填
+        if(instockId != 0){
+            ajaxPost(basePath+"/instock/getinstock",{id:instockId},function(data){
+            	
+            	purchaseform.initFormData(data.data); 
+            	$("#checker_id").val(hdname);
+                $('#purchaseId').attr("disabled","disabled");
+                $('#buyer_id').attr("disabled","disabled");
+                $('#instock_name').attr("disabled","disabled");
+                $('#checker_id').attr("disabled","disabled");
+                
+                $('#instock_det').show();
+                
+                $("#purchaseID").val(data.data.purchaseId);
+                $("#instockID").val(data.data.id);
+                
+            })
+        } 
+        purchaseDetTable = new CommonTable("purchase_det_table", "purchase_det_instock", "searchDivPDet", {
+            "ordering" : false,
+            "lengthChange": false,
+            "displayLength": 20,
+            "scrollY": "200px",
+            "scrollCollapse": true
+        });
+    	instockDetTable = new CommonTable("instock_det_table", "instock_det_list", "searchDivSDet", {
+            "ordering" : false,
+            "lengthChange": false,
+            "displayLength": 20,
+            "scrollY": "200px",
+            "scrollCollapse": true
+        });
+    	 $('button[data-btn-type]').click(function() {
+             var actions = $(this).attr('data-btn-type');
+             var rowId=purchaseDetTable.getSelectedRowId();
+             switch (actions) {
+             case 'addStock':
+            	 if(!rowId){
+            		 modals.info('请选择要入库的物料');
+                	 return;
+            	 }
+            	 var sysl = purchaseDetTable.getSelectedRowData().surplus_quantity;
+            	 if(sysl<=0){
+            		 modals.info('剩余可入库数量不足，不能入库该物料');
+                	 return;
+            	 }
+            	 var rksl = $("#sl").val();
+                 if(!rksl){
+                	 modals.info('请输入入库数量');
+                	 return;
+                 } 
+                 if(rksl-sysl>0){
+                	 modals.info('剩余可入库数量不足，请重新输入合理的入库数量');
+                	 return;
+                 }
+                 ajaxPost(basePath+"/instock/addStockDet?cgid="+rowId,{rksl:rksl,rkid:$("#instockID").val()},function(data){
+                     if(data.success){
+                    	 $("#sl").val("");
+                    	 purchaseDetTable.reloadRowData();
+                         instockDetTable.reloadRowData();
+                     }else{
+                         modals.error("系统繁忙，请稍后重试");
+                     }
+                 });
+                 break;    
+             case 'doCheck':
+            	 ajaxPost(basePath+"/instock/docheck?rkid="+$("#instockID").val(),{},function(data){
+                     if(data.success){
+                    	 modals.hideWin(winId);
+                    	 budgetApplyTable.reloadData();
+                     	modals.info("核对入库单成功");
+                     }else{
+                         modals.error("系统繁忙，请稍后重试");
+                     }
+                 });
+            	 break;
+             }
+
+         });
+    	
+    	
+        //初始化控件
+        purchaseform.initComponent();
+        
+    });
+    
+    function fnRenderDelete(value){
+        return "<a href='javascript:void(0)' onclick='instockDetObject.deleteDet(\"" + value + "\")'>移除入库单</a>";
+    }
+    
+    
+    
+</script>
