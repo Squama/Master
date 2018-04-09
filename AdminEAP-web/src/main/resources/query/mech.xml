@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<queryContext xmlns="http://www.example.org/query" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.example.org/query query.xsd">
+   <!-- 机械预算管理  start --> 
+   <query id="mech_budget_list" key="id" tableName="机械预算表" className="com.radish.master.entity.mech.MechBudget" widthType="px" pageSize="20">
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="projectName" header="所属项目" allowSort="true" width="150"/>
+        <column key="code" header="编码" width="150"/>
+        <column key="name" header="名称" width="150"/>
+        <column key="operator" header="操作员" width="150"/>
+        <column key="updateDateTime" header="更新时间" allowSort="true" dateFormat="yyyy-mm-dd" width="80"/>
+        <column key="status" header="状态" allowSort="true" width="150" render="10=新建,20=审核中,30=审核通过,40=审核不通过"/>
+        <column key="id" header="操作" width="80" fnRender="fnRenderOperate"/>
+    </query>
+    <query id="mech_budget_detail" key="id" tableName="机械预算明细" className="com.radish.master.entity.mech.MechBudgetDetail" widthType="px" pageSize="2000">
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="code" header="编码" allowSort="true" width="150"/>
+        <column key="type" header="类别" width="150"/>
+        <column key="name" header="名称" width="150"/>
+        <column key="modal" header="规格型号" width="150"/>
+        <column key="unit" header="单位" width="150"/>
+        <column key="quantity" header="台班" width="80"/>
+        <column key="id" header="操作" width="80" fnRender="fnRenderOperate"/>
+    </query>
+    <!-- 机械预算管理  end --> 
+    
+    <!-- 机械消耗 start -->
+    <query id="mech_consume_list" key="id" tableName="机械消耗表" className="com.radish.master.entity.mech.MechConsume" widthType="px" pageSize="20">
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="projectName" header="所属项目" allowSort="true" width="150"/>
+        <column key="mechName" header="机械条目" allowSort="true" width="150"/>
+        <column key="code" header="编码" width="150"/>
+        <column key="name" header="名称" width="150"/>
+        <column key="operator" header="操作员" width="150"/>
+        <column key="updateDateTime" header="更新时间" allowSort="true" dateFormat="yyyy-mm-dd" width="80"/>
+        <column key="status" header="状态" allowSort="true" width="150" render="10=新建,20=分公司领导审核中,30=项目主管审核中,40=成本控制审核中,50=审核通过,60=审核不通过"/>
+        <column key="id" header="操作" width="80" fnRender="fnRenderOperate"/>
+    </query>
+    <query id="mech_consume_detail" key="id" tableName="机械消耗明细" className="com.radish.master.entity.mech.MechConsumeDetail" widthType="px" pageSize="2000">
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="code" header="编码" allowSort="true" width="150"/>
+        <column key="type" header="类别" width="150"/>
+        <column key="name" header="名称" width="150"/>
+        <column key="modal" header="规格型号" width="150"/>
+        <column key="unit" header="单位" width="150"/>
+        <column key="consumeQuantity" header="台班" width="80"/>
+        <column key="id" header="操作" width="80" fnRender="fnRenderOperate"/>
+    </query>
+    <!-- 机械消耗 end -->
+    
+</queryContext>
