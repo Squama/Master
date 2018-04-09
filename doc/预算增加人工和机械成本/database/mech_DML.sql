@@ -1,0 +1,8 @@
+INSERT INTO `admineap`.`tbl_function` (`id`, `create_date_time`, `deleted`, `update_date_time`, `version`, `code`, `functype`, `icon`, `levelCode`, `name`, `parent_id`, `remark`, `url`) VALUES ('4028828e62a856270162a952f275000a', '2018-04-09 15:33:28', '0', '2018-04-09 15:33:28', '0', 'MECHCONSUME', '1', 'glyphicon glyphicon-rub', '000041000014', '机械消耗量上报', '40280cac5f757376015f759c65420000', NULL, '/mech/consume/list');
+INSERT INTO `admineap`.`tbl_function` (`id`, `create_date_time`, `deleted`, `update_date_time`, `version`, `code`, `functype`, `icon`, `levelCode`, `name`, `parent_id`, `remark`, `url`) VALUES ('4028828e62a856270162a953ca4d000b', '2018-04-09 15:34:24', '0', '2018-04-09 15:34:24', '0', 'MECHLABOURCONSUME', '1', 'glyphicon glyphicon-jpy', '000041000015', '机械人工消耗量上报', '40280cac5f757376015f759c65420000', NULL, '/mechlabour/consume/list');
+
+
+INSERT INTO `admineap`.`tbl_function` (`id`, `create_date_time`, `deleted`, `update_date_time`, `version`, `code`, `functype`, `icon`, `levelCode`, `name`, `parent_id`, `remark`, `url`) VALUES ('4028828e62a856270162a94ea3400008', '2018-04-09 15:28:46', '0', '2018-04-09 15:28:46', '0', 'MECHBUDGET', '1', 'fa fa-truck', '000045000006', '机械预算管理', '40280cac5fbf67ad015fbf6cfab20000', NULL, '/mech/budget/list');
+INSERT INTO `admineap`.`tbl_function` (`id`, `create_date_time`, `deleted`, `update_date_time`, `version`, `code`, `functype`, `icon`, `levelCode`, `name`, `parent_id`, `remark`, `url`) VALUES ('4028828e62a856270162a94ff7020009', '2018-04-09 15:30:13', '0', '2018-04-09 15:30:13', '0', 'MECHLABOUR', '1', 'fa fa-google-wallet', '000045000007', '机械人工预算管理', '40280cac5fbf67ad015fbf6cfab20000', NULL, '/mechlabour/budget/list');
+
+
