@@ -12,6 +12,9 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.hibernate.type.StringType;
+import org.hibernate.type.Type;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -263,12 +266,17 @@ public class PurchaseApplyController {
         return new Result(true);
     }
     
-    @RequestMapping(method = RequestMethod.POST, value="/validatechannel")
+    @RequestMapping(method = RequestMethod.POST, value = "/validatechannel")
     @ResponseBody
-    public Result validateChannel(String id, HttpServletRequest request){
-        PurchaseDet purchaseDet = purchaseService.get(PurchaseDet.class, id);
-        //purchaseService.delete(purchaseDet);
-        return new Result(false, "未编辑完");
+    public Result validateChannel(String businessKey, HttpServletRequest request) {
+        List<PurchaseDet> list = purchaseService.findMapBySql("select id from tbl_purchase_det where purchase_id = ? AND channel_id is null",
+                new Object[] { businessKey }, new Type[] { StringType.INSTANCE }, PurchaseDet.class);
+        if(!list.isEmpty()){
+            return new Result(false, "请为所有明细都添加渠道！"); 
+        }else{
+            return new Result(true, "校验通过");
+        }
+        
     }
     
     @RequestMapping(value="/getregionmat")

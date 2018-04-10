@@ -1,0 +1,171 @@
+<section class="content-header">
+    <h1>
+        <span>机械预算</span>
+        <small>新增</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
+        <li><a href="#">预算管理</a></li>
+        <li class="active">新增机械预算</li>
+    </ol>
+</section>
+
+    
+
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box box-info">
+                <div id="stepbar" class="add stepbar">
+                    <div>
+                        <div class="step">
+                            <span class="tip">1</span>
+                        </div>
+                        <div class="stepinfo">添加机械预算条目</div>
+                    </div>
+                    <div>
+                        <div class="step stepundone">
+                            <span class="tip">2</span>
+                        </div>
+                        <div class="stepinfo undoneinfo">编辑机械预算明细</div>
+                    </div>
+                    <div>
+                        <div class="step stepundone">
+                            <span class="tip">3</span>
+                        </div>
+                        <div class="stepinfo undoneinfo">完成</div>
+                    </div>
+                </div>
+                <form id="mech_form" name="mech_form" class="form-horizontal">
+                    <input type="hidden" name="id" id="id">
+                    <input type="hidden" name="projectName" id="projectName">
+                    <div class="box-body">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">选择项目<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <select id="projectID" class="form-control select2" name="projectID">
+                                            <option selected="selected" value="">选择一个项目</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">预算名称<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" id="name" name="name" placeholder="预算名称">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">预算编码<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" id="code" name="code" placeholder="预算编码" readonly="readonly">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer text-center">
+                        <button type="button" class="btn btn-default" data-btn-type="prev">返回</button>
+                        <button type="submit" class="btn btn-primary ml10" data-btn-type="next">编辑预算明细</button>
+                        <button type="submit" class="btn btn-success ml10" data-btn-type="save">保存并返回</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+    var form;
+    var id = "${id?default(0)}";
+    var projectOptions = '${projectOptions?default(0)}',options=0;
+    if(projectOptions != 0){
+        options = JSON.parse(projectOptions);
+    }
+    var mechCtrl = {
+        initButtonEvent: function () {
+            $("button[data-btn-type='prev']").click(function () {
+                loadPage(basePath+"/mech/budget/list");
+            });
+        }
+    }
+    $(function () {
+        //初始化表单 
+        form = $("#mech_form").form({baseEntity:false});
+        //数据校验
+        $("#mech_form").bootstrapValidator({
+            message: '请输入有效值',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            submitHandler: function () {
+                var action = $(this).attr('$submitButton').attr('data-btn-type');
+                var formData = form.getFormSimpleData();
+                ajaxPost(basePath + '/mech/budget/savemech', formData, function (data) {
+                    if (data.success) {
+                        switch (action) {
+                            case "next":
+                                loadPage(basePath+"/mech/budget/step2", undefined, data.data);
+                                break;
+                            case "save":
+                                loadPage(basePath+"/mech/budget/list");
+                                break;
+                        }
+                    } else {
+                        modals.error("保存失败！");
+                    }
+                });
+            },
+            fields: {
+                "projectID": {
+                    validators: {
+                        notEmpty: {message: '项目不能为空'}
+                    }
+                },
+                "name": {
+                    validators: {
+                        notEmpty: {message: '预算名称不能为空'}
+                    }
+                }
+            }
+        });
+        //初始化控件
+        form.initComponent();
+        mechCtrl.initButtonEvent();
+        
+        if(options != 0){
+            for (var i = 0, len = options.length; i < len; i++) {
+                var option = options[i];
+                $('#projectID').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+            }
+            $("#projectID").select2();
+            $("#projectID").bind("change", function () {
+                var value = $(this).val();
+                if (value === "") {
+                    return false;
+                }
+                
+                var name = "";
+                if ($("#projectID").prop('selectedIndex') > 0) {
+                    name = $("#projectID").find("option:selected").text();
+                }
+                $('#projectName').val(name);
+            });
+        }
+        
+        //编辑回填
+        if(id!="0"){
+            ajaxPost(basePath+"/mech/budget/get",{id:id},function(data){
+                form.initFormData(data);
+            })
+        }
+        
+        $("#name").on("focusout", function(){
+            ajaxPost(basePath + "/budgetimport/genno/"+$(this).val(), null, function (data) {
+                $('#code').val(data.message);
+            });
+        });
+        
+    });
+
+</script>

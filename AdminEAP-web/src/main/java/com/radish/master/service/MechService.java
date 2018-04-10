@@ -3,7 +3,10 @@
  */
 package com.radish.master.service;
 
+import java.util.List;
+
 import com.cnpc.framework.base.service.BaseService;
+import com.radish.master.pojo.Options;
 
 /**
 * 类说明
@@ -19,4 +22,8 @@ import com.cnpc.framework.base.service.BaseService;
 
 public interface MechService extends BaseService{
 
+    List<Options> getMechComboboxByProject(String projectID);
+    
+    List<Options> getConsumeCombobox(String mechID);
+    
 }

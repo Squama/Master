@@ -1,0 +1,235 @@
+<section class="content-header">
+    <h1>
+        <span>机械工程量上报</span>
+        <small>新增</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
+        <li><a href="#">项目管理</a></li>
+        <li class="active">新增机械工程量上报</li>
+    </ol>
+</section>
+
+    
+
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box box-info">
+                <div id="stepbar" class="add stepbar">
+                    <div>
+                        <div class="step">
+                            <span class="tip">1</span>
+                        </div>
+                        <div class="stepinfo">添加机械上报条目</div>
+                    </div>
+                    <div>
+                        <div class="step step">
+                            <span class="tip">2</span>
+                        </div>
+                        <div class="stepinfo">编辑机械上报明细</div>
+                    </div>
+                    <div>
+                        <div class="step stepundone">
+                            <span class="tip">3</span>
+                        </div>
+                        <div class="stepinfo undoneinfo">完成</div>
+                    </div>
+                </div>
+                <form id="mech-detail-form" name="mech-detail-form" class="form-horizontal">
+                    <input type="hidden" name="name" id="name">
+                    <div class="box-body">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">名称<span style="color:red">*</span></label>
+                                <div class="col-sm-8">
+                                    <select id="detailID" class="form-control select2" name="detailID">
+				                        <option selected="selected" value="">选择一个机械明细</option>
+				                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">类别<span style="color:red">*</span></label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="type" name="type" placeholder="类别" readonly="readonly">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">单位<span style="color:red">*</span></label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="unit" name="unit" placeholder="单位" readonly="readonly">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">预算价<span style="color:red">*</span></label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="budgetPrice" name="budgetPrice" placeholder="预算价" readonly="readonly">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">价差<span style="color:red">*</span></label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="spread" name="spread" placeholder="价差" readonly="readonly">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">编码<span style="color:red">*</span></label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="code" name="code" placeholder="编码" readonly="readonly">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">规格型号<span style="color:red">*</span></label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="modal" name="modal" placeholder="规格型号" readonly="readonly">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">上报机械台班<span style="color:red">*</span></label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="consumeQuantity" name="consumeQuantity" placeholder="数量">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">市场价<span style="color:red">*</span></label>
+                                <div class="col-sm-8">
+                                    <input type="text" onkeyup="value=value.replace(/[^\d]/g,'')" ng-pattern="/[^a-zA-Z]/" class="form-control" id="marketPrice" name="marketPrice" placeholder="市场价">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer text-center">
+                        <button type=submit class="btn btn-success ml10" data-btn-type="save">添加明细</button>
+                        <button type="button" class="btn btn-default" data-btn-type="prev">返回列表</button>
+                    </div>
+                </form>
+            </div>
+            <div class="box box-success">
+                <div class="box-header with-border">
+                    <span>
+                        <i class="fa fa-files-o">上报明细</i>
+                    </span>
+                </div>
+                <div class="dataTables_filter" id="searchDiv" style="display:none;">
+                   <input type="search" name="consumeID" id="consumeID" class="form-control" operator="eq" style="display:none;">
+                </div>
+                <div class="box-body">
+                    <!-- 内容 -->
+                    <table id="consume_detail_table" class="table table-bordered table-striped table-hover">
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+    var form;
+    var id = "${id}", projectID = "${projectID}", projectName = "${projectName}";
+    $('#consumeID').val(id);
+    var consumeOptions = '${consumeOptions?default(0)}',options=0;
+    if(consumeOptions != 0){
+        options = JSON.parse(consumeOptions);
+    }
+    var consumeDetailTable, winId = "consumeDetailWin";
+    var consumeDetailCtrl = {
+        initButtonEvent: function () {
+            $("button[data-btn-type='prev']").click(function () {
+                loadPage(basePath+"/mech/consume/list");
+            });
+            $("#marketPrice").on("focusout", function(){
+                var value = $(this).val();
+                if(!$('#budgetPrice').val()){
+                	$(this).val('');
+                	return false;
+                }
+                $('#spread').val(Math.abs(parseFloat(value)-parseFloat($('#budgetPrice').val())));
+            });
+        },
+        deleteDetail: function (rowId) {
+            modals.confirm("是否要删除该行数据？",function(){
+                ajaxPost(basePath+"/mech/consume/deletedetail/"+rowId,null,function(data){
+                    if(data.success){
+                    	consumeDetailTable.reloadRowData();
+                    }else{
+                        modals.error("删除失败！");
+                    }
+                });
+            })
+        }
+    }
+    $(function () {
+    	consumeDetailTable = new CommonTable("consume_detail_table", "mech_consume_detail", "searchDiv", null);
+        //初始化表单 
+        form = $("#mech-detail-form").form({baseEntity:false});
+        //数据校验
+        $("#mech-detail-form").bootstrapValidator({
+            message: '请输入有效值',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            submitHandler: function () {
+                var action = $(this).attr('$submitButton').attr('data-btn-type');
+                var formData = form.getFormSimpleData();
+                formData.consumeID = id;
+                formData.projectID = projectID;
+                formData.projectName = projectName;
+                ajaxPost(basePath + '/mech/consume/savedetail', formData, function (data) {
+                    if (data.success) {
+                    	consumeDetailTable.reloadData();
+                    } else {
+                        modals.error("保存失败！请检查是否存在重复上报同一明细");
+                    }
+                });
+            },
+            fields: {
+                "detailID": {
+                    validators: {
+                        notEmpty: {message: '名称不能为空'}
+                    }
+                },
+                "marketPrice": {
+                    validators: {
+                        notEmpty: {message: '市场价不能为空'}
+                    }
+                },
+                "consumeQuantity": {
+                    validators: {
+                        notEmpty: {message: '上报机械台班不能为空'}
+                    }
+                }
+            }
+        });
+        //初始化控件
+        form.initComponent();
+        consumeDetailCtrl.initButtonEvent();
+        
+        if(options != 0){
+            for (var i = 0, len = options.length; i < len; i++) {
+                var option = options[i];
+                $('#detailID').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+            }
+            $("#detailID").select2();
+            $("#detailID").bind("change", function () {
+                var value = $(this).val();
+                if (value === "") {
+                    return false;
+                }
+                
+                ajaxPost(basePath+"/mech/budget/getdetail",{id:value},function(data){
+                	form.initFormData(data);
+                });
+            });
+        }
+        
+    });
+    
+    function fnRenderConsumeDetail(value, type, rowObj){
+        var oper = "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='consumeDetailCtrl.deleteDetail(\"" + value + "\")'>删除</a>";
+        return oper;
+    }
+
+</script>

@@ -46,6 +46,14 @@ public class MechConsume extends BaseEntity {
     @Header(name = "消耗项名称")
     @Column(name = "name")
     private String name;
+    
+    @Header(name = "机械人工消耗总额")
+    @Column(name = "mech_labour")
+    private String mechLabour;
+    
+    @Header(name = "机械人工消耗工程量")
+    @Column(name = "mech_labour_volume")
+    private String mechLabourVolume;
 
     @Header(name = "操作员")
     @Column(name = "operator")
@@ -121,5 +129,21 @@ public class MechConsume extends BaseEntity {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getMechLabour() {
+        return mechLabour;
+    }
+
+    public void setMechLabour(String mechLabour) {
+        this.mechLabour = mechLabour;
+    }
+
+    public String getMechLabourVolume() {
+        return mechLabourVolume;
+    }
+
+    public void setMechLabourVolume(String mechLabourVolume) {
+        this.mechLabourVolume = mechLabourVolume;
     }
 }

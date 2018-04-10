@@ -67,14 +67,6 @@ public class MechBudgetDetail extends BaseEntity {
     @Column(name = "budget_price")
     private String budgetPrice;
 
-    @Header(name = "市场价")
-    @Column(name = "market_price")
-    private String marketPrice;
-
-    @Header(name = "价差")
-    @Column(name = "spread")
-    private String spread;
-
     @Header(name = "状态")
     @Column(name = "status")
     private String status;
@@ -157,22 +149,6 @@ public class MechBudgetDetail extends BaseEntity {
 
     public void setBudgetPrice(String budgetPrice) {
         this.budgetPrice = budgetPrice;
-    }
-
-    public String getMarketPrice() {
-        return marketPrice;
-    }
-
-    public void setMarketPrice(String marketPrice) {
-        this.marketPrice = marketPrice;
-    }
-
-    public String getSpread() {
-        return spread;
-    }
-
-    public void setSpread(String spread) {
-        this.spread = spread;
     }
 
     public String getStatus() {

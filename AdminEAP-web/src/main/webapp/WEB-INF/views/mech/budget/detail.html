@@ -1,0 +1,74 @@
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <span>
+                        <i class="fa fa-files-o">机械预算条目</i>
+                    </span>
+                </div>
+                <form id="mech-detail-form" name="mech-detail-form" class="form-horizontal">
+                    <div class="box-body">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">所属项目<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" id="projectName" name="projectName" placeholder="所属项目" readonly="readonly">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">预算名称<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" id="name" name="name" placeholder="预算名称" readonly="readonly">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">预算编码<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" id="code" name="code" placeholder="预算编码" readonly="readonly">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="box box-success" id="budget_tx">
+                <div class="box-header with-border">
+                    <span>
+                        <i class="fa fa-files-o">机械预算条目详情</i>
+                    </span>
+                </div>
+                <div class="dataTables_filter" id="searchDivDetail" style="display:none;">
+                   <input type="search" name="entryID" id="entryID" class="form-control" operator="eq" style="display:none;">
+                </div>
+                <div class="box-body">
+                    <!-- 内容 -->
+                    <table id="mech_detail_table" class="table table-bordered table-striped table-hover">
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+    var form, mechDetailTable;
+    var id = "${id}";
+    $('#entryID').val(id);
+    $(function () {
+        mechDetailTable = new CommonTable("mech_detail_table", "mech_budget_detail_overview", "searchDivDetail", null);
+        //初始化表单 
+        form = $("#mech-detail-form").form({baseEntity:false});
+        //初始化控件
+        form.initComponent();
+        
+        //编辑回填
+        if(id!="0"){
+            ajaxPost(basePath+"/mech/budget/get",{id:id},function(data){
+                form.initFormData(data);
+            })
+        }
+        
+    });
+   
+
+</script>

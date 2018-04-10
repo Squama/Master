@@ -58,6 +58,14 @@ public class Labor extends BaseEntity {
     @Header(name = "合同名称")
     @Column(name = "contract_name")
     private String contractName;
+    
+    @Header(name = "已消耗金额")
+    @Column(name = "consume_price")
+    private String consumePrice;
+    
+    @Header(name = "状态")
+    @Column(name = "status")
+    private String status;
 
     public String getProjectID() {
         return projectID;
