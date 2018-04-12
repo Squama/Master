@@ -75,7 +75,7 @@
         }
     });
     
-    function fnLaborRender(value, type, rowObj){
+    function fnRenderLabor(value, type, rowObj){
         var oper = "";
         if(rowObj.status == '测算已完成'){
             oper += "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='budgetManageObject.quantityDetail(\"" + rowObj.budgetNo + "\")'>数量消耗</a>";

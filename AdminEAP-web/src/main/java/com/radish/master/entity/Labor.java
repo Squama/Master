@@ -42,7 +42,7 @@ public class Labor extends BaseEntity {
     @Header(name = "施工负责人")
     @Column(name = "construction_manager")
     private String constructionManager;
-    
+
     @Header(name = "施工负责人ID")
     @Column(name = "construction_manager_id")
     private String constructionManagerID;
@@ -58,11 +58,11 @@ public class Labor extends BaseEntity {
     @Header(name = "合同名称")
     @Column(name = "contract_name")
     private String contractName;
-    
+
     @Header(name = "已消耗金额")
     @Column(name = "consume_price")
     private String consumePrice;
-    
+
     @Header(name = "状态")
     @Column(name = "status")
     private String status;
@@ -130,5 +130,21 @@ public class Labor extends BaseEntity {
     public void setConstructionManagerID(String constructionManagerID) {
         this.constructionManagerID = constructionManagerID;
     }
-    
+
+    public String getConsumePrice() {
+        return consumePrice;
+    }
+
+    public void setConsumePrice(String consumePrice) {
+        this.consumePrice = consumePrice;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
 }

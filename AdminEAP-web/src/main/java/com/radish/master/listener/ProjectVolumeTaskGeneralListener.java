@@ -46,7 +46,6 @@ public class ProjectVolumeTaskGeneralListener implements TaskListener {
             BaseService baseService = (BaseService) SpringUtil.getObject("baseActServer");
 
             ProjectVolume pv = baseService.get(ProjectVolume.class, businessKey);
-            System.out.println(delegateTask.getTaskDefinitionKey());
 
             if (FALSE.equalsIgnoreCase(delegateTask.getVariable("approved").toString())) {
                 if ("zhiliang".equals(delegateTask.getTaskDefinitionKey())) {
@@ -78,6 +77,7 @@ public class ProjectVolumeTaskGeneralListener implements TaskListener {
             } else if ("boss".equals(delegateTask.getTaskDefinitionKey())) {
                 pv.setStatus("60");
             } else if ("account".equals(delegateTask.getTaskDefinitionKey())) {
+                //TODO 在流程审核完成时，统计该合同下的各次工程量上报金额，记录到合同的消耗字段中。 即tbl_labor新加的字段
                 pv.setStatus("70");
             }
 

@@ -77,6 +77,22 @@
         <column key="marketPrice" header="市场价价" width="80"/>
         <column key="spread" header="价差" width="80"/>
     </query>
+    <query id="mech_consume_detail_activiti" key="id" tableName="机械消耗明细" className="com.radish.master.entity.mech.MechConsumeDetail" widthType="px" pageSize="2000">
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="code" header="编码" allowSort="true" width="150"/>
+        <column key="type" header="类别" width="150"/>
+        <column key="name" header="名称" width="150"/>
+        <column key="modal" header="规格型号" width="150"/>
+        <column key="unit" header="单位" width="150"/>
+        <column key="consumeQuantity" header="总台班" width="80"/>
+        <column key="consumeQuantity" header="已上报台班" width="80"/>
+        <column key="consumeQuantity" header="上报中台班" width="80"/>
+        <column key="consumeQuantity" header="本次上报台班" width="80"/>
+        <column key="budgetPrice" header="预算价" width="80"/>
+        <column key="marketPrice" header="市场价价" width="80"/>
+        <column key="spread" header="价差" width="80"/>
+    </query>
     <!-- 机械消耗 end -->
     
 </queryContext>

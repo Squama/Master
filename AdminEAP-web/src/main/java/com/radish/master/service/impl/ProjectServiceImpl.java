@@ -177,7 +177,7 @@ public class ProjectServiceImpl extends BaseServiceImpl implements ProjectServic
 
     @Override
     public List<Options> getLaborComboboxByProject(String projectID) {
-        return this.findMapBySql("select id value, contract_name data from tbl_labor where project_id=?", new Object[] {projectID},
+        return this.findMapBySql("select id value, contract_name data from tbl_labor where project_id=? AND Status='30'", new Object[] {projectID},
                 new Type[] { StringType.INSTANCE }, Options.class);
     }
 

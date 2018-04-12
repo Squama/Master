@@ -130,6 +130,7 @@ public class LaborController {
         if(StrUtil.isEmpty(labor.getId())){
             labor.setCreateDateTime(new Date());
             labor.setContractPrice("0");
+            labor.setStatus("10");
             projectService.save(labor);
         }else{
             Labor oldLabor = projectService.get(Labor.class, labor.getId());
