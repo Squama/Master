@@ -45,6 +45,22 @@
     if(projectOptions != 0){
     	options = JSON.parse(projectOptions);
     }
+    
+    var laborObject = {
+            startFlow: function (rowID) {
+                modals.confirm("是否要提交审批？",function(){
+                    ajaxPost(basePath + '/labor/start', {id:rowID}, function (data) {
+                        if (data.success) {
+                        	laborTable.reloadData();
+                            modals.correct("流程已启动，请及时处理");
+                        } else {
+                            modals.error(data.message);
+                        }
+                    });
+                });
+            }
+    }
+    
     $(function (){
     	laborTable = new CommonTable("labor_table", "labor_list", "searchDiv", null);
         
@@ -77,9 +93,8 @@
     
     function fnRenderLabor(value, type, rowObj){
         var oper = "";
-        if(rowObj.status == '测算已完成'){
-            oper += "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='budgetManageObject.quantityDetail(\"" + rowObj.budgetNo + "\")'>数量消耗</a>";
-            oper += "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='budgetManageObject.amountDetail(\"" + rowObj.budgetNo + "\")'>金额消耗</a>";
+        if(rowObj.status == '新建' || rowObj.status == '审核不通过'){
+            oper += "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='laborObject.startFlow(\"" + value + "\")'>提交审批</a>";
         }
         return oper;
     }

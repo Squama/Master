@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.base.service.BaseService;
+import com.radish.master.entity.Labor;
 import com.radish.master.entity.ProjectVolume;
 import com.radish.master.pojo.Options;
 
@@ -62,5 +63,5 @@ public interface ProjectService extends BaseService{
     
     public Result startVolumeFlow(ProjectVolume projectVolume, String processDefinitionKey);
     
-    
+    public Result startLaborFlow(Labor labor, String processDefinitionKey);
 }

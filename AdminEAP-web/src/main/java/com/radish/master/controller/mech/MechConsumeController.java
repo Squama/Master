@@ -24,6 +24,7 @@ import com.cnpc.framework.annotation.VerifyCSRFToken;
 import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.utils.SecurityUtil;
 import com.cnpc.framework.utils.StrUtil;
+import com.radish.master.entity.mech.MechBudget;
 import com.radish.master.entity.mech.MechConsume;
 import com.radish.master.entity.mech.MechConsumeDetail;
 import com.radish.master.service.BudgetService;
@@ -178,6 +179,13 @@ public class MechConsumeController {
             return new Result(false);
         }
         return new Result(true);
+    }
+    
+    @VerifyCSRFToken
+    @RequestMapping(value = "/start", method = RequestMethod.POST)
+    @ResponseBody
+    public Result start(String id) {
+        return mechService.startConsumeFlow(mechService.get(MechConsume.class, id),"mech");
     }
     
 }

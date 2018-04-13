@@ -1,7 +1,7 @@
 /**
  * 版权所有 (c) 2018，中金支付有限公司  
  */
-package com.radish.master.listener.mech;
+package com.radish.master.listener;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,7 +12,6 @@ import org.activiti.engine.delegate.TaskListener;
 import com.cnpc.framework.activiti.pojo.Constants;
 import com.cnpc.framework.base.service.BaseService;
 import com.radish.master.entity.Labor;
-import com.radish.master.entity.mech.MechBudget;
 import com.radish.master.system.SpringUtil;
 
 /**
@@ -22,14 +21,14 @@ import com.radish.master.system.SpringUtil;
 * Modify Information:
 * Author        Date          Description
 * ============ =========== ============================
-* dongyan      2018年4月9日    Create this file
+* dongyan      2018年4月13日    Create this file
 * </pre>
 * 
 */
 
-public class MechTaskCompleteListener implements TaskListener{
+public class LaborTaskCompleteListener implements TaskListener {
 
-    private static final long serialVersionUID = 7383477718722575983L;
+    private static final long serialVersionUID = 4294247719992051739L;
 
     @Override
     public void notify(DelegateTask delegateTask) {
@@ -39,17 +38,17 @@ public class MechTaskCompleteListener implements TaskListener{
              BaseService baseService = (BaseService)SpringUtil.getObject("baseActServer");
              Map<String, Object> params = new HashMap<String, Object>();
              params.put("id", businessKey);
-             MechBudget mechBudget = baseService.get("from MechBudget where id=:id", params);
+             Labor labor = baseService.get("from Labor where id=:id", params);
              
              if("true".equalsIgnoreCase(delegateTask.getVariable("approved").toString())){
-                 mechBudget.setStatus("30");
+                 labor.setStatus("30");
              }else if("false".equalsIgnoreCase(delegateTask.getVariable("approved").toString())){
-                 mechBudget.setStatus("40");
+                 labor.setStatus("40");
              }
              
-             baseService.save(mechBudget);
+             baseService.save(labor);
         }
 
     }
-
+    
 }

@@ -42,6 +42,7 @@ import com.cnpc.framework.utils.StrUtil;
 import com.radish.master.controller.ProjectController;
 import com.radish.master.entity.Labor;
 import com.radish.master.entity.ProjectFileItem;
+import com.radish.master.entity.ProjectVolume;
 import com.radish.master.service.BudgetService;
 import com.radish.master.service.ProjectService;
 import com.radish.master.system.GUID;
@@ -107,6 +108,13 @@ public class LaborController {
         request.setAttribute("id", id);
         request.setAttribute("projectOptions", JSONArray.toJSONString(budgetService.getProjectCombobox()));
         return "projectmanage/labor/labor_edit";
+    }
+    
+    @RefreshCSRFToken
+    @RequestMapping(value="/detail/{id}",method = RequestMethod.GET)
+    public String detail(@PathVariable("id") String id,HttpServletRequest request) {
+        request.setAttribute("id", id);
+        return "projectmanage/labor/labor_detail";
     }
     
     @RefreshCSRFToken
@@ -342,6 +350,13 @@ public class LaborController {
             labor.setContractFile(fileList.get(0).getId());
         }
         return labor;
+    }
+    
+    @VerifyCSRFToken
+    @RequestMapping(value = "/start", method = RequestMethod.POST)
+    @ResponseBody
+    public Result start(String id) {
+        return projectService.startLaborFlow(projectService.get(Labor.class, id),"projectLabor");
     }
     
 }

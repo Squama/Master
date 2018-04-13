@@ -179,4 +179,11 @@ public class MechBudgetController {
         return new Result(true);
     }
     
+    @VerifyCSRFToken
+    @RequestMapping(value = "/start", method = RequestMethod.POST)
+    @ResponseBody
+    public Result start(String id) {
+        return mechService.startBudgetFlow(mechService.get(MechBudget.class, id),"mechBudget");
+    }
+    
 }

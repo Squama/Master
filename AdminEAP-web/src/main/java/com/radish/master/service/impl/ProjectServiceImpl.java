@@ -204,6 +204,29 @@ public class ProjectServiceImpl extends BaseServiceImpl implements ProjectServic
         return runtimePageService.startProcessInstanceByKey(processDefinitionKey, name, variables, user.getId(),
                 businessKey);
     }
+    
+    @Override
+    public Result startLaborFlow(Labor labor, String processDefinitionKey) {
+        User user = SecurityUtil.getUser();
+
+        labor.setStatus("20");
+
+        this.update(labor);
+
+        String name = "项目：" + labor.getProjectName() + "合同：" + labor.getContractName() + "【审核】";
+
+        // businessKey
+        String businessKey = labor.getId();
+
+        // 配置流程变量
+        Map<String, Object> variables = new HashMap<>();
+        variables.put(Constants.VAR_APPLYUSER_NAME, user.getName());
+        variables.put(Constants.VAR_BUSINESS_KEY, businessKey);
+
+        // 启动流程
+        return runtimePageService.startProcessInstanceByKey(processDefinitionKey, name, variables, user.getId(),
+                businessKey);
+    }
 
     
 }

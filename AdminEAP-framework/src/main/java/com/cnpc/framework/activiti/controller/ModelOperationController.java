@@ -213,6 +213,10 @@ public class ModelOperationController {
                     map.put("valid", false);
             } else {
                 map.put("valid", false);
+                if(models.isEmpty()){
+                    map.put("valid", true);
+                    return map;
+                }
                 for (Model model : models) {
                     if (model.getId().equals(id)) {
                         map.put("valid", true);

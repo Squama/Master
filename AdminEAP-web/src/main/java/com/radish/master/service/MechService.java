@@ -5,7 +5,10 @@ package com.radish.master.service;
 
 import java.util.List;
 
+import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.base.service.BaseService;
+import com.radish.master.entity.mech.MechBudget;
+import com.radish.master.entity.mech.MechConsume;
 import com.radish.master.pojo.Options;
 
 /**
@@ -25,5 +28,9 @@ public interface MechService extends BaseService{
     List<Options> getMechComboboxByProject(String projectID);
     
     List<Options> getConsumeCombobox(String mechID);
+    
+    public Result startBudgetFlow(MechBudget mechBudget, String processDefinitionKey);
+    
+    public Result startConsumeFlow(MechConsume mechConsume, String processDefinitionKey);
     
 }
