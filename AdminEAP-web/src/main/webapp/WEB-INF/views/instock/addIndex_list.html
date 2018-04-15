@@ -88,7 +88,7 @@
                     return false;
                 }
                 modals.confirm("是否要删除该行数据？",function(){
-                    ajaxPost(basePath+"/instock/delete/"+rowId,null,function(data){
+                    ajaxPost(basePath+"/instock/deleteRkd?rkid="+rowId,null,function(data){
                         if(data.success){
                             budgetApplyTable.reloadRowData();
                         }else{
