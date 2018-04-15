@@ -3,12 +3,17 @@
  */
 package com.radish.master.listener;
 
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.activiti.engine.delegate.DelegateTask;
 import org.activiti.engine.delegate.TaskListener;
 
 import com.cnpc.framework.activiti.pojo.Constants;
 import com.cnpc.framework.base.service.BaseService;
-import com.cnpc.framework.utils.StrUtil;
+import com.radish.master.entity.Labor;
 import com.radish.master.entity.ProjectVolume;
 import com.radish.master.system.SpringUtil;
 
@@ -77,7 +82,28 @@ public class ProjectVolumeTaskGeneralListener implements TaskListener {
             } else if ("boss".equals(delegateTask.getTaskDefinitionKey())) {
                 pv.setStatus("60");
             } else if ("account".equals(delegateTask.getTaskDefinitionKey())) {
-                //TODO 在流程审核完成时，统计该合同下的各次工程量上报金额，记录到合同的消耗字段中。 即tbl_labor新加的字段
+                //在流程审核完成时，统计该合同下的各次工程量上报金额，记录到合同的消耗字段中。 即tbl_labor新加的字段
+            	
+            	String hql = "from ProjectVolume where laborID=:laborID AND status=:status";
+                Map<String, Object> params = new HashMap<>();
+                params.put("laborID", pv.getLaborID());
+                params.put("status", "70");
+            	List<ProjectVolume> pvList = baseService.find(hql, params);
+            	BigDecimal sum = new BigDecimal("0");
+            	for(ProjectVolume proV : pvList){
+            		BigDecimal consume = new BigDecimal(proV.getEngineerMoney());
+                    
+                    sum = sum.add(consume);
+            	}
+            	
+            	BigDecimal thisVolume = new BigDecimal(pv.getEngineerMoney());
+            	sum = sum.add(thisVolume);
+            	
+            	Labor labor = baseService.get(Labor.class, pv.getLaborID());
+            	labor.setConsumePrice(sum.setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
+            	
+            	baseService.save(labor);
+            	
                 pv.setStatus("70");
             }
 

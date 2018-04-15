@@ -8,7 +8,7 @@ import org.activiti.engine.delegate.TaskListener;
 
 import com.cnpc.framework.activiti.pojo.Constants;
 import com.cnpc.framework.base.service.BaseService;
-import com.radish.master.entity.mech.MechBudget;
+import com.radish.master.entity.mech.MechConsume;
 import com.radish.master.system.SpringUtil;
 
 /**
@@ -44,7 +44,7 @@ public class MechConsumeTaskCompleteListener implements TaskListener {
             String businessKey = delegateTask.getVariable(Constants.VAR_BUSINESS_KEY).toString();
             BaseService baseService = (BaseService) SpringUtil.getObject("baseActServer");
 
-            MechBudget mb = baseService.get(MechBudget.class, businessKey);
+            MechConsume mb = baseService.get(MechConsume.class, businessKey);
 
             if (FALSE.equalsIgnoreCase(delegateTask.getVariable("approved").toString())) {
                 if ("zhiliang".equals(delegateTask.getTaskDefinitionKey())) {
@@ -76,7 +76,7 @@ public class MechConsumeTaskCompleteListener implements TaskListener {
             } else if ("boss".equals(delegateTask.getTaskDefinitionKey())) {
                 mb.setStatus("60");
             } else if ("account".equals(delegateTask.getTaskDefinitionKey())) {
-                //TODO 在流程审核完成时，统计该合同下的各次工程量上报金额，记录到合同的消耗字段中。 即tbl_labor新加的字段
+                //TODO 机械上报流程，需要统计消耗吗？？？
                 mb.setStatus("70");
             }
 

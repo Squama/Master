@@ -24,7 +24,23 @@
         <column key="budgetPrice" header="预算价" width="80"/>
         <column key="id" header="操作" width="80" fnRender="fnRenderMechDetail"/>
     </query>
-    <query id="mech_budget_detail_overview" key="id" tableName="机械预算明细" className="com.radish.master.entity.mech.MechBudgetDetail" widthType="px" pageSize="2000">
+    <query id="mech_budget_detail_overview" key="id" tableName="机械预算明细" widthType="px" pageSize="2000">
+        <sql>
+            <![CDATA[
+				SELECT mc.id AS mechID, mcd.id AS id, mcd.code, mcd.type, mcd.name, mcd.modal, mcd.unit, mcd.quantity, 
+				mcd.budget_price, C.consumedQuantity
+				FROM tbl_mech_budget_detail mcd
+				INNER JOIN tbl_mech_budget mc
+				ON mcd.entry_id = mc.id AND 1=1
+				LEFT JOIN
+				(SELECT mc.mech_id, mcd.code, sum(mcd.consume_quantity) consumedQuantity
+				FROM tbl_mech_consume_detail mcd
+				RIGHT JOIN tbl_mech_consume mc
+				ON mcd.consume_id = mc.id AND mc.`status` = '70'
+				GROUP BY mc.mech_id,mcd.`code`) C
+				ON mc.id = C.mech_id
+            ]]>
+        </sql>
         <column key="rowIndex" header="序号" width="80"/>
         <column key="id" hidden="true" header="id" width="80"/>
         <column key="code" header="编码" allowSort="true" width="150"/>
@@ -32,8 +48,9 @@
         <column key="name" header="名称" width="150"/>
         <column key="modal" header="规格型号" width="150"/>
         <column key="unit" header="单位" width="150"/>
-        <column key="quantity" header="台班" width="80"/>
-        <column key="budgetPrice" header="预算价" width="80"/>
+        <column key="quantity" header="总台班" width="80"/>
+        <column key="consumedQuantity" header="已上报台班" width="80"/>
+        <column key="budget_price" header="预算价" width="80"/>
     </query>
     <!-- 机械预算管理  end --> 
     
@@ -47,7 +64,7 @@
         <column key="mechLabour" header="机械人工消耗量" width="150"/>
         <column key="operator" header="操作员" width="150"/>
         <column key="updateDateTime" header="更新时间" allowSort="true" dateFormat="yyyy-mm-dd" width="80"/>
-        <column key="status" header="状态" allowSort="true" width="150" render="10=新建,20=分公司领导审核中,30=项目主管审核中,40=成本控制审核中,50=审核通过,60=审核不通过"/>
+        <column key="status" header="状态" allowSort="true" width="150" render="10=新建,20=综合审核,30=施工负责人,40=预算负责人,50=总负责人,60=财务负责人,70=已完成"/>
         <column key="id" header="操作" width="80" fnRender="fnRenderConsume"/>
     </query>
     <query id="mech_consume_detail" key="id" tableName="机械消耗明细" className="com.radish.master.entity.mech.MechConsumeDetail" widthType="px" pageSize="2000">
@@ -77,7 +94,34 @@
         <column key="marketPrice" header="市场价价" width="80"/>
         <column key="spread" header="价差" width="80"/>
     </query>
-    <query id="mech_consume_detail_activiti" key="id" tableName="机械消耗明细" className="com.radish.master.entity.mech.MechConsumeDetail" widthType="px" pageSize="2000">
+    <query id="mech_consume_detail_activiti" key="id" tableName="机械消耗明细"  widthType="px" pageSize="2000">
+        <sql>
+            <![CDATA[
+				SELECT mc.mech_id, mcd.id AS id, mcd.code, mcd.type, mcd.name, mcd.modal, mcd.unit, mcd.consume_quantity, 
+				mcd.budget_price, mcd.market_price, mcd.spread, B.quantity, C.consumedQuantity, A.applyQuantity
+				FROM tbl_mech_consume_detail mcd
+				INNER JOIN tbl_mech_consume mc
+				ON mcd.consume_id = mc.id AND 1=1
+				LEFT JOIN
+				(SELECT entry_id, code, quantity FROM tbl_mech_budget_detail) B
+				ON mc.mech_id = B.entry_id AND mcd.`code` = B.`code`
+				LEFT JOIN
+				(SELECT mc.mech_id, mcd.code, sum(mcd.consume_quantity) consumedQuantity
+				FROM tbl_mech_consume_detail mcd
+				RIGHT JOIN tbl_mech_consume mc
+				ON mcd.consume_id = mc.id AND mc.`status` = '70'
+				GROUP BY mc.mech_id,mcd.`code`) C
+				ON mc.mech_id = C.mech_id AND mcd.`code` = C.`code`
+				LEFT JOIN
+				(SELECT mc.mech_id, mcd.code, sum(mcd.consume_quantity) applyQuantity
+				FROM tbl_mech_consume_detail mcd
+				RIGHT JOIN tbl_mech_consume mc
+				ON mcd.consume_id = mc.id AND mc.`status` <> '70' AND mc.`status` <> '10'
+				GROUP BY mc.mech_id,mcd.`code`) A
+				ON mc.mech_id = A.mech_id AND mcd.`code` = A.`code`
+
+            ]]>
+        </sql>
         <column key="rowIndex" header="序号" width="80"/>
         <column key="id" hidden="true" header="id" width="80"/>
         <column key="code" header="编码" allowSort="true" width="150"/>
@@ -85,12 +129,12 @@
         <column key="name" header="名称" width="150"/>
         <column key="modal" header="规格型号" width="150"/>
         <column key="unit" header="单位" width="150"/>
-        <column key="consumeQuantity" header="总台班" width="80"/>
-        <column key="consumeQuantity" header="已上报台班" width="80"/>
-        <column key="consumeQuantity" header="上报中台班" width="80"/>
-        <column key="consumeQuantity" header="本次上报台班" width="80"/>
-        <column key="budgetPrice" header="预算价" width="80"/>
-        <column key="marketPrice" header="市场价价" width="80"/>
+        <column key="quantity" header="总台班" width="80"/>
+        <column key="consumedQuantity" header="已上报台班" width="80"/>
+        <column key="applyQuantity" header="上报中台班" width="80"/>
+        <column key="consume_quantity" header="本次上报台班" width="80"/>
+        <column key="budget_price" header="预算价" width="80"/>
+        <column key="market_price" header="市场价价" width="80"/>
         <column key="spread" header="价差" width="80"/>
     </query>
     <!-- 机械消耗 end -->

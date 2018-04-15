@@ -39,7 +39,7 @@
                     </span>
                 </div>
                 <div class="dataTables_filter" id="searchDivDetail" style="display:none;">
-                   <input type="search" name="entryID" id="entryID" class="form-control" operator="eq" style="display:none;">
+                   <input type="search" name="mcd.entry_id" id="entryID" class="form-control" operator="eq" style="display:none;">
                 </div>
                 <div class="box-body">
                     <!-- 内容 -->
@@ -55,7 +55,20 @@
     var id = "${id}";
     $('#entryID').val(id);
     $(function () {
-        mechDetailTable = new CommonTable("mech_detail_table", "mech_budget_detail_overview", "searchDivDetail", null);
+        mechDetailTable = new CommonTable("mech_detail_table", "mech_budget_detail_overview", "searchDivDetail", {
+        	"createdRow": function( row, data, dataIndex ) {
+        		var quantity = parseFloat(data.quantity),
+        		consume = 0;
+        		if(data.consumedQuantity != null){
+        			consume = parseFloat(data.consumedQuantity);
+        		}
+        		if(accDiv(consume,quantity) >= 0.8 && accDiv(consume,quantity) < 0.95){
+        			$(row).css('background-color', 'yellow');
+        		}else if(accDiv(consume,quantity) >= 0.95){
+        			$(row).css('background-color', 'red');
+        		}
+             }
+        });
         //初始化表单 
         form = $("#mech-detail-form").form({baseEntity:false});
         //初始化控件
@@ -69,6 +82,23 @@
         }
         
     });
-   
+    function accDiv(arg1, arg2) {
+    	var t1 = 0, t2 = 0, r1, r2;
+    	try {
+    		t1 = arg1.toString().split(".")[1].length;
+    	}
+    	catch (e) {
+    	}
+    	try {
+    		t2 = arg2.toString().split(".")[1].length;
+    	}
+    		catch (e) {
+    	}
+    	with (Math) {
+	    	r1 = Number(arg1.toString().replace(".", ""));
+	    	r2 = Number(arg2.toString().replace(".", ""));
+	    	return (r1 / r2) * pow(10, t2 - t1);
+    	}
+    }
 
 </script>

@@ -24,7 +24,6 @@ import com.cnpc.framework.annotation.VerifyCSRFToken;
 import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.utils.SecurityUtil;
 import com.cnpc.framework.utils.StrUtil;
-import com.radish.master.entity.mech.MechBudget;
 import com.radish.master.entity.mech.MechConsume;
 import com.radish.master.entity.mech.MechConsumeDetail;
 import com.radish.master.service.BudgetService;
@@ -58,10 +57,16 @@ public class MechConsumeController {
         return "mech/consume/list";
     }
     
+    @RequestMapping(value="/detailouter/{id}",method = RequestMethod.GET)
+    public String detailOuter(@PathVariable("id") String id,HttpServletRequest request,HttpServletResponse response) {
+        request.setAttribute("id", id);
+        return "mech/consume/detail";
+    }
+    
     @RequestMapping(value="/detail/{id}",method = RequestMethod.GET)
     public String detail(@PathVariable("id") String id,HttpServletRequest request,HttpServletResponse response) {
         request.setAttribute("id", id);
-        return "mech/consume/detail";
+        return "mech/consume/activiti_detail";
     }
     
     @RequestMapping(method = RequestMethod.POST, value = "/get")
@@ -186,6 +191,12 @@ public class MechConsumeController {
     @ResponseBody
     public Result start(String id) {
         return mechService.startConsumeFlow(mechService.get(MechConsume.class, id),"mech");
+    }
+    
+    @RequestMapping(method = RequestMethod.POST, value = "/check")
+    @ResponseBody
+    public Result validateChannel(String businessKey, HttpServletRequest request) {
+        return new Result(true, "校验通过");
     }
     
 }

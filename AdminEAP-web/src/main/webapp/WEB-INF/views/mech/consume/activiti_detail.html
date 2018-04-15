@@ -41,7 +41,7 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">机械人工消耗工程量</label>
                                 <div class="col-sm-8">
-                                    <textarea class="form-control" id="mechLabourVolume" name="mechLabourVolume" rows="5" cols="100" placeholder="有机械人工消耗总额时必填" readonly="readonly"></textarea>
+                                    <textarea class="form-control" id="mechLabourVolume" name="mechLabourVolume" rows="5" cols="100" placeholder="有机械人工消耗总额时必填"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -54,8 +54,8 @@
                         <i class="fa fa-files-o">上报明细</i>
                     </span>
                 </div>
-                <div class="dataTables_filter" id="searchDiv" style="display:none;">
-                   <input type="search" name="consumeID" id="consumeID" class="form-control" operator="eq" style="display:none;">
+                <div class="dataTables_filter" id="searchDivActivitiDetail" style="display:none;">
+                   <input type="search" name="mc.id" id="entryID" class="form-control" operator="eq" style="display:none;">
                 </div>
                 <div class="box-body">
                     <!-- 内容 -->
@@ -71,7 +71,25 @@
     var id = "${id}";
     $('#entryID').val(id);
     $(function () {
-        consumeDetailTable = new CommonTable("consume_detail_table", "mech_consume_detail_overview", "searchDivDetail", null);
+        consumeDetailTable = new CommonTable("consume_detail_table", "mech_consume_detail_activiti", "searchDivActivitiDetail", {
+        	"createdRow": function( row, data, dataIndex ) {
+        		var quantity = parseFloat(data.quantity),
+        		consume = 0,
+        		apply = parseFloat(data.consume_quantity);
+        		if(data.consumedQuantity != null){
+        			consume = parseFloat(data.consumedQuantity);
+        		}
+        		//console.log(quantity);
+        		//console.log(consume);
+        		//console.log(apply);
+        		//console.log(accDiv(accAdd(consume, apply),quantity));
+        		if(accDiv(accAdd(consume, apply),quantity) >= 0.8 && accDiv(accAdd(consume, apply),quantity) < 0.95){
+        			$(row).css('background-color', 'yellow');
+        		}else if(accDiv(accAdd(consume, apply),quantity) >= 0.95){
+        			$(row).css('background-color', 'red');
+        		}
+             }
+        });
         //初始化表单 
         form = $("#consume-detail-form").form({baseEntity:false});
         //初始化控件
@@ -86,5 +104,56 @@
         
     });
    
+    function accAdd(arg1, arg2) {
+    	var r1, r2, m, c;
+    	try {
+    		r1 = arg1.toString().split(".")[1].length;
+    	}
+    	catch (e) {
+    		r1 = 0;
+    	}
+    	try {
+    		r2 = arg2.toString().split(".")[1].length;
+    	}
+    	catch (e) {
+    		r2 = 0;
+    	}
+    	c = Math.abs(r1 - r2);
+    	m = Math.pow(10, Math.max(r1, r2));
+    	if (c > 0) {
+	    	var cm = Math.pow(10, c);
+	    	if (r1 > r2) {
+	    		arg1 = Number(arg1.toString().replace(".", ""));
+	    		arg2 = Number(arg2.toString().replace(".", "")) * cm;
+	    	} else {
+	    		arg1 = Number(arg1.toString().replace(".", "")) * cm;
+	    		arg2 = Number(arg2.toString().replace(".", ""));
+	    	}
+    	} else {
+    		arg1 = Number(arg1.toString().replace(".", ""));
+    		arg2 = Number(arg2.toString().replace(".", ""));
+    	}
+    	return (arg1 + arg2) / m;
+   	}
+    
+    function accDiv(arg1, arg2) {
+    	var t1 = 0, t2 = 0, r1, r2;
+    	try {
+    		t1 = arg1.toString().split(".")[1].length;
+    	}
+    	catch (e) {
+    	}
+    	try {
+    		t2 = arg2.toString().split(".")[1].length;
+    	}
+    		catch (e) {
+    	}
+    	with (Math) {
+	    	r1 = Number(arg1.toString().replace(".", ""));
+	    	r2 = Number(arg2.toString().replace(".", ""));
+	    	return (r1 / r2) * pow(10, t2 - t1);
+    	}
+    }
 
+    
 </script>
