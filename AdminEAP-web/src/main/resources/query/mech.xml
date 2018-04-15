@@ -35,10 +35,10 @@
 				LEFT JOIN
 				(SELECT mc.mech_id, mcd.code, sum(mcd.consume_quantity) consumedQuantity
 				FROM tbl_mech_consume_detail mcd
-				RIGHT JOIN tbl_mech_consume mc
+				INNER JOIN tbl_mech_consume mc
 				ON mcd.consume_id = mc.id AND mc.`status` = '70'
 				GROUP BY mc.mech_id,mcd.`code`) C
-				ON mc.id = C.mech_id
+				ON mc.id = C.mech_id AND mcd.`code` = C.`code`
             ]]>
         </sql>
         <column key="rowIndex" header="序号" width="80"/>
@@ -108,14 +108,14 @@
 				LEFT JOIN
 				(SELECT mc.mech_id, mcd.code, sum(mcd.consume_quantity) consumedQuantity
 				FROM tbl_mech_consume_detail mcd
-				RIGHT JOIN tbl_mech_consume mc
+				INNER JOIN tbl_mech_consume mc
 				ON mcd.consume_id = mc.id AND mc.`status` = '70'
 				GROUP BY mc.mech_id,mcd.`code`) C
 				ON mc.mech_id = C.mech_id AND mcd.`code` = C.`code`
 				LEFT JOIN
 				(SELECT mc.mech_id, mcd.code, sum(mcd.consume_quantity) applyQuantity
 				FROM tbl_mech_consume_detail mcd
-				RIGHT JOIN tbl_mech_consume mc
+				INNER JOIN tbl_mech_consume mc
 				ON mcd.consume_id = mc.id AND mc.`status` <> '70' AND mc.`status` <> '10'
 				GROUP BY mc.mech_id,mcd.`code`) A
 				ON mc.mech_id = A.mech_id AND mcd.`code` = A.`code`

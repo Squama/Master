@@ -61,7 +61,7 @@ public class MechServiceImpl extends BaseServiceImpl implements MechService {
 
         this.update(mechBudget);
 
-        String name = "机械预算：" + mechBudget.getProjectName() + "【审核】";
+        String name = "项目：" + mechBudget.getProjectName() + "【机械预算<"+mechBudget.getName()+">审核】";
 
         // businessKey
         String businessKey = mechBudget.getId();
@@ -84,7 +84,7 @@ public class MechServiceImpl extends BaseServiceImpl implements MechService {
 
         this.update(mechConsume);
 
-        String name = "机械预算：" + mechConsume.getProjectName() + "【工程量上报】";
+        String name = "项目：" + mechConsume.getProjectName() + "【"+mechConsume.getMechName()+"工程量上报】";
 
         // businessKey
         String businessKey = mechConsume.getId();
