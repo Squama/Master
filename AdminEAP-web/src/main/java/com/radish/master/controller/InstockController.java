@@ -146,7 +146,7 @@ public class InstockController {
         String year = String.valueOf(date.get(Calendar.YEAR));
 		String str = "RK"+year;
 		List<Integer> list = baseService.find("select max(mat.xh) from com.radish.master.entity.Instock mat");
-    	if(list.get(0)==null){
+    	if(list.isEmpty()||list.get(0)==null){
     		rk.setNumber(str+"100001");
     		rk.setXh(100001);
     	}else{
