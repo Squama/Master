@@ -7,7 +7,7 @@
         <column key="projectName" header="项目名称" classType="String" allowSort="true" width="150"/>
         <column key="constructionTeam" header="施工班组" classType="String" allowSort="true" width="150"/>
         <column key="contractName" header="合同名称" classType="String" width="150"/>
-        <column key="contractPrice" header="合同总价" classType="String" allowSort="true" width="150"/>
+        <column key="contractPrice" header="合同总价（元）" classType="String" allowSort="true" width="150"/>
         <column key="consumePrice" header="已消耗"  width="150"/>
         <column key="constructionManager" header="施工负责人" classType="String" allowSort="true" width="150"/>
         <column key="status" header="状态" allowSort="true" width="150" render="10=新建,20=审核中,30=审核通过,40=审核不通过"/>
@@ -31,7 +31,7 @@
         <column key="constructionTeam" header="施工班组" classType="String" width="150"/>
         <column key="startTime" header="起始时间" classType="String" width="150" dateFormat="yyyy-mm-dd"/>
         <column key="endTime" header="结束时间" classType="String" width="150" dateFormat="yyyy-mm-dd"/>
-        <column key="engineerMoney" header="应付工程款" classType="String" width="150"/>
+        <column key="engineerMoney" header="应付工程款（元）" classType="String" width="150"/>
         <column key="status" header="审核状态" allowSort="true" width="150" render="10=新建,20=综合审核,30=施工负责人,40=预算负责人,50=总负责人,60=财务负责人,70=已完成"/>
         <column key="id" header="操作" width="80" fnRender="fnRenderVolume"/>
     </query>

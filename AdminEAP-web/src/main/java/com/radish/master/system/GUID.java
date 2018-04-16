@@ -3,18 +3,7 @@ package com.radish.master.system;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-/**
- * 
- * <pre>
- * Modify Information:
- * Author       Date        Description
- * ============ =========== ============================
- * zhangxing    2009-05-04  Create this file
- * zhangxin     2012-11-01  修改getTxNo()方法，10位随机数，总长度仍为20位不变
- * chenzhaoqing 2016-11-03  内存优化
- * </pre>
- * 
- */
+
 public class GUID {
 
     // 共62个字符 0-9, A-Z, a-z, 支持 0-61的转换

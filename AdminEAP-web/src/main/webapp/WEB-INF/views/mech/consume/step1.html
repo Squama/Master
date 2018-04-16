@@ -65,9 +65,9 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">机械人工消耗总额</label>
+                                <label class="col-sm-3 control-label">机械人工消耗总额（单位：元）</label>
                                 <div class="col-sm-6">
-                                    <input type="text" class="form-control" id="mechLabour" name="mechLabour" placeholder="机械人工消耗总额">
+                                    <input type="text" onkeyup="value=value.replace(/[^\d]/g,'')" ng-pattern="/[^a-zA-Z]/" class="form-control" id="mechLabour" name="mechLabour" placeholder="机械人工消耗总额">
                                 </div>
                             </div>
                             <div class="form-group">
