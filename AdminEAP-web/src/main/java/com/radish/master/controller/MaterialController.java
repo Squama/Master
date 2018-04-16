@@ -130,7 +130,7 @@ public class MaterialController {
     	String str = strs[1];
     	//拿到当前数据库数据的最大值
     	List<String> list = baseService.find("select max(mat.reserve1) from com.radish.master.entity.Materiel mat");
-    	if(list.isEmpty()||"".equals(list.get(0))){
+    	if(list.isEmpty()||list.get(0)==null){
     		materiel.setMat_number(str+"100105");
     		materiel.setReserve1("100105");
     	}else{
@@ -267,7 +267,7 @@ public class MaterialController {
     	String str = strs[1];
     	//拿到当前数据库数据的最大值
     	List<String> list = baseService.find("select max(mat.reserve1) from com.radish.master.entity.Materiel mat");
-    	if(list.isEmpty()||"".equals(list.get(0))){
+    	if(list.isEmpty()||list.get(0)==null){
     		materiel.setMat_number(str+"100105");
     		materiel.setReserve1("100105");
     	}else{
