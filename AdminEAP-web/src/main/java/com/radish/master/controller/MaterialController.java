@@ -9,6 +9,7 @@ import com.cnpc.framework.base.entity.User;
 import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.base.service.BaseService;
 import com.cnpc.framework.utils.SecurityUtil;
+import com.cnpc.framework.utils.StrUtil;
 import com.radish.master.entity.Channel;
 import com.radish.master.entity.Materiel;
 import com.radish.master.entity.Sign;
@@ -135,8 +136,13 @@ public class MaterialController {
     		materiel.setReserve1("100105");
     	}else{
     		String s= list.get(0);
-    		int i = Integer.parseInt(s);
-    		i++;
+    		int i;
+    		if(StrUtil.isEmpty(s)){
+    			i = 100105;
+    		}else{
+    			i = Integer.parseInt(s);
+    			i++;
+    		}
     		materiel.setMat_number(str+i);
     		materiel.setReserve1(i+"");
     	}
@@ -272,8 +278,13 @@ public class MaterialController {
     		materiel.setReserve1("100105");
     	}else{
     		String s= list.get(0);
-    		int i = Integer.parseInt(s);
-    		i++;
+    		int i;
+    		if(StrUtil.isEmpty(s)){
+    			i = 100105;
+    		}else{
+    			i = Integer.parseInt(s);
+    			i++;
+    		}
     		materiel.setMat_number(str+i);
     		materiel.setReserve1(i+"");
     	}
