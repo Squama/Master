@@ -329,7 +329,7 @@ public class StockController {
     @RequestMapping(value="/add",method = RequestMethod.GET)
     public String add(HttpServletRequest request){
         //request.setAttribute("purchaseOptions", JSONArray.toJSONString(stockService.getPurchaseCombobox("1")));
-        String sql ="select p.id value, p.purchase_name data from tbl_purchase p , tbl_purchase_det pd where pd.purchase_id = p.id and p.status = '50' and pd.status = '50' and pd.stock_type = '1' GROUP BY VALUE";
+        String sql ="select p.id value, p.purchase_name data from tbl_purchase p , tbl_purchase_det pd where pd.purchase_id = p.id and p.status = '50' and pd.surplus_quantity >0 and pd.stock_type = '1' GROUP BY VALUE";
         List purchaseOptions = baseService.findMapBySql(sql, new Object[]{}, new Type[]{StringType.INSTANCE}, Options.class);
         request.setAttribute("purchaseOptions", JSONArray.toJSONString(purchaseOptions));
 

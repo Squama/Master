@@ -22,7 +22,7 @@
 				<div class="form-group">
 					<label class="col-sm-3 control-label">物料名称<span style="color:#ff0000">*</span></label>
 					<div class="col-sm-8">
-						<select id="mat_name" class="form-control select2" name="mat_name" style="width:100%">
+						<select id="matName" class="form-control select2" name="mat_name" style="width:100%">
 							<option selected="selected" value="">选择一种物料</option>
 						</select>
 					</div>
@@ -117,11 +117,11 @@
                 var option = options[i];
                 $('#purchase_id').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
             }
-            $(".select2").select2();
+            $("#purchase_id").select2();
         }
     });
 
-    $("#mat_name").change(function(){
+    $("#matName").change(function(){
         setRegion();
         getChannelByPurchase();
         //数据校验
@@ -201,7 +201,7 @@
 
     function getChannelByPurchase(){
         region_id = $("#region").val();
-        mat_id = $("#mat_name").val();
+        mat_id = $("#matName option:selected").val();
         ajaxPost(basePath+"/stock/getChannelByPurchase?mat_id="+mat_id+"&purchase_id="+purchase_ID+"&region_id="+region_id,null,function(data){
             if(data.data){
                 $("#channel").val(data.data.channel_name);
@@ -218,7 +218,7 @@
 
     function setRegion(){
         var purchase_id = $("#purchase_id option:selected").val();
-        var mat_id = $("#mat_name option:selected").val();
+        var mat_id = $("#matName option:selected").val();
         ajaxPost(basePath + "/stock/getRegionInfo?purchase_id="+purchase_id+"&mat_id="+mat_id, null, function (data) {
             console.log(data);
             var region = data.region;
@@ -233,6 +233,7 @@
 
 
     $("#purchase_id").change(function(){
+    	$('#matName').empty();
         purchase_ID = $("#purchase_id").val();
         ajaxPost(basePath+"/stock/getProjectByPurchase?id="+purchase_ID,null,function(data){
 
@@ -243,22 +244,23 @@
             }
             /*初始化物料选择框*/
             if(data.data[0] != "[]"){
-
+				
                 var matOptions = data.data[0],moptions=0;
                 if(matOptions != 0){
                     moptions = JSON.parse(matOptions);
                 }
                 if(moptions != 0){
                     for (var i = 0, len = moptions.length; i < len; i++) {
-                        var option = moptions[i];
-                        $('#mat_name').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+                        
+                        $('#matName').append("<option value=\"" + moptions[i].value + "\">" + moptions[i].data + "</option>");
                     }
-                    $(".select2").select2();
+                    $("#matName").select2();
                 }
+                setRegion();
 			}else{
 
-                $('#mat_name').empty();
-                $('#mat_name').append("<option>选择一种物料</option>");
+                $('#matName').empty();
+                $('#matName').append("<option>选择一种物料</option>");
                 $("#mat_standard").val("- - - 自动生成 - - -");
                 $("#unit").val("- - - 自动生成 - - -");
                 $("#mat_id").val("- - - 自动生成 - - -");
