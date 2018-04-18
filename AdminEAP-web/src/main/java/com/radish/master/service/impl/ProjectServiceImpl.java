@@ -222,6 +222,7 @@ public class ProjectServiceImpl extends BaseServiceImpl implements ProjectServic
         Map<String, Object> variables = new HashMap<>();
         variables.put(Constants.VAR_APPLYUSER_NAME, user.getName());
         variables.put(Constants.VAR_BUSINESS_KEY, businessKey);
+        variables.put("taskName", name);
 
         // 启动流程
         return runtimePageService.startProcessInstanceByKey(processDefinitionKey, name, variables, user.getId(),

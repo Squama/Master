@@ -160,7 +160,6 @@ public class ProjectVolumeController {
         			}
     			}
     		}
-    		
     	}
     	map.put("zhiliang", zhiliang);
     	map.put("zhiliangsugg", zhiliangsugg);
