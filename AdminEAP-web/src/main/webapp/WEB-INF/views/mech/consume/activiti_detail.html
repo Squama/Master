@@ -45,6 +45,28 @@
                                 </div>
                             </div>
                         </div>
+                        <div id="pingxing" class="dn">
+                        	<div class="col-md-12">
+	                       		  <div class="col-md-4">
+			                        	<div class="callout callout-info" id="zhiliangT" style="margin-bottom:8px;">
+						                	<h4>质量员【<span id="zhiliang">未处理</span>】</h4>
+						                	<p>审批意见：<span id="zhiliangsugg">尚未审批</span></p>
+					              		</div>
+			                      </div>
+			                      <div class="col-md-4">
+			                        	<div class="callout callout-info" id="anquanT" style="margin-bottom:8px;">
+					                		<h4>安全员【<span id="anquan">未处理</span>】</h4>
+					                		<p>审批意见：<span id="anquansugg">尚未审批</span></p>
+					              		</div>
+			                      </div>
+			                      <div class="col-md-4">
+			                        	<div class="callout callout-info" id="shigongT" style="margin-bottom:8px;">
+					                		<h4>分管施工员【<span id="shigong">未处理</span>】</h4>
+					                		<p>审批意见：<span id="shigongsugg">尚未审批</span></p>
+					              		</div>
+			                      </div>
+                        	</div>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -79,10 +101,6 @@
         		if(data.consumedQuantity != null){
         			consume = parseFloat(data.consumedQuantity);
         		}
-        		//console.log(quantity);
-        		//console.log(consume);
-        		//console.log(apply);
-        		//console.log(accDiv(accAdd(consume, apply),quantity));
         		if(accDiv(accAdd(consume, apply),quantity) >= 0.8 && accDiv(accAdd(consume, apply),quantity) < 0.95){
         			$(row).css('background-color', 'yellow');
         		}else if(accDiv(accAdd(consume, apply),quantity) >= 0.95){
@@ -99,10 +117,33 @@
         if(id!="0"){
             ajaxPost(basePath+"/mech/consume/get",{id:id},function(data){
                 form.initFormData(data);
+                if(data.status=="20" || data.status=="30"){
+                	$('#pingxing').show();
+                	ajaxPost(basePath+"/projectvolume/getpingxing",{id:data.id},function(data){
+                        var px = data.data;
+                        handlePX('zhiliang', data.data.zhiliang, data.data.zhiliangsugg);
+                        handlePX('anquan', data.data.anquan, data.data.anquansugg);
+                        handlePX('shigong', data.data.shigong, data.data.shigongsugg);
+                    });
+                }
             })
         }
         
     });
+    
+    function handlePX(type, state, sugg){
+    	if("true" == state){
+    		$('#'+type+'T').removeClass('callout-info');
+    		$('#'+type+'T').addClass('callout-success');
+    		$('#'+type).html("审批通过");
+    		$('#'+type+'sugg').html(sugg);
+    	}else if("false" == state){
+    		$('#'+type+'T').removeClass('callout-info');
+    		$('#'+type+'T').addClass('callout-danger');
+    		$('#'+type).html("审批不通过");
+    		$('#'+type+'sugg').html(sugg);
+    	}
+    }
    
     function accAdd(arg1, arg2) {
     	var r1, r2, m, c;

@@ -3,11 +3,17 @@
  */
 package com.radish.master.listener.mech;
 
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.activiti.engine.delegate.DelegateTask;
 import org.activiti.engine.delegate.TaskListener;
 
 import com.cnpc.framework.activiti.pojo.Constants;
 import com.cnpc.framework.base.service.BaseService;
+import com.cnpc.framework.utils.SecurityUtil;
+import com.radish.master.entity.common.ActivitiSuggestion;
 import com.radish.master.entity.mech.MechConsume;
 import com.radish.master.system.SpringUtil;
 
@@ -42,10 +48,27 @@ public class MechConsumeTaskCompleteListener implements TaskListener {
         String eventName = delegateTask.getEventName();
         if (EVENTNAME_COMPLETE.equals(eventName)) {
             String businessKey = delegateTask.getVariable(Constants.VAR_BUSINESS_KEY).toString();
+            String taskDefinitionKey = delegateTask.getTaskDefinitionKey();
+            String suggestion = delegateTask.getVariable("suggestion").toString();
             BaseService baseService = (BaseService) SpringUtil.getObject("baseActServer");
 
             MechConsume mb = baseService.get(MechConsume.class, businessKey);
 
+            String suggestionHql = "from ActivitiSuggestion where businessKey=:businessKey AND taskNode=:taskNode";
+            Map<String, Object> suggestionParams = new HashMap<>();
+            suggestionParams.put("businessKey", businessKey);
+            suggestionParams.put("taskNode", taskDefinitionKey);
+            ActivitiSuggestion as = baseService.get(suggestionHql, suggestionParams);
+            
+            if(as == null){
+                as = new ActivitiSuggestion();
+                as.setCreateDateTime(new Date());
+                as.setUpdateDateTime(new Date());
+                as.setBusinessKey(businessKey);
+                as.setTaskNode(taskDefinitionKey);
+                as.setApprove("true");
+            }
+            
             if (FALSE.equalsIgnoreCase(delegateTask.getVariable("approved").toString())) {
                 if ("zhiliang".equals(delegateTask.getTaskDefinitionKey())) {
                     delegateTask.setVariable(ZHILIANG, FALSE);
@@ -54,6 +77,7 @@ public class MechConsumeTaskCompleteListener implements TaskListener {
                 } else if ("anquan".equals(delegateTask.getTaskDefinitionKey())) {
                     delegateTask.setVariable(ANQUAN, FALSE);
                 }
+                as.setApprove("false");
             } else if (TRUE.equalsIgnoreCase(delegateTask.getVariable("approved").toString())) {
                 if ("zhiliang".equals(delegateTask.getTaskDefinitionKey())) {
                     delegateTask.setVariable(ZHILIANG, TRUE);
@@ -81,6 +105,10 @@ public class MechConsumeTaskCompleteListener implements TaskListener {
             }
 
             baseService.save(mb);
+            as.setSuggestion(suggestion);
+            as.setOperator(SecurityUtil.getUser().getName());
+            as.setUpdateDateTime(new Date());
+            baseService.save(as);
 
         }
         

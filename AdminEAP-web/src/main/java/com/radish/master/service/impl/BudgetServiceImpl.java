@@ -88,6 +88,7 @@ public class BudgetServiceImpl extends BaseServiceImpl implements BudgetService 
         Map<String, Object> variables = new HashMap<>();
         variables.put(Constants.VAR_APPLYUSER_NAME, user.getName());
         variables.put(Constants.VAR_BUSINESS_KEY, budget.getBudgetNo());
+        variables.put("taskName", name);
         
         
         //启动流程
@@ -295,6 +296,7 @@ public class BudgetServiceImpl extends BaseServiceImpl implements BudgetService 
         Map<String, Object> variables = new HashMap<>();
         variables.put(Constants.VAR_APPLYUSER_NAME, user.getName());
         variables.put(Constants.VAR_BUSINESS_KEY, budget.getBudgetNo());
+        variables.put("taskName", name);
         
         
         //启动流程

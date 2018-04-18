@@ -195,8 +195,14 @@ public class MechConsumeController {
     
     @RequestMapping(method = RequestMethod.POST, value = "/check")
     @ResponseBody
-    public Result validateChannel(String businessKey, HttpServletRequest request) {
-        return new Result(true, "校验通过");
+    public Result validateChannel(String businessKey) {
+    	MechConsume mc = mechService.get(MechConsume.class, businessKey);
+        
+        if("20".equals(mc.getStatus())){
+            return new Result(false,"质量员、安全员和施工员尚未全部同意！！");
+        }else{
+            return new Result(true);
+        }
     }
     
 }

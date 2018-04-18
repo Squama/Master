@@ -143,6 +143,7 @@ public class PurchaseServiceImpl extends BaseServiceImpl implements PurchaseServ
 		Map<String, Object> variables = new HashMap<>();
 		variables.put(Constants.VAR_APPLYUSER_NAME, user.getName());
 		variables.put(Constants.VAR_BUSINESS_KEY, businessKey);
+		variables.put("taskName", name);
 		// 数量超限判断
 		List<PurchaseApplyAudit> list = this.getQuantityList(businessKey);
 		String result = "false";

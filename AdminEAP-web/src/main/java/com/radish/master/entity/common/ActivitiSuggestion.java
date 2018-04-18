@@ -42,6 +42,10 @@ public class ActivitiSuggestion extends BaseEntity {
     @Header(name = "审批意见")
     @Column(name = "suggestion")
     private String suggestion;
+    
+    @Header(name = "操作人")
+    @Column(name = "operator")
+    private String operator;
 
     public String getBusinessKey() {
         return businessKey;
@@ -74,5 +78,13 @@ public class ActivitiSuggestion extends BaseEntity {
     public void setSuggestion(String suggestion) {
         this.suggestion = suggestion;
     }
+
+	public String getOperator() {
+		return operator;
+	}
+
+	public void setOperator(String operator) {
+		this.operator = operator;
+	}
 
 }

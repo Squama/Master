@@ -5,6 +5,7 @@ package com.radish.master.listener;
 
 import java.math.BigDecimal;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -82,10 +83,11 @@ public class ProjectVolumeTaskGeneralListener implements TaskListener {
             
             if(as == null){
                 as = new ActivitiSuggestion();
+                as.setCreateDateTime(new Date());
+                as.setUpdateDateTime(new Date());
                 as.setBusinessKey(businessKey);
                 as.setTaskNode(taskDefinitionKey);
                 as.setApprove("true");
-                as.setSuggestion(suggestion);
             }
 
             if (FALSE.equalsIgnoreCase(delegateTask.getVariable("approved").toString())) {
@@ -146,6 +148,8 @@ public class ProjectVolumeTaskGeneralListener implements TaskListener {
 
             baseService.save(pv);
             as.setSuggestion(suggestion);
+            as.setOperator(SecurityUtil.getUser().getName());
+            as.setUpdateDateTime(new Date());
             baseService.save(as);
             
             
