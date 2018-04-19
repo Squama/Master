@@ -62,6 +62,23 @@
         <column key="qq" header="QQ" operator="eq" width="200" align="center" />
         <column key="auditStatus" header="审核状态" width="50" operator="in" allowSort="true" render="10=正常,20=离职待审核,30=新增待审核"/>
     </query>
+    
+    <!-- 职务列表 -->
+	<query id="job_auth_list" key="id" tableName="角色列表" className="com.cnpc.framework.base.entity.Dict" pageSize="100" widthType="px" allowPaging="false">
+		<column key="rowIndex" header="序号" width="50" allowSort="false"/>
+		<column key="id" header="id" hidden="true"/> 
+		<column key="version" header="version" hidden="true"/>
+		<column key="name" header="名称" width="100" allowSort="true" />
+		<column key="code" header="编码" width="100" allowSort="true"/>
+		<column key="remark" header="备注" width="100" allowSort="false" /> 
+	</query>
+	
+    <query id="job_role_list" key="id" tableName="职务角色列表" className="com.radish.master.entity.common.JobRole" pageSize="100" widthType="px" allowPaging="false">
+		<column key="rowIndex" header="序号" width="50" allowSort="false"/>
+		<column key="id" header="id" hidden="true"/> 
+		<column key="version" header="version" hidden="true"/>
+		<column key="roleName" header="名称" width="100" allowSort="true" />
+	</query>
 
 
 </queryContext>

@@ -6,26 +6,26 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
-import com.cnpc.framework.utils.EncryptUtil;
-import com.cnpc.framework.utils.StrUtil;
-import com.radish.master.system.SpringUtil;
-
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.cnpc.framework.base.service.BaseService;
-import com.cnpc.framework.base.service.UserRoleService;
-import com.cnpc.framework.base.service.UserService;
 import com.cnpc.framework.annotation.RefreshCSRFToken;
 import com.cnpc.framework.annotation.VerifyCSRFToken;
 import com.cnpc.framework.base.entity.Dict;
 import com.cnpc.framework.base.entity.User;
 import com.cnpc.framework.base.entity.UserRole;
 import com.cnpc.framework.base.pojo.Result;
+import com.cnpc.framework.base.service.BaseService;
+import com.cnpc.framework.base.service.UserRoleService;
+import com.cnpc.framework.base.service.UserService;
+import com.cnpc.framework.utils.EncryptUtil;
+import com.cnpc.framework.utils.SecurityUtil;
+import com.cnpc.framework.utils.StrUtil;
+import com.radish.master.service.WechatService;
+import com.radish.master.system.SpringUtil;
 
 /**
 * 员工信息查询管理控制器
@@ -40,6 +40,9 @@ public class EmployeeQueryController {
     
     @Resource
     private UserService userService;
+    
+    @Resource
+    private WechatService wechatService;
 
     @Resource
     private UserRoleService userRoleService;
@@ -111,18 +114,50 @@ public class EmployeeQueryController {
             userRoleService.setRoleForRegisterUser(userId);
             //头像和用户管理
             userService.updateUserAvatar(user, request.getRealPath("/"));
+            wechatService.setUserRole(user.getJobId(), user);
         } else {
+        	boolean flag = false;
+        	String oldJobID = "";
             User oldUser=this.getUser(user.getId());
             if(!oldUser.getLoginName().equals(user.getLoginName())){
             	oldUser.setPassword(EncryptUtil.getPassword(initPassword,user.getLoginName()));
             }
+            if(!oldUser.getJobId().equals(user.getJobId())){
+            	flag=true;
+            	oldJobID = oldUser.getJobId();
+            }
             SpringUtil.copyPropertiesIgnoreNull(user, oldUser);
             oldUser.setUpdateDateTime(new Date());
             userService.update(oldUser);
+            if(flag){
+            	wechatService.clearUserRole(oldJobID, oldUser);
+            	wechatService.setUserRole(oldUser.getJobId(), oldUser);
+            }
         }
         return new Result(true);
     }
+    
+    @RequestMapping(value="/tochangepwd",method = RequestMethod.GET)
+    public String toChangePWD(){
+        return "workmanage/employee/changePWD";
+    }
 
+    @VerifyCSRFToken
+    @RequestMapping(value="/changepwd")
+    @ResponseBody
+    public Result savePWD(String userpwd){
+        User user = userService.get(User.class, SecurityUtil.getUserId());
+        user.setPassword(EncryptUtil.getPassword(userpwd,user.getLoginName()));
+        
+        try{
+        	userService.save(user);
+        }catch (Exception e) {
+        	return new Result(false);
+		}
+        
+        return new Result(true);
+    }
+    
     @RequestMapping(value="/delete/{id}",method = RequestMethod.POST)
     @ResponseBody
     public Result delete(@PathVariable("id") String id){

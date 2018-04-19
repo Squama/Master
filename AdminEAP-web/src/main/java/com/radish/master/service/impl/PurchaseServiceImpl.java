@@ -278,7 +278,7 @@ public class PurchaseServiceImpl extends BaseServiceImpl implements PurchaseServ
         PurchaseDet purchaseDetOld = this.get(PurchaseDet.class, id);
         Purchase purchase = this.get(Purchase.class, purchaseDetOld.getPurchaseID());
 
-        Dispatch dispatch = this.getDispatchByProAndPur("402880e860c947ea0160ca0239670000", purchase.getProjectID(), purchaseDetOld.getPurchaseID());
+        Dispatch dispatch = this.getDispatchByProAndPur("4028828e61d54c2a0161e4f72db3010c", purchase.getProjectID(), purchaseDetOld.getPurchaseID());
 
         List<DispatchDetail> detailList = this.getDispatchDetailList(dispatch.getId(), purchaseDetOld.getId());
 

@@ -1,0 +1,91 @@
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><li class="fa fa-remove"></li></button>
+    <h5 class="modal-title">选择角色</h5>
+</div>
+
+<div class="modal-body">
+    <form id="job-select-role-form" name="job-select-role-form" class="form-horizontal">
+        <input type="hidden" name="jobID" id="jobID">
+        <input type="hidden" name="roleName" id="roleName">
+        <div class="box-body">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label for="roleID" class="col-sm-3 control-label">选择角色<span style="color:red">*</span></label>
+                    <div class="col-sm-8">
+                        <select id="roleID" class="form-control select2" name="roleID" style="width:100%;">
+                               <option selected="selected" value="">选择一个角色</option>
+                       </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="box-footer text-right">
+            <button type="button" class="btn btn-default" data-btn-type="cancel" data-dismiss="modal">取消</button>
+            <button type="submit" class="btn btn-primary" data-btn-type="save">提交</button>
+        </div>
+    </form>
+
+</div>
+<script>
+    var form =null;
+    var id = "${id?default(0)}";
+    if(id != 0){
+    	$('#jobID',$('#job-select-role-form')).val(id);
+    }
+    $(function() {
+        form=$("#job-select-role-form").form();
+        $("#job-select-role-form").bootstrapValidator({
+            message : '请输入有效值',
+            feedbackIcons : {
+                valid : 'glyphicon glyphicon-ok',
+                invalid : 'glyphicon glyphicon-remove',
+                validating : 'glyphicon glyphicon-refresh'
+            },
+            submitHandler : function(validator, userform, submitButton) {
+                modals.confirm('确认保存？', function() {
+                    var params = form.getFormSimpleData();
+                    console.log(params);
+                    ajaxPost(basePath+'/jobmanage/savejobrole', params, function(data, status) {
+                        if(data.success){
+                            modals.hideWin(winId); 
+                            jobRoleTable.reloadData(); 
+                        }else{
+                            modals.error("保存失败！请检查角色是否重复");
+                        }            
+                    });
+                });
+            },
+            fields : {
+                roleID : {
+                    validators : {
+                        notEmpty : {
+                            message : '请选择角色'
+                        }
+                    }
+                }
+            }
+        });
+        form.initComponent();
+        
+        if(options != 0){
+            for (var i = 0, len = options.length; i < len; i++) {
+                var option = options[i];
+                $('#roleID').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+            }
+            $("#roleID").select2();
+            $("#roleID").bind("change", function () {
+                var value = $(this).val();
+                if (value === "") {
+                    return false;
+                }
+                
+                var name = "";
+                if ($("#roleID").prop('selectedIndex') > 0) {
+                    name = $("#roleID").find("option:selected").text();
+                }
+                $('#roleName').val(name);
+            });
+        }
+    });
+    
+</script>

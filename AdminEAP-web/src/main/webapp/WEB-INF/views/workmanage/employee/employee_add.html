@@ -93,7 +93,6 @@
 							</div>
 							<div class="form-group">
                                 <label for="telphone" class="col-sm-3 control-label">职务</label>
-
                                 <div class="col-sm-8">
                                     <select type="text" class="form-control" id="job" name="jobId" placeholder="职务" ></select>
                                 </div>
@@ -202,6 +201,13 @@ $(function() {
                 validators: {
                     notEmpty: {
                         message: '请输入登录名'
+                    }
+                }
+            },
+            jobId: {
+                validators: {
+                    notEmpty: {
+                        message: '请选择职务'
                     }
                 }
             },

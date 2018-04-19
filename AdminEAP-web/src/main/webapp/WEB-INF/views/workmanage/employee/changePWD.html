@@ -1,0 +1,65 @@
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><li class="fa fa-remove"></li></button>
+    <h5 class="modal-title">修改密码</h5>
+</div>
+
+<div class="modal-body">
+    <form id="main-change-pwd-form" name="main-change-pwd-form" class="form-horizontal">
+        <div class="box-body">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label for="roleID" class="col-sm-3 control-label">输入新密码<span style="color:red">*</span></label>
+                    <div class="col-sm-8">
+                        <input type="password" class="form-control" id="userpwd" name="userpwd" placeholder="新密码" autocomplete="on">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="box-footer text-right">
+            <button type="button" class="btn btn-default" data-btn-type="cancel" data-dismiss="modal">取消</button>
+            <button type="submit" class="btn btn-primary" data-btn-type="save">提交</button>
+        </div>
+    </form>
+
+</div>
+<script>
+    var form =null;
+    $(function() {
+        form=$("#main-change-pwd-form").form();
+        $("#main-change-pwd-form").bootstrapValidator({
+            message : '请输入有效值',
+            feedbackIcons : {
+                valid : 'glyphicon glyphicon-ok',
+                invalid : 'glyphicon glyphicon-remove',
+                validating : 'glyphicon glyphicon-refresh'
+            },
+            submitHandler : function(validator, userform, submitButton) {
+                modals.confirm('保存后将登出，请牢记新密码，确认保存？', function() {
+                    var params = form.getFormSimpleData();
+                    ajaxPost(basePath+'/employeeQuery/changepwd', params, function(data, status) {
+                        if(data.success){
+                            modals.hideWin("CHANGEPASSWORD"); 
+                            $('#login-logout-btn').click(); 
+                            console.log($('#login-logout-btn'));
+                            loadPage(basePath+'/logout');
+                        }else{
+                            modals.error("修改失败！请联系系统管理员");
+                        }            
+                    });
+                });
+            },
+            fields : {
+            	userpwd : {
+                    validators : {
+                        notEmpty : {
+                            message : '请填写新密码'
+                        }
+                    }
+                }
+            }
+        });
+        form.initComponent();
+        
+    });
+    
+</script>

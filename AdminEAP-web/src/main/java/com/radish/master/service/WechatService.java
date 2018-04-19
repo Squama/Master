@@ -5,6 +5,8 @@ package com.radish.master.service;
 
 import java.util.List;
 
+import com.cnpc.framework.base.entity.User;
+import com.cnpc.framework.base.entity.UserRole;
 import com.cnpc.framework.base.service.BaseService;
 import com.radish.master.pojo.Options;
 
@@ -23,5 +25,15 @@ import com.radish.master.pojo.Options;
 public interface WechatService extends BaseService {
 
     List<Options> getAgentOptions();
+    
+    List<Options> getRoleOptions();
+    
+    List<User> getUserListByJob(String jobID);
+    
+    UserRole getUserRole(String userID, String roleID);
+    
+    public void setUserRole(String jobID, User user);
+    
+    public void clearUserRole(String jobID, User user);
     
 }
