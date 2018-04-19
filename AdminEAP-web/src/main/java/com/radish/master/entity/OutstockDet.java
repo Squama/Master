@@ -20,7 +20,7 @@ import com.cnpc.framework.base.entity.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
- * 类说明  入库单明细表
+ * 类说明  出库单明细表
  *
  * <pre>
  * Modify Information:
@@ -31,9 +31,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  *
  */
 @Entity
-@Table(name = "tbl_instock_det")
+@Table(name = "tbl_outstock_det")
 @JsonIgnoreProperties(value = { "hibernateLazyInitializer", "handler", "fieldHandler" })
-public class InstockDet {
+public class OutstockDet {
 
     private static final long serialVersionUID = 3309603144734703924L;
     
@@ -43,17 +43,17 @@ public class InstockDet {
     @Column(name = "id", length = 64)
     protected String id;
     
-  @Header(name = "所属入库单id")
-  @Column(name = "instockId")
-  private String instockId;
+  @Header(name = "所属出库单id")
+  @Column(name = "outstockId")
+  private String outstockId;
 
-  @Header(name = "采购明细id")
-  @Column(name = "pDetId")
-  private String pDetId;
+  @Header(name = "库存id")
+  @Column(name = "stockId")
+  private String stockId;
   
-  @Header(name = "采购渠道id")
-  @Column(name = "channelId")
-  private String channelId;
+  @Header(name = "库存渠道id")
+  @Column(name = "sChannelId")
+  private String sChannelId;
   
   @Header(name = "物料编号")
   @Column(name = "matNumber")
@@ -71,29 +71,18 @@ public class InstockDet {
   @Column(name = "unit")
   private String unit;
   
-  @Header(name = "入库量")
-  @Column(name = "rkl")
-  private String rkl;
+  @Header(name = "出库量")
+  @Column(name = "ckl")
+  private String ckl;
   
   @Header(name = "价格")
   @Column(name = "price")
   private String price;
   
-  @Header(name = "多买入库量")
-  @Column(name = "dmrkl")
-  private String dmrkl;
-  
   @Header(name = "备注")
   @Column(name = "remark")
   private String remark;
 
-  @Header(name = "班组id")
-  @Column(name = "teamId")
-  private String teamId;
-  
-  @Header(name = "班组名")
-  @Column(name = "teamName")
-  private String teamName;
   
 public String getId() {
 	return id;
@@ -103,28 +92,28 @@ public void setId(String id) {
 	this.id = id;
 }
 
-public String getInstockId() {
-	return instockId;
+public String getOutstockId() {
+	return outstockId;
 }
 
-public void setInstockId(String instockId) {
-	this.instockId = instockId;
+public void setOutstockId(String outstockId) {
+	this.outstockId = outstockId;
 }
 
-public String getpDetId() {
-	return pDetId;
+public String getStockId() {
+	return stockId;
 }
 
-public void setpDetId(String pDetId) {
-	this.pDetId = pDetId;
+public void setStockId(String stockId) {
+	this.stockId = stockId;
 }
 
-public String getChannelId() {
-	return channelId;
+public String getsChannelId() {
+	return sChannelId;
 }
 
-public void setChannelId(String channelId) {
-	this.channelId = channelId;
+public void setsChannelId(String sChannelId) {
+	this.sChannelId = sChannelId;
 }
 
 public String getMatNumber() {
@@ -159,12 +148,12 @@ public void setUnit(String unit) {
 	this.unit = unit;
 }
 
-public String getRkl() {
-	return rkl;
+public String getCkl() {
+	return ckl;
 }
 
-public void setRkl(String rkl) {
-	this.rkl = rkl;
+public void setCkl(String ckl) {
+	this.ckl = ckl;
 }
 
 public String getPrice() {
@@ -175,14 +164,6 @@ public void setPrice(String price) {
 	this.price = price;
 }
 
-public String getDmrkl() {
-	return dmrkl;
-}
-
-public void setDmrkl(String dmrkl) {
-	this.dmrkl = dmrkl;
-}
-
 public String getRemark() {
 	return remark;
 }
@@ -191,22 +172,5 @@ public void setRemark(String remark) {
 	this.remark = remark;
 }
 
-public String getTeamId() {
-	return teamId;
-}
-
-public void setTeamId(String teamId) {
-	this.teamId = teamId;
-}
-
-public String getTeamName() {
-	return teamName;
-}
-
-public void setTeamName(String teamName) {
-	this.teamName = teamName;
-}
-
-  
   
 }

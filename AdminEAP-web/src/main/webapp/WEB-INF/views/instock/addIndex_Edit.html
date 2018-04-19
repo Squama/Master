@@ -216,14 +216,14 @@
             "ordering" : false,
             "lengthChange": false,
             "displayLength": 20,
-            "scrollY": "200px",
+            "scrollY": "150px",
             "scrollCollapse": true
         });
     	instockDetTable = new CommonTable("instock_det_table", "instock_det_list", "searchDivSDet", {
             "ordering" : false,
             "lengthChange": false,
             "displayLength": 20,
-            "scrollY": "200px",
+            "scrollY": "150px",
             "scrollCollapse": true
         });
     	 $('button[data-btn-type]').click(function() {
@@ -245,8 +245,8 @@
                 	 modals.info('请输入入库数量');
                 	 return;
                  } 
-                 if(rksl-sysl>0){
-                	 modals.info('剩余可入库数量不足，请重新输入合理的入库数量');
+                 if(rksl-sysl-3>0){
+                	 modals.info('超过可入库允许范围，请重新输入合理的入库数量');
                 	 return;
                  }
                  ajaxPost(basePath+"/instock/addStockDet?cgid="+rowId,{rksl:rksl,rkid:$("#instockID").val()},function(data){

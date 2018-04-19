@@ -1,0 +1,282 @@
+<script type="text/javascript">
+ $.fn.modal.Constructor.prototype.enforceFocus = function () {};
+ </script>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            
+            <form id="instock-form" name="instock-form" class="form-horizontal">
+                <input type="hidden" name="id">
+                <div class="box box-info">
+                    <div class="box-header with-border">
+                        <span>
+                            <i class="fa fa-edit">出库单详情</i>
+                        </span>
+                    </div>
+                    <div class="box-body">
+                        <!-- 内容 -->
+                        <div class="col-md-6">
+			                <div class="form-group">
+                                <label class="col-sm-3 control-label">所属项目<span style="color:red">*</span></label>
+                                <div class="col-sm-8">
+                                    <select id="projectId" class="form-control select2" name="projectId" style="width:100%" onChange="getBzAndBw()">
+                                        <option selected="selected" value="">选择项目</option>
+                                    </select>
+                                </div>
+                            </div> 
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">选择班组<span style="color:red">*</span></label>
+                                <div class="col-sm-8">
+                                    <select id="teamCode" class="form-control select2" name="teamCode" style="width:100%">
+                                        <option selected="selected" value="">选择班组</option>
+                                    </select>
+                                </div>
+                            </div> 
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">选择使用部位<span style="color:red">*</span></label>
+                                <div class="col-sm-8">
+                                    <select id="budgetTxId" class="form-control select2" name="budgetTxId" style="width:100%">
+                                        <option selected="selected" value="">选择使用部位</option>
+                                    </select>
+                                </div>
+                            </div> 
+		            	</div>
+		            	<div class="col-md-6">
+		            		<div class="form-group">
+                                <label class="col-sm-3 control-label">出库单名称<span style="color:red">*</span></label>
+                                <div class="col-sm-8">
+                                     <input type="text" class="form-control" id="outstock_name" name="outstock_name" placeholder="出库单名称">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">承包人<span style="color:red">*</span></label>
+                                <div class="col-sm-8">
+                                     <input type="text" class="form-control" id="cbName" name="cbName" placeholder="承包人姓名">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">出库单编号<span style="color:red">*</span></label>
+                                <div class="col-sm-8">
+                                     <input type="text" class="form-control" id="number" name="number" placeholder="出库单编号" readonly="readonly">
+                                </div>
+                            </div>
+		            	</div>
+                    </div>
+                    <div class="box-footer text-center" id="formsave">
+                        <button type="submit" class="btn btn-primary" data-btn-type="next">保存并编辑明细</button>
+                    </div>
+                </div>
+            </form>
+            <form id="purchase-det-form" name="purchase-det-form" class="form-horizontal">
+                     <div class="box-header with-border">
+                        <span>
+                            <i class="fa fa-files-o">出库物料详情</i>
+                        </span>
+                    </div>
+                    <!-- 入库单详情 -->
+                    <div class="dataTables_filter" id="searchDivSDet" style="text-align:center;height:1px;">
+                       <input type="search" id="outstockID" name="outstockId" class="form-control" operator="eq" style="display:none;">
+                       <div class="btn-group">
+                           <button type="button" class="btn btn-primary" data-btn-type="search" id="refresh" style="display:none;">查询</button>
+                       </div>
+                    </div>
+                    <div class="box-body">
+                        <!-- 内容 -->
+                        <table id="outstock_det_table" class="table table-bordered table-striped table-hover">
+                        </table>
+                    </div>
+                </div>
+            </form>
+            <div class="box-footer text-center" >
+                        <button type="button" class="btn btn-primary" data-btn-type="next" id="doYes">确认出库</button>
+                    </div>
+        </div>
+    </div>
+    
+</section>
+
+<script>
+    $.fn.modal.Constructor.prototype.enforceFocus =function(){};
+    var purchaseform = $("#instock-form").form({baseEntity: false}), initData={},
+    options=0,uOptions=0;
+    var purchaseDetTable, winId = "purchaseDetWin";
+    var instockDetTable, winId = "instockDetWin";
+    
+    var pOptions = '${projectOptions?default(0)}';
+    if(pOptions != 0){
+        options = JSON.parse(pOptions);
+    }
+    var userOptions = '${userOptions?default(0)}';
+    if(userOptions != 0){
+        uOptions = JSON.parse(userOptions);
+    }
+	var outstockId = '${outstockId?default(0)}';
+	var lx = '${lx?default("")}';
+    
+    var instockDetObject = {
+            deleteDet: function (rowId) {
+            	ajaxPost(basePath + '/outstock/delOutstockDet', {id:rowId}, function (data) {
+                    if (data.success) {
+                    	 $("#sl").val("");
+                    	purchaseDetTable.table.page('first').draw(false);
+                    	instockDetTable.table.page('first').draw(false);
+                    } else {
+                        modals.error(data.message);
+                    }
+                });
+            }
+    }
+    
+    $(function (){
+    	if(lx){
+    		$("#doYes").css("display","none");
+    	}
+        if(options != 0){
+            for (var i = 0, len = options.length; i < len; i++) {
+                var option = options[i];
+                $('#projectId').append("<option value=\"" + option.id + "\">" + option.projectName + "</option>");
+            }
+            
+            $('#projectId').select2();
+        }
+        
+        $("#instock-form").bootstrapValidator({
+            message: '请输入有效值',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            submitHandler: function () {
+                var formData = purchaseform.getFormSimpleData();
+                ajaxPost(basePath + '/outstock/save', formData, function (data) {
+                    if (data.success) {
+                    	$("#number").val(data.data.number);
+                    	
+                        $('#instock_det').show();
+                        $('#formsave').hide();
+                        
+                        $('#projectId').attr("disabled","disabled");
+                        $('#teamCode').attr("disabled","disabled");
+                        $('#budgetTxId').attr("disabled","disabled");
+                        $('#outstock_name').attr("disabled","disabled");
+                        $('#cbName').attr("disabled","disabled");
+                        
+                        
+                        $("#projectID").val(data.data.projectId);
+                        $("#outstockID").val(data.data.id);
+                        //初始化两个列表
+                        instockDetTable.reloadRowData();
+                    } else {
+                        modals.error(data.message);
+                    }
+                });
+            },
+            fields: {
+                "projectId": {
+                    validators: {
+                        notEmpty: {message: '项目不能为空'}
+                    }
+                },
+                "teamCode": {
+                    validators: {
+                        notEmpty: {message: '班组不能为空'}
+                    }
+                },
+                "budgetTxId": {
+                    validators: {
+                        notEmpty: {message: '班组不能为空'}
+                    }
+                },
+                "outstock_name": {
+                    validators: {
+                        notEmpty: {message: '出库名称不能为空'}
+                    }
+                },
+                "cbName": {
+                    validators: {
+                        notEmpty: {message: '承包人不能为空'}
+                    }
+                }
+                
+            }
+        });
+        //编辑回填
+        if(outstockId != 0){
+            ajaxPost(basePath+"/outstock/getoutstock",{id:outstockId},function(data){
+            	
+            	purchaseform.initFormData(data.data); 
+            	$('#instock_det').show();
+                $('#formsave').hide();
+                
+                $('#projectId').attr("disabled","disabled");
+                $('#teamCode').attr("disabled","disabled");
+                $('#budgetTxId').attr("disabled","disabled");
+                $('#outstock_name').attr("disabled","disabled");
+                $('#cbName').attr("disabled","disabled");
+                
+                
+                $("#projectID").val(data.data.projectId);
+                $("#outstockID").val(data.data.id);
+                
+            })
+        } 
+        
+    	instockDetTable = new CommonTable("outstock_det_table", "outstock_det_list_ck", "searchDivSDet", {
+            "ordering" : false,
+            "lengthChange": false,
+            "displayLength": 20,
+            "scrollY": "200px",
+            "scrollCollapse": true
+        });
+    	 
+    	
+    	
+        //初始化控件
+        purchaseform.initComponent();
+        
+        $("#doYes").on("click",function(){
+        	doYes();
+        })
+    });
+    function doYes(){
+    	var ckid = $("#outstockID").val();
+    	
+    	ajaxPost(basePath + '/outstock/doYes', {ckid:ckid}, function (data) {
+            if (data.success) {
+            	modals.hideWin(winId);
+           		 budgetApplyTable.reloadData();
+            	modals.info("出库成功");
+            } else {
+                modals.error("加载部位和班组失败");
+            }
+        });
+    }
+    function getBzAndBw(){
+    	$("#budgetTxId").empty();
+    	$("#teamCode").empty();
+    	var xmid = $("#projectId option:selected").val();
+    	if(xmid){
+    	ajaxPost(basePath + '/outstock/getBzAndBw', {xmid:xmid}, function (data) {
+            if (data.success) {
+            	var teams = data.teams;
+            	var bws = data.bws;
+            	for(var i=0;i<bws.length;i++){
+            		$('#budgetTxId').append("<option value=\"" + bws[i].value + "\">" + bws[i].data + "</option>");
+                }
+                $('#budgetTxId').select2();
+            	
+                for(var i=0;i<teams.length;i++){
+            		$('#teamCode').append("<option value=\"" + teams[i].value + "\">" + teams[i].data + "</option>");
+                }
+                $('#teamCode').select2();
+            	
+            } else {
+                modals.error("加载部位和班组失败");
+            }
+        });
+    	}
+    }
+    
+    
+</script>

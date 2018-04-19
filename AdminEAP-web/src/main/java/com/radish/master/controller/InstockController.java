@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.annotations.common.util.StringHelper;
 import org.hibernate.type.StringType;
 import org.hibernate.type.Type;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -155,6 +156,7 @@ public class InstockController {
     		rk.setNumber(str+i);
     		rk.setXh(i);
     	}
+    	rk.setCreatId(SecurityUtil.getUserId());
     	baseService.save(rk);
 		
 		Result r = new Result();
@@ -175,11 +177,12 @@ public class InstockController {
 	
 	@RequestMapping("/addStockDet")
 	@ResponseBody
-	public Result addStockDet(HttpServletRequest request){
+	public Result addStockDet(HttpServletRequest request,String remark){
 		Arith arith = new Arith();
 		
 		String cgid= request.getParameter("cgid");
 		String rksl = request.getParameter("rksl");
+		String dmrkl = request.getParameter("dmrkl");
 		
 		String rkid = request.getParameter("rkid");
 		PurchaseDet cg = baseService.get(PurchaseDet.class, cgid);
@@ -189,6 +192,14 @@ public class InstockController {
 		if(cgs.size()>0){
 			InstockDet rkmx = cgs.get(0);
 			rkmx.setRkl(arith.add(Double.parseDouble(rkmx.getRkl()),Double.parseDouble(rksl))+"");
+			//1
+			if(!StringHelper.isEmpty(dmrkl)){
+				rkmx.setDmrkl(arith.add(Double.parseDouble(rkmx.getDmrkl()),Double.parseDouble(dmrkl))+"");
+			}
+			//有备注就覆盖
+			if(!StringHelper.isEmpty(remark)){
+				rkmx.setRemark(remark);
+			}
 			baseService.update(rkmx);
 			
 			cg.setSurplusQuantity(arith.sub(cg.getSurplusQuantity(), Double.parseDouble(rksl)));
@@ -213,6 +224,15 @@ public class InstockController {
 		rkmx.setRkl(rksl);
 		rkmx.setUnit(cg.getUnit());
 		rkmx.setChannelId(cg.getChannelID());
+		rkmx.setTeamId(cg.getTeamCode());
+		rkmx.setTeamName(cg.getTeamName());
+		//2
+		if(StringHelper.isEmpty(dmrkl)){//多买入库量
+			rkmx.setDmrkl("0");
+		}else{
+			rkmx.setDmrkl(dmrkl);
+		}
+		rkmx.setRemark(remark);
 		baseService.save(rkmx);
 		
 		cg.setSurplusQuantity(arith.sub(cg.getSurplusQuantity(), Double.parseDouble(rksl)));
