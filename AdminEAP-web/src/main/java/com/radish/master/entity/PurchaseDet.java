@@ -3,10 +3,16 @@ package com.radish.master.entity;
 import com.cnpc.framework.annotation.Header;
 import com.cnpc.framework.base.entity.BaseEntity;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 @Table(name = "tbl_purchase_det")
@@ -21,23 +27,23 @@ public class PurchaseDet extends BaseEntity {
     @Header(name = "部位ID")
     @Column(name = "region_id")
     private String regionID;
-    
+
     @Header(name = "部位名称")
     @Column(name = "region_name")
     private String regionName;
-    
+
     @Header(name = "物料ID")
     @Column(name = "mat_number")
     private String matNumber;
-    
+
     @Header(name = "物料名称")
     @Column(name = "mat_name")
     private String matName;
-    
+
     @Header(name = "物料规格")
     @Column(name = "mat_standard")
     private String matStandard;
-    
+
     @Header(name = "物料单位")
     @Column(name = "unit")
     private String unit;
@@ -69,10 +75,24 @@ public class PurchaseDet extends BaseEntity {
     @Header(name = "存储状态")
     @Column(name = "status")
     private String status;
-    
+
     @Header(name = "已有部分被调度标识")
     @Column(name = "dispatch_status")
     private String dispatchStatus;
+
+    @Header(name = "班组编号")
+    @Column(name = "team_code")
+    private String teamCode;
+
+    @Header(name = "班组名称")
+    @Column(name = "team_name")
+    private String teamName;
+
+    @Column(name = "demand_time")
+    @Temporal(TemporalType.TIMESTAMP)
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @CreationTimestamp
+    private Date demandTime;
 
     public String getPurchaseID() {
         return purchaseID;
@@ -81,32 +101,32 @@ public class PurchaseDet extends BaseEntity {
     public void setPurchaseID(String purchaseID) {
         this.purchaseID = purchaseID;
     }
-    
+
     public String getRegionID() {
-		return regionID;
-	}
+        return regionID;
+    }
 
-	public void setRegionID(String regionID) {
-		this.regionID = regionID;
-	}
+    public void setRegionID(String regionID) {
+        this.regionID = regionID;
+    }
 
-	public String getRegionName() {
-		return regionName;
-	}
+    public String getRegionName() {
+        return regionName;
+    }
 
-	public void setRegionName(String regionName) {
-		this.regionName = regionName;
-	}
+    public void setRegionName(String regionName) {
+        this.regionName = regionName;
+    }
 
-	public String getMatName() {
-		return matName;
-	}
+    public String getMatName() {
+        return matName;
+    }
 
-	public void setMatName(String matName) {
-		this.matName = matName;
-	}
+    public void setMatName(String matName) {
+        this.matName = matName;
+    }
 
-	public String getMatNumber() {
+    public String getMatNumber() {
         return matNumber;
     }
 
@@ -186,11 +206,36 @@ public class PurchaseDet extends BaseEntity {
         this.status = status;
     }
 
-	public String getDispatchStatus() {
-		return dispatchStatus;
-	}
+    public String getDispatchStatus() {
+        return dispatchStatus;
+    }
 
-	public void setDispatchStatus(String dispatchStatus) {
-		this.dispatchStatus = dispatchStatus;
-	}
+    public void setDispatchStatus(String dispatchStatus) {
+        this.dispatchStatus = dispatchStatus;
+    }
+
+    public String getTeamCode() {
+        return teamCode;
+    }
+
+    public void setTeamCode(String teamCode) {
+        this.teamCode = teamCode;
+    }
+
+    public String getTeamName() {
+        return teamName;
+    }
+
+    public void setTeamName(String teamName) {
+        this.teamName = teamName;
+    }
+
+    public Date getDemandTime() {
+        return demandTime;
+    }
+
+    public void setDemandTime(Date demandTime) {
+        this.demandTime = demandTime;
+    }
+
 }
