@@ -1,18 +1,26 @@
 package com.cnpc.framework.base.service.impl;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
 import com.cnpc.framework.base.dao.RedisDao;
 import com.cnpc.framework.base.entity.Function;
 import com.cnpc.framework.base.entity.FunctionFilter;
 import com.cnpc.framework.base.entity.RoleFunction;
+import com.cnpc.framework.base.entity.User;
 import com.cnpc.framework.base.pojo.TreeNode;
 import com.cnpc.framework.base.service.FunctionService;
 import com.cnpc.framework.constant.RedisConstant;
 import com.cnpc.framework.utils.TreeUtil;
-import org.apache.shiro.SecurityUtils;
-import org.springframework.stereotype.Service;
-
-import javax.annotation.Resource;
-import java.util.*;
 
 @Service("functionService")
 public class FunctionServiceImpl extends BaseServiceImpl implements FunctionService {
@@ -95,12 +103,19 @@ public class FunctionServiceImpl extends BaseServiceImpl implements FunctionServ
         String key = RedisConstant.PERMISSION_PRE + userId;
         List<Function> functionList = redisDao.getList(key,Function.class);
         if (functionList == null) {
-            String sql = "select rf.* from tbl_role_function rf left join tbl_role r on rf.roleId=r.id where r.code in (:roleCodes)";
-            //String[] strs = (String[])roleCodes.toArray();
-            Map<String, Object> params = new HashMap<>();
-            params.put("roleCodes", roleCodes);
-            List<RoleFunction> roleFunctionList = super.findBySql(sql, params, RoleFunction.class);
-            functionList = this.getFunctionListWithoutRepeat(roleFunctionList);
+        	
+        	User user = this.get(User.class, userId);
+        	if("1".equals(user.getIsSuperAdmin())){
+        		functionList = getAll();
+        	}else{
+        		String sql = "select rf.* from tbl_role_function rf left join tbl_role r on rf.roleId=r.id where r.code in (:roleCodes)";
+                //String[] strs = (String[])roleCodes.toArray();
+                Map<String, Object> params = new HashMap<>();
+                params.put("roleCodes", roleCodes);
+                List<RoleFunction> roleFunctionList = super.findBySql(sql, params, RoleFunction.class);
+                functionList = this.getFunctionListWithoutRepeat(roleFunctionList);
+        	}
+        	
             redisDao.add(key, functionList);
         }
 
