@@ -13,6 +13,7 @@
         <!--隐藏域保存选中的用户-->
         <!--<input type="hidden" name="userIds" id="userIds" style="width: 100%"/>-->
         <div class="dataTables_filter" id="searchDiv_user_select" style="display: none">
+        	<input name="auditStatus" type="search" operator="not_null" style="display:none;" /> 
             <input placeholder="请输入用户名" name="name" class="form-control" type="search" likeOption="true"/>
             <div class="btn-group">
                 <button type="button" class="btn btn-default" data-btn-type="search">查询</button>
