@@ -102,8 +102,9 @@ String prefix = "/outstock/";
     		ck.setXh(i);
     	}
     	ck.setCreatId(SecurityUtil.getUserId());
-    	BudgetTx bt = baseService.get(BudgetTx.class, ck.getBudgetTxId());
-    	ck.setSybw(bt.getRegionName());
+    	//先手动输入使用部位
+    	//BudgetTx bt = baseService.get(BudgetTx.class, ck.getBudgetTxId());
+    	//ck.setSybw(bt.getRegionName());
     	baseService.save(ck);
 		
 		Result r = new Result();
