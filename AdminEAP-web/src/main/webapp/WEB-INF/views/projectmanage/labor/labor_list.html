@@ -74,6 +74,11 @@
                         modals.info('请选择要编辑的行');
                         return false;
                     }
+                    var data = laborTable.getSelectedRowData();
+                    if(data.status == '提交审核' || data.status == '审核通过'){
+                        modals.info('审核中或审核完成的条目不可编辑!');
+                        return false;
+                    }
                     loadPage(basePath+"/labor/edit/" +rowId);
                     break;
                 case "add":

@@ -1,12 +1,12 @@
 <section class="content-header">
     <h1>
-        工程量上报
+        项目班组
         <small>列表</small>
     </h1>
     <ol class="breadcrumb">
         <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
-        <li><a href="#">项目信息</a></li>
-        <li class="active">工程量上报</li>
+        <li><a href="#">项目管理</a></li>
+        <li class="active">项目班组管理</li>
     </ol>
 </section>
 
@@ -15,10 +15,11 @@
         <div class="col-xs-12">
             <div class="box">
                 <!-- /.box-header -->
-                <div class="dataTables_filter" id="searchDiv" >
-                    <select id="projectID" class="form-control select2" name="pv.project_id" style="width:200px;" operator="eq">
-                    	<option selected="selected" value="">选择一个项目</option>
+                <div class="dataTables_filter" id="searchDiv">
+                   <select id="projectID" class="form-control select2" name="projectID" style="width:200px;" operator="eq">
+                        <option selected="selected" value="">选择一个项目</option>
                     </select>
+                   <input type="search" placeholder="请输入班组名称" title="班组名称" name="teamName" class="form-control" id="teamName" operator="like" likeOption="true">
                     <div class="btn-group">
                         <button type="button" class="btn btn-primary" data-btn-type="search">查询</button>
                         <button type="button" class="btn btn-default" data-btn-type="reset">重置</button>
@@ -26,10 +27,11 @@
                     <div class="btn-group">
                         <button type="button" class="btn btn-default" data-btn-type="add">新增</button>
                         <button type="button" class="btn btn-default" data-btn-type="edit">编辑</button>
+                        <button type="button" class="btn btn-default" data-btn-type="delete">删除</button>
                     </div>
                 </div>
                 <div class="box-body">
-                    <table id="volume_table" class="table table-bordered table-striped table-hover">
+                    <table id="team_table" class="table table-bordered table-striped table-hover">
                     </table>
                 </div>
             </div>
@@ -39,49 +41,54 @@
 
 <script>
     var form = $("#searchDiv").form({baseEntity: false}), initData={};
-    var volumeTable, winId = "volumeWin";
+    var teamTable, winId = "teamWin";
     var projectOptions = '${projectOptions?default(0)}',options=0;
     if(projectOptions != 0){
-    	options = JSON.parse(projectOptions);
-    }
-    
-    var volumeManageObject = {
-            toAudit: function (volumeID) {
-            	modals.confirm("是否要提交审批？",function(){
-                    ajaxPost(basePath + '/projectvolume/start', {id:volumeID}, function (data) {
-                        if (data.success) {
-                        	volumeTable.reloadData();
-                            modals.correct("流程已启动，请等待处理");
-                        } else {
-                            modals.error(data.message);
-                        }
-                    });
-                });
-            }
+        options = JSON.parse(projectOptions);
     }
     
     $(function (){
-    	volumeTable = new CommonTable("volume_table", "volume_list", "searchDiv", null);
+    	teamTable = new CommonTable("team_table", "project_team_list", "searchDiv", null);
         
         //绑定按钮事件
         $("button[data-btn-type]").click(function () {
             var action = $(this).data("btn-type");
-            var rowId = volumeTable.getSelectedRowId();
+            var rowId = teamTable.getSelectedRowId();
             switch (action) {
                 case "edit":
                     if(!rowId){
                         modals.info('请选择要编辑的行');
                         return false;
                     }
-                    var data = volumeTable.getSelectedRowData();
-                    if(data.status != '提交审核'){
-                        modals.info('审核中或审核完成的条目不可编辑!');
+                    modals.openWin({
+                        winId:winId,
+                        title:'编辑班组',
+                        width:'900px',
+                        url:basePath+"/project/team/edit/"+rowId
+                    });
+                    break;
+                case "delete":
+                    if(!rowId){
+                        modals.info('请选择要删除的行');
                         return false;
                     }
-                    loadPage(basePath+"/projectvolume/edit/" +rowId);
+                    modals.confirm("是否要删除该行数据？",function(){
+                        ajaxPost(basePath+"/project/team/delete/"+rowId,null,function(data){
+                            if(data.success){
+                            	teamTable.reloadRowData();
+                            }else{
+                                modals.error("删除失败！请联系系统管理员");
+                            }
+                        });
+                    })
                     break;
                 case "add":
-                    loadPage(basePath+"/projectvolume/add");
+                	modals.openWin({
+                        winId:winId,
+                        title:'新增班组',
+                        width:'900px',
+                        url:basePath+"/project/team/add"
+                    });
                     break;
             }
         });
@@ -93,14 +100,6 @@
             }
             $(".select2").select2();
         }
-        
     });
     
-    function fnRenderVolume(value, type, rowObj){
-        var oper = "";
-        if(rowObj.status == '新建'){
-            oper += "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='volumeManageObject.toAudit(\"" + rowObj.id + "\")'>提交审核</a>";
-        }
-        return oper;
-    }
 </script>

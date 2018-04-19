@@ -36,6 +36,8 @@ public interface PurchaseService extends BaseService{
     
     List<Options> getBudgetCombobox();
     
+    List<Options> getTeamComboboxByProject(String projectID);
+    
     List<Options> getBudgetComboboxByProject(String projectID);
     
     List<Options> getRegionComboboxByBudgetNo(String budgetNo);

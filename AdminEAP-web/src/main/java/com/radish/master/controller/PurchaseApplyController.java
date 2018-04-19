@@ -129,6 +129,7 @@ public class PurchaseApplyController {
         Map<String, String> map = new HashMap<String, String>();
         map.put("regions", JSONArray.toJSONString(purchaseService.getRegionComboboxByBudgetNo(purchase.getBudgetNo())));
         map.put("mats", JSONArray.toJSONString(purchaseService.getMatMap()));
+        map.put("teams", JSONArray.toJSONString(purchaseService.getTeamComboboxByProject(purchase.getProjectID())));
         map.put("projectName", project.getProjectName());
         map.put("budgetName", budget.getBudgetName());
         map.put("budgetNo", budget.getBudgetNo());
@@ -164,6 +165,7 @@ public class PurchaseApplyController {
         map.put("id", purchase.getId());
         map.put("regions", JSONArray.toJSONString(purchaseService.getRegionComboboxByBudgetNo(purchase.getBudgetNo())));
         map.put("mats", JSONArray.toJSONString(purchaseService.getMatMap()));
+        map.put("teams", JSONArray.toJSONString(purchaseService.getTeamComboboxByProject(purchase.getProjectID())));
         
         return new Result(true, map);
     }

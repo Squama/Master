@@ -68,7 +68,7 @@
                    modals.openWin({
                     winId:winId,
                     title:'用料申请',
-                    width:'1000px',
+                    width:'1200px',
                     url:basePath+"/purchase/apply/add",
                     hideFunc:function(){
                     	budgetApplyTable.reloadData();
@@ -84,16 +84,26 @@
                     modals.info('请选择要编辑的行');
                     return false;
                 }
+                var data = budgetApplyTable.getSelectedRowData();
+                if(data.status != '新建'){
+                    modals.info('审核中或审核完成的条目不可编辑!');
+                    return false;
+                }
                 modals.openWin({
                     winId:winId,
                     title:'编辑申请',
-                    width:'1000px',
+                    width:'1200px',
                     url:basePath+"/purchase/apply/edit?id="+rowId,
                    });
                break;
             case 'delete':
                 if(!rowId){
                     modals.info('请选择要删除的行');
+                    return false;
+                }
+                var data = budgetApplyTable.getSelectedRowData();
+                if(data.status != '新建'){
+                    modals.info('审核中或审核完成的条目不可删除!');
                     return false;
                 }
                 modals.confirm("是否要删除该行数据？",function(){

@@ -35,5 +35,14 @@
         <column key="status" header="审核状态" allowSort="true" width="150" render="10=新建,20=综合审核,30=施工负责人,40=预算负责人,50=总负责人,60=财务负责人,70=已完成"/>
         <column key="id" header="操作" width="80" fnRender="fnRenderVolume"/>
     </query>
+    
+    <query id="project_team_list" key="id" tableName="项目班组列表" className="com.radish.master.entity.project.ProjectTeam" widthType="px">
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="teamCode" header="班组编号" classType="String" width="150"/>
+        <column key="teamName" header="班组名称" classType="String" allowSort="true" width="150"/>
+        <column key="projectName" header="所属项目" classType="String" allowSort="true" width="150"/>
+        <column key="status" header="状态" allowSort="true" width="150" render="10=生效,20=失效"/>
+    </query>
 
 </queryContext>

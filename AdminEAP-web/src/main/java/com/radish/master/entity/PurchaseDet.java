@@ -88,10 +88,9 @@ public class PurchaseDet extends BaseEntity {
     @Column(name = "team_name")
     private String teamName;
 
+    @Header(name = "需求时间")
     @Column(name = "demand_time")
-    @Temporal(TemporalType.TIMESTAMP)
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @CreationTimestamp
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date demandTime;
 
     public String getPurchaseID() {

@@ -28,6 +28,8 @@
         <column key="matStandard" header="物料规格" classType="String" width="150"/>
         <column key="unit" header="单位" classType="String" width="150"/>
         <column key="quantity" header="数量" classType="String" width="150"/>
+        <column key="teamName" header="班组名称" classType="String" width="150"/>
+        <column key="demandTime" header="需求时间" classType="java.util.Date" dateFormat="yyyy-mm-dd" width="150"/>
         <column key="id" header="删除" width="80" fnRender="fnRenderDelete"/>
     </query>
     
@@ -38,6 +40,8 @@
         <column key="matStandard" header="物料规格" classType="String" width="150"/>
         <column key="unit" header="单位" classType="String" width="150"/>
         <column key="quantity" header="数量" classType="String" width="150"/>
+        <column key="teamName" header="班组名称" classType="String" width="150"/>
+        <column key="demandTime" header="需求时间" classType="java.util.Date" dateFormat="yyyy-mm-dd" width="150"/>
         <column key="channelName" header="渠道商" classType="String" width="150"/>
         <column key="channelID" header="选择渠道商" width="80" fnRender="fnRenderChannel"/>
         <column key="stockType" hidden="true" header="type" width="80"/>
@@ -54,7 +58,7 @@
 				SELECT S.project_ID id,M.mat_name matName, '总库' AS supplier, '按库存成本平均' AS price, S.mat_ID matID, '2' AS type,S.available_num AS count FROM
 				tbl_stock S, tbl_materiel M
 				WHERE S.mat_ID = M.mat_number 
-				AND S.project_ID = '402880e860c947ea0160ca0239670000'
+				AND S.project_ID = '4028828e61d54c2a0161e4f72db3010c'
 				AND S.available_num > 0) CH
 				WHERE 1=1
             ]]>

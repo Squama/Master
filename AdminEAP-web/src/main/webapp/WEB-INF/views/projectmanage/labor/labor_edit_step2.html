@@ -143,7 +143,7 @@
     
     var fileinputDefaults = {
           maxFileSize: 102400,
-          maxFileCount:1,
+          maxFileCount:10,
           previewSettings: {
               image: {width: "160px", height: "60px"},
               text: {width: "213px", height: "160px"},
@@ -180,7 +180,7 @@
     $("#contractfileupload").file($.extend({}, defaults, {
         title:"请上传劳务合同",
         fileinput:$.extend({}, fileinputDefaults, {
-            uploadExtraData: {"id":id}
+        	uploadExtraData: {"id":id,"fileField":"contractFile"}
         }),
         showContainer:'#contractfileattachment',
         fileIdContainer:"[name='contractFile']",

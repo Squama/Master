@@ -42,6 +42,10 @@ public class ProjectTeam extends BaseEntity {
     @Header(name = "班组名称")
     @Column(name = "team_name")
     private String teamName;
+    
+    @Header(name = "状态")
+    @Column(name = "status")
+    private String status;
 
     public String getProjectID() {
         return projectID;
@@ -73,6 +77,14 @@ public class ProjectTeam extends BaseEntity {
 
     public void setTeamName(String teamName) {
         this.teamName = teamName;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
 }

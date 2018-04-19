@@ -49,18 +49,23 @@
                     <div class="dataTables_filter" style="text-align:center;margin-top:5px;">
                        <input type="hidden" name="purchaseID">
                        <input type="hidden" name="regionName">
-                       <select id="regionID" class="form-control select2" name="regionID" style="width:200px;">
+                       <input type="hidden" name="teamName">
+                       <select id="teamCode" class="form-control select2" name="teamCode" style="width:180px;">
+                           <option selected="selected" value="">选择一个班组（非必选）</option>
+                       </select>
+                       <input type="text" class="form-control" data-flag="datepicker" data-format="yyyy-mm-dd" name="demandTime" id="demandTime" style="width:80px;" placeholder="需求时间">
+                       <select id="regionID" class="form-control select2" name="regionID" style="width:180px;">
                            <option selected="selected" value="">选择一个部位</option>
                        </select>
                        <input type="hidden" name="matName">
                        <select id="matNumber" class="form-control select2" name="matNumber" style="width:150px;">
                            <option selected="selected" value="">选择一个物料</option>
                        </select>
-                       <input type="text" placeholder="规格" title="规格" name="matStandard" class="form-control" id="matStandard" readonly="readonly">
+                       <input type="text" placeholder="规格" title="规格" name="matStandard" class="form-control" id="matStandard" style="width:120px;" readonly="readonly">
                        <input type="text" placeholder="单位" title="单位" name="unit" class="form-control" id="unit" style="width:60px;" readonly="readonly">
-                       <input type="text" placeholder="数量" title="数量" name="quantity" class="form-control" id="quantity" style="width:100px;">
+                       <input type="text" placeholder="数量" title="数量" name="quantity" class="form-control" id="quantity" style="width:60px;">
                        <div class="btn-group">
-                           <button type="submit" class="btn btn-primary" data-btn-type="savetx">添加明细</button>
+                           <button type="submit" class="btn btn-primary" data-btn-type="savetx">添加</button>
                        </div>
                     </div>
                     <div class="dataTables_filter" id="searchDivPDet" style="text-align:center;height:1px;">
@@ -161,9 +166,11 @@
                     	
                     	mats = JSON.parse(data.data.mats);
                     	regions = JSON.parse(data.data.regions);
+                    	teams = JSON.parse(data.data.teams);
                     	
                     	initRegions(regions);
                     	initMats(mats);
+                    	initTeams(teams);
                     	
                         initData.purchaseID = data.data.id;
                         purchasedetform.initFormData(initData);
@@ -230,11 +237,13 @@
         //编辑回填
         if(purchaseID != 0){
             ajaxPost(basePath+"/purchase/apply/getpurchase",{purchaseID:purchaseID},function(data){
-                mats = JSON.parse(data.data.mats);
+            	mats = JSON.parse(data.data.mats);
                 regions = JSON.parse(data.data.regions);
+                teams = JSON.parse(data.data.teams);
                 
                 initRegions(regions);
                 initMats(mats);
+                initTeams(teams);
                 
                 $('#purchase_det').show();
                 $('#purchaseformsave').hide();
@@ -324,4 +333,27 @@
         }
     }
     
+    function initTeams(teams){
+        if(teams != 0){
+            for (var i = 0, len = teams.length; i < len; i++) {
+                var option = teams[i];
+                $('#teamCode').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+            }
+            
+            $('#teamCode').select2();
+            
+            $('#teamCode').bind("change", function () {
+            	var value = $(this).val();
+                if (value === "") {
+                    return false;
+                }
+                
+                var name = "";
+                if ($("#teamCode").prop('selectedIndex') > 0) {
+                    name = $("#teamCode").find("option:selected").text();
+                }
+                $('input[name="teamName"]').val(name);
+            });
+        }
+    }
 </script>

@@ -17,10 +17,11 @@
                 <div class="box">
                     <!-- /.box-header -->
                     <div class="dataTables_filter" id="searchDiv">
-                        <input placeholder="请输入姓名" name="name" class="form-control" type="search" likeOption="true" /> <input
-                            placeholder="请输入登录名" name="loginName" class="form-control" type="search" likeOption="true" />
+                        <input placeholder="请输入姓名" name="name" class="form-control" type="search" likeOption="true" /> 
+                        <input placeholder="请输入登录名" name="loginName" class="form-control" type="search" likeOption="true" />
+                        <input name="auditStatus" type="search" operator="not_null" style="display:none;" /> 
                         <div class="btn-group">
-                            <button type="button" class="btn btn-primary"   data-btn-type="search">查询</button>
+                            <button type="button" class="btn btn-primary" data-btn-type="search">查询</button>
                             <button type="button" class="btn btn-default" data-btn-type="reset">重置</button>
                         </div>
                         <div class="btn-group">

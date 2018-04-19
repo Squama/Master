@@ -8,7 +8,6 @@ import com.cnpc.framework.annotation.VerifyCSRFToken;
 import com.cnpc.framework.base.pojo.FileResult;
 import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.utils.DateUtil;
-import com.cnpc.framework.utils.FileUtil;
 import com.cnpc.framework.utils.PropertiesUtil;
 import com.cnpc.framework.utils.SecurityUtil;
 import com.cnpc.framework.utils.StrUtil;
