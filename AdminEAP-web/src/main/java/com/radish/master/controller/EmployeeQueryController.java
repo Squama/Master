@@ -102,7 +102,6 @@ public class EmployeeQueryController {
         return userService.get(User.class, id);
     }
 
-    @VerifyCSRFToken
     @RequestMapping(value="/save")
     @ResponseBody
     public Result save(User user, HttpServletRequest request){
@@ -142,7 +141,6 @@ public class EmployeeQueryController {
         return "workmanage/employee/changePWD";
     }
 
-    @VerifyCSRFToken
     @RequestMapping(value="/changepwd")
     @ResponseBody
     public Result savePWD(String userpwd){

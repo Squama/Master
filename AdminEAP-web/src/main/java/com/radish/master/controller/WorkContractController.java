@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -34,7 +33,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.fastjson.JSONArray;
 import com.cnpc.framework.base.controller.UploaderController;
-import com.cnpc.framework.base.entity.SysFile;
 import com.cnpc.framework.base.entity.User;
 import com.cnpc.framework.base.pojo.FileResult;
 import com.cnpc.framework.base.pojo.Result;
@@ -45,8 +43,6 @@ import com.cnpc.framework.utils.PropertiesUtil;
 import com.cnpc.framework.utils.SecurityUtil;
 import com.cnpc.framework.utils.StrUtil;
 import com.radish.master.entity.HtFile;
-import com.radish.master.entity.Project;
-import com.radish.master.entity.ProjectFileItem;
 import com.radish.master.entity.WorkContract;
 
 @Controller

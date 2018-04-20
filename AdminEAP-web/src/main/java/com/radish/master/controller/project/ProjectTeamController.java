@@ -96,7 +96,7 @@ public class ProjectTeamController {
         return new Result(true, map);
     }
     
-    @RequestMapping(value="/delete/{id}",method = RequestMethod.GET)
+    @RequestMapping(value="/delete/{id}",method = RequestMethod.POST)
     @ResponseBody
     public Result delete(@PathVariable("id") String id){
         
