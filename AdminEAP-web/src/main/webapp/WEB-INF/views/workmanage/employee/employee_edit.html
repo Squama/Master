@@ -7,11 +7,6 @@
 
     <form id="user-form" name="user-form" class="form-horizontal">
         <input type="hidden" name="id">
-        <input type="hidden" name="version">
-        <input type="hidden" name="isSuperAdmin">
-        <input type="hidden" name="createDateTime" data-flag="date" data-format="yyyy-mm-dd hh:ii:ss">
-        <input type="hidden" name="deleted">
-        <input type='hidden' value='${CSRFToken}' id='csrftoken'>
         <div class="box-body">
             <div class="col-md-6">
                 <div class="form-group">
@@ -104,7 +99,7 @@
     var id="${id?default(0)}";
     $(function() {
         //初始化控件
-        form=$("#user-form").form();
+        form=$("#user-form").form({baseEntity:false});
         //数据校验
         $("#user-form").bootstrapValidator({
             message : '请输入有效值',
