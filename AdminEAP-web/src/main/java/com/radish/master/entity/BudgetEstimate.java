@@ -11,36 +11,36 @@ import com.cnpc.framework.annotation.Header;
 import com.cnpc.framework.base.entity.BaseEntity;
 
 /**
-* 类说明
-* 
-* <pre>
+ * 类说明
+ * 
+ * <pre>
 * Modify Information:
 * Author        Date          Description
 * ============ =========== ============================
 * dongyan      2017年12月1日    Create this file
-* </pre>
-* 
-*/
+ * </pre>
+ * 
+ */
 @Entity
-@Table(name="tbl_budget_estimate")
+@Table(name = "tbl_budget_estimate")
 public class BudgetEstimate extends BaseEntity {
 
     private static final long serialVersionUID = -2888885202838810412L;
 
     @Header(name = "预算明细编号")
-    @Column(name = "budget_tx_id") 
+    @Column(name = "budget_tx_id")
     private String budgetTxID;
-    
+
     @Header(name = "项目编号")
-    @Column(name = "project_id") 
+    @Column(name = "project_id")
     private String projectID;
-    
+
     @Header(name = "预算编号")
-    @Column(name = "budget_no") 
+    @Column(name = "budget_no")
     private String budgetNo;
-    
+
     @Header(name = "物料编号")
-    @Column(name = "mat_number")  
+    @Column(name = "mat_number")
     private String matNumber;
 
     @Header(name = "物料名称")
@@ -58,7 +58,11 @@ public class BudgetEstimate extends BaseEntity {
     @Header(name = "数量")
     @Column(name = "quantity")
     private String quantity;
-    
+
+    @Header(name = "预算单价")
+    @Column(name = "budget_price")
+    private String budgetPrice;
+
     public String getBudgetTxID() {
         return budgetTxID;
     }
@@ -123,4 +127,11 @@ public class BudgetEstimate extends BaseEntity {
         this.quantity = quantity;
     }
 
+    public String getBudgetPrice() {
+        return budgetPrice;
+    }
+
+    public void setBudgetPrice(String budgetPrice) {
+        this.budgetPrice = budgetPrice;
+    }
 }

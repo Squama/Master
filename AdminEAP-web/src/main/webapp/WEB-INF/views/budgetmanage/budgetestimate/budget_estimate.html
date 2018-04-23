@@ -1,3 +1,5 @@
+<div style="height:794px; overflow-x:auto;">
+
 <!-- Content Header (Page header) -->
 <link rel="stylesheet" href="${basePath}/resources/cinder/editor/dataTables.editor.css">
 <link rel="stylesheet" href="${basePath}/resources/cinder/editor/editor.dataTables.min.css">
@@ -18,7 +20,7 @@
 </section> 
 
 <section class="content">
-    <div class="row">
+    <div class="row" style="width:2200px;">
         <form id="budget_import_form" name="import_form" class="form-horizontal">
 	        <div class="col-xs-6">
 	            <div class="box">
@@ -27,7 +29,7 @@
 	                    <input type="search" title="预算编码" name="budgetNo" class="form-control dn" id="budgetNo" operator="eq" style="display:none;">
 	                    <div class="btn-group fixed-button-area">
 	                        <button type="button" class="btn btn-primary"  data-btn-type="estimate">测算</button>
-	                        <button type="button" class="btn btn-warning"  data-btn-type="estimateall">全选测算</button>
+	                        <button type="button" class="btn btn-warning"  data-btn-type="estimateall">全选(左)</button>
 	                    <!--<button type="button" class="btn btn-primary" data-btn-type="merge">合并</button>
 	                        <button type="button" class="btn btn-info" data-btn-type="split">拆分</button>
 	                        <button type="button" class="btn btn-warning" data-btn-type="revoke">撤回</button> -->
@@ -55,7 +57,7 @@
         </div>
     </div>
 </section>
-
+</div>
 <script src="${basePath}/resources/cinder/editor/dataTables.editor.min.js"></script>
 <script>  
     var importform,estimateEditor;
@@ -85,7 +87,7 @@
             	$("button[data-btn-type]").click(function () {
             		var action = $(this).attr('data-btn-type');
             		var length = $('input[name="choose"]:checked').length;
-                    if(length < 1 && action != 'revoke' && action != 'start' && action != 'submitTask'){
+                    if(length < 1 && action != 'estimateall' && action != 'start' && action != 'submitTask'){
                         modals.info('请勾选要测算的行');
                         return false;
                     }
@@ -103,6 +105,10 @@
 	                            });
 	                        })
 	                        break;
+	                    case 'estimateall':
+	                    	console.log($('.choose',$('#budget_import_table')));
+	                    	$('.choose',$('#budget_import_table')).click();
+	                    	break;
 	                    case 'merge':
 	                       if(length < 2){
 	                           modals.info('请至少勾选两行');
@@ -258,13 +264,13 @@
         
         budgetEstimateObject.initButtonEvent();
         budgetEstimateObject.initEstimateModal();
-        budgetEstimateObject.initEstimateEditor();
+        //budgetEstimateObject.initEstimateEditor();
     })
 
     
     function fnRenderCheckbox(value, type, rowObj){
     	var oper = "";
-        if(rowObj.orderNo==null || rowObj.orderNo=="")oper += "&nbsp;&nbsp;&nbsp;<input type='checkbox' name='choose' value ='"+value+"'>";
+        if(rowObj.orderNo==null || rowObj.orderNo=="")oper += "&nbsp;&nbsp;&nbsp;<input type='checkbox' name='choose' class='choose' value ='"+value+"'>";
         return oper;
     }
     function fnRenderCheckboxRight(value, type, rowObj){

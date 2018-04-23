@@ -44,6 +44,7 @@
                        <input type="text" placeholder="规格" title="规格" name="matStandard" class="form-control" id="matStandard" readonly="readonly">
                        <input type="text" placeholder="单位" title="单位" name="unit" class="form-control" id="unit" readonly="readonly" >
                        <input type="text" placeholder="请输入数量" title="数量" name="quantity" class="form-control" id="quantity" >
+                       <input type="text" placeholder="请输入预算价" title="单价" onkeyup="value=value.replace(/[^\d.]/g,'')" name="budgetPrice" class="form-control" id="budgetPrice" >
                        <div class="btn-group">
                            <button type="submit" class="btn btn-primary" data-btn-type="savetx">添加明细</button>
                        </div>
@@ -141,6 +142,11 @@
                 "quantity": {
                     validators: {
                         notEmpty: {message: '物料数量不能为空'}
+                    }
+                },
+                "budgetPrice": {
+                    validators: {
+                        notEmpty: {message: '预算单价不能为空'}
                     }
                 }
             }

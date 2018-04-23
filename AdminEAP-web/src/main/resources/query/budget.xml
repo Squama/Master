@@ -66,7 +66,7 @@
                 <![CDATA[
                   SELECT be.id id,bt.region_name quotaName,p.project_name projectName,
 				  b.budget_name budgetName,be.mat_number matNumber,be.mat_name matName,
-				  be.mat_standard matStandard,be.unit unit,be.quantity quantity
+				  be.mat_standard matStandard,be.unit unit,be.quantity quantity, be.budget_price budgetPrice
 				  FROM tbl_project p,tbl_budget b,tbl_budget_tx bt,tbl_budget_estimate be
 				  WHERE p.id = b.project_id AND b.budget_no = bt.budget_no AND bt.id = be.budget_tx_id
 				  AND 1=1
@@ -82,6 +82,7 @@
             <column key="matStandard" header="规格" />
             <column key="unit" header="单位"/>
             <column key="quantity" header="数量"/>
+            <column key="budgetPrice" header="预算单价（元）"/>
             <column key="id" header="删除" fnRender="fnRenderDelete"/>
     </query>
     
