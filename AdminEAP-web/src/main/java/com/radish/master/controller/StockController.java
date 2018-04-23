@@ -67,6 +67,16 @@ public class StockController {
     	request.setAttribute("xm", JSONArray.toJSONString(xm));
         return "stock/stockQuery_list_dispatchRk";
     }
+    @RefreshCSRFToken
+    @RequestMapping(value="/dispatchManage",method = RequestMethod.GET)
+    public String dispatchManage(HttpServletRequest request){
+    	List dd = baseService.findMapBySql("select d.id value, p.purchase_name data from tbl_dispatch d , tbl_purchase p where d.purchase_id = p.id ", new Object[]{}, new Type[]{StringType.INSTANCE}, Options.class);
+    	List xm = baseService.findMapBySql("select id value, project_name data from tbl_project", new Object[]{}, new Type[]{StringType.INSTANCE}, Options.class);
+    	
+    	request.setAttribute("dd", JSONArray.toJSONString(dd));
+    	request.setAttribute("xm", JSONArray.toJSONString(xm));
+        return "stock/dispatchManage";
+    }
 
     @RefreshCSRFToken
     @RequestMapping(value="/list_out",method = RequestMethod.GET)

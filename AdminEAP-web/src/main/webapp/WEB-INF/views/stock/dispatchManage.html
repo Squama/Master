@@ -1,0 +1,114 @@
+
+<section class="content-header">
+    <h1>
+        库存调度管理
+        <small>列表</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
+        <li><a href="#">库存信息</a></li>
+        <li class="active">库存调度管理</li>
+    </ol>
+</section>
+
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="nav-tabs-custom">
+               
+                <div class="tab-content">
+                    <div class="tab-pane active" id="tab-content-list">
+			            <div class="box">
+			                <!-- /.box-header -->
+			                <div class="dataTables_filter" id="searchDiv" style="display: none">
+			                    <!--查询条件-->
+			                    <select type="search" placeholder="请输入调度单编号" title="调度单编号" name="d.id" class="form-control select2" id="budget_id" operator="like" likeOption="true"  style =" width:20%">
+			                  	<option selected="selected" value="">选择一个调度单</option>
+			                   </select>
+			                   <select type="search" placeholder="请输入来源库" title="来源库" name="d.source_project_id" class="form-control select2" id="project_name" operator="like" likeOption="true"  style =" width:20%">
+			                  	<option selected="selected" value="">选择来源库</option>
+			                   </select>
+			                   <select type="search" placeholder="请输入目标库" title="目标库" name="d.target_project_id" class="form-control select2" id="project_name1" operator="like" likeOption="true"  style =" width:20%">
+			                  	<option selected="selected" value="">选择目标库</option>
+			                   </select>
+			                    <div class="btn-group">
+			                        <button type="button" class="btn btn-primary" data-btn-type="search">查询</button>
+			                        <button type="button" class="btn btn-default" data-btn-type="reset">重置</button>
+			                        <button type="button" class="btn btn-default" data-btn-type="look">查看调度单详情</button>
+                                    <button type="button" class="btn btn-default" data-btn-type="print">打印调度单</button>
+			                    </div>
+			                </div>
+			                <div class="box-body">
+			                    <table id="dispatch_table" class="table table-bordered table-striped table-hover">
+			                    </table>
+			                </div>
+			            </div>
+		            </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+
+    var stockQueryTableD, winId = "stockQueryWin";
+	
+    var xms = '${xm?default(0)}',xm=0;
+    if(xms != 0){
+    	xm = JSON.parse(xms);
+    }
+    var dds = '${dd?default(0)}',dd=0;
+    if(dds != 0){
+    	dd = JSON.parse(dds);
+    }
+    
+    $(function (){
+        stockQueryTableD = new CommonTable("dispatch_table", "dispatch_list_gl", "searchDiv", null);
+        //绑定按钮事件
+        $("button[data-btn-type]").click(function () {
+            var action = $(this).data("btn-type");
+            var rowId = stockQueryTableD.getSelectedRowId();
+            var row  = stockQueryTableD.getSelectedRowData()
+            switch (action) {
+                case "look":
+                	if(!rowId){
+                        modals.info('请选择要查看的调度单');
+                        return false;
+                    }
+                     modals.openWin({
+                        winId: winId,
+                        title: '调度单详情',
+                        width: '900px',
+                        url: basePath + "/stock/dispatch?id=" + rowId+"&lx=look"
+                    });  
+                    break;
+                case "print":
+                	if(!rowId){
+                        modals.info('请选择要打印的调度单');
+                        return false;
+                    }
+                	var url = basePath+"/ureport/preview?_u=file:dispatch.ureport.xml&_t=1,5&id="+rowId;
+               	 	window.open(url);
+                    break;
+            }
+        });
+        if(xm != 0){
+            for (var i = 0, len = xm.length; i < len; i++) {
+                var x = xm[i];
+                $('#project_name').append("<option value=\"" + x.value + "\">" + x.data + "</option>");
+            	$('#project_name1').append("<option value=\"" + x.value + "\">" + x.data + "</option>");
+            }
+            $(".select2").select2();
+        }
+        if(dd != 0){
+            for (var i = 0, len = dd.length; i < len; i++) {
+                var d = dd[i];
+                $('#budget_id').append("<option value=\"" + d.value + "\">" + d.data + "</option>");
+            }
+            $(".select2").select2();
+        }
+        
+    });
+
+</script>

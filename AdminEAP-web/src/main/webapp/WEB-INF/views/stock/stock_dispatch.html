@@ -16,7 +16,7 @@
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="col-sm-3 control-label">调度单编号</label>
+					<label class="col-sm-3 control-label">调度单名称</label>
 					<div class="col-sm-8">
 						<input id="purchase_id" class="form-control"  style="width:100%" readonly="readonly" >
 					</div>
@@ -42,7 +42,7 @@
 							<div class="dataTables_filter" id="searchDiv1" style="display: none">
 							 	<input type="search" title="调度单id" id="dispatch_id1" name="dd.dispatch_id" class="form-control" id="project_name" operator="like" likeOption="true" style="display: none">
 								<div class="btn-group">
-							         <button type="button" class="btn btn-primary" data-btn-type="doDis">确认调度</button>
+							         <button type="button" class="btn btn-primary" data-btn-type="doDis" id="doDis">确认调度</button>
 							    </div>		
 							</div>
 							<div class="box-body">
@@ -65,8 +65,10 @@
     $(function() {
     	if(lx=="ck"){
     		$(".modal-title").text("库存物料出库");
-    	}else if(lx="rk"){
+    	}else if(lx=="rk"){
     		$(".modal-title").text("库存物料入库");
+    	}else if(lx=="look"){
+    		$("#doDis").css("display","none");
     	}
         //初始化控件
         form=$("#stock-form").form();

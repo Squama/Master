@@ -70,7 +70,7 @@
 		          SELECT mx.*  
 		          FROM
                   tbl_purchase_det mx 
-                  WHERE 1=1 and mx.surplus_quantity>0 
+                  WHERE 1=1 and mx.surplus_quantity>0 and mx.stock_type='1'
 		        ]]>
 		    </sql>
         <column key="rowIndex" header="序号" width="80"/>

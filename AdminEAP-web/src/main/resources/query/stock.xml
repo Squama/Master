@@ -138,6 +138,27 @@
 			<column key="create_date_time" header="创建时间" classType="String" width="150" dateFormat="yyyy-mm-dd"/>
 			<column key="status" header="调度状态" classType="String" width="150"  render="10=新建,20=调度出库,60=调度完成"/>
 	</query>
+	<query id="dispatch_list_gl" key="id" tableName="调度单管理列表" widthType="px">
+			<sql>
+		        <![CDATA[
+		          SELECT 
+		          p.purchase_name purchase_name , d.create_date_time create_date_time,pmb.project_name mbName ,
+		          ply.project_name lyName , d.source_project_id sourceId , d.target_project_id targetId ,
+		          d.id id ,d.status status 
+		          FROM
+                  tbl_purchase p ,tbl_dispatch d ,tbl_project pmb,tbl_project ply
+                  WHERE 1=1 and d.purchase_id = p.id and d.source_project_id = ply.id and d.target_project_id = pmb.id 
+		        ]]>
+		    </sql>
+		    <column key="rowIndex" header="序号" width="50" allowSort="false"/>
+	        <column key="id" header="调度单id" classType="String" hidden="true"/>
+	        <column key="purchase_name" header="调度单名称" classType="String" width="150" allowSort="true"/>
+		    <column key="lyName" header="来源库" classType="String"  width="150"/>
+	        <column key="mbName" header="目标库" classType="String" width="150"/>
+			<column key="create_date_time" header="创建时间" classType="String" width="150" dateFormat="yyyy-mm-dd"/>
+			<column key="status" header="调度状态" classType="String" width="150"  render="10=新建,20=调度出库,30=调度入库,60=调度完成"/>
+	</query>
+	
 	<query id="stockDet_ck" key="id" tableName="库存详情查看列表" widthType="px">
 			<sql>
 		        <![CDATA[
