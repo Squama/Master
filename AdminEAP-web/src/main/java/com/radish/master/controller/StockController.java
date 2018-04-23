@@ -82,12 +82,12 @@ public class StockController {
     @RefreshCSRFToken
     @RequestMapping(value="/test",method = RequestMethod.GET)
     public String test(HttpServletRequest request){
-        //List<StockChannel> list = stockService.getStockChannelOutList("PTEST01","GG100001",500.0);
-        String sql = "select * from tbl_stock_channel where  mat_id = 'GJ100001'";
-        List<StockChannel> list = baseService.findBySql(sql,StockChannel.class);
-        //stockService.thawStockChannel(list);
-        stockService.getStockChannelFrozenList("402880e860c947ea0160ca0239670000","GG100001",500.0);
-        return "stock/stock_history_list";
+        String kcid = request.getParameter("kcid");
+        request.setAttribute("kcid", kcid);
+        List<Project> p = baseService.findMapBySql("select p.project_name projectName ,p.id id  from tbl_project p ", new Object[]{}, new Type[]{StringType.INSTANCE}, Project.class);
+		request.setAttribute("projectOptions", JSONArray.toJSONString(p));
+		
+        return "stock/stockQuery_look";
     }
 
     @RefreshCSRFToken
@@ -513,5 +513,33 @@ public class StockController {
     @RequestMapping("/addMatIndex")
     public String addMatIndex(HttpServletRequest request){
     	return "stock/addMat";
+    }
+    /**
+		 * 获取库存渠道详情
+		 * @author wangzhihao
+		 * @创建时间 2018年4月23日 上午11:18:35
+		 * @return
+		 */
+    @RequestMapping("/getstockDet")
+    @ResponseBody
+    public Map<String,Object> getstockDet(HttpServletRequest request){
+    	Map<String,Object> m = new HashMap<String,Object>();
+    	
+    	String kcid = request.getParameter("kcid");
+    	Stock kc = baseService.get(Stock.class, kcid);
+    	
+    	List<Materiel> wl = baseService.findBySql(" select * from tbl_materiel where mat_number='"+kc.getMat_id()+"'", Materiel.class); 
+    	if(wl.size()>0){
+    		m.put("projectId", kc.getProject_id());
+    		m.put("matName", wl.get(0).getMat_name());
+    		m.put("available_num", kc.getAvailable_num());
+    		m.put("matNumber", wl.get(0).getMat_number());
+    		m.put("matStandard", wl.get(0).getMat_number());
+    		m.put("unit", wl.get(0).getUnit());
+    		m.put("success", true);
+    	}else{
+    		m.put("success", false);
+    	}
+    	return m;
     }
 }

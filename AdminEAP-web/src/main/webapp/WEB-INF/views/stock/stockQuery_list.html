@@ -44,8 +44,8 @@
                                 </div>
 
                                 <div class="btn-group">
-                                    <!-- <button type="button" class="btn btn-default" data-btn-type="detail">查看详情</button> -->
-                                    <button type="button" class="btn btn-primary" data-btn-type="add">物料入库</button>
+                                     <button type="button" class="btn btn-primary" data-btn-type="detail">查看详情</button> 
+                                    <!-- <button type="button" class="btn btn-primary" data-btn-type="add">物料入库</button> -->
                                 </div>
                             </div>
                             <div class="box-body" >
@@ -92,9 +92,9 @@
                 case"detail":
                     modals.openWin({
                         winId:winId,
-                        title:'物料入库',
+                        title:'查看详情',
                         width:'900px',
-                        url:basePath+"/stock/test"
+                        url:basePath+"/stock/test?kcid="+rowId
                     });
                     break;
                 case "add":

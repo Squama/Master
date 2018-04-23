@@ -44,7 +44,7 @@
 		<column key="unit" header="单位" classType="String" width="150"/>
 		<!--<column key="operationPersonID" header="操作人员编号" classType="String" width="150"/>-->
 		<column key="userName" header="操作人员姓名" classType="String" width="150"/>
-		<column key="operationTime" header="操作时间" classType="Date" id="s.storage_time" operator="between" allowSort="true"  width="150" dateFormat="yyyy-mm-dd"/>
+		<column key="operationTime" header="操作时间" classType="Date" id="s.operation_time" operator="between" allowSort="true"  width="150" dateFormat="yyyy-mm-dd"/>
 		<column key="useTpye" header="操作类型" classType="String" width="150"  render="1=采购入库,2=调度入库,3=消耗出库,4=调度出库,5=初始化入库"/>
 		<column key="stockSource" header="来源/流向" classType="String" width="150"/>
 	</query>
@@ -137,6 +137,24 @@
 	        <column key="mbName" header="目标库" classType="String" width="150"/>
 			<column key="create_date_time" header="创建时间" classType="String" width="150" dateFormat="yyyy-mm-dd"/>
 			<column key="status" header="调度状态" classType="String" width="150"  render="10=新建,20=调度出库,60=调度完成"/>
+	</query>
+	<query id="stockDet_ck" key="id" tableName="库存详情查看列表" widthType="px">
+			<sql>
+		        <![CDATA[
+		          SELECT 
+		          kcqd.id id , kcqd.available_num available_num,kcqd.create_date_time create_date_time ,
+				  qd.price price ,qd.supplier supplier  ,kcqd.mat_id mat_id,kcqd.project_id project_id       
+		          FROM 
+                  tbl_stock_channel kcqd ,tbl_channel qd 
+                  WHERE 1=1 and kcqd.channel_id = qd.id 
+		        ]]>
+		    </sql>
+		    <column key="rowIndex" header="序号" width="50" allowSort="false"/>
+	        <column key="id" header="库存渠道id" classType="String" hidden="true"/>
+	        <column key="supplier" header="供应商" classType="String" width="150" />
+		    <column key="available_num" header="可用数量" classType="String"  width="150"/>
+	        <column key="price" header="单价" classType="String" width="150"/>
+			<column key="create_date_time" header="入库时间" classType="String" width="150" dateFormat="yyyy-mm-dd" allowSort="true"/>
 	</query>
 	
 </queryContext>

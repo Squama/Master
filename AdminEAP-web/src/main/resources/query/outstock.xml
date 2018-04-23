@@ -39,23 +39,41 @@
         <column key="id" header="库存id" classType="String" allowSort="true" width="150" hidden="true"/>
     </query>
     
-    <query id="outstock_det_list" key="id" tableName="出库单明细" className="com.radish.master.entity.OutstockDet" widthType="px" pageSize="20">
+    <query id="outstock_det_list" key="id" tableName="出库单明细"  widthType="px" pageSize="20">
+    	<sql>
+		        <![CDATA[
+		          SELECT mx.*  ,qd.supplier supplier 
+		          FROM
+                  tbl_outstock_det mx ,tbl_stock_channel cgqd,tbl_channel qd
+                  WHERE 1=1 and cgqd.id = mx.sChannelId and qd.id = cgqd.channel_id  
+		        ]]>
+		  </sql>
         <column key="rowIndex" header="序号" width="80"/>
         <column key="id" header="入库单id" classType="String" allowSort="true" width="150" hidden="true"/>
         <column key="matName" header="物料名称" classType="String" width="150" />
         <column key="matStandard" header="物料规格" classType="String" width="150"/>
         <column key="unit" header="单位" classType="String" width="150"/>
+        <column key="supplier" header="供应商" classType="String" width="150"/>
         <column key="price" header="价格(元)" classType="String" width="150"/>
         <column key="ckl" header="出库量" classType="String" width="150"/>
         <column key="id" header="操作" width="80" fnRender="fnRenderDelete"/>
     </query>
 	
-	<query id="outstock_det_list_ck" key="id" tableName="出库单明细" className="com.radish.master.entity.OutstockDet" widthType="px" pageSize="20">
+	<query id="outstock_det_list_ck" key="id" tableName="出库单明细(查看)" widthType="px" pageSize="20">
+        <sql>
+		        <![CDATA[
+		          SELECT mx.*  ,qd.supplier supplier 
+		          FROM
+                  tbl_outstock_det mx ,tbl_stock_channel cgqd,tbl_channel qd
+                  WHERE 1=1 and cgqd.id = mx.sChannelId and qd.id = cgqd.channel_id  
+		        ]]>
+		  </sql>
         <column key="rowIndex" header="序号" width="80"/>
         <column key="id" header="入库单id" classType="String" allowSort="true" width="150" hidden="true"/>
         <column key="matName" header="物料名称" classType="String" width="150" />
         <column key="matStandard" header="物料规格" classType="String" width="150"/>
         <column key="unit" header="单位" classType="String" width="150"/>
+        <column key="supplier" header="供应商" classType="String" width="150"/>
         <column key="price" header="价格(元)" classType="String" width="150"/>
         <column key="ckl" header="出库量" classType="String" width="150"/>
     </query>
