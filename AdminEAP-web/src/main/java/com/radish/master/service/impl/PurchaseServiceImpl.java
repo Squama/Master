@@ -241,12 +241,13 @@ public class PurchaseServiceImpl extends BaseServiceImpl implements PurchaseServ
             purchaseDetOld.setChannelName("总库调度");
             purchaseDetOld.setPrice(sum.divide(new BigDecimal(num), 2, RoundingMode.HALF_UP).toPlainString());
             purchaseDetOld.setSurplusQuantity(purchaseDetOld.getQuantity());
+            purchaseDetOld.setStockType("2");
             this.save(purchaseDetOld);
         } else {
             BigDecimal quantity = new BigDecimal(purchaseDetOld.getQuantity());
             purchaseDetOld.setQuantity(quantity.subtract(new BigDecimal(num)).doubleValue());
             purchaseDetOld.setSurplusQuantity(purchaseDetOld.getQuantity());
-            purchaseDetOld.setDispatchStatus("1");
+            purchaseDetOld.setStockType("1");
 
             this.update(purchaseDetOld);
 

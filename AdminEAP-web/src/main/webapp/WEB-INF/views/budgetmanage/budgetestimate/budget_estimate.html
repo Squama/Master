@@ -2,7 +2,7 @@
 <link rel="stylesheet" href="${basePath}/resources/cinder/editor/dataTables.editor.css">
 <link rel="stylesheet" href="${basePath}/resources/cinder/editor/editor.dataTables.min.css">
 <style>
-.fixed-button-area{position:fixed;z-index:1;left:45%;}
+.fixed-button-area{position:fixed;z-index:1;left:50%;}
 .DTE_Field_InputControl{color:black;}
 </style>
 
@@ -26,10 +26,11 @@
 	                    <input type="search" title="定额编号" name="quotaNo" class="form-control dn" id="quotaNo" operator="not_null" style="display:none;">
 	                    <input type="search" title="预算编码" name="budgetNo" class="form-control dn" id="budgetNo" operator="eq" style="display:none;">
 	                    <div class="btn-group fixed-button-area">
-	                        <button type="button" class="btn btn-success"  data-btn-type="estimate">测算</button>
-	                        <button type="button" class="btn btn-primary" data-btn-type="merge">合并</button>
+	                        <button type="button" class="btn btn-primary"  data-btn-type="estimate">测算</button>
+	                        <button type="button" class="btn btn-warning"  data-btn-type="estimateall">全选测算</button>
+	                    <!--<button type="button" class="btn btn-primary" data-btn-type="merge">合并</button>
 	                        <button type="button" class="btn btn-info" data-btn-type="split">拆分</button>
-	                        <!-- <button type="button" class="btn btn-warning" data-btn-type="revoke">撤回</button> -->
+	                        <button type="button" class="btn btn-warning" data-btn-type="revoke">撤回</button> -->
 	                        <button type="button" class="btn btn-success" data-btn-type="start">提交</button>
 	                    </div>
 	                </div>

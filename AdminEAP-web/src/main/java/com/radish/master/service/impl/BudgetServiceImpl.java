@@ -14,6 +14,7 @@ import com.radish.master.entity.Budget;
 import com.radish.master.entity.BudgetImport;
 import com.radish.master.entity.BudgetTx;
 import com.radish.master.entity.Materiel;
+import com.radish.master.entity.Project;
 import com.radish.master.entity.PurchaseApplyAudit;
 import com.radish.master.pojo.Options;
 import com.radish.master.service.BudgetService;
@@ -285,9 +286,11 @@ public class BudgetServiceImpl extends BaseServiceImpl implements BudgetService 
         
         this.update(budget);
         
+        Project project = this.get(Project.class, budget.getProjectID());
+        
         //给流程起个名字
         User user = SecurityUtil.getUser();
-        String name = user.getName() + "申请测算审批：" + budget.getBudgetName() + "，所属项目：" + budget.getProjectID();
+        String name = user.getName() + "申请测算审批：" + budget.getBudgetName() + "，所属项目：" + project.getProjectName();
         
         //businessKey
         String businessKey = budget.getBudgetNo();

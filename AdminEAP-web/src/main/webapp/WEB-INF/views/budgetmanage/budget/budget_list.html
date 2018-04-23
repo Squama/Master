@@ -101,11 +101,14 @@
         if (value) {
             var ret=value;
             ajaxPost(basePath + "/budget/getproject/"+value, null, function (data) {
-                ret=data.data;
+                ret=data.message;
             })
+            
             return ret;
-        } else
-            return value;
+        } else{
+        	return value;
+        }
+            
     }
     
     function fnRenderConsume(value, type, rowObj){
