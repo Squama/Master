@@ -62,6 +62,7 @@ public class ProjectVolumeTaskGeneralListener implements TaskListener {
         put("yusuan", "预算人员");
         put("boss", "分公司主管");
         put("account", "财务人员");
+        put("jingyingke", "经营科");
     }};
 
     @Override
