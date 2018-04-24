@@ -68,6 +68,66 @@ public class ProjectVolume extends BaseEntity {
     @Column(name = "status")
     private String status;
 
+    @Header(name = "申报机械费")
+    @Column(name = "apply_mech")
+    private String applyMech;
+
+    @Header(name = "申报人工费")
+    @Column(name = "apply_labour")
+    private String applyLabour;
+
+    @Header(name = "申报材料费")
+    @Column(name = "apply_mat")
+    private String applyMat;
+
+    @Header(name = "申报扣款")
+    @Column(name = "apply_debit")
+    private String applyDebit;
+
+    @Header(name = "申报小计")
+    @Column(name = "apply_sub")
+    private String applySub;
+
+    @Header(name = "经营科审核机械费")
+    @Column(name = "business_mech")
+    private String businessMech;
+
+    @Header(name = "经营科审核人工费")
+    @Column(name = "business_labour")
+    private String businessLabour;
+
+    @Header(name = "经营科审核材料费")
+    @Column(name = "business_mat")
+    private String businessMat;
+
+    @Header(name = "经营科审核扣款")
+    @Column(name = "business_debit")
+    private String businessDebit;
+
+    @Header(name = "经营科审核小计")
+    @Column(name = "business_sub")
+    private String businessSub;
+
+    @Header(name = "财务审核机械费")
+    @Column(name = "final_mech")
+    private String finalMech;
+
+    @Header(name = "财务审核人工费")
+    @Column(name = "final_labour")
+    private String finalLabour;
+
+    @Header(name = "财务审核材料费")
+    @Column(name = "final_mat")
+    private String finalMat;
+
+    @Header(name = "财务审核扣款")
+    @Column(name = "final_debit")
+    private String finalDebit;
+
+    @Header(name = "财务审核小计")
+    @Column(name = "final_sub")
+    private String finalSub;
+
     public String getProjectID() {
         return projectID;
     }
@@ -130,6 +190,126 @@ public class ProjectVolume extends BaseEntity {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getApplyMech() {
+        return applyMech;
+    }
+
+    public void setApplyMech(String applyMech) {
+        this.applyMech = applyMech;
+    }
+
+    public String getApplyLabour() {
+        return applyLabour;
+    }
+
+    public void setApplyLabour(String applyLabour) {
+        this.applyLabour = applyLabour;
+    }
+
+    public String getApplyMat() {
+        return applyMat;
+    }
+
+    public void setApplyMat(String applyMat) {
+        this.applyMat = applyMat;
+    }
+
+    public String getApplyDebit() {
+        return applyDebit;
+    }
+
+    public void setApplyDebit(String applyDebit) {
+        this.applyDebit = applyDebit;
+    }
+
+    public String getApplySub() {
+        return applySub;
+    }
+
+    public void setApplySub(String applySub) {
+        this.applySub = applySub;
+    }
+
+    public String getBusinessMech() {
+        return businessMech;
+    }
+
+    public void setBusinessMech(String businessMech) {
+        this.businessMech = businessMech;
+    }
+
+    public String getBusinessLabour() {
+        return businessLabour;
+    }
+
+    public void setBusinessLabour(String businessLabour) {
+        this.businessLabour = businessLabour;
+    }
+
+    public String getBusinessMat() {
+        return businessMat;
+    }
+
+    public void setBusinessMat(String businessMat) {
+        this.businessMat = businessMat;
+    }
+
+    public String getBusinessDebit() {
+        return businessDebit;
+    }
+
+    public void setBusinessDebit(String businessDebit) {
+        this.businessDebit = businessDebit;
+    }
+
+    public String getBusinessSub() {
+        return businessSub;
+    }
+
+    public void setBusinessSub(String businessSub) {
+        this.businessSub = businessSub;
+    }
+
+    public String getFinalMech() {
+        return finalMech;
+    }
+
+    public void setFinalMech(String finalMech) {
+        this.finalMech = finalMech;
+    }
+
+    public String getFinalLabour() {
+        return finalLabour;
+    }
+
+    public void setFinalLabour(String finalLabour) {
+        this.finalLabour = finalLabour;
+    }
+
+    public String getFinalMat() {
+        return finalMat;
+    }
+
+    public void setFinalMat(String finalMat) {
+        this.finalMat = finalMat;
+    }
+
+    public String getFinalDebit() {
+        return finalDebit;
+    }
+
+    public void setFinalDebit(String finalDebit) {
+        this.finalDebit = finalDebit;
+    }
+
+    public String getFinalSub() {
+        return finalSub;
+    }
+
+    public void setFinalSub(String finalSub) {
+        this.finalSub = finalSub;
     }
 
 }

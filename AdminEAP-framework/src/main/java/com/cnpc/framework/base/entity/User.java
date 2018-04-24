@@ -19,7 +19,6 @@ public class User extends BaseEntity {
 
     private static final long serialVersionUID = 6093546087036436583L;
 
-
     @Header(name = "姓名")
     @Column(name = "name")
     private String name;
@@ -69,18 +68,50 @@ public class User extends BaseEntity {
     @Column(name = "isSuperAdmin")
     private String isSuperAdmin;
 
-    @Header(name="部门ID")
-    @Column(name="dept_id")
+    @Header(name = "部门ID")
+    @Column(name = "dept_id")
     private String deptId;
 
-    @Header(name="职位ID")
-    @Column(name="job_id")
+    @Header(name = "职位ID")
+    @Column(name = "job_id")
     private String jobId;
-    
-    @Header(name="审核状态")
-    @Column(name="audit_status")
+
+    @Header(name = "审核状态")
+    @Column(name = "audit_status")
     private String auditStatus;
-    
+
+    @Header(name = "身份证号")
+    @Column(name = "identification_number")
+    private String identificationNumber;
+
+    @Header(name = "民族")
+    @Column(name = "ethnic")
+    private String ethnic;
+
+    @Header(name = "学历")
+    @Column(name = "education")
+    private String education;
+
+    @Header(name = "家庭住址")
+    @Column(name = "address")
+    private String address;
+
+    @Header(name = "紧急联系人电话")
+    @Column(name = "emergency_contract_phone")
+    private String emergencyContractPhone;
+
+    @Header(name = "紧急联系人")
+    @Column(name = "emergency_contract")
+    private String emergencyContract;
+
+    @Header(name = "工种")
+    @Column(name = "workType")
+    private String workType;
+
+    @Header(name = "基础工资")
+    @Column(name = "basic_salary")
+    private String basicSalary;
+
     @Transient
     private String avatarId;
 
@@ -239,12 +270,76 @@ public class User extends BaseEntity {
         this.auditStatus = auditStatus;
     }
 
-	public String getJobId() {
-		return jobId;
-	}
+    public String getJobId() {
+        return jobId;
+    }
 
-	public void setJobId(String jobId) {
-		this.jobId = jobId;
-	}
-    
+    public void setJobId(String jobId) {
+        this.jobId = jobId;
+    }
+
+    public String getIdentificationNumber() {
+        return identificationNumber;
+    }
+
+    public void setIdentificationNumber(String identificationNumber) {
+        this.identificationNumber = identificationNumber;
+    }
+
+    public String getEthnic() {
+        return ethnic;
+    }
+
+    public void setEthnic(String ethnic) {
+        this.ethnic = ethnic;
+    }
+
+    public String getEducation() {
+        return education;
+    }
+
+    public void setEducation(String education) {
+        this.education = education;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getEmergencyContractPhone() {
+        return emergencyContractPhone;
+    }
+
+    public void setEmergencyContractPhone(String emergencyContractPhone) {
+        this.emergencyContractPhone = emergencyContractPhone;
+    }
+
+    public String getEmergencyContract() {
+        return emergencyContract;
+    }
+
+    public void setEmergencyContract(String emergencyContract) {
+        this.emergencyContract = emergencyContract;
+    }
+
+    public String getWorkType() {
+        return workType;
+    }
+
+    public void setWorkType(String workType) {
+        this.workType = workType;
+    }
+
+    public String getBasicSalary() {
+        return basicSalary;
+    }
+
+    public void setBasicSalary(String basicSalary) {
+        this.basicSalary = basicSalary;
+    }
+
 }

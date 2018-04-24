@@ -35,6 +35,10 @@ public class Labor extends BaseEntity {
     @Column(name = "project_name")
     private String projectName;
 
+    @Header(name = "施工班组ID")
+    @Column(name = "construction_team_id")
+    private String constructionTeamID;
+
     @Header(name = "施工班组")
     @Column(name = "construction_team")
     private String constructionTeam;
@@ -66,6 +70,26 @@ public class Labor extends BaseEntity {
     @Header(name = "状态")
     @Column(name = "status")
     private String status;
+
+    @Header(name = "承包人")
+    @Column(name = "contractor")
+    private String contractor;
+
+    @Header(name = "机械费")
+    @Column(name = "mech_price")
+    private String mechPrice;
+
+    @Header(name = "人工费")
+    @Column(name = "labour_price")
+    private String labourPrice;
+
+    @Header(name = "材料费")
+    @Column(name = "mat_price")
+    private String matPrice;
+
+    @Header(name = "扣款")
+    @Column(name = "debit_price")
+    private String debitPrice;
 
     public String getProjectID() {
         return projectID;
@@ -145,6 +169,54 @@ public class Labor extends BaseEntity {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getConstructionTeamID() {
+        return constructionTeamID;
+    }
+
+    public void setConstructionTeamID(String constructionTeamID) {
+        this.constructionTeamID = constructionTeamID;
+    }
+
+    public String getContractor() {
+        return contractor;
+    }
+
+    public void setContractor(String contractor) {
+        this.contractor = contractor;
+    }
+
+    public String getMechPrice() {
+        return mechPrice;
+    }
+
+    public void setMechPrice(String mechPrice) {
+        this.mechPrice = mechPrice;
+    }
+
+    public String getLabourPrice() {
+        return labourPrice;
+    }
+
+    public void setLabourPrice(String labourPrice) {
+        this.labourPrice = labourPrice;
+    }
+
+    public String getMatPrice() {
+        return matPrice;
+    }
+
+    public void setMatPrice(String matPrice) {
+        this.matPrice = matPrice;
+    }
+
+    public String getDebitPrice() {
+        return debitPrice;
+    }
+
+    public void setDebitPrice(String debitPrice) {
+        this.debitPrice = debitPrice;
     }
 
 }
