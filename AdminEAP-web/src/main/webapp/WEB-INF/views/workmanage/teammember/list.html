@@ -1,0 +1,62 @@
+<section class="content-header">
+    <h1>
+        项目
+        <small>列表</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
+        <li><a href="#">办公管理</a></li>
+        <li class="active">项目人员管理</li>
+    </ol>
+</section>
+
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <!-- /.box-header -->
+                <div class="dataTables_filter" id="searchDiv" style="display: none">
+                   <input type="search" placeholder="请输入项目名" title="项目名" name="project_name" class="form-control" id="project_name" operator="like" likeOption="true">
+                   <input type="search" placeholder="请输入责任人" title="责任人" name="charge_name" class="form-control" id="charge_name" operator="like" likeOption="true">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-primary" data-btn-type="search">查询</button>
+                        <button type="button" class="btn btn-default" data-btn-type="reset">重置</button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <table id="member_project_table" class="table table-bordered table-striped table-hover">
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    var form = $("#searchDiv").form({baseEntity: false}), initData={};
+    var memberProjectTable, winId = "projectMemberWin";
+    var projectMemberObject = {
+            config: function (projectID) {
+            	loadPage(basePath+"/project/team/member/edit/" +projectID);
+            },
+            detail: function (projectID){
+            	modals.openWin({
+                    winId:winId,
+                    title:'班组人员详情',
+                    width:'900px',
+                    url:basePath+"/project/team/member/detail/" + projectID
+                   });
+            }
+    }
+    $(function (){
+    	memberProjectTable = new CommonTable("member_project_table", "member_project_list", "searchDiv", null);
+    });
+    
+    function fnRenderMember(value, type, rowObj) {
+        var oper = "";
+        oper += "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='projectMemberObject.config(\"" + value + "\")'>配置人员</a>";
+        oper += "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='projectMemberObject.detail(\"" + value + "\")'>查看人员</a>";
+        return oper;
+    }
+    
+</script>

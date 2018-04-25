@@ -31,6 +31,10 @@ public class UserTeam extends BaseEntity {
     @Column(name = "user_id")
     private String userID;
 
+    @Header(name = "用户名")
+    @Column(name = "user_name")
+    private String userName;
+
     @Header(name = "班组ID")
     @Column(name = "team_id")
     private String teamID;
@@ -97,6 +101,14 @@ public class UserTeam extends BaseEntity {
 
     public void setProjectName(String projectName) {
         this.projectName = projectName;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
 }

@@ -16,10 +16,11 @@
             <div class="box">
                 <!-- /.box-header -->
                 <div class="dataTables_filter" id="searchDiv">
-                   <select id="projectID" class="form-control select2" name="projectID" style="width:200px;" operator="eq">
+                    <select id="projectID" class="form-control select2" name="projectID" style="width:200px;" operator="eq">
                         <option selected="selected" value="">选择一个项目</option>
                     </select>
-                   <input type="search" placeholder="请输入班组名称" title="班组名称" name="teamName" class="form-control" id="teamName" operator="like" likeOption="true">
+                    <input type="search" placeholder="请输入班组名称" title="班组名称" name="teamName" class="form-control" id="teamName" operator="like" likeOption="true">
+                    <input type="search"  name = "status" id="status" value="30" style="display:none;" operator="not_eq">
                     <div class="btn-group">
                         <button type="button" class="btn btn-primary" data-btn-type="search">查询</button>
                         <button type="button" class="btn btn-default" data-btn-type="reset">重置</button>
@@ -80,7 +81,7 @@
                                 modals.error("删除失败！请联系系统管理员");
                             }
                         });
-                    })
+                    });
                     break;
                 case "add":
                 	modals.openWin({

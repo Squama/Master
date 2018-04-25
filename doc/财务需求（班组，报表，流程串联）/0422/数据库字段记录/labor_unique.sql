@@ -1,0 +1,1 @@
+ALTER TABLE tbl_labor ADD UNIQUE (project_id, construction_team_id)

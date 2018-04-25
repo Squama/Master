@@ -41,24 +41,23 @@ import com.radish.master.service.ProjectService;
 import com.radish.master.system.FileHelper;
 
 /**
-* 类说明
-* 
-* <pre>
+ * 类说明
+ * 
+ * <pre>
 * Modify Information:
 * Author        Date          Description
 * ============ =========== ============================
 * dongyan      2017年11月2日    Create this file
-* </pre>
-* 
-*/
+ * </pre>
+ * 
+ */
 @Service("projectService")
 public class ProjectServiceImpl extends BaseServiceImpl implements ProjectService {
-    
+
     @Resource
     private RuntimePageService runtimePageService;
-    
-    private static Logger logger= LoggerFactory.getLogger(ProjectServiceImpl.class);
-    
+
+    private static Logger logger = LoggerFactory.getLogger(ProjectServiceImpl.class);
 
     /**
      * 创建文件
@@ -99,47 +98,46 @@ public class ProjectServiceImpl extends BaseServiceImpl implements ProjectServic
 
     @Override
     public byte[] getImage(String path, String name) {
-        try{
-            
-            //调接口写读文件
+        try {
+
+            // 调接口写读文件
             return FileHelper.showImageFile(name, path);
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             logger.error("", e);
         }
-        
+
         return new byte[0];
     }
 
     @Override
     public Result getManagerName(String id) {
-        String name=this.redisDao.get("manager:"+id);
-        if(StrUtil.isEmpty(name)) {
-            User user=this.get(User.class,id);
-            redisDao.save("org:"+id,user.getName());
-            return new Result(true,user.getName(),"获取成功");
-        }else{
-            return new Result(true,name,"获取成功");
+        String name = this.redisDao.get("manager:" + id);
+        if (StrUtil.isEmpty(name)) {
+            User user = this.get(User.class, id);
+            redisDao.save("org:" + id, user.getName());
+            return new Result(true, user.getName(), "获取成功");
+        } else {
+            return new Result(true, name, "获取成功");
         }
     }
 
     @Override
     public String getFileField(String batchNo) {
         String result = "";
-        
-        if(StrUtil.isEmpty(batchNo)){
+
+        if (StrUtil.isEmpty(batchNo)) {
             return result;
         }
-        
+
         String hql = "from ProjectFileItem where batchNo=:batchNo";
         Map<String, Object> params = new HashMap<>();
         params.put("batchNo", batchNo);
         List<ProjectFileItem> itemList = this.find(hql, params);
-        if(itemList.isEmpty()){
+        if (itemList.isEmpty()) {
             result = "";
-        }else{
+        } else {
             StringBuilder sb = new StringBuilder();
-            for(int i=0;i<itemList.size();i++){
+            for (int i = 0; i < itemList.size(); i++) {
                 sb.append(",");
                 sb.append(itemList.get(i).getId());
             }
@@ -150,34 +148,34 @@ public class ProjectServiceImpl extends BaseServiceImpl implements ProjectServic
 
     @Override
     public Result deleteFileItem(String projectID, String fileField, String key) {
-        ProjectFileItem item=this.get(ProjectFileItem.class, key);
+        ProjectFileItem item = this.get(ProjectFileItem.class, key);
         String batchNo = item.getBatchNo();
         FileUtil.delFile(item.getFilePath());
         this.delete(item);
-        
+
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("batchNo", batchNo);
-        List<ProjectFileItem> list =  this.find("from ProjectFileItem where batchNo = :batchNo", params);
-        
-        if(list.isEmpty()){
+        List<ProjectFileItem> list = this.find("from ProjectFileItem where batchNo = :batchNo", params);
+
+        if (list.isEmpty()) {
             Project project = this.get(Project.class, projectID);
-            String methodStr = "set"+fileField.toUpperCase().substring(0, 1)+fileField.substring(1);
+            String methodStr = "set" + fileField.toUpperCase().substring(0, 1) + fileField.substring(1);
             Method method;
             try {
-                method = Project.class.getMethod(methodStr,new Class[]{String.class});
-                method.invoke(project, new Object[]{null});
+                method = Project.class.getMethod(methodStr, new Class[] { String.class });
+                method.invoke(project, new Object[] { null });
             } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
                 return new Result(false, e.getMessage());
             }
             this.update(project);
         }
-        
+
         return new Result(true);
     }
 
     @Override
     public List<Options> getLaborComboboxByProject(String projectID) {
-        return this.findMapBySql("select id value, contract_name data from tbl_labor where project_id=? AND Status='30'", new Object[] {projectID},
+        return this.findMapBySql("select id value, contract_name data from tbl_labor where project_id=? AND Status='30'", new Object[] { projectID },
                 new Type[] { StringType.INSTANCE }, Options.class);
     }
 
@@ -202,10 +200,9 @@ public class ProjectServiceImpl extends BaseServiceImpl implements ProjectServic
         variables.put("taskName", name);
 
         // 启动流程
-        return runtimePageService.startProcessInstanceByKey(processDefinitionKey, name, variables, user.getId(),
-                businessKey);
+        return runtimePageService.startProcessInstanceByKey(processDefinitionKey, name, variables, user.getId(), businessKey);
     }
-    
+
     @Override
     public Result startLaborFlow(Labor labor, String processDefinitionKey) {
         User user = SecurityUtil.getUser();
@@ -226,9 +223,43 @@ public class ProjectServiceImpl extends BaseServiceImpl implements ProjectServic
         variables.put("taskName", name);
 
         // 启动流程
-        return runtimePageService.startProcessInstanceByKey(processDefinitionKey, name, variables, user.getId(),
-                businessKey);
+        return runtimePageService.startProcessInstanceByKey(processDefinitionKey, name, variables, user.getId(), businessKey);
     }
 
-    
+    @Override
+    public List<Options> getTeamComboboxByProject(String projectID) {
+        return this.findMapBySql("select id value, team_name data from tbl_project_team where project_id=? AND status != 20", new Object[] { projectID },
+                new Type[] { StringType.INSTANCE }, Options.class);
+    }
+
+    @Override
+    public List<Options> getUserCombobox() {
+        return this.findMapBySql("select id value, name data from tbl_user where audit_status is not null", new Object[] {}, new Type[] { StringType.INSTANCE },
+                Options.class);
+    }
+
+    @Override
+    public Map<String, String> getUserTeamCombobox() {
+        List<Options> tempList = this.findMapBySql("select user_id value, team_name data from tbl_user_team order by user_id desc", new Object[] {},
+                new Type[] { StringType.INSTANCE }, Options.class);
+        Map<String, String> map = new HashMap<String, String>();
+        String userID = "";
+        String userTeams = null;
+        for(Options o : tempList){
+            if(!userID.equals(o.getValue())){
+                if(userTeams != null){
+                    map.put(userID, userTeams);
+                }
+                userTeams = o.getData();
+                userID = o.getValue();
+            }else{
+                userTeams = userTeams + "," + o.getData();
+            }
+        }
+        if(userTeams != null){
+            map.put(userID, userTeams);
+        }
+        return map;
+    }
+
 }

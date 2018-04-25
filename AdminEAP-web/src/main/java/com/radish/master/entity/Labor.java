@@ -87,10 +87,6 @@ public class Labor extends BaseEntity {
     @Column(name = "mat_price")
     private String matPrice;
 
-    @Header(name = "扣款")
-    @Column(name = "debit_price")
-    private String debitPrice;
-
     public String getProjectID() {
         return projectID;
     }
@@ -209,14 +205,6 @@ public class Labor extends BaseEntity {
 
     public void setMatPrice(String matPrice) {
         this.matPrice = matPrice;
-    }
-
-    public String getDebitPrice() {
-        return debitPrice;
-    }
-
-    public void setDebitPrice(String debitPrice) {
-        this.debitPrice = debitPrice;
     }
 
 }

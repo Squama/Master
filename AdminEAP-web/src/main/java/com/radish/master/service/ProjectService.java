@@ -5,6 +5,7 @@ package com.radish.master.service;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -64,4 +65,10 @@ public interface ProjectService extends BaseService{
     public Result startVolumeFlow(ProjectVolume projectVolume, String processDefinitionKey);
     
     public Result startLaborFlow(Labor labor, String processDefinitionKey);
+    
+    List<Options> getTeamComboboxByProject(String projectID);
+    
+    List<Options> getUserCombobox();
+    
+    Map<String, String> getUserTeamCombobox();
 }

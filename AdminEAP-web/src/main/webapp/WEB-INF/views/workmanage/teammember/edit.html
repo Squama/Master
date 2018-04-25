@@ -1,0 +1,229 @@
+<section class="content-header">
+    <h1>
+        项目人员
+        <small>配置</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
+        <li><a href="#">办公管理</a></li>
+        <li class="active">项目人员分配</li>
+    </ol>
+</section>
+
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            
+            <form id="member-form" name="member-form" class="form-horizontal">
+                <input type="hidden" name="projectID">
+                <div class="box box-info">
+                    <div class="box-header with-border">
+                        <span>
+                            <i class="fa fa-edit">选择班组人员</i>
+                        </span>
+                    </div>
+                    <div class="box-body">
+                        <!-- 内容 -->
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">班组<span style="color:red">*</span></label>
+                                <div class="col-sm-5">
+                                    <select id="teamID" class="form-control select2" name="teamID">
+				                        <option selected="selected" value="">选择一个班组</option>
+				                    </select>
+                                </div>
+                            </div> 
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">人员<span style="color:red">*</span></label>
+                                <div class="col-sm-5">
+	                                <select id="userID" class="form-control select2" name="userID" >
+	                                    <option selected="selected" value="">选择一个人员</option>
+	                                </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer text-center" id="budgetformsave">
+                        <button type="submit" class="btn btn-primary" data-btn-type="add">添加成员</button>
+                        <button type="button" class="btn btn-default" data-btn-type="prev">返回列表</button>
+                    </div>
+                </div>
+            </form>
+            <div class="box box-success">
+                <div class="box-header with-border">
+                    <span>
+                        <i class="fa fa-files-o">班组人员详情</i>
+                    </span>
+                </div>
+                <div class="dataTables_filter" id="searchDiv" style="text-align:center;height:1px;">
+                   <input type="search" name="projectID" id="projectID" class="form-control" operator="eq" style="display:none;">
+                   <div class="btn-group">
+                       <button type="button" class="btn btn-primary" data-btn-type="search" id="refresh" style="display:none;">查询</button>
+                   </div>
+                </div>
+                <div class="box-body">
+                    <!-- 内容 -->
+                    <table id="member_tx_table" class="table table-bordered table-striped table-hover">
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    var form = $("#member-form").form({baseEntity: false}), initData={};
+    var memberTxTable;
+    
+    var projectID="${id?default(0)}";
+    
+    if(projectID == "0"){
+    	modals.error("信息有误！");
+    	loadPage(basePath+"/project/team/member/list");
+    }
+    $('#projectID',$('#searchDiv')).val(projectID);
+    initData.projectID = projectID;
+    form.initFormData(initData);
+    
+    var teamOptions = '${teamOptions?default(0)}',tOptions=0;
+    if(teamOptions != 0){
+        tOptions = JSON.parse(teamOptions);
+    }
+    
+    var userOptions = '${userOptions?default(0)}',uOptions=0;
+    if(userOptions != 0){
+        uOptions = JSON.parse(userOptions);
+    }
+    
+    var userTeamOptions = '${userTeamOptions?default(0)}',utOptions=0;
+    if(userTeamOptions != 0){
+        utOptions = JSON.parse(userTeamOptions);
+    }
+    console.log(utOptions);
+    
+    var memberManageObject = {
+            initButtonEvent: function () {
+                $("button[data-btn-type='prev']").click(function () {
+                    loadPage(basePath+"/project/team/member/list");
+                });
+            },
+            deleteMember: function(id){
+            	modals.confirm("是否要删除该行数据？",function(){
+                    ajaxPost(basePath+"/project/team/member/delete/"+id,null,function(data){
+                        if(data.success){
+                        	memberTxTable.reloadRowData();
+                        }else{
+                            modals.error("删除失败！请联系系统管理员");
+                        }
+                    });
+                })
+            }
+    }
+    
+    $(function (){
+    	memberTxTable = new CommonTable("member_tx_table", "member_tx_list", "searchDiv", {
+            "dom": '<"top"i>rt<"bottom"flp><"clear">',
+            "paging" : false,
+            "drawCallback": function ( settings ) {
+                var api = this.api();
+                var rows = api.rows( {page:'current'} ).nodes();
+                var last=null;
+                api.column(4, {page:'current'} ).data().each( function ( group, i ) {
+                    if ( last !== group ) {
+                        var ret = group;
+                        var info = '所属班组：' + group;
+                        $(rows).eq( i ).before(
+                            '<tr class="group"  style="background-color:#3c8dbc;" data-container-id="'+group+'" onclick="toggleContainer(this);return false;">'+
+                            '<td class="text-left" colspan="6"><font color="#fff">'+info+'</font></td>'+
+                            '</tr>'
+                        );
+                        
+                        last = group;
+                    }
+                    $(rows).eq( i ).attr('data-group' ,''+group+'');
+                } );
+            }
+        });
+        
+        $("#member-form").bootstrapValidator({
+            message: '请输入有效值',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            submitHandler: function () {
+                var action = $(this).attr('$submitButton').attr('data-btn-type');
+                var formData = form.getFormSimpleData();
+                if(utOptions[formData.userID] != undefined){
+                	var msg = "该用户已分配给以下班组：" + utOptions[formData.userID] + ",确定仍要添加吗？？";
+                	modals.confirm(msg,function(){
+                		ajaxPost(basePath + '/project/team/member/save', formData, function (data) {
+                            if (data.success) {
+                                memberTxTable.reloadData();
+                            } else {
+                                modals.error("添加失败！");
+                            }
+                        });
+                    });
+                	return false;
+                }
+                ajaxPost(basePath + '/project/team/member/save', formData, function (data) {
+                    if (data.success) {
+                        memberTxTable.reloadData();
+                    } else {
+                        modals.error("添加失败！");
+                    }
+                });
+            },
+            fields: {
+                "teamID": {
+                    validators: {
+                        notEmpty: {message: '班组不能为空'}
+                    }
+                },
+                "userID": {
+                    validators: {
+                        notEmpty: {message: '人员不能为空'}
+                    }
+                }
+            }
+        });
+        
+        //编辑回填
+        if(projectID!="0"){
+        	memberTxTable.reloadData();
+        } 
+        
+        //初始化控件
+        form.initComponent();
+        memberManageObject.initButtonEvent();
+        
+        if(tOptions != 0){
+            for (var i = 0, len = tOptions.length; i < len; i++) {
+                var option = tOptions[i];
+                $('#teamID').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+            }
+            $("#teamID").select2();
+        }
+        
+        if(uOptions != 0){
+            for (var i = 0, len = uOptions.length; i < len; i++) {
+                var option = uOptions[i];
+                $('#userID').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+            }
+            $("#userID").select2();
+        }
+        
+    });
+    
+    function fnMemberDelete(value, type, rowObj){
+        return "<a href='javascript:void(0)' onclick='memberManageObject.deletemember(\"" + value + "\")'>删除</a>";
+    }
+    
+    function toggleContainer(that){
+        var selector = $(that).attr('data-container-id');
+        $('[data-group="'+selector+'"]', '#member_tx_table').toggle(100);
+    }
+    
+</script>

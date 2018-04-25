@@ -16,6 +16,7 @@
 <script src="${basePath}/resources/common/libs/fileinput/js/locales/zh.js"></script>
 <!--BaseFile组件-->
 <script src="${basePath}/resources/common/js/base-file.js"></script>
+<script src="${basePath}/resources/common/js/calculate.js"></script>
 <section class="content-header">
     <h1>
         <span>劳务合同</span>
@@ -54,13 +55,31 @@
                         <div class="stepinfo undoneinfo">完成</div>
                     </div>
                 </div>
-                <form id="labor_form" name="project_form" class="form-horizontal">
+                <form id="labor_form" name="labor_form" class="form-horizontal">
                     <div class="box-body">
                         <div class="col-md-12">
                             <div class="form-group">
+                                <label class="col-sm-3 control-label">机械费（单位：元）<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control calculate" id="mechPrice" name="mechPrice" placeholder="机械费" value="0">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">人工费（单位：元）<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control calculate" id="labourPrice" name="labourPrice" placeholder="人工费" value="0">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">材料费（单位：元）<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control calculate" id="matPrice" name="matPrice" placeholder="材料费" value="0">
+                                </div>
+                            </div>
+                            <div class="form-group">
                                 <label class="col-sm-3 control-label">合同总价（单位：元）<span style="color:red">*</span></label>
                                 <div class="col-sm-6">
-                                    <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control" id="contractPrice" name="contractPrice" placeholder="合同总价">
+                                    <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control" id="contractPrice" name="contractPrice" placeholder="合同总价" value="0">
                                 </div>
                             </div>
                             <div class="form-group">

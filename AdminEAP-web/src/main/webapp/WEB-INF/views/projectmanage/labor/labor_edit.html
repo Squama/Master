@@ -39,6 +39,7 @@
                 <form id="labor_form" name="project_form" class="form-horizontal">
                     <input type="hidden" name="id" id="id">
                     <input type="hidden" name="projectName" id="projectName">
+                    <input type="hidden" name="constructionTeam" id="constructionTeam">
                     <div class="box-body">
                         <div class="col-md-12">
                             <div class="form-group">
@@ -50,15 +51,17 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">合同名称<span style="color:red">*</span></label>
+                                <label class="col-sm-3 control-label">施工班组<span style="color:red">*</span></label>
                                 <div class="col-sm-6">
-                                    <input type="text" class="form-control" id="contractName" name="contractName" placeholder="合同名称">
+                                    <select id="constructionTeamID" class="form-control select2" name="constructionTeamID">
+                                            <option selected="selected" value="">选择一个班组</option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">施工班组<span style="color:red">*</span></label>
+                                <label class="col-sm-3 control-label">合同名称<span style="color:red">*</span></label>
                                 <div class="col-sm-6">
-                                    <input type="text" class="form-control" id="constructionTeam" name="constructionTeam" placeholder="施工班组">
+                                    <input type="text" class="form-control" id="contractName" name="contractName" placeholder="合同名称">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -92,6 +95,12 @@
     if(projectOptions != 0){
         options = JSON.parse(projectOptions);
     }
+    
+    var teamOptions = '${teamOptions?default(0)}',tOptions=0;
+    if(teamOptions != 0){
+        tOptions = JSON.parse(teamOptions);
+    }
+    
     var laborCtrl = {
         initButtonEvent: function () {
             $("button[data-btn-type='selectManager']").click(function () {
@@ -133,7 +142,7 @@
                                 break;
                         }
                     } else {
-                        modals.error(data.message);
+                    	modals.error("保存失败！请检查班组是否重复");
                     }
                 });
             },
@@ -148,7 +157,7 @@
                         notEmpty: {message: '合同名称不能为空'}
                     }
                 },
-                "constructionTeam": {
+                "constructionTeamID": {
                     validators: {
                         notEmpty: {message: '施工班组不能为空'}
                     }
@@ -169,7 +178,7 @@
                 var option = options[i];
                 $('#projectID').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
             }
-            $(".select2").select2();
+            $("#projectID").select2();
             $("#projectID").bind("change", function () {
                 var value = $(this).val();
                 if (value === "") {
@@ -181,6 +190,53 @@
                     name = $("#projectID").find("option:selected").text();
                 }
                 $('#projectName').val(name);
+                
+                ajaxPost(basePath+"/labor/getteamop",{projectID:value},function(data){
+                    var teamOptions = data.message;
+                    tOptions = JSON.parse(teamOptions);
+                    $('#constructionTeamID').empty();
+                    $('#constructionTeamID').append('<option selected="selected" value="">选择一个班组</option>');
+                    for (var i = 0, len = tOptions.length; i < len; i++) {
+                        var tOption = tOptions[i];
+                        $('#constructionTeamID').append("<option value=\"" + tOption.value + "\">" + tOption.data + "</option>");
+                    }
+                    
+                    $('#constructionTeamID').select2();
+                    
+                    $("#constructionTeamID").unbind("change.constructionTeam")
+                    $("#constructionTeamID").bind("change.constructionTeam", function () {
+                        var value = $(this).val();
+                        if (value === "") {
+                            return false;
+                        }
+                        
+                        var name = "";
+                        if ($("#constructionTeamID").prop('selectedIndex') > 0) {
+                            name = $("#constructionTeamID").find("option:selected").text();
+                        }
+                        $('#constructionTeam').val(name);
+                    });
+                })
+            });
+        }
+        
+        if(tOptions != 0){
+            for (var i = 0, len = tOptions.length; i < len; i++) {
+                var option = tOptions[i];
+                $('#constructionTeamID').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+            }
+            $("#constructionTeamID").select2();
+            $("#constructionTeamID").bind("change.constructionTeam", function () {
+                var value = $(this).val();
+                if (value === "") {
+                    return false;
+                }
+                
+                var name = "";
+                if ($("#constructionTeamID").prop('selectedIndex') > 0) {
+                    name = $("#constructionTeamID").find("option:selected").text();
+                }
+                $('#constructionTeam').val(name);
             });
         }
         

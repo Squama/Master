@@ -1,0 +1,64 @@
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box box-success">
+                <div class="box-header with-border">
+                    <span>
+                        <i class="fa fa-files-o">班组人员详情</i>
+                    </span>
+                </div>
+                <div class="dataTables_filter" id="searchDivDetail" style="text-align:center;height:1px;">
+                   <input type="search" name="projectID" id="projectID" class="form-control" operator="eq" style="display:none;">
+                   <div class="btn-group">
+                       <button type="button" class="btn btn-primary" data-btn-type="search" id="refresh" style="display:none;">查询</button>
+                   </div>
+                </div>
+                <div class="box-body">
+                    <!-- 内容 -->
+                    <table id="member_tx_table" class="table table-bordered table-striped table-hover">
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    var memberTxTable;
+    
+    var projectID="${id?default(0)}";
+    $('#projectID',$('#searchDivDetail')).val(projectID);
+    
+    $(function (){
+        memberTxTable = new CommonTable("member_tx_table", "member_tx_detail", "searchDivDetail", {
+            "dom": '<"top"i>rt<"bottom"flp><"clear">',
+            "paging" : false,
+            "drawCallback": function ( settings ) {
+                var api = this.api();
+                var rows = api.rows( {page:'current'} ).nodes();
+                var last=null;
+                api.column(4, {page:'current'} ).data().each( function ( group, i ) {
+                    if ( last !== group ) {
+                        var ret = group;
+                        var info = '所属班组：' + group;
+                        $(rows).eq( i ).before(
+                            '<tr class="group"  style="background-color:#3c8dbc;" data-container-id="'+group+'" onclick="toggleContainer(this);return false;">'+
+                            '<td class="text-left" colspan="6"><font color="#fff">'+info+'</font></td>'+
+                            '</tr>'
+                        );
+                        
+                        last = group;
+                    }
+                    $(rows).eq( i ).attr('data-group' ,''+group+'');
+                } );
+            }
+        });
+        
+    });
+    
+    function toggleContainer(that){
+        var selector = $(that).attr('data-container-id');
+        $('[data-group="'+selector+'"]', '#member_tx_table').toggle(100);
+    }
+    
+</script>

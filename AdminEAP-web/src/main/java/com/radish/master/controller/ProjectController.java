@@ -3,19 +3,25 @@
  */
 package com.radish.master.controller;
 
-import com.cnpc.framework.annotation.RefreshCSRFToken;
-import com.cnpc.framework.annotation.VerifyCSRFToken;
-import com.cnpc.framework.base.pojo.FileResult;
-import com.cnpc.framework.base.pojo.Result;
-import com.cnpc.framework.utils.DateUtil;
-import com.cnpc.framework.utils.PropertiesUtil;
-import com.cnpc.framework.utils.SecurityUtil;
-import com.cnpc.framework.utils.StrUtil;
-import com.radish.master.entity.Project;
-import com.radish.master.entity.ProjectFileItem;
-import com.radish.master.pojo.ProjectDetailVO;
-import com.radish.master.service.ProjectService;
-import com.radish.master.system.GUID;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -29,14 +35,20 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.*;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.*;
+import com.cnpc.framework.annotation.RefreshCSRFToken;
+import com.cnpc.framework.base.pojo.FileResult;
+import com.cnpc.framework.base.pojo.Result;
+import com.cnpc.framework.utils.DateUtil;
+import com.cnpc.framework.utils.PropertiesUtil;
+import com.cnpc.framework.utils.SecurityUtil;
+import com.cnpc.framework.utils.StrUtil;
+import com.radish.master.entity.Project;
+import com.radish.master.entity.ProjectFileItem;
+import com.radish.master.entity.project.ProjectTeam;
+import com.radish.master.pojo.ProjectDetailVO;
+import com.radish.master.service.ProjectService;
+import com.radish.master.system.GUID;
+import com.radish.master.system.TimeUtil;
 
 /**
  * @author dongy
@@ -127,7 +139,6 @@ public class ProjectController {
         return projectService.getManagerName(id);
     }
     
-    @VerifyCSRFToken
     @RequestMapping(value="/save")
     @ResponseBody
     public Result save(Project project, HttpServletRequest request){
@@ -137,6 +148,13 @@ public class ProjectController {
             project.setStatus("10");
             project.setUpdateDateTime(new Date());
             projectService.save(project);
+            ProjectTeam pt = new ProjectTeam();
+            pt.setProjectID(project.getId());
+            pt.setProjectName(project.getProjectName());
+            pt.setTeamCode("guanlirenyuanbanzi" + TimeUtil.getTimeStamp());
+            pt.setTeamName("管理人员班子");
+            pt.setStatus("30");
+            projectService.save(pt);
         }else{
             Project oldProject = this.getProject(project.getId());
             oldProject.setProjectCode(project.getProjectCode());

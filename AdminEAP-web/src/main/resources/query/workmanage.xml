@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<queryContext xmlns="http://www.example.org/query" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.example.org/query query.xsd">
+    <query id="member_project_list" key="id" tableName="项目人员管理" widthType="px">
+        <sql>
+            <![CDATA[
+              SELECT p.id id,project_code projectCode, project_name projectName, name projectManager, status 
+              FROM tbl_project p, tbl_user u
+              WHERE p.project_manager = u.id AND 1=1
+            ]]>
+        </sql>
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="projectCode" header="项目编号" allowSort="true" width="150"/>
+        <column key="projectName" header="项目名称" classType="String" allowSort="true" width="150"/>
+        <column key="projectManager" header="项目负责人" classType="String" allowSort="true" width="150"/>
+        <column key="id" header="操作" width="100" fnRender="fnRenderMember"/>
+    </query>
+    
+    <query id="member_tx_list" key="id" tableName="班组人员" className="com.radish.master.entity.project.UserTeam" widthType="px" pageSize="200">
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="userName" header="用户名" classType="String" width="150"/>
+        <column key="teamName" header="班组名称" classType="String" width="150"/>
+        <column key="teamCode" header="班组编号" classType="String" width="150"/>
+        <column key="projectName" header="项目名称" classType="String" width="150"/>
+        <column key="id" header="操作" width="100" fnRender="fnMemberDelete"/>
+    </query>
+    
+    <query id="member_tx_detail" key="id" tableName="班组人员" className="com.radish.master.entity.project.UserTeam" widthType="px" pageSize="200">
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="userName" header="用户名" classType="String" width="150"/>
+        <column key="teamName" header="班组名称" classType="String" width="150"/>
+        <column key="teamCode" header="班组编号" classType="String" width="150"/>
+        <column key="projectName" header="项目名称" classType="String" width="150"/>
+    </query>
+    
+</queryContext>

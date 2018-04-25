@@ -42,7 +42,6 @@ import com.cnpc.framework.utils.StrUtil;
 import com.radish.master.controller.ProjectController;
 import com.radish.master.entity.Labor;
 import com.radish.master.entity.ProjectFileItem;
-import com.radish.master.entity.ProjectVolume;
 import com.radish.master.service.BudgetService;
 import com.radish.master.service.ProjectService;
 import com.radish.master.system.GUID;
@@ -98,8 +97,13 @@ public class LaborController {
     @RequestMapping(value="/add",method = RequestMethod.GET)
     public String add(HttpServletRequest request){
         request.setAttribute("projectOptions", JSONArray.toJSONString(budgetService.getProjectCombobox()));
-        
         return "projectmanage/labor/labor_add";
+    }
+    
+    @RequestMapping(value="/getteamop")
+    @ResponseBody
+    public Result getBudgetOp(String projectID){
+        return new Result(true, JSONArray.toJSONString(projectService.getTeamComboboxByProject(projectID)));
     }
     
     @RefreshCSRFToken
@@ -107,6 +111,7 @@ public class LaborController {
     public String edit(@PathVariable("id") String id,HttpServletRequest request,HttpServletResponse response) {
         request.setAttribute("id", id);
         request.setAttribute("projectOptions", JSONArray.toJSONString(budgetService.getProjectCombobox()));
+        request.setAttribute("teamOptions", JSONArray.toJSONString(projectService.getTeamComboboxByProject(id)));
         return "projectmanage/labor/labor_edit";
     }
     
@@ -138,13 +143,23 @@ public class LaborController {
         if(StrUtil.isEmpty(labor.getId())){
             labor.setCreateDateTime(new Date());
             labor.setContractPrice("0");
+            labor.setMechPrice("0");
+            labor.setLabourPrice("0");
+            labor.setMatPrice("0");
             labor.setStatus("10");
-            projectService.save(labor);
+            try {
+                projectService.save(labor);
+            } catch (Exception e) {
+                return new Result(false);
+            }
         }else{
             Labor oldLabor = projectService.get(Labor.class, labor.getId());
+            oldLabor.setProjectID(labor.getProjectID());
             oldLabor.setProjectName(labor.getProjectName());
             oldLabor.setConstructionManager(labor.getConstructionManager());
             oldLabor.setUpdateDateTime(new Date());
+            oldLabor.setConstructionTeamID(labor.getConstructionTeamID());
+            oldLabor.setConstructionTeam(labor.getConstructionTeam());
             projectService.update(oldLabor);
         }
         
@@ -160,6 +175,10 @@ public class LaborController {
         
         Labor oldLabor = projectService.get(Labor.class, labor.getId());
         oldLabor.setContractPrice(labor.getContractPrice());
+        oldLabor.setMechPrice(labor.getMechPrice());
+        oldLabor.setLabourPrice(labor.getLabourPrice());
+        oldLabor.setMatPrice(labor.getMatPrice());
+        oldLabor.setContractor(labor.getContractor());
         projectService.update(oldLabor);
         
         Map<String, String> map = new HashMap<String, String>();
