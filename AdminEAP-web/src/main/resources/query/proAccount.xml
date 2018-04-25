@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<queryContext xmlns="http://www.example.org/query" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.example.org/query query.xsd">
+<!--本xml片段为代码生成器生成，时间：2017-10-17 11:38:08-->
+	<query id="projectAccount_list" key="id" tableName="账本列表" widthType="px">
+			<sql>
+		        <![CDATA[
+		          SELECT zm.id id, zm.accountName accountName ,zm.allMoney allMoney ,xm.project_name pname 
+		          FROM 
+                  tbl_projectAccount zm ,tbl_project xm 
+                  WHERE 1=1 and zm.projectId = xm.id 
+		        ]]>
+		    </sql>
+		    <column key="rowIndex" header="序号" width="50" allowSort="false"/>
+	        <column key="id" header="账目id" classType="String" allowSort="true" width="150" hidden="true"/>
+		    <column key="pname" header="所属项目" classType="String"  width="150"/>
+		    <column key="accountName" header="账目名称" classType="String" width="150"/>
+	        <column key="allMoney" header="账目当前总额" classType="String" width="150"  />
+			<column key="id" header="操作" width="80" fnRender="fnRenderDet"/>
+	</query>
+	
+	<query id="projectAccountDet_list" key="id" tableName="账目列表" widthType="px">
+			<sql>
+		        <![CDATA[
+		          SELECT  mx.createDate createDate , mx.abstracts abstracts,mx.inMoney inMoney,mx.outMoney outMoney,
+		          mx.remark remark ,mx.id id ,mx.accounter accounter,mx.auditName auditName ,mx.status status 
+		          FROM 
+                  tbl_projectAccount zm ,tbl_projectAccount_det mx  
+                  WHERE 1=1 and zm.id = mx.projectAccountId order by mx.createDate desc
+		        ]]>
+		    </sql>
+		    <column key="rowIndex" header="序号" width="50" allowSort="false"/>
+	        <column key="id" header="账目id" classType="String" allowSort="true" width="150" hidden="true"/>
+		    <column key="createDate" header="账目日期" classType="String"  width="80" dateFormat="yyyy-mm-dd"/>
+		    <column key="abstracts" header="摘要" classType="String" width="150"/>
+	        <column key="inMoney" header="进账" classType="String" width="150"  />
+	        <column key="outMoney" header="出账" classType="String" width="150"  />
+	        <column key="remark" header="备注" classType="String" width="150"  />
+			<!-- <column key="id" header="操作" width="80" fnRender="fnRenderAuditDet"/> -->
+	</query>
+	
+</queryContext>

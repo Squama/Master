@@ -1,0 +1,195 @@
+<script type="text/javascript">
+ $.fn.modal.Constructor.prototype.enforceFocus = function () {};
+ </script>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            
+            <form id="instock-form" name="instock-form" class="form-horizontal">
+                <input type="hidden" name="id" id="accountDetId">
+                <input type="hidden" name="projectAccountId" id="accountId">
+                <div class="box box-info">
+                    <div class="box-header with-border">
+                        <span>
+                            <i class="fa fa-edit">账目信息</i>
+                        </span>
+                    </div>
+                    <div class="box-body">
+                        <!-- 内容 -->
+                        <div class="col-md-6">
+			                <div class="form-group">
+                                <label class="col-sm-3 control-label">收支类型<span style="color:red">*</span></label>
+                                <div class="col-sm-8">
+                                    <select id="zmtype" class="form-control select2" name="zmtype" style="width:100%">
+                                       <option value="1">收入</option>
+                                       <option value="2">支出</option>
+                                    </select>
+                                </div>
+                            </div> 
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">金额<span style="color:red">*</span></label>
+                                <div class="col-sm-8">
+                                     <input type="text" class="form-control" id="money" name="money" placeholder="收支金额">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">审核人<span style="color:red">*</span></label>
+                                <div class="col-sm-8">
+                                     <select id="auditId" class="form-control select2" name="auditId" style="width:100%">
+                                        <option selected="selected" value="">选择一个人员</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                        
+		            	</div>
+		            	<div class="col-md-6">
+		            		<div class="form-group">
+                                <label class="col-sm-3 control-label">收支时间<span style="color:red">*</span></label>
+                                <div class="col-sm-8">
+                                     <input type="text" class="form-control date-picker" data-flag="datepicker"  id="createDate" name="createDate" placeholder="收支时间">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">记账人<span style="color:red">*</span></label>
+                                <div class="col-sm-8">
+                                     <select id="accounterId" class="form-control select2" name="accounterId" style="width:100%">
+                                        <option selected="selected" value="">选择一个人员</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                
+                            </div>
+                            
+		            	</div>
+		            	
+                    </div>
+                    <div class="form-group">
+	                    <label for="remark" class="col-sm-2 control-label">摘要<span style="color:red">*</span></label>
+	
+	                    <div class="col-sm-9">
+	                        <textarea class="form-control" id="abstracts" name="abstracts" placeholder="请输入摘要" rows="6"></textarea>
+	                    </div>
+		            </div>
+                    <div class="form-group">
+	                    <label for="remark" class="col-sm-2 control-label">备注</label>
+	
+	                    <div class="col-sm-9">
+	                        <textarea class="form-control" id="remark" name="remark" placeholder="请输入备注" rows="6"></textarea>
+	                    </div>
+		            </div>
+                    <div class="box-footer text-center" id="formsave">
+                        <button type="submit" class="btn btn-primary" data-btn-type="next">保存</button>
+                    </div>
+                </div>
+            </form>
+            
+        </div>
+    </div>
+</section>
+
+<script>
+    $.fn.modal.Constructor.prototype.enforceFocus =function(){};
+    var purchaseform = $("#instock-form").form({baseEntity: false}), initData={},
+    options=0,uOptions=0;
+    
+    var pOptions = '${userOptions?default(0)}';
+    if(pOptions != 0){
+        options = JSON.parse(pOptions);
+    }
+    var zmid = '${zmid?default(0)}'
+   	var zmmxid = '${zmmxid?default(0)}'
+    $(function (){
+    	if(zmid!=0){
+    		$("#accountId").val(zmid);
+    	}
+    	if(zmmxid!=0){
+    		$("#accountDetId").val(zmmxid);
+    	}
+        if(options != 0){
+            for (var i = 0, len = options.length; i < len; i++) {
+                var option = options[i];
+                $('#auditId').append("<option value=\"" + option.id + "\">" + option.name + "</option>");
+                $('#accounterId').append("<option value=\"" + option.id + "\">" + option.name + "</option>");
+            }
+            
+            $('#auditId').select2();
+            $('#accounterId').select2();
+        }
+        
+        $("#instock-form").bootstrapValidator({
+            message: '请输入有效值',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            submitHandler: function () {
+                var formData = purchaseform.getFormSimpleData();
+                ajaxPost(basePath + '/proaccount/saveAccountDet', formData, function (data) {
+                    if (data.success) {
+                    	modals.hideWin(winId);
+                    	modals.info('保存成功');
+                    	$("#accountDetId").val(data.data.id);
+                    } else {
+                        modals.error(data.message);
+                    }
+                });
+            },
+            fields: {
+                "money": {
+                    validators: {
+                        notEmpty: {message: '收支金额不能为空'}
+            			,regexp: {
+                            regexp: /^([1-9][\d]{0,7}|0)(\.[\d]{1,2})?$/,  
+                            message: '请输入正确的金额数字'  
+                        }
+                    }
+                },
+                "auditId": {
+                    validators: {
+                        notEmpty: {message: '审核人不能为空'}
+                    }
+                },
+                "createDate": {
+                    validators: {
+                        notEmpty: {message: '收支时间不能为空'}
+                    }
+                },
+                "accounterId": {
+                    validators: {
+                        notEmpty: {message: '记账人不能为空'}
+                    }
+                },
+                "abstracts": {
+                    validators: {
+                        notEmpty: {message: '摘要不能为空'}
+                    }
+                }
+            }
+        });
+        //编辑回填
+        if(zmmxid != 0){
+            ajaxPost(basePath+"/proaccount/getAccountDet",{id:zmmxid},function(data){
+            	var zm = data.data;
+            	purchaseform.initFormData(zm);
+            	if(zm.zmtype==1){
+            		$("#money").val(zm.inMoney);
+            	}else{
+            		$("#money").val(zm.outMoney);
+            	}
+               
+                
+            })
+        } 
+    	
+    	
+        //初始化控件
+        purchaseform.initComponent();
+        
+    });
+    
+    
+    
+</script>
