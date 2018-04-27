@@ -1,3 +1,4 @@
+<script src="${basePath}/resources/common/js/calculate.js"></script>
 <section class="content-header">
     <h1>
         <span>工程量上报</span>
@@ -16,6 +17,7 @@
             <div class="box box-info">
                 <form id="volume_form" name="project_form" class="form-horizontal">
                     <input type="hidden" name="projectName" id="projectName">
+                    <input type="hidden" name="id">
                     <div class="box-body">
                         <div class="col-md-6">
                             <div class="form-group">
@@ -33,7 +35,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-5 control-label">合同总价（单位：元）<span style="color:red">*</span></label>
+                                <label class="col-sm-5 control-label">合同总价（元）<span style="color:red">*</span></label>
                                 <div class="col-sm-6">
                                     <input type="text" class="form-control" id="contractPrice" name="contractPrice" placeholder="合同总价" readonly="readonly">
                                 </div>
@@ -46,13 +48,25 @@
                                         placeholder="起始时间">
                                 </div>
                             </div>
+                            <div class="form-group">
+                                <label class="col-sm-5 control-label">机械费（元）<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control calculate" id="applyMech" name="applyMech" placeholder="本次上报机械费" value="0">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-5 control-label">材料费（元）<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control calculate" id=applyMat name="applyMat" placeholder="本次上报材料费" value="0">
+                                </div>
+                            </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">选择合同<span style="color:red">*</span></label>
                                 <div class="col-sm-6">
                                     <select id="laborID" class="form-control select2" name="laborID">
-                                        <option selected="selected" value="">选择一个项目</option>
+                                        <option selected="selected" value="">选择一个合同</option>
                                     </select>
                                 </div>
                             </div>
@@ -63,9 +77,11 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">本次应付工程款（单位：元）<span style="color:red">*</span></label>
-                                <div class="col-sm-6">
-                                    <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control" id="engineerMoney" name="engineerMoney" placeholder="本次应付工程款">
+                                <label class="col-sm-3 control-label">生成时间<span style="color:red">*</span></label>
+                                <div class="input-group col-sm-6">
+                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                    <input type="text" class="form-control" data-flag="datepicker" data-format="yyyy-mm-dd" name="createTime" id="createTime"
+                                        placeholder="生成时间" disabled="disabled">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -74,6 +90,26 @@
 	                                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 			                        <input type="text" class="form-control" data-flag="datepicker" data-format="yyyy-mm-dd" name="endTime" id="endTime"
 			                            placeholder="结束时间">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">人工费（元）<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control calculate" id="applyLabour" name="applyLabour" placeholder="本次上报人工费" value="0">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">扣款（元）<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control calculate" id="applyDebit" name="applyDebit" placeholder="本次上报应扣款" value="0">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">本次上报总计（元）<span style="color:red">*</span></label>
+                                <div class="col-sm-7">
+                                    <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control" id="applySub" name="applySub" placeholder="本次上报总计" readonly="readonly" value="0">
                                 </div>
                             </div>
                         </div>
@@ -144,11 +180,6 @@
                         notEmpty: {message: '合同不能为空'}
                     }
                 },
-                "engineerMoney": {
-                    validators: {
-                        notEmpty: {message: '应付工程款不能为空'}
-                    }
-                },
                 "startTime": {
                     validators: {
                         notEmpty: {message: '起始时间不能为空'}
@@ -160,6 +191,26 @@
                     }
                 },
                 "volume": {
+                    validators: {
+                        notEmpty: {message: '工程量不能为空'}
+                    }
+                },
+                "applyMech": {
+                    validators: {
+                        notEmpty: {message: '机械费不能为空'}
+                    }
+                },
+                "applyLabour": {
+                    validators: {
+                        notEmpty: {message: '人工费不能为空'}
+                    }
+                },
+                "applyMat": {
+                    validators: {
+                        notEmpty: {message: '材料费不能为空'}
+                    }
+                },
+                "applyDebit": {
                     validators: {
                         notEmpty: {message: '工程量不能为空'}
                     }
@@ -219,6 +270,16 @@
                 form.initFormData(data);
             })
         }
+        
+        $(".calculate").on("focusout", function(){
+            var mech = parseFloat($('#applyMech').val());
+            var labour = parseFloat($('#applyLabour').val());
+            var mat = parseFloat($('#applyMat').val());
+            var debit = parseFloat($('#applyDebit').val());
+            
+            var sub = accSubtraction(accAddition(accAddition(mech, labour), mat), debit);
+            $('#applySub').val(sub);
+        });
     });
     
 </script>

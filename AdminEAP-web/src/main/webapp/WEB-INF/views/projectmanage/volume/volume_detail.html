@@ -7,7 +7,7 @@
                     <div class="box-body">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="col-sm-5 control-label">选择项目<span style="color:red">*</span></label>
+                                <label class="col-sm-5 control-label">所属项目<span style="color:red">*</span></label>
                                 <div class="col-sm-6">
                                     <select id="projectID" class="form-control select2" name="projectID" disabled="disabled">
                                         <option selected="selected" value="">选择一个项目</option>
@@ -34,13 +34,25 @@
                                         placeholder="起始时间" disabled="disabled">
                                 </div>
                             </div>
+                            <div class="form-group">
+                                <label class="col-sm-5 control-label">机械费（元）<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control calculate" id="applyMech" name="applyMech" placeholder="本次上报机械费" disabled="disabled">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-5 control-label">材料费（元）<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control calculate" id=applyMat name="applyMat" placeholder="本次上报材料费" disabled="disabled">
+                                </div>
+                            </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">选择合同<span style="color:red">*</span></label>
+                                <label class="col-sm-3 control-label">上报合同<span style="color:red">*</span></label>
                                 <div class="col-sm-6">
                                     <select id="laborID" class="form-control select2" name="laborID" disabled="disabled">
-                                        <option selected="selected" value="">选择一个项目</option>
+                                        <option selected="selected" value="">选择一个合同</option>
                                     </select>
                                 </div>
                             </div>
@@ -51,9 +63,11 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">本次应付工程款<span style="color:red">*</span></label>
-                                <div class="col-sm-6">
-                                    <input type="text" class="form-control" id="engineerMoney" name="engineerMoney" placeholder="本次应付工程款" disabled="disabled">
+                                <label class="col-sm-3 control-label">生成时间<span style="color:red">*</span></label>
+                                <div class="input-group col-sm-6">
+                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                    <input type="text" class="form-control" data-flag="datepicker" data-format="yyyy-mm-dd" name="updateDateTime" id="updateDateTime"
+                                        placeholder="生成时间" disabled="disabled">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -64,6 +78,26 @@
                                         placeholder="结束时间" disabled="disabled">
                                 </div>
                             </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">人工费（元）<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control calculate" id="applyLabour" name="applyLabour" placeholder="本次上报人工费" disabled="disabled">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">扣款（元）<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control calculate" id="applyDebit" name="applyDebit" placeholder="本次上报应扣款" disabled="disabled">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">本次上报总计（元）<span style="color:red">*</span></label>
+                                <div class="col-sm-7">
+                                    <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control" id="applySub" name="applySub" placeholder="本次上报总计" readonly="readonly" disabled="disabled">
+                                </div>
+                            </div>
                         </div>
                         <div class="col-md-12">
                             <label class="col-sm-2 control-label">工程量<span style="color:red">*</span></label>
@@ -71,19 +105,27 @@
                                 <textarea class="form-control" id="volume" name="volume" rows="8" cols="100" disabled="disabled"></textarea>
                             </div>
                         </div>
-                        <div id="pingxing" class="col-md-4 dn" style="margin-left:25%">
-                        	  <div class="callout callout-info" id="zhiliangT" style="margin-top:8px;margin-bottom:8px;">
-				                <h4>质量员【<span id="zhiliang">未处理</span>】</h4>
-				                <p>审批意见：<span id="zhiliangsugg">尚未审批</span></p>
-				              </div>
-				              <div class="callout callout-info" id="anquanT" style="margin-bottom:8px;">
-				                <h4>安全员【<span id="anquan">未处理</span>】</h4>
-				                <p>审批意见：<span id="anquansugg">尚未审批</span></p>
-				              </div>
-				              <div class="callout callout-info" id="shigongT" style="margin-bottom:8px;">
-				                <h4>分管施工员【<span id="shigong">未处理</span>】</h4>
-				                <p>审批意见：<span id="shigongsugg">尚未审批</span></p>
-				              </div>
+                        <div id="pingxing" class="dn">
+                            <div class="col-md-12">
+                                  <div class="col-md-4">
+                                        <div class="callout callout-info" id="zhiliangT" style="margin-bottom:8px;">
+                                            <h4>质量员【<span id="zhiliang">未处理</span>】</h4>
+                                            <p>审批意见：<span id="zhiliangsugg">尚未审批</span></p>
+                                        </div>
+                                  </div>
+                                  <div class="col-md-4">
+                                        <div class="callout callout-info" id="anquanT" style="margin-bottom:8px;">
+                                            <h4>安全员【<span id="anquan">未处理</span>】</h4>
+                                            <p>审批意见：<span id="anquansugg">尚未审批</span></p>
+                                        </div>
+                                  </div>
+                                  <div class="col-md-4">
+                                        <div class="callout callout-info" id="shigongT" style="margin-bottom:8px;">
+                                            <h4>分管施工员【<span id="shigong">未处理</span>】</h4>
+                                            <p>审批意见：<span id="shigongsugg">尚未审批</span></p>
+                                        </div>
+                                  </div>
+                            </div>
                         </div>
                     </div>
                 </form>

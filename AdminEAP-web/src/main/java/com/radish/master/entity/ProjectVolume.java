@@ -49,13 +49,14 @@ public class ProjectVolume extends BaseEntity {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date endTime;
 
+    @Header(name = "创建时间")
+    @Column(name = "create_time")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date createTime;
+
     @Header(name = "劳务合同ID")
     @Column(name = "labor_id")
     private String laborID;
-
-    @Header(name = "本次应付工程款")
-    @Column(name = "engineer_money")
-    private String engineerMoney;
 
     @Header(name = "工程量")
     @Column(name = "volume")
@@ -166,14 +167,6 @@ public class ProjectVolume extends BaseEntity {
 
     public void setLaborID(String laborID) {
         this.laborID = laborID;
-    }
-
-    public String getEngineerMoney() {
-        return engineerMoney;
-    }
-
-    public void setEngineerMoney(String engineerMoney) {
-        this.engineerMoney = engineerMoney;
     }
 
     public String getVolume() {
@@ -310,6 +303,14 @@ public class ProjectVolume extends BaseEntity {
 
     public void setFinalSub(String finalSub) {
         this.finalSub = finalSub;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 
 }

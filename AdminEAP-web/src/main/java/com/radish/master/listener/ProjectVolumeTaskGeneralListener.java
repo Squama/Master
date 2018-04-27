@@ -59,10 +59,9 @@ public class ProjectVolumeTaskGeneralListener implements TaskListener {
         put("shigong", "施工员");
         put("anquan", "安全员");
         put("fuzeren", "项目负责人");
-        put("yusuan", "预算人员");
+        put("yusuan", "经营科");
         put("boss", "分公司主管");
         put("account", "财务人员");
-        put("jingyingke", "经营科");
     }};
 
     @Override
@@ -131,12 +130,12 @@ public class ProjectVolumeTaskGeneralListener implements TaskListener {
             	List<ProjectVolume> pvList = baseService.find(hql, params);
             	BigDecimal sum = new BigDecimal("0");
             	for(ProjectVolume proV : pvList){
-            		BigDecimal consume = new BigDecimal(proV.getEngineerMoney());
+            		BigDecimal consume = new BigDecimal(proV.getFinalSub());
                     
                     sum = sum.add(consume);
             	}
             	
-            	BigDecimal thisVolume = new BigDecimal(pv.getEngineerMoney());
+            	BigDecimal thisVolume = new BigDecimal(pv.getFinalSub());
             	sum = sum.add(thisVolume);
             	
             	Labor labor = baseService.get(Labor.class, pv.getLaborID());

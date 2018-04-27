@@ -36,6 +36,7 @@ import com.radish.master.entity.Labor;
 import com.radish.master.entity.Project;
 import com.radish.master.entity.ProjectFileItem;
 import com.radish.master.entity.ProjectVolume;
+import com.radish.master.entity.common.ActivitiSuggestion;
 import com.radish.master.pojo.Options;
 import com.radish.master.service.ProjectService;
 import com.radish.master.system.FileHelper;
@@ -198,6 +199,26 @@ public class ProjectServiceImpl extends BaseServiceImpl implements ProjectServic
         variables.put(Constants.VAR_APPLYUSER_NAME, user.getName());
         variables.put(Constants.VAR_BUSINESS_KEY, businessKey);
         variables.put("taskName", name);
+        
+        String suggestionHql = "from ActivitiSuggestion where businessKey=:businessKey AND taskNode=:taskNode";
+        Map<String, Object> suggestionParams = new HashMap<>();
+        suggestionParams.put("businessKey", businessKey);
+        suggestionParams.put("taskNode", "caozuoyuan");
+        ActivitiSuggestion as = this.get(suggestionHql, suggestionParams);
+        
+        if(as == null){
+            as = new ActivitiSuggestion();
+            as.setCreateDateTime(new Date());
+            as.setUpdateDateTime(new Date());
+            as.setBusinessKey(businessKey);
+            as.setTaskNode("caozuoyuan");
+            as.setApprove("true");
+        }
+        
+        as.setSuggestion("");
+        as.setOperator(SecurityUtil.getUser().getName());
+        as.setUpdateDateTime(new Date());
+        this.save(as);
 
         // 启动流程
         return runtimePageService.startProcessInstanceByKey(processDefinitionKey, name, variables, user.getId(), businessKey);

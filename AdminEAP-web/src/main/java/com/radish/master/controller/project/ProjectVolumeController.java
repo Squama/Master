@@ -25,7 +25,6 @@ import com.cnpc.framework.activiti.pojo.TaskVo;
 import com.cnpc.framework.activiti.service.RuntimePageService;
 import com.cnpc.framework.activiti.service.TaskPageService;
 import com.cnpc.framework.annotation.RefreshCSRFToken;
-import com.cnpc.framework.annotation.VerifyCSRFToken;
 import com.cnpc.framework.base.pojo.PageInfo;
 import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.query.entity.QueryCondition;
@@ -90,6 +89,22 @@ public class ProjectVolumeController {
         request.setAttribute("id", id);
         request.setAttribute("projectOptions", JSONArray.toJSONString(budgetService.getProjectCombobox()));
         return "projectmanage/volume/volume_detail";
+    }
+    
+    @RefreshCSRFToken
+    @RequestMapping(value="/detailbusiness/{id}",method = RequestMethod.GET)
+    public String detailBusiness(@PathVariable("id") String id,HttpServletRequest request,HttpServletResponse response) {
+        request.setAttribute("id", id);
+        request.setAttribute("projectOptions", JSONArray.toJSONString(budgetService.getProjectCombobox()));
+        return "projectmanage/volume/volume_detail_business";
+    }
+    
+    @RefreshCSRFToken
+    @RequestMapping(value="/detailfinal/{id}",method = RequestMethod.GET)
+    public String detailFinal(@PathVariable("id") String id,HttpServletRequest request,HttpServletResponse response) {
+        request.setAttribute("id", id);
+        request.setAttribute("projectOptions", JSONArray.toJSONString(budgetService.getProjectCombobox()));
+        return "projectmanage/volume/volume_detail_final";
     }
     
     @RequestMapping(value="/check",method = RequestMethod.POST)
@@ -177,13 +192,23 @@ public class ProjectVolumeController {
         return projectService.get(Labor.class, laborID);
     }
     
-    @VerifyCSRFToken
     @RequestMapping(method = RequestMethod.POST, value="/save")
     @ResponseBody
     public Result save(ProjectVolume projectVolume, HttpServletRequest request){
         if(StrUtil.isEmpty(projectVolume.getId())){
             projectVolume.setCreateDateTime(new Date());
+            projectVolume.setCreateTime(new Date());
             projectVolume.setStatus("10");
+            projectVolume.setBusinessMech(projectVolume.getApplyMech());
+            projectVolume.setBusinessLabour(projectVolume.getApplyLabour());
+            projectVolume.setBusinessMat(projectVolume.getApplyMat());
+            projectVolume.setBusinessDebit(projectVolume.getApplyDebit());
+            projectVolume.setBusinessSub(projectVolume.getApplySub());
+            projectVolume.setFinalMech(projectVolume.getApplyMech());
+            projectVolume.setFinalLabour(projectVolume.getApplyLabour());
+            projectVolume.setFinalMat(projectVolume.getApplyMat());
+            projectVolume.setFinalDebit(projectVolume.getApplyDebit());
+            projectVolume.setFinalSub(projectVolume.getApplySub());
             projectService.save(projectVolume);
         }else{
             ProjectVolume oldProjectVolume = projectService.get(ProjectVolume.class, projectVolume.getId());
@@ -192,9 +217,24 @@ public class ProjectVolumeController {
             oldProjectVolume.setStartTime(projectVolume.getStartTime());
             oldProjectVolume.setEndTime(projectVolume.getEndTime());
             oldProjectVolume.setLaborID(projectVolume.getLaborID());
-            oldProjectVolume.setEngineerMoney(projectVolume.getEngineerMoney());
             oldProjectVolume.setVolume(projectVolume.getVolume());
+            oldProjectVolume.setApplyMech(projectVolume.getApplyMech());
+            oldProjectVolume.setApplyLabour(projectVolume.getApplyLabour());
+            oldProjectVolume.setApplyMat(projectVolume.getApplyMat());
+            oldProjectVolume.setApplyDebit(projectVolume.getApplyDebit());
+            oldProjectVolume.setApplySub(projectVolume.getApplySub());
+            oldProjectVolume.setBusinessMech(projectVolume.getApplyMech());
+            oldProjectVolume.setBusinessLabour(projectVolume.getApplyLabour());
+            oldProjectVolume.setBusinessMat(projectVolume.getApplyMat());
+            oldProjectVolume.setBusinessDebit(projectVolume.getApplyDebit());
+            oldProjectVolume.setBusinessSub(projectVolume.getApplySub());
+            oldProjectVolume.setFinalMech(projectVolume.getApplyMech());
+            oldProjectVolume.setFinalLabour(projectVolume.getApplyLabour());
+            oldProjectVolume.setFinalMat(projectVolume.getApplyMat());
+            oldProjectVolume.setFinalDebit(projectVolume.getApplyDebit());
+            oldProjectVolume.setFinalSub(projectVolume.getApplySub());
             oldProjectVolume.setUpdateDateTime(new Date());
+            oldProjectVolume.setCreateTime(new Date());
             projectService.update(oldProjectVolume);
         }
         
@@ -204,7 +244,54 @@ public class ProjectVolumeController {
         
     }
     
-    @VerifyCSRFToken
+    @RequestMapping(method = RequestMethod.POST, value="/savebusiness")
+    @ResponseBody
+    public Result saveBusiness(ProjectVolume projectVolume, HttpServletRequest request){
+        
+        ProjectVolume oldProjectVolume = projectService.get(ProjectVolume.class, projectVolume.getId());
+        oldProjectVolume.setBusinessMech(projectVolume.getBusinessMech());
+        oldProjectVolume.setBusinessLabour(projectVolume.getBusinessLabour());
+        oldProjectVolume.setBusinessMat(projectVolume.getBusinessMat());
+        oldProjectVolume.setBusinessDebit(projectVolume.getBusinessDebit());
+        oldProjectVolume.setBusinessSub(projectVolume.getBusinessSub());
+        oldProjectVolume.setUpdateDateTime(new Date());
+        
+        try{
+            projectService.update(oldProjectVolume); 
+        }catch (Exception e) {
+            return new Result(false);
+        }
+        
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("id", projectVolume.getId());
+        return new Result(true, map);
+        
+    }
+    
+    @RequestMapping(method = RequestMethod.POST, value="/savefinal")
+    @ResponseBody
+    public Result saveFinal(ProjectVolume projectVolume, HttpServletRequest request){
+        
+        ProjectVolume oldProjectVolume = projectService.get(ProjectVolume.class, projectVolume.getId());
+        oldProjectVolume.setFinalMech(projectVolume.getFinalMech());
+        oldProjectVolume.setFinalLabour(projectVolume.getFinalLabour());
+        oldProjectVolume.setFinalMat(projectVolume.getFinalMat());
+        oldProjectVolume.setFinalDebit(projectVolume.getFinalDebit());
+        oldProjectVolume.setFinalSub(projectVolume.getFinalSub());
+        oldProjectVolume.setUpdateDateTime(new Date());
+        
+        try{
+            projectService.update(oldProjectVolume); 
+        }catch (Exception e) {
+            return new Result(false);
+        }
+        
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("id", projectVolume.getId());
+        return new Result(true, map);
+        
+    }
+    
     @RequestMapping(value = "/start", method = RequestMethod.POST)
     @ResponseBody
     public Result start(String id) {
