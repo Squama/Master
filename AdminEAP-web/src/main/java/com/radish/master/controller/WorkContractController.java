@@ -104,11 +104,7 @@ public class WorkContractController {
 	public Result save(HttpServletRequest request,WorkContract wc){
 		Result r = new Result();
 		String fileid = wc.getFileId();
-		if(fileid!=null){
-			HtFile file = baseService.get(HtFile.class, fileid);
-			wc.setFile_name(file.getFileName());
-			wc.setFile_path(file.getFilePath());
-		}
+		
 		String i = (String)baseService.save(wc);
 		r.setCode(i);
 		
@@ -138,12 +134,7 @@ public class WorkContractController {
 		wco.setQyDate(wc.getQyDate());
 		wco.setItems(wc.getItems());
 		wco.setRemark(wc.getRemark());
-		if(wc.getFileId()!=null&&!wc.getFileId().equals(wco.getFileId())){
-			wco.setFileId(wc.getFileId());
-			HtFile file = baseService.get(HtFile.class, wc.getFileId());
-			wco.setFile_name(file.getFileName());
-			wco.setFile_path(file.getFilePath());
-		}
+		wco.setFileId(wc.getFileId());
 		baseService.update(wco);
 		Result r = new Result();
 		r.setSuccess(true);
