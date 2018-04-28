@@ -24,6 +24,9 @@
 			                <div class="dataTables_filter" id="searchDiv" style="display: none">
 			                    <!--查询条件-->
 			                   <input type="search"  title="审核" name = "auditStatus" id="audit_status" value="10" style="display:none">
+			                   <select id="deptId" class="form-control select2" name="deptId" style="width:200px;" operator="eq">
+			                        <option selected="selected" value="">选择一个部门</option>
+			                   </select>
 			                   <input type="search" placeholder="请输入姓名" title="姓名" name="name" class="form-control" id="name" operator="like" likeOption="true">
 			                   <div class="input-group">
 			                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
@@ -86,6 +89,32 @@
                                                 <input type="text" class="form-control" id="email" name="email" placeholder="Email">
                                             </div>
                                         </div>
+                                        <div class="form-group">
+						                    <label for="email" class="col-sm-3 control-label">身份证号</label>
+						                    <div class="col-sm-8">
+						                        <input type="text" class="form-control" id="identificationNumber" name="identificationNumber" placeholder="身份证号">
+						                    </div>
+						                </div>
+						                <div class="form-group">
+						                    <label for="email" class="col-sm-3 control-label">学历</label>
+						                    <div class="col-sm-8">
+						                        <select id="education" class="form-control select2" name="education" style="width:100%">
+				                                    <option selected="selected" value="">选择一个学历</option>
+				                                </select>
+						                    </div>
+						                </div>
+						                <div class="form-group">
+						                    <label for="email" class="col-sm-3 control-label">紧急联系人</label>
+						                    <div class="col-sm-8">
+						                        <input type="text" class="form-control" id="emergencyContact" name="emergencyContact" placeholder="紧急联系人">
+						                    </div>
+						                </div>
+						                <div class="form-group">
+						                    <label for="email" class="col-sm-3 control-label">工种</label>
+						                    <div class="col-sm-8">
+						                        <input type="text" class="form-control" id="workType" name="workType" placeholder="工种">
+						                    </div>
+						                </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
@@ -119,6 +148,32 @@
                                                 <input type="text" class="form-control" id="qq" name="qq" placeholder="QQ">
                                             </div>
                                         </div>
+                                        <div class="form-group">
+						                    <label for="email" class="col-sm-3 control-label">民族</label>
+						                    <div class="col-sm-8">
+						                        <select id="ethnic" class="form-control select2" name="ethnic" style="width:100%">
+                                                    <option selected="selected" value="">选择一个民族</option>
+                                                </select>
+						                    </div>
+						                </div>
+						                <div class="form-group">
+						                    <label for="email" class="col-sm-3 control-label">家庭住址</label>
+						                    <div class="col-sm-8">
+						                        <input type="text" class="form-control" id="address" name="address" placeholder="家庭住址">
+						                    </div>
+						                </div>
+						                <div class="form-group">
+						                    <label for="email" class="col-sm-3 control-label">紧急联系人电话</label>
+						                    <div class="col-sm-8">
+						                        <input type="text" class="form-control" id="emergencyContactPhone" name="emergencyContactPhone" placeholder="紧急联系人电话">
+						                    </div>
+						                </div>
+						                <div class="form-group">
+						                    <label for="email" class="col-sm-3 control-label">基本工资</label>
+						                    <div class="col-sm-8">
+						                        <input type="text" class="form-control" id="basicSalary" name="basicSalary" placeholder="基本工资">
+						                    </div>
+						                </div>
                                     </div>
                                 </div>
                                 <!-- /.box-body -->
@@ -144,6 +199,20 @@
         form.initFormData(initData);
     }
     
+    var deptOptions = '${deptOptions?default(0)}',dOptions=0;
+    if(deptOptions != 0){
+    	dOptions = JSON.parse(deptOptions);
+    }
+    
+    var eduOptions = '${eduOptions?default(0)}',edOptions=0;
+    if(eduOptions != 0){
+    	edOptions = JSON.parse(eduOptions);
+    }
+    
+    var ethOptions = '${ethOptions?default(0)}',etOptions=0;
+    if(ethOptions != 0){
+    	etOptions = JSON.parse(ethOptions);
+    }
 
     var employeeQueryTable, winId = "employeeQueryWin";
     $(function (){
@@ -183,6 +252,30 @@
                 detailForm.initFormData(data);
             });
 		});
+        
+        if(dOptions != 0){
+            for (var i = 0, len = dOptions.length; i < len; i++) {
+                var option = dOptions[i];
+                $('#deptId').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+            }
+            $("#deptId").select2();
+        }
+        
+        if(edOptions != 0){
+            for (var i = 0, len = edOptions.length; i < len; i++) {
+                var option = edOptions[i];
+                $('#education').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+            }
+            $("#education").select2();
+        }
+        
+        if(etOptions != 0){
+            for (var i = 0, len = etOptions.length; i < len; i++) {
+                var option = etOptions[i];
+                $('#ethnic').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+            }
+            $("#ethnic").select2();
+        }
     });
     
     function setTitle(title){

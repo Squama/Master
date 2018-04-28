@@ -59,11 +59,36 @@
 							</div>
 							<div class="form-group">
 								<label for="email" class="col-sm-3 control-label">Email</label>
-
 								<div class="col-sm-8">
 									<input type="text" class="form-control" id="email" name="email" placeholder="Email">
 								</div>
 							</div>
+							<div class="form-group">
+                                <label for="email" class="col-sm-3 control-label">身份证号</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="identificationNumber" name="identificationNumber" placeholder="身份证号">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="email" class="col-sm-3 control-label">学历</label>
+                                <div class="col-sm-8">
+                                    <select id="education" class="form-control select2" name="education" style="width:100%">
+			                            <option selected="selected" value="">选择一个学历</option>
+			                        </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="email" class="col-sm-3 control-label">紧急联系人</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="emergencyContact" name="emergencyContact" placeholder="紧急联系人">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="email" class="col-sm-3 control-label">工种</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="workType" name="workType" placeholder="工种">
+                                </div>
+                            </div>
 						</div>
 						<div class="col-md-6">
 							<div class="form-group">
@@ -88,7 +113,9 @@
 							<div class="form-group">
                                 <label for="telphone" class="col-sm-3 control-label">职务</label>
                                 <div class="col-sm-8">
-                                    <select type="text" class="form-control" id="job" name="jobId" placeholder="职务" ></select>
+                                    <select type="text" class="form-control" id="job" name="jobId" placeholder="职务" >
+                                        <option selected="selected" value="">选择一个职务</option>
+                                    </select>
                                 </div>
                             </div>
 							<div class="form-group">
@@ -106,19 +133,34 @@
 									<input type="text" class="form-control" id="qq" name="qq" placeholder="QQ">
 								</div>
 							</div>
+							<div class="form-group">
+                                <label for="email" class="col-sm-3 control-label">民族</label>
+                                <div class="col-sm-8">
+                                    <select id="ethnic" class="form-control select2" name="ethnic" style="width:100%">
+			                            <option selected="selected" value="">选择一个民族</option>
+			                        </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="email" class="col-sm-3 control-label">家庭住址</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="address" name="address" placeholder="家庭住址">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="email" class="col-sm-3 control-label">紧急联系人电话</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="emergencyContactPhone" name="emergencyContactPhone" placeholder="紧急联系人电话">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="email" class="col-sm-3 control-label">基本工资</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="basicSalary" name="basicSalary" placeholder="基本工资">
+                                </div>
+                            </div>
 						</div>
 					</div>
-
-
-					<!-- <input type="hidden" name="fileIds" id="fileIds">
-					<div class="form-group" align="center">
-						<div class="btn btn-default btn-file" id="uploadFile">
-							<i class="fa fa-paperclip"></i> 上传劳务合同(Max. 10MB)
-						</div>
-					</div>
-					<div class="form-group" id="file_container">
-						<input type="file" name="file"  id="attachment">
-					</div> -->
 
 					<!-- /.box-body -->
 					<div class="box-footer text-center">
@@ -139,6 +181,17 @@
 //tableId,queryId,conditionContainer
 var form = null;
 var id = "${id?default(0)}";
+
+var eduOptions = '${eduOptions?default(0)}',edOptions=0;
+if(eduOptions != 0){
+    edOptions = JSON.parse(eduOptions);
+}
+
+var ethOptions = '${ethOptions?default(0)}',etOptions=0;
+if(ethOptions != 0){
+    etOptions = JSON.parse(ethOptions);
+}
+
 $(function() {
     //初始化控件
     form = $("#user-form").form({baseEntity:false});
@@ -215,6 +268,13 @@ $(function() {
                     }
 
                 }
+            },
+            basicSalary: {
+                validators: {
+                    notEmpty: {
+                        message: '请输入基本工资'
+                    }
+                }
             }
         }
     });
@@ -238,31 +298,27 @@ $(function() {
 				+ "</option>";
 			}
 			$("#job").append(option);
+			$("#job").select2();
 		}
 	}) 
-});
-$("#uploadFile").file({
-    title: "请上传附件",
-    fileinput: {
-        maxFileSize: 10240,
-        maxFileCount:3
-    },
-    fileIdContainer:"[name='fileIds']",
-    showContainer:'#attachment',
-    //显示文件类型 edit=可编辑  detail=明细 默认为明细
-    showType:'edit',
-    //弹出窗口 执行上传附件后的回调函数(window:false不调用此方法)
-    window:true,
-    callback:function(fileIds,oldfileIds){
-        //更新fileIds
-        this.showFiles({
-            fileIds:fileIds
-        });
+	
+    if(edOptions != 0){
+        for (var i = 0, len = edOptions.length; i < len; i++) {
+            var option = edOptions[i];
+            $('#education').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+        }
+        $("#education").select2();
     }
+    
+    if(etOptions != 0){
+        for (var i = 0, len = etOptions.length; i < len; i++) {
+            var option = etOptions[i];
+            $('#ethnic').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+        }
+        $("#ethnic").select2();
+    }
+	
 });
-
-
-
 
 function resetForm() {
     form.clearForm();

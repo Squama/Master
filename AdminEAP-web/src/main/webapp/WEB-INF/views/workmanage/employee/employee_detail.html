@@ -135,13 +135,6 @@
                 </div>
             </div>
         </div>
-        <!-- /.box-body -->
-        <div class="box-footer text-right">
-            <!--以下两种方式提交验证,根据所需选择-->
-            <button type="button" class="btn btn-default" data-btn-type="cancel" data-dismiss="modal">取消</button>
-            <button type="submit" class="btn btn-primary" data-btn-type="save">提交</button>
-        </div>
-        <!-- /.box-footer -->
     </form>
 
 </div>
@@ -163,85 +156,6 @@
     $(function() {
         //初始化控件
         form=$("#user-form").form({baseEntity:false});
-        //数据校验
-        $("#user-form").bootstrapValidator({
-            message : '请输入有效值',
-            feedbackIcons : {
-                valid : 'glyphicon glyphicon-ok',
-                invalid : 'glyphicon glyphicon-remove',
-                validating : 'glyphicon glyphicon-refresh'
-            },
-            submitHandler : function(validator, userform, submitButton) {
-                modals.confirm('确认保存？', function() {
-                    //Save Data，对应'submit-提交'
-                    var params = form.getFormSimpleData();
-                    ajaxPost(basePath+'/employeeQuery/save', params, function(data, status) {
-                        if(data.success){
-                            if(id!="0"){//更新
-                                modals.hideWin(winId);
-                                userTable.reloadRowData(id);
-                            }else{//新增
-                                 //modals.info("数据保存成功");
-                                 modals.hideWin(winId); 
-                                 userTable.reloadData(); 
-                            }
-                        }                
-                    });
-                });
-            },
-            fields : {
-                name : {
-                    validators : {
-                        notEmpty : {
-                            message : '请输入姓名'
-                        }
-                    }
-                },
-                sex : {
-                    validators : {
-                        notEmpty : {
-                            message : '请选择性别'
-                        }
-                    }
-                },
-                birthday : {
-                    validators : {
-                        notEmpty : {
-                            message : '请输入出生日期'
-                        },
-                        date : {
-                            format : $(this).data("format"),
-                            message : '请输入有效日期'
-                        } 
-                    }
-                },
-                loginName : {
-                    validators : {
-                        notEmpty : {
-                            message : '请输入登录名'
-                        }
-                    }
-                },
-                jobId: {
-                    validators: {
-                        notEmpty: {
-                            message: '请选择职务'
-                        }
-                    }
-                },
-                email:{
-                    validators:{
-                        notEmpty:{
-                            message:'请输入邮件',
-                        },
-                        emailAddress:{
-                            message:'非法的邮件格式',
-                        }
-                     
-                    }
-                }
-            }
-        });
         form.initComponent();
         //初始化部门选择器
         $("button[data-flag='org']").org({
@@ -252,19 +166,19 @@
 
         })
         ajaxPost(basePath+"/employeeQuery/getRylx",null,function(data){
-			if(data.data){
-				var list = data.data;
-				var option = "<option></option>";
-				for(var i=0;i<list.length;i++){
-					
-					option += "<option value='"+list[i].id+"'>"
-					+ list[i].name
-					+ "</option>";
-				}
-				$("#job").append(option);
-			}
-		}) 
-		
+            if(data.data){
+                var list = data.data;
+                var option = "<option></option>";
+                for(var i=0;i<list.length;i++){
+                    
+                    option += "<option value='"+list[i].id+"'>"
+                    + list[i].name
+                    + "</option>";
+                }
+                $("#job").append(option);
+            }
+        }) 
+        
         if(edOptions != 0){
             for (var i = 0, len = edOptions.length; i < len; i++) {
                 var option = edOptions[i];
@@ -280,7 +194,7 @@
             }
             $("#ethnic").select2();
         }
-		
+        
         //回填id      
         if(id!="0"){
             ajaxPost(basePath+"/employeeQuery/get",{id:id},function(data){
@@ -289,9 +203,4 @@
         } 
     });
     
-    
-    function resetForm(){
-        form.clearForm();
-        $("#user-form").data('bootstrapValidator').resetForm();
-    }
 </script>

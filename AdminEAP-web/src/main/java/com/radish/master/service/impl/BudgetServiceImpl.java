@@ -244,7 +244,6 @@ public class BudgetServiceImpl extends BaseServiceImpl implements BudgetService 
     @Override
     public List<Options> getProjectCombobox() {
         return this.findMapBySql("select id value, project_name data from tbl_project", new Object[]{}, new Type[]{StringType.INSTANCE}, Options.class);
-        
     }
 
     @Override

@@ -97,15 +97,15 @@ public class User extends BaseEntity {
     private String address;
 
     @Header(name = "紧急联系人电话")
-    @Column(name = "emergency_contract_phone")
-    private String emergencyContractPhone;
+    @Column(name = "emergency_contact_phone")
+    private String emergencyContactPhone;
 
     @Header(name = "紧急联系人")
-    @Column(name = "emergency_contract")
-    private String emergencyContract;
+    @Column(name = "emergency_contact")
+    private String emergencyContact;
 
     @Header(name = "工种")
-    @Column(name = "workType")
+    @Column(name = "work_type")
     private String workType;
 
     @Header(name = "基础工资")
@@ -310,20 +310,20 @@ public class User extends BaseEntity {
         this.address = address;
     }
 
-    public String getEmergencyContractPhone() {
-        return emergencyContractPhone;
+    public String getEmergencyContactPhone() {
+        return emergencyContactPhone;
     }
 
-    public void setEmergencyContractPhone(String emergencyContractPhone) {
-        this.emergencyContractPhone = emergencyContractPhone;
+    public void setEmergencyContactPhone(String emergencyContactPhone) {
+        this.emergencyContactPhone = emergencyContactPhone;
     }
 
-    public String getEmergencyContract() {
-        return emergencyContract;
+    public String getEmergencyContact() {
+        return emergencyContact;
     }
 
-    public void setEmergencyContract(String emergencyContract) {
-        this.emergencyContract = emergencyContract;
+    public void setEmergencyContact(String emergencyContact) {
+        this.emergencyContact = emergencyContact;
     }
 
     public String getWorkType() {

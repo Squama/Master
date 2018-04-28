@@ -17,8 +17,13 @@
                 <div class="box">
                     <!-- /.box-header -->
                     <div class="dataTables_filter" id="searchDiv">
-                        <input placeholder="请输入姓名" name="name" class="form-control" type="search" likeOption="true" /> 
-                        <input placeholder="请输入登录名" name="loginName" class="form-control" type="search" likeOption="true" />
+                    <form name="queryFrm" id="queryFrm" method="post">
+                        <select id="deptId" class="form-control select2" name="deptId" style="width:200px;" operator="eq">
+                             <option selected="selected" value="">选择一个部门</option>
+                        </select>
+                        <input placeholder="请输入姓名" name="name" id="name" class="form-control" type="search" likeOption="true" /> 
+                        <input placeholder="请输入登录名" name="loginName" id="loginName" class="form-control" type="search" likeOption="true" />
+                    
                         <input name="auditStatus" type="search" operator="not_null" style="display:none;" /> 
                         <div class="btn-group">
                             <button type="button" class="btn btn-primary" data-btn-type="search">查询</button>
@@ -28,7 +33,9 @@
                             <button type="button" class="btn btn-default" data-btn-type="add">新增</button>
                             <button type="button" class="btn btn-default" data-btn-type="edit" >编辑</button>
                             <button type="button" class="btn btn-default" data-btn-type="delete">删除</button>
+                            <button type="button" class="btn btn-default" data-btn-type="export">导出</button>
                         </div>
+                    </form>
                     </div>
                     <div class="box-body">
                         <table id="user_table" class="table table-bordered table-striped table-hover">
@@ -47,6 +54,12 @@
         //tableId,queryId,conditionContainer
         var userTable;
         var winId="userWin";
+        
+        var deptOptions = '${deptOptions?default(0)}',dOptions=0;
+        if(deptOptions != 0){
+            dOptions = JSON.parse(deptOptions);
+        }
+        
         $(function() { 
             //init table and fill data
             userTable = new CommonTable("user_table", "employee_manage", "searchDiv");
@@ -78,7 +91,7 @@
                     modals.openWin({
                         winId:winId,
                         title:'编辑用户【'+userTable.getSelectedRowData().name+'】',
-                        width:'900px',
+                        width:'1100px',
                         url:basePath+"/employeeQuery/edit?id="+rowId,
                        });
                    break;
@@ -98,10 +111,48 @@
                         });
                     })
                     break;
+                case 'export':
+                	/* var deptID = $('#deptId', $('#searchDiv')).val();
+                	var name = $('#name', $('#searchDiv')).val();
+                	var loginName = $('#loginName', $('#searchDiv')).val();
+                	var exportData = {};
+                	exportData.deptId = deptID;
+                	exportData.name = name;
+                	exportData.loginName = loginName;
+                	console.log(exportData);
+                    ajaxPost(basePath+"/employeeQuery/getexcel",exportData,function(data){
+                        if(data.success){
+                            userTable.reloadRowData();
+                        }else{
+                            modals.error("用户数据被引用，不可删除！");
+                        }
+                    }); */
+                    var url = basePath+"/employeeQuery/getexcel";
+                    $("form[name='queryFrm']").attr('action', url).submit();
+                    break;
                 }
 
             });
             //form_init();
+            
+            if(dOptions != 0){
+                for (var i = 0, len = dOptions.length; i < len; i++) {
+                    var option = dOptions[i];
+                    $('#deptId').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+                }
+                $("#deptId").select2();
+            }
+            
+            $("#user_table").on("dblclick", "tr", function(e){
+                var id = $(this).attr('id'); 
+                modals.openWin({
+                    winId:winId,
+                    title:'查看用户【'+userTable.getSelectedRowData().name+'】',
+                    width:'1100px',
+                    url:basePath+"/employeeQuery/detail?id="+id,
+                   });
+            });
+            
         })
 
         function fnRenderDept(value) {
