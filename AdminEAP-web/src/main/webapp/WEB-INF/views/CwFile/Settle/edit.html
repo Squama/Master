@@ -1,0 +1,249 @@
+<link rel="stylesheet" href="${basePath}/resources/common/libs/fileinput/css/fileinput.min.css">
+<style>
+
+#projectaddstep2 .krajee-default.file-preview-frame .kv-file-content {
+    height: auto;
+}
+
+#projectaddstep2 .krajee-default .file-footer-caption {
+    width: 100px;
+}
+
+</style>
+<script src="${basePath}/resources/common/libs/fileinput/js/fileinput.js"></script>
+<script src="${basePath}/resources/common/libs/fileinput/js/locales/zh.js"></script>
+<!--BaseFile组件-->
+<script src="${basePath}/resources/common/js/base-file.js"></script>
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><li class="fa fa-remove"></li></button>
+    <h5 class="modal-title"></h5>
+</div>
+<div class="modal-body" style="max-height:100%;overflow-y:auto;">
+
+    <form id="contract-form" name="contract-form" class="form-horizontal">
+     <input type="hidden" name="id" id= "id">
+       <div class="box-body">
+            <div class="col-md-6">
+                
+                <div class="form-group">
+                    <label for="projectId" class="col-sm-3 control-label">所属项目</label>
+
+                    <div class="col-sm-8">
+                   		<select id="projectId" class="form-control select2 "  name="projectId" style="width:100%" >
+                    		<option selected="selected" value="">选择一个项目</option>
+                    	</select>
+                    </div>
+                </div>
+                <div class="form-group">
+					<label  for="money" class="col-sm-3 control-label">结算金额</label>
+					<div class=" col-sm-8">
+						<input class="form-control" id="money" name="money"   placeholder="结算金额"  >
+				
+					</div>
+				</div>
+           		
+            </div>
+            <div class="col-md-6">
+            	<div class="form-group">
+                    <label  for="number" class="col-sm-3 control-label">编号</label>
+					<div class=" col-sm-8">
+						<input class="form-control " id="number" name="number"   placeholder="编号"  >
+				
+					</div>
+                </div>			
+				
+            </div>   
+        </div>
+        	<div class="form-group">
+                    <label for="remark" class="col-sm-2 control-label">备注</label>
+
+                    <div class="col-sm-9">
+                        <textarea class="form-control" id="remark" name="remark" placeholder="备注" rows="6"></textarea>
+                    </div>
+            </div>
+        		<input type="hidden" name="fileId" id="fileId">
+					<div class="form-group" align="center" id="wjscid">
+						<div class="btn btn-default btn-file" id="uploadFile">
+							<i class="fa fa-paperclip"></i> 上传结算附件(Max. 10MB)
+						</div>
+					</div>
+					<div class="form-group" id="file_container">
+						<input type="file" name="file"  id="attachment">
+					</div>
+        <!-- /.box-body -->
+        <div class="" style="text-align: center;position:fixed; height:50px;width:100%;bottom:40px;">
+            <!--以下两种方式提交验证,根据所需选择-->
+            <button type="submit" class="btn btn-primary" data-btn-type="save" id="b_sub">提交</button>
+            <button type="button" class="btn btn-default" data-btn-type="prev">返回</button>
+        </div>
+        <!-- /.box-footer -->
+    </form>
+</div>
+<script>
+    var form =null;
+    var xms = '${xm?default(0)}',xm=0;
+    if(xms != 0){
+    	xm = JSON.parse(xms);
+    }
+    var id="${id}";
+    var doWhat="${doWhat}"
+    
+   	var editCtrl = {
+           initButtonEvent: function () {
+               $("button[data-btn-type='prev']").click(function () {
+                   loadPage(basePath+"/settleDoc/list");
+               });
+           }
+       }
+    $(function() {
+        //初始化控件
+        form=$("#contract-form").form();
+        //数据校验
+        $("#contract-form").bootstrapValidator({
+            message : '请输入有效值',
+            feedbackIcons : {
+                valid : 'glyphicon glyphicon-ok',
+                invalid : 'glyphicon glyphicon-remove',
+                validating : 'glyphicon glyphicon-refresh'
+            },
+            submitHandler : function() {
+                modals.confirm('确认保存？', function() {
+                    //Save Data，对应'submit-提交'
+                    var params = form.getFormSimpleData();
+                    	ajaxPost(basePath+'/settleDoc/update', params, function(data) {
+                            if(data.success){
+                            	modals.hideWin(winId);
+                            	dutycheckTable.reloadData();
+                                modals.info("数据保存成功");
+                                
+                            }                
+                        }); 
+              
+                     
+                });
+            },
+            fields : {
+            	projectId : {
+                    validators : {
+                        notEmpty : {
+                            message : '请选择所属项目'
+                        }
+                    }
+                },
+                number : {
+                    validators : {
+                        notEmpty : {
+                            message : '请输入编号'
+                        }
+                    }
+                },
+                money: {
+                    validators: {
+                        regexp: {
+                            regexp: /^([1-9][\d]{0,7}|0)(\.[\d]{1,2})?$/,  
+                            message: '请输入正确的金额数字(保留两位小数)'  
+                        }
+                    }
+                }
+            }
+        });
+        
+        form.initComponent();
+        if(xm != 0){
+            for (var i = 0, len = xm.length; i < len; i++) {
+                var u = xm[i];
+                $('#projectId').append("<option value='" + u.value + "'>" + u.data + "</option>");
+            }
+            $(".select2").select2();
+        }
+        if(doWhat=="1"){
+        	$('input,select,textarea',$('form[name="dutycheck-form"]')).attr('disabled',true);
+        	$("#b_sub").css("display","none");
+        	$("#wjscid").css("display","none");
+        }
+        
+        load();
+        editCtrl.initButtonEvent();
+        
+    });
+    function load(){
+    	ajaxPost(basePath+'/settleDoc/load?id='+id, {}, function(data) {
+            
+            formdata = data.data;
+            form.initFormData(formdata); 
+                            
+        }); 
+    }
+    function resetForm(){
+        form.clearForm();
+        $("#contract-form").data('bootstrapValidator').resetForm();
+    }
+    var fileinputDefaults = {
+            maxFileSize: 102400,
+            maxFileCount:3,
+            previewSettings: {
+                image: {width: "160px", height: "60px"},
+                text: {width: "213px", height: "160px"},
+                object: {width: "160px", height: "auto"},
+                pdf: {width: "160px", height: "160px"},
+                other: {width: "160px", height: "160px"}
+            },
+            previewZoomSettings: {
+                image: {width: "auto", height: "auto", 'max-width': "100%", 'max-height': "100%"},
+                text: {width: "100%", height: "100%", 'min-height': "480px"},
+                object: {width: "auto", height: "100%", 'min-height': "480px"},
+                pdf: {width: "100%", height: "100%", 'min-height': "480px"},
+                other: {width: "auto", height: "100%", 'min-height': "480px"}
+            },
+            uploadUrl: basePath + "/settleDoc/uploadMultipleFile",
+            deleteUrl: basePath + "/settleDoc/deletefile",
+            allowedPreviewTypes : ['image', 'object']
+      }
+      var defaults = {
+            title: "请上传附件",
+            getFileResultUrl: basePath+"/settleDoc/getFiles",
+            downloadFileUrl: basePath+"/settleDoc/download/",
+            fileinput: fileinputDefaults,
+            showType:'detail',
+            window:true,
+            callback:function(fileId,oldfileIds){
+                this.showFiles({
+                    fileIds:fileId,
+                    type:'preview'
+                });
+            }
+      }
+      
+      $("#uploadFile").file($.extend({}, defaults, {
+          title:"请上传附件",
+          fileinput:$.extend({}, fileinputDefaults, {
+              uploadExtraData: {"fileField":"fileId"}
+          }),
+          showContainer:'#attachment',
+          fileIdContainer:"[name='fileId']",
+          extraPreviewConfig:{
+              "fileField":"fileId"
+          }
+      }));
+    
+    /* $("#uploadFile").file({
+        title: "请上传附件",
+        fileinput: {
+            maxFileSize: 10240,
+            maxFileCount:3
+        },
+        fileIdContainer:"[name='fileId']",
+        showContainer:'#attachment',
+        //显示文件类型 edit=可编辑  detail=明细 默认为明细
+        showType:'edit',
+        //弹出窗口 执行上传附件后的回调函数(window:false不调用此方法)
+        window:true,
+        callback:function(fileId,oldfileIds){
+            //更新fileIds
+            this.showFiles({
+                fileIds:fileId
+            });
+        }
+    }); */
+	
+</script>

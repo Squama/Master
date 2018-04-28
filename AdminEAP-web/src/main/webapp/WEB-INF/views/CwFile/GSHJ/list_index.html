@@ -1,0 +1,124 @@
+<section class="content-header">
+    <h1>
+        公司函件查询
+        <small>列表</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
+        <li><a href="#">财务文件管理</a></li>
+        <li class="active">公司函件查询</li>
+    </ol>
+</section>
+
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <!-- /.box-header -->
+                <div class="dataTables_filter" id="searchDiv1" style="display: none">
+                    <!--查询条件-->
+                    <!--查询条件-->
+                    <select type="search" placeholder="请输入所属项目" title="所属项目" name="p.id" class="form-control select2" id="Pname" operator="like" likeOption="true"  style =" width:20%">
+                  		<option selected="selected" value="">选择所属项目</option>
+                    </select>
+                    <input type="search" placeholder="请输入编号" title="编号" name="wj.number" class="form-control"  operator="like" likeOption="true">
+			        
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-primary" data-btn-type="search">查询</button>
+                        <button type="button" class="btn btn-default" data-btn-type="reset">重置</button>
+                    </div>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default" data-btn-type="detail">查看</button>
+                         <button type="button" class="btn btn-default" data-btn-type="edit" >编辑</button>
+                        <button type="button" class="btn btn-default" data-btn-type="delete">删除</button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <table id="lwContract_table" class="table table-bordered table-striped table-hover">
+                    </table>
+                </div>
+            </div>
+           </div>
+         </div>
+         
+</section>
+
+<script>
+    var form = $("#searchDiv1").form({baseEntity: false}), initData={};
+    
+    var xms = '${xm?default(0)}',xm=0;
+    if(xms != 0){
+    	xm = JSON.parse(xms);
+    }
+
+    var dutycheckTable, winId = "projectQueryWin";
+    $(function (){
+    	dutycheckTable = new CommonTable("lwContract_table", "correspondenceDoc_list_file", "searchDiv1");
+        
+        
+        
+        //绑定按钮事件
+        $("button[data-btn-type]").click(function () {
+            var action = $(this).data("btn-type");
+            var rowId = dutycheckTable.getSelectedRowId();
+            switch (action) {
+                case "detail":
+                	if(!rowId){
+                        modals.info('请选择要查看的行');
+                        return false;
+                    }
+                	
+                	loadPage(basePath+"/correspondenceDoc/edit?id="+rowId+"&&doWhat=1");
+                    break;
+                case "edit":
+                	if(!rowId){
+                        modals.info('请选择要编辑的行');
+                        return false;
+                    }
+                	loadPage(basePath+"/correspondenceDoc/edit?id="+rowId+"&&doWhat=2");
+                    
+                	break;
+                case "delete":
+                	if(!rowId){
+                        modals.info('请选择要删除的行');
+                        return false;
+                    }
+                    modals.confirm("是否要删除该行数据？",function(){
+                        ajaxPost(basePath+"/correspondenceDoc/delete?id="+rowId,null,function(data){
+                        	if(data.success){
+                        		dutycheckTable.reloadData();
+                        	}
+                        	
+                  
+                        });
+                    })
+                	break;
+               
+            }
+        });
+        if(xm != 0){
+            for (var i = 0, len = xm.length; i < len; i++) {
+                var u = xm[i];
+                $('#Pname').append("<option value='" + u.value + "'>" + u.data + "</option>");
+            }
+            $(".select2").select2();
+        }
+    });
+    function fnRenderDetail(value) {
+    	if(value){
+    		return "<a href='javascript:void(0)' onclick='showDetail(\"" + value + "\")'>查看附件</a>";
+    	}else{
+    		return "";
+    	}
+        
+    }
+    
+    function showDetail(fileId) {
+    	modals.openWin({
+            winId: "fileWin",
+            width: "900px",
+            url: basePath + "/correspondenceDoc/projectdetailfile?id=" + fileId ,
+            title: "查看附件"
+        });
+    }
+</script>
