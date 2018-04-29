@@ -11,7 +11,6 @@ import org.activiti.engine.delegate.TaskListener;
 
 import com.cnpc.framework.activiti.pojo.Constants;
 import com.cnpc.framework.base.service.BaseService;
-import com.radish.master.entity.Labor;
 import com.radish.master.entity.mech.MechBudget;
 import com.radish.master.system.SpringUtil;
 

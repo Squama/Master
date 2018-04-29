@@ -58,7 +58,7 @@ public class ProjectTeamSalaryController {
 	@RequestMapping(value = "/detail/{id}", method = RequestMethod.GET)
 	public String detail(@PathVariable("id") String id, HttpServletRequest request, HttpServletResponse response) {
 		request.setAttribute("id", id);
-		return "projectmanage/team/salary/activiti_detail";
+		return "projectmanage/team/salary/detail";
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/get")
@@ -238,7 +238,7 @@ public class ProjectTeamSalaryController {
 
 		Salary salary = teamSalaryService.get(Salary.class, id);
 
-		return teamSalaryService.startTeamSalaryFlow(salary, "mech");
+		return teamSalaryService.startTeamSalaryFlow(salary, "teamSalary");
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/check")
