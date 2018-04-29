@@ -49,4 +49,10 @@ public class CommonServiceImpl extends BaseServiceImpl implements CommonService 
         return this.findMapBySql("select id value, name data from tbl_org", new Object[] {}, new Type[] { StringType.INSTANCE }, Options.class);
     }
 
+    @Override
+    public List<Options> getUserCombobox() {
+        return this.findMapBySql("select id value, name data from tbl_user where audit_status is not null", new Object[] {}, new Type[] { StringType.INSTANCE },
+                Options.class);
+    }
+    
 }

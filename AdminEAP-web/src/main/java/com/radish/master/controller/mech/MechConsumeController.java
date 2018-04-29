@@ -112,8 +112,8 @@ public class MechConsumeController {
             MechConsume oldMech = mechService.get(MechConsume.class, mech.getId());
             SpringUtil.copyPropertiesIgnoreNull(mech, oldMech);
             oldMech.setUpdateDateTime(new Date());
-            mech.setOperator(SecurityUtil.getUser().getName());
-            mech.setOperatorID(SecurityUtil.getUserId());
+            oldMech.setOperator(SecurityUtil.getUser().getName());
+            oldMech.setOperatorID(SecurityUtil.getUserId());
             mechService.save(oldMech);
         }
         
@@ -186,7 +186,6 @@ public class MechConsumeController {
         return new Result(true);
     }
     
-    @VerifyCSRFToken
     @RequestMapping(value = "/start", method = RequestMethod.POST)
     @ResponseBody
     public Result start(String id) {

@@ -30,4 +30,6 @@ public interface CommonService extends BaseService{
     
     List<Options> getDepartmentCombobox();
     
+    List<Options> getUserCombobox();
+    
 }
