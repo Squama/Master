@@ -249,10 +249,16 @@ public class ProjectServiceImpl extends BaseServiceImpl implements ProjectServic
 
     @Override
     public List<Options> getTeamComboboxByProject(String projectID) {
-        return this.findMapBySql("select id value, team_name data from tbl_project_team where project_id=? AND status != 20", new Object[] { projectID },
+        return this.findMapBySql("select id value, team_name data from tbl_project_team where project_id=? AND status = 10", new Object[] { projectID },
                 new Type[] { StringType.INSTANCE }, Options.class);
     }
 
+    @Override
+    public List<Options> getMemberTeamComboboxByProject(String projectID) {
+        return this.findMapBySql("select id value, team_name data from tbl_project_team where project_id=? AND status != 20", new Object[] { projectID },
+                new Type[] { StringType.INSTANCE }, Options.class);
+    }
+    
     @Override
     public List<Options> getUserCombobox() {
         return this.findMapBySql("select id value, name data from tbl_user where audit_status is not null", new Object[] {}, new Type[] { StringType.INSTANCE },

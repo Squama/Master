@@ -68,6 +68,8 @@ public interface ProjectService extends BaseService{
     
     List<Options> getTeamComboboxByProject(String projectID);
     
+    List<Options> getMemberTeamComboboxByProject(String projectID);
+    
     List<Options> getUserCombobox();
     
     Map<String, String> getUserTeamCombobox();

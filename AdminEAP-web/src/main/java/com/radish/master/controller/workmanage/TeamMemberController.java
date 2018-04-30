@@ -51,7 +51,7 @@ public class TeamMemberController {
     @RequestMapping(value="/edit/{id}",method = RequestMethod.GET)
     public String edit(@PathVariable("id") String id,HttpServletRequest request) {
         request.setAttribute("id", id);
-        request.setAttribute("teamOptions", JSONArray.toJSONString(projectService.getTeamComboboxByProject(id)));
+        request.setAttribute("teamOptions", JSONArray.toJSONString(projectService.getMemberTeamComboboxByProject(id)));
         request.setAttribute("userOptions", JSONArray.toJSONString(projectService.getUserCombobox()));
         request.setAttribute("userTeamOptions", JSONArray.toJSONString(projectService.getUserTeamCombobox()));
         return "workmanage/teammember/edit";

@@ -189,7 +189,7 @@
                                 var volumeOptions = data.message;
                                 vOptions = JSON.parse(volumeOptions);
                                 $('#volumeID').empty();
-                                $('#volumeID').append('<option selected="selected" value="">选择一个合同</option>');
+                                $('#volumeID').append('<option selected="selected" value="">选择一个工程量清单</option>');
                                 for (var i = 0, len = vOptions.length; i < len; i++) {
                                     var option = vOptions[i];
                                     $('#volumeID').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
