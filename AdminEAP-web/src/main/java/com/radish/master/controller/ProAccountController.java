@@ -45,10 +45,15 @@ public class ProAccountController {
 	
 	@RequestMapping("/addAccountIndex")
 	public String addAccountIndex(HttpServletRequest request){
-		List xm = baseService.findMapBySql("select id value, project_name data from tbl_project where id not in(select zm.projectId from tbl_projectAccount zm)", new Object[]{}, new Type[]{StringType.INSTANCE}, Options.class);
-		request.setAttribute("projectOptions", JSONArray.toJSONString(xm));
-		
 		String id = request.getParameter("id");
+		if(id==null){
+			List xm = baseService.findMapBySql("select id value, project_name data from tbl_project where id not in(select zm.projectId from tbl_projectAccount zm)", new Object[]{}, new Type[]{StringType.INSTANCE}, Options.class);
+			request.setAttribute("projectOptions", JSONArray.toJSONString(xm));
+		}else{
+			List xm = baseService.findMapBySql("select id value, project_name data from tbl_project", new Object[]{}, new Type[]{StringType.INSTANCE}, Options.class);
+			request.setAttribute("projectOptions", JSONArray.toJSONString(xm));
+		}
+		
 		request.setAttribute("zmid", id);
 		return prefix +"addAccountIndex";
 	}

@@ -96,6 +96,7 @@
         });
         //编辑回填
         if(zmid != 0){
+        	$("#projectId").attr("disabled",true);
             ajaxPost(basePath+"/proaccount/getAccount",{id:zmid},function(data){
             	
             	purchaseform.initFormData(data.data); 
