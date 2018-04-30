@@ -1,0 +1,105 @@
+<section class="content-header">
+    <h1>
+        班组工资
+        <small>列表</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
+        <li><a href="#">项目管理</a></li>
+        <li class="active">班组工资表</li>
+    </ol>
+</section>
+
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <!-- /.box-header -->
+                <div class="dataTables_filter" id="searchDiv">
+                    <select id="projectID" class="form-control select2" name="projectID" style="width:200px;" operator="eq">
+                        <option selected="selected" value="">选择一个项目</option>
+                    </select>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-primary" data-btn-type="search">查询</button>
+                        <button type="button" class="btn btn-default" data-btn-type="reset">重置</button>
+                    </div>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default" data-btn-type="print">打印工资单</button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <table id="team_salary_table" class="table table-bordered table-striped table-hover">
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    var form = $("#searchDiv").form({baseEntity: false}), initData={};
+    var teamSalaryTable, winId = "teamSalaryWin";
+    var projectOptions = '${projectOptions?default(0)}',options=0;
+    if(projectOptions != 0){
+        options = JSON.parse(projectOptions);
+    }
+    var uid = '${uid?default(0)}';
+    var teamSalaryObject = {
+            startFlow: function (mechID) {
+                modals.confirm("是否要提交审批？",function(){
+                    ajaxPost(basePath + '/project/team/salary/start', {id:mechID}, function (data) {
+                        if (data.success) {
+                        	teamSalaryTable.reloadData();
+                            modals.correct("流程已启动，请及时处理");
+                        } else {
+                            modals.error(data.message);
+                        }
+                    });
+                });
+            },
+            overview: function (rowID) {
+                modals.openWin({
+                    winId:winId,
+                    title:'班组工资表总览',
+                    width:'1400px',
+                    url:basePath+"/project/team/salary/detailouter/"+rowID
+                   });
+            }
+    }
+    
+    $(function (){
+    	teamSalaryTable = new CommonTable("team_salary_table", "team_salary_list", "searchDiv", null);
+        
+        //绑定按钮事件
+        $("button[data-btn-type]").click(function () {
+            var action = $(this).data("btn-type");
+            var rowId = teamSalaryTable.getSelectedRowId();
+            switch (action) {
+                case "print":
+	                if(!rowId){
+	                    modals.info('请选择要打印的行');
+	                    return false;
+	                }
+	                var url = basePath+"/ureport/preview?_u=file:salaryBz.ureport.xml&_t=1,5&id="+rowId+"&uid="+uid;
+               	 	window.open(url);
+	                break;
+            }
+        });
+        
+        if(options != 0){
+            for (var i = 0, len = options.length; i < len; i++) {
+                var option = options[i];
+                $('#projectID').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+            }
+            $("#projectID").select2();
+        }
+        
+    });
+    
+    function fnRenderSalary(value, type, rowObj) {
+        var oper = "";
+        oper += "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='teamSalaryObject.overview(\"" + value + "\")'>总览</a>";
+        return oper;
+    }
+    
+</script>
