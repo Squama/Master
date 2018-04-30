@@ -160,6 +160,7 @@ public class LaborController {
             oldLabor.setUpdateDateTime(new Date());
             oldLabor.setConstructionTeamID(labor.getConstructionTeamID());
             oldLabor.setConstructionTeam(labor.getConstructionTeam());
+            oldLabor.setContractor(labor.getContractor());
             projectService.update(oldLabor);
         }
         
