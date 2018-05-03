@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<queryContext xmlns="http://www.example.org/query" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.example.org/query query.xsd">
+    
+    
+    <query id="volume_list_Pay" key="id" tableName="工程量上报支付列表" widthType="px">
+        <sql>
+            <![CDATA[
+              SELECT pv.id id, pv.project_name projectName, l.contract_name contractName,
+		      l.construction_team constructionTeam, pv.start_time startTime, pv.end_time endTime,
+			  pv.apply_sub applySub,pv.final_sub finalSub, pv.volume volume, pv.`status` status,
+			  (select zf.id from tbl_volumePay zf where volumeId=pv.id and payType='10') rg,
+			  (select zf.id from tbl_volumePay zf where volumeId=pv.id and payType='20') jx,
+			  (select zf.id from tbl_volumePay zf where volumeId=pv.id and payType='30') cl 
+			  FROM tbl_project_volume pv, tbl_labor l
+			  WHERE pv.labor_id = l.id AND 1=1 and pv.status='70'
+            ]]>
+        </sql>
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="projectName" header="项目名称" classType="String" allowSort="true" width="150"/>
+        <column key="contractName" header="合同名称" classType="String" allowSort="true" width="150"/>
+        <column key="constructionTeam" header="施工班组" classType="String" width="150"/>
+        <column key="startTime" header="起始时间" classType="String" width="150" dateFormat="yyyy-mm-dd"/>
+        <column key="endTime" header="结束时间" classType="String" width="150" dateFormat="yyyy-mm-dd"/>
+        <column key="applySub" header="申报工程款（元）" classType="String" width="150"/>
+        <column key="finalSub" header="审核工程款（元）" classType="String" width="150"/>
+        <column key="status" header="审核状态" allowSort="true" width="150" render="10=新建,20=综合审核,30=施工负责人,40=经营科审核,50=经理审批,60=财务负责人,70=已完成"/>
+        <column key="id" header="人工" width="80" fnRender="fnRenderRG"/>
+        <column key="id" header="材料" width="80" fnRender="fnRenderCL"/>
+        <column key="id" header="机械" width="80" fnRender="fnRenderJX"/>
+    </query>
+</queryContext>
