@@ -203,11 +203,11 @@
             
             var formData = {};
             formData.id = id;
-            formData.businessMech = mech;
-            formData.businessLabour = labour;
-            formData.businessMat = mat;
-            formData.businessDebit = debit;
-            formData.businessSub = sub;
+            formData.businessMech = mech + "";
+            formData.businessLabour = labour + "";
+            formData.businessMat = mat + "";
+            formData.businessDebit = debit + "";
+            formData.businessSub = sub + "";
             ajaxPost(basePath + '/projectvolume/savebusiness', formData, function (data) {
                 if (data.success) {
                 } else {

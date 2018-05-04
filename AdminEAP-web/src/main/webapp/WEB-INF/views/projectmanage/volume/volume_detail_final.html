@@ -218,11 +218,11 @@
             
             var formData = {};
             formData.id = id;
-            formData.finalMech = mech;
-            formData.finalLabour = labour;
-            formData.finalMat = mat;
-            formData.finalDebit = debit;
-            formData.finalSub = sub;
+            formData.finalMech = mech + '';
+            formData.finalLabour = labour + '';
+            formData.finalMat = mat + '';
+            formData.finalDebit = debit + '';
+            formData.finalSub = sub + '';
             ajaxPost(basePath + '/projectvolume/savefinal', formData, function (data) {
                 if (data.success) {
                 } else {
