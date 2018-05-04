@@ -289,4 +289,23 @@ public class ProjectServiceImpl extends BaseServiceImpl implements ProjectServic
         return map;
     }
 
+    @Override
+    public List<ProjectVolume> checkTimePeriod(String projectID, String laborID, String startTimeStr, String endTimeStr) {
+        StringBuilder buffer = new StringBuilder();
+        
+        buffer.append("SELECT * FROM tbl_project_volume ");
+        buffer.append("WHERE UNIX_TIMESTAMP(start_time) <= UNIX_TIMESTAMP(:endTime) ");
+        buffer.append("AND UNIX_TIMESTAMP(end_time) >= UNIX_TIMESTAMP(:startTime) ");
+        buffer.append("AND project_id=:projectID AND labor_id=:laborID ");
+        
+        Map<String, Object> params = new HashMap<String, Object>();
+
+        params.put("endTime", endTimeStr);
+        params.put("startTime", startTimeStr);
+        params.put("projectID", projectID);
+        params.put("laborID", laborID);
+        
+        return this.findBySql(buffer.toString(), params, ProjectVolume.class);
+    }
+
 }

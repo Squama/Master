@@ -73,4 +73,6 @@ public interface ProjectService extends BaseService{
     List<Options> getUserCombobox();
     
     Map<String, String> getUserTeamCombobox();
+    
+    List<ProjectVolume> checkTimePeriod(String projectID, String laborID, String startTimeStr, String endTimeStr);
 }

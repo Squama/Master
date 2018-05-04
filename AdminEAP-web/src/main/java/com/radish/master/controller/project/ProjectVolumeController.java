@@ -3,6 +3,7 @@
  */
 package com.radish.master.controller.project;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -195,6 +196,30 @@ public class ProjectVolumeController {
     @RequestMapping(method = RequestMethod.POST, value="/save")
     @ResponseBody
     public Result save(ProjectVolume projectVolume, HttpServletRequest request){
+        SimpleDateFormat myFormat=new SimpleDateFormat("yyyy-MM-dd");
+        if(projectVolume.getStartTime().compareTo(projectVolume.getEndTime()) != -1){
+            return new Result(false, "开始时间必须小于结束时间");
+        }
+        
+        String startTime = myFormat.format(projectVolume.getStartTime()) + " 00:00:00";
+        String endTime = myFormat.format(projectVolume.getEndTime()) + " 23:59:59";
+        
+        /*Calendar calendar = Calendar.getInstance();
+        calendar.clear();
+        
+        calendar.set(projectVolume.getStartTime().getYear()+1900, projectVolume.getStartTime().getMonth()+1, projectVolume.getStartTime().getDay(), 0, 0, 0);
+        String startTime = String.valueOf(calendar.getTimeInMillis());
+        
+        calendar.clear();
+        calendar.set(projectVolume.getEndTime().getYear()+1900, projectVolume.getEndTime().getMonth()+1, projectVolume.getEndTime().getDay(), 23, 59, 59);
+        String endTime = String.valueOf(calendar.getTimeInMillis());*/
+        
+        
+        List<ProjectVolume> list = projectService.checkTimePeriod(projectVolume.getProjectID(), projectVolume.getLaborID(), startTime, endTime);
+        if(!list.isEmpty()){
+            return new Result(false, "上报时间段不可重叠");
+        }
+        
         if(StrUtil.isEmpty(projectVolume.getId())){
             projectVolume.setCreateDateTime(new Date());
             projectVolume.setCreateTime(new Date());
