@@ -4,7 +4,7 @@
     <query id="volume_list_print" key="id" tableName="工程量上报列表" widthType="px">
         <sql>
             <![CDATA[
-              SELECT pv.id id, pv.project_name projectName, l.contract_name contractName,
+              SELECT pv.id id, pv.project_name projectName, l.contract_name contractName,pv.project_id project_id,
 		      l.construction_team constructionTeam, pv.start_time startTime, pv.end_time endTime,
 			  pv.apply_sub applySub,pv.final_sub finalSub, pv.volume volume, pv.`status` status
 			  FROM tbl_project_volume pv, tbl_labor l
