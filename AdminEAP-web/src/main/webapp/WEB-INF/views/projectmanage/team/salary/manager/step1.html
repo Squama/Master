@@ -1,0 +1,172 @@
+<section class="content-header">
+    <h1>
+        <span>管理人员工资单</span>
+        <small>新增</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
+        <li><a href="#">办公管理</a></li>
+        <li class="active">新增管理人员工资单</li>
+    </ol>
+</section>
+
+    
+
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box box-info">
+                <div id="stepbar" class="add stepbar">
+                    <div>
+                        <div class="step">
+                            <span class="tip">1</span>
+                        </div>
+                        <div class="stepinfo">添加工资单条目</div>
+                    </div>
+                    <div>
+                        <div class="step stepundone">
+                            <span class="tip">2</span>
+                        </div>
+                        <div class="stepinfo undoneinfo">编辑工资单明细</div>
+                    </div>
+                    <div>
+                        <div class="step stepundone">
+                            <span class="tip">3</span>
+                        </div>
+                        <div class="stepinfo undoneinfo">完成</div>
+                    </div>
+                </div>
+                <form id="team-salary-form" name="team-salary-form" class="form-horizontal">
+                    <input type="hidden" name="id" id="id">
+                    <input type="hidden" name="projectName" id="projectName">
+                    <div class="box-body">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">选择项目<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <select id="projectID" class="form-control select2" name="projectID">
+                                            <option selected="selected" value="">选择一个项目</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">开始时间<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" data-flag="datepicker" data-format="yyyy-mm-dd" name="startTime" id="startTime"
+                                        placeholder="起始时间">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">结束时间<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" data-flag="datepicker" data-format="yyyy-mm-dd" name="endTime" id="endTime"
+                                        placeholder="结束时间">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer text-center">
+                        <button type="button" class="btn btn-default" data-btn-type="prev">返回</button>
+                        <button type="submit" class="btn btn-primary ml10" data-btn-type="next">编辑工资单明细</button>
+                        <button type="submit" class="btn btn-success ml10" data-btn-type="save">保存并返回</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+    var form;
+    var id = "${id?default(0)}";
+    var projectOptions = '${projectOptions?default(0)}',options=0;
+    if(projectOptions != 0){
+        options = JSON.parse(projectOptions);
+    }
+    var salaryCtrl = {
+        initButtonEvent: function () {
+            $("button[data-btn-type='prev']").click(function () {
+                loadPage(basePath+"/project/manager/salary/list");
+            });
+        }
+    }
+    $(function () {
+        //初始化表单 
+        form = $("#team-salary-form").form({baseEntity:false});
+        //数据校验
+        $("#team-salary-form").bootstrapValidator({
+            message: '请输入有效值',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            submitHandler: function () {
+                var action = $(this).attr('$submitButton').attr('data-btn-type');
+                var formData = form.getFormSimpleData();
+                ajaxPost(basePath + '/project/manager/salary/savesalary', formData, function (data) {
+                    if (data.success) {
+                        switch (action) {
+                            case "next":
+                                loadPage(basePath+"/project/manager/salary/step2", undefined, data.data);
+                                break;
+                            case "save":
+                                loadPage(basePath+"/project/manager/salary/list");
+                                break;
+                        }
+                    } else {
+                        modals.error("保存失败！请检查是否已有该工资单");
+                    }
+                });
+            },
+            fields: {
+                "projectID": {
+                    validators: {
+                        notEmpty: {message: '项目不能为空'}
+                    }
+                },
+                "startTime": {
+                    validators: {
+                        notEmpty: {message: '开始时间不能为空'}
+                    }
+                },
+                "endTime": {
+                    validators: {
+                        notEmpty: {message: '结束时间不能为空'}
+                    }
+                }
+            }
+        });
+        //初始化控件
+        form.initComponent();
+        salaryCtrl.initButtonEvent();
+        
+        if(options != 0){
+            for (var i = 0, len = options.length; i < len; i++) {
+                var option = options[i];
+                $('#projectID').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+            }
+            $(".select2").select2();
+            $("#projectID").bind("change", function () {
+                var value = $(this).val();
+                if (value === "") {
+                    return false;
+                }
+                
+                var name = "";
+                if ($("#projectID").prop('selectedIndex') > 0) {
+                    name = $("#projectID").find("option:selected").text();
+                }
+                $('#projectName').val(name);
+            });
+        }
+        
+        //编辑回填
+        if(id!="0"){
+            ajaxPost(basePath+"/project/manager/salary/get",{id:id},function(data){
+                form.initFormData(data);
+            })
+        }
+        
+    });
+
+</script>

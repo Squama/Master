@@ -18,5 +18,11 @@ public interface TeamSalaryService extends BaseService{
 	
 	List<Options> getUserComboboxByProjectAndLabor(String projectID, String laborID);
 	
+	List<Options> getManageUserComboboxByProject(String projectID);
+	
 	public Result startTeamSalaryFlow(Salary salary, String processDefinitionKey);
+	
+	public Result startManagerSalaryFlow(Salary salary, String processDefinitionKey);
+	
+	List<Salary> checkTimePeriod(String projectID, String startTimeStr, String endTimeStr, String salaryID);
 }

@@ -82,10 +82,15 @@
                     modals.info('请选择要删除的行');
                     return false;
                 }
-                modals.confirm("是否要删除该行数据？",function(){
+                var data = budgetTable.getSelectedRowData();
+                if(data.status != '新建'){
+                    modals.info('只有新建状态的数据才可删除!');
+                    return false;
+                }
+                modals.confirm("是否要删除该行数据？这可能需要消耗一些时间。",function(){
                     ajaxPost(basePath+"/budget/delete/"+rowId,null,function(data){
                         if(data.success){
-                            userTable.reloadRowData();
+                        	budgetTable.reloadRowData();
                         }else{
                             modals.error("该数据被引用，不可删除！");
                         }

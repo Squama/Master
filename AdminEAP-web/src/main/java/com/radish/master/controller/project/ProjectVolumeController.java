@@ -215,7 +215,7 @@ public class ProjectVolumeController {
         String endTime = String.valueOf(calendar.getTimeInMillis());*/
         
         
-        List<ProjectVolume> list = projectService.checkTimePeriod(projectVolume.getProjectID(), projectVolume.getLaborID(), startTime, endTime);
+        List<ProjectVolume> list = projectService.checkTimePeriod(projectVolume.getProjectID(), projectVolume.getLaborID(), startTime, endTime, projectVolume.getId());
         if(!list.isEmpty()){
             return new Result(false, "上报时间段不可重叠");
         }

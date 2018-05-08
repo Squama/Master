@@ -39,7 +39,6 @@
                 <form id="salary-detail-form" name="salary-detail-form" class="form-horizontal">
                 	<input type="hidden" name="salaryID" id="salaryID">
                     <input type="hidden" name="name" id="name">
-                    <input type="hidden" name="total" id="total">
                     <div class="box-body">
                         <div class="col-md-6">
                             <div class="form-group">
@@ -152,10 +151,9 @@
 </section>
 <script>
     var form;
-    var id = "${id}", total = "${total}";
+    var id = "${id}";
     $('#salaryID').val(id);
     $('#salaryID',$('#searchDiv')).val(id);
-    $('#total').val(total);
     var userOptions = '${userOptions?default(0)}',options=0;
     if(userOptions != 0){
         options = JSON.parse(userOptions);
@@ -164,12 +162,12 @@
     var salaryDetailCtrl = {
         initButtonEvent: function () {
             $("button[data-btn-type='prev']").click(function () {
-                loadPage(basePath+"/project/team/salary/list");
+                loadPage(basePath+"/project/manager/salary/list");
             });
         },
         deleteDetail: function (rowId) {
             modals.confirm("是否要删除该行数据？",function(){
-                ajaxPost(basePath+"/project/team/salary/deletedetail/"+rowId,null,function(data){
+                ajaxPost(basePath+"/project/manager/salary/deletedetail/"+rowId,null,function(data){
                     if(data.success){
                     	salaryDetailTable.reloadRowData();
                     }else{
@@ -194,7 +192,7 @@
             submitHandler: function () {
                 var action = $(this).attr('$submitButton').attr('data-btn-type');
                 var formData = form.getFormSimpleData();
-                ajaxPost(basePath + '/project/team/salary/savedetail', formData, function (data) {
+                ajaxPost(basePath + '/project/manager/salary/savedetail', formData, function (data) {
                     if (data.success) {
                     	salaryDetailTable.reloadData();
                     } else {
@@ -251,7 +249,7 @@
                     return false;
                 }
                 
-                ajaxPost(basePath+"/project/team/salary/getinfo",{userID:value},function(data){
+                ajaxPost(basePath+"/project/manager/salary/getinfo",{userID:value},function(data){
                 	form.initFormData(data);
                 });
             });
