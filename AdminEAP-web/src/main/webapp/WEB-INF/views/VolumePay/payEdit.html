@@ -122,7 +122,7 @@
                 modals.confirm('确认支付？', function() {
                     //Save Data，对应'submit-提交'
                     var params = form.getFormSimpleData();
-                    	ajaxPost(basePath+'/volumepay/doPay?payType='+type+"&gclid="+gclid, params, function(data) {
+                    	ajaxPost(basePath+'/volumepay/doPay?gclid='+gclid, params, function(data) {
                             if(data.success){
                             	modals.hideWin(winId);
                             	volumeTable.reloadData();
