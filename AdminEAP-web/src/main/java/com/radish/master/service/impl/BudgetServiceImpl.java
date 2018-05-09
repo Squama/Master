@@ -132,7 +132,7 @@ public class BudgetServiceImpl extends BaseServiceImpl implements BudgetService 
                     String quotaNo = getCellValue(row.getCell(0));
                     
                     
-                    if(StrUtil.isEmpty(quotaNo)){
+                    if(StrUtil.isEmpty(quotaNo) || quotaNo.matches("\\d+$")){
                         bi.setId(GUID.genTxNo(16, true));
                         if(group != bi.getId()){
                             group = bi.getId();
