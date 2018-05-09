@@ -11,6 +11,7 @@ import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.base.service.BaseService;
 import com.cnpc.framework.query.entity.QueryCondition;
 import com.radish.master.entity.Budget;
+import com.radish.master.entity.BudgetEstimate;
 import com.radish.master.entity.BudgetImport;
 import com.radish.master.entity.BudgetTx;
 import com.radish.master.entity.Materiel;
@@ -50,4 +51,11 @@ public interface BudgetService extends BaseService {
     Map<String, Materiel> getMatMap();
     
     public Result startEstimateFlow(Budget budget, String processDefinitionKey);
+    
+    
+    public List<BudgetTx> getBudgetTxList(String budgetNo);
+    
+    public List<BudgetImport> getBudgetImportList(String budgetNo);
+    
+    public List<BudgetEstimate> getBudgetEstimateList(String budgetNo);
 }

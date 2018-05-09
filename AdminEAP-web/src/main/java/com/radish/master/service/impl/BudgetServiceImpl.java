@@ -1,25 +1,15 @@
 package com.radish.master.service.impl;
 
 
-import com.cnpc.framework.activiti.pojo.Constants;
-import com.cnpc.framework.activiti.service.RuntimePageService;
-import com.cnpc.framework.base.entity.User;
-import com.cnpc.framework.base.pojo.PageInfo;
-import com.cnpc.framework.base.pojo.Result;
-import com.cnpc.framework.base.service.impl.BaseServiceImpl;
-import com.cnpc.framework.query.entity.QueryCondition;
-import com.cnpc.framework.utils.SecurityUtil;
-import com.cnpc.framework.utils.StrUtil;
-import com.radish.master.entity.Budget;
-import com.radish.master.entity.BudgetImport;
-import com.radish.master.entity.BudgetTx;
-import com.radish.master.entity.Materiel;
-import com.radish.master.entity.Project;
-import com.radish.master.entity.PurchaseApplyAudit;
-import com.radish.master.pojo.Options;
-import com.radish.master.service.BudgetService;
-import com.radish.master.system.CodeException;
-import com.radish.master.system.GUID;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
@@ -34,15 +24,26 @@ import org.hibernate.type.Type;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
+import com.cnpc.framework.activiti.pojo.Constants;
+import com.cnpc.framework.activiti.service.RuntimePageService;
+import com.cnpc.framework.base.entity.User;
+import com.cnpc.framework.base.pojo.PageInfo;
+import com.cnpc.framework.base.pojo.Result;
+import com.cnpc.framework.base.service.impl.BaseServiceImpl;
+import com.cnpc.framework.query.entity.QueryCondition;
+import com.cnpc.framework.utils.SecurityUtil;
+import com.cnpc.framework.utils.StrUtil;
+import com.radish.master.entity.Budget;
+import com.radish.master.entity.BudgetEstimate;
+import com.radish.master.entity.BudgetImport;
+import com.radish.master.entity.BudgetTx;
+import com.radish.master.entity.Materiel;
+import com.radish.master.entity.Project;
+import com.radish.master.entity.PurchaseApplyAudit;
+import com.radish.master.pojo.Options;
+import com.radish.master.service.BudgetService;
+import com.radish.master.system.CodeException;
+import com.radish.master.system.GUID;
 
 @Service("budgetService")
 public class BudgetServiceImpl extends BaseServiceImpl implements BudgetService {
@@ -131,7 +132,7 @@ public class BudgetServiceImpl extends BaseServiceImpl implements BudgetService 
                     String quotaNo = getCellValue(row.getCell(0));
                     
                     
-                    if(StrUtil.isEmpty(quotaNo)){
+                    if(StrUtil.isEmpty(quotaNo) || quotaNo.matches("\\d+$")){
                         bi.setId(GUID.genTxNo(16, true));
                         if(group != bi.getId()){
                             group = bi.getId();
@@ -371,5 +372,26 @@ public class BudgetServiceImpl extends BaseServiceImpl implements BudgetService 
 		return this.findMapBySql(sb.toString(), new Object[] {purchaseID, purchaseID, purchaseID },
 				new Type[] {StringType.INSTANCE, StringType.INSTANCE, StringType.INSTANCE }, null);
 	}
+
+    @Override
+    public List<BudgetTx> getBudgetTxList(String budgetNo) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("budgetNo", budgetNo);
+        return this.find("from BudgetTx where budgetNo = :budgetNo", params);
+    }
+
+    @Override
+    public List<BudgetImport> getBudgetImportList(String budgetNo) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("budgetNo", budgetNo);
+        return this.find("from BudgetImport where budgetNo = :budgetNo", params);
+    }
+
+    @Override
+    public List<BudgetEstimate> getBudgetEstimateList(String budgetNo) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("budgetNo", budgetNo);
+        return this.find("from BudgetEstimate where budgetNo = :budgetNo", params);
+    }
     
 }

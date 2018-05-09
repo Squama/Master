@@ -1,14 +1,11 @@
 package com.radish.master.controller;
 
 
-import com.cnpc.framework.annotation.RefreshCSRFToken;
-import com.cnpc.framework.annotation.VerifyCSRFToken;
-import com.cnpc.framework.base.pojo.Result;
-import com.cnpc.framework.utils.SecurityUtil;
-import com.radish.master.entity.Budget;
-import com.radish.master.entity.BudgetTx;
-import com.radish.master.entity.Project;
-import com.radish.master.service.BudgetService;
+import java.util.Date;
+import java.util.List;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,10 +13,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.Date;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
+import com.cnpc.framework.annotation.RefreshCSRFToken;
+import com.cnpc.framework.base.pojo.Result;
+import com.cnpc.framework.utils.SecurityUtil;
+import com.radish.master.entity.Budget;
+import com.radish.master.entity.BudgetEstimate;
+import com.radish.master.entity.BudgetImport;
+import com.radish.master.entity.BudgetTx;
+import com.radish.master.entity.Project;
+import com.radish.master.service.BudgetService;
 
 @Controller
 @RequestMapping("/budget")
@@ -97,7 +99,6 @@ public class BudgetController {
         return budgetService.getBudgetByNo(budgetNo);
     }
     
-    @VerifyCSRFToken
     @RequestMapping(method = RequestMethod.POST, value = "/save")
     @ResponseBody
     private Result saveBudget(Budget budget, HttpServletRequest request) {
@@ -112,7 +113,6 @@ public class BudgetController {
         return new Result(true, budget);
     }
     
-    @VerifyCSRFToken
     @RequestMapping(method = RequestMethod.POST, value = "/savetx")
     @ResponseBody
     private Result saveBudgetTx(BudgetTx budgetTx, HttpServletRequest request) {
@@ -125,14 +125,12 @@ public class BudgetController {
         return new Result(true);
     }
     
-    @VerifyCSRFToken
     @RequestMapping(value = "/start", method = RequestMethod.POST)
     @ResponseBody
     public Result start(Budget budget) {
         return budgetService.startFlow(this.getBudgetByNo(budget.getBudgetNo()),budget_key);
     }
     
-    @RefreshCSRFToken
     @RequestMapping(value="/channel/{id}",method ={RequestMethod.POST,RequestMethod.GET})
     public String channel(@PathVariable("id") String id,HttpServletRequest request) {
         BudgetTx budgetTx = budgetService.get(BudgetTx.class ,id);
@@ -141,7 +139,6 @@ public class BudgetController {
         return "budgetmanage/budgetactiviti/budget_channel";
     }
     
-    @VerifyCSRFToken
     @RequestMapping(method = RequestMethod.POST, value = "/savechannel")
     @ResponseBody
     private Result saveChannel(BudgetTx budgetTx, HttpServletRequest request) {
@@ -153,6 +150,37 @@ public class BudgetController {
         
         budgetService.save(budgetTxOld);
         
+        return new Result(true);
+    }
+    
+    @RequestMapping(value="/delete/{id}",method = RequestMethod.POST)
+    @ResponseBody
+    public Result delete(@PathVariable("id") String id){
+        
+        Budget budget = budgetService.getBudgetByNo(id);
+        if(!"10".equals(budget.getStatus())){
+            return new Result(false);
+        }else{
+            List<BudgetTx> txList = budgetService.getBudgetTxList(budget.getBudgetNo());
+            
+            for(BudgetTx tx : txList){
+                budgetService.delete(tx);
+            }
+            
+            List<BudgetImport> importList = budgetService.getBudgetImportList(budget.getBudgetNo());
+            
+            for(BudgetImport imp : importList){
+                budgetService.delete(imp);
+            }
+            
+            List<BudgetEstimate> estimateList = budgetService.getBudgetEstimateList(budget.getBudgetNo());
+            
+            for(BudgetEstimate est : estimateList){
+                budgetService.delete(est);
+            }
+            
+            budgetService.delete(budget);
+        }
         return new Result(true);
     }
     

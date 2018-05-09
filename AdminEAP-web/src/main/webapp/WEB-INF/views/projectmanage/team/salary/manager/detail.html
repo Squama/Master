@@ -4,18 +4,12 @@
             <div class="box box-info">
                 <div class="box-header with-border">
                     <span>
-                        <i class="fa fa-files-o">班组工资单</i>
+                        <i class="fa fa-files-o">管理人员工资单</i>
                     </span>
                 </div>
                 <form id="salary-detail-form" name="salary-detail-form" class="form-horizontal">
                     <div class="box-body">
                         <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="col-sm-4 control-label">所属项目<span style="color:red">*</span></label>
-                                <div class="col-sm-8">
-                                    <input type="text" class="form-control" id="projectName" name="projectName" readonly="readonly">
-                                </div>
-                            </div>
                             <div class="form-group">
                                 <label class="col-sm-4 control-label">开始时间<span style="color:red">*</span></label>
                                 <div class="col-sm-8">
@@ -23,16 +17,17 @@
                                         placeholder="起始时间" disabled="disabled">
                                 </div>
                             </div>
+                            
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">所属项目<span style="color:red">*</span></label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="projectName" name="projectName" readonly="readonly">
+                                </div>
+                            </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="col-sm-4 control-label">劳务合同<span style="color:red">*</span></label>
-                                <div class="col-sm-8">
-                                    <input type="text" class="form-control" id="contractName" name="contractName" readonly="readonly">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-4 control-label">结束时间</label>
+                                <label class="col-sm-4 control-label">结束时间<span style="color:red">*</span></label>
                                 <div class="col-sm-8">
                                     <input type="text" class="form-control" data-flag="datepicker" data-format="yyyy-mm-dd" name="endTime" id="endTime"
                                         placeholder="结束时间" disabled="disabled">
@@ -73,7 +68,7 @@
         
         //编辑回填
         if(id!="0"){
-            ajaxPost(basePath+"/project/team/salary/get",{id:id},function(data){
+            ajaxPost(basePath+"/project/manager/salary/get",{id:id},function(data){
                 form.initFormData(data);
             })
         }

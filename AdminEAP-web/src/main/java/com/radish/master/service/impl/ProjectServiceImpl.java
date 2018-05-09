@@ -290,7 +290,7 @@ public class ProjectServiceImpl extends BaseServiceImpl implements ProjectServic
     }
 
     @Override
-    public List<ProjectVolume> checkTimePeriod(String projectID, String laborID, String startTimeStr, String endTimeStr) {
+    public List<ProjectVolume> checkTimePeriod(String projectID, String laborID, String startTimeStr, String endTimeStr, String volumeID) {
         StringBuilder buffer = new StringBuilder();
         
         buffer.append("SELECT * FROM tbl_project_volume ");
@@ -304,6 +304,11 @@ public class ProjectServiceImpl extends BaseServiceImpl implements ProjectServic
         params.put("startTime", startTimeStr);
         params.put("projectID", projectID);
         params.put("laborID", laborID);
+        
+        if(!StrUtil.isEmpty(volumeID)){
+            buffer.append(" AND id <> :id");
+            params.put("id", volumeID);
+        }
         
         return this.findBySql(buffer.toString(), params, ProjectVolume.class);
     }
