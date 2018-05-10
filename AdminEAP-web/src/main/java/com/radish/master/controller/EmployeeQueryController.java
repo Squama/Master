@@ -11,6 +11,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.hibernate.annotations.common.util.StringHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,6 +30,7 @@ import com.cnpc.framework.base.service.UserService;
 import com.cnpc.framework.utils.EncryptUtil;
 import com.cnpc.framework.utils.SecurityUtil;
 import com.cnpc.framework.utils.StrUtil;
+import com.radish.master.entity.JobDeptRt;
 import com.radish.master.entity.common.UserExport;
 import com.radish.master.service.CommonService;
 import com.radish.master.service.WechatService;
@@ -200,6 +202,37 @@ public class EmployeeQueryController {
         r.setData(list);
         return r;
     }
+    @RequestMapping(value = "/changeJob", method = RequestMethod.POST)
+    @ResponseBody
+    public Result changeJob(HttpServletRequest request) {
+    	String deptid= request.getParameter("deptid");
+    	Result r = new Result();
+    	List<Dict> d = baseService.findBySql("select * from tbl_dict  where code='JOBS'", Dict.class);
+    	if(StringHelper.isEmpty(deptid)){
+            List<Dict> list = baseService.findBySql("select * from tbl_dict where parent_id='" + d.get(0).getId() + "'", Dict.class);
+            r.setData(list);	
+    	}else{
+    		String sql = "select * from tbl_dict where parent_id='" + d.get(0).getId() + "'";
+    		List<JobDeptRt> gxs = baseService.findBySql("select * from tbl_job_dept  where deptId='"+deptid+"'", JobDeptRt.class);
+    		if(gxs.size()>0){
+    			String jobids = "";
+    			for(JobDeptRt gx:gxs){
+    				jobids +="'"+gx.getJobId()+"',";
+    			}
+    			jobids = jobids.substring(0, jobids.length()-1);
+    			sql += " and id in("+jobids+")";
+    			List<Dict> list = baseService.findBySql(sql, Dict.class);
+    			r.setData(list);
+    		}else{
+    			List<Dict> list = baseService.findBySql(sql, Dict.class);
+    			r.setData(list);
+    		}
+    		
+    	}
+        
+        return r;
+    }
+    
 
     @RequestMapping(value = "/auditResult/{id}", method = RequestMethod.POST)
     @ResponseBody

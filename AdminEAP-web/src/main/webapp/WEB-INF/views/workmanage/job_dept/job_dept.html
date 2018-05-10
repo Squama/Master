@@ -1,0 +1,116 @@
+<div class="modal-header">
+    <h3 class="modal-title">职务关联部门</h3>
+</div>
+<div class="modal-body">
+	<div class="row">
+	<button type="button" class="btn btn-primary btn-sm" data-btn-type="add_ff" id = "save">
+                            <i class="fa fa-plus">&nbsp;保存</i></button>
+		<div class="col-md-4">
+            <div class="box box-primary" style="height: 100%;overflow-y:auto">
+                <div class="box-body box-profile">
+                    <div id="depttree"></div>
+                </div>
+                <!-- /.box-body -->
+            </div>
+        </div>
+        <div class="col-md-4">
+        
+            <div class="box box-primary" style="height: 100%;overflow-y:auto">
+                <div class="box-body box-profile">
+                    <div id="jobtree"></div>
+                </div>
+                <!-- /.box-body -->
+            </div>
+        </div>
+	</div>
+</div>
+
+<script>
+$(function () {
+	
+	initdeptTree(0);
+	initjobTree(0);
+	$("#save").on("click",function(){
+		save();
+	})
+})
+
+function initdeptTree(selectNodeId ) {
+    var treeData = null;
+    ajaxPost(basePath + "/deptjob/deptTree", null, function (data) {
+        treeData = data;
+    });
+    $("#depttree").treeview({
+        data: treeData,
+        showBorder: true,
+        levels: 2,
+        showCheckbox: false,
+        showIcon: false,
+        onNodeSelected: function (event, data) {
+        	initjobTree(0);
+           var xz = [];
+			ajaxPost(basePath+"/deptjob/getjob",{deptid:data.id},function(datas){
+            	for(var i=0;i<datas.length;i++){
+            		xz.push(datas[i])
+            		
+            	}
+            	
+            })
+            $("#jobtree").data('treeview').checkNode(xz);
+			
+        }
+    });
+    if (treeData.length == 0)
+        return;
+    $("#depttree").data('treeview').expandNode(selectNodeId);
+    $("#depttree").data('treeview').revealNode(selectNodeId);
+    
+}
+ function initjobTree(selectNodeId ){
+	 var treeData = null;
+	    ajaxPost(basePath + "/deptjob/jobTree", null, function (data) {
+	        treeData = data;
+	    });
+	    $("#jobtree").treeview({
+	        data: treeData,
+	        showBorder: true,
+	        levels: 2,
+	        showCheckbox: true,
+	        showIcon: false
+	    });
+	    if (treeData.length == 0)
+	        return;
+	    $("#jobtree").data('treeview').expandNode(selectNodeId);
+	    $("#jobtree").data('treeview').revealNode(selectNodeId);
+ }
+ function save(){
+	 var dept = $("#depttree").data("treeview").getSelected();
+	 var nodes = $("#jobtree").data("treeview").getChecked();
+     var rflist = [];
+     var jobs="";
+     for (var i = 0; i < nodes.length; i++) {
+         var curNode = nodes[i];
+         rflist.push(curNode.id);
+         if(jobs){
+        	 jobs+=","+curNode.id;
+         }else{
+        	 jobs+=curNode.id;
+         }
+     }
+     if(rflist.length==0){
+    	 modals.info('请选择至少一个职务');
+    	 return;
+     }
+     if(!dept[0].id){
+    	 modals.info('请选择要关联的部门');
+    	 return;
+     }
+     
+     ajaxPost(basePath + '/deptjob/save', {jobs:jobs,deptid:dept[0].id}, function (data) {
+         if (data.success) {
+        	 modals.info('关联成功');
+         }
+     });
+ }
+	
+</script>

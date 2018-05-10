@@ -104,17 +104,34 @@
     //确定选择组织机构
     BaseOrg.prototype.selectOrg = function () {
         var selectedNode = $("#" + this.treeId).data("treeview").getSelected();
+        var deptid="";
         if (selectedNode.length > 0) {
             if (this.options.idField)
                 this.options.idField.val(selectedNode[0].id);
             if (this.options.nameField)
                 this.options.nameField.val(selectedNode[0].text);
+            deptid=selectedNode[0].id;
         } else {
             if (this.options.idField)
                 this.options.idField.val("");
             if (this.options.nameField)
                 this.options.nameField.val("");
         }
+        ajaxPost(basePath+"/employeeQuery/changeJob",{deptid:deptid},function(data){
+        	$("#job").empty();
+        	if(data.data){
+    			var list = data.data;
+    			var option = "";
+    			for(var i=0;i<list.length;i++){
+    				
+    				option += "<option value='"+list[i].id+"'>"
+    				+ list[i].name
+    				+ "</option>";
+    			}
+    			$("#job").append(option);
+    			$("#job").select2();
+    		}
+    	}) 
         modals.hideWin(this.orgId);
 
     }

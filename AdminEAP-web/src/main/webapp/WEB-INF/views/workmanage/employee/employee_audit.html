@@ -70,16 +70,16 @@
                         });
                     })                      
                     break;
-                case 'edit':
+                case 'detail':
                     if(!rowId){
-                        modals.info('请选择要编辑的行');
+                        modals.info('请选择要查看的行');
                         return false;
                     }
                     modals.openWin({
                         winId:winId,
                         title:'编辑用户【'+userTable.getSelectedRowData().name+'】',
                         width:'900px',
-                        url:basePath+"/employeeQuery/edit?id="+rowId,
+                        url:basePath+"/employeeQuery/detail?id="+rowId,
                        });
                    break;
                 }

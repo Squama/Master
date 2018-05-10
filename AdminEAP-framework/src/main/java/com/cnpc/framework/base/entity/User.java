@@ -111,6 +111,51 @@ public class User extends BaseEntity {
     @Header(name = "基础工资")
     @Column(name = "basic_salary")
     private String basicSalary;
+    
+    @Header(name = "部门名称")
+    @Column(name = "deptName")
+    private String deptName;
+    
+    @Header(name = "工号")
+    @Column(name = "jobNumber")
+    private String jobNumber;
+    
+    @Header(name = "年龄")
+    @Column(name = "age")
+    private String age;
+    
+    @Header(name = "政治面貌")
+    @Column(name = "political")
+    private String political;
+    
+    @Header(name = "职称")
+    @Column(name = "someTitle")
+    private String someTitle;
+    
+    @Header(name = "毕业学院")
+    @Column(name = "school")
+    private String school;
+    
+    @Header(name = "专业")
+    @Column(name = "professional")
+    private String professional;
+    
+    @Header(name = "血型")
+    @Column(name = "bloodType")
+    private String bloodType;
+    
+    @Header(name = "银行账户")
+    @Column(name = "bankCount")
+    private String bankCount;
+    
+    @Header(name = "各类文件Id")
+    @Column(name = "fileId")
+    private String fileId;
+    
+    @Header(name = "入职时间")
+    @Column(name = "hireDate")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date hireDate;
 
     @Transient
     private String avatarId;
@@ -341,5 +386,93 @@ public class User extends BaseEntity {
     public void setBasicSalary(String basicSalary) {
         this.basicSalary = basicSalary;
     }
+
+	public String getDeptName() {
+		return deptName;
+	}
+
+	public void setDeptName(String deptName) {
+		this.deptName = deptName;
+	}
+
+	public String getJobNumber() {
+		return jobNumber;
+	}
+
+	public void setJobNumber(String jobNumber) {
+		this.jobNumber = jobNumber;
+	}
+
+	public String getAge() {
+		return age;
+	}
+
+	public void setAge(String age) {
+		this.age = age;
+	}
+
+	public String getPolitical() {
+		return political;
+	}
+
+	public void setPolitical(String political) {
+		this.political = political;
+	}
+
+	public String getSomeTitle() {
+		return someTitle;
+	}
+
+	public void setSomeTitle(String someTitle) {
+		this.someTitle = someTitle;
+	}
+
+	public String getSchool() {
+		return school;
+	}
+
+	public void setSchool(String school) {
+		this.school = school;
+	}
+
+	public String getProfessional() {
+		return professional;
+	}
+
+	public void setProfessional(String professional) {
+		this.professional = professional;
+	}
+
+	public String getBloodType() {
+		return bloodType;
+	}
+
+	public void setBloodType(String bloodType) {
+		this.bloodType = bloodType;
+	}
+
+	public String getBankCount() {
+		return bankCount;
+	}
+
+	public void setBankCount(String bankCount) {
+		this.bankCount = bankCount;
+	}
+
+	public String getFileId() {
+		return fileId;
+	}
+
+	public void setFileId(String fileId) {
+		this.fileId = fileId;
+	}
+
+	public Date getHireDate() {
+		return hireDate;
+	}
+
+	public void setHireDate(Date hireDate) {
+		this.hireDate = hireDate;
+	}
 
 }
