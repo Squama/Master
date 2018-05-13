@@ -128,6 +128,18 @@ public class ProjectVolume extends BaseEntity {
     @Header(name = "财务审核小计")
     @Column(name = "final_sub")
     private String finalSub;
+    
+    @Header(name = "人工费支付状态")
+    @Column(name = "labourStatus")
+    private String labourStatus;
+    
+    @Header(name = "材料费支付状态")
+    @Column(name = "matStatus")
+    private String matStatus;
+    
+    @Header(name = "机械费支付状态")
+    @Column(name = "mechStatus")
+    private String mechStatus;
 
     public String getProjectID() {
         return projectID;
@@ -312,5 +324,29 @@ public class ProjectVolume extends BaseEntity {
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
+
+	public String getLabourStatus() {
+		return labourStatus;
+	}
+
+	public void setLabourStatus(String labourStatus) {
+		this.labourStatus = labourStatus;
+	}
+
+	public String getMatStatus() {
+		return matStatus;
+	}
+
+	public void setMatStatus(String matStatus) {
+		this.matStatus = matStatus;
+	}
+
+	public String getMechStatus() {
+		return mechStatus;
+	}
+
+	public void setMechStatus(String mechStatus) {
+		this.mechStatus = mechStatus;
+	}
 
 }
