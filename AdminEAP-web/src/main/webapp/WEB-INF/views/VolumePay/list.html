@@ -45,23 +45,10 @@
     
     var volumeManageObject = {
             pay: function (volumeID,payType) {
-            	var zflx = "";
+            	/* var zflx = "";
             	var msg = "";
             	if(payType==10){
             		zflx="人工";
-            		
-            		//查询是否有工资表以及资金是否相等
-            		$.ajax({
-        				async: false,
-        				url : basePath+"/volumepay/isHaveSalary?gclid="+volumeID,
-        				dataType : 'json',
-        				success : function(data) {
-        					if(data.message){
-        						msg = data.message;
-        					}
-        				}
-        		    });
-            		
             	}else if(payType==20){
             		zflx="机械";
             	}else if(payType==30){
@@ -76,7 +63,8 @@
                     title:zflx+'支付',
                     width:'900px',
                     url:basePath+"/volumepay/payMoney?gclid="+volumeID+"&&type="+payType+"&&lx=zf"
-                   });
+                   }); */
+            	loadPage(basePath+"/volumepay/payList?gclid="+volumeID+"&type="+payType);
             },
             look: function (zfid,payType) {
             	var zflx = "";
@@ -103,23 +91,7 @@
         $("button[data-btn-type]").click(function () {
             var action = $(this).data("btn-type");
             var rowId = volumeTable.getSelectedRowId();
-            switch (action) {
-                case "edit":
-                    if(!rowId){
-                        modals.info('请选择要编辑的行');
-                        return false;
-                    }
-                    var data = volumeTable.getSelectedRowData();
-                    if(data.status != '新建'){
-                        modals.info('审核中或审核完成的条目不可编辑!');
-                        return false;
-                    }
-                    loadPage(basePath+"/projectvolume/edit/" +rowId);
-                    break;
-                case "add":
-                    loadPage(basePath+"/projectvolume/add");
-                    break;
-            }
+            
         });
         
         if(options != 0){
@@ -134,28 +106,34 @@
     
     function fnRenderRG(value, type, rowObj){
     	var oper ="";
-    	if(rowObj.rg){
-    		oper +="&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='volumeManageObject.look(\"" + rowObj.rg + "\",10)'>查看</a>";
+    	if(rowObj.labourStatus==20){
+    		oper +="&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='volumeManageObject.pay(\"" + rowObj.id + "\",10)'>详情(支付完成)</a>";
+    	}else if(rowObj.labourStatus==10){
+    		oper +="&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='volumeManageObject.pay(\"" + rowObj.id + "\",10)'>详情(支付部分)</a>";
     	}else{
-    		oper +="&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='volumeManageObject.pay(\"" + rowObj.id + "\",10)'>支付</a>";
+    		oper +="&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='volumeManageObject.pay(\"" + rowObj.id + "\",10)'>详情(未支付)</a>";
     	}
         return oper;
     }
     function fnRenderCL(value, type, rowObj){
     	var oper ="";
-    	if(rowObj.cl){
-    		oper +="&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='volumeManageObject.look(\"" + rowObj.cl + "\",30)'>查看</a>";
+    	if(rowObj.matStatus==20){
+    		oper +="&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='volumeManageObject.pay(\"" + rowObj.id + "\",30)'>详情(支付完成)</a>";
+    	}else if(rowObj.matStatus==10){
+    		oper +="&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='volumeManageObject.pay(\"" + rowObj.id + "\",30)'>详情(支付部分)</a>";
     	}else{
-    		oper +="&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='volumeManageObject.pay(\"" + rowObj.id + "\",30)'>支付</a>";
+    		oper +="&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='volumeManageObject.pay(\"" + rowObj.id + "\",30)'>详情(未支付)</a>";
     	}
         return oper;
     }
     function fnRenderJX(value, type, rowObj){
     	var oper ="";
-    	if(rowObj.jx){
-    		oper +="&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='volumeManageObject.look(\"" + rowObj.jx + "\",20)'>查看</a>";
+    	if(rowObj.mechStatus==20){
+    		oper +="&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='volumeManageObject.pay(\"" + rowObj.id + "\",20)'>详情(支付完成)</a>";
+    	}else if(rowObj.mechStatus==10){
+    		oper +="&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='volumeManageObject.pay(\"" + rowObj.id + "\",20)'>详情(支付部分)</a>";
     	}else{
-    		oper +="&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='volumeManageObject.pay(\"" + rowObj.id + "\",20)'>支付</a>";
+    		oper +="&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='volumeManageObject.pay(\"" + rowObj.id + "\",20)'>详情(未支付)</a>";
     	}
         return oper;
     }
