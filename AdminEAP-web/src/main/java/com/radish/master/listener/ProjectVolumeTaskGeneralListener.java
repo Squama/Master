@@ -139,7 +139,8 @@ public class ProjectVolumeTaskGeneralListener implements TaskListener {
             	sum = sum.add(thisVolume);
             	
             	Labor labor = baseService.get(Labor.class, pv.getLaborID());
-            	labor.setConsumePrice(sum.setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
+            	//TODO 将消耗统计到预算中
+            	//labor.setConsumePrice(sum.setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
             	
             	baseService.save(labor);
             	

@@ -35,6 +35,10 @@ public class LaborSub extends BaseEntity {
     @Column(name = "contract_name")
     private String contractName;
 
+    @Header(name = "分项名称")
+    @Column(name = "sub_name")
+    private String subName;
+
     @Header(name = "分项总价")
     @Column(name = "sub_price")
     private String subPrice;
@@ -62,6 +66,10 @@ public class LaborSub extends BaseEntity {
     @Header(name = "分项材料费")
     @Column(name = "mat_price")
     private String matPrice;
+
+    @Header(name = "分项包工包料费用")
+    @Column(name = "package_price")
+    private String packagePrice;
 
     public String getLaborID() {
         return laborID;
@@ -133,6 +141,22 @@ public class LaborSub extends BaseEntity {
 
     public void setMatPrice(String matPrice) {
         this.matPrice = matPrice;
+    }
+
+    public String getSubName() {
+        return subName;
+    }
+
+    public void setSubName(String subName) {
+        this.subName = subName;
+    }
+
+    public String getPackagePrice() {
+        return packagePrice;
+    }
+
+    public void setPackagePrice(String packagePrice) {
+        this.packagePrice = packagePrice;
     }
 
 }

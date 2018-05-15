@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -31,7 +32,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.fastjson.JSONArray;
-import com.cnpc.framework.annotation.RefreshCSRFToken;
 import com.cnpc.framework.annotation.VerifyCSRFToken;
 import com.cnpc.framework.base.pojo.FileResult;
 import com.cnpc.framework.base.pojo.Result;
@@ -42,7 +42,9 @@ import com.cnpc.framework.utils.StrUtil;
 import com.radish.master.controller.ProjectController;
 import com.radish.master.entity.Labor;
 import com.radish.master.entity.ProjectFileItem;
+import com.radish.master.entity.project.LaborSub;
 import com.radish.master.service.BudgetService;
+import com.radish.master.service.CommonService;
 import com.radish.master.service.ProjectService;
 import com.radish.master.system.GUID;
 
@@ -62,6 +64,9 @@ import com.radish.master.system.GUID;
 public class LaborController {
     
     private static Logger logger= LoggerFactory.getLogger(ProjectController.class);
+    
+    @Resource
+    private CommonService commonService;
     
     @Resource
     private ProjectService projectService;
@@ -93,7 +98,12 @@ public class LaborController {
         return "projectmanage/labor/labor_list";
     }
     
-    @RefreshCSRFToken
+    @RequestMapping(value="/detailouter/{id}",method = RequestMethod.GET)
+    public String detailOuter(@PathVariable("id") String id,HttpServletRequest request){
+        request.setAttribute("id", id);
+        return "projectmanage/labor/labor_sub_list";
+    }
+    
     @RequestMapping(value="/add",method = RequestMethod.GET)
     public String add(HttpServletRequest request){
         request.setAttribute("projectOptions", JSONArray.toJSONString(budgetService.getProjectCombobox()));
@@ -106,7 +116,6 @@ public class LaborController {
         return new Result(true, JSONArray.toJSONString(projectService.getTeamComboboxByProject(projectID)));
     }
     
-    @RefreshCSRFToken
     @RequestMapping(value="/edit/{id}",method = RequestMethod.GET)
     public String edit(@PathVariable("id") String id,HttpServletRequest request,HttpServletResponse response) {
         request.setAttribute("id", id);
@@ -115,37 +124,48 @@ public class LaborController {
         return "projectmanage/labor/labor_edit";
     }
     
-    @RefreshCSRFToken
     @RequestMapping(value="/detail/{id}",method = RequestMethod.GET)
     public String detail(@PathVariable("id") String id,HttpServletRequest request) {
         request.setAttribute("id", id);
         return "projectmanage/labor/labor_detail";
     }
     
-    @RefreshCSRFToken
-    @RequestMapping(value="/uploadfile",method = RequestMethod.POST)
+    @RequestMapping(value="/sub",method = RequestMethod.POST)
     public String step2(Labor labor, HttpServletRequest request){
-        request.setAttribute("id", labor.getId());
+        request.setAttribute("laborID", labor.getId());
+        request.setAttribute("contractName", labor.getContractName());
+        request.setAttribute("userOptions", JSONArray.toJSONString(commonService.getUserCombobox()));
         return "projectmanage/labor/labor_add_step2";
     }
     
-    @RefreshCSRFToken
-    @RequestMapping(value="/edituploadfile",method = RequestMethod.POST)
-    public String editstep2(Labor labor, HttpServletRequest request){
-        request.setAttribute("id", labor.getId());
-        return "projectmanage/labor/labor_edit_step2";
+    @RequestMapping(value="/editsub",method = RequestMethod.POST)
+    public String editStep2(Labor labor, HttpServletRequest request){
+        request.setAttribute("laborID", labor.getId());
+        request.setAttribute("contractName", labor.getContractName());
+        request.setAttribute("userOptions", JSONArray.toJSONString(commonService.getUserCombobox()));
+        return "projectmanage/labor/labor_add_step2";
     }
     
-    @VerifyCSRFToken
+    @RequestMapping(value="/uploadfile",method = RequestMethod.POST)
+    public String step3(Labor labor, HttpServletRequest request){
+        request.setAttribute("id", labor.getId());
+        labor = projectService.get(Labor.class, labor.getId());
+        request.setAttribute("contractPrice", labor.getContractPrice());
+        return "projectmanage/labor/labor_add_step3";
+    }
+    
+    @RequestMapping(value="/edituploadfile",method = RequestMethod.POST)
+    public String editstep3(Labor labor, HttpServletRequest request){
+        request.setAttribute("id", labor.getId());
+        return "projectmanage/labor/labor_edit_step3";
+    }
+    
     @RequestMapping(value="/save")
     @ResponseBody
     public Result save(Labor labor, HttpServletRequest request){
         if(StrUtil.isEmpty(labor.getId())){
             labor.setCreateDateTime(new Date());
             labor.setContractPrice("0");
-            labor.setMechPrice("0");
-            labor.setLabourPrice("0");
-            labor.setMatPrice("0");
             labor.setStatus("10");
             try {
                 projectService.save(labor);
@@ -166,19 +186,77 @@ public class LaborController {
         
         Map<String, String> map = new HashMap<String, String>();
         map.put("id", labor.getId());
+        map.put("contractName", labor.getContractName());
         return new Result(true, map);
     }
     
-    @VerifyCSRFToken
+    @RequestMapping(value="/savesub")
+    @ResponseBody
+    public Result saveSub(LaborSub laborSub, HttpServletRequest request){
+        laborSub.setCreateDateTime(new Date());
+        try {
+            projectService.save(laborSub);
+        } catch (Exception e) {
+            return new Result(false);
+        }
+        
+        String hql = "from LaborSub where laborID=:laborID";
+        Map<String, Object> params = new HashMap<>();
+        params.put("laborID", laborSub.getLaborID());
+        List<LaborSub> subList = projectService.find(hql, params);
+        
+        BigDecimal sum = new BigDecimal("0");
+        for(LaborSub sub : subList){
+            BigDecimal subPrice = new BigDecimal(sub.getSubPrice());
+            
+            sum = sum.add(subPrice);
+        }
+        
+        Labor labor = projectService.get(Labor.class, laborSub.getLaborID());
+        labor.setContractPrice(sum.setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
+        
+        projectService.update(labor);
+        
+        return new Result(true);
+    }
+    
+    @RequestMapping(value = "/deletesub/{id}", method = RequestMethod.POST)
+    @ResponseBody
+    public Result deleteSub(@PathVariable("id") String id) {
+
+        LaborSub detail = projectService.get(LaborSub.class, id);
+        try {
+            projectService.delete(detail);
+        } catch (Exception e) {
+            return new Result(false);
+        }
+        
+        String hql = "from LaborSub where laborID=:laborID";
+        Map<String, Object> params = new HashMap<>();
+        params.put("laborID", detail.getLaborID());
+        List<LaborSub> subList = projectService.find(hql, params);
+        
+        BigDecimal sum = new BigDecimal("0");
+        for(LaborSub sub : subList){
+            BigDecimal subPrice = new BigDecimal(sub.getSubPrice());
+            
+            sum = sum.add(subPrice);
+        }
+        
+        Labor labor = projectService.get(Labor.class, detail.getLaborID());
+        labor.setContractPrice(sum.setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
+        
+        projectService.update(labor);
+        
+        return new Result(true);
+    }
+    
     @RequestMapping(value="/savecontract")
     @ResponseBody
     public Result saveContract(Labor labor, HttpServletRequest request){
         
         Labor oldLabor = projectService.get(Labor.class, labor.getId());
         oldLabor.setContractPrice(labor.getContractPrice());
-        oldLabor.setMechPrice(labor.getMechPrice());
-        oldLabor.setLabourPrice(labor.getLabourPrice());
-        oldLabor.setMatPrice(labor.getMatPrice());
         oldLabor.setContractor(labor.getContractor());
         projectService.update(oldLabor);
         

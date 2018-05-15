@@ -16,7 +16,7 @@
     <div class="row">
         <div class="col-xs-12">
             <div class="box box-info">
-                <div id="stepbar" class="add stepbar">
+                <div id="stepbar" class="add stepbar" style="margin-left: 25%;">
                     <div>
                         <div class="step">
                             <span class="tip">1</span>
@@ -27,11 +27,17 @@
                         <div class="step stepundone">
                             <span class="tip">2</span>
                         </div>
-                        <div class="stepinfo undoneinfo">上传劳务合同</div>
+                        <div class="stepinfo undoneinfo">录入合同分项</div>
                     </div>
                     <div>
                         <div class="step stepundone">
                             <span class="tip">3</span>
+                        </div>
+                        <div class="stepinfo undoneinfo">上传劳务合同</div>
+                    </div>
+                    <div>
+                        <div class="step stepundone">
+                            <span class="tip">4</span>
                         </div>
                         <div class="stepinfo undoneinfo">完成</div>
                     </div>
@@ -85,7 +91,7 @@
                     </div>
                     <div class="box-footer text-center">
                         <button type="button" class="btn btn-default" data-btn-type="prev">返回</button>
-                        <button type="submit" class="btn btn-primary ml10" data-btn-type="next">上传劳务合同</button>
+                        <button type="submit" class="btn btn-primary ml10" data-btn-type="next">编辑合同分项</button>
                         <button type="submit" class="btn btn-success ml10" data-btn-type="save">保存并返回</button>
                     </div>
                 </form>
@@ -133,7 +139,7 @@
                     if (data.success) {
                         switch (action) {
                             case "next":
-                                loadPage(basePath+"/labor/uploadfile", undefined, data.data);
+                                loadPage(basePath+"/labor/sub", undefined, data.data);
                                 break;
                             case "save":
                                 loadPage(basePath+"/labor/list");

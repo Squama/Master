@@ -1,0 +1,184 @@
+
+<link rel="stylesheet" href="${basePath}/resources/common/libs/fileinput/css/fileinput.min.css">
+<style>
+
+#projectaddstep2 .krajee-default.file-preview-frame .kv-file-content {
+    height: auto;
+}
+
+#projectaddstep2 .krajee-default .file-footer-caption {
+    width: 100px;
+}
+
+</style>
+
+<script src="${basePath}/resources/common/libs/fileinput/js/fileinput.js"></script>
+<script src="${basePath}/resources/common/libs/fileinput/js/locales/zh.js"></script>
+<!--BaseFile组件-->
+<script src="${basePath}/resources/common/js/base-file.js"></script>
+<script src="${basePath}/resources/common/js/calculate.js"></script>
+<section class="content-header">
+    <h1>
+        <span>劳务合同</span>
+        <small>新增</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
+        <li><a href="#">项目管理</a></li>
+        <li class="active">新增劳务合同</li>
+    </ol>
+</section>
+
+    
+
+<section class="content" id="projectaddstep2">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box box-info">
+                <div id="stepbar" class="add stepbar">
+                    <div>
+                        <div class="step">
+                            <span class="tip">1</span>
+                        </div>
+                        <div class="stepinfo">添加合同基本信息</div>
+                    </div>
+                    <div>
+                        <div class="step">
+                            <span class="tip">2</span>
+                        </div>
+                        <div class="stepinfo">录入合同分项</div>
+                    </div>
+                    <div>
+                        <div class="step">
+                            <span class="tip">3</span>
+                        </div>
+                        <div class="stepinfo">上传劳务合同</div>
+                    </div>
+                    <div>
+                        <div class="step stepundone">
+                            <span class="tip">4</span>
+                        </div>
+                        <div class="stepinfo undoneinfo">完成</div>
+                    </div>
+                </div>
+                <form id="labor_form" name="labor_form" class="form-horizontal">
+                    <div class="box-body">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">合同总价（单位：元）<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" id="contractPrice" name="contractPrice" readonly="readonly" value="${contractPrice}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">劳务合同<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="hidden" name="contractfilefield" id="contractfilefield">
+                                    <div class="form-group">
+                                        <div class="btn btn-default btn-file" id="contractfileupload">
+                                            <i class="fa fa-paperclip"></i> 上传劳务合同(最大. 100MB)
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="file" name="contractfileattachment" id="contractfileattachment">
+                                    </div> 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer text-center">
+                        <button type="submit" class="btn btn-default" data-btn-type="prev">返回列表</button>
+                        <button type="submit" class="btn btn-success ml10" data-btn-type="save">保存并返回</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+    var labform;
+    var id = "${id?default(0)}";
+    $(function () {
+        //初始化表单 
+        form = $("#labor_form").form({baseEntity:false});
+        //数据校验
+        $("#labor_form").bootstrapValidator({
+            message: '请输入有效值',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            submitHandler: function () {
+                var action = $(this).attr('$submitButton').attr('data-btn-type');
+                switch (action) {
+                    case "prev":
+                        loadPage(basePath+"/labor/list");
+                        break;
+                    case "save":
+                    	loadPage(basePath+"/labor/list");
+                        break;
+                }
+            },
+            fields: {
+                "contractPrice": {
+                    validators: {
+                        notEmpty: {message: '合同总价不能为空'}
+                    }
+                }
+            }
+        });
+        //初始化控件
+        form.initComponent();
+    });
+    
+    var fileinputDefaults = {
+          maxFileSize: 102400,
+          maxFileCount:10,
+          previewSettings: {
+              image: {width: "160px", height: "60px"},
+              text: {width: "213px", height: "160px"},
+              object: {width: "160px", height: "auto"},
+              pdf: {width: "160px", height: "160px"},
+              other: {width: "160px", height: "160px"}
+          },
+          previewZoomSettings: {
+              image: {width: "auto", height: "auto", 'max-width': "100%", 'max-height': "100%"},
+              text: {width: "100%", height: "100%", 'min-height': "480px"},
+              object: {width: "auto", height: "100%", 'min-height': "480px"},
+              pdf: {width: "100%", height: "100%", 'min-height': "480px"},
+              other: {width: "auto", height: "100%", 'min-height': "480px"}
+          },
+          uploadUrl: basePath + "/labor/uploadMultipleFile",
+          deleteUrl: basePath + "/project/deletefile",
+          allowedPreviewTypes : ['image', 'object']
+    }
+    var defaults = {
+          title: "请上传附件",
+          getFileResultUrl: basePath+"/project/getFiles",
+          downloadFileUrl: basePath+"/project/download/",
+          fileinput: fileinputDefaults,
+          showType:'detail',
+          window:true,
+          callback:function(fileIds,oldfileIds){
+              this.showFiles({
+                  fileIds:fileIds,
+                  type:'preview'
+              });
+          }
+    }
+    
+    $("#contractfileupload").file($.extend({}, defaults, {
+        title:"请上传劳务合同",
+        fileinput:$.extend({}, fileinputDefaults, {
+            uploadExtraData: {"id":id,"fileField":"contractFile"}
+        }),
+        showContainer:'#contractfileattachment',
+        fileIdContainer:"[name='contractFile']",
+        extraPreviewConfig:{
+            "fileField":"contractFile"
+        }
+    }));
+
+
+</script>

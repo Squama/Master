@@ -63,10 +63,6 @@ public class Labor extends BaseEntity {
     @Column(name = "contract_name")
     private String contractName;
 
-    @Header(name = "已消耗金额")
-    @Column(name = "consume_price")
-    private String consumePrice;
-
     @Header(name = "状态")
     @Column(name = "status")
     private String status;
@@ -74,18 +70,6 @@ public class Labor extends BaseEntity {
     @Header(name = "承包人")
     @Column(name = "contractor")
     private String contractor;
-
-    @Header(name = "机械费")
-    @Column(name = "mech_price")
-    private String mechPrice;
-
-    @Header(name = "人工费")
-    @Column(name = "labour_price")
-    private String labourPrice;
-
-    @Header(name = "材料费")
-    @Column(name = "mat_price")
-    private String matPrice;
 
     public String getProjectID() {
         return projectID;
@@ -151,14 +135,6 @@ public class Labor extends BaseEntity {
         this.constructionManagerID = constructionManagerID;
     }
 
-    public String getConsumePrice() {
-        return consumePrice;
-    }
-
-    public void setConsumePrice(String consumePrice) {
-        this.consumePrice = consumePrice;
-    }
-
     public String getStatus() {
         return status;
     }
@@ -181,30 +157,6 @@ public class Labor extends BaseEntity {
 
     public void setContractor(String contractor) {
         this.contractor = contractor;
-    }
-
-    public String getMechPrice() {
-        return mechPrice;
-    }
-
-    public void setMechPrice(String mechPrice) {
-        this.mechPrice = mechPrice;
-    }
-
-    public String getLabourPrice() {
-        return labourPrice;
-    }
-
-    public void setLabourPrice(String labourPrice) {
-        this.labourPrice = labourPrice;
-    }
-
-    public String getMatPrice() {
-        return matPrice;
-    }
-
-    public void setMatPrice(String matPrice) {
-        this.matPrice = matPrice;
     }
 
 }

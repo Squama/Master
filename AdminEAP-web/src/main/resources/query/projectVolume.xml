@@ -8,11 +8,37 @@
         <column key="constructionTeam" header="施工班组" classType="String" allowSort="true" width="150"/>
         <column key="contractName" header="合同名称" classType="String" width="150"/>
         <column key="contractPrice" header="合同总价（元）" classType="String" allowSort="true" width="150"/>
-        <column key="consumePrice" header="已消耗"  width="150"/>
         <column key="contractor" header="承包人" classType="String" allowSort="true" width="150"/>
         <column key="constructionManager" header="施工负责人" classType="String" allowSort="true" width="150"/>
         <column key="status" header="状态" allowSort="true" width="150" render="10=新建,20=审核中,30=审核通过,40=审核不通过"/>
         <column key="id" header="操作" width="80" fnRender="fnRenderLabor"/>
+    </query>
+    
+    <query id="labor_sub_list" key="id" tableName="劳务合同分项列表" className="com.radish.master.entity.project.LaborSub" widthType="px">
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="contractName" header="合同名称" classType="String" />
+        <column key="subName" header="分项名称" classType="String"/>
+        <column key="constructionWorkerName" header="子项施工员" classType="String"/>
+        <column key="subPrice" header="分项合计（元）" classType="String" />
+        <column key="mechPrice" header="分项机械（元）" classType="String" />
+        <column key="labourPrice" header="分项人工（元）" classType="String" />
+        <column key="matPrice" header="分项材料（元）" classType="String" />
+        <column key="packagePrice" header="包工包料（元）" classType="String" />
+        <column key="id" header="操作" width="80" fnRender="fnRenderSub"/>
+    </query>
+    
+    <query id="labor_sub_detail" key="id" tableName="劳务合同分项列表" className="com.radish.master.entity.project.LaborSub" widthType="px">
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="contractName" header="合同名称" classType="String" />
+        <column key="subName" header="分项名称" classType="String"/>
+        <column key="constructionWorkerName" header="子项施工员" classType="String"/>
+        <column key="subPrice" header="分项合计（元）" classType="String" />
+        <column key="mechPrice" header="分项机械（元）" classType="String" />
+        <column key="labourPrice" header="分项人工（元）" classType="String" />
+        <column key="matPrice" header="分项材料（元）" classType="String" />
+        <column key="packagePrice" header="包工包料（元）" classType="String" />
     </query>
     
     <query id="volume_list" key="id" tableName="工程量上报列表" widthType="px">
