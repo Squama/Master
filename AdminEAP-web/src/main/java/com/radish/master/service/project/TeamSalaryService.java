@@ -8,7 +8,9 @@ import java.util.List;
 import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.base.service.BaseService;
 import com.radish.master.entity.project.Salary;
+import com.radish.master.entity.project.SalaryVolume;
 import com.radish.master.pojo.Options;
+import com.radish.master.pojo.SalarySubInfo;
 
 public interface TeamSalaryService extends BaseService{
 
@@ -25,4 +27,8 @@ public interface TeamSalaryService extends BaseService{
 	public Result startManagerSalaryFlow(Salary salary, String processDefinitionKey);
 	
 	List<Salary> checkTimePeriod(String projectID, String startTimeStr, String endTimeStr, String salaryID);
+	
+	SalaryVolume getBySalaryAndVolume(String salaryID, String volumeID);
+	
+	List<SalarySubInfo> getSubInfoList(String salaryID);
 }

@@ -23,7 +23,9 @@ import com.cnpc.framework.utils.SecurityUtil;
 import com.cnpc.framework.utils.StrUtil;
 import com.radish.master.entity.common.ActivitiSuggestion;
 import com.radish.master.entity.project.Salary;
+import com.radish.master.entity.project.SalaryVolume;
 import com.radish.master.pojo.Options;
+import com.radish.master.pojo.SalarySubInfo;
 
 @Service("teamSalaryService")
 public class TeamSalaryServiceImpl extends BaseServiceImpl implements TeamSalaryService {
@@ -167,4 +169,22 @@ public class TeamSalaryServiceImpl extends BaseServiceImpl implements TeamSalary
         return this.findBySql(buffer.toString(), params, Salary.class);
     }
 
+    @Override
+    public SalaryVolume getBySalaryAndVolume(String salaryID, String volumeID) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("salaryID", salaryID);
+        params.put("volumeID", volumeID);
+        return this.get("from SalaryVolume where salaryID=:salaryID AND volumeID=:volumeID ", params);
+    }
+
+    @Override
+    public List<SalarySubInfo> getSubInfoList(String salaryID) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("SELECT ls.sub_name subName, pv.start_time startTime, pv.end_time endTime ");
+        sb.append("FROM tbl_salary s, tbl_salary_volume sv, tbl_project_volume pv, tbl_labor_sub ls ");
+        sb.append("WHERE s.id = sv.salary_id AND sv.volume_id = pv.id AND pv.labor_sub_id = ls.id ");
+        sb.append(" AND s.id=?");
+        return this.findMapBySql(sb.toString(), new Object[] { salaryID }, new Type[] { StringType.INSTANCE }, SalarySubInfo.class);
+    }
+    
 }

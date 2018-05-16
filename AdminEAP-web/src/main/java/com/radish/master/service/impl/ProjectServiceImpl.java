@@ -181,6 +181,12 @@ public class ProjectServiceImpl extends BaseServiceImpl implements ProjectServic
     }
 
     @Override
+    public List<Options> getLaborSubComboboxByLabor(String laborID) {
+        return this.findMapBySql("select id value, sub_name data from tbl_labor_sub where labor_id=?", new Object[] { laborID },
+                new Type[] { StringType.INSTANCE }, Options.class);
+    }
+    
+    @Override
     public Result startVolumeFlow(ProjectVolume projectVolume, String processDefinitionKey) {
         User user = SecurityUtil.getUser();
 
@@ -290,13 +296,13 @@ public class ProjectServiceImpl extends BaseServiceImpl implements ProjectServic
     }
 
     @Override
-    public List<ProjectVolume> checkTimePeriod(String projectID, String laborID, String startTimeStr, String endTimeStr, String volumeID) {
+    public List<ProjectVolume> checkTimePeriod(String projectID, String laborID, String laborSubID, String startTimeStr, String endTimeStr, String volumeID) {
         StringBuilder buffer = new StringBuilder();
         
         buffer.append("SELECT * FROM tbl_project_volume ");
         buffer.append("WHERE UNIX_TIMESTAMP(start_time) <= UNIX_TIMESTAMP(:endTime) ");
         buffer.append("AND UNIX_TIMESTAMP(end_time) >= UNIX_TIMESTAMP(:startTime) ");
-        buffer.append("AND project_id=:projectID AND labor_id=:laborID ");
+        buffer.append("AND project_id=:projectID AND labor_id=:laborID AND labor_sub_id=:laborSubID ");
         
         Map<String, Object> params = new HashMap<String, Object>();
 
@@ -304,6 +310,7 @@ public class ProjectServiceImpl extends BaseServiceImpl implements ProjectServic
         params.put("startTime", startTimeStr);
         params.put("projectID", projectID);
         params.put("laborID", laborID);
+        params.put("laborSubID", laborSubID);
         
         if(!StrUtil.isEmpty(volumeID)){
             buffer.append(" AND id <> :id");

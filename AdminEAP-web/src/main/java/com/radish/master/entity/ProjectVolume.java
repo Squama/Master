@@ -58,6 +58,10 @@ public class ProjectVolume extends BaseEntity {
     @Column(name = "labor_id")
     private String laborID;
 
+    @Header(name = "劳务合同分项ID")
+    @Column(name = "labor_sub_id")
+    private String laborSubID;
+
     @Header(name = "工程量")
     @Column(name = "volume")
     private String volume;
@@ -85,6 +89,10 @@ public class ProjectVolume extends BaseEntity {
     @Column(name = "apply_debit")
     private String applyDebit;
 
+    @Header(name = "申报包工包料")
+    @Column(name = "apply_pack")
+    private String applyPack;
+
     @Header(name = "申报小计")
     @Column(name = "apply_sub")
     private String applySub;
@@ -104,6 +112,10 @@ public class ProjectVolume extends BaseEntity {
     @Header(name = "经营科审核扣款")
     @Column(name = "business_debit")
     private String businessDebit;
+
+    @Header(name = "经营科审核包工包料")
+    @Column(name = "business_pack")
+    private String businessPack;
 
     @Header(name = "经营科审核小计")
     @Column(name = "business_sub")
@@ -125,18 +137,22 @@ public class ProjectVolume extends BaseEntity {
     @Column(name = "final_debit")
     private String finalDebit;
 
+    @Header(name = "财务审核包工包料")
+    @Column(name = "final_pack")
+    private String finalPack;
+
     @Header(name = "财务审核小计")
     @Column(name = "final_sub")
     private String finalSub;
-    
+
     @Header(name = "人工费支付状态")
     @Column(name = "labourStatus")
     private String labourStatus;
-    
+
     @Header(name = "材料费支付状态")
     @Column(name = "matStatus")
     private String matStatus;
-    
+
     @Header(name = "机械费支付状态")
     @Column(name = "mechStatus")
     private String mechStatus;
@@ -325,28 +341,60 @@ public class ProjectVolume extends BaseEntity {
         this.createTime = createTime;
     }
 
-	public String getLabourStatus() {
-		return labourStatus;
-	}
+    public String getLabourStatus() {
+        return labourStatus;
+    }
 
-	public void setLabourStatus(String labourStatus) {
-		this.labourStatus = labourStatus;
-	}
+    public void setLabourStatus(String labourStatus) {
+        this.labourStatus = labourStatus;
+    }
 
-	public String getMatStatus() {
-		return matStatus;
-	}
+    public String getMatStatus() {
+        return matStatus;
+    }
 
-	public void setMatStatus(String matStatus) {
-		this.matStatus = matStatus;
-	}
+    public void setMatStatus(String matStatus) {
+        this.matStatus = matStatus;
+    }
 
-	public String getMechStatus() {
-		return mechStatus;
-	}
+    public String getMechStatus() {
+        return mechStatus;
+    }
 
-	public void setMechStatus(String mechStatus) {
-		this.mechStatus = mechStatus;
-	}
+    public void setMechStatus(String mechStatus) {
+        this.mechStatus = mechStatus;
+    }
+
+    public String getLaborSubID() {
+        return laborSubID;
+    }
+
+    public void setLaborSubID(String laborSubID) {
+        this.laborSubID = laborSubID;
+    }
+
+    public String getApplyPack() {
+        return applyPack;
+    }
+
+    public void setApplyPack(String applyPack) {
+        this.applyPack = applyPack;
+    }
+
+    public String getBusinessPack() {
+        return businessPack;
+    }
+
+    public void setBusinessPack(String businessPack) {
+        this.businessPack = businessPack;
+    }
+
+    public String getFinalPack() {
+        return finalPack;
+    }
+
+    public void setFinalPack(String finalPack) {
+        this.finalPack = finalPack;
+    }
 
 }

@@ -16,13 +16,21 @@
                                 </div>
                             </div>
                             <div class="form-group">
+                                <label class="col-sm-5 control-label">选择合同分项<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <select id="laborSubID" class="form-control select2" name="laborSubID" disabled="disabled">
+                                        <option selected="selected" value="">选择一个分项</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
                                 <label class="col-sm-5 control-label">施工班组<span style="color:red">*</span></label>
                                 <div class="col-sm-6">
                                     <input type="text" class="form-control" id="constructionTeam" name="constructionTeam" placeholder="施工班组" readonly="readonly">
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-5 control-label">合同总价<span style="color:red">*</span></label>
+                                <label class="col-sm-5 control-label">合同总价（元）</label>
                                 <div class="col-sm-6">
                                     <input type="text" class="form-control" id="contractPrice" name="contractPrice" placeholder="合同总价" readonly="readonly">
                                 </div>
@@ -46,17 +54,23 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">施工负责人<span style="color:red">*</span></label>
-                                <div class="col-sm-6">
-                                    <input type="text" class="form-control" id="constructionManager" name="constructionManager" placeholder="施工负责人" readonly="readonly">
-                                </div>
-                            </div>
-                            <div class="form-group">
                                 <label class="col-sm-3 control-label">生成时间<span style="color:red">*</span></label>
                                 <div class="input-group col-sm-6">
                                     <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                                    <input type="text" class="form-control" data-flag="datepicker" data-format="yyyy-mm-dd" name="updateDateTime" id="updateDateTime"
+                                    <input type="text" class="form-control" data-flag="datepicker" data-format="yyyy-mm-dd" name="createTime" id="createTime"
                                         placeholder="生成时间" disabled="disabled">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">施工负责人<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" id="constructionManager" name="constructionManager" readonly="readonly">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">分项总价（元）</label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" id="subPrice" name="subPrice" readonly="readonly">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -77,7 +91,7 @@
                         <div id="pingxing" class="col-md-6" style="margin-left:25%">
                               <div class="callout callout-success" id="applyInfo" style="margin-top:8px;margin-bottom:8px;">
                                 <h4>上报金额：</h4>
-                                <p>机械费：<span id="mechInfo">尚未审批</span>；人工费：<span id="labourInfo">尚未审批</span>；材料费：<span id="matInfo">尚未审批</span>；扣款：<span id="debitInfo">尚未审批</span></p>
+                                <p>机械费：<span id="mechInfo">尚未审批</span>；人工费：<span id="labourInfo">尚未审批</span>；材料费：<span id="matInfo">尚未审批</span>；包工包料：<span id="packInfo">尚未审批</span>；扣款：<span id="debitInfo">尚未审批</span></p>
                                 <h5>上报小计：<span id="subInfo">尚未审批</span></h5>
                               </div>
                         </div>
@@ -94,6 +108,12 @@
                                     <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control calculate" id="businessMat" name="businessMat" placeholder="审核材料费" value="0">
                                 </div>
                             </div>
+                            <div class="form-group">
+                                <label class="col-sm-5 control-label">审核扣款（元）<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control calculate" id="businessDebit" name="businessDebit" placeholder="审核应扣款" value="0">
+                                </div>
+                            </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
@@ -103,9 +123,9 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">审核扣款（元）<span style="color:red">*</span></label>
+                                <label class="col-sm-3 control-label">审核包工包料（元）<span style="color:red">*</span></label>
                                 <div class="col-sm-6">
-                                    <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control calculate" id="businessDebit" name="businessDebit" placeholder="审核应扣款" value="0">
+                                    <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control calculate" id="businessPack" name="businessPack" placeholder="审核包工包料" value="0">
                                 </div>
                             </div>
                         </div>
@@ -171,7 +191,28 @@
                             $('#constructionTeam').val(data.constructionTeam);
                             $('#constructionManager').val(data.constructionManager);
                             $('#contractPrice').val(data.contractPrice);
-                        })
+                        });
+                        //加载分项
+                        ajaxPost(basePath+"/projectvolume/getlaborsub",{laborID:laborid},function(data){
+                            var laborSubOptions = data.message;
+                            sOptions = JSON.parse(laborSubOptions);
+                            $('#laborSubID').empty();
+                            $('#laborSubID').append('<option selected="selected" value="">选择一个分项</option>');
+                            for (var i = 0, len = sOptions.length; i < len; i++) {
+                                var option = sOptions[i];
+                                $('#laborSubID').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+                            }
+                            $('#laborSubID').unbind("change.Labor");
+                            $('#laborSubID').bind("change.Labor", function(){
+                                laborSubID = $(this).val();
+                                ajaxPost(basePath+"/projectvolume/getlaborsubinfo",{laborSubID:laborSubID},function(data){
+                                    $('#subPrice').val(data.subPrice);
+                                })
+                            });
+                            
+                            $('#laborSubID').select2();
+                        });
+                        //分项加载结束
                     });
                     
                     $('#laborID').select2();
@@ -184,9 +225,11 @@
         if(id!="0"){
             ajaxPost(basePath+"/projectvolume/get",{id:id},function(data){
                 form.initFormData(data);
+                $('#laborSubID').val(data.laborSubID).trigger("change");
                 $('#mechInfo').html(data.applyMech + '元');
                 $('#labourInfo').html(data.applyLabour + '元');
                 $('#matInfo').html(data.applyMat + '元');
+                $('#packInfo').html(data.applyPack + '元');
                 $('#debitInfo').html(data.applyDebit + '元');
                 $('#subInfo').html(data.applySub + '元');
             })
@@ -196,9 +239,10 @@
             var mech = parseFloat($('#businessMech').val());
             var labour = parseFloat($('#businessLabour').val());
             var mat = parseFloat($('#businessMat').val());
+            var pack = parseFloat($('#businessPack').val());
             var debit = parseFloat($('#businessDebit').val());
             
-            var sub = accSubtraction(accAddition(accAddition(mech, labour), mat), debit);
+            var sub = accSubtraction(accAddition(accAddition(accAddition(mech, labour), mat), pack), debit);
             $('#businessSub').val(sub);
             
             var formData = {};
@@ -206,6 +250,7 @@
             formData.businessMech = mech + "";
             formData.businessLabour = labour + "";
             formData.businessMat = mat + "";
+            formData.businessPack = pack + "";
             formData.businessDebit = debit + "";
             formData.businessSub = sub + "";
             ajaxPost(basePath + '/projectvolume/savebusiness', formData, function (data) {

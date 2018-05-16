@@ -4,6 +4,7 @@
 package com.radish.master.controller.project;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.cnpc.framework.annotation.RefreshCSRFToken;
 import com.cnpc.framework.annotation.VerifyCSRFToken;
@@ -26,12 +28,13 @@ import com.cnpc.framework.base.entity.User;
 import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.utils.StrUtil;
 import com.radish.master.entity.Labor;
-import com.radish.master.entity.ProjectVolume;
 import com.radish.master.entity.project.Salary;
 import com.radish.master.entity.project.SalaryDetail;
+import com.radish.master.entity.project.SalaryVolume;
+import com.radish.master.pojo.SalaryChooseVO;
+import com.radish.master.pojo.SalarySubInfo;
 import com.radish.master.service.CommonService;
 import com.radish.master.service.project.TeamSalaryService;
-import com.radish.master.system.SpringUtil;
 
 @Controller
 @RequestMapping("/project/team/salary")
@@ -49,15 +52,19 @@ public class ProjectTeamSalaryController {
 		return "projectmanage/team/salary/list";
 	}
 
-	@RequestMapping(value = "/detailouter/{id}", method = RequestMethod.GET)
-	public String detailOuter(@PathVariable("id") String id, HttpServletRequest request, HttpServletResponse response) {
-		request.setAttribute("id", id);
-		return "projectmanage/team/salary/detail";
-	}
-
 	@RequestMapping(value = "/detail/{id}", method = RequestMethod.GET)
 	public String detail(@PathVariable("id") String id, HttpServletRequest request, HttpServletResponse response) {
 		request.setAttribute("id", id);
+		String subInfo = "";
+		SimpleDateFormat myFormat=new SimpleDateFormat("yyyy-MM-dd");
+		List<SalarySubInfo> list = teamSalaryService.getSubInfoList(id);
+		for(SalarySubInfo sub : list){
+		    subInfo = subInfo + "分项名称：" +sub.getSubName() + "，";
+		    subInfo = subInfo + "开始时间：" + myFormat.format(sub.getStartTime()) + "，";
+		    subInfo = subInfo + "结束时间：" + myFormat.format(sub.getEndTime());
+		    subInfo = subInfo + "\\n";
+		}
+		request.setAttribute("subInfo", subInfo);
 		return "projectmanage/team/salary/detail";
 	}
 
@@ -117,10 +124,7 @@ public class ProjectTeamSalaryController {
 			salary.setUpdateDateTime(new Date());
 			salary.setStatus("10");
 			salary.setType("10");
-			ProjectVolume pv = teamSalaryService.get(ProjectVolume.class, salary.getVolumeID());
-			salary.setStartTime(pv.getStartTime());
-			salary.setEndTime(pv.getEndTime());
-			salary.setTotal(pv.getFinalLabour());
+			salary.setTotal("0");
 			salary.setApplySum("0");
 			try {
 				teamSalaryService.save(salary);
@@ -130,13 +134,8 @@ public class ProjectTeamSalaryController {
 			total = salary.getTotal();
 		} else {
 			Salary oldSalary = teamSalaryService.get(Salary.class, salary.getId());
-			if (oldSalary.getVolumeID() != salary.getVolumeID()) {
-				ProjectVolume pv = teamSalaryService.get(ProjectVolume.class, salary.getVolumeID());
-				oldSalary.setStartTime(pv.getStartTime());
-				oldSalary.setEndTime(pv.getEndTime());
-				oldSalary.setTotal(pv.getFinalLabour());
-			}
-			SpringUtil.copyPropertiesIgnoreNull(salary, oldSalary);
+			oldSalary.setProjectID(salary.getProjectID());
+			oldSalary.setLaborID(salary.getLaborID());
 			oldSalary.setUpdateDateTime(new Date());
 			teamSalaryService.save(oldSalary);
 			
@@ -150,6 +149,57 @@ public class ProjectTeamSalaryController {
 		map.put("total", total);
 		return new Result(true, map);
 	}
+	
+    @RequestMapping(value = "/choose", method = RequestMethod.POST)
+    @ResponseBody
+    public Result choose(String volumeList) {
+
+        List<SalaryChooseVO> scs = JSON.parseArray(volumeList, SalaryChooseVO.class);
+        Salary salary = null;
+        BigDecimal sum = new BigDecimal("0");
+        for (SalaryChooseVO vo : scs) {
+            if(salary == null){
+                salary = teamSalaryService.get(Salary.class, vo.getSalaryID());
+                sum = new BigDecimal(salary.getTotal());
+            }
+            SalaryVolume sv = new SalaryVolume();
+            sv.setSalaryID(vo.getSalaryID());
+            sv.setVolumeID(vo.getVolumeID());
+            teamSalaryService.save(sv);
+            
+            sum = sum.add(new BigDecimal(vo.getLabour()));
+        }
+        if(salary != null){
+            salary.setTotal(sum.toPlainString());
+            teamSalaryService.update(salary);
+        }
+        return new Result(true,sum.toPlainString());
+    }
+    
+    @RequestMapping(value = "/unchoose", method = RequestMethod.POST)
+    @ResponseBody
+    public Result unChoose(String volumeList) {
+
+        List<SalaryChooseVO> scs = JSON.parseArray(volumeList, SalaryChooseVO.class);
+        Salary salary = null;
+        BigDecimal sum = new BigDecimal("0");
+        for (SalaryChooseVO vo : scs) {
+            if(salary == null){
+                salary = teamSalaryService.get(Salary.class, vo.getSalaryID());
+                sum = new BigDecimal(salary.getTotal());
+            }
+            SalaryVolume sv = teamSalaryService.getBySalaryAndVolume(vo.getSalaryID(), vo.getVolumeID());
+            teamSalaryService.delete(sv);
+            
+            sum = sum.subtract(new BigDecimal(vo.getLabour()));
+        }
+        if(salary != null){
+            salary.setTotal(sum.toPlainString());
+            teamSalaryService.update(salary);
+        }
+        return new Result(true,sum.toPlainString());
+    }
+	
 
 	@RequestMapping(value = "/delete/{id}", method = RequestMethod.POST)
 	@ResponseBody

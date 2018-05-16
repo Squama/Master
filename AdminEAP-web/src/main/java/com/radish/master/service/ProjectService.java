@@ -62,6 +62,8 @@ public interface ProjectService extends BaseService{
     
     List<Options> getLaborComboboxByProject(String projectID);
     
+    List<Options> getLaborSubComboboxByLabor(String laborID);
+    
     public Result startVolumeFlow(ProjectVolume projectVolume, String processDefinitionKey);
     
     public Result startLaborFlow(Labor labor, String processDefinitionKey);
@@ -74,5 +76,5 @@ public interface ProjectService extends BaseService{
     
     Map<String, String> getUserTeamCombobox();
     
-    List<ProjectVolume> checkTimePeriod(String projectID, String laborID, String startTimeStr, String endTimeStr, String volumeID);
+    List<ProjectVolume> checkTimePeriod(String projectID, String laborID, String laborSubID, String startTimeStr, String endTimeStr, String volumeID);
 }

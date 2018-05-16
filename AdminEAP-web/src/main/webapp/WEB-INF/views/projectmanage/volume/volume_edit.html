@@ -15,7 +15,7 @@
     <div class="row">
         <div class="col-xs-12">
             <div class="box box-info">
-                <form id="volume_form" name="project_form" class="form-horizontal">
+                <form id="volume_form" name="volume_form" class="form-horizontal">
                     <input type="hidden" name="projectName" id="projectName">
                     <input type="hidden" name="id">
                     <div class="box-body">
@@ -29,13 +29,21 @@
                                 </div>
                             </div>
                             <div class="form-group">
+                                <label class="col-sm-5 control-label">选择合同分项<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <select id="laborSubID" class="form-control select2" name="laborSubID">
+                                        <option selected="selected" value="">选择一个分项</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
                                 <label class="col-sm-5 control-label">施工班组<span style="color:red">*</span></label>
                                 <div class="col-sm-6">
                                     <input type="text" class="form-control" id="constructionTeam" name="constructionTeam" placeholder="施工班组" readonly="readonly">
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-5 control-label">合同总价（元）<span style="color:red">*</span></label>
+                                <label class="col-sm-5 control-label">合同总价（元）</label>
                                 <div class="col-sm-6">
                                     <input type="text" class="form-control" id="contractPrice" name="contractPrice" placeholder="合同总价" readonly="readonly">
                                 </div>
@@ -60,6 +68,12 @@
                                     <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control calculate" id=applyMat name="applyMat" placeholder="本次上报材料费" value="0">
                                 </div>
                             </div>
+                            <div class="form-group">
+                                <label class="col-sm-5 control-label">扣款（元）<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control calculate" id="applyDebit" name="applyDebit" placeholder="本次上报应扣款" value="0">
+                                </div>
+                            </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
@@ -71,17 +85,23 @@
                                 </div>
                             </div>
                             <div class="form-group">
+                                <label class="col-sm-3 control-label">生成时间<span style="color:red">*</span></label>
+                                <div class="input-group col-sm-6">
+                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                    <input type="text" class="form-control" data-flag="datepicker" data-format="yyyy-mm-dd" name="createTime" id="createTime"
+                                        placeholder="生成时间" disabled="disabled">
+                                </div>
+                            </div>
+                            <div class="form-group">
                                 <label class="col-sm-3 control-label">施工负责人<span style="color:red">*</span></label>
                                 <div class="col-sm-6">
                                     <input type="text" class="form-control" id="constructionManager" name="constructionManager" placeholder="施工负责人" readonly="readonly">
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">生成时间<span style="color:red">*</span></label>
-                                <div class="input-group col-sm-6">
-                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                                    <input type="text" class="form-control" data-flag="datepicker" data-format="yyyy-mm-dd" name="createTime" id="createTime"
-                                        placeholder="生成时间" disabled="disabled">
+                                <label class="col-sm-3 control-label">分项总价（元）</label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" id="subPrice" name="subPrice" readonly="readonly">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -99,9 +119,9 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">扣款（元）<span style="color:red">*</span></label>
+                                <label class="col-sm-3 control-label">包工包料（元）<span style="color:red">*</span></label>
                                 <div class="col-sm-6">
-                                    <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control calculate" id="applyDebit" name="applyDebit" placeholder="本次上报应扣款" value="0">
+                                    <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control calculate" id="applyPack" name="applyPack" placeholder="本次上报包工包料金额" value="0">
                                 </div>
                             </div>
                         </div>
@@ -122,7 +142,7 @@
                     </div>
                     <div class="box-footer text-center">
                         <button type="button" class="btn btn-default" data-btn-type="prev">返回</button>
-                        <button type="submit" class="btn btn-success ml10" data-btn-type="save">保存并返回</button>
+                        <button type="submit" class="btn btn-success ml10" data-btn-type="save" id="savebtn">保存并返回</button>
                     </div>
                 </form>
             </div>
@@ -210,6 +230,11 @@
                         notEmpty: {message: '材料费不能为空'}
                     }
                 },
+                "applyPack": {
+                    validators: {
+                        notEmpty: {message: '包工包料不能为空'}
+                    }
+                },
                 "applyDebit": {
                     validators: {
                         notEmpty: {message: '工程量不能为空'}
@@ -248,6 +273,7 @@
                         var lOption = lOptions[i];
                         $('#laborID').append("<option value=\"" + lOption.value + "\">" + lOption.data + "</option>");
                     }
+                    $('#laborID').select2();
                     $('#laborID').unbind("change.Labor");
                     $('#laborID').bind("change.Labor", function(){
                         laborid = $(this).val();
@@ -255,12 +281,37 @@
                         	$('#constructionTeam').val(data.constructionTeam);
                         	$('#constructionManager').val(data.constructionManager);
                         	$('#contractPrice').val(data.contractPrice);
-                        })
+                        });
+                        //加载分项
+                        ajaxPost(basePath+"/projectvolume/getlaborsub",{laborID:laborid},function(data){
+                            var laborSubOptions = data.message;
+                            sOptions = JSON.parse(laborSubOptions);
+                            $('#laborSubID').empty();
+                            $('#laborSubID').append('<option selected="selected" value="">选择一个分项</option>');
+                            for (var i = 0, len = sOptions.length; i < len; i++) {
+                                var option = sOptions[i];
+                                $('#laborSubID').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+                            }
+                            $('#laborSubID').select2();
+                            $('#laborSubID').unbind("change.LaborSub");
+                            $('#laborSubID').bind("change.LaborSub", function(){
+                                laborSubID = $(this).val();
+                                ajaxPost(basePath+"/projectvolume/getlaborsubinfo",{laborSubID:laborSubID},function(data){
+                                    $('#subPrice').val(data.subPrice);
+                                    ajaxPost(basePath+"/projectvolume/checkconstworker", {userID:data.constructionWorkerID,userName:data.constructionWorkerName}, function (data, status) {
+                                        if (!data.success) {
+                                            modals.error(data.message);
+                                            $('#savebtn').attr("disabled","disabled");
+                                        }else{
+                                        	$('#savebtn').removeAttr("disabled");
+                                        }
+                                    });
+                                })
+                            });
+                        });
+                        //分项加载结束
                     });
-                    
-                    $('#laborID').select2();
-                })
-                
+                });
             });
         }
         
@@ -268,6 +319,7 @@
         if(id!="0"){
             ajaxPost(basePath+"/projectvolume/get",{id:id},function(data){
                 form.initFormData(data);
+                $('#laborSubID').val(data.laborSubID).trigger("change");
             })
         }
         
@@ -275,9 +327,10 @@
             var mech = parseFloat($('#applyMech').val());
             var labour = parseFloat($('#applyLabour').val());
             var mat = parseFloat($('#applyMat').val());
+            var pack = parseFloat($('#applyPack').val());
             var debit = parseFloat($('#applyDebit').val());
             
-            var sub = accSubtraction(accAddition(accAddition(mech, labour), mat), debit);
+            var sub = accSubtraction(accAddition(accAddition(accAddition(mech, labour), mat), pack), debit);
             $('#applySub').val(sub);
         });
     });

@@ -26,14 +26,18 @@ import com.cnpc.framework.activiti.pojo.TaskVo;
 import com.cnpc.framework.activiti.service.RuntimePageService;
 import com.cnpc.framework.activiti.service.TaskPageService;
 import com.cnpc.framework.annotation.RefreshCSRFToken;
+import com.cnpc.framework.base.entity.User;
 import com.cnpc.framework.base.pojo.PageInfo;
 import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.query.entity.QueryCondition;
+import com.cnpc.framework.utils.SecurityUtil;
 import com.cnpc.framework.utils.StrUtil;
 import com.radish.master.entity.Labor;
 import com.radish.master.entity.ProjectVolume;
+import com.radish.master.entity.project.LaborSub;
 import com.radish.master.service.BudgetService;
 import com.radish.master.service.ProjectService;
+import com.radish.master.system.SpringUtil;
 
 /**
 * 类说明
@@ -120,10 +124,28 @@ public class ProjectVolumeController {
         }
     }
     
+    @RequestMapping(value="/checkconstworker",method = RequestMethod.POST)
+    @ResponseBody
+    public Result checkConstWorker(String userID, String userName){
+        User currentUser = SecurityUtil.getUser();
+        
+        if(!userID.equals(currentUser.getId())){
+            return new Result(false,"本分项只可由施工员【"+userName+"】进行上报！");
+        }else{
+            return new Result(true);
+        }
+    }
+    
     @RequestMapping(value="/getlabor")
     @ResponseBody
     public Result getLabor(String projectID){
         return new Result(true, JSONArray.toJSONString(projectService.getLaborComboboxByProject(projectID)));
+    }
+    
+    @RequestMapping(value="/getlaborsub")
+    @ResponseBody
+    public Result getLaborSub(String laborID){
+        return new Result(true, JSONArray.toJSONString(projectService.getLaborSubComboboxByLabor(laborID)));
     }
     
     @RequestMapping(value="/getpingxing")
@@ -193,6 +215,12 @@ public class ProjectVolumeController {
         return projectService.get(Labor.class, laborID);
     }
     
+    @RequestMapping(value="/getlaborsubinfo")
+    @ResponseBody
+    public LaborSub getLaborSubInfo(String laborSubID){
+        return projectService.get(LaborSub.class, laborSubID);
+    }
+    
     @RequestMapping(method = RequestMethod.POST, value="/save")
     @ResponseBody
     public Result save(ProjectVolume projectVolume, HttpServletRequest request){
@@ -215,7 +243,7 @@ public class ProjectVolumeController {
         String endTime = String.valueOf(calendar.getTimeInMillis());*/
         
         
-        List<ProjectVolume> list = projectService.checkTimePeriod(projectVolume.getProjectID(), projectVolume.getLaborID(), startTime, endTime, projectVolume.getId());
+        List<ProjectVolume> list = projectService.checkTimePeriod(projectVolume.getProjectID(), projectVolume.getLaborID(), projectVolume.getLaborSubID(), startTime, endTime, projectVolume.getId());
         if(!list.isEmpty()){
             return new Result(false, "上报时间段不可重叠");
         }
@@ -228,16 +256,18 @@ public class ProjectVolumeController {
             projectVolume.setBusinessLabour(projectVolume.getApplyLabour());
             projectVolume.setBusinessMat(projectVolume.getApplyMat());
             projectVolume.setBusinessDebit(projectVolume.getApplyDebit());
+            projectVolume.setBusinessPack(projectVolume.getApplyPack());
             projectVolume.setBusinessSub(projectVolume.getApplySub());
             projectVolume.setFinalMech(projectVolume.getApplyMech());
             projectVolume.setFinalLabour(projectVolume.getApplyLabour());
             projectVolume.setFinalMat(projectVolume.getApplyMat());
             projectVolume.setFinalDebit(projectVolume.getApplyDebit());
+            projectVolume.setFinalPack(projectVolume.getApplyPack());
             projectVolume.setFinalSub(projectVolume.getApplySub());
             projectService.save(projectVolume);
         }else{
             ProjectVolume oldProjectVolume = projectService.get(ProjectVolume.class, projectVolume.getId());
-            oldProjectVolume.setProjectID(projectVolume.getProjectID());
+            /*oldProjectVolume.setProjectID(projectVolume.getProjectID());
             oldProjectVolume.setProjectName(projectVolume.getProjectName());
             oldProjectVolume.setStartTime(projectVolume.getStartTime());
             oldProjectVolume.setEndTime(projectVolume.getEndTime());
@@ -247,19 +277,26 @@ public class ProjectVolumeController {
             oldProjectVolume.setApplyLabour(projectVolume.getApplyLabour());
             oldProjectVolume.setApplyMat(projectVolume.getApplyMat());
             oldProjectVolume.setApplyDebit(projectVolume.getApplyDebit());
+            oldProjectVolume.setApplyPack(projectVolume.getApplyPack());
             oldProjectVolume.setApplySub(projectVolume.getApplySub());
             oldProjectVolume.setBusinessMech(projectVolume.getApplyMech());
             oldProjectVolume.setBusinessLabour(projectVolume.getApplyLabour());
             oldProjectVolume.setBusinessMat(projectVolume.getApplyMat());
             oldProjectVolume.setBusinessDebit(projectVolume.getApplyDebit());
+            oldProjectVolume.setBusinessPack(projectVolume.getApplyPack());
             oldProjectVolume.setBusinessSub(projectVolume.getApplySub());
             oldProjectVolume.setFinalMech(projectVolume.getApplyMech());
             oldProjectVolume.setFinalLabour(projectVolume.getApplyLabour());
             oldProjectVolume.setFinalMat(projectVolume.getApplyMat());
             oldProjectVolume.setFinalDebit(projectVolume.getApplyDebit());
-            oldProjectVolume.setFinalSub(projectVolume.getApplySub());
+            oldProjectVolume.setFinalPack(projectVolume.getApplyPack());
+            oldProjectVolume.setFinalSub(projectVolume.getApplySub());*/
+            
+            SpringUtil.copyPropertiesIgnoreNull(projectVolume, oldProjectVolume);
+            
             oldProjectVolume.setUpdateDateTime(new Date());
             oldProjectVolume.setCreateTime(new Date());
+            
             projectService.update(oldProjectVolume);
         }
         
@@ -278,6 +315,7 @@ public class ProjectVolumeController {
         oldProjectVolume.setBusinessLabour(projectVolume.getBusinessLabour());
         oldProjectVolume.setBusinessMat(projectVolume.getBusinessMat());
         oldProjectVolume.setBusinessDebit(projectVolume.getBusinessDebit());
+        oldProjectVolume.setBusinessPack(projectVolume.getBusinessPack());
         oldProjectVolume.setBusinessSub(projectVolume.getBusinessSub());
         oldProjectVolume.setUpdateDateTime(new Date());
         
@@ -302,6 +340,7 @@ public class ProjectVolumeController {
         oldProjectVolume.setFinalLabour(projectVolume.getFinalLabour());
         oldProjectVolume.setFinalMat(projectVolume.getFinalMat());
         oldProjectVolume.setFinalDebit(projectVolume.getFinalDebit());
+        oldProjectVolume.setFinalPack(projectVolume.getFinalPack());
         oldProjectVolume.setFinalSub(projectVolume.getFinalSub());
         oldProjectVolume.setUpdateDateTime(new Date());
         

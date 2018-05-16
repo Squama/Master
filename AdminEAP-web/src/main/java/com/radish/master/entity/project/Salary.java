@@ -40,10 +40,6 @@ public class Salary extends BaseEntity {
 	@Column(name = "contract_name")
 	private String contractName;
 
-	@Header(name = "工程量清单编码")
-	@Column(name = "volume_id")
-	private String volumeID;
-
 	@Header(name = "施工开始时间")
 	@Column(name = "start_time")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -104,14 +100,6 @@ public class Salary extends BaseEntity {
 
 	public void setContractName(String contractName) {
 		this.contractName = contractName;
-	}
-
-	public String getVolumeID() {
-		return volumeID;
-	}
-
-	public void setVolumeID(String volumeID) {
-		this.volumeID = volumeID;
 	}
 
 	public Date getStartTime() {

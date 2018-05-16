@@ -59,18 +59,52 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">选择工程量清单<span style="color:red">*</span></label>
+                                <label class="col-sm-3 control-label">本次支付人工费合计（元）</label>
                                 <div class="col-sm-6">
-                                    <select id="volumeID" class="form-control select2" name="volumeID">
-                                            <option selected="selected" value="">选择一个工程量清单</option>
-                                    </select>
+                                    <input type="text" class="form-control" id="total" name="total" readonly="readonly">
                                 </div>
                             </div>
                         </div>
+                        
+			            <div class="col-md-6 volumelist dn">
+			                <div class="box box-primary">
+			                    <div class="box-header with-border">
+			                       <h5 class="box-title" style="font-size:14px;">工程量清单（未选择）</h5>
+			                       <button type="button" id="btn_add_ur" class="btn btn-sm close" title="工程量清单（未选择）" >
+			                         <li class="fa fa-arrow-right"></li>
+			                       </button>
+			                    </div>
+			                    <div class="dataTables_filter" id="searchDiv_unselected" style="display:none;">
+			                        <input name="pv.labor_id" id="leftLaborID"  type="search" class="form-control" operator="eq" style="display:none;" />
+			                    </div>
+			                    <div class="box-body">
+			                        <table id="volume_unchoosen_table" class="table table-bordered table-striped table-hover">
+			                        </table>
+			                    </div>
+			                </div>
+			            </div>
+			            <div class="col-md-6 volumelist dn">
+			                <div class="box box-primary">
+			                <div class="box-header with-border">
+			                       <h5 class="box-title" style="font-size:14px;float:right">工程量清单（已选择）</h5>
+			                       <button type="button" id="btn_remove_ur" class="btn btn-sm close" style="float:left" title="工程量清单（已选择）" >
+			                         <li class="fa fa-arrow-left"></li>
+			                       </button>
+			                    </div>
+			                    <div class="dataTables_filter" id="searchDiv_selected" style="display:none;">
+			                        <input name="pv.labor_id" id="rightLaborID"  type="search" class="form-control" operator="eq" style="display:none;" />                     
+			                    </div>
+			                    <div class="box-body">
+			                        <table id="volume_choosen_table" class="table table-bordered table-striped table-hover">
+			                        </table>
+			                    </div>
+			                </div>
+			            </div>
                     </div>
                     <div class="box-footer text-center">
                         <button type="button" class="btn btn-default" data-btn-type="prev">返回</button>
-                        <button type="submit" class="btn btn-primary ml10" data-btn-type="next">编辑工资单明细</button>
+                        <button type="submit" class="btn btn-primary ml10" data-btn-type="volume" id="btn1">保存并选择工程清单</button>
+                        <button type="submit" class="btn btn-primary ml10 dn" data-btn-type="next" id="btn2">编辑工资单明细</button>
                         <button type="submit" class="btn btn-success ml10" data-btn-type="save">保存并返回</button>
                     </div>
                 </form>
@@ -80,7 +114,8 @@
 </section>
 <script>
     var form;
-    var id = "${id?default(0)}";
+    var id = "${id?default(0)}",step2Data={};
+    var unselectedTable,selectedTable;
     var projectOptions = '${projectOptions?default(0)}',options=0;
     if(projectOptions != 0){
         options = JSON.parse(projectOptions);
@@ -93,6 +128,72 @@
         }
     }
     $(function () {
+        var table_config={ 
+                           "scrollY":"370px",
+                           "scrollCollapse": true,
+                           "paging":false,
+                           "singleSelect":false,
+                           "scrollXInner":"450px", 
+                           "autoWidth":false
+                         };     
+        unselectedTable = new CommonTable("volume_unchoosen_table", "volume_unchoosen_list", "searchDiv_unselected",table_config);
+        var selected_config={
+                               "scrollY":"370px",
+                               "scrollCollapse": true,
+                               "paging":false,
+                               "singleSelect":false,
+                               "autoWidth":false
+                           };
+        selectedTable=new CommonTable("volume_choosen_table","volume_choosen_list","searchDiv_selected",selected_config);
+        $("#btn_add_ur").click(function(){
+            var rows=unselectedTable.getSelectedRowsData();
+            var volumeList=[]; 
+            if(!rows){ 
+                modals.info("请选择工程量清单");
+                return;
+            }
+            $.each(rows,function(index,row){                    
+                var volumeObj={};
+                volumeObj.volumeID=row.id;
+                volumeObj.labour=row.final_labour;
+                volumeObj.laborID=$('#laborID').val();
+                volumeObj.salaryID=id;
+                volumeList.push(volumeObj);
+            });
+            ajaxPost(basePath+"/project/team/salary/choose",{"volumeList":JSON.stringify(volumeList)},function(data){
+                if(data.success){                       
+                    selectedTable.reloadData();
+                    unselectedTable.reloadData(); 
+                    $('#total').val(data.message);
+                }
+            });
+       
+        });
+        
+        $("#btn_remove_ur").click(function(){
+            var rows=selectedTable.getSelectedRowsData();
+            if(!rows){
+                modals.info("请选择要剔除的工程量清单");
+                return;
+            }
+            var volumeList=[]; 
+            $.each(rows,function(index,row){                    
+                var volumeObj={};
+                volumeObj.volumeID=row.id;
+                volumeObj.labour=row.final_labour;
+                volumeObj.laborID=$('#laborID').val();
+                volumeObj.salaryID=id;
+                volumeList.push(volumeObj);
+            });
+            ajaxPost(basePath+"/project/team/salary/unchoose",{"volumeList":JSON.stringify(volumeList)},function(data){
+                if(data.success){
+                    unselectedTable.reloadData();
+                    selectedTable.reloadData(); 
+                    $('#total').val(data.message);
+                }
+            })
+        })
+    	
         //初始化表单 
         form = $("#team-salary-form").form({baseEntity:false});
         //数据校验
@@ -110,11 +211,22 @@
                     if (data.success) {
                         switch (action) {
                             case "next":
+                            	if($('[role="row"]','#volume_choosen_table').length == 1){
+                                    modals.error("必须至少选择一个工程单！");
+                                    return false;
+                                }
                                 loadPage(basePath+"/project/team/salary/step2", undefined, data.data);
                                 break;
                             case "save":
                                 loadPage(basePath+"/project/team/salary/list");
                                 break;
+                            case "volume":
+                            	$('#id').val(data.data.id);
+                            	id=data.data.id;
+                            	initEdit();
+                            	unselectedTable.reloadData();
+                                selectedTable.reloadData();
+                            	break;
                         }
                     } else {
                         modals.error("保存失败！请检查是否已有该工资单");
@@ -130,11 +242,6 @@
                 "laborID": {
                     validators: {
                         notEmpty: {message: '劳务合同不能为空'}
-                    }
-                },
-                "volumeID": {
-                    validators: {
-                        notEmpty: {message: '工程量清单不能为空'}
                     }
                 }
             }
@@ -176,27 +283,13 @@
                         if (laborID === "") {
                             return false;
                         }
-                        console.log(laborID);
                         var contractName = "";
                         if ($("#laborID").prop('selectedIndex') > 0) {
                         	contractName = $("#laborID").find("option:selected").text();
                         }
                         $('#contractName').val(contractName);
-                        
-                        var projectID = $('#projectID').val();
-                        if(projectID != ""){
-                        	ajaxPost(basePath+"/project/team/salary/getvolume",{projectID:projectID,laborID:laborID},function(data){
-                                var volumeOptions = data.message;
-                                vOptions = JSON.parse(volumeOptions);
-                                $('#volumeID').empty();
-                                $('#volumeID').append('<option selected="selected" value="">选择一个工程量清单</option>');
-                                for (var i = 0, len = vOptions.length; i < len; i++) {
-                                    var option = vOptions[i];
-                                    $('#volumeID').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
-                                }
-                                $('#volumeID').select2();
-                            });
-                        }
+                        $('#rightLaborID').val(laborID);
+                        $('#leftLaborID').val(laborID);
                     });
                     
                     
@@ -208,7 +301,16 @@
         if(id!="0"){
             ajaxPost(basePath+"/project/team/salary/get",{id:id},function(data){
                 form.initFormData(data);
+                initEdit();
             })
+        }
+        
+        function initEdit(){
+        	$('#btn1').hide();
+            $('#btn2').show();
+            $('#projectID').attr('disabled','disabled');
+            $('#laborID').attr('disabled','disabled');
+            $('.volumelist').show();
         }
         
     });

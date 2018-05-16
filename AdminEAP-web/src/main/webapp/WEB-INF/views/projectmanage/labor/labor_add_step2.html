@@ -134,7 +134,6 @@
             });
             
             $("button[data-btn-type='next']").click(function () {
-            	console.log($('[role="row"]','#labor_sub_table').length);
             	if($('[role="row"]','#labor_sub_table').length == 1){
             		modals.error("必须至少添加一个分项！");
             		return false;
