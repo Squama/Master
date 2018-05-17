@@ -3,6 +3,7 @@
  */
 package com.radish.master.controller;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
@@ -23,7 +24,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSONArray;
 import com.cnpc.framework.annotation.VerifyCSRFToken;
 import com.cnpc.framework.base.pojo.Result;
-import com.cnpc.framework.utils.SecurityUtil;
 import com.radish.master.entity.Budget;
 import com.radish.master.entity.BudgetEstimate;
 import com.radish.master.entity.BudgetImport;
@@ -94,6 +94,8 @@ public class BudgetEstimateController {
             
             txList.add(bt);
             
+            btGroup = budgetService.getTxGroupByNo(bt.getQuotaGroup());
+            
             if(btGroup == null || !btGroup.getQuotaGroup().equalsIgnoreCase(bt.getQuotaGroup())){
                 btGroup = new BudgetTx();
                 BudgetImport biGroup = budgetService.getGroupByNo(bi.getQuotaGroup());
@@ -101,11 +103,85 @@ public class BudgetEstimateController {
                 btGroup.setId(null);
                 btGroup.setRegionCode(biGroup.getQuotaNo());
                 btGroup.setRegionName(biGroup.getQuotaName());
+                btGroup.setIsGroup("1");
                 
                 txList.add(btGroup);
             }
 
         }
+        
+        budgetService.batchUpdate(importList);
+        budgetService.batchSave(txList);
+        
+        return new Result(true);
+    }
+    
+    @RequestMapping(value="/tomerge",method = RequestMethod.GET)
+    public String toMerge(String budgetNo, String[] choose, HttpServletRequest request){
+        List<BudgetImport> importList = budgetService.getBudgetImportList(choose);
+        
+        BigDecimal quantities = new BigDecimal("0");
+        BigDecimal unitPrice = new BigDecimal("0");
+        BigDecimal artificiality = new BigDecimal("0");
+        BigDecimal materiels = new BigDecimal("0");
+        BigDecimal mech = new BigDecimal("0");
+        
+        for(BudgetImport bi : importList){
+            quantities = quantities.add(new BigDecimal(bi.getQuantities() == null?"0":bi.getQuantities()));
+            unitPrice = unitPrice.add(new BigDecimal(bi.getUnitPrice() == null?"0":bi.getUnitPrice()));
+            artificiality = artificiality.add(new BigDecimal(bi.getArtificiality() == null?"0":bi.getArtificiality()));
+            materiels = materiels.add(new BigDecimal(bi.getMateriels() == null?"0":bi.getMateriels()));
+            mech = mech.add(new BigDecimal(bi.getMech() == null?"0":bi.getMech()));
+
+        }
+        
+        request.setAttribute("budgetNo", budgetNo);
+        request.setAttribute("quantities", quantities.toPlainString());
+        request.setAttribute("unitPrice", unitPrice.toPlainString());
+        request.setAttribute("artificiality", artificiality.toPlainString());
+        request.setAttribute("materiels", materiels.toPlainString());
+        request.setAttribute("mech", mech.toPlainString());
+        
+        return "budgetmanage/budgetestimate/merge_estimate";
+    }
+    
+    @RequestMapping(value="/mergeestimate",method = RequestMethod.POST)
+    @ResponseBody
+    public Result mergeEstimate(BudgetTx budgetTx, String[] choose, HttpServletRequest request) throws CodeException{
+        List<BudgetImport> importList = budgetService.getBudgetImportList(choose);
+        
+        List<BudgetTx> txList = new ArrayList<BudgetTx>();
+        
+        BudgetTx btGroup = null;
+        String orderNo = GUID.genTxNo(16);
+        for(BudgetImport bi : importList){
+            bi.setOrderNo(orderNo);
+            bi.setCol(null);
+            
+            budgetTx.setProjectID(bi.getProjectID());
+            
+            btGroup = budgetService.getTxGroupByNo(bi.getQuotaGroup());
+            
+            if(btGroup == null){
+                btGroup = new BudgetTx();
+                BudgetImport biGroup = budgetService.getGroupByNo(bi.getQuotaGroup());
+                BeanUtils.copyProperties(biGroup,btGroup);
+                btGroup.setId(null);
+                btGroup.setRegionCode(biGroup.getQuotaNo());
+                btGroup.setRegionName(biGroup.getQuotaName());
+                btGroup.setIsGroup("1");
+                
+                txList.add(btGroup);
+            }
+
+        }
+        
+        budgetTx.setQuotaGroup(btGroup.getQuotaGroup());
+        budgetTx.setOrderNo(orderNo);
+        budgetTx.setCol(String.valueOf(importList.size()));
+        budgetTx.setCreateDateTime(new Date());
+        
+        txList.add(budgetTx);
         
         budgetService.batchUpdate(importList);
         budgetService.batchSave(txList);
@@ -174,6 +250,23 @@ public class BudgetEstimateController {
     private Result deleteBudgetEstimate(String id, HttpServletRequest request) {
         BudgetEstimate budgetEstimate = budgetService.get(BudgetEstimate.class, id);
         budgetService.delete(budgetEstimate);
+        return new Result(true);
+    }
+    
+    @RequestMapping(method = RequestMethod.POST, value = "/deletetx")
+    @ResponseBody
+    private Result deleteBudgetTx(String id, HttpServletRequest request) {
+        BudgetTx tx = budgetService.get(BudgetTx.class, id);
+        //获取import 的 list
+        List<BudgetImport> importList = budgetService.getBudgetImportListByOrderNo(tx.getOrderNo());
+        //list循环更新
+        for(BudgetImport bi : importList){
+            bi.setOrderNo(null);
+        }
+        
+        budgetService.batchUpdate(importList);
+        budgetService.delete(tx);
+        //tx删除
         return new Result(true);
     }
     

@@ -57,19 +57,6 @@
 
     })
 
-    function fnRenderProject(value) {
-        if (value) {
-            var ret=value;
-            /**
-            ajaxPost(basePath + "/org/show/"+value, null, function (data) {
-                ret=data.data;
-            })
-            */
-            return ret;
-        } else
-            return value;
-    }
-    
     function fnRenderDetail(value) {
     	return "";
         //return "<a href='javascript:void(0)' onclick='budgetQueryObj.showDetail(\"" + value + "\")'>详情</a>";

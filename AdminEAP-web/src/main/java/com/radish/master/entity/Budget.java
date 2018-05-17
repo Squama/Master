@@ -15,55 +15,75 @@ public class Budget extends BaseEntity {
 
     private static final long serialVersionUID = 5201916964951209848L;
 
-    @Header(name="预算编码")
-    @Column(name="budget_no")
+    @Header(name = "预算编码")
+    @Column(name = "budget_no")
     private String budgetNo;
 
-    @Header(name="预算信息名称")
-    @Column(name="budget_name")
+    @Header(name = "预算信息名称")
+    @Column(name = "budget_name")
     private String budgetName;
 
-    @Header(name="所属项目")
-    @Column(name="project_id")
+    @Header(name = "所属项目")
+    @Column(name = "project_id")
     private String projectID;
-    
-    @Header(name="预算总价")
-    @Column(name="budget_amount")
+
+    @Header(name = "所属项目名称")
+    @Column(name = "project_name")
+    private String projectName;
+
+    @Header(name = "所属合同")
+    @Column(name = "labor_id")
+    private String laborID;
+
+    @Header(name = "所属合同名称")
+    @Column(name = "labor_name")
+    private String laborName;
+
+    @Header(name = "所属合同分项")
+    @Column(name = "labor_sub_id")
+    private String laborSubID;
+
+    @Header(name = "分项名称")
+    @Column(name = "labor_sub_name")
+    private String laborSubName;
+
+    @Header(name = "预算总价")
+    @Column(name = "budget_amount")
     private String budgetAmount;
-    
-    @Header(name="消耗总价")
-    @Column(name="consume_amount")
+
+    @Header(name = "消耗总价")
+    @Column(name = "consume_amount")
     private String consumeAmount;
 
-    @Header(name="预算导入人员")
-    @Column(name="operator")
+    @Header(name = "预算导入人员")
+    @Column(name = "operator")
     private String operator;
 
-    @Header(name="导入时间")
-    @Column(name="operate_time")
+    @Header(name = "导入时间")
+    @Column(name = "operate_time")
     private Date operateTime;
 
-    @Header(name="测算提交人员")
-    @Column(name="estimater")
+    @Header(name = "测算提交人员")
+    @Column(name = "estimater")
     private String estimater;
-    
-    @Header(name="测算提交时间")
-    @Column(name="estimate_time")
+
+    @Header(name = "测算提交时间")
+    @Column(name = "estimate_time")
     private String estimateTime;
-    
-    @Header(name="测算审核人员")
-    @Column(name="checker")
+
+    @Header(name = "测算审核人员")
+    @Column(name = "checker")
     private String checker;
 
-    @Header(name="测算审核时间")
-    @Column(name="check_time")
+    @Header(name = "测算审核时间")
+    @Column(name = "check_time")
     private Date checkTime;
 
     /**
      * 10=新建,20=测算已提交,30=测算已完成
      */
-    @Header(name="状态")
-    @Column(name="status")
+    @Header(name = "状态")
+    @Column(name = "status")
     private String status;
 
     public String getBudgetNo() {
@@ -160,6 +180,46 @@ public class Budget extends BaseEntity {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
+    }
+
+    public String getLaborID() {
+        return laborID;
+    }
+
+    public void setLaborID(String laborID) {
+        this.laborID = laborID;
+    }
+
+    public String getLaborName() {
+        return laborName;
+    }
+
+    public void setLaborName(String laborName) {
+        this.laborName = laborName;
+    }
+
+    public String getLaborSubID() {
+        return laborSubID;
+    }
+
+    public void setLaborSubID(String laborSubID) {
+        this.laborSubID = laborSubID;
+    }
+
+    public String getLaborSubName() {
+        return laborSubName;
+    }
+
+    public void setLaborSubName(String laborSubName) {
+        this.laborSubName = laborSubName;
     }
 
 }

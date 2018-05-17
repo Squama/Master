@@ -94,7 +94,7 @@
 
     
     
-    var budgetEstimateObject = {
+    var budgetSingleEstimateObject = {
             deleteBudgetEstimate: function (rowId) {
             	ajaxPost(basePath + '/budget/estimate/delete', {id:rowId}, function (data) {
                     if (data.success) {
@@ -172,7 +172,7 @@
     
     
     function fnRenderDelete(value){
-        return "<a href='javascript:void(0)' onclick='budgetEstimateObject.deleteBudgetEstimate(\"" + value + "\")'>删除</a>";
+        return "<a href='javascript:void(0)' onclick='budgetSingleEstimateObject.deleteBudgetEstimate(\"" + value + "\")'>删除</a>";
     }
     
 </script>

@@ -22,6 +22,8 @@ public interface BudgetService extends BaseService {
 
     Budget getBudgetByNo(String batchNo);
     
+    Budget getBudgetByProjectAndName(String projectID, String budgetName);
+    
     Boolean checkTxUnique(String projectID, String regionID, String matNumber);
 
     public Result startFlow(Budget budget, String processDefinitionKey);
@@ -58,4 +60,6 @@ public interface BudgetService extends BaseService {
     public List<BudgetImport> getBudgetImportList(String budgetNo);
     
     public List<BudgetEstimate> getBudgetEstimateList(String budgetNo);
+    
+    public List<BudgetImport> getBudgetImportListByOrderNo(String orderNo);
 }

@@ -22,70 +22,74 @@ import com.cnpc.framework.base.entity.BaseEntity;
  * 
  */
 @Entity
-@Table(name="tbl_budget_tx")
+@Table(name = "tbl_budget_tx")
 public class BudgetTx extends BaseEntity {
 
     private static final long serialVersionUID = -2958304921341682100L;
 
-    @Header(name="部位编号")
-    @Column(name="region_code")
+    @Header(name = "部位编号")
+    @Column(name = "region_code")
     private String regionCode;
-    
-    @Header(name="部位名称")
-    @Column(name="region_name")
+
+    @Header(name = "部位名称")
+    @Column(name = "region_name")
     private String regionName;
-    
-    @Header(name="单位")
-    @Column(name="units")
+
+    @Header(name = "单位")
+    @Column(name = "units")
     private String units;
-    
-    @Header(name="工程量")
-    @Column(name="quantities")
+
+    @Header(name = "工程量")
+    @Column(name = "quantities")
     private String quantities;
-    
-    @Header(name="单价")
-    @Column(name="price")
+
+    @Header(name = "单价")
+    @Column(name = "price")
     private String price;
-    
-    @Header(name="合价")
-    @Column(name="unit_price")
+
+    @Header(name = "合价")
+    @Column(name = "unit_price")
     private String unitPrice;
-    
-    @Header(name="合价（人工）")
-    @Column(name="artificiality")
+
+    @Header(name = "合价（人工）")
+    @Column(name = "artificiality")
     private String artificiality;
-    
-    @Header(name="合价（材料）")
-    @Column(name="materiels")
+
+    @Header(name = "合价（材料）")
+    @Column(name = "materiels")
     private String materiels;
 
-    @Header(name="合价（机械）")
-    @Column(name="mech")
+    @Header(name = "合价（机械）")
+    @Column(name = "mech")
     private String mech;
-    
-    @Header(name="主材合价")
-    @Column(name="materiels_unit_price")
+
+    @Header(name = "主材合价")
+    @Column(name = "materiels_unit_price")
     private String materielsUnitPrice;
-    
-    @Header(name="分组")
-    @Column(name="quota_group")
+
+    @Header(name = "分组")
+    @Column(name = "quota_group")
     private String quotaGroup;
-    
-    @Header(name="项目")
-    @Column(name="project_id")
+
+    @Header(name = "项目")
+    @Column(name = "project_id")
     private String projectID;
-    
-    @Header(name="预算")
-    @Column(name="budget_no")
+
+    @Header(name = "预算")
+    @Column(name = "budget_no")
     private String budgetNo;
-    
-    @Header(name="拆分合并标志")
-    @Column(name="order_no")
+
+    @Header(name = "拆分合并标志")
+    @Column(name = "order_no")
     private String orderNo;
-    
-    @Header(name="行高标志")
-    @Column(name="col")
+
+    @Header(name = "行高标志")
+    @Column(name = "col")
     private String col;
+
+    @Header(name = "是否为分组")
+    @Column(name = "is_group")
+    private String isGroup;
 
     public String getRegionCode() {
         return regionCode;
@@ -205,6 +209,14 @@ public class BudgetTx extends BaseEntity {
 
     public void setCol(String col) {
         this.col = col;
+    }
+
+    public String getIsGroup() {
+        return isGroup;
+    }
+
+    public void setIsGroup(String isGroup) {
+        this.isGroup = isGroup;
     }
 
 }

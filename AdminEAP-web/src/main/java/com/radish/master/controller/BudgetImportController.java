@@ -5,6 +5,8 @@ package com.radish.master.controller;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -48,6 +50,21 @@ public class BudgetImportController {
         request.setAttribute("projectOptions", JSONArray.toJSONString(budgetService.getProjectCombobox()));
         
         return "budgetmanage/budget/budget_import";
+    }
+    
+    @RequestMapping("/checkUnique")
+    @ResponseBody
+    public Map checkUnique(String projectID, String budgetName, String fieldValue, String id) {
+
+        Map<String, Boolean> map = new HashMap<String, Boolean>();
+        try {
+            Budget budget = budgetService.getBudgetByProjectAndName(projectID, budgetName);
+            map.put("valid", budget==null);
+            return map;
+        } catch (Exception ex) {
+            map.put("valid", false);
+            return map;
+        }
     }
     
     @RequestMapping(method = RequestMethod.POST, value = "/import")

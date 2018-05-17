@@ -277,6 +277,9 @@
                     $('#laborID').unbind("change.Labor");
                     $('#laborID').bind("change.Labor", function(){
                         laborid = $(this).val();
+                        if (laborid === "") {
+                            return false;
+                        }
                         ajaxPost(basePath+"/projectvolume/getlaborinfo",{laborID:laborid},function(data){
                         	$('#constructionTeam').val(data.constructionTeam);
                         	$('#constructionManager').val(data.constructionManager);
@@ -296,6 +299,9 @@
                             $('#laborSubID').unbind("change.LaborSub");
                             $('#laborSubID').bind("change.LaborSub", function(){
                                 laborSubID = $(this).val();
+                                if (laborSubID === "") {
+                                    return false;
+                                }
                                 ajaxPost(basePath+"/projectvolume/getlaborsubinfo",{laborSubID:laborSubID},function(data){
                                     $('#subPrice').val(data.subPrice);
                                     ajaxPost(basePath+"/projectvolume/checkconstworker", {userID:data.constructionWorkerID,userName:data.constructionWorkerName}, function (data, status) {

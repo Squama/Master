@@ -14,85 +14,89 @@ import org.hibernate.annotations.GenericGenerator;
 import com.cnpc.framework.annotation.Header;
 
 /**
-* 类说明
-* 
-* <pre>
+ * 类说明
+ * 
+ * <pre>
 * Modify Information:
 * Author        Date          Description
 * ============ =========== ============================
 * dongyan      2017年12月4日    Create this file
-* </pre>
-* 
-*/
+ * </pre>
+ * 
+ */
 @Entity
 @Table(name = "tbl_budget_import")
 public class BudgetImport {
-    
+
     @Id
     @GenericGenerator(name = "id", strategy = "uuid")
     @GeneratedValue(generator = "id")
     @Column(name = "id", length = 36)
     private String id;
-    
-    @Header(name="定额编码")
-    @Column(name="quota_no")
+
+    @Header(name = "定额编码")
+    @Column(name = "quota_no")
     private String quotaNo;
-    
-    @Header(name="子目名称")
-    @Column(name="quota_name")
+
+    @Header(name = "子目名称")
+    @Column(name = "quota_name")
     private String quotaName;
-    
-    @Header(name="单位")
-    @Column(name="units")
+
+    @Header(name = "单位")
+    @Column(name = "units")
     private String units;
-    
-    @Header(name="工程量")
-    @Column(name="quantities")
+
+    @Header(name = "工程量")
+    @Column(name = "quantities")
     private String quantities;
-    
-    @Header(name="单价")
-    @Column(name="price")
+
+    @Header(name = "单价")
+    @Column(name = "price")
     private String price;
-    
-    @Header(name="合价")
-    @Column(name="unit_price")
+
+    @Header(name = "合价")
+    @Column(name = "unit_price")
     private String unitPrice;
-    
-    @Header(name="合价（人工）")
-    @Column(name="artificiality")
+
+    @Header(name = "合价（人工）")
+    @Column(name = "artificiality")
     private String artificiality;
-    
-    @Header(name="合价（材料）")
-    @Column(name="materiels")
+
+    @Header(name = "合价（材料）")
+    @Column(name = "materiels")
     private String materiels;
 
-    @Header(name="合价（机械）")
-    @Column(name="mech")
+    @Header(name = "合价（机械）")
+    @Column(name = "mech")
     private String mech;
-    
-    @Header(name="主材合价")
-    @Column(name="materiels_unit_price")
+
+    @Header(name = "主材合价")
+    @Column(name = "materiels_unit_price")
     private String materielsUnitPrice;
-    
-    @Header(name="分组")
-    @Column(name="quota_group")
+
+    @Header(name = "分组")
+    @Column(name = "quota_group")
     private String quotaGroup;
-    
-    @Header(name="项目")
-    @Column(name="project_id")
+
+    @Header(name = "项目")
+    @Column(name = "project_id")
     private String projectID;
-    
-    @Header(name="预算")
-    @Column(name="budget_no")
+
+    @Header(name = "预算")
+    @Column(name = "budget_no")
     private String budgetNo;
-    
-    @Header(name="拆分合并标志")
-    @Column(name="order_no")
+
+    @Header(name = "拆分合并标志")
+    @Column(name = "order_no")
     private String orderNo;
-    
-    @Header(name="行高标志")
-    @Column(name="col")
+
+    @Header(name = "行高标志")
+    @Column(name = "col")
     private String col;
+
+    @Header(name = "是否为分组")
+    @Column(name = "is_group")
+    private String isGroup;
 
     public String getId() {
         return id;
@@ -221,4 +225,13 @@ public class BudgetImport {
     public void setCol(String col) {
         this.col = col;
     }
+
+    public String getIsGroup() {
+        return isGroup;
+    }
+
+    public void setIsGroup(String isGroup) {
+        this.isGroup = isGroup;
+    }
+
 }

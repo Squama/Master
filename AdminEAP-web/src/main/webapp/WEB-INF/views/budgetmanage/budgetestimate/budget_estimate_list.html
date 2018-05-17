@@ -86,17 +86,6 @@
         });
     })
 
-    function fnRenderProject(value) {
-        if (value) {
-            var ret=value;
-            ajaxPost(basePath + "/budget/getproject/"+value, null, function (data) {
-                ret=data.message;
-            })
-            return ret;
-        } else
-            return value;
-    }
-    
     function fnRenderOperate(value, type, rowObj){
         var oper = "";
         if(rowObj.status == '新建'){

@@ -311,8 +311,8 @@
                 eval('datas.' + el_name + '="' + (is_ckbox ? (old_val ? (old_val + ',') : '') : '') + value + '"');
             }
         });
-        console.log("--------------------------------");
-        console.log(datas);
+        //console.log("--------------------------------");
+        //console.log(datas);
         return datas;
     }
 

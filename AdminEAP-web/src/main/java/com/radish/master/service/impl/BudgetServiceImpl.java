@@ -60,6 +60,14 @@ public class BudgetServiceImpl extends BaseServiceImpl implements BudgetService 
         params.put("budgetNo", budgetNo);
         return this.get("from Budget where budgetNo=:budgetNo", params);
     }
+    
+    @Override
+    public Budget getBudgetByProjectAndName(String projectID, String budgetName){
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("projectID", projectID);
+        params.put("budgetName", budgetName);
+        return this.get("from Budget where projectID=:projectID AND budgetName=:budgetName", params);
+    }
 
     @Override
     public Boolean checkTxUnique(String projectID, String regionID, String matNumber) {
@@ -132,13 +140,21 @@ public class BudgetServiceImpl extends BaseServiceImpl implements BudgetService 
                     String quotaNo = getCellValue(row.getCell(0));
                     
                     
-                    if(StrUtil.isEmpty(quotaNo) || quotaNo.matches("\\d+$")){
+                    if(StrUtil.isEmpty(quotaNo)){
                         bi.setId(GUID.genTxNo(16, true));
                         if(group != bi.getId()){
                             group = bi.getId();
                         }
-                    }else{
+                        bi.setIsGroup("1");
+                    } else if(quotaNo.matches("\\d+$")){
+                        if(group != quotaNo){
+                            group = quotaNo;
+                        }
                         bi.setQuotaNo(quotaNo);
+                        bi.setIsGroup("1");
+                    } else{
+                        bi.setQuotaNo(quotaNo);
+                        bi.setIsGroup("0"); 
                     }
                     
                     String quotaName = getCellValue(row.getCell(1));
@@ -187,7 +203,7 @@ public class BudgetServiceImpl extends BaseServiceImpl implements BudgetService 
             
             return rows - 1;
         }catch(Exception e){
-            throw new CodeException(e.getMessage());
+            throw new CodeException("导入失败");
         }finally{
             if(workbook != null){
                 workbook.close();
@@ -239,9 +255,9 @@ public class BudgetServiceImpl extends BaseServiceImpl implements BudgetService 
     public BudgetImport getGroupByNo(String group) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("quotaGroup", group);
-        return this.get("from BudgetImport where quotaNo IS NULL AND quotaGroup=:quotaGroup", params);
+        return this.get("from BudgetImport where isGroup = '1' AND quotaGroup=:quotaGroup", params);
     }
-
+    
     @Override
     public List<Options> getProjectCombobox() {
         return this.findMapBySql("select id value, project_name data from tbl_project", new Object[]{}, new Type[]{StringType.INSTANCE}, Options.class);
@@ -263,10 +279,17 @@ public class BudgetServiceImpl extends BaseServiceImpl implements BudgetService 
     }
     
     @Override
+    public List<BudgetImport> getBudgetImportListByOrderNo(String orderNo) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("orderNo", orderNo);
+        return this.find("from BudgetImport where orderNo =:orderNo", params);
+    }
+    
+    @Override
     public BudgetTx getTxGroupByNo(String group) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("quotaGroup", group);
-        return this.get("from BudgetTx where regionCode IS NULL AND quotaGroup=:quotaGroup", params);
+        return this.get("from BudgetTx where isGroup = '1' AND quotaGroup=:quotaGroup", params);
     }
 
     @Override

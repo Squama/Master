@@ -15,6 +15,8 @@ v1.0.2.05（未上线，2018-06-01，王志浩）
 3.修改表：tbl_labor,去掉消耗字段
 4.tbl_project_volume增加labor_sub_id,apply_pack,business_pack,final_pack
 5.tbl_salary去掉volume_id;
+6.tbl_budget增加project_name,labor_id,labor_name,labor_sub_id,labor_sub_name;
+7.tbl_budget_import增加字段 is_group
 
 
 
