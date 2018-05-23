@@ -72,9 +72,11 @@
     	if(type==10){
     		$("#titleH").html("人工费支付列表");
     	}else if(type==20){
-    		$("#titleH").html("机械费费支付列表");
+    		$("#titleH").html("机械费支付列表");
     	}else if(type==30){
-    		$("#titleH").html("材料费费支付列表");
+    		$("#titleH").html("材料费支付列表");
+    	}else if(type==40){
+    		$("#titleH").html("包工包料费支付列表");
     	}
     	
     	volumeTable = new CommonTable("volume_table", "volumePay_list", "searchDiv", null);
@@ -94,6 +96,8 @@
             		zflx="机械";
             	}else if(type==30){
             		zflx="材料";
+            	}else if(type==40){
+            		zflx="包工包料";
             	}
             	modals.openWin({
                     winId:winId,

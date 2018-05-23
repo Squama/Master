@@ -8,7 +8,7 @@
               SELECT pv.id id, pv.project_name projectName, l.contract_name contractName,
 		      l.construction_team constructionTeam, pv.start_time startTime, pv.end_time endTime,
 			  pv.apply_sub applySub,pv.final_sub finalSub, pv.volume volume, pv.`status` status,
-			  pv.labourStatus labourStatus,pv.matStatus matStatus, pv.mechStatus mechStatus 
+			  pv.labourStatus labourStatus,pv.matStatus matStatus, pv.mechStatus mechStatus ,pv.packStatus packStatus 
 			  FROM tbl_project_volume pv, tbl_labor l 
 			  WHERE pv.labor_id = l.id AND 1=1 and pv.status='70'
             ]]>
@@ -26,6 +26,7 @@
         <column key="id" header="人工" width="80" fnRender="fnRenderRG"/>
         <column key="id" header="材料" width="80" fnRender="fnRenderCL"/>
         <column key="id" header="机械" width="80" fnRender="fnRenderJX"/>
+        <column key="id" header="包工包料" width="80" fnRender="fnRenderBGBL"/>
     </query>
     
     <query id="volumePay_list" key="id" tableName="工程量支付明细列表" widthType="px">
@@ -38,7 +39,7 @@
         </sql>
         <column key="id" hidden="true" header="id" width="80" />
         <column key="rowIndex" header="序号" width="80"/>
-        <column key="payType" header="支付类型" classType="String" allowSort="true" width="150" render="10=人工,20=机械,30=材料"/>
+        <column key="payType" header="支付类型" classType="String" allowSort="true" width="150" render="10=人工,20=机械,30=材料,40=包工包料"/>
         <column key="payWay" header="支付方式" classType="String" allowSort="true" width="150" render="10=现金,20=转账,30=电汇"/>
         <column key="department" header="部门" classType="String" width="150"/>
         <column key="payMoney" header="支付金额" classType="String" width="150"/>

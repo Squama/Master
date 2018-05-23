@@ -109,6 +109,13 @@ public class VolumePayController {
 			zje = Double.valueOf(pv.getFinalMech());
 		}else if("30".equals(type)){
 			zje = Double.valueOf(pv.getFinalMat());
+		}else if("40".equals(type)){
+			if(pv.getFinalPack()==null){
+				zje=0.0;
+			}else{
+				zje = Double.valueOf(pv.getFinalPack());
+			}
+			
 		}
 		double kzf = zje;
 		for(VolumePay zf:zfs){
@@ -203,6 +210,12 @@ public class VolumePayController {
 				zje = Double.valueOf(pv.getFinalMech());
 			}else if("30".equals(zf.getPayType())){
 				zje = Double.valueOf(pv.getFinalMat());
+			}else if("40".equals(zf.getPayType())){
+				if(pv.getFinalPack()==null){
+					zje=0.0;
+				}else{
+					zje = Double.valueOf(pv.getFinalPack());
+				}
 			}
 			double kzf = zje;
 			for(VolumePay z:zfs){
@@ -333,6 +346,8 @@ public class VolumePayController {
 			zflx = "机械费";
 		}else if("30".equals(zf.getPayType())){
 			zflx = "材料费";
+		}else if("40".equals(zf.getPayType())){
+			zflx = "包工包料费";
 		}
 		String gclid = zf.getVolumeId();
 		String qdmc = "";

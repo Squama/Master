@@ -69,7 +69,10 @@ public class VolumePayTaskCompleteListener implements TaskListener {
                 	zje = ari.add(zje, Double.valueOf(gcl.getFinalMech()));
                 }else if("30".equals(zf.getPayType())){//材料
                 	zje = ari.add(zje,Double.valueOf(gcl.getFinalMat()));
+                }else if("40".equals(zf.getPayType())){//包公包料
+                	zje = ari.add(zje,Double.valueOf(gcl.getFinalPack()));
                 }
+     			zzs.add(gcl);
      		}
              Double yzje = zje;
              //计算是否已经完全支付，并修改工程量的状态
@@ -87,6 +90,12 @@ public class VolumePayTaskCompleteListener implements TaskListener {
          		}
              }else if("30".equals(zf.getPayType())){//材料
             	 String sql = " select * from tbl_volumePay where volumeId='"+zf.getVolumeId()+"' and payType='30' and status='30'";
+          		List<VolumePay> zfs = baseService.findBySql(sql, VolumePay.class);
+          		for(VolumePay z:zfs){
+         			zje = ari.sub(zje, Double.valueOf(z.getPayMoney()));
+         		}
+             }else if("40".equals(zf.getPayType())){//材料
+            	 String sql = " select * from tbl_volumePay where volumeId='"+zf.getVolumeId()+"' and payType='40' and status='30'";
           		List<VolumePay> zfs = baseService.findBySql(sql, VolumePay.class);
           		for(VolumePay z:zfs){
          			zje = ari.sub(zje, Double.valueOf(z.getPayMoney()));
@@ -110,6 +119,8 @@ public class VolumePayTaskCompleteListener implements TaskListener {
                     	g.setMechStatus("10");
                     }else if("30".equals(zf.getPayType())){//材料
                     	g.setMatStatus("10");
+                    }else if("40".equals(zf.getPayType())){//包工包料
+                    	g.setPackStatus("10");
                     }
        				
        				baseService.update(g);
@@ -122,6 +133,8 @@ public class VolumePayTaskCompleteListener implements TaskListener {
                     	g.setMechStatus("20");
                     }else if("30".equals(zf.getPayType())){//材料
                     	g.setMatStatus("20");
+                    }else if("40".equals(zf.getPayType())){//包工包料
+                    	g.setPackStatus("20");
                     }
        				baseService.update(g);
        			}
@@ -133,6 +146,8 @@ public class VolumePayTaskCompleteListener implements TaskListener {
                     	g.setMechStatus(null);
                     }else if("30".equals(zf.getPayType())){//材料
                     	g.setMatStatus(null);
+                    }else if("40".equals(zf.getPayType())){//包工包料
+                    	g.setPackStatus(null);
                     }
        				baseService.update(g);
        			}

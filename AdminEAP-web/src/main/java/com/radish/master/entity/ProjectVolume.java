@@ -156,6 +156,10 @@ public class ProjectVolume extends BaseEntity {
     @Header(name = "机械费支付状态")
     @Column(name = "mechStatus")
     private String mechStatus;
+    
+    @Header(name = "包工包料支付状态")
+    @Column(name = "packStatus")
+    private String packStatus;
 
     public String getProjectID() {
         return projectID;
@@ -396,5 +400,13 @@ public class ProjectVolume extends BaseEntity {
     public void setFinalPack(String finalPack) {
         this.finalPack = finalPack;
     }
+
+	public String getPackStatus() {
+		return packStatus;
+	}
+
+	public void setPackStatus(String packStatus) {
+		this.packStatus = packStatus;
+	}
 
 }
