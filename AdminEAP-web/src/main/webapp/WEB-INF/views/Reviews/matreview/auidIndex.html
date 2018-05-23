@@ -1,0 +1,183 @@
+<link rel="stylesheet" href="${basePath}/resources/common/libs/fileinput/css/fileinput.min.css">
+<style>
+
+#projectaddstep2 .krajee-default.file-preview-frame .kv-file-content {
+    height: auto;
+}
+
+#projectaddstep2 .krajee-default .file-footer-caption {
+    width: 100px;
+}
+
+</style>
+<script src="${basePath}/resources/common/libs/fileinput/js/fileinput.js"></script>
+<script src="${basePath}/resources/common/libs/fileinput/js/locales/zh.js"></script>
+<!--BaseFile组件-->
+<script src="${basePath}/resources/common/js/base-file.js"></script>
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><li class="fa fa-remove"></li></button>
+    <h5 class="modal-title"></h5>
+</div>
+<div class="modal-body" style="max-height:100%;overflow-y:auto;">
+
+    <form id="contract-form" name="contract-form" class="form-horizontal">
+     <input type="hidden" name="id" id= "id">
+       <div class="box-body">
+            <div class="col-md-6">
+                
+                <div class="form-group">
+                    <label for="projectId" class="col-sm-3 control-label">所属项目</label>
+
+                    <div class="col-sm-8">
+                   		<select id="projectId" class="form-control select2 "  name="projectId" style="width:100%" >
+                   			<option selected="selected" value="">选择一个项目</option>
+                   		</select>
+                    </div>
+                </div>
+           		<div class="form-group">
+					<label  for="createName" class="col-sm-3 control-label">起草人</label>
+					<div class=" col-sm-8">
+						<select class="form-control select2 " id="creatName" name="creatName" style="width:100%">
+							<option selected="selected" value="">选择一个人员</option>
+						</select>
+				
+					</div>
+				</div>
+					<div class="form-group">
+					<label  for="purchase" class="col-sm-3 control-label">采购单位</label>
+					<div class=" col-sm-8">
+						<input class="form-control " id="purchase" name="purchase"  placeholder="采购单位" >
+					</div>
+				</div>
+				
+            </div>
+            <div class="col-md-6">
+            	<div class="form-group">
+                    <label  for="number" class="col-sm-3 control-label">编号</label>
+					<div class=" col-sm-8">
+						<input class="form-control " id="number" name="number"   placeholder="编号" readonly="readonly" >
+				
+					</div>
+                </div>
+                <div class="form-group">
+					<label  for="reviewName" class="col-sm-3 control-label">评审对象</label>
+					<div class=" col-sm-8">
+						<input class="form-control " id="reviewName" name="reviewName" placeholder="评审对象">
+				
+					</div>
+				</div>
+				<div class="form-group">
+                    <label  for="supply" class="col-sm-3 control-label">供货单位</label>
+					<div class=" col-sm-8">
+						<input class="form-control " id="supply" name="supply"   placeholder="供货单位" >
+					</div>
+                </div>
+            </div>   
+        </div>
+        	<div class="form-group">
+                    <label for="announcements" class="col-sm-2 control-label">注意事项</label>
+
+                    <div class="col-sm-9">
+                        <textarea class="form-control" id="announcements" name="announcements" placeholder="注意事项" rows="7"></textarea>
+                    </div>
+            </div>
+        
+        <!-- /.box-footer -->
+    </form>
+    <div  class="box-body">
+    	<table id="sps" class="table table-bordered table-striped table-hover">
+    		<tr>
+    			<th>部门</th>
+    			<th>评审风险点</th>
+    			<th>评审意见</th>
+    			<th>评审人</th>
+    		</tr>
+         </table>
+    </div>
+</div>
+<script>
+    var form =null;
+    var uses = '${userOptions?default(0)}',use=0;
+    if(uses != 0){
+    	use = JSON.parse(uses);
+    }
+    
+    var pros = '${projectOptions?default(0)}',pro=0;
+    if(pros != 0){
+    	pro = JSON.parse(pros);
+    }
+    var spid = '${spid?default(0)}'
+    
+    $(function() {
+        //初始化控件
+        form=$("#contract-form").form();
+        form.initComponent();
+        if(use != 0){
+            for (var i = 0, len = use.length; i < len; i++) {
+                var u = use[i];
+                $('#creatName').append("<option value='" + u.id + "'>" + u.name + "</option>");
+            }
+            $("#creatName").select2();
+        }
+        if(pro != 0){
+            for (var i = 0, len = pro.length; i < len; i++) {
+                var u = pro[i];
+                $('#projectId').append("<option value='" + u.id + "'>" + u.projectName + "</option>");
+            }
+            $("#projectId").select2();
+        }
+        if(spid!=0){
+        	load();
+         }
+        
+        
+        
+    });
+    function load(){
+    	 ajaxPost(basePath+"/matreview/load",{id:spid},function(data){
+         	
+    		 $("#contract-form").form().initFormData(data.data); 
+             
+             
+         })
+         ajaxPost(basePath+"/matreview/loadSpyj",{id:spid},function(data){
+         	var list = data.data;
+         	var trs ="";
+         	for(var i=0;i<list.length;i++){
+				trs+="<tr>";
+				trs+="<td>"+deptChange(list[i].taskNode)+"</td>";
+				trs+="<td>"+list[i].risk+"</td>";
+				trs+="<td>"+list[i].suggestion+"</td>";
+				trs+="<td>"+list[i].operator+"</td>";
+				trs+="</tr>";
+             }
+             $("#sps").append(trs);
+         })
+    	
+    }
+    function deptChange(value){
+		if(value=="fawu"){
+			return "法务部门";
+		}else if(value=="jinying"){
+			return "经营部门";
+		}else if(value=="gongchen"){
+			return "工程部门";
+		}else if(value=="bangong"){
+			return "办公部门";
+		}else if(value=="caiwu"){
+			return "财务部门";
+		}else if(value=="fuBoss"){
+			return "副总经理";
+		}else if(value=="boss"){
+			return "总经理";
+		}else{
+			return "";
+		}
+		
+    }
+    function resetForm(){
+        form.clearForm();
+        $("#contract-form").data('bootstrapValidator').resetForm();
+    }
+	
+</script>

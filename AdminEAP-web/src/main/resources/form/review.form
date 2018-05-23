@@ -1,0 +1,32 @@
+<div class="form-group">
+	<label class="control-label col-xs-3">评审风险点</label>
+    <div class="col-xs-7">
+        <textarea name="risk" id="risk" placeholder="请填写风险点" class="form-control" rows="4"></textarea>
+    </div>
+    
+</div>
+<div class="form-group">
+	<label class="control-label col-xs-3">评审意见</label>
+    <div class="col-xs-7">
+        <textarea name="suggestion" id="suggestion" placeholder="请填写意见" class="form-control" rows="4"></textarea>
+    </div>
+</div>
+<script>
+    var workflowCtrl = {
+        thisForm: null,
+        init: function (formId,businessKey) {
+            this.thisForm = $("#" + formId).form({baseEntity: false});
+            this.thisForm.initComponent();
+            return this.thisForm;
+        },
+        validators: function () {
+            var fields = {
+                suggestion: {validators: {notEmpty: {message: "请填写审批意见"}}}
+                ,risk: {validators: {notEmpty: {message: "请填写风险点"}}}
+
+            };
+            return fields;
+        }
+    }
+
+</script>

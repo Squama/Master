@@ -1,0 +1,184 @@
+<link rel="stylesheet" href="${basePath}/resources/common/libs/fileinput/css/fileinput.min.css">
+<style>
+
+#projectaddstep2 .krajee-default.file-preview-frame .kv-file-content {
+    height: auto;
+}
+
+#projectaddstep2 .krajee-default .file-footer-caption {
+    width: 100px;
+}
+
+</style>
+<script src="${basePath}/resources/common/libs/fileinput/js/fileinput.js"></script>
+<script src="${basePath}/resources/common/libs/fileinput/js/locales/zh.js"></script>
+<!--BaseFile组件-->
+<script src="${basePath}/resources/common/js/base-file.js"></script>
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><li class="fa fa-remove"></li></button>
+    <h5 class="modal-title"></h5>
+</div>
+<div class="modal-body" style="max-height:100%;overflow-y:auto;">
+
+    <form id="contract-form" name="contract-form" class="form-horizontal">
+     <input type="hidden" name="id" id= "id">
+        <div class="box-body">
+            <div class="col-md-6">
+                
+                <div class="form-group">
+                    <label for="projectName" class="col-sm-3 control-label">招标项目名称</label>
+
+                    <div class="col-sm-8">
+                   		<select id="projectId" class="form-control select2 "  name="projectId" style="width:100%" >
+                   			<option selected="selected" value="">选择一个项目</option>
+                   		</select>
+                    </div>
+                </div>
+           		<div class="form-group">
+					<label  for="bidNumber" class="col-sm-3 control-label">招标文件编号</label>
+					<div class=" col-sm-8">
+						<input class="form-control " id="bidNumber" name="bidNumber"  placeholder="招标文件编号" >
+				
+					</div>
+				</div>
+				<div class="form-group">
+					<label  for="bider" class="col-sm-3 control-label">招标单位</label>
+					<div class=" col-sm-8">
+						<input class="form-control " id="bider" name="bider"  placeholder="招标单位" >
+					</div>
+				</div>
+				<div class="form-group">
+					<label  for="moneySource" class="col-sm-3 control-label">资金来源</label>
+					<div class=" col-sm-8">
+						<input class="form-control " id="moneySource" name="moneySource"  placeholder="资金来源" >
+					</div>
+				</div>
+				<div class="form-group">
+					<label  for="buildSize" class="col-sm-3 control-label">工程规模</label>
+					<div class=" col-sm-8">
+						<input class="form-control " id="buildSize" name="buildSize"  placeholder="工程规模" >
+					</div>
+				</div>
+            </div>
+            <div class="col-md-6">
+            	<div class="form-group">
+                    <label  for="number" class="col-sm-3 control-label">编号</label>
+					<div class=" col-sm-8">
+						<input class="form-control " id="number" name="number"   placeholder="编号" readonly="readonly" >
+				
+					</div>
+                </div>
+                <div class="form-group">
+					<label  for="bidWay" class="col-sm-3 control-label">招标方式</label>
+					<div class=" col-sm-8">
+						<input class="form-control " id="bidWay" name="bidWay" placeholder="招标方式">
+				
+					</div>
+				</div>
+				<div class="form-group">
+                    <label  for="builder" class="col-sm-3 control-label">建设单位</label>
+					<div class=" col-sm-8">
+						<input class="form-control " id="builder" name="builder"   placeholder="建设单位" >
+					</div>
+                </div>
+                <div class="form-group">
+					<label  for="buildAddress" class="col-sm-3 control-label">工程地点</label>
+					<div class=" col-sm-8">
+						<input class="form-control " id="buildAddress" name="buildAddress"  placeholder="工程地点" >
+					</div>
+				</div>
+				<div class="form-group">
+					<label  for="buildTime" class="col-sm-3 control-label">建设周期</label>
+					<div class=" col-sm-8">
+						<input class="form-control " id="buildTime" name="buildTime"  placeholder="建设周期" >
+					</div>
+				</div>
+            </div>   
+        </div>
+        
+        <!-- /.box-footer -->
+    </form>
+    <div  class="box-body">
+    	<table id="sps" class="table table-bordered table-striped table-hover">
+    		<tr>
+    			<th>部门</th>
+    			<th>评审风险点</th>
+    			<th>评审意见</th>
+    			<th>评审人</th>
+    		</tr>
+         </table>
+    </div>
+</div>
+<script>
+    var form =null;
+    var spid = '${spid?default(0)}'
+   var pros = '${projectOptions?default(0)}',pro=0;
+    if(pros != 0){
+    	pro = JSON.parse(pros);
+    }
+    $(function() {
+        //初始化控件
+        form=$("#contract-form").form();
+        form.initComponent();
+        
+        
+        if(pro != 0){
+            for (var i = 0, len = pro.length; i < len; i++) {
+                var u = pro[i];
+                $('#projectId').append("<option value='" + u.id + "'>" + u.projectName + "</option>");
+            }
+            $("#projectId").select2();
+        }
+        if(spid!=0){
+        	load();
+         }
+        
+    });
+    function load(){
+    	 ajaxPost(basePath+"/bidreview/load",{id:spid},function(data){
+         	
+    		 $("#contract-form").form().initFormData(data.data); 
+             
+             
+         })
+         ajaxPost(basePath+"/bidreview/loadSpyj",{id:spid},function(data){
+         	var list = data.data;
+         	var trs ="";
+         	for(var i=0;i<list.length;i++){
+				trs+="<tr>";
+				trs+="<td>"+deptChange(list[i].taskNode)+"</td>";
+				trs+="<td>"+list[i].risk+"</td>";
+				trs+="<td>"+list[i].suggestion+"</td>";
+				trs+="<td>"+list[i].operator+"</td>";
+				trs+="</tr>";
+             }
+             $("#sps").append(trs);
+         })
+    	
+    }
+    function deptChange(value){
+		if(value=="fawu"){
+			return "法务部门";
+		}else if(value=="jinying"){
+			return "经营部门";
+		}else if(value=="gongchen"){
+			return "工程部门";
+		}else if(value=="bangong"){
+			return "办公部门";
+		}else if(value=="caiwu"){
+			return "财务部门";
+		}else if(value=="fuBoss"){
+			return "副总经理";
+		}else if(value=="boss"){
+			return "总经理";
+		}else{
+			return "";
+		}
+		
+    }
+    function resetForm(){
+        form.clearForm();
+        $("#contract-form").data('bootstrapValidator').resetForm();
+    }
+	
+</script>

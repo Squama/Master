@@ -1,0 +1,287 @@
+<link rel="stylesheet" href="${basePath}/resources/common/libs/fileinput/css/fileinput.min.css">
+<style>
+
+#projectaddstep2 .krajee-default.file-preview-frame .kv-file-content {
+    height: auto;
+}
+
+#projectaddstep2 .krajee-default .file-footer-caption {
+    width: 100px;
+}
+
+</style>
+<script src="${basePath}/resources/common/libs/fileinput/js/fileinput.js"></script>
+<script src="${basePath}/resources/common/libs/fileinput/js/locales/zh.js"></script>
+<!--BaseFile组件-->
+<script src="${basePath}/resources/common/js/base-file.js"></script>
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><li class="fa fa-remove"></li></button>
+    <h5 class="modal-title"></h5>
+</div>
+<div class="modal-body" style="max-height:600px;overflow-y:auto;">
+
+    <form id="contract-form" name="contract-form" class="form-horizontal">
+     <input type="hidden" name="id" id= "id">
+       <div class="box-body">
+            <div class="col-md-6">
+                
+                <div class="form-group">
+                    <label for="projectId" class="col-sm-3 control-label">所属项目</label>
+
+                    <div class="col-sm-8">
+                   		<select id="projectId" class="form-control select2 "  name="projectId" style="width:100%" >
+                   			<option selected="selected" value="">选择一个项目</option>
+                   		</select>
+                    </div>
+                </div>
+           		<div class="form-group">
+					<label  for="createName" class="col-sm-3 control-label">起草人</label>
+					<div class=" col-sm-8">
+						<select class="form-control select2 " id="creatName" name="creatName" style="width:100%">
+							<option selected="selected" value="">选择一个人员</option>
+						</select>
+				
+					</div>
+				</div>
+				<div class="form-group">
+					<label  for="builder" class="col-sm-3 control-label">建设单位</label>
+					<div class=" col-sm-8">
+						<input class="form-control " id="builder" name="builder"  placeholder="建设单位" >
+					</div>
+				</div>
+				
+				
+				
+				
+            </div>
+            <div class="col-md-6">
+            	<div class="form-group">
+                    <label  for="number" class="col-sm-3 control-label">编号</label>
+					<div class=" col-sm-8">
+						<input class="form-control " id="number" name="number"   placeholder="编号" readonly="readonly" >
+				
+					</div>
+                </div>
+                <div class="form-group">
+					<label  for="reviewName" class="col-sm-3 control-label">合同谈判人</label>
+					<div class=" col-sm-8">
+						<input class="form-control " id="reviewName" name="reviewName" placeholder="参与合同谈判人">
+				
+					</div>
+				</div>
+				<div class="form-group">
+                    <label  for="contracter" class="col-sm-3 control-label">承包单位</label>
+					<div class=" col-sm-8">
+						<input class="form-control " id="contracter" name="contracter"   placeholder="承包单位" >
+					</div>
+                </div>
+            </div>   
+        </div>
+        	<div class="form-group">
+                    <label for="dzedyq" class="col-sm-2 control-label">垫资额度要求</label>
+
+                    <div class="col-sm-9">
+                        <textarea class="form-control" id="dzedyq" name="dzedyq" placeholder="垫资额度要求" rows="2"></textarea>
+                    </div>
+            </div>
+       		 <div class="form-group">
+                    <label for="zlyq" class="col-sm-2 control-label">质量目标要求</label>
+
+                    <div class="col-sm-9">
+                        <textarea class="form-control" id="zlyq" name="zlyq" placeholder="质量目标要求" rows="2"></textarea>
+                    </div>
+            </div>
+        	<div class="form-group">
+                    <label for="fhjd" class="col-sm-2 control-label">保修期限、保修金返还时间</label>
+
+                    <div class="col-sm-9">
+                        <textarea class="form-control" id="fhjd" name="fhjd" placeholder="返还时间节点" rows="2"></textarea>
+                    </div>
+            </div>
+        	<div class="form-group">
+                    <label for="jgc" class="col-sm-2 control-label">甲供材</label>
+
+                    <div class="col-sm-9">
+                        <textarea class="form-control" id="jgc" name="jgc" placeholder="甲供材" rows="2"></textarea>
+                    </div>
+            </div>
+        	<div class="form-group">
+                    <label for="payWay" class="col-sm-2 control-label">付款方式</label>
+
+                    <div class="col-sm-9">
+                        <textarea class="form-control" id="payWay" name="payWay" placeholder="付款方式" rows="2"></textarea>
+                    </div>
+            </div>
+        	<div class="form-group">
+                    <label for="payTime" class="col-sm-2 control-label">付款时间节点</label>
+
+                    <div class="col-sm-9">
+                        <textarea class="form-control" id="payTime" name="payTime" placeholder="付款时间节点" rows="2"></textarea>
+                    </div>
+            </div>
+        	<div class="form-group">
+                    <label for="phMoney" class="col-sm-2 control-label">分包项目配合费</label>
+
+                    <div class="col-sm-9">
+                        <textarea class="form-control" id="phMoney" name="phMoney" placeholder="分包项目配合费" rows="2"></textarea>
+                    </div>
+            </div>
+        	<div class="form-group">
+                    <label for="dajd" class="col-sm-2 control-label">定案时间节点</label>
+
+                    <div class="col-sm-9">
+                        <textarea class="form-control" id="dajd" name="dajd" placeholder="定案时间节点" rows="2"></textarea>
+                    </div>
+            </div>
+        	<div class="form-group">
+                    <label for="jjtj" class="col-sm-2 control-label">纠纷解决途径</label>
+
+                    <div class="col-sm-9">
+                        <textarea class="form-control" id="jjtj" name="jjtj" placeholder="纠纷解决途径" rows="2"></textarea>
+                    </div>
+            </div>
+        	<div class="form-group">
+                    <label for="swyq" class="col-sm-2 control-label">税务要求</label>
+
+                    <div class="col-sm-9">
+                        <textarea class="form-control" id="swyq" name="swyq" placeholder="税务要求" rows="2"></textarea>
+                    </div>
+            </div>
+        	<div class="form-group">
+                    <label for="getToJf" class="col-sm-2 control-label">发包方分包合同应提供给承包方</label>
+
+                    <div class="col-sm-9">
+                        <textarea class="form-control" id="getToJf" name="getToJf" placeholder="发包方分包合同应提供给承包方" rows="2"></textarea>
+                    </div>
+            </div>
+        <div class="" style=" left: 50%;position: fixed;bottom: 10px;">
+            <!--以下两种方式提交验证,根据所需选择-->
+            <button type="submit" class="btn btn-primary" data-btn-type="save" id="save">保存</button>
+        </div>
+        <!-- /.box-footer -->
+    </form>
+</div>
+<script>
+    var form =null;
+    var uses = '${userOptions?default(0)}',use=0;
+    if(uses != 0){
+    	use = JSON.parse(uses);
+    }
+    
+    var pros = '${projectOptions?default(0)}',pro=0;
+    if(pros != 0){
+    	pro = JSON.parse(pros);
+    }
+    var bh = '${bh?default(0)}'
+
+    var spid = '${spid?default(0)}'
+    
+    $(function() {
+        //初始化控件
+        form=$("#contract-form").form();
+        //数据校验
+        $("#contract-form").bootstrapValidator({
+            message : '请输入有效值',
+            feedbackIcons : {
+                valid : 'glyphicon glyphicon-ok',
+                invalid : 'glyphicon glyphicon-remove',
+                validating : 'glyphicon glyphicon-refresh'
+            },
+            submitHandler : function() {
+                modals.confirm('确认保存？', function() {
+                    //Save Data，对应'submit-提交'
+                    var params = form.getFormSimpleData();
+                    var url = basePath + '/laborreview/save';
+                    	ajaxPost(url, params, function(data) {
+                            if(data.success){
+                            	modals.hideWin(winId);
+                            	budgetApplyTable.reloadData();
+                                modals.info("保存成功");
+                                
+                            }                
+                        }); 
+                });
+            },
+            fields : {
+            	projectId : {
+                    validators : {
+                        notEmpty : {
+                            message : '请选择项目'
+                        }
+                    }
+                },
+                creatName : {
+                    validators : {
+                        notEmpty : {
+                            message : '请选择起草人'
+                        }
+                    }
+                },
+                reviewName : {
+                    validators : {
+                        notEmpty : {
+                            message : '请输入评审对象'
+                        }
+                    }
+                },
+                contracter:{
+                	validators : {
+                        notEmpty : {
+                            message : '请输入承包单位'
+                        }
+                    }
+                },
+                builder:{
+                	validators : {
+                        notEmpty : {
+                            message : '请输入建设单位'
+                        }
+                    }
+                }
+            }
+        });
+        form.initComponent();
+        if(use != 0){
+            for (var i = 0, len = use.length; i < len; i++) {
+                var u = use[i];
+                $('#creatName').append("<option value='" + u.id + "'>" + u.name + "</option>");
+            }
+            $("#creatName").select2();
+        }
+        if(pro != 0){
+            for (var i = 0, len = pro.length; i < len; i++) {
+                var u = pro[i];
+                $('#projectId').append("<option value='" + u.id + "'>" + u.projectName + "</option>");
+            }
+            $("#projectId").select2();
+        }
+        
+        if(bh!=0){
+        	$("#number").val(bh);
+        }
+        if(spid!=0){
+        	load();
+         }
+        
+        
+        
+    });
+    /* function doPrint(){
+    	var url = basePath+"/ureport/preview?_u=file:volumePay.ureport.xml&_t=1,5&id="+zfid+"&zdr="+zdr;
+   	 	window.open(url);
+    } */
+    function load(){
+    	 ajaxPost(basePath+"/laborreview/load",{id:spid},function(data){
+         	
+    		 $("#contract-form").form().initFormData(data.data); 
+             
+             
+         })
+    	
+    }
+    function resetForm(){
+        form.clearForm();
+        $("#contract-form").data('bootstrapValidator').resetForm();
+    }
+	
+</script>

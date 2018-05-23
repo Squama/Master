@@ -1,0 +1,24 @@
+<div class="form-group">
+	<label class="control-label col-xs-3">评审结论</label>
+    <div class="col-xs-7">
+        <textarea name="conclusion" id="conclusion" placeholder="请填写评审结论" class="form-control" rows="5"></textarea>
+    </div>
+    
+</div>
+<script>
+    var workflowCtrl = {
+        thisForm: null,
+        init: function (formId,businessKey) {
+            this.thisForm = $("#" + formId).form({baseEntity: false});
+            this.thisForm.initComponent();
+            return this.thisForm;
+        },
+        validators: function () {
+            var fields = {
+                conclusion: {validators: {notEmpty: {message: "请填写评审结论"}}}
+            };
+            return fields;
+        }
+    }
+
+</script>

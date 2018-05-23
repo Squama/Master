@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<queryContext xmlns="http://www.example.org/query" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.example.org/query query.xsd">
+<!--本xml片段为代码生成器生成，时间：2017-10-17 11:38:08-->
+	<query id="reviewmat_lists" key="id" tableName="采购合同评审列表" widthType="px">
+			<sql>
+		        <![CDATA[
+		          SELECT mx.* ,u.name uname
+		          FROM
+                  tbl_reviewmat mx ,tbl_user u
+                  WHERE 1=1 and u.id = mx.creatName 
+		        ]]>
+		    </sql>
+		    <column key="rowIndex" header="序号" width="50" allowSort="false"/>
+	        <column key="id" header="id" classType="String" allowSort="true" width="150" hidden="true"/>
+		    <column key="projectName" header="所属项目" classType="String" width="150"/>
+		    <column key="number" header="编号" classType="String" width="150"/>
+		    <column key="reviewName" header="评审对象" classType="String" width="150"/>
+	        <column key="uname" header="起草人" classType="String" width="150" operator="like" />
+			<column key="purchase" header="采购单位" classType="String" width="150" operator="like" />
+	        <column key="supply" header="供货单位" classType="String" width="150"/>
+	        <column key="status" header="评审状态" classType="String" width="150" render="10=新建,20=综合评审,30=副经理评审,40=总经理评审,50=经营科总结,60=完成"/>
+	        <column key="id" header="操作" width="80" fnRender="fnRenderSubmit"/>
+	</query>
+	
+	<query id="reviewlabor_lists" key="id" tableName="施工合同评审列表" widthType="px">
+			<sql>
+		        <![CDATA[
+		          SELECT mx.* ,u.name uname
+		          FROM
+                  tbl_reviewLabor mx ,tbl_user u
+                  WHERE 1=1 and u.id = mx.creatName 
+		        ]]>
+		    </sql>
+		    <column key="rowIndex" header="序号" width="50" allowSort="false"/>
+	        <column key="id" header="id" classType="String" allowSort="true" width="150" hidden="true"/>
+		    <column key="projectName" header="所属项目" classType="String" width="150"/>
+		    <column key="number" header="编号" classType="String" width="150"/>
+		    <column key="reviewName" header="参与合同谈判人" classType="String" width="150"/>
+	        <column key="uname" header="起草人" classType="String" width="150" operator="like" />
+			<column key="builder" header="建设单位" classType="String" width="150" operator="like" />
+	        <column key="contracter" header="承包单位" classType="String" width="150"/>
+	        <column key="status" header="评审状态" classType="String" width="150" render="10=新建,20=综合评审,30=副经理评审,40=总经理评审,50=经营科总结,60=完成"/>
+	        <column key="id" header="操作" width="80" fnRender="fnRenderSubmit"/>
+	</query>
+	<query id="reviewbid_lists" key="id" tableName="招标文件评审列表" widthType="px">
+			<sql>
+		        <![CDATA[
+		          SELECT mx.*
+		          FROM
+                  tbl_reviewBid mx 
+                  WHERE 1=1 
+		        ]]>
+		    </sql>
+		    <column key="rowIndex" header="序号" width="50" allowSort="false"/>
+	        <column key="id" header="id" classType="String" allowSort="true" width="150" hidden="true"/>
+		    <column key="projectName" header="招标项目名称" classType="String" width="150"/>
+		    <column key="number" header="评审编号" classType="String" width="150"/>
+		    <column key="bidNumber" header="招标文件编号" classType="String" width="150"/>
+	        <column key="bidWay" header="招标方式" classType="String" width="150" operator="like" />
+			<column key="builder" header="建设单位" classType="String" width="150" operator="like" />
+	        <column key="bider" header="招标单位" classType="String" width="150"/>
+	        <column key="status" header="评审状态" classType="String" width="150" render="10=新建,20=综合评审,30=副经理评审,40=总经理评审,50=经营科总结,60=完成"/>
+	        <column key="id" header="操作" width="80" fnRender="fnRenderSubmit"/>
+	</query>
+	<query id="reviewquali_lists" key="id" tableName="招标资格评审列表" widthType="px">
+			<sql>
+		        <![CDATA[
+		          SELECT mx.*
+		          FROM
+                  tbl_reviewQualification mx 
+                  WHERE 1=1 
+		        ]]>
+		    </sql>
+		    <column key="rowIndex" header="序号" width="50" allowSort="false"/>
+	        <column key="id" header="id" classType="String" allowSort="true" width="150" hidden="true"/>
+		    <column key="projectName" header="招标项目名称" classType="String" width="150"/>
+		    <column key="number" header="评审编号" classType="String" width="150"/>
+			<column key="builder" header="建设单位" classType="String" width="150" operator="like" />
+	        <column key="bider" header="招标单位" classType="String" width="150"/>
+	        <column key="status" header="评审状态" classType="String" width="150" render="10=新建,20=综合评审,30=副经理评审,40=总经理评审,50=经营科总结,60=完成"/>
+	        <column key="id" header="操作" width="80" fnRender="fnRenderSubmit"/>
+	</query>
+</queryContext>

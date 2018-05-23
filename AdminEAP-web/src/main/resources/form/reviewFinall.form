@@ -1,0 +1,52 @@
+<div class="form-group">
+	<label class="control-label col-xs-3">评审结论</label>
+    <div class="col-xs-7">
+        <textarea name="conclusion" id="conclusion" placeholder="请填写评审结论" class="form-control"></textarea>
+    </div>
+    
+</div>
+<div class="form-group">
+	<label class="control-label col-xs-3">风险点提醒</label>
+    <div class="col-xs-7">
+        <textarea name="risk" id="risk" placeholder="请填写风险点提醒" class="form-control"></textarea>
+    </div>
+</div>
+<div class="form-group">
+	<label class="control-label col-xs-3">合同谈判之后风险点和关键点的争议、处置</label>
+    <div class="col-xs-7">
+        <textarea name="manage" id="manage" placeholder="请填写合同谈判之后风险点和关键点的争议、处置" class="form-control"></textarea>
+    </div>
+</div>
+<div class="form-group">
+	<label class="control-label col-xs-3">参与人员</label>
+    <div class="col-xs-7">
+        <textarea name="joinName" id="joinName" placeholder="请填写参与人员" class="form-control"></textarea>
+    </div>
+</div>
+<div class="form-group">
+	<label class="control-label col-xs-3">合同交底</label>
+    <div class="col-xs-7">
+        <textarea name="remark" id="remark" placeholder="请填写合同交底" class="form-control"></textarea>
+    </div>
+</div>
+<script>
+    var workflowCtrl = {
+        thisForm: null,
+        init: function (formId,businessKey) {
+            this.thisForm = $("#" + formId).form({baseEntity: false});
+            this.thisForm.initComponent();
+            return this.thisForm;
+        },
+        validators: function () {
+            var fields = {
+                conclusion: {validators: {notEmpty: {message: "请填写评审结论"}}}
+                ,risk: {validators: {notEmpty: {message: "请填写风险点"}}}
+                ,manage: {validators: {notEmpty: {message: "请填写合同谈判之后风险点和关键点的争议、处置"}}}
+                ,joinName: {validators: {notEmpty: {message: "请填写参与人员"}}}
+                ,remark: {validators: {notEmpty: {message: "请填写合同交底"}}}
+            };
+            return fields;
+        }
+    }
+
+</script>
