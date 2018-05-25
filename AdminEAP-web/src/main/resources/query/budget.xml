@@ -82,6 +82,48 @@
             <column key="id" header="删除" fnRender="fnRenderDelete"/>
     </query>
     
+    <query id="budget_labour_estimate_list" key="id" tableName="人工测算明细" widthType="px">
+            <sql>
+                <![CDATA[
+                  SELECT bl.id id,bt.region_name quotaName,p.project_name projectName,
+                  b.budget_name budgetName,bl.labour_name labourName, 
+                  bl.forecast_price foracastPrice, bl.labour_quantity labourQuantity
+                  FROM tbl_project p,tbl_budget b,tbl_budget_tx bt,tbl_budget_labour bl
+                  WHERE p.id = b.project_id AND b.budget_no = bt.budget_no AND bt.id = bl.budget_tx_id
+                  AND 1=1
+                ]]>
+            </sql>
+            <column key="id" header="id" hidden="true"/>
+            <column key="rowIndex" header="序号"/>
+            <column key="quotaName" header="子目名称"/>
+            <column key="projectName" header="所属项目"/>
+            <column key="budgetName" header="所属预算"/>
+            <column key="labourName" header="人工费名称"/>
+            <column key="forecastPrice" header="市场估计价" />
+            <column key="labourQuantity" header="消耗量" />
+            <column key="id" header="删除" fnRender="fnRenderDeleteLabour"/>
+    </query>
+    
+    <query id="budget_mech_estimate_list" key="id" tableName="机械测算明细" widthType="px">
+            <sql>
+                <![CDATA[
+                  SELECT bm.id id,bt.region_name quotaName,p.project_name projectName,
+                  b.budget_name budgetName,bm.mech_price mechPrice, bm.mech_quantity mechQuantity
+                  FROM tbl_project p,tbl_budget b,tbl_budget_tx bt,tbl_budget_mech bm
+                  WHERE p.id = b.project_id AND b.budget_no = bt.budget_no AND bt.id = bm.budget_tx_id
+                  AND 1=1
+                ]]>
+            </sql>
+            <column key="id" header="id" hidden="true"/>
+            <column key="rowIndex" header="序号"/>
+            <column key="quotaName" header="子目名称"/>
+            <column key="projectName" header="所属项目"/>
+            <column key="budgetName" header="所属预算"/>
+            <column key="mechPrice" header="台班单价" />
+            <column key="mechQuantity" header="台班消耗量" />
+            <column key="id" header="删除" fnRender="fnRenderDeleteMech"/>
+    </query>
+    
     <!-- 数量消耗列表 -->
     <query id="budget_quantity_list" key="id" tableName="数量超限" widthType="px" service="budgetService" method="getQuantityAuditList"
            simpleSearch="false" className="com.radish.master.entity.PurchaseApplyAudit">
