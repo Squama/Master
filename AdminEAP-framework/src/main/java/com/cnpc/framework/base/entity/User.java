@@ -156,6 +156,10 @@ public class User extends BaseEntity {
     @Column(name = "hireDate")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date hireDate;
+    
+    @Header(name = "转正状态")
+    @Column(name = "zzStatus")
+    private String zzStatus;
 
     @Transient
     private String avatarId;
@@ -473,6 +477,14 @@ public class User extends BaseEntity {
 
 	public void setHireDate(Date hireDate) {
 		this.hireDate = hireDate;
+	}
+
+	public String getZzStatus() {
+		return zzStatus;
+	}
+
+	public void setZzStatus(String zzStatus) {
+		this.zzStatus = zzStatus;
 	}
 
 }
