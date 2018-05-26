@@ -71,13 +71,13 @@ public class OfficeDocController {
 	
 	@RequestMapping("/index")
 	public String index(HttpServletRequest request){
-		List<User> ul1 = baseService.findMapBySql("select u.name name ,u.id id , u.job_id jobId from tbl_user u , tbl_org o where u.dept_id = o.id ", new Object[]{}, new Type[]{StringType.INSTANCE}, User.class);
+		List<User> ul1 = baseService.findMapBySql("select u.name name ,u.id id , u.job_id jobId from tbl_user u , tbl_org o where u.dept_id = o.id and  u.audit_status = 10", new Object[]{}, new Type[]{StringType.INSTANCE}, User.class);
 		request.setAttribute("use", JSONArray.toJSONString(ul1));
 		return prefix+"ht_index";
 	}
 	@RequestMapping("/list")
 	public String list(HttpServletRequest request){
-		List<User> ul1 = baseService.findMapBySql("select u.name name ,u.id id , u.job_id jobId from tbl_user u , tbl_org o where u.dept_id = o.id ", new Object[]{}, new Type[]{StringType.INSTANCE}, User.class);
+		List<User> ul1 = baseService.findMapBySql("select u.name name ,u.id id , u.job_id jobId from tbl_user u , tbl_org o where u.dept_id = o.id and  u.audit_status = 10", new Object[]{}, new Type[]{StringType.INSTANCE}, User.class);
 		request.setAttribute("use", JSONArray.toJSONString(ul1));
 		return prefix+"list_index";
 	}
@@ -92,7 +92,7 @@ public class OfficeDocController {
     }
 	 @RequestMapping(value="/edit",method = RequestMethod.GET)
 	    public String edit(String id,HttpServletRequest request){
-		 	List<User> ul = baseService.findMapBySql("select u.name name ,u.id id , u.job_id jobId from tbl_user u , tbl_org o where u.dept_id = o.id ", new Object[]{}, new Type[]{StringType.INSTANCE}, User.class);
+		 	List<User> ul = baseService.findMapBySql("select u.name name ,u.id id , u.job_id jobId from tbl_user u , tbl_org o where u.dept_id = o.id and  u.audit_status = 10", new Object[]{}, new Type[]{StringType.INSTANCE}, User.class);
 			request.setAttribute("uses", JSONArray.toJSONString(ul));
 	        request.setAttribute("id", id);
 	        request.setAttribute("doWhat",request.getParameter("doWhat"));

@@ -65,7 +65,7 @@ public class InstockController {
 		String id = request.getParameter("id");
 		request.setAttribute("instockId", id);
 		
-		List<User> ul = baseService.findMapBySql("select u.name name ,u.id id  from tbl_user u ", new Object[]{}, new Type[]{StringType.INSTANCE}, User.class);
+		List<User> ul = baseService.findMapBySql("select u.name name ,u.id id  from tbl_user u where u.audit_status = 10", new Object[]{}, new Type[]{StringType.INSTANCE}, User.class);
 		request.setAttribute("userOptions", JSONArray.toJSONString(ul));
 		
 		if(id==null){//新增只能看见40、50状态的采购单
@@ -84,7 +84,7 @@ public class InstockController {
 		String id = request.getParameter("id");
 		request.setAttribute("instockId", id);
 		
-		List<User> ul = baseService.findMapBySql("select u.name name ,u.id id  from tbl_user u ", new Object[]{}, new Type[]{StringType.INSTANCE}, User.class);
+		List<User> ul = baseService.findMapBySql("select u.name name ,u.id id  from tbl_user u where u.audit_status = 10", new Object[]{}, new Type[]{StringType.INSTANCE}, User.class);
 		request.setAttribute("userOptions", JSONArray.toJSONString(ul));
 		
 		if(id==null){//新增只能看见40、50状态的采购单
@@ -102,7 +102,7 @@ public class InstockController {
 		String id = request.getParameter("id");
 		request.setAttribute("instockId", id);
 		
-		List<User> ul = baseService.findMapBySql("select u.name name ,u.id id  from tbl_user u ", new Object[]{}, new Type[]{StringType.INSTANCE}, User.class);
+		List<User> ul = baseService.findMapBySql("select u.name name ,u.id id  from tbl_user u where u.audit_status = 10", new Object[]{}, new Type[]{StringType.INSTANCE}, User.class);
 		request.setAttribute("userOptions", JSONArray.toJSONString(ul));
 		
 		if(id==null){//新增只能看见40、50状态的采购单
@@ -120,7 +120,7 @@ public class InstockController {
 		String id = request.getParameter("id");
 		request.setAttribute("instockId", id);
 		
-		List<User> ul = baseService.findMapBySql("select u.name name ,u.id id  from tbl_user u ", new Object[]{}, new Type[]{StringType.INSTANCE}, User.class);
+		List<User> ul = baseService.findMapBySql("select u.name name ,u.id id  from tbl_user u where u.audit_status = 10", new Object[]{}, new Type[]{StringType.INSTANCE}, User.class);
 		request.setAttribute("userOptions", JSONArray.toJSONString(ul));
 		
 		if(id==null){//新增只能看见40、50状态的采购单

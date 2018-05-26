@@ -50,10 +50,10 @@ public class DutyCheckController {
 	@RequestMapping("/addIndex")
 	public String addIndex(HttpServletRequest request){
 		request.setAttribute("projectOptions", JSONArray.toJSONString(budgetService.getProjectCombobox()));
-		List<User> ul = baseService.findMapBySql("select u.name name ,u.id id , u.job_id jobId from tbl_user u , tbl_org o where u.dept_id = o.id and o.code like 'PROJECT%' ", new Object[]{}, new Type[]{StringType.INSTANCE}, User.class);
+		List<User> ul = baseService.findMapBySql("select u.name name ,u.id id , u.job_id jobId from tbl_user u , tbl_org o where u.dept_id = o.id and o.code like 'PROJECT%' and u.audit_status = 10", new Object[]{}, new Type[]{StringType.INSTANCE}, User.class);
 		request.setAttribute("users", JSONArray.toJSONString(ul));
 		
-		List<User> ul1 = baseService.findMapBySql("select u.name name ,u.id id , u.job_id jobId from tbl_user u , tbl_org o where u.dept_id = o.id ", new Object[]{}, new Type[]{StringType.INSTANCE}, User.class);
+		List<User> ul1 = baseService.findMapBySql("select u.name name ,u.id id , u.job_id jobId from tbl_user u , tbl_org o where u.dept_id = o.id and u.audit_status = 10", new Object[]{}, new Type[]{StringType.INSTANCE}, User.class);
 		request.setAttribute("checker", JSONArray.toJSONString(ul1));
 		
 		return prefix+"dutycheck_addIndex";

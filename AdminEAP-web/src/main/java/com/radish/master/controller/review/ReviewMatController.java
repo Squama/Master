@@ -58,7 +58,7 @@ public class ReviewMatController {
 		List<Project> p = baseService.findMapBySql("select p.project_name projectName ,p.id id  from tbl_project p ", new Object[]{}, new Type[]{StringType.INSTANCE}, Project.class);
 		request.setAttribute("projectOptions", JSONArray.toJSONString(p));
 		
-		List<User> ul = baseService.findMapBySql("select u.name name ,u.id id  from tbl_user u ", new Object[]{}, new Type[]{StringType.INSTANCE}, User.class);
+		List<User> ul = baseService.findMapBySql("select u.name name ,u.id id  from tbl_user u where  u.audit_status = 10", new Object[]{}, new Type[]{StringType.INSTANCE}, User.class);
 		request.setAttribute("userOptions", JSONArray.toJSONString(ul));
 		
 		

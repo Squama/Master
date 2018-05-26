@@ -72,7 +72,7 @@ public class ProAccountController {
 		String zmid = request.getParameter("zmid");
 		String zmmxid = request.getParameter("zmmxid");
 		
-		List<User> ul = baseService.findMapBySql("select u.name name ,u.id id  from tbl_user u ", new Object[]{}, new Type[]{StringType.INSTANCE}, User.class);
+		List<User> ul = baseService.findMapBySql("select u.name name ,u.id id  from tbl_user u where u.audit_status = 10 ", new Object[]{}, new Type[]{StringType.INSTANCE}, User.class);
 		request.setAttribute("userOptions", JSONArray.toJSONString(ul));
 		
 		request.setAttribute("zmid", zmid);
