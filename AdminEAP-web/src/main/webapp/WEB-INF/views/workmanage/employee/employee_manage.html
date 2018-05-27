@@ -21,6 +21,13 @@
                         <select id="deptId" class="form-control select2" name="deptId" style="width:200px;" operator="eq">
                              <option selected="selected" value="">选择一个部门</option>
                         </select>
+                        <select id="auditStatus" class="form-control select2" name="auditStatus" style="width:200px;" operator="eq">
+                             <option selected="selected" value="">选择员工状态</option>
+                             <option  value="10">正常</option>
+                             <option  value="20">离职待审核</option>
+                             <option  value="30">新增待审核</option>
+                             <option  value="50">离职</option>
+                        </select>
                         <input placeholder="请输入姓名" name="name" id="name" class="form-control" type="search" likeOption="true" /> 
                         <input placeholder="请输入登录名" name="loginName" id="loginName" class="form-control" type="search" likeOption="true" />
                     
@@ -32,7 +39,7 @@
                         <div class="btn-group">
                             <button type="button" class="btn btn-default" data-btn-type="add">新增</button>
                             <button type="button" class="btn btn-default" data-btn-type="edit" >编辑</button>
-                            <button type="button" class="btn btn-default" data-btn-type="delete">删除</button>
+                            <!-- <button type="button" class="btn btn-default" data-btn-type="delete">删除</button> -->
                             <button type="button" class="btn btn-default" data-btn-type="export">导出</button>
                         </div>
                     </form>
@@ -142,6 +149,7 @@
                 }
                 $("#deptId").select2();
             }
+            $("#auditStatus").select2();
             
             $("#user_table").on("dblclick", "tr", function(e){
                 var id = $(this).attr('id'); 

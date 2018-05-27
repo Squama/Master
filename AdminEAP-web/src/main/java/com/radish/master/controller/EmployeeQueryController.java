@@ -1,6 +1,7 @@
 package com.radish.master.controller;
 
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -31,6 +32,7 @@ import com.cnpc.framework.utils.EncryptUtil;
 import com.cnpc.framework.utils.SecurityUtil;
 import com.cnpc.framework.utils.StrUtil;
 import com.radish.master.entity.JobDeptRt;
+import com.radish.master.entity.UserLeave;
 import com.radish.master.entity.common.UserExport;
 import com.radish.master.service.CommonService;
 import com.radish.master.service.WechatService;
@@ -76,7 +78,10 @@ public class EmployeeQueryController {
     @RequestMapping(value = "/deletelist", method = RequestMethod.GET)
     public String deleteList(HttpServletRequest request) {
         request.setAttribute("auditStatus", 20);
-        return "workmanage/employee/employeeQuery_list";
+        request.setAttribute("deptOptions", JSONArray.toJSONString(commonService.getDepartmentCombobox()));
+        request.setAttribute("eduOptions", JSONArray.toJSONString(commonService.getEducationCombobox()));
+        request.setAttribute("ethOptions", JSONArray.toJSONString(commonService.getEthnicCombobox()));
+        return "workmanage/employee/employeeDelete_list";
     }
 
     @RequestMapping(value = "/manage", method = RequestMethod.GET)
@@ -119,6 +124,12 @@ public class EmployeeQueryController {
     @ResponseBody
     public User get(@PathVariable("id") String id) {
         return baseService.get(User.class, id);
+    }
+    
+    @RequestMapping(value = "/getLeave/{id}", method = RequestMethod.POST)
+    @ResponseBody
+    public UserLeave getLeave(@PathVariable("id") String id) {
+        return baseService.get(UserLeave.class, id);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/get")
@@ -258,10 +269,10 @@ public class EmployeeQueryController {
     public String exportExcel(User user, HttpServletRequest request, HttpServletResponse response) {
         try {
             ArrayList<String[]> rows = new ArrayList<>();
-            String[] header = { "序号", "姓名", "性别", "部门", "职务", "工种", "手机", "座机", "身份证号", "学历", "民族", "基本工资", "紧急联系人", "紧急联系人电话" };
+            String[] header = { "序号", "姓名", "性别", "出生日期", "民族", "身份证号码", "学历", "手机", "座机","现住址", "职位", "入职时间" };
             rows.add(header);
             getExcel(user, rows);
-            String[] cells = new String[14];
+            String[] cells = new String[12];
             for (int i = 0; i < cells.length; i++) {
                 cells[i] = "";
             }
@@ -287,7 +298,8 @@ public class EmployeeQueryController {
         
         buffer.append("SELECT U.id,U.`name`,CASE WHEN U.sex='1' THEN '男' ELSE '女' END as sex,O.`name` deptId,D.`name` jobId,U.work_type workType,U.mobile,U.telphone, ");
         buffer.append("U.identification_number identificationNumber,E.`name` education,M.`name` ethnic, U.basic_salary basicSalary, ");
-        buffer.append("U.emergency_contact emergencyContact, U.emergency_contact_phone emergencyContactPhone ");
+        buffer.append("U.emergency_contact emergencyContact, U.emergency_contact_phone emergencyContactPhone, ");
+        buffer.append("U.birthday birthday, U.hireDate hireDate , U.address address ");
         buffer.append("FROM tbl_user U ");
         buffer.append("LEFT JOIN tbl_org O ");
         buffer.append("ON U.dept_id = O.id ");
@@ -317,27 +329,43 @@ public class EmployeeQueryController {
             buffer.append(" AND U.login_name LIKE '%:loginName%' ");
             params.put("loginName", user.getLoginName());
         }
+        if (!StrUtil.isEmpty(user.getAuditStatus())) {
+            buffer.append(" AND U.audit_status = :auditStatus ");
+            params.put("auditStatus", user.getAuditStatus().replace(",", ""));
+        }
         try {
+        	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             List<UserExport> users = commonService.findBySql(buffer.toString(), params, UserExport.class);
             for (int i = 0; i < users.size(); i++) {
                 UserExport userColumn = users.get(i);
 
-                String[] cells = new String[14];
+                String[] cells = new String[12];
 
                 cells[0] = String.valueOf(i + 1);
                 cells[1] = userColumn.getName();
                 cells[2] = userColumn.getSex();
-                cells[3] = userColumn.getDeptId();
-                cells[4] = userColumn.getJobId();
+                if(userColumn.getBirthday()==null){
+                	cells[3] = "";
+                }else{
+                	cells[3] = sdf.format(userColumn.getBirthday());
+                }
+                cells[4] = userColumn.getEthnic();
+                cells[5] = userColumn.getIdentificationNumber();
+                cells[6] = userColumn.getEducation();
+                cells[7] = userColumn.getMobile();
+                cells[8] = userColumn.getTelphone();
+                cells[9] = userColumn.getAddress();
+                cells[10] = userColumn.getJobId();
+                if(userColumn.getHireDate()==null){
+                	 cells[11] = "";
+                }else{
+                	 cells[11] = sdf.format(userColumn.getHireDate());
+                }
+                /*cells[3] = userColumn.getDeptId();
                 cells[5] = userColumn.getWorkType();
-                cells[6] = userColumn.getMobile();
-                cells[7] = userColumn.getTelphone();
-                cells[8] = userColumn.getIdentificationNumber();
-                cells[9] = userColumn.getEducation();
-                cells[10] = userColumn.getEthnic();
                 cells[11] = userColumn.getBasicSalary();
                 cells[12] = userColumn.getEmergencyContact();
-                cells[13] = userColumn.getEmergencyContactPhone();
+                cells[13] = userColumn.getEmergencyContactPhone();*/
                         
                 rows.add(cells);
             }
@@ -348,7 +376,7 @@ public class EmployeeQueryController {
     }
 
     private Column[] getColumn() {
-        Column[] columns = new Column[14];
+        Column[] columns = new Column[12];
 
         columns[0] = new Column();
         columns[0].setAlign(Column.ALIGN_CENTER);
@@ -379,11 +407,11 @@ public class EmployeeQueryController {
         columns[6].setWidth(5000);
 
         columns[7] = new Column();
-        columns[7].setAlign(Column.ALIGN_RIGHT);
+        columns[7].setAlign(Column.ALIGN_CENTER);
         columns[7].setWidth(6000);
 
         columns[8] = new Column();
-        columns[8].setAlign(Column.ALIGN_RIGHT);
+        columns[8].setAlign(Column.ALIGN_CENTER);
         columns[8].setWidth(6000);
         
         columns[9] = new Column();
@@ -391,20 +419,20 @@ public class EmployeeQueryController {
         columns[9].setWidth(8000);
         
         columns[10] = new Column();
-        columns[10].setAlign(Column.ALIGN_RIGHT);
+        columns[10].setAlign(Column.ALIGN_CENTER);
         columns[10].setWidth(6000);
         
         columns[11] = new Column();
         columns[11].setAlign(Column.ALIGN_CENTER);
         columns[11].setWidth(8000);
         
-        columns[12] = new Column();
+        /*columns[12] = new Column();
         columns[12].setAlign(Column.ALIGN_CENTER);
         columns[12].setWidth(8000);
         
         columns[13] = new Column();
         columns[13].setAlign(Column.ALIGN_CENTER);
-        columns[13].setWidth(8000);
+        columns[13].setWidth(8000);*/
 
         return columns;
     }

@@ -4,6 +4,7 @@
 package com.radish.master.entity.common;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -52,7 +53,13 @@ public class UserExport implements Serializable {
     private String emergencyContact;
 
     private String emergencyContactPhone;
+    
+    private Date birthday;
+    
+    private Date hireDate;
 
+    private String address;
+    
     public String getId() {
         return id;
     }
@@ -164,5 +171,29 @@ public class UserExport implements Serializable {
     public void setEmergencyContactPhone(String emergencyContactPhone) {
         this.emergencyContactPhone = emergencyContactPhone;
     }
+
+	public Date getBirthday() {
+		return birthday;
+	}
+
+	public void setBirthday(Date birthday) {
+		this.birthday = birthday;
+	}
+
+	public Date getHireDate() {
+		return hireDate;
+	}
+
+	public void setHireDate(Date hireDate) {
+		this.hireDate = hireDate;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
 
 }

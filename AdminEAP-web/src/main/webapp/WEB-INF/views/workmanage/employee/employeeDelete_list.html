@@ -1,12 +1,12 @@
 <section class="content-header">
     <h1>
-        员工信息
+        离职员工信息
         <small>列表</small>
     </h1>
     <ol class="breadcrumb">
         <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
         <li><a href="#">办公管理</a></li>
-        <li class="active">员工信息查询</li>
+        <li class="active">离职员工信息</li>
     </ol>
 </section>
 
@@ -23,7 +23,7 @@
 			                <!-- /.box-header -->
 			                <div class="dataTables_filter" id="searchDiv" style="display: none">
 			                    <!--查询条件-->
-			                   <input type="search"  title="审核" name = "auditStatus" id="audit_status" value="10" style="display:none">
+			                   <input type="search"  title="审核" name = "leaveStatus" id="leaveStatus" value="40" style="display:none">
 			                   <select id="deptId" class="form-control select2" name="deptId" style="width:200px;" operator="eq">
 			                        <option selected="selected" value="">选择一个部门</option>
 			                   </select>
@@ -298,7 +298,7 @@
 
     var employeeQueryTable, winId = "employeeQueryWin";
     $(function (){
-        employeeQueryTable = new CommonTable("employee_table", "employee_list", "searchDiv", null);
+        employeeQueryTable = new CommonTable("employee_table", "employee_list_leave", "searchDiv", null);
         
         $("#nav-tab-list").on("click",function(){
             setTitle("员工列表");
@@ -318,7 +318,7 @@
                 	detailForm.clearForm();
                     setTitle("查看用户【"+employeeQueryTable.getSelectedRowData().name+"】")
                     $("#nav-tab-detail").click();
-                    ajaxPost(basePath+"/employeeQuery/get/"+employeeQueryTable.getSelectedRowData().id,null,function(data){
+                    ajaxPost(basePath+"/employeeQuery/getLeave/"+employeeQueryTable.getSelectedRowData().id,null,function(data){
                     	detailForm.initFormData(data);
                     });
                     break;
@@ -330,7 +330,7 @@
             detailForm.clearForm();
             setTitle("查看用户【"+employeeQueryTable.getSelectedRowData().name+"】")
             $("#nav-tab-detail").click();
-            ajaxPost(basePath+"/employeeQuery/get/"+employeeQueryTable.getSelectedRowData().id,null,function(data){
+            ajaxPost(basePath+"/employeeQuery/getLeave/"+employeeQueryTable.getSelectedRowData().id,null,function(data){
                 detailForm.initFormData(data);
             });
 		});
