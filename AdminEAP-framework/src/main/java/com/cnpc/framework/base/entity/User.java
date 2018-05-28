@@ -160,6 +160,19 @@ public class User extends BaseEntity {
     @Header(name = "转正状态")
     @Column(name = "zzStatus")
     private String zzStatus;
+    
+    @Header(name = "转正部门成绩")
+    @Column(name = "zzDeptDesc")
+    private String zzDeptDesc;
+    
+    
+    @Header(name = "转正建议")
+    @Column(name = "zzView")
+    private String zzView;
+    
+    @Header(name = "转正驳回原因")
+    @Column(name = "zzFaildDesc")
+    private String zzFaildDesc;
 
     @Transient
     private String avatarId;
@@ -485,6 +498,30 @@ public class User extends BaseEntity {
 
 	public void setZzStatus(String zzStatus) {
 		this.zzStatus = zzStatus;
+	}
+
+	public String getZzView() {
+		return zzView;
+	}
+
+	public void setZzView(String zzView) {
+		this.zzView = zzView;
+	}
+
+	public String getZzFaildDesc() {
+		return zzFaildDesc;
+	}
+
+	public void setZzFaildDesc(String zzFaildDesc) {
+		this.zzFaildDesc = zzFaildDesc;
+	}
+
+	public String getZzDeptDesc() {
+		return zzDeptDesc;
+	}
+
+	public void setZzDeptDesc(String zzDeptDesc) {
+		this.zzDeptDesc = zzDeptDesc;
 	}
 
 }

@@ -107,5 +107,47 @@
         <column key="leaveView" header="办公室意见"  width="100"  />
         <column key="leaveStatus" header="审核状态"  width="200" render="10=办公室审核,20=副总经理审核,30=总经理审核,40=审核通过,50=驳回"/>
     </query>
-
+    <!-- 人员待转正列表 -->
+    <query id="employee_list_zz" key="id" tableName="人员待转正列表" widthType="px">
+			<sql>
+		        <![CDATA[
+		          SELECT *
+		          FROM
+                  tbl_user
+                  WHERE 1=1 and hireDate is not null and  DATE_SUB(DATE_ADD(hireDate, INTERVAL 2 MONTH),INTERVAL 1 WEEK)<now()
+ 				  and zzStatus <>'50' and audit_status='10'
+		        ]]>
+		    </sql>
+		<column key="rowIndex" header="序号" width="50" allowSort="false"/>
+        <column key="id" header="id" hidden="true"/>
+        <column key="version" header="version" hidden="true"/>
+        <column key="name" header="姓名" operator="like" width="100" allowSort="true" />
+        <column key="dept_id" header="所在部门" align="left" width="100" fnRender="fnRenderDept"/>
+        <column key="sex" header="性别" operator="eq" width="150" allowSort="true" render="1=男,0=女" />
+        <column key="birthday" header="出生年月" operator="like" width="80" allowSort="true" dateFormat="yyyy-mm-dd" />
+        <column key="hireDate" header="入职时间" operator="like" width="80" allowSort="true" dateFormat="yyyy-mm-dd" />
+        <column key="zzStatus" header="转正状态" width="50"  render="0=试用期,10=用人部门审核,20=办公室意见,30=副经理审核,40=总经理审核,50=正式员工,60=转正驳回"/>
+		<column key="id" header="操作" width="50"  fnRender="fnRenderSubmit"/>
+	</query>
+	<!-- 部门领导审批 -->
+		<query id="employee_list_deptAuidt" key="id" tableName="人员待转正列表" widthType="px">
+			<sql>
+		        <![CDATA[
+		          SELECT *
+		          FROM
+                  tbl_user
+                  WHERE 1=1 and zzStatus ='10' and audit_status='10'
+		        ]]>
+		    </sql>
+		<column key="rowIndex" header="序号" width="50" allowSort="false"/>
+        <column key="id" header="id" hidden="true"/>
+        <column key="version" header="version" hidden="true"/>
+        <column key="name" header="姓名" operator="like" width="100" allowSort="true" />
+        <column key="dept_id" header="所在部门" align="left" width="100" fnRender="fnRenderDept"/>
+        <column key="sex" header="性别" operator="eq" width="150" allowSort="true" render="1=男,0=女" />
+        <column key="birthday" header="出生年月" operator="like" width="80" allowSort="true" dateFormat="yyyy-mm-dd" />
+        <column key="hireDate" header="入职时间" operator="like" width="80" allowSort="true" dateFormat="yyyy-mm-dd" />
+        <column key="zzStatus" header="转正状态" width="50"  allowSort="true" render="0=试用期,10=用人部门审核,20=办公室意见,30=副经理审核,40=总经理审核,50=正式员工,60=转正驳回"/>
+		<column key="id" header="操作" width="50"  fnRender="fnRenderSubmit"/>
+	</query>
 </queryContext>
