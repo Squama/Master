@@ -41,7 +41,25 @@
         <column key="col" hidden="true" header="行高" width="80"/>
     </query>
     
-    <query id="budget_estimate_right_list" key="id" tableName="成本测算表" className="com.radish.master.entity.BudgetTx" widthType="px" pageSize="2000" order="quotaGroup asc,orderNo desc">
+    <query id="budget_estimate_right_list" key="id" tableName="成本测算表" widthType="px" pageSize="2000" order="bt.quota_group asc,bt.order_no desc">
+        <sql>
+            <![CDATA[
+              SELECT bt.id id, bt.region_code regionCode, bt.region_name regionName, bt.quantities quantities,
+			  bt.unit_price unitPrice, bt.artificiality artificiality, bt.materiels materiels, bt.mech mech,
+			  bt.quota_group quotaGroup, bt.order_no orderNo, bt.col col, be.esCount, bl.labourCount, bm.mechCount
+			  FROM tbl_budget_tx bt
+			  LEFT JOIN 
+			  (SELECT count(1) esCount, budget_tx_id FROM tbl_budget_estimate GROUP BY budget_tx_id) be
+			  ON bt.id = be.budget_tx_id
+			  LEFT JOIN
+			  (SELECT count(1) labourCount, budget_tx_id FROM tbl_budget_labour GROUP BY budget_tx_id) bl
+			  ON bt.id = bl.budget_tx_id
+			  LEFT JOIN
+			  (SELECT count(1) mechCount, budget_tx_id FROM tbl_budget_mech GROUP BY budget_tx_id) bm
+			  ON bt.id = bm.budget_tx_id
+			  WHERE 1=1
+            ]]>
+        </sql>
         <column key="rowIndex" header="序号" width="80"/>
         <column key="regionCode" header="定额编号" width="120"/>
         <column key="regionName" header="子目名称" width="150" enableTooltip="true" maxLen="8"/>
@@ -53,6 +71,9 @@
         <column key="quotaGroup" hidden="true" header="分组" width="80"/>
         <column key="orderNo" hidden="true" header="拆分合并标志" width="80"/>
         <column key="col" hidden="true" header="行高" width="80"/>
+        <column key="esCount" hidden="true" header="材料测算条数"/>
+        <column key="labourCount" hidden="true" header="人工测算条数"/>
+        <column key="mechCount" hidden="true" header="机械测算条数"/>
         <column key="id" header="id" hidden="true"/>
         <column key="id" header="删除" fnRender="fnRenderTxDelete"/>
     </query>
@@ -87,7 +108,7 @@
                 <![CDATA[
                   SELECT bl.id id,bt.region_name quotaName,p.project_name projectName,
                   b.budget_name budgetName,bl.labour_name labourName, 
-                  bl.forecast_price foracastPrice, bl.labour_quantity labourQuantity
+                  bl.forecast_price forecastPrice, bl.labour_quantity labourQuantity
                   FROM tbl_project p,tbl_budget b,tbl_budget_tx bt,tbl_budget_labour bl
                   WHERE p.id = b.project_id AND b.budget_no = bt.budget_no AND bt.id = bl.budget_tx_id
                   AND 1=1
@@ -108,7 +129,7 @@
             <sql>
                 <![CDATA[
                   SELECT bm.id id,bt.region_name quotaName,p.project_name projectName,
-                  b.budget_name budgetName,bm.mech_price mechPrice, bm.mech_quantity mechQuantity
+                  b.budget_name budgetName,bm.mech_name mechName, bm.mech_price mechPrice, bm.mech_quantity mechQuantity
                   FROM tbl_project p,tbl_budget b,tbl_budget_tx bt,tbl_budget_mech bm
                   WHERE p.id = b.project_id AND b.budget_no = bt.budget_no AND bt.id = bm.budget_tx_id
                   AND 1=1
@@ -119,9 +140,116 @@
             <column key="quotaName" header="子目名称"/>
             <column key="projectName" header="所属项目"/>
             <column key="budgetName" header="所属预算"/>
+            <column key="mechName" header="机械费名称" />
             <column key="mechPrice" header="台班单价" />
             <column key="mechQuantity" header="台班消耗量" />
             <column key="id" header="删除" fnRender="fnRenderDeleteMech"/>
+    </query>
+    
+    <query id="budget_consume_list" key="id" tableName="预算消耗" widthType="px" order="b.labor_sub_id desc, b.create_date_time asc">
+            <sql>
+                <![CDATA[
+                    SELECT b.id,b.labor_sub_id,bc.subCount, b.project_name projectName, b.labor_name laborName, b.labor_sub_name laborSubName,
+                    b.budget_name budgetName, c.consumeLabour, c.consumeMat, c.consumeMech, c.consumePack,
+                    tx.budgetLabour, tx.budgetMat, tx.budgetMech, txpack.unit_price budgetPack,
+                    'Labour' labourPer, 'Mat' matPer, 'Mech' mechPer, 'Pack' packPer
+                    FROM tbl_budget b
+                    LEFT JOIN
+                    (SELECT IFNULL(sum(pv.final_labour),'0') consumeLabour,IFNULL(sum(pv.final_mat),'0') consumeMat,
+                    IFNULL(sum(pv.final_mech),'0') consumeMech,IFNULL(sum(pv.final_pack),'0') consumePack, pv.labor_sub_id laborSubID
+                    FROM tbl_project_volume pv
+                    WHERE pv.`status` = '70'
+                    GROUP BY pv.labor_sub_id) c
+                    ON b.labor_sub_id = c.laborSubID
+                    LEFT JOIN
+                    (SELECT budget.labor_sub_id laborSubID,budget.budget_no sumbudgetNo, txsum.budgetLabour, txsum.budgetMat, txsum.budgetMech
+                    FROM tbl_budget budget,
+                    (
+                    SELECT IFNULL(SUM(bt.artificiality),'0') budgetLabour, IFNULL(SUM(bt.materiels),'0') budgetMat,
+                    IFNULL(SUM(bt.mech),'0') budgetMech, bt.budget_no
+                    FROM tbl_budget_tx bt WHERE bt.is_group = '0'
+                    GROUP BY bt.budget_no
+                    ) txsum
+                    WHERE budget.budget_no = txsum.budget_no) tx
+                    ON b.budget_no = tx.sumbudgetNo
+                    LEFT JOIN
+                    (SELECT tb.budget_no, tbt.unit_price
+                    FROM tbl_budget_tx tbt,tbl_budget tb
+                    WHERE tbt.budget_no = tb.budget_no 
+                    AND tbt.quota_group = 'package' AND tbt.order_no = 'pack' ) txpack
+                    ON b.budget_no = txpack.budget_no
+                    LEFT JOIN
+                    (SELECT COUNT(1) subCount, labor_sub_id
+                    FROM tbl_budget
+                    GROUP BY labor_sub_id) bc
+                    ON b.labor_sub_id = bc.labor_sub_id
+                    WHERE 1=1
+                ]]>
+            </sql>
+            <column key="id" header="id" hidden="true"/>
+            <column key="rowIndex" header="序号"/>
+            <column key="budgetName" header="预算名称"/>
+            <column key="budgetLabour" header="人工预算" fnRender="fnRenderBase64"/>
+            <column key="consumeLabour" header="人工消耗" fnRender="fnRenderLabourConsume"/>
+            <column key="labourPer" header="百分比" fnRender="fnRenderLabourPercent"/>
+            <column key="budgetMat" header="材料预算" fnRender="fnRenderBase64"/>
+            <column key="consumeMat" header="材料消耗" fnRender="fnRenderMatConsume"/>
+            <column key="matPer" header="百分比" fnRender="fnRenderMatPercent"/>
+            <column key="budgetMech" header="机械预算" fnRender="fnRenderBase64"/>
+            <column key="consumeMech" header="机械消耗" fnRender="fnRenderMechConsume"/>
+            <column key="mechPer" header="百分比" fnRender="fnRenderMechPercent"/>
+            <column key="budgetPack" header="包工包料预算" fnRender="fnRenderBase64"/>
+            <column key="consumePack" header="包工包料消耗" fnRender="fnRenderPackConsume"/>
+            <column key="packPer" header="百分比" fnRender="fnRenderPackPercent"/>
+    </query>
+    
+    <query id="budget_subconsume_list" key="id" tableName="预算消耗" widthType="px" order="b.id desc, b.create_date_time asc">
+            <sql>
+                <![CDATA[
+                    SELECT b.id, b.contract_name contractName, b.sub_name subName,
+                    c.consumeLabour, c.consumeMat, c.consumeMech, c.consumePack,
+                    tx.budgetLabour, tx.budgetMat, tx.budgetMech, txpack.unit_price budgetPack,
+                    'Labour' labourPer, 'Mat' matPer, 'Mech' mechPer, 'Pack' packPer
+                    FROM tbl_labor_sub b
+                    LEFT JOIN
+                    (SELECT IFNULL(sum(pv.final_labour),'0') consumeLabour,IFNULL(sum(pv.final_mat),'0') consumeMat,
+                    IFNULL(sum(pv.final_mech),'0') consumeMech,IFNULL(sum(pv.final_pack),'0') consumePack, pv.labor_sub_id laborSubID
+                    FROM tbl_project_volume pv
+                    WHERE pv.`status` = '70'
+                    GROUP BY pv.labor_sub_id) c
+                    ON b.id = c.laborSubID
+                    LEFT JOIN
+                    (SELECT IFNULL(SUM(bt.artificiality),'0') budgetLabour, IFNULL(SUM(bt.materiels),'0') budgetMat,
+                    IFNULL(SUM(bt.mech),'0') budgetMech, bgt.labor_sub_id
+                    FROM tbl_budget_tx bt, tbl_budget bgt
+                    WHERE bt.budget_no = bgt.budget_no AND bt.is_group = '0'
+                    GROUP BY bgt.labor_sub_id) tx
+                    ON b.id = tx.labor_sub_id
+                    LEFT JOIN
+                    (SELECT tb.labor_sub_id, SUM(tbt.unit_price) unit_price
+                    FROM tbl_budget_tx tbt,tbl_budget tb
+                    WHERE tbt.budget_no = tb.budget_no 
+                    AND tbt.quota_group = 'package' AND tbt.order_no = 'pack' 
+                    GROUP BY tb.labor_sub_id) txpack
+                    ON b.id = txpack.labor_sub_id
+                    WHERE 1=1
+                ]]>
+            </sql>
+            <column key="id" header="id" hidden="true"/>
+            <column key="contractName" header="合同名称"/>
+            <column key="subName" header="子项名称"/>
+            <column key="budgetLabour" header="人工预算" fnRender="fnRenderBase64"/>
+            <column key="consumeLabour" header="人工消耗" fnRender="fnRenderBase64"/>
+            <column key="labourPer" header="百分比" fnRender="fnRenderLabourPercent"/>
+            <column key="budgetMat" header="材料预算" fnRender="fnRenderBase64"/>
+            <column key="consumeMat" header="材料消耗" fnRender="fnRenderBase64"/>
+            <column key="matPer" header="百分比" fnRender="fnRenderMatPercent"/>
+            <column key="budgetMech" header="机械预算" fnRender="fnRenderBase64"/>
+            <column key="consumeMech" header="机械消耗" fnRender="fnRenderBase64"/>
+            <column key="mechPer" header="百分比" fnRender="fnRenderMechPercent"/>
+            <column key="budgetPack" header="包工包料" fnRender="fnRenderBase64"/>
+            <column key="consumePack" header="消耗" fnRender="fnRenderBase64"/>
+            <column key="packPer" header="百分比" fnRender="fnRenderPackPercent"/>
     </query>
     
     <!-- 数量消耗列表 -->

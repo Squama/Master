@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.fastjson.JSONArray;
 import com.cnpc.framework.base.pojo.Result;
+import com.cnpc.framework.utils.StrUtil;
 import com.radish.master.entity.Budget;
 import com.radish.master.entity.BudgetImport;
 import com.radish.master.service.BudgetService;
@@ -57,6 +58,10 @@ public class BudgetImportController {
     public Map checkUnique(String projectID, String budgetName, String fieldValue, String id) {
 
         Map<String, Boolean> map = new HashMap<String, Boolean>();
+        if(StrUtil.isEmpty(budgetName)){
+            map.put("valid", true);
+            return map;
+        }
         try {
             Budget budget = budgetService.getBudgetByProjectAndName(projectID, budgetName);
             map.put("valid", budget==null);

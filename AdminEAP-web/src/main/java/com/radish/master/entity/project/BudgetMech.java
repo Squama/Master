@@ -39,9 +39,9 @@ public class BudgetMech extends BaseEntity {
     @Column(name = "budget_no")
     private String budgetNo;
 
-    @Header(name = "人工费名称")
-    @Column(name = "labour_name")
-    private String labourName;
+    @Header(name = "机械费名称")
+    @Column(name = "mech_name")
+    private String mechName;
 
     @Header(name = "台班单价")
     @Column(name = "mech_price")
@@ -75,12 +75,12 @@ public class BudgetMech extends BaseEntity {
         this.budgetNo = budgetNo;
     }
 
-    public String getLabourName() {
-        return labourName;
+    public String getMechName() {
+        return mechName;
     }
 
-    public void setLabourName(String labourName) {
-        this.labourName = labourName;
+    public void setMechName(String mechName) {
+        this.mechName = mechName;
     }
 
     public String getMechPrice() {

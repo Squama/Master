@@ -16,6 +16,8 @@ import com.radish.master.entity.BudgetImport;
 import com.radish.master.entity.BudgetTx;
 import com.radish.master.entity.Materiel;
 import com.radish.master.entity.PurchaseApplyAudit;
+import com.radish.master.entity.project.BudgetLabour;
+import com.radish.master.entity.project.BudgetMech;
 import com.radish.master.pojo.Options;
 
 public interface BudgetService extends BaseService {
@@ -50,6 +52,8 @@ public interface BudgetService extends BaseService {
     
     BudgetTx getTxGroupByNo(String group);
     
+    BudgetTx checkPack(String budgetNo);
+    
     Map<String, Materiel> getMatMap();
     
     public Result startEstimateFlow(Budget budget, String processDefinitionKey);
@@ -61,5 +65,13 @@ public interface BudgetService extends BaseService {
     
     public List<BudgetEstimate> getBudgetEstimateList(String budgetNo);
     
+    public List<BudgetEstimate> getBudgetEstimateCount(String budgetTxID);
+    
     public List<BudgetImport> getBudgetImportListByOrderNo(String orderNo);
+    
+    public List<BudgetTx> getBudgetTxListByGroup(String budgetNo, String group);
+    
+    public List<BudgetLabour> getBudgetLabourCount(String budgetTxID);
+    
+    public List<BudgetMech> getBudgetMechCount(String budgetTxID);
 }

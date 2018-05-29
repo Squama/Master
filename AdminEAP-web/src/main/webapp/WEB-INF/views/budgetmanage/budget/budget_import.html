@@ -287,6 +287,9 @@
         }
         
         $("#budgetName").on("focusout", function(){
+        	if($(this).val() == '' || $(this).val() == null || $(this).val() == undefined){
+        		return false;
+        	}
         	ajaxPost(basePath + "/budgetimport/genno/"+$(this).val(), null, function (data) {
                 $('#budgetNo').val(data.message);
             });

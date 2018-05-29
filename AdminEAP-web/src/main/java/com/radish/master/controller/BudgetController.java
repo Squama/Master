@@ -54,6 +54,34 @@ public class BudgetController {
         return "budgetmanage/budgetactiviti/budget_amount_list";
     }
     
+    @RequestMapping(value="/toestimate",method = RequestMethod.GET)
+    public String toEstimate(String budgetNo, HttpServletRequest request){
+        request.setAttribute("budgetNo", budgetNo);
+        
+        return "budgetmanage/budget/estimate_detail";
+    }
+    
+    @RequestMapping(value="/singledetail",method = RequestMethod.GET)
+    public String singleEstimate(HttpServletRequest request, String id){
+        request.setAttribute("budgetTxID", id);
+        
+        return "budgetmanage/budget/single_estimate_detail";
+    }
+    
+    @RequestMapping(value="/consumelist")
+    public String consumeList(HttpServletRequest request, String budgetName){
+        request.setAttribute("budgetName", budgetName);
+        
+        return "budgetmanage/budget/consume_list";
+    }
+    
+    @RequestMapping(value="/subconsume",method = RequestMethod.GET)
+    public String subConsume(HttpServletRequest request, String subName){
+        request.setAttribute("subName", subName);
+        
+        return "budgetmanage/budget/subconsume_list";
+    }
+    
     /**
      * 
      * 新旧代码分界

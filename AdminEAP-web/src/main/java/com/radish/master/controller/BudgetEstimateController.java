@@ -29,6 +29,8 @@ import com.radish.master.entity.BudgetEstimate;
 import com.radish.master.entity.BudgetImport;
 import com.radish.master.entity.BudgetTx;
 import com.radish.master.entity.Project;
+import com.radish.master.entity.project.BudgetLabour;
+import com.radish.master.entity.project.BudgetMech;
 import com.radish.master.pojo.RowEdit;
 import com.radish.master.service.BudgetService;
 import com.radish.master.system.CodeException;
@@ -237,11 +239,123 @@ public class BudgetEstimateController {
         return new Result(true, map);
     }
     
-    @VerifyCSRFToken
     @RequestMapping(method = RequestMethod.POST, value = "/save")
     @ResponseBody
     private Result saveBudgetEstimate(BudgetEstimate budgetEstimate, HttpServletRequest request) {
+        
+        List<BudgetEstimate> list = budgetService.getBudgetEstimateCount(budgetEstimate.getBudgetTxID());
+        if(list.size() >= 20){
+            return new Result(false, "材料测算保存失败！请检查是否超过20条！");
+        }
+        
         budgetService.save(budgetEstimate);
+        //汇总合价
+        list = budgetService.getBudgetEstimateCount(budgetEstimate.getBudgetTxID());
+        BigDecimal sum = new BigDecimal("0");
+        for(BudgetEstimate be : list){
+            BigDecimal quantity = new BigDecimal(be.getQuantity());
+            BigDecimal price = new BigDecimal(be.getBudgetPrice());
+            
+            sum = sum.add(quantity.multiply(price));
+        }
+        
+        BudgetTx bt = budgetService.get(BudgetTx.class, budgetEstimate.getBudgetTxID());
+        
+        bt.setMateriels(sum.toPlainString());
+        
+        budgetService.update(bt);
+        
+        return new Result(true);
+    }
+    
+    @RequestMapping(method = RequestMethod.POST, value = "/savelabour")
+    @ResponseBody
+    private Result saveBudgetLabour(BudgetLabour budgetLabour, HttpServletRequest request) {
+        budgetService.save(budgetLabour);
+        
+        List<BudgetLabour> list = budgetService.getBudgetLabourCount(budgetLabour.getBudgetTxID());
+        //汇总合价
+        BigDecimal sum = new BigDecimal("0");
+        for(BudgetLabour be : list){
+            BigDecimal quantity = new BigDecimal(be.getLabourQuantity());
+            BigDecimal price = new BigDecimal(be.getForecastPrice());
+            
+            sum = sum.add(quantity.multiply(price));
+        }
+        
+        BudgetTx bt = budgetService.get(BudgetTx.class, budgetLabour.getBudgetTxID());
+        
+        bt.setArtificiality(sum.toPlainString());
+        
+        budgetService.update(bt);
+        
+        return new Result(true);
+    }
+    
+    @RequestMapping(method = RequestMethod.POST, value = "/savemech")
+    @ResponseBody
+    private Result saveBudgetMech(BudgetMech budgetMech, HttpServletRequest request) {
+        budgetService.save(budgetMech);
+        
+        List<BudgetMech> list = budgetService.getBudgetMechCount(budgetMech.getBudgetTxID());
+        //汇总合价
+        BigDecimal sum = new BigDecimal("0");
+        for(BudgetMech be : list){
+            BigDecimal quantity = new BigDecimal(be.getMechQuantity());
+            BigDecimal price = new BigDecimal(be.getMechPrice());
+            
+            sum = sum.add(quantity.multiply(price));
+        }
+        
+        BudgetTx bt = budgetService.get(BudgetTx.class, budgetMech.getBudgetTxID());
+        
+        bt.setMech(sum.toPlainString());
+        
+        budgetService.update(bt);
+        
+        return new Result(true);
+    }
+    
+    @RequestMapping(method = RequestMethod.POST, value = "/savepackage")
+    @ResponseBody
+    private Result saveBudgetPack(String budgetNo, String acreage, String univalent, HttpServletRequest request) {
+        BudgetTx tx = budgetService.checkPack(budgetNo);
+        if(tx != null){
+            return new Result(false);
+        }
+        
+        BigDecimal price;
+        BigDecimal mianji = new BigDecimal(acreage);
+        BigDecimal danjia = new BigDecimal(univalent);
+        
+        price = mianji.multiply(danjia);
+        
+        Budget budget = budgetService.getBudgetByNo(budgetNo);
+        BudgetTx pack = new BudgetTx();
+        pack.setBudgetNo(budget.getBudgetNo());
+        pack.setProjectID(budget.getProjectID());
+        pack.setRegionCode("包工包料");
+        pack.setRegionName("包工包料");
+        pack.setQuantities(acreage);
+        pack.setUnitPrice(price.toPlainString());
+        pack.setQuotaGroup("package");
+        pack.setOrderNo("pack");
+        
+        BudgetTx packGroup = new BudgetTx();
+        packGroup.setBudgetNo(budget.getBudgetNo());
+        packGroup.setProjectID(budget.getProjectID());
+        packGroup.setRegionName("包工包料");
+        packGroup.setQuotaGroup("package");
+        packGroup.setIsGroup("1");
+        packGroup.setQuantities("");
+        packGroup.setUnitPrice(price.toPlainString());
+        packGroup.setArtificiality("");
+        packGroup.setMateriels("");
+        packGroup.setMech("");
+        
+        budgetService.save(pack);
+        budgetService.save(packGroup);
+        
         return new Result(true);
     }
     
@@ -250,6 +364,22 @@ public class BudgetEstimateController {
     private Result deleteBudgetEstimate(String id, HttpServletRequest request) {
         BudgetEstimate budgetEstimate = budgetService.get(BudgetEstimate.class, id);
         budgetService.delete(budgetEstimate);
+        return new Result(true);
+    }
+    
+    @RequestMapping(method = RequestMethod.POST, value = "/deletelabour")
+    @ResponseBody
+    private Result deleteBudgetLabour(String id, HttpServletRequest request) {
+        BudgetLabour budgetLabour = budgetService.get(BudgetLabour.class, id);
+        budgetService.delete(budgetLabour);
+        return new Result(true);
+    }
+    
+    @RequestMapping(method = RequestMethod.POST, value = "/deletemech")
+    @ResponseBody
+    private Result deleteBudgetMech(String id, HttpServletRequest request) {
+        BudgetMech budgetMech = budgetService.get(BudgetMech.class, id);
+        budgetService.delete(budgetMech);
         return new Result(true);
     }
     
@@ -266,7 +396,12 @@ public class BudgetEstimateController {
         
         budgetService.batchUpdate(importList);
         budgetService.delete(tx);
-        //tx删除
+        //tx删除分组
+        List<BudgetTx> list = budgetService.getBudgetTxListByGroup(tx.getBudgetNo(), tx.getQuotaGroup());
+        if(list.size() == 1 && "1".equals(list.get(0).getIsGroup())){
+            budgetService.delete(list.get(0));
+        }
+        
         return new Result(true);
     }
     

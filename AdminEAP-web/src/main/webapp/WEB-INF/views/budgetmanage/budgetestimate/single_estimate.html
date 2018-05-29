@@ -97,6 +97,7 @@
                             <input type="hidden" name="budgetNo">
                             <div class="box box-success" id="budget_mech">
                                 <div class="dataTables_filter" style="text-align:center;margin-top:5px;">
+                                   <input type="text" placeholder="机械费名称" title="机械费名称" name="mechName" class="form-control" >
                                    <input type="text" placeholder="台班消耗量" title="台班消耗量" name="mechPrice" class="form-control" >
                                    <input type="text" placeholder="台班单价" title="台班单价" onkeyup="value=value.replace(/[^\d.]/g,'')" name="mechQuantity" class="form-control" >
                                    <div class="btn-group">
@@ -126,7 +127,10 @@
 </section>
 
 <script>
-    var budgettxinfoform = $("#budget-tx-info-form").form({baseEntity: false}), initData={},
+    var budgettxinfoform = $("#budget-tx-info-form").form({baseEntity: false}),
+    budgetlabourform = $("#budget-labour-form").form({baseEntity: false}),
+    budgetmechform = $("#budget-mech-form").form({baseEntity: false}),
+    initData={},
     budgetTxEstimateTable,budgetLabourEstimateTable,budgetMechEstimateTable,options;
     
     var budgetTxID="${budgetTxID?default('0')}";
@@ -163,6 +167,24 @@
                         modals.error(data.message);
                     }
                 });
+            },
+            deleteBudgetEstimateLabour: function (rowId) {
+                ajaxPost(basePath + '/budget/estimate/deletelabour', {id:rowId}, function (data) {
+                    if (data.success) {
+                        budgetLabourEstimateTable.reloadData();
+                    } else {
+                        modals.error(data.message);
+                    }
+                });
+            },
+            deleteBudgetEstimateMech: function (rowId) {
+                ajaxPost(basePath + '/budget/estimate/deletemech', {id:rowId}, function (data) {
+                    if (data.success) {
+                        budgetMechEstimateTable.reloadData();
+                    } else {
+                        modals.error(data.message);
+                    }
+                });
             }
     }
     
@@ -183,7 +205,6 @@
                 validating: 'glyphicon glyphicon-refresh'
             },
             submitHandler: function () {
-                var action = $(this).attr('$submitButton').attr('data-btn-type');
                 var formData = budgettxinfoform.getFormSimpleData();
                 ajaxPost(basePath + '/budget/estimate/save', formData, function (data) {
                     if (data.success) {
@@ -220,6 +241,42 @@
             "scrollCollapse": true
         });
         
+        $("#budget-labour-form").bootstrapValidator({
+            message: '请输入有效值',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            submitHandler: function () {
+                var formData = budgetlabourform.getFormSimpleData();
+                ajaxPost(basePath + '/budget/estimate/savelabour', formData, function (data) {
+                    if (data.success) {
+                        budgetLabourEstimateTable.reloadData();
+                    } else {
+                        modals.error(data.message);
+                    }
+                });
+            },
+            fields: {
+                "labourName": {
+                    validators: {
+                        notEmpty: {message: '人工费名称不能为空'}
+                    }
+                },
+                "forecastPrice": {
+                    validators: {
+                        notEmpty: {message: '市场预估价不能为空'}
+                    }
+                },
+                "labourQuantity": {
+                    validators: {
+                        notEmpty: {message: '消耗量不能为空'}
+                    }
+                }
+            }
+        });
+        
         budgetMechEstimateTable = new CommonTable("budget_mech_estimate_table", "budget_mech_estimate_list", "searchDivMechEstimate", {
             "ordering" : false,
             "lengthChange": false,
@@ -228,11 +285,49 @@
             "scrollCollapse": true
         });
         
+        $("#budget-mech-form").bootstrapValidator({
+            message: '请输入有效值',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            submitHandler: function () {
+                var formData = budgetmechform.getFormSimpleData();
+                ajaxPost(basePath + '/budget/estimate/savemech', formData, function (data) {
+                    if (data.success) {
+                        budgetMechEstimateTable.reloadData();
+                    } else {
+                        modals.error(data.message);
+                    }
+                });
+            },
+            fields: {
+            	"mechName": {
+                    validators: {
+                        notEmpty: {message: '机械费名称不能为空'}
+                    }
+                },
+                "mechPrice": {
+                    validators: {
+                        notEmpty: {message: '台班单价不能为空'}
+                    }
+                },
+                "mechQuantity": {
+                    validators: {
+                        notEmpty: {message: '台班消耗量不能为空'}
+                    }
+                }
+            }
+        });
+        
         //编辑回填
         if(budgetTxID!="0"){
             ajaxPost(basePath+"/budget/estimate/getbytxid",{budgetTxID:budgetTxID},function(data){
             	data.data.budgetTx.budgetTxID=data.data.budgetTx.id;
             	budgettxinfoform.initFormData(data.data.budgetTx);
+            	budgetlabourform.initFormData(data.data.budgetTx);
+            	budgetmechform.initFormData(data.data.budgetTx);
                 $('#projectName').val(data.data.projectName).attr("disabled","disabled");
                 $('#budgetName').val(data.data.budgetName).attr("disabled","disabled");
             })
@@ -240,28 +335,33 @@
         
         //初始化控件
         budgettxinfoform.initComponent();
+        budgetlabourform.initComponent();
+        budgetmechform.initComponent();
         
         
-        $("#nav-tab-labour").on("click",function(){
+        $("#nav-tab-labour").on("shown.bs.tab",function(){
         	budgetLabourEstimateTable.reloadData();
         });
         
-        $("#nav-tab-mech").on("click",function(){
+        $("#nav-tab-mech").on("shown.bs.tab",function(){
         	budgetMechEstimateTable.reloadData();
         });
     });
     
     
     function fnRenderDelete(value){
-        return "<a href='javascript:void(0)' onclick='budgetSingleEstimateObject.deleteBudgetEstimate(\"" + value + "\")'>删除</a>";
+    	var opt = "<a href='javascript:void(0)' onclick='budgetSingleEstimateObject.deleteBudgetEstimate(\"" + value + "\")'>删除</a>";
+        return opt;
     }
     
     function fnRenderDeleteLabour(value){
-        return "<a href='javascript:void(0)' onclick='budgetSingleEstimateObject.deleteBudgetEstimateLabour(\"" + value + "\")'>删除</a>";
+        var opt =  "<a href='javascript:void(0)' onclick='budgetSingleEstimateObject.deleteBudgetEstimateLabour(\"" + value + "\")'>删除</a>";
+        return opt;
     }
     
     function fnRenderDeleteMech(value){
-        return "<a href='javascript:void(0)' onclick='budgetSingleEstimateObject.deleteBudgetEstimateMech(\"" + value + "\")'>删除</a>";
+        var opt =  "<a href='javascript:void(0)' onclick='budgetSingleEstimateObject.deleteBudgetEstimateMech(\"" + value + "\")'>删除</a>";
+        return opt;
     }
     
 </script>

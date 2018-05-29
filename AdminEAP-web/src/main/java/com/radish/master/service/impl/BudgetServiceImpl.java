@@ -40,6 +40,8 @@ import com.radish.master.entity.BudgetTx;
 import com.radish.master.entity.Materiel;
 import com.radish.master.entity.Project;
 import com.radish.master.entity.PurchaseApplyAudit;
+import com.radish.master.entity.project.BudgetLabour;
+import com.radish.master.entity.project.BudgetMech;
 import com.radish.master.pojo.Options;
 import com.radish.master.service.BudgetService;
 import com.radish.master.system.CodeException;
@@ -286,12 +288,27 @@ public class BudgetServiceImpl extends BaseServiceImpl implements BudgetService 
     }
     
     @Override
+    public List<BudgetTx> getBudgetTxListByGroup(String budgetNo, String group) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("quotaGroup", group);
+        params.put("budgetNo", budgetNo);
+        return this.find("from BudgetTx where budgetNo=:budgetNo AND quotaGroup =:quotaGroup", params);
+    }
+    
+    @Override
     public BudgetTx getTxGroupByNo(String group) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("quotaGroup", group);
         return this.get("from BudgetTx where isGroup = '1' AND quotaGroup=:quotaGroup", params);
     }
 
+    @Override
+    public BudgetTx checkPack(String budgetNo) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("budgetNo", budgetNo);
+        return this.get("from BudgetTx where budgetNo=:budgetNo AND orderNo='pack'", params);
+    }
+    
     @Override
     public Map<String, Materiel> getMatMap() {
         List<Materiel> list = this.find("from Materiel where isValid = 1");
@@ -415,6 +432,27 @@ public class BudgetServiceImpl extends BaseServiceImpl implements BudgetService 
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("budgetNo", budgetNo);
         return this.find("from BudgetEstimate where budgetNo = :budgetNo", params);
+    }
+    
+    @Override
+    public List<BudgetEstimate> getBudgetEstimateCount(String budgetTxID) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("budgetTxID", budgetTxID);
+        return this.find("from BudgetEstimate where budgetTxID = :budgetTxID", params);
+    }
+    
+    @Override
+    public List<BudgetLabour> getBudgetLabourCount(String budgetTxID) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("budgetTxID", budgetTxID);
+        return this.find("from BudgetLabour where budgetTxID = :budgetTxID", params);
+    }
+    
+    @Override
+    public List<BudgetMech> getBudgetMechCount(String budgetTxID) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("budgetTxID", budgetTxID);
+        return this.find("from BudgetMech where budgetTxID = :budgetTxID", params);
     }
     
 }
