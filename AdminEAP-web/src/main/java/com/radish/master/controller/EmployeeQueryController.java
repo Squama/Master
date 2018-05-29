@@ -146,6 +146,7 @@ public class EmployeeQueryController {
             // 设置初始密码
             user.setPassword(EncryptUtil.getPassword(initPassword, user.getLoginName()));
             user.setAuditStatus("30");
+            user.setZzStatus("0");
             String userId = userService.save(user).toString();
             userRoleService.setRoleForRegisterUser(userId);
             // 头像和用户管理
