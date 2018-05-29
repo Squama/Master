@@ -143,6 +143,10 @@ public class ReviewLabor{
   @Header(name = "备注")
   @Column(name = "remark")
   private String remark;
+  
+  @Header(name = "合同编号")
+  @Column(name = "htNumber")
+  private String htNumber;
 
 public String getId() {
 	return id;
@@ -350,6 +354,14 @@ public String getRemark() {
 
 public void setRemark(String remark) {
 	this.remark = remark;
+}
+
+public String getHtNumber() {
+	return htNumber;
+}
+
+public void setHtNumber(String htNumber) {
+	this.htNumber = htNumber;
 }
 
   

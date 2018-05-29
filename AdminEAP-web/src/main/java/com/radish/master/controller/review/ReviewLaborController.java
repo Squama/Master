@@ -129,6 +129,7 @@ public class ReviewLaborController {
 			p.setJjtj(ps.getJjtj());
 			p.setSwyq(ps.getSwyq());
 			p.setGetToJf(ps.getGetToJf());
+			p.setHtNumber(ps.getHtNumber());
 			baseService.update(p);
 			r.setSuccess(true);
 		}else{//保存
