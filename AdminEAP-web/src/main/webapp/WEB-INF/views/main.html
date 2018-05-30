@@ -441,7 +441,15 @@ var basePath="${basePath}";//给外部js文件传递路径参数
 		   loadPage($(this).data("url"));
 		   $("ul.treeview-menu li").removeClass("active");
 		   $(this).parent().addClass("active");
-	   });  
+	   });
+		//判断是否为办公室人员，如果是，就判断近期有无转正人员
+	   ajaxPost(basePath+'/employeeQuery/getZzUser', {}, function(data) {
+           if(data.success){
+        	   modals.info(data.message);
+           }else{
+				console.log(data.message);
+           }
+       }); 
    });
    
    function changePWD(){

@@ -61,7 +61,7 @@
             dOptions = JSON.parse(deptOptions);
         }
         
-        $(function() { 
+        $(function() {
             $("#dept_id").val(deptid);
             //init table and fill data
             userTable = new CommonTable("user_table", "employee_list_deptAuidt", "searchDiv");
@@ -80,7 +80,6 @@
         }
 
         function fnRenderSubmit(value, type, rowObj){
-            debugger
         	var s = "";
         	if(rowObj.zzStatus=='用人部门审核'){
         		s = "<a href='javascript:void(0)' onclick='volumeManageObject.submit(\"" + value + "\")'>填写考核成绩并提交</a>";

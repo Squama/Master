@@ -13,6 +13,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.hibernate.annotations.common.util.StringHelper;
+import org.hibernate.type.StringType;
+import org.hibernate.type.Type;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSONArray;
 import com.cnpc.framework.annotation.RefreshCSRFToken;
 import com.cnpc.framework.base.entity.Dict;
+import com.cnpc.framework.base.entity.Role;
 import com.cnpc.framework.base.entity.User;
 import com.cnpc.framework.base.entity.UserRole;
 import com.cnpc.framework.base.pojo.Result;
@@ -34,6 +37,7 @@ import com.cnpc.framework.utils.StrUtil;
 import com.radish.master.entity.JobDeptRt;
 import com.radish.master.entity.UserLeave;
 import com.radish.master.entity.common.UserExport;
+import com.radish.master.entity.review.ReviewFile;
 import com.radish.master.service.CommonService;
 import com.radish.master.service.WechatService;
 import com.radish.master.system.CodeException;
@@ -159,7 +163,7 @@ public class EmployeeQueryController {
             if (!oldUser.getLoginName().equals(user.getLoginName())) {
                 oldUser.setPassword(EncryptUtil.getPassword(initPassword, user.getLoginName()));
             }
-            if (!oldUser.getJobId().equals(user.getJobId())) {
+            if (oldUser.getJobId()!=null&&!oldUser.getJobId().equals(user.getJobId())) {
                 flag = true;
                 oldJobID = oldUser.getJobId();
             }
@@ -437,5 +441,43 @@ public class EmployeeQueryController {
 
         return columns;
     }
+    
+    @RequestMapping("/getZzUser")
+    @ResponseBody
+    public Result getZzUser(){
+    	Result r = new Result();
+    	String uid = SecurityUtil.getUserId();
+    	//判断是否为办公室人员
+    	List<Role> roles = baseService.findMapBySql("select id  from tbl_role where code='office'", new Object[]{}, new Type[]{StringType.INSTANCE}, Role.class); 
+    	if(roles.size()>0){
+    		List<UserRole> gxs = baseService.findMapBySql("select id  from tbl_user_role where roleId='"+roles.get(0).getId()+"' and userId='"+uid+"'", new Object[]{}, new Type[]{StringType.INSTANCE}, UserRole.class); 
+    		if(gxs.size()>0){
+    			String sql = "SELECT name,deptName  "
+					         + "FROM tbl_user "
+			                 + "WHERE 1=1 and hireDate is not null and  DATE_SUB(DATE_ADD(hireDate, INTERVAL 2 MONTH),INTERVAL 1 WEEK)<now() "
+			 				 + "and zzStatus ='0' and audit_status='10' ";
+    			
+    			List<User> u =baseService.findMapBySql(sql, new Object[]{}, new Type[]{StringType.INSTANCE}, User.class); 
+    			if(u.size()>0){
+    				String str = "近期需转正人员：";
+    				for(User user:u){
+    					str += user.getName()+"("+user.getDeptName()+")/";
+    				}
+    				r.setMessage(str);
+    			}else{
+    				r.setMessage("暂无需转正人员");
+    				r.setSuccess(false);
+    			}
+    		}else{
+    			r.setMessage("不是办公人员");
+    			r.setSuccess(false);
+    		}
+    	}else{
+    		r.setMessage("无office角色");
+    		r.setSuccess(false);
+    	}
+    	return r;
+    };
+    
 
 }
