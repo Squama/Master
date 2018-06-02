@@ -19,7 +19,7 @@
                 <div class="dataTables_filter" id="searchDiv">
                     <input placeholder="请输入子项名称" name="b.sub_name" id="subName" class="form-control" type="search"  operator="like" likeOption="true" /> 
                     <div class="btn-group">
-                        <button type="button" class="btn btn-primary" id="subconsumeSearch">查询</button>
+                        <button type="button" class="btn btn-primary" data-btn-type="search" id="subconsumeSearch">查询</button>
                         <button type="button" class="btn btn-default" data-btn-type="reset">重置</button>
                     </div>
                 </div>
@@ -46,10 +46,6 @@
     $(function() { 
         //init table and fill data
         budgetSubConsumeTable = new CommonTable("budget_subconsume_table", "budget_subconsume_list", "searchDiv");
-        
-        $('#subconsumeSearch').on('click',function(){
-            loadPage(basePath+"/budget/subconsume", undefined, {budgetName : $('#subName').val()});
-        });
     })
     
     function fnRenderBase64(value, type, rowObj){
