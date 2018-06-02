@@ -25,7 +25,7 @@
 	        <div class="col-xs-6">
 	            <div class="box">
 	                <div class="dataTables_filter" id="searchDivImport">
-	                    <input type="search" title="定额编号" name="quotaNo" class="form-control dn" id="quotaNo" operator="not_null" style="display:none;">
+	                    <input type="search" title="定额编号" name="isGroup" class="form-control dn" id="isGroup" operator="eq" value="0" style="display:none;">
 	                    <input type="search" title="预算编码" name="budgetNo" class="form-control dn" id="budgetNo" operator="eq" style="display:none;">
 	                    <div class="btn-group fixed-button-area">
 	                        <button type="button" class="btn btn-primary"  data-btn-type="estimate">测算</button>
@@ -55,7 +55,7 @@
                    </div>
                 </div>
                 <div class="dataTables_filter" id="searchDivTx">
-                    <input type="search" title="部位编号" name="bt.region_code" class="form-control dn" id="regionNo" operator="not_null" style="display:none;">
+                    <input type="search" title="部位编号" name="bt.is_group" class="form-control dn" id="isGroup" operator="eq" value="0" style="display:none;">
                     <input type="search" title="预算编码" name="bt.budget_no" class="form-control dn" id="budgetNo" operator="eq" style="display:none;">
                 </div>
                 <div class="box-body">

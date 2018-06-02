@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSONArray;
 import com.cnpc.framework.annotation.VerifyCSRFToken;
 import com.cnpc.framework.base.pojo.Result;
+import com.cnpc.framework.utils.StrUtil;
 import com.radish.master.entity.Budget;
 import com.radish.master.entity.BudgetEstimate;
 import com.radish.master.entity.BudgetImport;
@@ -129,11 +130,11 @@ public class BudgetEstimateController {
         BigDecimal mech = new BigDecimal("0");
         
         for(BudgetImport bi : importList){
-            quantities = quantities.add(new BigDecimal(bi.getQuantities() == null?"0":bi.getQuantities()));
-            unitPrice = unitPrice.add(new BigDecimal(bi.getUnitPrice() == null?"0":bi.getUnitPrice()));
-            artificiality = artificiality.add(new BigDecimal(bi.getArtificiality() == null?"0":bi.getArtificiality()));
-            materiels = materiels.add(new BigDecimal(bi.getMateriels() == null?"0":bi.getMateriels()));
-            mech = mech.add(new BigDecimal(bi.getMech() == null?"0":bi.getMech()));
+            quantities = quantities.add(new BigDecimal(StrUtil.isEmpty(bi.getQuantities())?"0":bi.getQuantities()));
+            unitPrice = unitPrice.add(new BigDecimal(StrUtil.isEmpty(bi.getUnitPrice())?"0":bi.getUnitPrice()));
+            artificiality = artificiality.add(new BigDecimal(StrUtil.isEmpty(bi.getArtificiality())?"0":bi.getArtificiality()));
+            materiels = materiels.add(new BigDecimal(StrUtil.isEmpty(bi.getMateriels())?"0":bi.getMateriels()));
+            mech = mech.add(new BigDecimal(StrUtil.isEmpty(bi.getMech())?"0":bi.getMech()));
 
         }
         
@@ -162,7 +163,9 @@ public class BudgetEstimateController {
             
             budgetTx.setProjectID(bi.getProjectID());
             
-            btGroup = budgetService.getTxGroupByNo(bi.getQuotaGroup());
+            if(btGroup == null){
+            	btGroup = budgetService.getTxGroupByNo(bi.getQuotaGroup());
+            }
             
             if(btGroup == null){
                 btGroup = new BudgetTx();
@@ -182,6 +185,7 @@ public class BudgetEstimateController {
         budgetTx.setOrderNo(orderNo);
         budgetTx.setCol(String.valueOf(importList.size()));
         budgetTx.setCreateDateTime(new Date());
+        budgetTx.setIsGroup("0");
         
         txList.add(budgetTx);
         
