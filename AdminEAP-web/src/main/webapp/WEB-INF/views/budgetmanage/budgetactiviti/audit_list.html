@@ -4,7 +4,7 @@
             <div class="col-xs-6">
                 <div class="box">
                     <div class="dataTables_filter" id="searchDivImport">
-                        <input type="search" title="定额编号" name="quotaNo" class="form-control dn" id="quotaNo" operator="not_null" style="display:none;">
+                        <input type="search" title="定额编号" name="isGroup" class="form-control dn" id="isGroup" operator="eq" value="0" style="display:none;">
                         <input type="search" title="预算编码" name="budgetNo" class="form-control dn" id="budgetNo" operator="eq" style="display:none;">
                     </div>
                     <div class="box-body">
@@ -17,8 +17,8 @@
         <div class="col-xs-6">
             <div class="box">
                 <div class="dataTables_filter" id="searchDivTx">
-                    <input type="search" title="部位编号" name="regionCode" class="form-control dn" id="regionNo" operator="not_null" style="display:none;">
-                    <input type="search" title="预算编码" name="budgetNo" class="form-control dn" id="budgetNo" operator="eq" style="display:none;">
+                    <input type="search" title="部位编号" name="bt.is_group" class="form-control dn" id="isGroup" operator="eq" value="0" style="display:none;">
+                    <input type="search" title="预算编码" name="bt.budget_no" class="form-control dn" id="budgetNo" operator="eq" style="display:none;">
                 </div>
                 <div class="box-body">
                     <table id="budget_tx_table" class="table table-bordered table-striped table-hover">
@@ -50,14 +50,8 @@
     });
     
     $(function() { 
-        <!-- 初始化导入的预算表 -->
+    	<!-- 初始化导入的预算表 -->
         budgetImportTable = new CommonTable("budget_import_table", "budget_estimate_left_list", "searchDivImport", {
-            "createdRow": function( row, data, dataIndex ) {
-                if(data.col != null){
-                    var height = parseInt(data.col) * 54;
-                    $(row).css('height',height + 'px');
-                }
-             },
              "dom": '<"top"i>rt<"bottom"flp><"clear">',
              "paging" : false,
              "drawCallback": function ( settings ) {
@@ -65,69 +59,63 @@
                  var rows = api.rows( {page:'current'} ).nodes();
                  var last=null;
       
-                 api.column(11, {page:'current'} ).data().each( function ( group, i ) {
+                 api.column(8, {page:'current'} ).data().each( function ( group, i ) {
+                	 if(!group){
+                		 modals.confirm("预算导入格式有误，无法正常完成测算！！",function(){
+                			 loadPage(basePath+"/budget/estimate/list");
+	                     });
+                	 }
                      if ( last !== group ) {
                          var ret = group;
                          ajaxPost(basePath + "/budgetimport/getgroup/"+group, null, function (data) {
                              ret=data.data;
                          });
                          $(rows).eq( i ).before(
-                             '<tr class="group" id="'+ret.id+'" style="background-color:darkgrey;">'+
-                             '<td class="text-center" colspan="3">'+ret.quotaName+'</td>'+
-                             '<td class="text-center">'+ret.units+'</td>'+
-                             '<td class="text-center">'+ret.quantities+'</td>'+
-                             '<td class="text-center">'+ret.price+'</td>'+
-                             '<td class="text-center">'+ret.unitPrice+'</td>'+
-                             '<td class="text-center">'+ret.artificiality+'</td>'+
-                             '<td class="text-center">'+ret.materiels+'</td>'+
-                             '<td class="text-center">'+ret.mech+'</td>'+
-                             '<td class="text-center">'+ret.materielsUnitPrice+'</td>'+
+                             '<tr class="group" id="'+ret.id+'" style="background-color:#605ca8;" data-container-id="'+group+'" onclick="toggleContainer(this);return false;">'+
+                             '<td class="text-center" colspan="3"><font color="#fff">'+ret.quotaName+'</font></td>'+
+                             '<td class="text-center"><font color="#fff">'+ret.quantities+'</font></td>'+
+                             '<td class="text-center"><font color="#fff">'+ret.unitPrice+'</font></td>'+
+                             '<td class="text-center"><font color="#fff">'+ret.artificiality+'</font></td>'+
+                             '<td class="text-center"><font color="#fff">'+ret.materiels+'</font></td>'+
+                             '<td class="text-center"><font color="#fff">'+ret.mech+'</font></td>'+
                              '</tr>'
                          );
       
                          last = group;
                      }
+                     $(rows).eq( i ).attr('data-group' ,''+group+'');
                  } );
-                 //$('#budget_import_table').find('tr').not('.group').find(':first-child').hide();
              }
         });
         <!-- 初始化成本测算表  -->
         budgetTxTable = new CommonTable("budget_tx_table", "budget_estimate_right_list", "searchDivTx", {
-            "createdRow": function( row, data, dataIndex ) {
-                if(data.col != null){
-                    var height = parseInt(data.col) * 54;
-                    $(row).css('height',height + 'px');
-                }
-             },
-             "dom": '<"top"i>rt<"bottom"flp><"clear">',
              "paging" : false,
              "drawCallback": function ( settings ) {
                  var api = this.api();
                  var rows = api.rows( {page:'current'} ).nodes();
                  var last=null;
       
-                 api.column(11, {page:'current'} ).data().each( function ( group, i ) {
+                 api.column(8, {page:'current'} ).data().each( function ( group, i ) {
                      if ( last !== group ) {
                          var ret = group;
                          ajaxPost(basePath + "/budget/estimate/getgroup/"+group, null, function (data) {
                              ret=data.data;
                          });
                          $(rows).eq( i ).before(
-                             '<tr class="group" id="'+ret.id+'" style="background-color:darkgrey;">'+
-                             '<td class="text-center" colspan="3">'+ret.regionName+'</td>'+
-                             '<td class="text-center">'+ret.units+'</td>'+
-                             '<td class="text-center">'+ret.quantities+'</td>'+
-                             '<td class="text-center">'+ret.price+'</td>'+
-                             '<td class="text-center">'+ret.unitPrice+'</td>'+
-                             '<td class="text-center">'+ret.artificiality+'</td>'+
-                             '<td class="text-center">'+ret.materiels+'</td>'+
-                             '<td class="text-center">'+ret.mech+'</td>'+
-                             '<td class="text-center">'+ret.materielsUnitPrice+'</td>'+
+                             '<tr class="group" id="'+ret.id+'" style="background-color:grey;" data-container-id="'+group+'" onclick="toggleContainerTx(this);return false;">'+
+                             '<td class="text-center" colspan="3"><font color="#fff">'+ret.regionName+'</font></td>'+
+                             '<td class="text-center"><font color="#fff">'+ret.quantities+'</font></td>'+
+                             '<td class="text-center"><font color="#fff">'+ret.unitPrice+'</font></td>'+
+                             '<td class="text-center"><font color="#fff">'+ret.artificiality+'</font></td>'+
+                             '<td class="text-center"><font color="#fff">'+ret.materiels+'</font></td>'+
+                             '<td class="text-center"><font color="#fff">'+ret.mech+'</font></td>'+
+                             '<td class="text-center"></td>'+
                              '</tr>'
                          );
       
                          last = group;
                      }
+                     $(rows).eq( i ).attr('data-group' ,''+group+'');
                  } );
              }
         });
@@ -137,6 +125,9 @@
         return "";
     }
     function fnRenderCheckboxRight(value, type, rowObj){
+        return "";
+    }
+    function fnRenderTxDelete(value){
         return "";
     }
     
