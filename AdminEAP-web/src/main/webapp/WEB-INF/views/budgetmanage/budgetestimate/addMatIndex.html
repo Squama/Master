@@ -1,0 +1,327 @@
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><li class="fa fa-remove"></li></button>
+    <h5 class="modal-title">新增物料</h5>
+</div>
+
+<div class="modal-body">
+
+    <form id="material-form" name="material-form" class="form-horizontal">
+     <input type="hidden" name="id">
+     <input type="hidden" name="budgetTxID" id="xsmxid">
+     <input type="hidden" name="projectID" id="xmid">
+     <input type="hidden" name="budgetNo" id="xsbh">
+        <div class="box-body">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="mat_name" class="col-sm-3 control-label">物料名称</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control"  name="mat_name" placeholder="物料名称">
+                    </div>
+                    
+                </div>
+                
+                <div class="form-group">
+                    <label for="unit" class="col-sm-3 control-label">单位</label>
+
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control"  name="unit" placeholder="单位">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="quantity" class="col-sm-3 control-label">数量</label>
+
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control"  name="quantity" placeholder="测算数量">
+                    </div>
+                </div>
+           
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">一级分类<span style="color:red">*</span></label>
+                    <div class="col-sm-8">
+                        <select name="ss1" id="ss1"   data-placeholder="请选择一级分类" class="form-control select2" style="width:100%" data-blank="true" onchange="changeSS2()">
+                        	
+                        </select>
+                    </div>
+                    </div>
+                    
+                   
+                    
+                    <div class="form-group" id="div3" style="display: none">
+                    <label class="col-sm-3 control-label">三级分类<span style="color:red">*</span></label>
+                    <div class="col-sm-8">
+                        <select name="ss3" id="ss3"   data-placeholder="请选择三级分类" class="form-control select2" style="width:100%" data-blank="true" onchange="changeSS4()">
+                        	
+                        </select>
+                    </div> 
+                    </div>
+                    
+                    
+                	
+                
+            </div>
+            <div class="col-md-6">
+            	<div class="form-group">
+                    <label for="mat_standard" class="col-sm-3 control-label">物料规格</label>
+
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control"  name="mat_standard" id="mat_standard" placeholder="物料规格">
+                    </div>
+                    <button type="button" class="btn btn-default" id = "getFh">符号</button>
+                </div>
+                <div class="form-group">
+					<label class="col-sm-3 control-label">是否启用</label>
+
+					<div class="col-sm-8">
+						<label class="control-label"> 
+						   <input type="radio" name="isValid" data-flag="icheck" class="square-green" value="1"> 是
+						</label> &nbsp; 
+						<label class="control-label"> 
+						   <input type="radio" name="isValid" data-flag="icheck" class="square-green" value="0"> 否
+						</label>
+					</div>
+				</div>
+				<div class="form-group">
+                    <label for="budgetPrice" class="col-sm-3 control-label">预算价</label>
+
+                    <div class="col-sm-8">
+                       <input type="text" placeholder="请输入预算价" title="单价" onkeyup="value=value.replace(/[^\d.]/g,'')" name="budgetPrice" class="form-control" >
+                    </div>
+                </div>
+				<div class="form-group" id="div2" style="display: none">
+                    <label class="col-sm-3 control-label">二级分类<span style="color:red">*</span></label>
+                    <div class="col-sm-8">
+                        <select name="ss2" id="ss2"  data-placeholder="请选择二级分类" class="form-control select2" style="width:100%" data-blank="true" onchange="changeSS3()">
+                        	
+                        </select>
+                    </div>
+                    </div>
+                 <div class="form-group" id="div4" style="display: none">
+                    <label class="col-sm-3 control-label">四级分类<span style="color:red">*</span></label>
+                    <div class="col-sm-8">
+                        <select name="ss4" id="ss4"   data-placeholder="请选择四级分类" class="form-control select2" style="width:100%" data-blank="true" >
+                        	
+                        </select>
+                    </div> 
+                	</div>
+                
+            </div>
+            
+        </div>
+        <!-- /.box-body -->
+        <div class="box-footer text-right">
+            <!--以下两种方式提交验证,根据所需选择-->
+            <button type="button" class="btn btn-default" data-btn-type="cancel" data-dismiss="modal">取消</button>
+            <button type="submit" class="btn btn-primary" data-btn-type="save">提交</button>
+        </div>
+        <!-- /.box-footer -->
+    </form>
+
+</div>
+<script>
+    //tableId,queryId,conditionContainer
+    var form =null;
+	var budgetTxID = '${budgetTxID}';
+	var projectID = '${projectID}';
+	var matBudgetNo = '${matBudgetNo}';
+	$("#xsmxid").val(budgetTxID);
+	$("#xmid").val(projectID);
+	$("#xsbh").val(matBudgetNo);
+    
+    $(function() {
+        //初始化控件
+        form=$("#material-form").form();
+        //数据校验
+        $("#material-form").bootstrapValidator({
+            message : '请输入有效值',
+            feedbackIcons : {
+                valid : 'glyphicon glyphicon-ok',
+                invalid : 'glyphicon glyphicon-remove',
+                validating : 'glyphicon glyphicon-refresh'
+            },
+            submitHandler : function() {
+                modals.confirm('确认保存？', function() {
+                    //Save Data，对应'submit-提交'
+                    var params = form.getFormSimpleData();
+                    var isHave = "";
+                    //添加判断，数据库是否已存在物料--名称 规格 单位
+                    $.ajax({
+					 	async: false,
+						type : "post",
+						url : basePath+'/material/isHaveMat',
+						data:params,
+						dataType : 'json',
+						success : function(data) {
+							if(data.message){
+								isHave = "isHave";
+							}
+						}
+					});
+                    if(isHave){
+                    	 modals.info("已录入相同名称、规格、单位一样的物料");
+                    	return ;
+                    }
+                    
+                     ajaxPost(basePath+'/budget/estimate/saveMat', params, function(data) {
+                        if(data.success){
+                        	modals.hideWin("matWin");
+                            modals.info("数据保存成功");
+                            
+                        }                
+                    });  
+                });
+            },
+            fields : {
+            	mat_name : {
+                    validators : {
+                        notEmpty : {
+                            message : '请输入物料名称'
+                        }
+                    }
+                },
+                mat_standard : {
+                    validators : {
+                        notEmpty : {
+                            message : '请选择物料规格'
+                        }
+                    }
+                },
+                unit : {
+                    validators : {
+                        notEmpty : {
+                            message : '请输入单位'
+                        },
+                       
+                    }
+                },
+                isValid : {
+                    validators : {
+                        notEmpty : {
+                            message : '请选择状态'
+                        }
+                    }
+                },
+                quantity : {
+                    validators : {
+                        notEmpty : {
+                            message : '物料数量不能为空'
+                        }
+                    }
+                },
+                budgetPrice : {
+                    validators : {
+                        notEmpty : {
+                            message : '预算单价不能为空'
+                        }
+                    }
+                }
+            }
+        });
+        form.initComponent();
+        
+        //设置ss1下拉框
+        setSS1();
+        $("#getFh").on("click",function(){getFh()})
+    });
+    
+    function getFh(){
+    	modals.openWin({
+            winId:"fh",
+            title:'符号按钮',
+            width:'400px',
+            url:basePath+"/material/getFh"
+           });
+    }
+    function resetForm(){
+        form.clearForm();
+        $("#material-form").data('bootstrapValidator').resetForm();
+    }
+    
+    function setSS1(){
+    	ajaxPost(basePath+"/material/getFl",null,function(data){
+    		if(data.data){
+    			var list = data.data;
+    			var option;
+    			for(var i=0;i<list.length;i++){
+    				
+    				option += "<option value='"+list[i].id+"'>"
+    				+ list[i].name
+    				+ "</option>";
+    			}
+    			$("#ss1").append(option);
+    			changeSS2();
+    		}
+    	})
+    }
+    function changeSS2(){ 
+    	
+    	$("#ss2").empty();
+    	var p_id = $("#ss1").val();
+    	ajaxPost(basePath+"/material/getFl?p_id="+p_id,null,function(data){
+    		if(data.data){
+    			var list = data.data;
+    			var option;
+    			if(list.length>0){
+    				$("#div2").css("display","")
+    			}else{
+    				$("#div2").css("display","none")
+    			}
+    			for(var i=0;i<list.length;i++){
+    				
+    				option += "<option value='"+list[i].id+"'>"
+    				+ list[i].name
+    				+ "</option>";
+    			}
+    			$("#ss2").append(option);
+    			changeSS3();
+    		}
+    	})
+    }
+	function changeSS3(){
+		$("#ss3").empty();
+    	var p_id = $("#ss2").val();
+    	ajaxPost(basePath+"/material/getFl?p_id="+p_id,null,function(data){
+    		if(data.data){
+    			var list = data.data;
+    			var option;
+    			if(list.length>0){
+    				$("#div3").css("display","")
+    			}else{
+    				$("#div3").css("display","none")
+    			}
+    			for(var i=0;i<list.length;i++){
+    				
+    				option += "<option value='"+list[i].id+"'>"
+    				+ list[i].name
+    				+ "</option>";
+    			}
+    			$("#ss3").append(option);
+    			changeSS4();
+    		}
+    	})
+    }
+	function changeSS4(){
+		$("#ss4").empty();
+    	var p_id = $("#ss3").val();
+    	ajaxPost(basePath+"/material/getFl?p_id="+p_id,null,function(data){
+    		if(data.data){
+    			var list = data.data;
+    			var option;
+    			if(list.length>0){
+    				$("#div4").css("display","")
+    			}else{
+    				$("#div4").css("display","none")
+    			}
+    			for(var i=0;i<list.length;i++){
+    				
+    				option += "<option value='"+list[i].id+"'>"
+    				+ list[i].name
+    				+ "</option>";
+    			}
+    			$("#ss4").append(option);
+    			
+    		}
+    	})
+	}
+	
+</script>

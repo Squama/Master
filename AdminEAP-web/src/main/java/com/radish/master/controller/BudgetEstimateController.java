@@ -15,6 +15,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,12 +24,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONArray;
 import com.cnpc.framework.annotation.VerifyCSRFToken;
+import com.cnpc.framework.base.entity.Mat;
+import com.cnpc.framework.base.entity.User;
 import com.cnpc.framework.base.pojo.Result;
+import com.cnpc.framework.base.service.BaseService;
+import com.cnpc.framework.utils.SecurityUtil;
 import com.cnpc.framework.utils.StrUtil;
 import com.radish.master.entity.Budget;
 import com.radish.master.entity.BudgetEstimate;
 import com.radish.master.entity.BudgetImport;
 import com.radish.master.entity.BudgetTx;
+import com.radish.master.entity.Materiel;
 import com.radish.master.entity.Project;
 import com.radish.master.entity.project.BudgetLabour;
 import com.radish.master.entity.project.BudgetMech;
@@ -54,6 +60,8 @@ public class BudgetEstimateController {
 
     @Resource
     private BudgetService budgetService;
+    @Resource
+	private BaseService baseService;
     
     @RequestMapping(value="/list",method = RequestMethod.GET)
     public String list(){
@@ -437,4 +445,92 @@ public class BudgetEstimateController {
         return "budgetmanage/budgetestimate/budget_estimate_list";
     }
     
+    @RequestMapping(value="/addMatIndex",method = RequestMethod.GET)
+    public String addMatIndex(HttpServletRequest request){
+    	String  budgetTxID = request.getParameter("budgetTxID");
+    	String  projectID = request.getParameter("projectID");
+    	String  matBudgetNo = request.getParameter("matBudgetNo");
+    	request.setAttribute("budgetTxID", budgetTxID);
+    	request.setAttribute("projectID", projectID);
+    	request.setAttribute("matBudgetNo", matBudgetNo);
+        return "budgetmanage/budgetestimate/addMatIndex";
+    }
+    
+    @RequestMapping(method = RequestMethod.POST, value = "/saveMat")
+    @ResponseBody
+    private Result saveMat(BudgetEstimate budgetEstimate, HttpServletRequest request,Materiel materiel) {
+    	//先存物料
+    	String ss1 = request.getParameter("ss1");
+    	String ss2 = request.getParameter("ss2");
+    	String ss3 = request.getParameter("ss3");
+    	String ss4 = request.getParameter("ss4");
+    	if(ss1!=null){
+    		materiel.setParent_ID(ss1);
+    	}
+    	if(ss2!=null){
+    		materiel.setParent_ID(ss2);
+    	}
+    	if(ss3!=null){
+    		materiel.setParent_ID(ss3);
+    	}
+    	if(ss4!=null){
+    		materiel.setParent_ID(ss4);
+    	}
+    	materiel.setCreate_time(new Date());
+    	String mat_id = materiel.getParent_ID();
+    	Mat m = baseService.get(Mat.class, mat_id);
+    	String code = m.getCode();
+    	String[] strs = code.split("_");
+    	String str = strs[1];
+    	//拿到当前数据库数据的最大值
+    	List<String> num = baseService.find("select max(mat.reserve1) from com.radish.master.entity.Materiel mat");
+    	if(num.isEmpty()||num.get(0)==null){
+    		materiel.setMat_number(str+"100105");
+    		materiel.setReserve1("100105");
+    	}else{
+    		String s= num.get(0);
+    		int i;
+    		if(StrUtil.isEmpty(s)){
+    			i = 100105;
+    		}else{
+    			i = Integer.parseInt(s);
+    			i++;
+    		}
+    		materiel.setMat_number(str+i);
+    		materiel.setReserve1(i+"");
+    	}
+    	User u = SecurityUtil.getUser();
+    	materiel.setCreate_name(u.getName());
+    	baseService.save(materiel);
+    	
+    	//保存物料测算明细
+        List<BudgetEstimate> list = budgetService.getBudgetEstimateCount(budgetEstimate.getBudgetTxID());
+        if(list.size() >= 20){
+            return new Result(false, "材料测算保存失败！请检查是否超过20条！");
+        }
+        
+        budgetEstimate.setMatNumber(materiel.getMat_number());
+        budgetEstimate.setMatName(materiel.getMat_name());
+        budgetEstimate.setMatStandard(materiel.getMat_standard());
+        budgetEstimate.setUnit(materiel.getUnit());
+        budgetService.save(budgetEstimate);
+        
+        //汇总合价
+        list = budgetService.getBudgetEstimateCount(budgetEstimate.getBudgetTxID());
+        BigDecimal sum = new BigDecimal("0");
+        for(BudgetEstimate be : list){
+            BigDecimal quantity = new BigDecimal(be.getQuantity());
+            BigDecimal price = new BigDecimal(be.getBudgetPrice());
+            
+            sum = sum.add(quantity.multiply(price));
+        }
+        
+        BudgetTx bt = budgetService.get(BudgetTx.class, budgetEstimate.getBudgetTxID());
+        
+        bt.setMateriels(sum.toPlainString());
+        
+        budgetService.update(bt);
+        
+        return new Result(true);
+    }
 }

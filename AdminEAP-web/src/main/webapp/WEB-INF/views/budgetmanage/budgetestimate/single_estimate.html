@@ -59,12 +59,12 @@
                     </div>
                     <div class="tab-pane active" id="tab-content-mat">
 	                    <form id="budget-tx-info-form" name="budget-tx-info-form" class="form-horizontal">
-			                <input type="hidden" name="budgetTxID">
-			                <input type="hidden" name="projectID">
-			                <input type="hidden" name="budgetNo">
+			                <input type="hidden" name="budgetTxID" id="matBudgetTxID">
+			                <input type="hidden" name="projectID" id="matProjectID">
+			                <input type="hidden" name="budgetNo" id="matBudgetNo">
 			                <div class="box box-success" id="budget_tx">
 			                    <div class="dataTables_filter" style="text-align:center;margin-top:5px;">
-			                       <input type="hidden" name="matName" id="matName" >
+			                       <input type="hidden" name="matName" id="matName1" >
 			                       <select id="matNumber" class="form-control select2" name="matNumber" style="width:200px;">
 			                           <option selected="selected" value="">选择一个物料</option>
 			                       </select>
@@ -74,6 +74,7 @@
 			                       <input type="text" placeholder="请输入预算价" title="单价" onkeyup="value=value.replace(/[^\d.]/g,'')" name="budgetPrice" class="form-control" id="budgetPrice" >
 			                       <div class="btn-group">
 			                           <button type="submit" class="btn btn-primary" data-btn-type="savetx">添加明细</button>
+			                           <button type="button" class="btn btn-primary" data-btn-type="savetx" id="addMatIndex" style="margin-left: 5px">新增物料</button>
 			                       </div>
 			                    </div>
 			                    <div class="dataTables_filter" id="searchDivTxEstimate" style="text-align:center;height:1px;">
@@ -145,11 +146,10 @@
         }
         select.bind("change", function () {
             var data = $(this).val();
-
             if (data === "") {
                 return false;
             }
-            $('#matName').val(materiels[data].mat_name);
+            $('#matName1').val(materiels[data].mat_name);
             $('#matStandard').val(materiels[data].mat_standard);
             $('#unit').val(materiels[data].unit);
         });
@@ -212,7 +212,7 @@
                     } else {
                         modals.error(data.message);
                     }
-                });
+                }); 
             },
             fields: {
                 "matNumber": {
@@ -346,6 +346,18 @@
         $("#nav-tab-mech").on("shown.bs.tab",function(){
         	budgetMechEstimateTable.reloadData();
         });
+        $("#addMatIndex").on("click",function(){
+            var par = "budgetTxID="+$("#matBudgetTxID").val()+"&projectID="+$("#matProjectID").val()+"&matBudgetNo="+$("#matBudgetNo").val();
+        	modals.openWin({
+                winId: "matWin",
+                width: "800px",
+                url: basePath + "/budget/estimate/addMatIndex?"+par,
+                title: "测算",
+                hideFunc:function(){
+                	budgetTxEstimateTable.reloadData();
+                }
+            });
+         });
     });
     
     
