@@ -1,0 +1,86 @@
+<section class="content-header">
+    <h1>
+        工程变更函件列表
+        <small>列表</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
+        <li><a href="#">质量管理</a></li>
+        <li class="active">工程变更函件列表</li>
+    </ol>
+</section>
+
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <!-- /.box-header -->
+                <div class="dataTables_filter" id="searchDiv1" style="display: none">
+                    <!--查询条件-->
+                    <!--查询条件-->
+                    <select id="projectID" class="form-control select2" name="wj.proid" style="width:200px;" operator="eq">
+        				<option selected="selected" value="">选择一个项目</option>
+       				 </select>
+       				 <select class="form-control select2" name="type" style="width:200px;" operator="eq">
+        				<option selected="selected" value="">选择变更函件类型</option>
+        				<option  value="10">图纸会审纪要</option>
+                   		<option  value="20">设计变更单</option>
+                   		<option  value="30">工程签证单</option>
+                   		<option  value="40">工程联系单</option>
+       				 </select>
+       				 <input type="search" placeholder="请输入编号" title="编号" name="wj.number" class="form-control" operator="like" likeOption="true">
+           
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-primary" data-btn-type="search">查询</button>
+                        <button type="button" class="btn btn-default" data-btn-type="reset">重置</button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <table id="lwContract_table" class="table table-bordered table-striped table-hover">
+                    </table>
+                </div>
+            </div>
+           </div>
+         </div>
+         
+</section>
+
+<script>
+    var form = $("#searchDiv1").form({baseEntity: false}), initData={};
+    var xms = '${xm?default(0)}',xm=0;
+    if(xms != 0){
+    	xm = JSON.parse(xms);
+    }
+
+    var dutycheckTable, winId = "projectQueryWin";
+    $(function (){
+    	dutycheckTable = new CommonTable("lwContract_table", "proEditLetters_List", "searchDiv1");
+        
+
+        if(xm != 0){
+            for (var i = 0, len = xm.length; i < len; i++) {
+                var u = xm[i];
+                $('#projectID').append("<option value='" + u.value + "'>" + u.data + "</option>");
+            }
+            $(".select2").select2();
+        }
+        
+    });
+    function fnRenderXq(value) {
+    	if(value){
+    		return "<a href='javascript:void(0)' onclick='showDetail(\"" + value + "\")' >查看附件</a>";
+    	}else{
+    		return "";
+    	}
+        
+    }
+    
+    function showDetail(fileId) {
+    	modals.openWin({
+            winId: "files",
+            width: "900px",
+            url: basePath + "/editletters/projectdetailfilelook?id=" + fileId ,
+            title: "查看附件"
+        });
+    }
+</script>
