@@ -53,4 +53,23 @@
         <column key="create_time" header="创建日期" classType="String" width="150" allowSort="true" />
         <column key="id" header="文件详情" width="80" fnRender="fnRenderXq"/>
     </query>
+    
+    <query id="checkDqFile_List" key="id" tableName="定期检查记录文件列表" widthType="px">
+        <sql>
+            <![CDATA[
+              SELECT wj.ID id,  wj.create_time create_time, wj.number number, wj.status status,wj.isfk isfk,
+              p.project_name pName ,wj.proid pid 
+			  FROM tbl_checkDq wj ,tbl_project p 
+			  WHERE 1=1 and wj.proid = p.id 
+            ]]>
+        </sql>
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="pName" header="所属项目" classType="String" width="150"/>
+        <column key="number" header="编号" classType="String" width="150"/>
+        <column key="create_time" header="创建日期" classType="String" width="150" allowSort="true" />
+        <column key="status" header="状态" classType="String" width="150" render="10=新建,20=项目回复,30=复查,40=完成"/>
+        <column key="isfk" header="罚款详情" width="80" fnRender="fnRenderFk"/>
+        <column key="id" header="管理" width="80" fnRender="fnRenderGl"/>
+    </query>
 </queryContext>
