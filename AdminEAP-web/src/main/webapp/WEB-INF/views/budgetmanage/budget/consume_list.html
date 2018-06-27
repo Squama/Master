@@ -57,6 +57,9 @@
     function fnRenderBase64(value, type, rowObj){
     	var result = '0';
     	if(value!='' && value!=null){
+    		if(!isNaN(value)){
+    			return value;
+    		}
     		result = parseFloat(window.atob(value)).toFixed(2).toString();
     	}
     	return result;
@@ -80,18 +83,18 @@
     	if(last != rowObj.labor_sub_id){
     		last = rowObj.labor_sub_id;
     		subCount = rowObj.subCount;
-    		labourGroup = rowObj['consumeLabour'] == null?'0':window.atob(rowObj['consumeLabour']);
-    		matGroup = rowObj['consumeMat'] == null?'0':window.atob(rowObj['consumeMat']);
-    		mechGroup = rowObj['consumeMech'] == null?'0':window.atob(rowObj['consumeMech']);
-    		packGroup = rowObj['consumePack'] == null?'0':window.atob(rowObj['consumePack']);
+    		labourGroup = rowObj['consumeLabour'] == null?'0':fnRenderBase64(rowObj['consumeLabour']);
+    		matGroup = rowObj['consumeMat'] == null?'0':fnRenderBase64(rowObj['consumeMat']);
+    		mechGroup = rowObj['consumeMech'] == null?'0':fnRenderBase64(rowObj['consumeMech']);
+    		packGroup = rowObj['consumePack'] == null?'0':fnRenderBase64(rowObj['consumePack']);
     	}else{
     		subCount--;
     	}
     	var budget;
-    	if(rowObj.budgetLabour == '' || rowObj.budgetLabour == null || window.atob(rowObj.budgetLabour) == '0'){
+    	if(rowObj.budgetLabour == '' || rowObj.budgetLabour == null || fnRenderBase64(rowObj.budgetLabour) == '0'){
     		budget = '0';
         }else{
-        	budget = parseFloat(window.atob(rowObj.budgetLabour)).toFixed(2).toString();
+        	budget = parseFloat(fnRenderBase64(rowObj.budgetLabour)).toFixed(2).toString();
         }
     	lConsume = getConsume(labourGroup, budget);
     	
@@ -110,10 +113,10 @@
     function fnRenderLabourPercent(value, type, rowObj){
     	
     	var tmp, data;
-    	if(rowObj.budgetLabour == '' || rowObj.budgetLabour == null || window.atob(rowObj.budgetLabour) == '0'){
+    	if(rowObj.budgetLabour == '' || rowObj.budgetLabour == null || fnRenderBase64(rowObj.budgetLabour) == '0'){
     		tmp = '0';
     	}else{
-    		data = accDivision(lConsume, window.atob(rowObj.budgetLabour));
+    		data = accDivision(lConsume, fnRenderBase64(rowObj.budgetLabour));
     		tmp = ((100*data).toFixed(2)).toString();
     	}
     	
@@ -123,10 +126,10 @@
     
     function fnRenderMatConsume(value, type, rowObj){
     	var budget;
-        if(rowObj.budgetMat == '' || rowObj.budgetMat == null || window.atob(rowObj.budgetMat) == '0'){
+        if(rowObj.budgetMat == '' || rowObj.budgetMat == null || fnRenderBase64(rowObj.budgetMat) == '0'){
             budget = '0';
         }else{
-            budget = parseFloat(window.atob(rowObj.budgetMat)).toFixed(2).toString();
+            budget = parseFloat(fnRenderBase64(rowObj.budgetMat)).toFixed(2).toString();
         }
         maConsume = getConsume(matGroup, budget);
         if(subCount != 1){
@@ -143,10 +146,10 @@
     function fnRenderMatPercent(value, type, rowObj){
         
         var tmp, data;
-        if(rowObj.budgetMat == '' || rowObj.budgetMat == null || window.atob(rowObj.budgetMat) == '0'){
+        if(rowObj.budgetMat == '' || rowObj.budgetMat == null || fnRenderBase64(rowObj.budgetMat) == '0'){
             tmp = '0';
         }else{
-            data = accDivision(maConsume, window.atob(rowObj.budgetMat));
+            data = accDivision(maConsume, fnRenderBase64(rowObj.budgetMat));
             tmp = ((100*data).toFixed(2)).toString();
         }
         
@@ -156,10 +159,10 @@
     
     function fnRenderMechConsume(value, type, rowObj){
     	var budget;
-        if(rowObj.budgetMech == '' || rowObj.budgetMech == null || window.atob(rowObj.budgetMech) == '0'){
+        if(rowObj.budgetMech == '' || rowObj.budgetMech == null || fnRenderBase64(rowObj.budgetMech) == '0'){
             budget = '0';
         }else{
-            budget = parseFloat(window.atob(rowObj.budgetMech)).toFixed(2).toString();
+            budget = parseFloat(fnRenderBase64(rowObj.budgetMech)).toFixed(2).toString();
         }
         meConsume = getConsume(mechGroup, budget);
         
@@ -178,10 +181,10 @@
     function fnRenderMechPercent(value, type, rowObj){
         
         var tmp, data;
-        if(rowObj.budgetMech == '' || rowObj.budgetMech == null || window.atob(rowObj.budgetMech) == '0'){
+        if(rowObj.budgetMech == '' || rowObj.budgetMech == null || fnRenderBase64(rowObj.budgetMech) == '0'){
             tmp = '0';
         }else{
-            data = accDivision(meConsume, window.atob(rowObj.budgetMech));
+            data = accDivision(meConsume, fnRenderBase64(rowObj.budgetMech));
             tmp = ((100*data).toFixed(2)).toString();
         }
         
@@ -191,14 +194,14 @@
     
     function fnRenderPackConsume(value, type, rowObj){
     	var budget;
-        if(rowObj.budgetPack == '' || rowObj.budgetPack == null || window.atob(rowObj.budgetPack) == '0'){
+        if(rowObj.budgetPack == '' || rowObj.budgetPack == null || fnRenderBase64(rowObj.budgetPack) == '0'){
             budget = '0';
         }else{
-            budget = parseFloat(window.atob(rowObj.budgetPack)).toFixed(2).toString();
+            budget = parseFloat(fnRenderBase64(rowObj.budgetPack)).toFixed(2).toString();
         }
     	
         pConsume = getConsume(packGroup, budget);
-        var bp = window.atob(rowObj.budgetPack);
+        var bp = fnRenderBase64(rowObj.budgetPack);
         if(bp == '' || bp == null){
         	bp = '0';
         }
@@ -216,10 +219,10 @@
     function fnRenderPackPercent(value, type, rowObj){
         
         var tmp, data;
-        if(rowObj.budgetPack == '' || rowObj.budgetPack == null || window.atob(rowObj.budgetPack) == '0'){
+        if(rowObj.budgetPack == '' || rowObj.budgetPack == null || fnRenderBase64(rowObj.budgetPack) == '0'){
             tmp = '0';
         }else{
-            data = accDivision(pConsume, window.atob(rowObj.budgetPack));
+            data = accDivision(pConsume, fnRenderBase64(rowObj.budgetPack));
             tmp = ((100*data).toFixed(2)).toString();
         }
         

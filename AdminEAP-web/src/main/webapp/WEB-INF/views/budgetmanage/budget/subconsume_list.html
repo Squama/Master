@@ -51,25 +51,27 @@
     function fnRenderBase64(value, type, rowObj){
         var result = '0';
         if(value!='' && value!=null){
+            if(!isNaN(value)){
+                return value;
+            }
             result = parseFloat(window.atob(value)).toFixed(2).toString();
         }
         return result;
     }
     
-    
     function fnRenderLabourPercent(value, type, rowObj){
         
         var tmp, data;
-        if(rowObj.budgetLabour == '' || rowObj.budgetLabour == null || window.atob(rowObj.budgetLabour) == '0'){
+        if(rowObj.budgetLabour == '' || rowObj.budgetLabour == null || fnRenderBase64(rowObj.budgetLabour) == '0'){
             tmp = '0';
         }else{
         	var consume;
-        	if(rowObj.consumeLabour == '' || rowObj.consumeLabour == null || window.atob(rowObj.consumeLabour) == '0'){
+        	if(rowObj.consumeLabour == '' || rowObj.consumeLabour == null || fnRenderBase64(rowObj.consumeLabour) == '0'){
         		consume = '0';
         	}else{
-        		consume = window.atob(rowObj.consumeLabour);
+        		consume = fnRenderBase64(rowObj.consumeLabour);
         	}
-            data = accDivision(consume, window.atob(rowObj.budgetLabour));
+            data = accDivision(consume, fnRenderBase64(rowObj.budgetLabour));
             tmp = ((100*data).toFixed(2)).toString();
         }
         
@@ -81,16 +83,16 @@
     function fnRenderMatPercent(value, type, rowObj){
         
         var tmp, data;
-        if(rowObj.budgetMat == '' || rowObj.budgetMat == null || window.atob(rowObj.budgetMat) == '0'){
+        if(rowObj.budgetMat == '' || rowObj.budgetMat == null || fnRenderBase64(rowObj.budgetMat) == '0'){
             tmp = '0';
         }else{
         	var consume;
-            if(rowObj.consumeMat == '' || rowObj.consumeMat == null || window.atob(rowObj.consumeMat) == '0'){
+            if(rowObj.consumeMat == '' || rowObj.consumeMat == null || fnRenderBase64(rowObj.consumeMat) == '0'){
                 consume = '0';
             }else{
-                consume = window.atob(rowObj.consumeMat);
+                consume = fnRenderBase64(rowObj.consumeMat);
             }
-            data = accDivision(consume, window.atob(rowObj.budgetMat));
+            data = accDivision(consume, fnRenderBase64(rowObj.budgetMat));
             tmp = ((100*data).toFixed(2)).toString();
         }
         
@@ -102,16 +104,16 @@
     function fnRenderMechPercent(value, type, rowObj){
         
         var tmp, data;
-        if(rowObj.budgetMech == '' || rowObj.budgetMech == null || window.atob(rowObj.budgetMech) == '0'){
+        if(rowObj.budgetMech == '' || rowObj.budgetMech == null || fnRenderBase64(rowObj.budgetMech) == '0'){
             tmp = '0';
         }else{
         	var consume;
-            if(rowObj.consumeMech == '' || rowObj.consumeMech == null || window.atob(rowObj.consumeMech) == '0'){
+            if(rowObj.consumeMech == '' || rowObj.consumeMech == null || fnRenderBase64(rowObj.consumeMech) == '0'){
                 consume = '0';
             }else{
-                consume = window.atob(rowObj.consumeMech);
+                consume = fnRenderBase64(rowObj.consumeMech);
             }
-            data = accDivision(consume, window.atob(rowObj.budgetMech));
+            data = accDivision(consume, fnRenderBase64(rowObj.budgetMech));
             tmp = ((100*data).toFixed(2)).toString();
         }
         
@@ -122,16 +124,16 @@
     function fnRenderPackPercent(value, type, rowObj){
         
         var tmp, data;
-        if(rowObj.budgetPack == '' || rowObj.budgetPack == null || window.atob(rowObj.budgetPack) == '0'){
+        if(rowObj.budgetPack == '' || rowObj.budgetPack == null || fnRenderBase64(rowObj.budgetPack) == '0'){
             tmp = '0';
         }else{
         	var consume;
-            if(rowObj.consumePack == '' || rowObj.consumePack == null || window.atob(rowObj.consumePack) == '0'){
+            if(rowObj.consumePack == '' || rowObj.consumePack == null || fnRenderBase64(rowObj.consumePack) == '0'){
                 consume = '0';
             }else{
-                consume = window.atob(rowObj.consumePack);
+                consume = fnRenderBase64(rowObj.consumePack);
             }
-            data = accDivision(consume, window.atob(rowObj.budgetPack));
+            data = accDivision(consume, fnRenderBase64(rowObj.budgetPack));
             tmp = ((100*data).toFixed(2)).toString();
         }
         
