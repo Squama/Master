@@ -1,20 +1,30 @@
 package com.cnpc.framework.base.service.impl;
 
 import java.io.Serializable;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 
-import com.cnpc.framework.base.dao.RedisDao;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.type.Type;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.cnpc.framework.base.dao.BaseDao;
+import com.cnpc.framework.base.dao.RedisDao;
+import com.cnpc.framework.base.entity.TaskWechat;
+import com.cnpc.framework.base.entity.WechatConfig;
+import com.cnpc.framework.base.pojo.AccessToken;
 import com.cnpc.framework.base.pojo.PageInfo;
 import com.cnpc.framework.base.service.BaseService;
+import com.cnpc.framework.utils.CodeException;
+import com.cnpc.framework.utils.PropertiesUtil;
+import com.cnpc.framework.utils.SecurityUtil;
 import com.cnpc.framework.utils.StrUtil;
+import com.cnpc.framework.utils.WeChatUtil;
 
 /**
  *
@@ -296,4 +306,88 @@ public class BaseServiceImpl implements BaseService {
     public List findMapBySql(String sql, Map<String, Object> params, int page, int rows, Class clazz) {
         return baseDao.findMapBySql(sql, params, page, rows, clazz);
     }
+
+	@Override
+	public void sendSteamWeChat(String processDefinitionKey, String title, String desc) {
+		String wechatHql = "from TaskWechat where processDefinitionKey=:processDefinitionKey";
+        Map<String, Object> wechatParams = new HashMap<>();
+        wechatParams.put("processDefinitionKey", "projectVolume");
+        TaskWechat tw = this.get(wechatHql, wechatParams);
+        
+        if(tw == null){
+            return;
+        }
+        
+        WechatConfig wechatConfig = this.get(WechatConfig.class, tw.getWechatConfigID());
+        
+        
+        try {
+            // 获取Token
+            AccessToken token = WeChatUtil.getAccessToken(wechatConfig.getSecret());
+            // 组装消息
+            String alarmString = getMessage(wechatConfig.getAgentID(), tw.getToParty(), title, desc);
+            // 发送消息
+            String postURL = PropertiesUtil.getValue("SENDMESSAGE_URL").replace("ACCESS_TOKEN", token.getToken());
+            JSONObject responseJSON = WeChatUtil.httpRequest(postURL, "POST", alarmString);
+        } catch (CodeException e) {
+            e.printStackTrace();
+        }
+		
+	}
+	
+	private String getMessage(String agentID, String party, String title, String desc){
+        Map<String, Object> map = new HashMap<String, Object>();
+
+        // 成员ID列表
+        map.put("touser", "");
+        // 部门ID列表，当touser为@all时忽略本参数
+        map.put("toparty", party);
+        // 标签ID列表，当touser为@all时忽略本参数
+        map.put("totag", "");
+        // 消息类型，固定为text
+        map.put("msgtype", "textcard");
+        // 企业应用ID
+        map.put("agentid", agentID);
+
+        HashMap<String, String> contentMap = new HashMap<String, String>();
+        contentMap.put("title", title);
+        contentMap.put("description", desc);
+        contentMap.put("url", "URL");
+        contentMap.put("btntxt", "以上");
+        map.put("textcard", contentMap);
+
+        // 消息是否保密，0：否，1：是
+        map.put("safe", "0");
+
+        JSONObject json = (JSONObject) JSONObject.toJSON(map);
+        return json.toString();
+    }
+
+	@Override
+	public String getWeChatDesc(String name, String taskName, String approved, String suggestion) {
+        
+        Calendar cal = Calendar.getInstance();
+        int year = cal.get(Calendar.YEAR);//获取年份
+        int month=cal.get(Calendar.MONTH);//获取月份
+        int day=cal.get(Calendar.DATE);//获取日
+        StringBuilder sb = new StringBuilder();
+        sb.append("<div class=\"gray\">");
+        sb.append(year+"年"+month+"月"+day+"日");
+        sb.append("</div> <div class=\"normal\">");
+        sb.append(taskName);
+        sb.append("</div><div class=\"highlight\">");
+        sb.append("已经过【");
+        sb.append(name);
+        sb.append("】审批，操作人：");
+        sb.append(SecurityUtil.getUser().getName());
+        sb.append("</div><div class=\"normal\">");
+        sb.append("审批结果：");
+        sb.append(approved);
+        sb.append("</div><div class=\"highlight\">");
+        sb.append("审批意见：");
+        sb.append(suggestion);
+        sb.append("</div>");
+        
+        return sb.toString();
+	}
 }

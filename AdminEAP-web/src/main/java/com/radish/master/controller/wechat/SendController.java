@@ -17,14 +17,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.cnpc.framework.annotation.VerifyCSRFToken;
+import com.cnpc.framework.base.entity.WechatConfig;
+import com.cnpc.framework.base.pojo.AccessToken;
 import com.cnpc.framework.base.pojo.Result;
+import com.cnpc.framework.utils.CodeException;
 import com.cnpc.framework.utils.PropertiesUtil;
-import com.radish.master.entity.wechat.WechatConfig;
-import com.radish.master.pojo.AccessToken;
+import com.cnpc.framework.utils.WeChatUtil;
 import com.radish.master.pojo.SendWeChatVO;
 import com.radish.master.service.WechatService;
-import com.radish.master.system.CodeException;
-import com.radish.master.system.WeChatUtil;
 
 /**
 * 类说明

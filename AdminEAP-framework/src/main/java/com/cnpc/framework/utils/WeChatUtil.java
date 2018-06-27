@@ -1,5 +1,5 @@
 
-package com.radish.master.system;
+package com.cnpc.framework.utils;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -14,8 +14,7 @@ import javax.net.ssl.TrustManager;
 
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
-import com.cnpc.framework.utils.PropertiesUtil;
-import com.radish.master.pojo.AccessToken;
+import com.cnpc.framework.base.pojo.AccessToken;
 
 
 /**

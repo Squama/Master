@@ -3,6 +3,8 @@ package com.radish.master.system;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import com.cnpc.framework.utils.CodeException;
+
 
 public class GUID {
 

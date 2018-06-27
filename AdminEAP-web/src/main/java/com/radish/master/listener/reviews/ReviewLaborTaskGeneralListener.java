@@ -15,21 +15,21 @@ import org.activiti.engine.delegate.TaskListener;
 
 import com.alibaba.fastjson.JSONObject;
 import com.cnpc.framework.activiti.pojo.Constants;
+import com.cnpc.framework.base.entity.TaskWechat;
+import com.cnpc.framework.base.entity.WechatConfig;
+import com.cnpc.framework.base.pojo.AccessToken;
 import com.cnpc.framework.base.service.BaseService;
+import com.cnpc.framework.utils.CodeException;
 import com.cnpc.framework.utils.PropertiesUtil;
 import com.cnpc.framework.utils.SecurityUtil;
+import com.cnpc.framework.utils.WeChatUtil;
 import com.radish.master.entity.Labor;
 import com.radish.master.entity.ProjectVolume;
 import com.radish.master.entity.common.ActivitiReview;
 import com.radish.master.entity.common.ActivitiSuggestion;
-import com.radish.master.entity.common.TaskWechat;
 import com.radish.master.entity.review.ReviewLabor;
 import com.radish.master.entity.review.ReviewMat;
-import com.radish.master.entity.wechat.WechatConfig;
-import com.radish.master.pojo.AccessToken;
-import com.radish.master.system.CodeException;
 import com.radish.master.system.SpringUtil;
-import com.radish.master.system.WeChatUtil;
 
 /**
  * 类说明

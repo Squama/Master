@@ -356,4 +356,8 @@ public interface BaseService {
     <T> T getCacheByKey(String key, Class clazz);
 
 
+    public void sendSteamWeChat(String processDefinitionKey, String title, String desc);
+    
+    public String getWeChatDesc(String name, String taskName, String approved, String suggestion);
+    
 }

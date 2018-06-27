@@ -1,14 +1,13 @@
 /**
  * 版权所有 (c) 2018，中金支付有限公司  
  */
-package com.radish.master.entity.common;
+package com.cnpc.framework.base.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
 import com.cnpc.framework.annotation.Header;
-import com.cnpc.framework.base.entity.BaseEntity;
 
 /**
  * 类说明

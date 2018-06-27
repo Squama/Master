@@ -1,5 +1,5 @@
 
-package com.radish.master.system;
+package com.cnpc.framework.utils;
 
 /**
  * 带错误码的异常类

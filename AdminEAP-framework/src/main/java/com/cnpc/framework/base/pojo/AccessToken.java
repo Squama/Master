@@ -1,5 +1,5 @@
 
-package com.radish.master.pojo;
+package com.cnpc.framework.base.pojo;
 
 /**
  * 类说明
