@@ -231,6 +231,9 @@ public class TaskPageServiceImpl extends BaseServiceImpl implements TaskPageServ
     @Override
     public Result submitTask(String taskId, Map<String, String> formData) {
         Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+        ProcessInstance processInstance = runtimeService.createProcessInstanceQuery().processInstanceId(task
+                .getProcessInstanceId()).singleResult();
+        
         String formKey = formService.getTaskFormKey(task.getProcessDefinitionId(), task.getTaskDefinitionKey());
         Object renderForm = null;
         if (!StrUtil.isEmpty(formKey) && formKey.endsWith(".form"))
@@ -260,11 +263,26 @@ public class TaskPageServiceImpl extends BaseServiceImpl implements TaskPageServ
         }
         //任务完成后，由TaskCreatedListener设置委托
 
+        //发送企业微信通知
+        //流程key：processInstance.getProcessDefinitionKey()
+        //title: processInstance.getProcessDefinitionName() + "流程变更通知"
+        //desc： task.getName(), processInstance.getName(),formData.get("approved"),formData.get("suggestion")
+        String approved = "";
+        String suggestion = "";
+        if(!StrUtil.isEmpty(formData.get("approved"))){
+            approved = "true".equalsIgnoreCase(formData.get("approved"))? "通过" : "不通过";
+        }
+        if(!StrUtil.isEmpty(formData.get("suggestion"))){
+            suggestion = formData.get("suggestion");
+        }
+        this.sendSteamWeChat(processInstance.getProcessDefinitionKey(), processInstance.getProcessDefinitionName() + "流程变更通知",
+                this.getWeChatDesc(task.getName(), processInstance.getName(), approved, suggestion));
+        
         return new Result(true);
     }
 
     /**
-     * 获取已办的任务李彪
+     * 获取已办的任务
      *
      * @param condition 查询条件
      * @param pageInfo  分页信息

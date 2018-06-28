@@ -311,7 +311,7 @@ public class BaseServiceImpl implements BaseService {
 	public void sendSteamWeChat(String processDefinitionKey, String title, String desc) {
 		String wechatHql = "from TaskWechat where processDefinitionKey=:processDefinitionKey";
         Map<String, Object> wechatParams = new HashMap<>();
-        wechatParams.put("processDefinitionKey", "projectVolume");
+        wechatParams.put("processDefinitionKey", processDefinitionKey);
         TaskWechat tw = this.get(wechatHql, wechatParams);
         
         if(tw == null){
