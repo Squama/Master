@@ -3,31 +3,16 @@
  */
 package com.radish.master.listener.qualityCheck;
 
-import java.math.BigDecimal;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import org.activiti.engine.delegate.DelegateTask;
 import org.activiti.engine.delegate.TaskListener;
 
-import com.alibaba.fastjson.JSONObject;
 import com.cnpc.framework.activiti.pojo.Constants;
 import com.cnpc.framework.base.service.BaseService;
-import com.cnpc.framework.utils.PropertiesUtil;
 import com.cnpc.framework.utils.SecurityUtil;
-import com.radish.master.entity.Labor;
-import com.radish.master.entity.ProjectVolume;
-import com.radish.master.entity.common.ActivitiSuggestion;
-import com.radish.master.entity.common.TaskWechat;
 import com.radish.master.entity.qualityCheck.CheckDq;
-import com.radish.master.entity.wechat.WechatConfig;
-import com.radish.master.pojo.AccessToken;
-import com.radish.master.system.CodeException;
 import com.radish.master.system.SpringUtil;
-import com.radish.master.system.WeChatUtil;
 
 /**
  * 类说明
