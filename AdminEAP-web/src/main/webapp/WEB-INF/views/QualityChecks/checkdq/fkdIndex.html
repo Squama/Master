@@ -85,6 +85,7 @@
         <div class="" style="text-align: center;height:50px;width:100%;">
             <!--以下两种方式提交验证,根据所需选择-->
             <button type="submit" class="btn btn-primary" data-btn-type="save" id="b_sub">保存</button>
+            <button type="button" class="btn btn-primary" data-btn-type="save" id="print">打印罚款单</button>
         </div>
         <!-- /.box-footer -->
     </form>
@@ -160,10 +161,21 @@
             }
             $("#projectId").select2();
         }
+        
         form.initComponent();
         ajaxPost(basePath+'/checkdq/loadFkd', {id:id}, function(data) {
-    		$("#fkd-form").form().initFormData(data.data);          
+    		$("#fkd-form").form().initFormData(data.data); 
+    		if(!data.data.id){
+				$("#print").css("display","none");
+        	}         
         });
+        $("#print").on("click",function(){
+        	ajaxPost(basePath+'/checkdq/loadFkd', {id:id}, function(data) {
+        		var url = basePath+"/ureport/preview?_u=file:fk.ureport.xml&_t=1,5&id="+data.data.id;
+        	 	window.open(url);         
+            });
+        	
+        })
         
     });
     function resetForm(){

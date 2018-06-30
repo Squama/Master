@@ -30,6 +30,7 @@
                     	<button type="button" class="btn btn-default" data-btn-type="add">新增</button>
                     	<button type="button" class="btn btn-default" data-btn-type="edit">编辑</button>
                     	<!-- <button type="button" class="btn btn-default" data-btn-type="look">查看</button> -->
+                        <button type="button" class="btn btn-default" data-btn-type="print">打印</button>
                         <button type="button" class="btn btn-default" data-btn-type="delete">删除</button>
                     </div>
                 </div>
@@ -103,6 +104,14 @@
                         });
                     })
                 	break;
+                case "print":
+            		if(!rowId){
+                        modals.info('请选择要打印的行');
+                        return false;
+                    }
+            		var url = basePath+"/ureport/preview?_u=file:QC.ureport.xml&_t=1,5&id="+rowId;
+            	 	window.open(url);     
+            	break;
                
             }
         });
