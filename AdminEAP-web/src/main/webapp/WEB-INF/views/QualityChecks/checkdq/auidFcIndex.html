@@ -189,6 +189,14 @@
                 url:basePath+"/checkdq/edit?id="+id+"&lx=look",
                });
             })
+         $("#fkd").on("click",function(){
+        	 modals.openWin({
+                 winId:"fks",
+                 title:'查看',
+                 width:'1000px',
+                 url:basePath+"/checkdq/fkdIndex?id="+id+"&lx=add"
+                });
+            })
         if(id){
         	ajaxPost(basePath+'/checkdq/load', {id:id}, function(data) {
         		$("#contract-form2").form().initFormData(data);          

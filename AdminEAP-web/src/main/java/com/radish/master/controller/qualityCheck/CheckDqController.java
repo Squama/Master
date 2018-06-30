@@ -51,6 +51,8 @@ import com.cnpc.framework.utils.StrUtil;
 import com.radish.master.entity.Project;
 import com.radish.master.entity.qualityCheck.CheckDq;
 import com.radish.master.entity.qualityCheck.CheckDqFile;
+import com.radish.master.entity.qualityCheck.CheckFkd;
+import com.radish.master.entity.qualityCheck.LettersLook;
 import com.radish.master.entity.review.MaxNumber;
 import com.radish.master.entity.review.ReviewBid;
 import com.radish.master.service.BudgetService;
@@ -223,6 +225,113 @@ public class CheckDqController {
         // 启动流程
         return runtimePageService.startProcessInstanceByKey("checkDq", name, variables, user.getId(), businessKey);
     }
+	/**
+	 * 罚款单相关
+	 */
+	@RequestMapping("/fkdIndex")
+	public String fkdIndex(HttpServletRequest request) {
+    	request.setAttribute("xm", JSONArray.toJSONString(budgetService.getProjectCombobox()));
+    	String id = request.getParameter("id");
+    	String lx = request.getParameter("lx");
+    	request.setAttribute("id", id);
+    	request.setAttribute("lx", lx);
+    	
+        return prefix+"fkdIndex";
+    }
+	@RequestMapping("/loadFkd")
+	@ResponseBody
+	public Result loadFkd(HttpServletRequest request){
+		String id = request.getParameter("id");
+		List<CheckFkd> fks = baseService.find(" from CheckFkd where checkDqId='"+id+"'");
+		Result r = new Result();
+		if(fks.size()==0){//无罚款数据
+			CheckDq ck = baseService.get(CheckDq.class, id);
+			CheckFkd fk = new CheckFkd();
+			fk.setCheckDqId(id);
+			fk.setProid(ck.getProid());
+			fk.setProname(ck.getProname());
+			
+			String str =maxNum();
+			
+			Calendar date = Calendar.getInstance();
+			String year = String.valueOf(date.get(Calendar.YEAR));
+			String strs = "FKD"+year+str;
+			fk.setNumber(strs);
+			r.setData(fk);
+		}else{
+			r.setData(fks.get(0));
+		}
+		return r;
+	}
+	@RequestMapping("/saveFkd")
+	@ResponseBody
+	public Result saveFkd(HttpServletRequest request,CheckFkd fk){
+		Result r = new Result();
+		String id = request.getParameter("id");
+		User u = SecurityUtil.getUser();
+		if(id==null){//保存
+			fk.setCreate_time(new Date());
+			fk.setCreate_name_ID(u.getId());
+			fk.setCreate_name(u.getName());
+			String proid = fk.getProid();
+			Project p = baseService.get(Project.class, proid);
+			fk.setProname(p.getProjectName());
+			baseService.save(fk);
+			r.setCode(fk.getId());
+			CheckDq dq = baseService.get(CheckDq.class, fk.getCheckDqId());
+			dq.setIsfk("1");
+			baseService.update(dq);
+		}else{
+			CheckFkd f = baseService.get(CheckFkd.class, id);
+			f.setProid(fk.getProid());
+			Project p = baseService.get(Project.class, fk.getProid());
+			f.setProname(p.getProjectName());
+			f.setWgtime(fk.getWgtime());
+			f.setWgbz(fk.getWgbz());
+			f.setWgdd(fk.getWgdd());
+			f.setFkje(fk.getFkje());
+			f.setWgCont(fk.getWgCont());
+			baseService.update(f);
+			r.setCode(id);
+		}
+		return r;
+	}
+	@RequestMapping("/delete")
+	@ResponseBody
+	public Result delete(HttpServletRequest request){
+		Result r = new Result();
+		String jcid = request.getParameter("id");
+		CheckDq jc = baseService.get(CheckDq.class, jcid);
+		//删除罚款单
+		List<CheckFkd> fks = baseService.find(" from CheckFkd where checkDqId='"+jcid+"'");
+		for(CheckFkd fk:fks){
+			baseService.delete(fk);
+		}
+		//删除对应图片记录
+		List<CheckDqFile> tps = baseService.find(" from CheckDqFile where form_ID='"+jcid+"'");
+		for(CheckDqFile tp:tps){
+			String dirPath=request.getRealPath("/");
+	        FileUtil.delFile(uploaderPath+File.separator+tp.getSavedName());
+			baseService.delete(tp);
+		}
+		baseService.delete(jc);
+		
+		return r;
+	}
+	@RequestMapping("/deletefkd")
+	@ResponseBody
+	public Result deletefkd(HttpServletRequest request){
+		Result r = new Result();
+		String jcid = request.getParameter("id");
+		List<CheckFkd> fks = baseService.find(" from CheckFkd where checkDqId='"+jcid+"'");
+		for(CheckFkd fk:fks){
+			baseService.delete(fk);
+		}
+		CheckDq dq = baseService.get(CheckDq.class, jcid);
+		dq.setIsfk("0");
+		baseService.update(dq);
+		return r;
+	}
 	
 	private static Logger logger= LoggerFactory.getLogger(UploaderController.class);
 	private static final String uploaderPath=PropertiesUtil.getValue("qualityChecksFilePath")+"\\checkdq";
