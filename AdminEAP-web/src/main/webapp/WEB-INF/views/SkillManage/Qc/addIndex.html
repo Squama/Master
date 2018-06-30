@@ -1,0 +1,210 @@
+<link rel="stylesheet" href="${basePath}/resources/common/libs/fileinput/css/fileinput.min.css">
+<style>
+
+#projectaddstep2 .krajee-default.file-preview-frame .kv-file-content {
+    height: auto;
+}
+
+#projectaddstep2 .krajee-default .file-footer-caption {
+    width: 100px;
+}
+
+</style>
+<script src="${basePath}/resources/common/libs/fileinput/js/fileinput.js"></script>
+<script src="${basePath}/resources/common/libs/fileinput/js/locales/zh.js"></script>
+<!--BaseFile组件-->
+<script src="${basePath}/resources/common/js/base-file.js"></script>
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><li class="fa fa-remove"></li></button>
+    <h5 class="modal-title"></h5>
+</div>
+<div class="modal-body" style="max-height:600px;overflow-y:auto;">
+
+    <form id="contract-form" name="contract-form" class="form-horizontal">
+     <input type="hidden" name="id" id= "id">
+        <div class="box-body">
+				<div class="form-group">
+                    <label  for="proid" class="col-sm-2 control-label">所属项目</label>
+					<div class=" col-sm-9">
+						<select id="projectId" class="form-control select2 "  name="proid" style="width:100%" >
+                   			<option selected="selected" value="">选择一个项目</option>
+                   		</select>
+					</div>
+                </div>
+            </div>
+            <div class="form-group">
+                    <label for="md" class="col-sm-2 control-label">实施目的</label>
+
+                    <div class="col-sm-9">
+                        <textarea class="form-control" id="md" name="md" placeholder="实施目的" rows="5"></textarea>
+                    </div>
+            </div>
+            <div class="form-group">
+                    <label for="gcgk" class="col-sm-2 control-label">工程概况</label>
+
+                    <div class="col-sm-9">
+                        <textarea class="form-control" id="gcgk" name="gcgk" placeholder="工程概况" rows="5"></textarea>
+                    </div>
+            </div>
+            <div class="form-group">
+                    <label for="xzgk" class="col-sm-2 control-label">小组概况</label>
+
+                    <div class="col-sm-9">
+                        <textarea class="form-control" id="xzgk" name="xzgk" placeholder="小组概况" rows="5"></textarea>
+                    </div>
+            </div>
+            <div class="form-group">
+                    <label for="xzcy" class="col-sm-2 control-label">小组成员</label>
+
+                    <div class="col-sm-9">
+                        <textarea class="form-control" id="xzcy" name="xzcy" placeholder="小组成员" rows="5"></textarea>
+                    </div>
+            </div>
+            <div class="form-group">
+                    <label for="xzjh" class="col-sm-2 control-label">小组计划</label>
+
+                    <div class="col-sm-9">
+                        <textarea class="form-control" id="xzjh" name="xzjh" placeholder="小组计划" rows="5"></textarea>
+                    </div>
+            </div>
+            <div class="form-group">
+                    <label for="xtly" class="col-sm-2 control-label">选题理由</label>
+
+                    <div class="col-sm-9">
+                        <textarea class="form-control" id="xtly" name="xtly" placeholder="选题理由" rows="5"></textarea>
+                    </div>
+            </div>
+            <div class="form-group">
+                    <label for="xzdc" class="col-sm-2 control-label">现状调查</label>
+
+                    <div class="col-sm-9">
+                        <textarea class="form-control" id="xzdc" name="xzdc" placeholder="现状调查" rows="5"></textarea>
+                    </div>
+            </div>
+            <div class="form-group">
+                    <label for="lz" class="col-sm-2 control-label">论证</label>
+
+                    <div class="col-sm-9">
+                        <textarea class="form-control" id="lz" name="lz" placeholder="论证" rows="5"></textarea>
+                    </div>
+            </div>
+            <div class="form-group">
+                    <label for="yyfx" class="col-sm-2 control-label">原因分析</label>
+
+                    <div class="col-sm-9">
+                        <textarea class="form-control" id="yyfx" name="yyfx" placeholder="原因分析" rows="5"></textarea>
+                    </div>
+            </div>
+            <div class="form-group">
+                    <label for="yyqr" class="col-sm-2 control-label">要因确认</label>
+
+                    <div class="col-sm-9">
+                        <textarea class="form-control" id="yyqr" name="yyqr" placeholder="要因确认" rows="5"></textarea>
+                    </div>
+            </div>
+            <div class="form-group">
+                    <label for="dc" class="col-sm-2 control-label">制定对策</label>
+
+                    <div class="col-sm-9">
+                        <textarea class="form-control" id="dc" name="dc" placeholder="对策" rows="5"></textarea>
+                    </div>
+            </div>
+            <div class="form-group">
+                    <label for="dcssqk" class="col-sm-2 control-label">对策实施情况</label>
+
+                    <div class="col-sm-9">
+                        <textarea class="form-control" id="dcssqk" name="dcssqk" placeholder="对策实施情况" rows="5"></textarea>
+                    </div>
+            </div>
+            <div class="form-group">
+                    <label for="jg" class="col-sm-2 control-label">结果</label>
+
+                    <div class="col-sm-9">
+                        <textarea class="form-control" id="jg" name="jg" placeholder="结果" rows="5"></textarea>
+                    </div>
+            </div>
+            <div class="form-group">
+                    <label for="ggcs" class="col-sm-2 control-label">巩固措施</label>
+
+                    <div class="col-sm-9">
+                        <textarea class="form-control" id="ggcs" name="ggcs" placeholder="巩固措施" rows="5"></textarea>
+                    </div>
+            </div>
+            <div class="form-group">
+                    <label for="zj" class="col-sm-2 control-label">总结</label>
+
+                    <div class="col-sm-9">
+                        <textarea class="form-control" id="zj" name="zj" placeholder="总结" rows="5"></textarea>
+                    </div>
+            </div>
+        <!-- /.box-body -->
+        <div class="" style="text-align: center;height:50px;width:100%;position:fixed;bottom: 10px ">
+            <!--以下两种方式提交验证,根据所需选择-->
+            <button type="submit" class="btn btn-primary" data-btn-type="save" id="b_sub">保存</button>
+        </div>
+        <!-- /.box-footer -->
+    </form>
+</div>
+<script>
+    var form =null;
+    
+    var pros = '${xm?default(0)}',pro=0;
+    if(pros != 0){
+    	pro = JSON.parse(pros);
+    }
+    var id = '${id?default(0)}';
+    $(function() {
+        //初始化控件
+        form=$("#contract-form").form();
+        //数据校验
+        $("#contract-form").bootstrapValidator({
+            message : '请输入有效值',
+            feedbackIcons : {
+                valid : 'glyphicon glyphicon-ok',
+                invalid : 'glyphicon glyphicon-remove',
+                validating : 'glyphicon glyphicon-refresh'
+            },
+            submitHandler : function() {
+                modals.confirm('确认保存？', function() {
+                    //Save Data，对应'submit-提交'
+                    var params = form.getFormSimpleData();
+                    	ajaxPost(basePath+'/qcproject/save', params, function(data) {
+                            if(data.success){
+                                modals.info("数据保存成功");
+                                $("#id").val(data.code);
+                            }                
+                        }); 
+              
+                     
+                });
+            },
+            fields : {
+                proid : {
+                    validators : {
+                        notEmpty : {
+                            message : '请选择所属项目'
+                        }
+                    }
+                }
+            }
+        });
+        if(pro != 0){
+            for (var i = 0, len = pro.length; i < len; i++) {
+                var u = pro[i];
+                $('#projectId').append("<option value='" + u.value + "'>" + u.data + "</option>");
+            }
+            $("#projectId").select2();
+        }
+        form.initComponent();
+        if(id!=0){
+        	ajaxPost(basePath+'/qcproject/load', {id:id}, function(data) {
+        		$("#contract-form").form().initFormData(data);          
+            }); 
+        }
+        
+    });
+    function resetForm(){
+        form.clearForm();
+        $("#contract-form").data('bootstrapValidator').resetForm();
+    }
+</script>

@@ -1,0 +1,135 @@
+<section class="content-header">
+    <h1>
+        公司技术交底
+        <small>列表</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
+        <li><a href="#">技术管理</a></li>
+        <li class="active">公司技术交底</li>
+    </ol>
+</section>
+
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <!-- /.box-header -->
+                <div class="dataTables_filter" id="searchDiv1" style="display: none">
+                    <!--查询条件-->
+                    <!--查询条件-->
+                    <select id="projectID" class="form-control select2" name="proid" style="width:200px;" operator="eq">
+        				<option selected="selected" value="">选择一个项目</option>
+       				 </select>
+           			 <input name="type" value="10" style="display: none"/>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-primary" data-btn-type="search">查询</button>
+                    </div>
+                    <div class="btn-group">
+                    	<button type="button" class="btn btn-default" data-btn-type="add" id="add">新增</button>
+                    	<button type="button" class="btn btn-default" data-btn-type="edit" id="edit">编辑</button>
+                    	<button type="button" class="btn btn-default" data-btn-type="look" id="look">查看</button>
+                        <button type="button" class="btn btn-default" data-btn-type="delete" id="delete">删除</button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <table id="lwContract_table" class="table table-bordered table-striped table-hover">
+                    </table>
+                </div>
+            </div>
+           </div>
+         </div>
+         
+</section>
+
+<script>
+    var form = $("#searchDiv1").form({baseEntity: false}), initData={};
+    var xms = '${xm?default(0)}',xm=0;
+    if(xms != 0){
+    	xm = JSON.parse(xms);
+    }
+    var lx = '${lx?default(0)}';
+    var dutycheckTable, winId = "projectQueryWin";
+    $(function (){
+    	dutycheckTable = new CommonTable("lwContract_table", "gsjd_List", "searchDiv1");
+        
+        
+        
+        //绑定按钮事件
+        $("button[data-btn-type]").click(function () {
+            var action = $(this).data("btn-type");
+            var rowId = dutycheckTable.getSelectedRowId();
+            switch (action) {
+            	case "add":
+            		modals.openWin({
+                        winId:winId,
+                        title:'创建',
+                        width:'1000px',
+                        url:basePath+"/jsjd/add?type=10",
+                        hideFunc:function(){
+                        	dutycheckTable.reloadData();
+                        },
+                        
+                       });
+            	break;
+            	case "edit":
+            		if(!rowId){
+                        modals.info('请选择要编辑的行');
+                        return false;
+                    }
+                    modals.openWin({
+                        winId:winId,
+                        title:'编辑',
+                        width:'1000px',
+                        url:basePath+"/jsjd/add?id="+rowId+"&type=10",
+                        hideFunc:function(){
+                        	dutycheckTable.reloadData();
+                        }
+                       });
+            	break;
+            	case "look":
+            		if(!rowId){
+                        modals.info('请选择要编辑的行');
+                        return false;
+                    }
+                    modals.openWin({
+                        winId:winId,
+                        title:'编辑',
+                        width:'1000px',
+                        url:basePath+"/jsjd/add?id="+rowId+"&ck=look&type=10"
+                       });
+            	break;
+                case "delete":
+                	if(!rowId){
+                        modals.info('请选择要删除的行');
+                        return false;
+                    }
+                    modals.confirm("是否要删除该行数据？",function(){
+                        ajaxPost(basePath+"/jsjd/delete?id="+rowId,null,function(data){
+                        	if(data.success){
+                        		dutycheckTable.reloadData();
+                        	}
+                        	
+                  
+                        });
+                    })
+                	break;
+               
+            }
+        });
+
+        if(xm != 0){
+            for (var i = 0, len = xm.length; i < len; i++) {
+                var u = xm[i];
+                $('#projectID').append("<option value='" + u.value + "'>" + u.data + "</option>");
+            }
+            $(".select2").select2();
+        } 
+        if(lx=="look"){
+            $("#add").css("display","none");
+            $("#edit").css("display","none");
+            $("#delete").css("display","none");
+         }
+    });
+    
+</script>
