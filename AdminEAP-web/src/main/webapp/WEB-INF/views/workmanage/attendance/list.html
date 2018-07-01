@@ -1,0 +1,41 @@
+<section class="content-header">
+    <h1>
+        考勤
+        <small>列表</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
+        <li><a href="#">考勤管理</a></li>
+        <li class="active">考勤记录查询</li>
+    </ol>
+</section>
+
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <!-- /.box-header -->
+                <div class="dataTables_filter" id="searchDiv">
+                   <input type="search" placeholder="请输入姓名" title="姓名" name="name" class="form-control" operator="like" likeOption="true" autocomplete="off">
+                   <input type="search" placeholder="请输入月份" title="月份" name="month" class="form-control" operator="eq" autocomplete="off">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-primary" data-btn-type="search">查询</button>
+                        <button type="button" class="btn btn-default" data-btn-type="reset">重置</button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <table id="attendance_list_table" class="table table-bordered table-striped table-hover">
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    var form = $("#searchDiv").form({baseEntity: false}), initData={};
+    var attendanceTable;
+    $(function (){
+    	attendanceTable = new CommonTable("attendance_list_table", "attendance_list", "searchDiv", null);
+    });
+</script>

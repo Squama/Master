@@ -35,4 +35,18 @@
         <column key="projectName" header="项目名称" classType="String" width="150"/>
     </query>
     
+    <query id="attendance_list" key="id" tableName="考勤记录" className="com.radish.master.entity.wechat.Attendance" widthType="px" pageSize="20">
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="month" header="月份" classType="String" />
+        <column key="name" header="姓名" classType="String" />
+        <column key="suppose" header="应打卡天数" classType="String" />
+        <column key="normal" header="正常打卡天数" classType="String" />
+        <column key="exception" header="异常打卡天数" classType="String" />
+        <column key="early" header="早退" classType="String" />
+        <column key="late" header="迟到" classType="String" />
+        <column key="completion" header="矿工" classType="String" />
+        <column key="total" header="合计" classType="String" />
+    </query>
+    
 </queryContext>
