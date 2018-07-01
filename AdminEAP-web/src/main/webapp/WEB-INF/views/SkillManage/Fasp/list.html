@@ -89,7 +89,7 @@
                         return false;
                     }
             		if(dutycheckTable.getSelectedRowData().status!='新建'&&dutycheckTable.getSelectedRowData().status!='驳回'){
-                    	modals.info('改状态不能编辑');
+                    	modals.info('该状态不能编辑');
                         return false;
                     }
                     modals.openWin({
@@ -108,7 +108,7 @@
                         return false;
                     }
                 	if(dutycheckTable.getSelectedRowData().status!='新建'&&dutycheckTable.getSelectedRowData().status!='驳回'){
-                    	modals.info('改状态不能删除');
+                    	modals.info('该状态不能删除');
                         return false;
                     }
                     modals.confirm("是否要删除该行数据？",function(){

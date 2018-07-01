@@ -21,7 +21,7 @@
 <div class="modal-body" style="max-height:100%;overflow-y:auto;">
 
     <form id="fkd-form" name="fkd-form" class="form-horizontal">
-     <input type="hidden" name="id" id= "id">
+     <input type="hidden" name="id" id= "id2">
      <input type="hidden" name="checkDqId" id= "checkDqId">
         <div class="box-body">
             <div class="col-md-6">
@@ -116,7 +116,7 @@
                     	ajaxPost(basePath+'/checkdq/saveFkd', params, function(data) {
                             if(data.success){
                                 modals.info("数据保存成功");
-                                $("#id").val(data.code);
+                                $("#id2").val(data.code);
                             }                
                         }); 
               
