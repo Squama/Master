@@ -1,10 +1,28 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
-<body>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <!-- /.box-header -->
+                <div class="dataTables_filter" id="searchDivAttendance">
+                   <input type="search" placeholder="请输入姓名" title="姓名" name="name" id="attendanceName" class="form-control" operator="like" likeOption="true" style="display:none;">
+                   <input type="search" placeholder="请输入月份" title="月份" name="month" class="form-control" operator="eq" autocomplete="off">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-primary" data-btn-type="search">查询</button>
+                        <button type="button" class="btn btn-default" data-btn-type="reset">重置</button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <table id="attendance_list_table" class="table table-bordered table-striped table-hover">
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
-</body>
-</html>
+<script>
+    var form = $("#searchDivAttendance").form({baseEntity: false});
+    var attendanceName="${name?default(0)}";
+    $('#attendanceName',$('#searchDivAttendance')).val(attendanceName);
+    var attendanceTable = new CommonTable("attendance_list_table", "attendance_list", "searchDivAttendance", null);
+</script>

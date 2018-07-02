@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -22,6 +24,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -53,6 +56,12 @@ public class AttendanceController {
         return "workmanage/attendance/list";
     }
 	
+    @RequestMapping(value="/detail/{name}",method = RequestMethod.GET)
+    public String detail(@PathVariable("name") String name,HttpServletRequest request){
+        request.setAttribute("name", name);
+        return "workmanage/attendance/attend";
+    }
+    
     @RequestMapping(value="/import",method = RequestMethod.GET)
     public String toImport(){
         return "workmanage/attendance/import";
