@@ -368,7 +368,7 @@ public class BaseServiceImpl implements BaseService {
         
         Calendar cal = Calendar.getInstance();
         int year = cal.get(Calendar.YEAR);//获取年份
-        int month=cal.get(Calendar.MONTH);//获取月份
+        int month=cal.get(Calendar.MONTH) + 1;//获取月份
         int day=cal.get(Calendar.DATE);//获取日
         StringBuilder sb = new StringBuilder();
         sb.append("<div class=\"gray\">");
