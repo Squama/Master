@@ -1,0 +1,102 @@
+
+<link rel="stylesheet" href="${basePath}/resources/common/libs/fileinput/css/fileinput.min.css">
+<script src="${basePath}/resources/common/libs/fileinput/js/fileinput.js"></script>
+<script src="${basePath}/resources/common/libs/fileinput/js/locales/zh.js"></script>
+<!--BaseFile组件-->
+<script src="${basePath}/resources/common/js/base-file.js"></script>
+<section class="content-header">
+    <h1>
+        <span>考勤记录</span>
+        <small>导入</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
+        <li><a href="#">考勤管理</a></li>
+        <li class="active">导入考勤记录</li>
+    </ol>
+</section>
+
+    
+
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <span>
+                        <i class="fa fa-edit">导入考勤记录</i>
+                    </span>
+                </div>
+                <form id="import_form" name="attendance_form" class="form-horizontal">
+                    <div class="box-body">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">文件<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="file" name="file" id="file">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer text-center">
+                        <button type="button" class="btn btn-default" data-btn-type="reset">清空</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+    var importform,attendanceImportTable;
+    $(function () {
+        //初始化表单 
+        importform = $("#import_form").form({baseEntity:false});
+        //数据校验
+        $("#import_form").bootstrapValidator({
+            message: '请输入有效值',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            submitHandler: function () {
+                //nothing
+            }
+        });
+        //初始化控件
+        importform.initComponent();
+        
+        $('#file').on('click', function(e){
+            $("#import_form").data("bootstrapValidator").validate();
+            if(!$("#import_form").data("bootstrapValidator").isValid()){
+                e.preventDefault();
+            }
+        });
+        
+        $("button[data-btn-type='reset']").click(function () {
+            loadPage(basePath+"/attendance/importwen");
+        });
+    });
+    
+    $.fn.fileinputLocales['zh'].msgValidationError = "请选择xls或xlsx格式的文件";
+    $.fn.fileinputLocales['zh'].uploadLabel = "导入";
+    
+    $("#file").fileinput({
+        language: 'zh',
+        uploadUrl: basePath + "/attendance/doimportwen",
+        uploadExtraData : getFormData,
+        allowedFileExtensions : ['xls', 'xlsx'],
+        showPreview : false
+    }).on("fileuploaded", function(event, data, previewId, index){
+        $('input[name="month"]',$('#searchDiv')).val($('#month').val());
+        setTimeout('disableFileInput()',500);
+    });
+    
+    function getFormData(){
+        return importform.getFormSimpleData();
+    }
+    
+    function disableFileInput(){
+        $("#file").fileinput('disable')
+    }
+</script>

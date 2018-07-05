@@ -35,6 +35,7 @@ import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.base.service.BaseService;
 import com.cnpc.framework.utils.CodeException;
 import com.radish.master.entity.wechat.Attendance;
+import com.radish.master.entity.wechat.Wen;
 
 
 /**
@@ -65,6 +66,11 @@ public class AttendanceController {
     @RequestMapping(value="/import",method = RequestMethod.GET)
     public String toImport(){
         return "workmanage/attendance/import";
+    }
+    
+    @RequestMapping(value="/importwen",method = RequestMethod.GET)
+    public String toImportWen(){
+        return "workmanage/attendance/import_wen";
     }
 	
     @RequestMapping(method = RequestMethod.POST, value = "/doimport")
@@ -159,6 +165,172 @@ public class AttendanceController {
         }catch (CodeException ce) {
         	return new Result(false,ce.getMessage());
 		}catch (Exception e) {
+            return new Result(false,"导入失败");
+        }finally{
+            if(workbook != null){
+                workbook.close();
+            }
+        }
+        
+        return new Result(true,file.getOriginalFilename());
+    }
+    
+    @RequestMapping(method = RequestMethod.POST, value = "/doimportwen")
+    @ResponseBody
+    public Result importExcelWen(@RequestParam(value = "file", required = false) MultipartFile file) throws IOException{
+        
+        
+        Workbook workbook = null;
+        try{
+            String fileName = file.getOriginalFilename();
+            
+            if(fileName.endsWith(XLS)){
+                workbook = new HSSFWorkbook(file.getInputStream());
+            }else if(fileName.endsWith(XLSX)){
+                workbook = new XSSFWorkbook(file.getInputStream());
+            }else{
+                throw new CodeException("文件不是excel格式");
+            }
+            
+            Sheet sheet = workbook.getSheet("Sheet1");
+            
+            int rows = sheet.getLastRowNum();
+            
+            if(rows == 0){
+                throw new CodeException("表格中无数据");
+            }  
+            
+            List<Wen> list = new ArrayList<Wen>();
+            
+            String group = "";
+            
+            for(int i = 0; i<=rows; i++){
+                Row row = sheet.getRow(i);
+                if(row != null){
+                    Wen bi = new Wen();
+                    
+                    String bingli = getCellValue(row.getCell(0));
+                    bi.setBingli(bingli);
+
+                    String bingan = getCellValue(row.getCell(1));
+                    bi.setBingan(bingan);
+                    
+                    if("1409761".equals(bingan)){
+                        System.out.println("that's it");
+                    }
+                    
+                    String sex = getCellValue(row.getCell(2));
+                    bi.setSex(sex);
+                    
+                    String age = getCellValue(row.getCell(3));
+                    bi.setAge(age);
+                    
+                    String getdate = getCellValue(row.getCell(4));
+                    bi.setGetdate(getdate);
+                    
+                    String zhenduan = getCellValue(row.getCell(5));
+                    bi.setZhenduan(zhenduan);
+                    
+                    String jielun = getCellValue(row.getCell(6));
+                    bi.setJielun(jielun);
+                    
+                    String shuju = "nan";
+                    String zuida = "nan";
+                    int cmIndex = jielun.indexOf("cm");
+                    
+                    int index = -1;
+                    int xiuzheng = 0;
+                    
+                    if(cmIndex == -1){
+                        shuju = "0";
+                        zuida = "0";
+                        index = 1;
+                    }
+                    
+                    if(index == -1){
+                        index = jielun.indexOf("直径");
+                        xiuzheng = 2;
+                    }
+                    
+                    if(index == -1){
+                        index = jielun.indexOf("最大径");
+                        xiuzheng = 3;
+                    }
+                    
+                    if(index == -1){
+                        index = jielun.indexOf("肿瘤大小");
+                        xiuzheng = 4;
+                        cmIndex = jielun.indexOf("cm", index);
+                        shuju = jielun.substring(index + xiuzheng, cmIndex);
+                        String[] array = shuju.split("×");
+                        String temp = "-1";
+                        for(int k=0;k<array.length;k++) {
+                            for(int j=i+1;j<array.length;j++) {
+                                if(Integer.valueOf(array[i])>=Integer.valueOf(array[j])) {
+                                    temp = array[i];
+                                    array[i] = array[j];
+                                    array[j] = temp;
+                                }
+                            }
+                        }
+                        zuida = array[0];
+                    }
+                    
+                    if(index == -1){
+                        index = jielun.indexOf("大小");
+                        xiuzheng = 2;
+                        cmIndex = jielun.indexOf("cm", index);
+                        shuju = jielun.substring(index + xiuzheng, cmIndex);
+                        String[] array = shuju.split("×");
+                        String temp = "-1";
+                        for(int k=0;k<array.length;k++) {
+                            for(int j=i+1;j<array.length;j++) {
+                                if(Integer.valueOf(array[i])>=Integer.valueOf(array[j])) {
+                                    temp = array[i];
+                                    array[i] = array[j];
+                                    array[j] = temp;
+                                }
+                            }
+                        }
+                        zuida = array[0];
+                    }
+                    
+                    if("nan".equals(shuju)){
+                       System.out.println(bingan);
+                       System.out.println(index);
+                       System.out.println(xiuzheng);
+                       System.out.println(cmIndex);
+                       System.out.println("----------------------");
+                       if(cmIndex < index){
+                           shuju = "有多个数值";
+                       }else{
+                           shuju =  jielun.substring(index + xiuzheng, cmIndex); 
+                       }
+                    }
+                    
+                    if("nan".equals(zuida)){
+                        zuida = shuju;
+                    }
+                    
+                    bi.setShuju(shuju);
+                    bi.setZuida(zuida);
+                    
+                    String biaoben = getCellValue(row.getCell(7));
+                    bi.setBiaoben(biaoben);
+                    
+                    String baogao = getCellValue(row.getCell(8));
+                    bi.setBaogao(baogao);
+                    
+                    list.add(bi);
+                }
+            }
+            
+            baseService.batchSave(list);
+            
+        }catch (CodeException ce) {
+            return new Result(false,ce.getMessage());
+        }catch (Exception e) {
+            e.printStackTrace();
             return new Result(false,"导入失败");
         }finally{
             if(workbook != null){
