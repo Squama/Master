@@ -47,6 +47,7 @@ import com.radish.master.service.BudgetService;
 import com.radish.master.service.CommonService;
 import com.radish.master.service.ProjectService;
 import com.radish.master.system.GUID;
+import com.radish.master.system.SpringUtil;
 
 /**
 * 类说明
@@ -116,6 +117,12 @@ public class LaborController {
         return new Result(true, JSONArray.toJSONString(projectService.getTeamComboboxByProject(projectID)));
     }
     
+    @RequestMapping(value="/getmanagerop")
+    @ResponseBody
+    public Result getManagerOp(String projectID){
+        return new Result(true, JSONArray.toJSONString(projectService.getTeamManagerComboboxByProject(projectID)));
+    }
+    
     @RequestMapping(value="/edit/{id}",method = RequestMethod.GET)
     public String edit(@PathVariable("id") String id,HttpServletRequest request,HttpServletResponse response) {
         request.setAttribute("id", id);
@@ -165,7 +172,6 @@ public class LaborController {
     public Result save(Labor labor, HttpServletRequest request){
         if(StrUtil.isEmpty(labor.getId())){
             labor.setCreateDateTime(new Date());
-            labor.setContractPrice("0");
             labor.setStatus("10");
             try {
                 projectService.save(labor);
@@ -174,13 +180,11 @@ public class LaborController {
             }
         }else{
             Labor oldLabor = projectService.get(Labor.class, labor.getId());
-            oldLabor.setProjectID(labor.getProjectID());
-            oldLabor.setProjectName(labor.getProjectName());
-            oldLabor.setConstructionManager(labor.getConstructionManager());
+            
+            SpringUtil.copyPropertiesIgnoreNull(labor, oldLabor);
+            
             oldLabor.setUpdateDateTime(new Date());
-            oldLabor.setConstructionTeamID(labor.getConstructionTeamID());
-            oldLabor.setConstructionTeam(labor.getConstructionTeam());
-            oldLabor.setContractor(labor.getContractor());
+            
             projectService.update(oldLabor);
         }
         

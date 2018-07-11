@@ -185,6 +185,12 @@ public class ProjectServiceImpl extends BaseServiceImpl implements ProjectServic
         return this.findMapBySql("select id value, sub_name data from tbl_labor_sub where labor_id=?", new Object[] { laborID },
                 new Type[] { StringType.INSTANCE }, Options.class);
     }
+
+    @Override
+    public List<Options> getProjectSubCombobox(String projectID) {
+        return this.findMapBySql("select id value, sub_name data from tbl_project_sub where project_id=? ", new Object[] { projectID },
+                new Type[] { StringType.INSTANCE }, Options.class);
+    }
     
     @Override
     public Result startVolumeFlow(ProjectVolume projectVolume, String processDefinitionKey) {
@@ -205,14 +211,14 @@ public class ProjectServiceImpl extends BaseServiceImpl implements ProjectServic
         variables.put(Constants.VAR_APPLYUSER_NAME, user.getName());
         variables.put(Constants.VAR_BUSINESS_KEY, businessKey);
         variables.put("taskName", name);
-        
+
         String suggestionHql = "from ActivitiSuggestion where businessKey=:businessKey AND taskNode=:taskNode";
         Map<String, Object> suggestionParams = new HashMap<>();
         suggestionParams.put("businessKey", businessKey);
         suggestionParams.put("taskNode", "caozuoyuan");
         ActivitiSuggestion as = this.get(suggestionHql, suggestionParams);
-        
-        if(as == null){
+
+        if (as == null) {
             as = new ActivitiSuggestion();
             as.setCreateDateTime(new Date());
             as.setUpdateDateTime(new Date());
@@ -220,7 +226,7 @@ public class ProjectServiceImpl extends BaseServiceImpl implements ProjectServic
             as.setTaskNode("caozuoyuan");
             as.setApprove("true");
         }
-        
+
         as.setSuggestion("");
         as.setOperator(SecurityUtil.getUser().getName());
         as.setUpdateDateTime(new Date());
@@ -255,16 +261,23 @@ public class ProjectServiceImpl extends BaseServiceImpl implements ProjectServic
 
     @Override
     public List<Options> getTeamComboboxByProject(String projectID) {
-        return this.findMapBySql("select id value, team_name data from tbl_project_team where project_id=? AND status = 10", new Object[] { projectID },
+        return this.findMapBySql("select id value, team_name data from tbl_project_team where project_id=? AND status = '10'", new Object[] { projectID },
                 new Type[] { StringType.INSTANCE }, Options.class);
     }
 
     @Override
+    public List<Options> getTeamManagerComboboxByProject(String projectID) {
+        return this.findMapBySql(
+                "SELECT u.id value, u.name data FROM tbl_user u, tbl_user_team ut, tbl_project_team pt WHERE u.id = ut.user_id AND ut.team_id = pt.id AND pt.project_id =? AND pt.status = '30'",
+                new Object[] { projectID }, new Type[] { StringType.INSTANCE }, Options.class);
+    }
+
+    @Override
     public List<Options> getMemberTeamComboboxByProject(String projectID) {
-        return this.findMapBySql("select id value, team_name data from tbl_project_team where project_id=? AND status != 20", new Object[] { projectID },
+        return this.findMapBySql("select id value, team_name data from tbl_project_team where project_id=? AND status != '20'", new Object[] { projectID },
                 new Type[] { StringType.INSTANCE }, Options.class);
     }
-    
+
     @Override
     public List<Options> getUserCombobox() {
         return this.findMapBySql("select id value, name data from tbl_user where audit_status is not null", new Object[] {}, new Type[] { StringType.INSTANCE },
@@ -278,45 +291,45 @@ public class ProjectServiceImpl extends BaseServiceImpl implements ProjectServic
         Map<String, String> map = new HashMap<String, String>();
         String userID = "";
         String userTeams = null;
-        for(Options o : tempList){
-            if(!userID.equals(o.getValue())){
-                if(userTeams != null){
+        for (Options o : tempList) {
+            if (!userID.equals(o.getValue())) {
+                if (userTeams != null) {
                     map.put(userID, userTeams);
                 }
                 userTeams = o.getData();
                 userID = o.getValue();
-            }else{
+            } else {
                 userTeams = userTeams + "," + o.getData();
             }
         }
-        if(userTeams != null){
+        if (userTeams != null) {
             map.put(userID, userTeams);
         }
         return map;
     }
 
     @Override
-    public List<ProjectVolume> checkTimePeriod(String projectID, String laborID, String laborSubID, String startTimeStr, String endTimeStr, String volumeID) {
+    public List<ProjectVolume> checkTimePeriod(String projectID, String laborID, String projectSubID, String startTimeStr, String endTimeStr, String volumeID) {
         StringBuilder buffer = new StringBuilder();
-        
+
         buffer.append("SELECT * FROM tbl_project_volume ");
         buffer.append("WHERE UNIX_TIMESTAMP(start_time) <= UNIX_TIMESTAMP(:endTime) ");
         buffer.append("AND UNIX_TIMESTAMP(end_time) >= UNIX_TIMESTAMP(:startTime) ");
-        buffer.append("AND project_id=:projectID AND labor_id=:laborID AND labor_sub_id=:laborSubID ");
-        
+        buffer.append("AND project_id=:projectID AND labor_id=:laborID AND project_sub_id=:projectSubID ");
+
         Map<String, Object> params = new HashMap<String, Object>();
 
         params.put("endTime", endTimeStr);
         params.put("startTime", startTimeStr);
         params.put("projectID", projectID);
         params.put("laborID", laborID);
-        params.put("laborSubID", laborSubID);
-        
-        if(!StrUtil.isEmpty(volumeID)){
+        params.put("projectSubID", projectSubID);
+
+        if (!StrUtil.isEmpty(volumeID)) {
             buffer.append(" AND id <> :id");
             params.put("id", volumeID);
         }
-        
+
         return this.findBySql(buffer.toString(), params, ProjectVolume.class);
     }
 

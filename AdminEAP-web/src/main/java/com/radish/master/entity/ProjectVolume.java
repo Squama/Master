@@ -58,9 +58,9 @@ public class ProjectVolume extends BaseEntity {
     @Column(name = "labor_id")
     private String laborID;
 
-    @Header(name = "劳务合同分项ID")
-    @Column(name = "labor_sub_id")
-    private String laborSubID;
+    @Header(name = "项目子项ID")
+    @Column(name = "project_sub_id")
+    private String projectSubID;
 
     @Header(name = "工程量")
     @Column(name = "volume")
@@ -156,7 +156,7 @@ public class ProjectVolume extends BaseEntity {
     @Header(name = "机械费支付状态")
     @Column(name = "mechStatus")
     private String mechStatus;
-    
+
     @Header(name = "包工包料支付状态")
     @Column(name = "packStatus")
     private String packStatus;
@@ -369,12 +369,12 @@ public class ProjectVolume extends BaseEntity {
         this.mechStatus = mechStatus;
     }
 
-    public String getLaborSubID() {
-        return laborSubID;
+    public String getProjectSubID() {
+        return projectSubID;
     }
 
-    public void setLaborSubID(String laborSubID) {
-        this.laborSubID = laborSubID;
+    public void setProjectSubID(String projectSubID) {
+        this.projectSubID = projectSubID;
     }
 
     public String getApplyPack() {
@@ -401,12 +401,12 @@ public class ProjectVolume extends BaseEntity {
         this.finalPack = finalPack;
     }
 
-	public String getPackStatus() {
-		return packStatus;
-	}
+    public String getPackStatus() {
+        return packStatus;
+    }
 
-	public void setPackStatus(String packStatus) {
-		this.packStatus = packStatus;
-	}
+    public void setPackStatus(String packStatus) {
+        this.packStatus = packStatus;
+    }
 
 }

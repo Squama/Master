@@ -29,10 +29,10 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-5 control-label">选择合同分项<span style="color:red">*</span></label>
+                                <label class="col-sm-5 control-label">选择合同<span style="color:red">*</span></label>
                                 <div class="col-sm-6">
-                                    <select id="laborSubID" class="form-control select2" name="laborSubID">
-                                        <option selected="selected" value="">选择一个分项</option>
+                                    <select id="laborID" class="form-control select2" name="laborID">
+                                        <option selected="selected" value="">选择一个合同</option>
                                     </select>
                                 </div>
                             </div>
@@ -40,12 +40,6 @@
                                 <label class="col-sm-5 control-label">施工班组<span style="color:red">*</span></label>
                                 <div class="col-sm-6">
                                     <input type="text" class="form-control" id="constructionTeam" name="constructionTeam" placeholder="施工班组" readonly="readonly">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-5 control-label">合同总价（元）</label>
-                                <div class="col-sm-6">
-                                    <input type="text" class="form-control" id="contractPrice" name="contractPrice" placeholder="合同总价" readonly="readonly">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -77,31 +71,23 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">选择合同<span style="color:red">*</span></label>
+                                <label class="col-sm-3 control-label">选择项目子项<span style="color:red">*</span></label>
                                 <div class="col-sm-6">
-                                    <select id="laborID" class="form-control select2" name="laborID">
-                                        <option selected="selected" value="">选择一个合同</option>
+                                    <select id="projectSubID" class="form-control select2" name="projectSubID">
+                                        <option selected="selected" value="">选择一个项目子项</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">生成时间<span style="color:red">*</span></label>
-                                <div class="input-group col-sm-6">
-                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                                    <input type="text" class="form-control" data-flag="datepicker" data-format="yyyy-mm-dd" name="createTime" id="createTime"
-                                        placeholder="生成时间" disabled="disabled">
+                                <label class="col-sm-3 control-label">合同总价（元）</label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" id="contractPrice" name="contractPrice" placeholder="合同总价" readonly="readonly">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">施工负责人<span style="color:red">*</span></label>
                                 <div class="col-sm-6">
                                     <input type="text" class="form-control" id="constructionManager" name="constructionManager" placeholder="施工负责人" readonly="readonly">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">分项总价（元）</label>
-                                <div class="col-sm-6">
-                                    <input type="text" class="form-control" id="subPrice" name="subPrice" readonly="readonly">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -281,43 +267,34 @@
                             return false;
                         }
                         ajaxPost(basePath+"/projectvolume/getlaborinfo",{laborID:laborid},function(data){
+                        	ajaxPost(basePath+"/projectvolume/checkconstworker", {userID:data.constructionManagerID,userName:data.constructionManager}, function (data, status) {
+                                if (!data.success) {
+                                    modals.error(data.message);
+                                    $('#savebtn').attr("disabled","disabled");
+                                }else{
+                                    $('#savebtn').removeAttr("disabled");
+                                }
+                            });
                         	$('#constructionTeam').val(data.constructionTeam);
                         	$('#constructionManager').val(data.constructionManager);
                         	$('#contractPrice').val(data.contractPrice);
                         });
-                        //加载分项
-                        ajaxPost(basePath+"/projectvolume/getlaborsub",{laborID:laborid},function(data){
-                            var laborSubOptions = data.message;
-                            sOptions = JSON.parse(laborSubOptions);
-                            $('#laborSubID').empty();
-                            $('#laborSubID').append('<option selected="selected" value="">选择一个分项</option>');
-                            for (var i = 0, len = sOptions.length; i < len; i++) {
-                                var option = sOptions[i];
-                                $('#laborSubID').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
-                            }
-                            $('#laborSubID').select2();
-                            $('#laborSubID').unbind("change.LaborSub");
-                            $('#laborSubID').bind("change.LaborSub", function(){
-                                laborSubID = $(this).val();
-                                if (laborSubID === "") {
-                                    return false;
-                                }
-                                ajaxPost(basePath+"/projectvolume/getlaborsubinfo",{laborSubID:laborSubID},function(data){
-                                    $('#subPrice').val(data.subPrice);
-                                    ajaxPost(basePath+"/projectvolume/checkconstworker", {userID:data.constructionWorkerID,userName:data.constructionWorkerName}, function (data, status) {
-                                        if (!data.success) {
-                                            modals.error(data.message);
-                                            $('#savebtn').attr("disabled","disabled");
-                                        }else{
-                                        	$('#savebtn').removeAttr("disabled");
-                                        }
-                                    });
-                                })
-                            });
-                        });
-                        //分项加载结束
+                        
                     });
                 });
+                //加载子项
+                ajaxPost(basePath+"/projectvolume/getprojectsub",{projectID:value},function(data){
+                    var laborSubOptions = data.message;
+                    sOptions = JSON.parse(laborSubOptions);
+                    $('#projectSubID').empty();
+                    $('#projectSubID').append('<option selected="selected" value="">选择一个项目子项</option>');
+                    for (var i = 0, len = sOptions.length; i < len; i++) {
+                        var option = sOptions[i];
+                        $('#projectSubID').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+                    }
+                    $('#projectSubID').select2();
+                });
+                //子项加载结束
             });
         }
         
@@ -325,7 +302,7 @@
         if(id!="0"){
             ajaxPost(basePath+"/projectvolume/get",{id:id},function(data){
                 form.initFormData(data);
-                $('#laborSubID').val(data.laborSubID).trigger("change");
+                $('#laborID').val(data.laborID).trigger("change");
             })
         }
         

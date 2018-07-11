@@ -71,6 +71,38 @@ public class Labor extends BaseEntity {
     @Column(name = "contractor")
     private String contractor;
 
+    @Header(name = "机械费")
+    @Column(name = "mech_price")
+    private String mechPrice;
+
+    @Header(name = "人工费")
+    @Column(name = "labour_price")
+    private String labourPrice;
+
+    @Header(name = "材料费")
+    @Column(name = "mat_price")
+    private String matPrice;
+
+    @Header(name = "包工包料费用")
+    @Column(name = "package_price")
+    private String packagePrice;
+
+    @Header(name = "机械费消耗")
+    @Column(name = "mech_consume")
+    private String mechConsume;
+
+    @Header(name = "人工费消耗")
+    @Column(name = "labour_consume")
+    private String labourConsume;
+
+    @Header(name = "材料费消耗")
+    @Column(name = "mat_consume")
+    private String matConsume;
+
+    @Header(name = "包工包料费用消耗")
+    @Column(name = "package_consume")
+    private String packageConsume;
+
     public String getProjectID() {
         return projectID;
     }
@@ -157,6 +189,70 @@ public class Labor extends BaseEntity {
 
     public void setContractor(String contractor) {
         this.contractor = contractor;
+    }
+
+    public String getMechPrice() {
+        return mechPrice;
+    }
+
+    public void setMechPrice(String mechPrice) {
+        this.mechPrice = mechPrice;
+    }
+
+    public String getLabourPrice() {
+        return labourPrice;
+    }
+
+    public void setLabourPrice(String labourPrice) {
+        this.labourPrice = labourPrice;
+    }
+
+    public String getMatPrice() {
+        return matPrice;
+    }
+
+    public void setMatPrice(String matPrice) {
+        this.matPrice = matPrice;
+    }
+
+    public String getPackagePrice() {
+        return packagePrice;
+    }
+
+    public void setPackagePrice(String packagePrice) {
+        this.packagePrice = packagePrice;
+    }
+
+    public String getMechConsume() {
+        return mechConsume;
+    }
+
+    public void setMechConsume(String mechConsume) {
+        this.mechConsume = mechConsume;
+    }
+
+    public String getLabourConsume() {
+        return labourConsume;
+    }
+
+    public void setLabourConsume(String labourConsume) {
+        this.labourConsume = labourConsume;
+    }
+
+    public String getMatConsume() {
+        return matConsume;
+    }
+
+    public void setMatConsume(String matConsume) {
+        this.matConsume = matConsume;
+    }
+
+    public String getPackageConsume() {
+        return packageConsume;
+    }
+
+    public void setPackageConsume(String packageConsume) {
+        this.packageConsume = packageConsume;
     }
 
 }

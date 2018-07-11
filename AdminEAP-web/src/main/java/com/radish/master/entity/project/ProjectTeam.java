@@ -43,6 +43,9 @@ public class ProjectTeam extends BaseEntity {
     @Column(name = "team_name")
     private String teamName;
     
+    /**
+     * 10-普通班组，20-失效班组，30-管理人员班组
+     */
     @Header(name = "状态")
     @Column(name = "status")
     private String status;

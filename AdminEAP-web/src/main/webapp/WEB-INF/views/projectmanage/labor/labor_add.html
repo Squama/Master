@@ -1,3 +1,4 @@
+<script src="${basePath}/resources/common/js/calculate.js"></script>
 <section class="content-header">
     <h1>
         <span>劳务合同</span>
@@ -10,13 +11,11 @@
     </ol>
 </section>
 
-    
-
 <section class="content">
     <div class="row">
         <div class="col-xs-12">
             <div class="box box-info">
-                <div id="stepbar" class="add stepbar" style="margin-left: 25%;">
+                <div id="stepbar" class="add stepbar">
                     <div>
                         <div class="step">
                             <span class="tip">1</span>
@@ -27,17 +26,11 @@
                         <div class="step stepundone">
                             <span class="tip">2</span>
                         </div>
-                        <div class="stepinfo undoneinfo">录入合同分项</div>
-                    </div>
-                    <div>
-                        <div class="step stepundone">
-                            <span class="tip">3</span>
-                        </div>
                         <div class="stepinfo undoneinfo">上传劳务合同</div>
                     </div>
                     <div>
                         <div class="step stepundone">
-                            <span class="tip">4</span>
+                            <span class="tip">3</span>
                         </div>
                         <div class="stepinfo undoneinfo">完成</div>
                     </div>
@@ -45,6 +38,7 @@
                 <form id="labor_form" name="project_form" class="form-horizontal">
                     <input type="hidden" name="projectName" id="projectName">
                     <input type="hidden" name="constructionTeam" id="constructionTeam">
+                    <input type="hidden" name="constructionManager" id="constructionManager">
                     <div class="box-body">
                         <div class="col-md-12">
                             <div class="form-group">
@@ -77,21 +71,47 @@
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">施工负责人<span style="color:red">*</span></label>
-                                <div class="col-sm-5">
-                                    <input type="hidden" id="constructionManagerID" name="constructionManagerID"">
-                                    <input type="text" class="form-control" id="constructionManager" name="constructionManager" readonly="readonly" placeholder="请选择负责人">
+                                <div class="col-sm-6">
+                                    <select id="constructionManagerID" class="form-control select2" name="constructionManagerID">
+                                            <option selected="selected" value="">从项目管理人员中选择一个负责人</option>
+                                    </select>
                                 </div>
-                                <div class="col-sm-2">
-                                    <button type="button" class="btn btn-primary" data-btn-type="selectManager">
-                                         <i class="fa fa-user"></i>&nbsp;选择
-                                    </button>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">机械费（元）<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control calculate" id="mechPrice" name="mechPrice" placeholder="机械费" value="0">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">人工费（元）<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control calculate" id="labourPrice" name="labourPrice" placeholder="人工费" value="0">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">材料费（元）<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control calculate" id="matPrice" name="matPrice" placeholder="材料费" value="0">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">包工包料（元）<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control calculate" id="packagePrice" name="packagePrice" placeholder="包工包料" value="0">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">合计（元）<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control calculate" id="contractPrice" name="contractPrice" placeholder="合计" value="0" readonly="readonly">
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="box-footer text-center">
                         <button type="button" class="btn btn-default" data-btn-type="prev">返回</button>
-                        <button type="submit" class="btn btn-primary ml10" data-btn-type="next">编辑合同分项</button>
+                        <button type="submit" class="btn btn-primary ml10" data-btn-type="next">上传劳务合同</button>
                         <button type="submit" class="btn btn-success ml10" data-btn-type="save">保存并返回</button>
                     </div>
                 </form>
@@ -107,15 +127,6 @@
     }
     var laborCtrl = {
         initButtonEvent: function () {
-            $("button[data-btn-type='selectManager']").click(function () {
-                var ids = $("#projectManager").val() || 0;
-                modals.openWin({
-                    winId: 'userSelectWin',
-                    url: basePath + '/user/select/0/' + ids + '/setProjectManager',
-                    width: '850px',
-                    title: "选择项目负责人"
-                })
-            });
             $("button[data-btn-type='prev']").click(function () {
                 loadPage(basePath+"/labor/list");
             });
@@ -139,7 +150,7 @@
                     if (data.success) {
                         switch (action) {
                             case "next":
-                                loadPage(basePath+"/labor/sub", undefined, data.data);
+                                loadPage(basePath+"/labor/uploadfile", undefined, data.data);
                                 break;
                             case "save":
                                 loadPage(basePath+"/labor/list");
@@ -171,9 +182,29 @@
                         notEmpty: {message: '施工班组不能为空'}
                     }
                 },
-                "constructionManager": {
+                "constructionManagerID": {
                     validators: {
-                        notEmpty: {message: '项目负责人不能为空'}
+                        notEmpty: {message: '施工负责人不能为空'}
+                    }
+                },
+                "mechPrice": {
+                    validators: {
+                        notEmpty: {message: '机械费不能为空'}
+                    }
+                },
+                "labourPrice": {
+                    validators: {
+                        notEmpty: {message: '人工费不能为空'}
+                    }
+                },
+                "matPrice": {
+                    validators: {
+                        notEmpty: {message: '材料费不能为空'}
+                    }
+                },
+                "packagePrice": {
+                    validators: {
+                        notEmpty: {message: '包工包料不能为空'}
                     }
                 }
             }
@@ -199,7 +230,7 @@
                 	name = $("#projectID").find("option:selected").text();
                 }
                 $('#projectName').val(name);
-                
+                //加载班组
                 ajaxPost(basePath+"/labor/getteamop",{projectID:value},function(data){
                     var teamOptions = data.message;
                     tOptions = JSON.parse(teamOptions);
@@ -224,14 +255,45 @@
                         }
                         $('#constructionTeam').val(name);
                     });
-                })
+                });
+                //加载项目管理人员，供选择施工负责人
+                ajaxPost(basePath+"/labor/getmanagerop",{projectID:value},function(data){
+                    var managerOptions = data.message;
+                    mOptions = JSON.parse(managerOptions);
+                    $('#constructionManagerID').empty();
+                    $('#constructionManagerID').append('<option selected="selected" value="">从项目管理人员中选择一个负责人</option>');
+                    for (var i = 0, len = mOptions.length; i < len; i++) {
+                        var mOption = mOptions[i];
+                        $('#constructionManagerID').append("<option value=\"" + mOption.value + "\">" + mOption.data + "</option>");
+                    }
+                    
+                    $('#constructionManagerID').select2();
+                    
+                    $('#constructionManagerID').bind("change", function(){
+                        var value = $(this).val();
+                        if (value === "") {
+                            return false;
+                        }
+                        
+                        var name = "";
+                        if ($("#constructionManagerID").prop('selectedIndex') > 0) {
+                            name = $("#constructionManagerID").find("option:selected").text();
+                        }
+                        $('#constructionManager').val(name);
+                    });
+                });
             });
         }
+        
+        $(".calculate").on("focusout", function(){
+            var mech = parseFloat($('#mechPrice').val());
+            var labour = parseFloat($('#labourPrice').val());
+            var mat = parseFloat($('#matPrice').val());
+            var pack = parseFloat($('#packagePrice').val());
+            
+            var sub = accAddition(accAddition(accAddition(mech, labour), mat), pack);
+            $('#contractPrice').val(sub);
+        });
     });
     
-    function setProjectManager(id, name){
-        $("#constructionManagerID").val(id);
-        $("#constructionManager").val(name);
-    }
-
 </script>

@@ -178,6 +178,14 @@
                     	}
                     });
                 });
+            },
+            detail: function (laborID){
+                modals.openWin({
+                    winId:winId,
+                    title:'子项',
+                    width:'1100px',
+                    url:basePath+"/project/detail/" + laborID
+                   });
             }
     }
     
@@ -214,7 +222,10 @@
     }
     
     function fnRenderDetail(value) {
-        return "<a href='javascript:void(0)' onclick='projectQueryObject.showDetail(\"" + value + "\")'>详情</a>";
+    	var oper = "";
+        oper += "<a href='javascript:void(0)' onclick='projectQueryObject.showDetail(\"" + value + "\")'>详情</a>";
+        oper += "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='projectQueryObject.detail(\"" + value + "\")'>查看子项</a>";
+        return oper;
     }
     
     function setTitle(title){

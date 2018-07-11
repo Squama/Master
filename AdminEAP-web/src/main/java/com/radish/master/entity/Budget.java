@@ -31,21 +31,13 @@ public class Budget extends BaseEntity {
     @Column(name = "project_name")
     private String projectName;
 
-    @Header(name = "所属合同")
-    @Column(name = "labor_id")
-    private String laborID;
+    @Header(name = "项目子项")
+    @Column(name = "project_sub_id")
+    private String projectSubID;
 
-    @Header(name = "所属合同名称")
-    @Column(name = "labor_name")
-    private String laborName;
-
-    @Header(name = "所属合同分项")
-    @Column(name = "labor_sub_id")
-    private String laborSubID;
-
-    @Header(name = "分项名称")
-    @Column(name = "labor_sub_name")
-    private String laborSubName;
+    @Header(name = "项目子项名称")
+    @Column(name = "project_sub_name")
+    private String projectSubName;
 
     @Header(name = "预算总价")
     @Column(name = "budget_amount")
@@ -190,36 +182,20 @@ public class Budget extends BaseEntity {
         this.projectName = projectName;
     }
 
-    public String getLaborID() {
-        return laborID;
+    public String getProjectSubID() {
+        return projectSubID;
     }
 
-    public void setLaborID(String laborID) {
-        this.laborID = laborID;
+    public void setProjectSubID(String projectSubID) {
+        this.projectSubID = projectSubID;
     }
 
-    public String getLaborName() {
-        return laborName;
+    public String getProjectSubName() {
+        return projectSubName;
     }
 
-    public void setLaborName(String laborName) {
-        this.laborName = laborName;
-    }
-
-    public String getLaborSubID() {
-        return laborSubID;
-    }
-
-    public void setLaborSubID(String laborSubID) {
-        this.laborSubID = laborSubID;
-    }
-
-    public String getLaborSubName() {
-        return laborSubName;
-    }
-
-    public void setLaborSubName(String laborSubName) {
-        this.laborSubName = laborSubName;
+    public void setProjectSubName(String projectSubName) {
+        this.projectSubName = projectSubName;
     }
 
 }

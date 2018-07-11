@@ -44,6 +44,7 @@ import com.cnpc.framework.utils.SecurityUtil;
 import com.cnpc.framework.utils.StrUtil;
 import com.radish.master.entity.Project;
 import com.radish.master.entity.ProjectFileItem;
+import com.radish.master.entity.project.ProjectSub;
 import com.radish.master.entity.project.ProjectTeam;
 import com.radish.master.pojo.ProjectDetailVO;
 import com.radish.master.service.ProjectService;
@@ -139,6 +140,12 @@ public class ProjectController {
         return projectService.getManagerName(id);
     }
     
+    @RequestMapping(value="/detail/{id}",method = RequestMethod.GET)
+    public String detail(@PathVariable("id") String id,HttpServletRequest request) {
+        request.setAttribute("id", id);
+        return "projectmanage/project/project_sub_detail";
+    }
+    
     @RequestMapping(value="/save")
     @ResponseBody
     public Result save(Project project, HttpServletRequest request){
@@ -168,6 +175,33 @@ public class ProjectController {
         Map<String, String> map = new HashMap<String, String>();
         map.put("id", project.getId());
         return new Result(true, map);
+    }
+    
+    @RequestMapping(value="/savesub")
+    @ResponseBody
+    public Result saveSub(ProjectSub projectSub, HttpServletRequest request){
+        projectSub.setCreateDateTime(new Date());
+        try {
+            projectService.save(projectSub);
+        } catch (Exception e) {
+            return new Result(false);
+        }
+        
+        return new Result(true);
+    }
+    
+    @RequestMapping(value = "/deletesub/{id}", method = RequestMethod.POST)
+    @ResponseBody
+    public Result deleteSub(@PathVariable("id") String id) {
+
+        ProjectSub detail = projectService.get(ProjectSub.class, id);
+        try {
+            projectService.delete(detail);
+        } catch (Exception e) {
+            return new Result(false);
+        }
+        
+        return new Result(true);
     }
     
     @RefreshCSRFToken

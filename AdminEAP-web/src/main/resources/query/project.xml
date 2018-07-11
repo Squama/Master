@@ -16,6 +16,7 @@
         <column key="projectName" header="项目名称" classType="String" allowSort="true" width="150"/>
         <column key="projectManager" header="项目负责人" classType="String" allowSort="true" width="150"/>
         <column key="status" header="项目状态" allowSort="true" width="150" render="10=新建,20=待编辑,30=待编辑"/>
+        <column key="id" header="操作" width="100" fnRender="fnRenderDetail"/>
     </query>
     
     <query id="project_query_list" key="id" tableName="项目查询列表" widthType="px">
@@ -50,6 +51,13 @@
         <column key="projectManager" header="项目负责人" classType="String" allowSort="true" width="150"/>
         <column key="status" header="项目状态" allowSort="true" width="150" render="10=新建,20=待编辑,30=待编辑"/>
         <column key="id" header="查看文件" width="100" fnRender="fnRenderDetail"/>
+    </query>
+
+    <query id="project_sub_list" key="id" tableName="劳务合同分项列表" className="com.radish.master.entity.project.ProjectSub" widthType="px">
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="subName" header="子项名称" classType="String" />
+        <column key="id" header="操作" width="80" fnRender="fnRenderSub"/>
     </query>
 
 </queryContext>

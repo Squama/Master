@@ -16,8 +16,6 @@
     </ol>
 </section>
 
-    
-
 <section class="content" id="projectaddstep2">
     <div class="row">
         <div class="col-xs-12">
@@ -29,8 +27,7 @@
                 </div>
                 <form id="import_form" name="project_form" class="form-horizontal">
                     <input type="hidden" name="projectName" id="projectName">
-                    <input type="hidden" name="laborName" id="laborName">
-                    <input type="hidden" name="laborSubName" id="laborSubName">
+                    <input type="hidden" name="projectSubName" id="projectSubName">
                     <div class="box-body">
                         <div class="col-md-6">
                             <div class="form-group">
@@ -42,17 +39,11 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">选择合同<span style="color:red">*</span></label>
+                                <label class="col-sm-3 control-label">选择子项<span style="color:red">*</span></label>
                                 <div class="col-sm-8">
-                                    <select id="laborID" class="form-control select2" name="laborID">
-                                        <option selected="selected" value="">选择一个合同</option>
+                                    <select id="projectSubID" class="form-control select2" name="projectSubID">
+                                        <option selected="selected" value="">选择一个项目子项</option>
                                     </select>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">预算名称<span style="color:red">*</span></label>
-                                <div class="col-sm-8">
-                                    <input type="text" class="form-control" name="budgetName" id="budgetName">
                                 </div>
                             </div>
                         </div>
@@ -72,21 +63,19 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">选择分项<span style="color:red">*</span></label>
+                                <label class="col-sm-3 control-label">预算名称<span style="color:red">*</span></label>
                                 <div class="col-sm-8">
-                                    <select id="laborSubID" class="form-control select2" name="laborSubID">
-                                        <option selected="selected" value="">选择一个分项</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">预算编号（生成）<span style="color:red">*</span></label>
-                                <div class="col-sm-8">
-                                    <input type="text" class="form-control" name="budgetNo" id="budgetNo" readonly="readonly">
+                                    <input type="text" class="form-control" name="budgetName" id="budgetName">
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">预算编号（生成）<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" name="budgetNo" id="budgetNo" readonly="readonly">
+                                </div>
+                            </div>
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">预算文件<span style="color:red">*</span></label>
                                 <div class="col-sm-6">
@@ -183,9 +172,9 @@
                         notEmpty: {message: '预算类型不能为空'}
                     }
                 },
-                "laborID": {
+                "projectSubID": {
                     validators: {
-                        notEmpty: {message: '所属合同不能为空'}
+                        notEmpty: {message: '项目子项不能为空'}
                     }
                 },
                 "budgetName": {
@@ -201,11 +190,6 @@
                             },
                             message:'该名称已被使用'
                         }
-                    }
-                },
-                "laborSubID": {
-                    validators: {
-                        notEmpty: {message: '所属分项不能为空'}
                     }
                 }
             }
@@ -231,56 +215,28 @@
                 }
                 $('#projectName').val(name);
                 
-                ajaxPost(basePath+"/projectvolume/getlabor",{projectID:value},function(data){
-                    var laborOptions = data.message;
-                    lOptions = JSON.parse(laborOptions);
-                    $('#laborID').empty();
-                    $('#laborID').append('<option selected="selected" value="">选择一个合同</option>');
-                    for (var i = 0, len = lOptions.length; i < len; i++) {
-                        var lOption = lOptions[i];
-                        $('#laborID').append("<option value=\"" + lOption.value + "\">" + lOption.data + "</option>");
+                ajaxPost(basePath+"/projectvolume/getprojectsub",{projectID:value},function(data){
+                    var subOptions = data.message;
+                    sOptions = JSON.parse(subOptions);
+                    $('#projectSubID').empty();
+                    $('#projectSubID').append('<option selected="selected" value="">选择一个项目子项</option>');
+                    for (var i = 0, len = sOptions.length; i < len; i++) {
+                        var sOption = sOptions[i];
+                        $('#projectSubID').append("<option value=\"" + sOption.value + "\">" + sOption.data + "</option>");
                     }
-                    $('#laborID').select2();
-                    $('#laborID').unbind("change.Labor");
-                    $('#laborID').bind("change.Labor", function(){
-                        laborid = $(this).val();
-                        if (laborid === "") {
+                    $('#projectSubID').select2();
+                    $('#projectSubID').unbind("change.ProjectSub");
+                    $('#projectSubID').bind("change.ProjectSub", function(){
+                        subid = $(this).val();
+                        if (subid === "") {
                             return false;
                         }
                         
-                        var laborName = "";
-                        if ($("#laborID").prop('selectedIndex') > 0) {
-                        	laborName = $("#laborID").find("option:selected").text();
+                        var subName = "";
+                        if ($("#projectSubID").prop('selectedIndex') > 0) {
+                        	laborName = $("#projectSubID").find("option:selected").text();
                         }
-                        $('#laborName').val(laborName);
-                        
-                        //加载分项
-                        ajaxPost(basePath+"/projectvolume/getlaborsub",{laborID:laborid},function(data){
-                            var laborSubOptions = data.message;
-                            sOptions = JSON.parse(laborSubOptions);
-                            $('#laborSubID').empty();
-                            $('#laborSubID').append('<option selected="selected" value="">选择一个分项</option>');
-                            for (var i = 0, len = sOptions.length; i < len; i++) {
-                                var option = sOptions[i];
-                                $('#laborSubID').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
-                            }
-                            $('#laborSubID').select2();
-                            $('#laborSubID').unbind("change.LaborSub");
-                            $('#laborSubID').bind("change.LaborSub", function(){
-                                laborSubID = $(this).val();
-                                
-                                if (laborSubID === "") {
-                                    return false;
-                                }
-                                
-                                var laborSubName = "";
-                                if ($("#laborSubID").prop('selectedIndex') > 0) {
-                                	laborSubName = $("#laborSubID").find("option:selected").text();
-                                }
-                                $('#laborSubName').val(laborSubName);
-                            });
-                        });
-                        //分项加载结束
+                        $('#projectSubName').val(subName);
                     });
                 });
             });

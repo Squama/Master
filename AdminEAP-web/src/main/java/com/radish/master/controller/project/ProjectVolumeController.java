@@ -148,6 +148,12 @@ public class ProjectVolumeController {
         return new Result(true, JSONArray.toJSONString(projectService.getLaborSubComboboxByLabor(laborID)));
     }
     
+    @RequestMapping(value="/getprojectsub")
+    @ResponseBody
+    public Result getProjectSub(String projectID){
+        return new Result(true, JSONArray.toJSONString(projectService.getProjectSubCombobox(projectID)));
+    }
+    
     @RequestMapping(value="/getpingxing")
     @ResponseBody
     public Result getPX(String id){
@@ -243,7 +249,7 @@ public class ProjectVolumeController {
         String endTime = String.valueOf(calendar.getTimeInMillis());*/
         
         
-        List<ProjectVolume> list = projectService.checkTimePeriod(projectVolume.getProjectID(), projectVolume.getLaborID(), projectVolume.getLaborSubID(), startTime, endTime, projectVolume.getId());
+        List<ProjectVolume> list = projectService.checkTimePeriod(projectVolume.getProjectID(), projectVolume.getLaborID(), projectVolume.getProjectSubID(), startTime, endTime, projectVolume.getId());
         if(!list.isEmpty()){
             return new Result(false, "上报时间段不可重叠");
         }

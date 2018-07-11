@@ -64,11 +64,15 @@ public interface ProjectService extends BaseService{
     
     List<Options> getLaborSubComboboxByLabor(String laborID);
     
+    List<Options> getProjectSubCombobox(String projectID);
+    
     public Result startVolumeFlow(ProjectVolume projectVolume, String processDefinitionKey);
     
     public Result startLaborFlow(Labor labor, String processDefinitionKey);
     
     List<Options> getTeamComboboxByProject(String projectID);
+    
+    List<Options> getTeamManagerComboboxByProject(String projectID);
     
     List<Options> getMemberTeamComboboxByProject(String projectID);
     

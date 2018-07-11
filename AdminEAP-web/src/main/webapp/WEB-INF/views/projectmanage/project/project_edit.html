@@ -49,7 +49,7 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">项目名称<span style="color:red">*</span></label>
                                 <div class="col-sm-6">
-                                    <input type="text" class="form-control" id="projectName" name="projectName" placeholder="项目名称">
+                                    <input type="text" class="form-control" id="projectName" name="projectName" placeholder="项目名称" disabled="disabled">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -79,12 +79,38 @@
                     </div>
                 </form>
             </div>
+            <div class="box box-success" id="projectAddSub">
+                <div class="box-header with-border">
+                    <span>
+                        <i class="fa fa-files-o">子项列表</i>
+                    </span>
+                </div>
+                <form id="project-sub-form" name="project-sub-form" class="form-horizontal">
+                    <div class="dataTables_filter" style="text-align:center;margin-top:5px;">
+                       <input type="hidden" name="projectID" id="subFormProjectID">
+                       <input type="text" placeholder="请输入子项名称" title="子项名称" name="subName" class="form-control" id="subName" >
+                       <div class="btn-group">
+                           <button type="submit" class="btn btn-primary" data-btn-type="savetx">添加子项</button>
+                       </div>
+                    </div>
+                </form>
+                <div class="dataTables_filter" id="searchDivSub" style="display:none;">
+                   <input type="search" name="projectID" id="projectID" class="form-control" operator="eq" style="display:none;" value="1">
+                </div>
+                <div class="box-body">
+                    <!-- 内容 -->
+                    <table id="project_sub_table" class="table table-bordered table-striped table-hover">
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 </section>
 <script>
-    var labform;
+    var labform, projectSubForm = $("#project-sub-form").form({baseEntity:false});
     var id = "${id?default(0)}";
+    $('#subFormProjectID').val(id);
+    $('#projectID').val(id);
     var projectEditCtrl = {
         initButtonEvent: function () {
             $("button[data-btn-type='selectManager']").click(function () {
@@ -102,6 +128,13 @@
         }
     }
     $(function () {
+    	projectSubTable = new CommonTable("project_sub_table", "project_sub_list", "searchDiv",{
+            "ordering" : false,
+            "lengthChange": false,
+            "displayLength": 20,
+            "scrollY": "300px",
+            "scrollCollapse": true
+        });
         //初始化表单 
         labform = $("#project_form").form({baseEntity:false});
         //数据校验
@@ -148,6 +181,39 @@
                 }
             }
         });
+        
+        $("#project-sub-form").bootstrapValidator({
+            message: '请输入有效值',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            submitHandler: function () {
+                var action = $(this).attr('$submitButton').attr('data-btn-type');
+                var formData = projectSubForm.getFormSimpleData();
+                switch (action) {
+                    case "savetx":
+                        ajaxPost(basePath + '/project/savesub', formData, function (data) {
+                            if (data.success) {
+                                projectSubTable.table.page('first').draw(false);
+                            } else {
+                               modals.error("添加失败，请检查子项名称是否重复！");
+                            }
+                        });
+                        break;
+                }
+                
+            },
+            fields: {
+                "subName": {
+                    validators: {
+                        notEmpty: {message: '子项名称不能为空'}
+                    }
+                }
+            }
+        });
+        
         //初始化控件
         labform.initComponent();
         //编辑回填
@@ -166,6 +232,11 @@
     function setProjectManager(id, name){
         $("#projectManager").val(id);
         $("#projectManagerName").val(name);
+    }
+    
+    function fnRenderSub(value, type, rowObj){
+    	var oper = "";
+        return oper;
     }
 
 </script>

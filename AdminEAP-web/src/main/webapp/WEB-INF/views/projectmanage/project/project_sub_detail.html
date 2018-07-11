@@ -1,0 +1,35 @@
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box box-success">
+                <div class="box-header with-border">
+                    <span>
+                        <i class="fa fa-files-o">项目子项列表</i>
+                    </span>
+                </div>
+                <div class="dataTables_filter" id="searchDivSub" style="display:none;">
+                   <input type="search" name="projectID" id="projectID" class="form-control" operator="eq" style="display:none;" value="1">
+                </div>
+                <div class="box-body">
+                    <!-- 内容 -->
+                    <table id="project_sub_table" class="table table-bordered table-striped table-hover">
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+    var projectSubTable;
+    var id = "${id}";
+    $('#projectID', $('#searchDivSub')).val(id);
+    $(function () {
+    	projectSubTable = new CommonTable("project_sub_table", "project_sub_list", "searchDivSub", null);
+    });
+   
+    function fnRenderSub(value, type, rowObj){
+        var oper = "";
+        return oper;
+    }
+    
+</script>
