@@ -54,6 +54,8 @@ public interface BudgetService extends BaseService {
     
     BudgetTx checkPack(String budgetNo);
     
+    Materiel getEstimateImportMat(String name, String standard, String unit);
+    
     Map<String, Materiel> getMatMap();
     
     public Result startEstimateFlow(Budget budget, String processDefinitionKey);

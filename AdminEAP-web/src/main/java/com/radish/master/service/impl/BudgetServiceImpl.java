@@ -454,5 +454,26 @@ public class BudgetServiceImpl extends BaseServiceImpl implements BudgetService 
         params.put("budgetTxID", budgetTxID);
         return this.find("from BudgetMech where budgetTxID = :budgetTxID", params);
     }
+
+    @Override
+    public Materiel getEstimateImportMat(String name, String standard, String unit) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("name", name);
+        params.put("standard", standard);
+        Materiel mat = this.get("from Materiel where mat_name=:name AND mat_standard=:standard", params);
+        if(mat == null){
+            mat = new Materiel();
+            mat.setCreate_time(new Date());
+            mat.setMat_name(name);
+            mat.setMat_number("CESUAN_DAORU"+GUID.getTxNo16());
+            mat.setMat_standard(standard);
+            mat.setUnit(unit);
+            mat.setParent_ID("1231233");
+            mat.setIsValid("1");
+            
+            this.save(mat);
+        }
+        return mat;
+    }
     
 }

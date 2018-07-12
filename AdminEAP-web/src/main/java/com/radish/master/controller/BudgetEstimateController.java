@@ -3,7 +3,10 @@
  */
 package com.radish.master.controller;
 
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
@@ -14,13 +17,22 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFDateUtil;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.fastjson.JSONArray;
 import com.cnpc.framework.annotation.VerifyCSRFToken;
@@ -39,6 +51,7 @@ import com.radish.master.entity.Materiel;
 import com.radish.master.entity.Project;
 import com.radish.master.entity.project.BudgetLabour;
 import com.radish.master.entity.project.BudgetMech;
+import com.radish.master.entity.wechat.Attendance;
 import com.radish.master.pojo.RowEdit;
 import com.radish.master.service.BudgetService;
 import com.radish.master.system.GUID;
@@ -62,6 +75,9 @@ public class BudgetEstimateController {
     private BudgetService budgetService;
     @Resource
 	private BaseService baseService;
+    
+    private final static String XLS = "xls";
+    private final static String XLSX = "xlsx";
     
     @RequestMapping(value="/list",method = RequestMethod.GET)
     public String list(){
@@ -125,6 +141,163 @@ public class BudgetEstimateController {
         budgetService.batchSave(txList);
         
         return new Result(true);
+    }
+    
+    @RequestMapping(method = RequestMethod.POST, value = "/doimport")
+    @ResponseBody
+    public Result importEstimate(@RequestParam(value = "file", required = false) MultipartFile file, String budgetTxID, String projectID, String budgetNo) throws IOException{
+        
+        Workbook workbook = null;
+        try{
+            String fileName = file.getOriginalFilename();
+            
+            if(fileName.endsWith(XLS)){
+                workbook = new HSSFWorkbook(file.getInputStream());
+            }else if(fileName.endsWith(XLSX)){
+                workbook = new XSSFWorkbook(file.getInputStream());
+            }else{
+                throw new CodeException("文件不是excel格式");
+            }
+            
+            Sheet sheet = workbook.getSheetAt(0);
+            
+            int rows = sheet.getLastRowNum();
+            
+            if(rows == 0){
+                throw new CodeException("表格中无数据");
+            }  
+            
+            List<BudgetEstimate> matList = new ArrayList<BudgetEstimate>();
+            List<BudgetLabour> labourList = new ArrayList<BudgetLabour>();
+            List<BudgetMech> mechList = new ArrayList<BudgetMech>();
+            
+            int startLine = 0;
+            //人工
+            for(int i = 1; i<=rows; i++){
+                Row row = sheet.getRow(i);
+                
+                if(row != null){
+                    if( i == 1 && !"一".equals(getCellValue(row.getCell(0)))){
+                        throw new CodeException("表格中人工费第一行数据格式不正确");
+                    }
+                    if("小计".equals(getCellValue(row.getCell(1)))){
+                        startLine = i + 1;
+                        break;
+                    }
+                    
+                    BudgetLabour bi = new BudgetLabour();
+                    
+                    bi.setBudgetTxID(budgetTxID);
+                    bi.setBudgetNo(budgetNo);
+                    bi.setProjectID(projectID);
+                    
+                    String labourName = getCellValue(row.getCell(1));
+                    bi.setLabourName(labourName);
+                    
+                    String labourQuantity = getCellValue(row.getCell(4));
+                    bi.setLabourQuantity(labourQuantity);
+                    
+                    String forecastPrice = getCellValue(row.getCell(5));
+                    bi.setForecastPrice(forecastPrice);
+                    
+                    
+                    labourList.add(bi);
+                }
+            }
+            
+            //材料
+            for(int i = startLine; i<=rows; i++){
+                Row row = sheet.getRow(i);
+                
+                if(row != null){
+                    if( i == startLine && !"二".equals(getCellValue(row.getCell(0)))){
+                        throw new CodeException("表格中材料费第一行数据格式不正确");
+                    }
+                    if("小计".equals(getCellValue(row.getCell(1)))){
+                        if("配比材料".equals(getCellValue(sheet.getRow(i + 1).getCell(1)))){
+                            i = i + 1;
+                            continue;
+                        }else if("机械".equals(getCellValue(sheet.getRow(i + 1).getCell(1)))){
+                            startLine = i + 1;
+                            break;
+                        }
+                    }
+                    
+                    BudgetEstimate bi = new BudgetEstimate();
+                    
+                    bi.setBudgetTxID(budgetTxID);
+                    bi.setBudgetNo(budgetNo);
+                    bi.setProjectID(projectID);
+                    
+                    String name = getCellValue(row.getCell(1));
+                    String standard = getCellValue(row.getCell(2));
+                    String unit = getCellValue(row.getCell(3));
+                    Materiel mat = budgetService.getEstimateImportMat(name, standard, unit);
+                    
+                    bi.setMatName(mat.getMat_name());
+                    bi.setMatNumber(mat.getMat_number());
+                    bi.setMatStandard(mat.getMat_standard());
+                    bi.setUnit(mat.getUnit());
+                    
+                    String quantity = getCellValue(row.getCell(4));
+                    bi.setQuantity(quantity);
+                    
+                    String budgetPrice = getCellValue(row.getCell(5));
+                    bi.setBudgetPrice(budgetPrice);
+                    
+                    
+                    matList.add(bi);
+                }
+            }
+            
+            //机械
+            for(int i = startLine; i<=rows; i++){
+                Row row = sheet.getRow(i);
+                
+                if(row != null){
+                    if( i == startLine && !"四".equals(getCellValue(row.getCell(0)))){
+                        throw new CodeException("表格中机械费第一行数据格式不正确");
+                    }
+                    if("小计".equals(getCellValue(row.getCell(1)))){
+                        startLine = i + 1;
+                        break;
+                    }
+                    
+                    BudgetMech bi = new BudgetMech();
+                    
+                    bi.setBudgetTxID(budgetTxID);
+                    bi.setBudgetNo(budgetNo);
+                    bi.setProjectID(projectID);
+                    
+                    String mechName = getCellValue(row.getCell(1));
+                    bi.setMechName(mechName);
+                    
+                    String mechQuantity = getCellValue(row.getCell(4));
+                    bi.setMechQuantity(mechQuantity);
+                    
+                    String mechPrice = getCellValue(row.getCell(5));
+                    bi.setMechPrice(mechPrice);
+                    
+                    
+                    mechList.add(bi);
+                }
+            }
+            
+            baseService.batchSave(labourList);
+            baseService.batchSave(matList);
+            baseService.batchSave(mechList);
+            
+        }catch (CodeException ce) {
+            return new Result(false,ce.getMessage());
+        }catch (Exception e) {
+            return new Result(false,"导入失败");
+        }finally{
+            if(workbook != null){
+                workbook.close();
+            }
+        }
+        
+        return new Result(true,file.getOriginalFilename());
     }
     
     @RequestMapping(value="/tomerge",method = RequestMethod.GET)
@@ -532,5 +705,45 @@ public class BudgetEstimateController {
         budgetService.update(bt);
         
         return new Result(true);
+    }
+    
+    private String getCellValue(Cell cell){
+        String value = "";
+        
+        if(cell != null){
+            switch(cell.getCellType()){
+                case HSSFCell.CELL_TYPE_NUMERIC:
+                    if(HSSFDateUtil.isCellDateFormatted(cell)){
+                        Date date = cell.getDateCellValue();
+                        if(date != null){
+                            value = new SimpleDateFormat("yyyy-MM-dd").format(date);
+                        }else{
+                            value = "";
+                        }
+                    }else{
+                        value = new DecimalFormat("##.##").format(cell.getNumericCellValue());
+                    }
+                    break;
+                case HSSFCell.CELL_TYPE_STRING:
+                    value = cell.getStringCellValue();
+                    break;
+                case HSSFCell.CELL_TYPE_BOOLEAN:
+                    value = cell.getBooleanCellValue() + "";
+                    break;
+                case HSSFCell.CELL_TYPE_FORMULA:
+                    value = cell.getCellFormula() + "";
+                    break;
+                case HSSFCell.CELL_TYPE_BLANK:
+                    value = "";
+                    break;
+                case HSSFCell.CELL_TYPE_ERROR:
+                    value = "非法字符";
+                    break;
+                default:
+                    value = "未知类型";
+                    break;
+            }
+        }
+        return value.trim();
     }
 }

@@ -38,6 +38,12 @@ public class TeamSalaryServiceImpl extends BaseServiceImpl implements TeamSalary
         return this.findMapBySql("select id value, contract_name data from tbl_labor where project_id=? AND Status='30'", new Object[] { projectID },
                 new Type[] { StringType.INSTANCE }, Options.class);
     }
+    
+    @Override
+    public List<Options> getTeamComboboxByProject(String projectID) {
+        return this.findMapBySql("select id value, team_name data from tbl_project_team where project_id=? AND status = '10'", new Object[] { projectID },
+                new Type[] { StringType.INSTANCE }, Options.class);
+    }
 
     @Override
     public List<Options> getVolumeComboboxByProjectAndLabor(String projectID, String laborID) {
@@ -51,6 +57,13 @@ public class TeamSalaryServiceImpl extends BaseServiceImpl implements TeamSalary
         return this.findMapBySql(
                 "SELECT UT.user_id value, UT.user_name data FROM tbl_user_team UT, tbl_labor L WHERE UT.team_id = L.construction_team_id AND L.project_id=? AND L.id=?",
                 new Object[] { projectID, laborID }, new Type[] { StringType.INSTANCE, StringType.INSTANCE }, Options.class);
+    }
+    
+    @Override
+    public List<Options> getUserComboboxByTeam(String teamID) {
+        return this.findMapBySql(
+                "SELECT UT.user_id value, UT.user_name data FROM tbl_user_team UT WHERE UT.team_id =? ",
+                new Object[] { teamID }, new Type[] { StringType.INSTANCE }, Options.class);
     }
 
     @Override
@@ -68,7 +81,7 @@ public class TeamSalaryServiceImpl extends BaseServiceImpl implements TeamSalary
 
         this.update(salary);
 
-        String name = "劳务合同：" + salary.getContractName() + "【工资单审核】";
+        String name = "班组：" + salary.getTeamName() + "【工资单审核】";
 
         // businessKey
         String businessKey = salary.getId();

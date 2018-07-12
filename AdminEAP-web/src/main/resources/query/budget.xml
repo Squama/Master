@@ -149,20 +149,20 @@
     <query id="budget_consume_list" key="id" tableName="预算消耗" widthType="px" order="b.labor_sub_id desc, b.create_date_time asc">
             <sql>
                 <![CDATA[
-                    SELECT b.id,b.labor_sub_id,bc.subCount, b.project_name projectName, b.labor_name laborName, b.labor_sub_name laborSubName,
+                    SELECT b.id,b.project_sub_id,bc.subCount, b.project_name projectName, b.project_sub_name projectSubName,
                     b.budget_name budgetName, c.consumeLabour, c.consumeMat, c.consumeMech, c.consumePack,
                     tx.budgetLabour, tx.budgetMat, tx.budgetMech, txpack.unit_price budgetPack,
                     'Labour' labourPer, 'Mat' matPer, 'Mech' mechPer, 'Pack' packPer
                     FROM tbl_budget b
                     LEFT JOIN
                     (SELECT IFNULL(sum(pv.final_labour),'0') consumeLabour,IFNULL(sum(pv.final_mat),'0') consumeMat,
-                    IFNULL(sum(pv.final_mech),'0') consumeMech,IFNULL(sum(pv.final_pack),'0') consumePack, pv.labor_sub_id laborSubID
+                    IFNULL(sum(pv.final_mech),'0') consumeMech,IFNULL(sum(pv.final_pack),'0') consumePack, pv.project_sub_id projectSubID
                     FROM tbl_project_volume pv
                     WHERE pv.`status` = '70'
-                    GROUP BY pv.labor_sub_id) c
-                    ON b.labor_sub_id = c.laborSubID
+                    GROUP BY pv.project_sub_id) c
+                    ON b.project_sub_id = c.projectSubID
                     LEFT JOIN
-                    (SELECT budget.labor_sub_id laborSubID,budget.budget_no sumbudgetNo, txsum.budgetLabour, txsum.budgetMat, txsum.budgetMech
+                    (SELECT budget.project_sub_id projectSubID,budget.budget_no sumbudgetNo, txsum.budgetLabour, txsum.budgetMat, txsum.budgetMech
                     FROM tbl_budget budget,
                     (
                     SELECT IFNULL(SUM(bt.artificiality),'0') budgetLabour, IFNULL(SUM(bt.materiels),'0') budgetMat,
@@ -179,10 +179,10 @@
                     AND tbt.quota_group = 'package' AND tbt.order_no = 'pack' ) txpack
                     ON b.budget_no = txpack.budget_no
                     LEFT JOIN
-                    (SELECT COUNT(1) subCount, labor_sub_id
+                    (SELECT COUNT(1) subCount, project_sub_id
                     FROM tbl_budget
-                    GROUP BY labor_sub_id) bc
-                    ON b.labor_sub_id = bc.labor_sub_id
+                    GROUP BY project_sub_id) bc
+                    ON b.project_sub_id = bc.project_sub_id
                     WHERE 1=1
                 ]]>
             </sql>
@@ -206,37 +206,37 @@
     <query id="budget_subconsume_list" key="id" tableName="预算消耗" widthType="px" order="b.id desc, b.create_date_time asc">
             <sql>
                 <![CDATA[
-                    SELECT b.id, b.contract_name contractName, b.sub_name subName,
+                    SELECT b.id, tx.project_name projectName, b.sub_name subName,
                     c.consumeLabour, c.consumeMat, c.consumeMech, c.consumePack,
                     tx.budgetLabour, tx.budgetMat, tx.budgetMech, txpack.unit_price budgetPack,
                     'Labour' labourPer, 'Mat' matPer, 'Mech' mechPer, 'Pack' packPer
-                    FROM tbl_labor_sub b
+                    FROM tbl_project_sub b
                     LEFT JOIN
                     (SELECT IFNULL(sum(pv.final_labour),'0') consumeLabour,IFNULL(sum(pv.final_mat),'0') consumeMat,
-                    IFNULL(sum(pv.final_mech),'0') consumeMech,IFNULL(sum(pv.final_pack),'0') consumePack, pv.labor_sub_id laborSubID
+                    IFNULL(sum(pv.final_mech),'0') consumeMech,IFNULL(sum(pv.final_pack),'0') consumePack, pv.project_sub_id projectSubID
                     FROM tbl_project_volume pv
                     WHERE pv.`status` = '70'
-                    GROUP BY pv.labor_sub_id) c
-                    ON b.id = c.laborSubID
+                    GROUP BY pv.project_sub_id) c
+                    ON b.id = c.projectSubID
                     LEFT JOIN
                     (SELECT IFNULL(SUM(bt.artificiality),'0') budgetLabour, IFNULL(SUM(bt.materiels),'0') budgetMat,
-                    IFNULL(SUM(bt.mech),'0') budgetMech, bgt.labor_sub_id
+                    IFNULL(SUM(bt.mech),'0') budgetMech, bgt.project_sub_id, bgt.project_name
                     FROM tbl_budget_tx bt, tbl_budget bgt
                     WHERE bt.budget_no = bgt.budget_no AND bt.is_group = '0'
-                    GROUP BY bgt.labor_sub_id) tx
-                    ON b.id = tx.labor_sub_id
+                    GROUP BY bgt.project_sub_id) tx
+                    ON b.id = tx.project_sub_id
                     LEFT JOIN
-                    (SELECT tb.labor_sub_id, SUM(tbt.unit_price) unit_price
+                    (SELECT tb.project_sub_id, SUM(tbt.unit_price) unit_price
                     FROM tbl_budget_tx tbt,tbl_budget tb
                     WHERE tbt.budget_no = tb.budget_no 
                     AND tbt.quota_group = 'package' AND tbt.order_no = 'pack' 
-                    GROUP BY tb.labor_sub_id) txpack
-                    ON b.id = txpack.labor_sub_id
+                    GROUP BY tb.project_sub_id) txpack
+                    ON b.id = txpack.project_sub_id
                     WHERE 1=1
                 ]]>
             </sql>
             <column key="id" header="id" hidden="true"/>
-            <column key="contractName" header="合同名称"/>
+            <column key="projectName" header="项目名称"/>
             <column key="subName" header="子项名称"/>
             <column key="budgetLabour" header="人工预算" fnRender="fnRenderBase64"/>
             <column key="consumeLabour" header="人工消耗" fnRender="fnRenderBase64"/>
