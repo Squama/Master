@@ -6,7 +6,6 @@ package com.radish.master.listener;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.activiti.engine.delegate.DelegateTask;
@@ -116,7 +115,7 @@ public class ProjectVolumeTaskGeneralListener implements TaskListener {
                 pv.setStatus("60");
             } else if ("account".equals(taskDefinitionKey)) {
                 // 在流程审核完成时，统计该合同下的各次工程量上报金额，记录到合同的消耗字段中。 即tbl_labor新加的字段
-
+                /*
                 String hql = "from ProjectVolume where laborID=:laborID AND status=:status";
                 Map<String, Object> params = new HashMap<>();
                 params.put("laborID", pv.getLaborID());
@@ -131,12 +130,30 @@ public class ProjectVolumeTaskGeneralListener implements TaskListener {
 
                 BigDecimal thisVolume = new BigDecimal(pv.getFinalSub());
                 sum = sum.add(thisVolume);
-
+                 
+                
+                labor.setConsumePrice(sum.setScale(2,
+                BigDecimal.ROUND_DOWN).toPlainString());
+                */
+                
                 Labor labor = baseService.get(Labor.class, pv.getLaborID());
-                // TODO 将消耗统计到预算中
-                // labor.setConsumePrice(sum.setScale(2,
-                // BigDecimal.ROUND_DOWN).toPlainString());
 
+                BigDecimal oldLabour = new BigDecimal(labor.getLabourConsume() == null? "0" : labor.getLabourConsume());
+                BigDecimal oldMat = new BigDecimal(labor.getMatConsume() == null? "0" : labor.getMatConsume());
+                BigDecimal oldMech = new BigDecimal(labor.getMechConsume() == null? "0" : labor.getMechConsume());
+                BigDecimal oldPack = new BigDecimal(labor.getPackageConsume() == null? "0" : labor.getPackageConsume());
+                
+                BigDecimal thisLabour = new BigDecimal(pv.getFinalLabour());
+                BigDecimal thisMat = new BigDecimal(pv.getFinalMat());
+                BigDecimal thisMech = new BigDecimal(pv.getFinalMech());
+                BigDecimal thisPack = new BigDecimal(pv.getFinalPack());
+                
+                labor.setLabourConsume(oldLabour.add(thisLabour).setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
+                labor.setMatConsume(oldMat.add(thisMat).setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
+                labor.setMechConsume(oldMech.add(thisMech).setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
+                labor.setPackageConsume(oldPack.add(thisPack).setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
+                
+                
                 baseService.save(labor);
 
                 pv.setStatus("70");
@@ -147,14 +164,6 @@ public class ProjectVolumeTaskGeneralListener implements TaskListener {
             as.setOperator(SecurityUtil.getUser().getName());
             as.setUpdateDateTime(new Date());
             baseService.save(as);
-
-            /*String taskName = "";
-            if (delegateTask.getVariable("taskName") != null) {
-                taskName = delegateTask.getVariable("taskName").toString();
-            }
-
-            baseService.sendSteamWeChat("projectVolume", "工程量上报流程变更通知", baseService.getWeChatDesc(TASKMAP.get(taskDefinitionKey), taskName,
-                    TRUE.equalsIgnoreCase(delegateTask.getVariable("approved").toString()) ? "通过" : "不通过", suggestion));*/
 
         }
 

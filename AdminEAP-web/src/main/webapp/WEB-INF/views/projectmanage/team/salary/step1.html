@@ -271,7 +271,7 @@
                     var laborOptions = data.message;
                     lOptions = JSON.parse(laborOptions);
                     $('#teamID').empty();
-                    $('#teamID').append('<option selected="selected" value="">选择一个合同</option>');
+                    $('#teamID').append('<option selected="selected" value="">选择一个班组</option>');
                     for (var i = 0, len = lOptions.length; i < len; i++) {
                         var option = lOptions[i];
                         $('#teamID').append("<option value=\"" + option.value + "\">" + option.data + "</option>");

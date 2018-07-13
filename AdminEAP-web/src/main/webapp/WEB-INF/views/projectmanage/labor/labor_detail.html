@@ -28,6 +28,18 @@
                                     <input type="text" class="form-control" id="constructionManager" name="constructionManager" readonly="readonly">
                                 </div>
                             </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">机械费（单位：元）<span style="color:red">*</span></label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control calculate" id="mechPrice" name="mechPrice" placeholder="机械费" readonly="readonly">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">人工费（单位：元）<span style="color:red">*</span></label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control calculate" id="labourPrice" name="labourPrice" placeholder="人工费" readonly="readonly">
+                                </div>
+                            </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
@@ -48,24 +60,21 @@
                                     <input type="text" class="form-control" id="contractPrice" name="contractPrice" readonly="readonly">
                                 </div>
                             </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">材料费（单位：元）<span style="color:red">*</span></label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control calculate" id="matPrice" name="matPrice" placeholder="材料费" readonly="readonly">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">包工包料（单位：元）<span style="color:red">*</span></label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control calculate" id="packagePrice" name="packagePrice" placeholder="包工包料" readonly="readonly">
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </form>
-            </div>
-            <div class="box box-success">
-                <div class="box-header with-border">
-                    <span>
-                        <i class="fa fa-files-o">合同分项列表</i>
-                    </span>
-                </div>
-                <div class="dataTables_filter" id="searchDiv" style="display:none;">
-                   <input type="search" name="laborID" id="laborID" class="form-control" operator="eq" style="display:none;">
-                </div>
-                <div class="box-body">
-                    <!-- 内容 -->
-                    <table id="labor_sub_table" class="table table-bordered table-striped table-hover">
-                    </table>
-                </div>
             </div>
         </div>
     </div>
@@ -75,7 +84,6 @@
     var id = "${id}";
     $('#laborID',$('#searchDiv')).val(id);
     $(function () {
-    	laborSubTable = new CommonTable("labor_sub_table", "labor_sub_detail", "searchDiv", null);
         //初始化表单 
         form = $("#labor-detail-form").form({baseEntity:false});
         //初始化控件

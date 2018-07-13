@@ -80,13 +80,14 @@
     }
     
     function fnRenderLabourConsume(value, type, rowObj){
-    	if(last != rowObj.labor_sub_id){
-    		last = rowObj.labor_sub_id;
+    	if(last != rowObj.project_sub_id){
+    		last = rowObj.project_sub_id;
     		subCount = rowObj.subCount;
     		labourGroup = rowObj['consumeLabour'] == null?'0':fnRenderBase64(rowObj['consumeLabour']);
     		matGroup = rowObj['consumeMat'] == null?'0':fnRenderBase64(rowObj['consumeMat']);
     		mechGroup = rowObj['consumeMech'] == null?'0':fnRenderBase64(rowObj['consumeMech']);
     		packGroup = rowObj['consumePack'] == null?'0':fnRenderBase64(rowObj['consumePack']);
+    		console.log(1);
     	}else{
     		subCount--;
     	}

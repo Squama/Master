@@ -20,8 +20,7 @@
     <query id="budget_estimate_list" key="budgetNo" tableName="待成本测算列表" className="com.radish.master.entity.Budget" widthType="px">
         <column key="rowIndex" header="序号" width="80"/>
         <column key="projectName" header="所属项目" classType="String" allowSort="true" width="150"/>
-        <column key="laborName" header="所属合同" classType="String" />
-        <column key="laborSubName" header="合同分项" classType="String"/>
+        <column key="projectSubName" header="项目子项" classType="String"/>
         <column key="budgetName" header="预算名称" classType="String"/>
         <column key="status" header="预算状态" allowSort="true" width="150" render="10=新建,20=测算已提交,30=测算已完成"/>
         <column key="budgetNo" header="操作" width="80" fnRender="fnRenderOperate"/>
@@ -146,7 +145,7 @@
             <column key="id" header="删除" fnRender="fnRenderDeleteMech"/>
     </query>
     
-    <query id="budget_consume_list" key="id" tableName="预算消耗" widthType="px" order="b.labor_sub_id desc, b.create_date_time asc">
+    <query id="budget_consume_list" key="id" tableName="预算消耗" widthType="px" order="b.project_sub_id desc, b.create_date_time asc">
             <sql>
                 <![CDATA[
                     SELECT b.id,b.project_sub_id,bc.subCount, b.project_name projectName, b.project_sub_name projectSubName,
@@ -283,8 +282,7 @@
     <query id="budget_list" key="budgetNo" tableName="成本预算列表" className="com.radish.master.entity.Budget" widthType="px">
         <column key="rowIndex" header="序号" width="80"/>
         <column key="projectName" header="所属项目" classType="String" allowSort="true" width="150"/>
-        <column key="laborName" header="所属合同" classType="String" />
-        <column key="laborSubName" header="合同分项" classType="String"/>
+        <column key="projectSubName" header="项目子项" classType="String"/>
         <column key="budgetName" header="预算名称" classType="String"/>
         <column key="status" header="预算状态" allowSort="true" width="150" render="10=新建,20=测算已提交,30=测算已完成"/>
         <column key="operator" header="消耗情况" classType="String" width="150" fnRender="fnRenderConsume"/>
@@ -293,8 +291,7 @@
     <query id="budget_list_query" key="budgetNo" tableName="成本预算列表" className="com.radish.master.entity.Budget" widthType="px">
         <column key="rowIndex" header="序号" width="80"/>
         <column key="projectName" header="所属项目" classType="String" allowSort="true" width="150"/>
-        <column key="laborName" header="所属合同" classType="String" />
-        <column key="laborSubName" header="合同分项" classType="String"/>
+        <column key="projectSubName" header="项目子项" classType="String"/>
         <column key="budgetName" header="预算名称" classType="String"/>
         <column key="status" header="预算状态" allowSort="true" width="150" render="10=新建,20=测算已提交,30=测算已完成"/>
         <column key="budgetNo" header="查看预算" width="80" fnRender="fnRenderDetail"/>

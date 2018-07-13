@@ -178,14 +178,6 @@
                             return false;
                         }
                         ajaxPost(basePath+"/projectvolume/getlaborinfo",{laborID:laborid},function(data){
-                            ajaxPost(basePath+"/projectvolume/checkconstworker", {userID:data.constructionManagerID,userName:data.constructionManager}, function (data, status) {
-                                if (!data.success) {
-                                    modals.error(data.message);
-                                    $('#savebtn').attr("disabled","disabled");
-                                }else{
-                                    $('#savebtn').removeAttr("disabled");
-                                }
-                            });
                             $('#constructionTeam').val(data.constructionTeam);
                             $('#constructionManager').val(data.constructionManager);
                             $('#contractPrice').val(data.contractPrice);

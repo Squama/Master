@@ -65,6 +65,7 @@
             obj["class"] = "text-" + column.align;
             //obj["width"]=column.width+"px";
             //obj["sWidthOrig"]=null;
+            obj["defaultContent"] = "";
             if (column.fnRender) {
                 var fnRender = null;
                 try {

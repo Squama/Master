@@ -65,7 +65,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-5 control-label">合同总价（元）</label>
+                                <label class="col-sm-3 control-label">合同总价（元）</label>
                                 <div class="col-sm-6">
                                     <input type="text" class="form-control" id="contractPrice" name="contractPrice" placeholder="合同总价" readonly="readonly">
                                 </div>
@@ -188,14 +188,6 @@
                             return false;
                         }
                         ajaxPost(basePath+"/projectvolume/getlaborinfo",{laborID:laborid},function(data){
-                            ajaxPost(basePath+"/projectvolume/checkconstworker", {userID:data.constructionManagerID,userName:data.constructionManager}, function (data, status) {
-                                if (!data.success) {
-                                    modals.error(data.message);
-                                    $('#savebtn').attr("disabled","disabled");
-                                }else{
-                                    $('#savebtn').removeAttr("disabled");
-                                }
-                            });
                             $('#constructionTeam').val(data.constructionTeam);
                             $('#constructionManager').val(data.constructionManager);
                             $('#contractPrice').val(data.contractPrice);

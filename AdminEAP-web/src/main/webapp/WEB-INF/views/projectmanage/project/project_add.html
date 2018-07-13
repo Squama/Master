@@ -137,7 +137,7 @@
         }
     }
     $(function () {
-    	projectSubTable = new CommonTable("project_sub_table", "project_sub_list", "searchDiv",{
+    	projectSubTable = new CommonTable("project_sub_table", "project_sub_list", "searchDivSub",{
             "ordering" : false,
             "lengthChange": false,
             "displayLength": 20,
@@ -176,6 +176,7 @@
 	                        	$('#uploadProFiles').show();
 	                        	$('#projectAddSub').show();
 	                        	$('#subFormProjectID').val(data.data.id);
+	                        	$('#mainID').val(data.data.id);
 	                        	$('#projectID').val(data.data.id);
 	                        	projectSubTable.reloadData();
 	                    }

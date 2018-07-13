@@ -74,7 +74,7 @@ public class ProjectTeamSalaryController {
         return teamSalaryService.get(Salary.class, id);
     }
 
-    @RequestMapping(value = "/getlabor")
+    @RequestMapping(value = "/getteam")
     @ResponseBody
     public Result getLabor(String projectID) {
         return new Result(true, JSONArray.toJSONString(teamSalaryService.getTeamComboboxByProject(projectID)));
