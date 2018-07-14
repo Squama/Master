@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<queryContext xmlns="http://www.example.org/query" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.example.org/query query.xsd">
+    
+    
+    <query id="projectPay_Det" key="id" tableName="支付明细" widthType="px">
+        <sql>
+            <![CDATA[
+              SELECT zf.id id, mx.channelName channelName ,mx.qc qc ,mx.bq bq ,mx.fk fk ,mx.qm qm ,mx.content content
+			  FROM tbl_projectPay zf ,tbl_projectPay_det mx 
+			  WHERE 1=1 and zf.id = mx.projectPayId
+            ]]>
+        </sql>
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="channelName" header="供货商" classType="String" allowSort="true" width="150"/>
+        <column key="qc" header="期初余款" classType="String" width="150"/>
+        <column key="bq" header="本期购入" classType="String" width="150"/>
+        <column key="fk" header="本期付款" classType="String" width="150"/>
+        <column key="qm" header="期末余款" classType="String" width="150"/>
+        <column key="content" header="备注" classType="String" width="150"/>
+    </query>
+    
+    <query id="projectPay" key="id" tableName="支付信息" widthType="px">
+        <sql>
+            <![CDATA[
+              SELECT zf.id id, zf.startdate startdate,zf.enddate enddate,zf.status status ,zf.projectId projectId ,xm.project_name pName
+			  FROM tbl_projectPay zf ,tbl_project xm 
+			  WHERE 1=1 and xm.id = zf.projectId 
+            ]]>
+        </sql>
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="pName" header="所属项目" classType="String" allowSort="true" width="150"/>
+        <column key="startdate" header="开始时间" classType="String" width="150" dateFormat="yyyy-mm-dd"/>
+        <column key="enddate" header="截止时间" classType="String" allowSort="true" width="150" dateFormat="yyyy-mm-dd"/>
+        <column key="status" header="状态" classType="String" width="150"  render="10=新建,20=领导审批,30=完成"/>
+        <column key="id" header="明细" classType="String" width="150"  fnRender="fnRenderXQ"/>
+        <column key="id" header="管理" classType="String" width="150"  fnRender="fnRenderGL"/>
+    </query>
+    
+    <query id="projectPay_DetSh" key="id" tableName="支付明细审核" widthType="px">
+        <sql>
+            <![CDATA[
+              SELECT zf.id zfid, mx.channelName channelName ,mx.qc qc ,mx.bq bq ,mx.fk fk ,mx.qm qm ,mx.content content,mx.id id
+			  FROM tbl_projectPay zf ,tbl_projectPay_det mx 
+			  WHERE 1=1 and zf.id = mx.projectPayId
+            ]]>
+        </sql>
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="channelName" header="供货商" classType="String" allowSort="true" width="150"/>
+        <column key="qc" header="期初余款" classType="String" width="150"/>
+        <column key="bq" header="本期购入" classType="String" width="150"/>
+        <column key="fk" header="本期付款" classType="String" width="150"/>
+        <column key="qm" header="期末余款" classType="String" width="150"/>
+        <column key="content" header="备注" classType="String" width="150"/>
+        <column key="id" header="管理" classType="String" width="150"  fnRender="fnRenderGL"/>
+    </query>
+</queryContext>

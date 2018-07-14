@@ -1,0 +1,118 @@
+
+<link rel="stylesheet" href="${basePath}/resources/common/libs/fileinput/css/fileinput.min.css">
+<script src="${basePath}/resources/common/libs/fileinput/js/fileinput.js"></script>
+<script src="${basePath}/resources/common/libs/fileinput/js/locales/zh.js"></script>
+<!--BaseFile组件-->
+<script src="${basePath}/resources/common/js/base-file.js"></script>
+
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <span>
+                        <i class="fa fa-edit">付款信息</i>
+                    </span>
+                </div>
+                <form id="import_form" name="attendance_form" class="form-horizontal">
+                    <div class="box-body">
+                        <div class="col-md-12">
+                        	
+
+		                    <div class="form-group">
+		                    	<label for="projectId" class="col-sm-5 control-label">项目名称</label>
+		                   		<div class="col-sm-2">
+			                   		<select id="projectId" class="form-control select2 "  name="projectId" style="width:100%" >
+			                   			<option selected="selected" value="">选择一个项目</option>
+			                   		</select>
+		                   		</div>
+		                    </div>
+		                    <div class="form-group">
+                                <label class="col-sm-5 control-label">开始时间</label>
+                                <div class="col-sm-2">
+                                    <input type="text" class="form-control date-picker" name="startdate" id="startdate" data-flag="datepicker" data-format="yyyy-mm-dd"  placeholder="" >
+                                </div>
+                            </div>
+                        	<div class="form-group">
+                                <label class="col-sm-5 control-label">截止时间</label>
+                                <div class="col-sm-2">
+                                    <input type="text" class="form-control date-picker" name="enddate" id="enddate" data-flag="datepicker" data-format="yyyy-mm-dd"  placeholder="" >
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="box">
+                <div class="dataTables_filter" id="searchDiv" style="text-align:center;height:1px;">
+                    <input type="search" id="pid" name="zf.id" class="form-control dn" operator="eq" style="display:none;" value="1">
+                    <div class="btn-group">
+                    </div>
+                </div>
+                <div class="box-body">
+                    <table id="attendance_import_table" class="table table-bordered table-striped table-hover">
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+var pros = '${projectOptions?default(0)}',pro=0;
+if(pros != 0){
+	pro = JSON.parse(pros);
+}
+var pid = '${payid?default(0)}'
+if(pid!=0){
+	$("#pid").val(pid);
+}
+
+    var importform,attendanceImportTable;
+    $(function () {
+    	budgetImportTable = new CommonTable("attendance_import_table", "projectPay_DetSh", "searchDiv");
+    	
+        //初始化表单 
+        importform = $("#import_form").form({baseEntity:false});
+        //数据校验
+        $("#import_form").bootstrapValidator({
+            message: '请输入有效值',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            submitHandler: function () {
+            	
+            }
+        });
+        //初始化控件
+        importform.initComponent();
+        if(pro != 0){
+            for (var i = 0, len = pro.length; i < len; i++) {
+                var u = pro[i];
+                $('#projectId').append("<option value='" + u.value + "'>" + u.data + "</option>");
+            }
+            $("#projectId").select2();
+        }
+        if(pid!=0){
+        	ajaxPost(basePath + '/projectpay/getZf', {id:pid}, function (data) {
+        		importform.initFormData(data); 
+            });
+        }
+    });
+    function fnRenderGL(value, type, rowObj){
+    	var oper ="<a href='javascript:void(0)' onclick='payEdit(\"" + value + "\")'>编辑付款信息</a>";
+    	
+        return oper;
+    }
+    function payEdit(mxid){
+    	modals.openWin({
+            winId:"pay",
+            title:'编辑付款信息',
+            width:'900px',
+            url:basePath+"/projectpay/editPay?mxid="+mxid
+           });
+    }
+    
+</script>

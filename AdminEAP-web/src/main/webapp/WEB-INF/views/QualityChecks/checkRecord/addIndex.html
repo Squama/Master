@@ -65,11 +65,13 @@ $(function () {
         var rowId=volumeTable.getSelectedRowId();
         switch (action) {
         case 'add':
-            var pid = $("#pid").val();
-            	if(!pid){
+            	var p = $('#depttree').treeview('getSelected');
+            	console.log(p);
+            	if(p.length==0){
             		 modals.info('请选择文件分类');
                      return false;
                 }
+            	var pid=p[0].id;
                modals.openWin({
                 winId:"checkRecord",
                 title:'创建',

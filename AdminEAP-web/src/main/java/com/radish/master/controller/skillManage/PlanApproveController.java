@@ -130,7 +130,7 @@ public class PlanApproveController {
 			baseService.update(s);
 			r.setCode(id);
 		}
-		if(fileId.length()>0){
+		if(fileId!=null&&fileId.length()>0){
 			if(fileId.indexOf(",")<0){//单张
 				PlanFile wj = baseService.get(PlanFile.class, fileId);
 				wj.setFormId(id);

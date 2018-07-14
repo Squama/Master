@@ -1,0 +1,137 @@
+<section class="content-header">
+    <h1>
+        项目供应商付款记录
+        <small>列表</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
+        <li><a href="#">财务账目管理</a></li>
+        <li class="active">项目供应商付款列表</li>
+    </ol>
+</section>
+
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <!-- /.box-header -->
+                <div class="dataTables_filter" id="searchDiv" >
+                    <select id="projectID" class="form-control select2" name="zf.projectId" style="width:200px;" operator="eq">
+                    	<option selected="selected" value="">选择一个项目</option>
+                    </select>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-primary" data-btn-type="search">查询</button>
+                        <button type="button" class="btn btn-default" data-btn-type="reset">重置</button>
+                       
+                    </div>
+                    <div class="btn-group">
+                     <button type="button" class="btn btn-default" data-btn-type="delete" id ="delete">删除</button>
+                     <button type="button" class="btn btn-default" data-btn-type="print" id ="print">打印</button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <table id="volume_table" class="table table-bordered table-striped table-hover">
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    var form = $("#searchDiv").form({baseEntity: false}), initData={};
+    var volumeTable, winId = "volumeWin";
+    var projectOptions = '${projectOptions?default(0)}',options=0;
+    if(projectOptions != 0){
+    	options = JSON.parse(projectOptions);
+    }
+    
+    var volumeManageObject = {
+            pay: function (payid) {
+            	modals.openWin({
+                    winId:winId,
+                    title:'查看详情',
+                    width:'900px',
+                    url:basePath+"/projectpay/paymx?payid="+payid
+                   });
+            },
+            submit: function (payid) {
+            	modals.confirm("是否要提交审批？",function(){
+                    ajaxPost(basePath + '/projectpay/start', {id:payid}, function (data) {
+                        if (data.success) {
+                        	volumeTable.reloadData();
+                            modals.correct("流程已启动，请及时处理");
+                        } else {
+                            modals.error(data.message);
+                        }
+                    });
+                });
+            }
+    }
+    
+    $(function (){
+    	volumeTable = new CommonTable("volume_table", "projectPay", "searchDiv", null);
+        
+        //绑定按钮事件
+        $("button[data-btn-type]").click(function () {
+            var action = $(this).data("btn-type");
+            var rowId = volumeTable.getSelectedRowId();
+            switch (action) {
+       		case "delete":
+       			if(!rowId){
+                    modals.info('请选择要删除的行');
+                    return false;
+                }
+            	if(volumeTable.getSelectedRowData().status!='新建'){
+                	modals.info('只能删除新建的信息');
+                    return false;
+                }
+                modals.confirm("是否要删除该行数据？",function(){
+                    ajaxPost(basePath+"/projectpay/delete?id="+rowId,null,function(data){
+                    	if(data.success){
+                    		volumeTable.reloadData();
+                    	}
+                    	
+              
+                    });
+                })
+            break;
+       		case "print":
+       			if(!rowId){
+                    modals.info('请选择要打印的行');
+                    return false;
+                }
+       			if(volumeTable.getSelectedRowData().status!='完成'){
+                	modals.info('只能打印完成的信息');
+                    return false;
+                }
+       			var url = basePath+"/ureport/preview?_u=file:projectpay.ureport.xml&_t=1,5&id="+rowId;
+        	 	window.open(url);
+           	break;
+            }
+        });
+        
+        if(options != 0){
+            for (var i = 0, len = options.length; i < len; i++) {
+                var option = options[i];
+                $('#projectID').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+            }
+            $("#projectID").select2();
+        }
+        
+    });
+    
+    function fnRenderXQ(value, type, rowObj){
+    	var oper ="<a href='javascript:void(0)' onclick='volumeManageObject.pay(\"" + value + "\")'>详情</a>";
+    	
+        return oper;
+    }
+    function fnRenderGL(value, type, rowObj){
+    	var oper ="";
+    	if(rowObj.status=="新建"){
+    		oper +="<a href='javascript:void(0)' onclick='volumeManageObject.submit(\"" + value + "\")'>提交</a>";
+    	}
+        return oper;
+    }
+   
+</script>

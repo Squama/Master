@@ -1,0 +1,105 @@
+<link rel="stylesheet" href="${basePath}/resources/common/libs/fileinput/css/fileinput.min.css">
+<style>
+
+#projectaddstep2 .krajee-default.file-preview-frame .kv-file-content {
+    height: auto;
+}
+
+#projectaddstep2 .krajee-default .file-footer-caption {
+    width: 100px;
+}
+
+</style>
+<script src="${basePath}/resources/common/libs/fileinput/js/fileinput.js"></script>
+<script src="${basePath}/resources/common/libs/fileinput/js/locales/zh.js"></script>
+<!--BaseFile组件-->
+<script src="${basePath}/resources/common/js/base-file.js"></script>
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><li class="fa fa-remove"></li></button>
+    <h5 class="modal-title"></h5>
+</div>
+<div class="modal-body" style="max-height:100%;overflow-y:auto;">
+
+    <form id="contract-form" name="contract-form" class="form-horizontal">
+       <div class="box-body">
+            <div class="col-md-6">
+                
+				<div class="form-group">
+					<label  for="fk" class="col-sm-4 control-label">本期付款金额</label>
+					<div class=" col-sm-7">
+						<input class="form-control " id="fk" name="fk"   placeholder="付款金额"  >
+				
+					</div>
+				</div>
+            </div>
+            <div class="col-md-6">
+            	
+            </div>   
+        </div>
+        	<div class="form-group">
+                    <label for="content" class="col-sm-2 control-label">备注</label>
+
+                    <div class="col-sm-8">
+                        <textarea class="form-control" id="content" name="content" placeholder="备注" rows="3"></textarea>
+                    </div>
+            </div>
+        <div class="" style="text-align: center;">
+            <!--以下两种方式提交验证,根据所需选择-->
+            <button type="submit" class="btn btn-primary" data-btn-type="save" >保存</button>
+        </div>
+        <!-- /.box-footer -->
+    </form>
+</div>
+<script>
+    var form =null;
+    
+    var mxid="${mxid?default(0)}";
+   
+    $(function() {
+        //初始化控件
+        form=$("#contract-form").form();
+        //数据校验
+        $("#contract-form").bootstrapValidator({
+            message : '请输入有效值',
+            feedbackIcons : {
+                valid : 'glyphicon glyphicon-ok',
+                invalid : 'glyphicon glyphicon-remove',
+                validating : 'glyphicon glyphicon-refresh'
+            },
+            submitHandler : function() {
+                    
+                    //Save Data，对应'submit-提交'
+                    var params = form.getFormSimpleData();
+                    	ajaxPost(basePath+'/projectpay/editMxInfo', params, function(data){
+                            if(data.success){
+                            	modals.hideWin("pay");
+                            	budgetImportTable.reloadData();
+                                modals.info("编辑成功");
+                                
+                            }                
+                        }); 
+              
+            },
+            fields : {
+            	fk: {
+                    validators : {
+                        notEmpty : {
+                            message : '请输入付款金额'
+                        }
+                    }
+                }
+            }
+        });
+        form.initComponent();
+        
+        load();
+    });
+    function load(){
+    	ajaxPost(basePath + '/projectpay/getMx', {mxid:mxid}, function(data) {
+            
+            form.initFormData(data); 
+                            
+        }); 
+    }
+	
+</script>
