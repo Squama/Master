@@ -465,10 +465,10 @@ public class BudgetServiceImpl extends BaseServiceImpl implements BudgetService 
             mat = new Materiel();
             mat.setCreate_time(new Date());
             mat.setMat_name(name);
-            mat.setMat_number("CESUAN_DAORU"+GUID.getTxNo16());
+            mat.setMat_number("CS"+GUID.getTxNo16());
             mat.setMat_standard(standard);
             mat.setUnit(unit);
-            mat.setParent_ID("1231233");
+            mat.setParent_ID("4028828e645e868401649c473716005f");
             mat.setIsValid("1");
             
             this.save(mat);

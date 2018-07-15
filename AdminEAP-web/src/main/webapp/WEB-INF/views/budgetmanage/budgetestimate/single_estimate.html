@@ -20,6 +20,21 @@
 	                         </div>
 	                     </div> 
 	                 </div>
+	                 <form id="estimate_import_form" name="attendance_form" class="form-horizontal">
+	                 	<input type="hidden" name="budgetTxID">
+                        <input type="hidden" name="projectID">
+                        <input type="hidden" name="budgetNo">
+	                    <div class="box-body">
+	                        <div class="col-md-12">
+	                            <div class="form-group">
+	                                <label class="col-sm-2 control-label">测算文件<span style="color:red">*</span></label>
+	                                <div class="col-sm-8">
+	                                    <input type="file" name="file" id="file">
+	                                </div>
+	                            </div>
+	                        </div>
+	                    </div>
+	                </form>
 	             </div>
 	         </div>
             <div class="nav-tabs-custom">
@@ -131,6 +146,7 @@
     var budgettxinfoform = $("#budget-tx-info-form").form({baseEntity: false}),
     budgetlabourform = $("#budget-labour-form").form({baseEntity: false}),
     budgetmechform = $("#budget-mech-form").form({baseEntity: false}),
+    estimateimportform = $("#budget-mech-form").form({baseEntity: false}),
     initData={},
     budgetTxEstimateTable,budgetLabourEstimateTable,budgetMechEstimateTable,options;
     
@@ -321,6 +337,18 @@
             }
         });
         
+        $("#estimate_import_form").bootstrapValidator({
+            message: '请输入有效值',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            submitHandler: function () {
+                //nothing
+            }
+        });
+        
         //编辑回填
         if(budgetTxID!="0"){
             ajaxPost(basePath+"/budget/estimate/getbytxid",{budgetTxID:budgetTxID},function(data){
@@ -337,10 +365,39 @@
         budgettxinfoform.initComponent();
         budgetlabourform.initComponent();
         budgetmechform.initComponent();
+        estimateimportform.initComponent();
+        
+        $('#file').on('click', function(e){
+            $("#estimate_import_form").data("bootstrapValidator").validate();
+            if(!$("#estimate_import_form").data("bootstrapValidator").isValid()){
+                e.preventDefault();
+            }
+        });
+        
+        $.fn.fileinputLocales['zh'].msgValidationError = "请选择xls或xlsx格式的文件";
+        $.fn.fileinputLocales['zh'].uploadLabel = "导入";
+        
+        $("#file").fileinput({
+            language: 'zh',
+            uploadUrl: basePath + "/budget/estimate/doimport",
+            uploadExtraData : getFormData,
+            allowedFileExtensions : ['xls', 'xlsx'],
+            showPreview : false
+        }).on("fileuploaded", function(event, data, previewId, index){
+        	if(!data.response.success){
+        		alert("导入失败" + data.response.message);
+        	}
+        	$('#nav-tab-labour').click();
+            setTimeout('disableFileInput()',500);
+        });
         
         
         $("#nav-tab-labour").on("shown.bs.tab",function(){
         	budgetLabourEstimateTable.reloadData();
+        });
+        
+        $("#nav-tab-mat").on("shown.bs.tab",function(){
+        	budgetTxEstimateTable.reloadData();
         });
         
         $("#nav-tab-mech").on("shown.bs.tab",function(){
@@ -360,6 +417,13 @@
          });
     });
     
+    function getFormData(){
+        return estimateimportform.getFormSimpleData();
+    }
+    
+    function disableFileInput(){
+        $("#file").fileinput('disable')
+    }
     
     function fnRenderDelete(value){
     	var opt = "<a href='javascript:void(0)' onclick='budgetSingleEstimateObject.deleteBudgetEstimate(\"" + value + "\")'>删除</a>";

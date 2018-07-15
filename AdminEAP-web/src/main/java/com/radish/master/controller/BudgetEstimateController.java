@@ -51,7 +51,6 @@ import com.radish.master.entity.Materiel;
 import com.radish.master.entity.Project;
 import com.radish.master.entity.project.BudgetLabour;
 import com.radish.master.entity.project.BudgetMech;
-import com.radish.master.entity.wechat.Attendance;
 import com.radish.master.pojo.RowEdit;
 import com.radish.master.service.BudgetService;
 import com.radish.master.system.GUID;
@@ -180,6 +179,11 @@ public class BudgetEstimateController {
                     if( i == 1 && !"一".equals(getCellValue(row.getCell(0)))){
                         throw new CodeException("表格中人工费第一行数据格式不正确");
                     }
+                    
+                    if( i == 1 && "一".equals(getCellValue(row.getCell(0)))){
+                        continue;
+                    }
+                    
                     if("小计".equals(getCellValue(row.getCell(1)))){
                         startLine = i + 1;
                         break;
@@ -213,6 +217,11 @@ public class BudgetEstimateController {
                     if( i == startLine && !"二".equals(getCellValue(row.getCell(0)))){
                         throw new CodeException("表格中材料费第一行数据格式不正确");
                     }
+                    
+                    if( i == startLine && "二".equals(getCellValue(row.getCell(0)))){
+                        continue;
+                    }
+                    
                     if("小计".equals(getCellValue(row.getCell(1)))){
                         if("配比材料".equals(getCellValue(sheet.getRow(i + 1).getCell(1)))){
                             i = i + 1;
@@ -258,6 +267,11 @@ public class BudgetEstimateController {
                     if( i == startLine && !"四".equals(getCellValue(row.getCell(0)))){
                         throw new CodeException("表格中机械费第一行数据格式不正确");
                     }
+                    
+                    if( i == startLine && "四".equals(getCellValue(row.getCell(0)))){
+                        continue;
+                    }
+                    
                     if("小计".equals(getCellValue(row.getCell(1)))){
                         startLine = i + 1;
                         break;
@@ -286,6 +300,42 @@ public class BudgetEstimateController {
             baseService.batchSave(labourList);
             baseService.batchSave(matList);
             baseService.batchSave(mechList);
+            
+            //汇总合价
+            List<BudgetEstimate> list = budgetService.getBudgetEstimateCount(budgetTxID);
+            BigDecimal sumMat = new BigDecimal("0");
+            for(BudgetEstimate be : list){
+                BigDecimal quantity = new BigDecimal(be.getQuantity());
+                BigDecimal price = new BigDecimal(be.getBudgetPrice());
+                
+                sumMat = sumMat.add(quantity.multiply(price));
+            }
+            
+            List<BudgetLabour> listLabour = budgetService.getBudgetLabourCount(budgetTxID);
+            BigDecimal sumLabour = new BigDecimal("0");
+            for(BudgetLabour be : listLabour){
+                BigDecimal quantity = new BigDecimal(be.getLabourQuantity());
+                BigDecimal price = new BigDecimal(be.getForecastPrice());
+                
+                sumLabour = sumLabour.add(quantity.multiply(price));
+            }
+            
+            List<BudgetMech> listMech = budgetService.getBudgetMechCount(budgetTxID);
+            BigDecimal sumMech = new BigDecimal("0");
+            for(BudgetMech be : listMech){
+                BigDecimal quantity = new BigDecimal(be.getMechQuantity());
+                BigDecimal price = new BigDecimal(be.getMechPrice());
+                
+                sumMech = sumMech.add(quantity.multiply(price));
+            }
+            
+            BudgetTx bt = budgetService.get(BudgetTx.class, budgetTxID);
+            
+            bt.setMateriels(sumMat.toPlainString());
+            bt.setArtificiality(sumLabour.toPlainString());
+            bt.setMech(sumMech.toPlainString());
+            
+            budgetService.update(bt);
             
         }catch (CodeException ce) {
             return new Result(false,ce.getMessage());
