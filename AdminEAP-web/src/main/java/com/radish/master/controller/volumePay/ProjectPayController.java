@@ -88,6 +88,7 @@ public class ProjectPayController {
 	public Result doJs(HttpServletRequest request,ProjectPay fk){
 		Result r = new Result();
 		String pid = fk.getProjectId();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		List<InstockChannel> rks = baseService.find(" from InstockChannel where projectId='"+pid+"'");
 		if(rks.size()<=0){
 			r.setMessage("此项目暂无可付款的入库信息，无法生成付款明细");
@@ -97,6 +98,12 @@ public class ProjectPayController {
 		//按结束时间排序
 		List<ProjectPay> fks = baseService.find(" from ProjectPay where projectId='"+pid+"' order by enddate desc");
 		if(fks.size()>0){//开始时间为所有记录最大的结束时间,不然属于第一次支付，无开始时间
+			if(fks.get(0).getEnddate().after(fk.getEnddate())){//上次支付结束时间 在 这次支付结束时间之后
+				String scsj = sdf.format(fks.get(0).getEnddate());
+				r.setMessage("此次结束小于上次结束时间，请重新选择截止时间。（上次截至时间："+scsj+"）");
+				r.setSuccess(false);
+				return r;
+			}
 			fk.setStartdate(fks.get(0).getEnddate());
 			if(!"30".equals(fks.get(0).getStatus())){//如果上一条未审批完成，不能生成新数据
 				r.setMessage("此项目最新付款数据还未完成，不能生成新的付款数据");
@@ -106,7 +113,7 @@ public class ProjectPayController {
 		}
 		fk.setStatus("10");
 		//拿到指定开始时间到结束时间内的数据
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		
 		String sql = " from InstockChannel where projectId='"+pid+"' ";
 		if(fk.getStartdate()!=null){
 			sql += " and indate > '"+sdf.format(fk.getStartdate())+"' and indate <= '"+sdf.format(fk.getEnddate())+"' ";

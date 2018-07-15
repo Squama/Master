@@ -173,6 +173,10 @@ public class User extends BaseEntity {
     @Header(name = "转正驳回原因")
     @Column(name = "zzFaildDesc")
     private String zzFaildDesc;
+    
+    @Header(name = "职责描述")
+    @Column(name = "dutyContent")
+    private String dutyContent;
 
     @Transient
     private String avatarId;
@@ -524,4 +528,13 @@ public class User extends BaseEntity {
 		this.zzDeptDesc = zzDeptDesc;
 	}
 
+	public String getDutyContent() {
+		return dutyContent;
+	}
+
+	public void setDutyContent(String dutyContent) {
+		this.dutyContent = dutyContent;
+	}
+	
+	
 }

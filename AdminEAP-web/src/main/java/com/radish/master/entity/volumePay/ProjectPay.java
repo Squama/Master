@@ -31,7 +31,7 @@ public class ProjectPay implements Serializable {
     @GenericGenerator(name = "id", strategy = "uuid")
     @GeneratedValue(generator = "id")
     @Column(name = "id", length = 64)
-    protected String id;
+    private String id;
 
     @Header(name = "开始时间")
     @Column(name = "startdate")
