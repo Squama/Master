@@ -6,7 +6,7 @@
         <column key="rowIndex" header="序号" width="80"/>
         <column key="id" hidden="true" header="id" width="80"/>
         <column key="projectName" header="所属项目" allowSort="true" width="150"/>
-        <column key="contractName" header="合同名称" allowSort="true" width="150"/>
+        <column key="teamName" header="班组名称" allowSort="true" width="150"/>
         <column key="total" header="总额" width="150"/>
         <column key="applySum" header="申请总额" width="150"/>
         <column key="status" header="状态" allowSort="true" width="150" render="10=新建,20=负责人审批,30=办公室主任审批,40=总经理审批,50=财务审批,60=已完成,70=审核不通过"/>
