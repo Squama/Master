@@ -76,7 +76,9 @@
                             	budgetImportTable.reloadData();
                                 modals.info("编辑成功");
                                 
-                            }                
+                            }else{
+                            	modals.info(data.message);
+                            }          
                         }); 
               
             },

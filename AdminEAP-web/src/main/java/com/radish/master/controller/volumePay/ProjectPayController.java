@@ -240,6 +240,11 @@ public class ProjectPayController {
 		ProjectPayDet zf = baseService.get(ProjectPayDet.class, id);
 		zf.setContent(mx.getContent());
 		Double je = ari.add(Double.valueOf(zf.getQc()), Double.valueOf(zf.getBq()));
+		if(ari.sub(je, Double.valueOf(mx.getFk()))<0){
+			r.setSuccess(false);
+			r.setMessage("付款金额过多，请重新输入");
+			return r;
+		}
 		zf.setQm(ari.sub(je, Double.valueOf(mx.getFk()))+"");
 		zf.setFk(mx.getFk());
 		baseService.update(zf);
