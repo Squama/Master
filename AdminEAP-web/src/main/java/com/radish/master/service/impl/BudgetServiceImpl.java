@@ -255,9 +255,11 @@ public class BudgetServiceImpl extends BaseServiceImpl implements BudgetService 
 
     @Override
     public BudgetImport getGroupByNo(String group) {
+        BudgetImport bi = this.get(BudgetImport.class, group);
         Map<String, Object> params = new HashMap<String, Object>();
-        params.put("quotaGroup", group);
-        return this.get("from BudgetImport where isGroup = '1' AND quotaGroup=:quotaGroup", params);
+        params.put("quotaGroup", bi.getQuotaGroup());
+        params.put("budgetNo", bi.getBudgetNo());
+        return this.get("from BudgetImport where isGroup = '1' AND quotaGroup=:quotaGroup AND budgetNo=:budgetNo", params);
     }
     
     @Override
@@ -297,9 +299,11 @@ public class BudgetServiceImpl extends BaseServiceImpl implements BudgetService 
     
     @Override
     public BudgetTx getTxGroupByNo(String group) {
+        BudgetTx bt = this.get(BudgetTx.class, group);
         Map<String, Object> params = new HashMap<String, Object>();
-        params.put("quotaGroup", group);
-        return this.get("from BudgetTx where isGroup = '1' AND quotaGroup=:quotaGroup", params);
+        params.put("quotaGroup", bt.getQuotaGroup());
+        params.put("budgetNo", bt.getBudgetNo());
+        return this.get("from BudgetTx where isGroup = '1' AND quotaGroup=:quotaGroup AND budgetNo=:budgetNo", params);
     }
 
     @Override

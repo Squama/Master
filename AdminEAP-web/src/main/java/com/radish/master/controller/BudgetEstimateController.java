@@ -120,11 +120,11 @@ public class BudgetEstimateController {
             
             txList.add(bt);
             
-            btGroup = budgetService.getTxGroupByNo(bt.getQuotaGroup());
+            btGroup = budgetService.getTxGroupByNo(bt.getId());
             
             if(btGroup == null || !btGroup.getQuotaGroup().equalsIgnoreCase(bt.getQuotaGroup())){
                 btGroup = new BudgetTx();
-                BudgetImport biGroup = budgetService.getGroupByNo(bi.getQuotaGroup());
+                BudgetImport biGroup = budgetService.getGroupByNo(bi.getId());
                 BeanUtils.copyProperties(biGroup,btGroup);
                 btGroup.setId(null);
                 btGroup.setRegionCode(biGroup.getQuotaNo());
@@ -395,12 +395,12 @@ public class BudgetEstimateController {
             budgetTx.setProjectID(bi.getProjectID());
             
             if(btGroup == null){
-            	btGroup = budgetService.getTxGroupByNo(bi.getQuotaGroup());
+            	btGroup = budgetService.getTxGroupByNo(bi.getId());
             }
             
             if(btGroup == null){
                 btGroup = new BudgetTx();
-                BudgetImport biGroup = budgetService.getGroupByNo(bi.getQuotaGroup());
+                BudgetImport biGroup = budgetService.getGroupByNo(bi.getId());
                 BeanUtils.copyProperties(biGroup,btGroup);
                 btGroup.setId(null);
                 btGroup.setRegionCode(biGroup.getQuotaNo());

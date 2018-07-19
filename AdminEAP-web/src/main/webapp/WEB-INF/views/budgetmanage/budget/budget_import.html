@@ -91,7 +91,7 @@
             </div>
             <div class="box">
                 <div class="dataTables_filter" id="searchDiv" style="text-align:center;height:1px;">
-                    <input type="search" title="定额编号" name="quotaNo" class="form-control dn" id="quotaNo" operator="not_null" style="display:none;">
+                    <input type="search" title="定额编号" name="isGroup" class="form-control dn" id="isGroup" operator="eq" value="0" style="display:none;">
                     <input type="search" title="批次" name="budgetNo" class="form-control dn" id="budgetNo" operator="eq" style="display:none;" value="1">
                     <div class="btn-group">
                         <button type="button" class="btn btn-primary dn" data-btn-type="search">查询</button>
@@ -123,7 +123,8 @@
                 api.column(12, {page:'current'} ).data().each( function ( group, i ) {
                     if ( last !== group ) {
                     	var ret = group;
-                    	ajaxPost(basePath + "/budgetimport/getgroup/"+group, null, function (data) {
+                    	var groupRowID = $(rows).eq(i).attr("id");
+                    	ajaxPost(basePath + "/budgetimport/getgroup/"+groupRowID, null, function (data) {
                             ret=data.data;
                         });
                         $(rows).eq( i ).before(

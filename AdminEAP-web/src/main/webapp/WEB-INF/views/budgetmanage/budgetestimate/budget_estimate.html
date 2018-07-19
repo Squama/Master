@@ -255,7 +255,8 @@
                 	 }
                      if ( last !== group ) {
                          var ret = group;
-                         ajaxPost(basePath + "/budgetimport/getgroup/"+group, null, function (data) {
+                         var groupRowID = $(rows).eq(i).attr("id");
+                         ajaxPost(basePath + "/budgetimport/getgroup/"+groupRowID, null, function (data) {
                              ret=data.data;
                          });
                          $(rows).eq( i ).before(
@@ -295,7 +296,8 @@
                  api.column(8, {page:'current'} ).data().each( function ( group, i ) {
                      if ( last !== group ) {
                          var ret = group;
-                         ajaxPost(basePath + "/budget/estimate/getgroup/"+group, null, function (data) {
+                         var groupRowID = $(rows).eq(i).attr("id");
+                         ajaxPost(basePath + "/budget/estimate/getgroup/"+groupRowID, null, function (data) {
                              ret=data.data;
                          });
                          $(rows).eq( i ).before(
