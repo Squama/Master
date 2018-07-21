@@ -67,6 +67,7 @@ public class ProjectPayController {
 	public String paymx(HttpServletRequest request){
 		String payid = request.getParameter("payid");
 		request.setAttribute("payid",payid);
+		request.setAttribute("zdr", SecurityUtil.getUserId());
 		return prefix +"paymx";
 	}
 	@RequestMapping("/auidt/{id}")//审核查看页
@@ -74,6 +75,13 @@ public class ProjectPayController {
 		request.setAttribute("projectOptions", JSONArray.toJSONString(budgetService.getProjectCombobox()));
 		request.setAttribute("payid",id);
 		return prefix+"auidLook";
+		
+	}
+	@RequestMapping("/auidtMx/{id}")//审核查看页
+	public String auidtMx(@PathVariable("id") String id,HttpServletRequest request){
+		request.setAttribute("projectOptions", JSONArray.toJSONString(budgetService.getProjectCombobox()));
+		request.setAttribute("payid",id);
+		return prefix+"auidLookMx";
 		
 	}
 	@RequestMapping("/editPay")
@@ -174,6 +182,8 @@ public class ProjectPayController {
 		baseService.save(fk);
 		for (ProjectPayDet mx : mxs) {
 			mx.setProjectPayId(fk.getId());
+			mx.setStatus("10");
+			mx.setFkfs("10");
 			baseService.save(mx);
 		}
 		r.setSuccess(true);
@@ -249,6 +259,55 @@ public class ProjectPayController {
 		zf.setFk(mx.getFk());
 		baseService.update(zf);
 		
+		return r;
+	}
+	
+	@RequestMapping("/startZf")
+	@ResponseBody
+	public Result startZf(String id) {
+		ProjectPayDet mx = baseService.get(ProjectPayDet.class, id);
+		ProjectPay zf = baseService.get(ProjectPay.class, mx.getProjectPayId());
+		Project p = baseService.get(Project.class, zf.getProjectId());
+		mx.setStatus("50");
+		User user = SecurityUtil.getUser();
+		baseService.update(mx);
+		
+
+        String name =p.getProjectName()+"|"+mx.getChannelName()+"【采购商支付审核】";
+
+        // businessKey
+        String businessKey = mx.getId();
+
+        // 配置流程变量
+        Map<String, Object> variables = new HashMap<>();
+        variables.put(Constants.VAR_APPLYUSER_NAME, user.getName());
+        variables.put(Constants.VAR_BUSINESS_KEY, businessKey);
+        variables.put("taskName", name);
+
+        // 启动流程
+        return runtimePageService.startProcessInstanceByKey("projectPayMx", name, variables, user.getId(), businessKey);
+    }
+	@RequestMapping("/getZfMxSh")
+	@ResponseBody
+	public Map<String, Object> getZfMxSh(String id){
+		Map<String, Object> m = new HashMap<String, Object>();
+		ProjectPayDet mx = baseService.get(ProjectPayDet.class, id);
+		ProjectPay zf = baseService.get(ProjectPay.class, mx.getProjectPayId());
+		
+		m.put("projectId", zf.getProjectId());
+		m.put("gys", mx.getChannelName());
+		m.put("je", mx.getFk());
+		m.put("fkfs", mx.getFkfs());
+		return m;
+	}
+	
+	@RequestMapping("/saveFkfs")
+	@ResponseBody
+	public Result saveFkfs(HttpServletRequest request,String fkfs,String id){
+		Result r = new Result();
+		ProjectPayDet mx = baseService.get(ProjectPayDet.class, id);
+		mx.setFkfs(fkfs);
+		baseService.update(mx);
 		return r;
 	}
 }

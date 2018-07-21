@@ -1,0 +1,121 @@
+
+<link rel="stylesheet" href="${basePath}/resources/common/libs/fileinput/css/fileinput.min.css">
+<script src="${basePath}/resources/common/libs/fileinput/js/fileinput.js"></script>
+<script src="${basePath}/resources/common/libs/fileinput/js/locales/zh.js"></script>
+<!--BaseFile组件-->
+<script src="${basePath}/resources/common/js/base-file.js"></script>
+
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <span>
+                        <i class="fa fa-edit">付款信息</i>
+                    </span>
+                </div>
+                <form id="import_form" name="attendance_form" class="form-horizontal">
+                    <div class="box-body">
+                        <div class="col-md-12">
+                        	
+
+		                    <div class="form-group">
+		                    	<label for="projectId" class="col-sm-5 control-label">项目名称</label>
+		                   		<div class="col-sm-2">
+			                   		<select id="projectId" class="form-control select2 "  name="projectId" style="width:100%" disabled="disabled">
+			                   			<option selected="selected" value="">选择一个项目</option>
+			                   		</select>
+		                   		</div>
+		                    </div>
+		                    
+                            <div class="form-group">
+                                <label class="col-sm-5 control-label">供应商</label>
+                                <div class="col-sm-2">
+                                    <input type="text" class="form-control" name="gys" id="gys"  placeholder="" disabled="disabled">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-5 control-label">付款金额</label>
+                                <div class="col-sm-2">
+                                    <input type="text" class="form-control" name="je" id="je"  placeholder="" disabled="disabled">
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="col-sm-5 control-label">付款方式</label>
+                                <div class="col-sm-2">
+                                	<select id="fkfs" class="form-control select2 "  name="fkfs" >
+			                    		<option selected="selected" value="">选择一种方式</option>
+			                    		<option  value="10">现金</option>
+			                    		<option  value="20">转账</option>
+			                    		<option  value="30">电汇</option>
+			                    	</select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="" style="text-align: center;">
+			            <!--以下两种方式提交验证,根据所需选择-->
+			            <button type="submit" class="btn btn-primary" data-btn-type="save" id="save">保存</button>
+			        </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+var pros = '${projectOptions?default(0)}',pro=0;
+if(pros != 0){
+	pro = JSON.parse(pros);
+}
+var pid = '${payid?default(0)}'
+
+    var importform;
+    $(function () {
+    	
+        //初始化表单 
+        importform = $("#import_form").form({baseEntity:false});
+        //数据校验
+        $("#import_form").bootstrapValidator({
+            message: '请输入有效值',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            submitHandler: function () {
+            	var params = importform.getFormSimpleData();
+            	ajaxPost(basePath+'/projectpay/saveFkfs?id='+pid, params, function(data) {
+                    if(data.success){
+                        modals.info("保存成功");
+                    }                
+                }); 
+            },
+            fields : {
+            	fkfs : {
+                    validators : {
+                        notEmpty : {
+                            message : '请选择付款方式'
+                        }
+                    }
+                }
+            }
+        });
+        //初始化控件
+        importform.initComponent();
+        if(pro != 0){
+            for (var i = 0, len = pro.length; i < len; i++) {
+                var u = pro[i];
+                $('#projectId').append("<option value='" + u.value + "'>" + u.data + "</option>");
+            }
+            $(".select2").select2();
+        }
+        if(pid!=0){
+        	ajaxPost(basePath + '/projectpay/getZfMxSh', {id:pid}, function (data) {
+        		importform.initFormData(data); 
+            });
+        }
+    });
+    
+    
+</script>

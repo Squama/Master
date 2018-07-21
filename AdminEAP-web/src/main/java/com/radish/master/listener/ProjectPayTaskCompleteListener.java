@@ -22,6 +22,7 @@ import com.radish.master.entity.project.Salary;
 import com.radish.master.entity.project.SalaryDetail;
 import com.radish.master.entity.project.SalaryVolume;
 import com.radish.master.entity.volumePay.ProjectPay;
+import com.radish.master.entity.volumePay.ProjectPayDet;
 import com.radish.master.entity.volumePay.VolumePay;
 import com.radish.master.system.Arith;
 import com.radish.master.system.SpringUtil;
@@ -55,7 +56,18 @@ public class ProjectPayTaskCompleteListener implements TaskListener {
              
              zf.setStatus("30");
             
-             baseService.save(zf);
+             baseService.update(zf);
+             
+             //支付明细状态修改
+             List<ProjectPayDet> mxs = baseService.find(" from ProjectPayDet where projectPayId='"+businessKey+"'");
+             for(ProjectPayDet mx :mxs){
+            	 if(mx.getFk()!=null&&Double.valueOf(mx.getFk())==0){//本次不付款，状态改成完成
+            		 mx.setStatus("30");
+            	 }else{
+            		 mx.setStatus("20");
+            	 }
+            	 baseService.update(mx);
+             }
              
              
         }

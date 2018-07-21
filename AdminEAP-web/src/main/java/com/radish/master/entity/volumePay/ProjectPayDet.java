@@ -65,6 +65,18 @@ public class ProjectPayDet implements Serializable {
     @Header(name = "备注")
     @Column(name = "content")
     private String content;
+    
+    @Header(name = "状态")
+    @Column(name = "status")
+    private String status;
+    
+    @Header(name = "驳回原因")
+    @Column(name = "bhdesc")
+    private String bhdesc;
+    
+    @Header(name = "付款方式")
+    @Column(name = "fkfs")
+    private String fkfs;
 
 	public String getId() {
 		return id;
@@ -136,6 +148,30 @@ public class ProjectPayDet implements Serializable {
 
 	public void setContent(String content) {
 		this.content = content;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public String getBhdesc() {
+		return bhdesc;
+	}
+
+	public void setBhdesc(String bhdesc) {
+		this.bhdesc = bhdesc;
+	}
+
+	public String getFkfs() {
+		return fkfs;
+	}
+
+	public void setFkfs(String fkfs) {
+		this.fkfs = fkfs;
 	}
     
     
