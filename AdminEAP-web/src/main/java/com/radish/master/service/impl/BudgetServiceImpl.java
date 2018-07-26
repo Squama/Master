@@ -263,6 +263,14 @@ public class BudgetServiceImpl extends BaseServiceImpl implements BudgetService 
     }
     
     @Override
+    public BudgetImport getGroupByGroupAndNo(String group, String budgetNo) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("quotaGroup", group);
+        params.put("budgetNo", budgetNo);
+        return this.get("from BudgetImport where isGroup = '1' AND quotaGroup=:quotaGroup AND budgetNo=:budgetNo", params);
+    }
+    
+    @Override
     public List<Options> getProjectCombobox() {
         return this.findMapBySql("select id value, project_name data from tbl_project", new Object[]{}, new Type[]{StringType.INSTANCE}, Options.class);
     }
@@ -303,6 +311,14 @@ public class BudgetServiceImpl extends BaseServiceImpl implements BudgetService 
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("quotaGroup", bt.getQuotaGroup());
         params.put("budgetNo", bt.getBudgetNo());
+        return this.get("from BudgetTx where isGroup = '1' AND quotaGroup=:quotaGroup AND budgetNo=:budgetNo", params);
+    }
+    
+    @Override
+    public BudgetTx getTxGroupByGroupAndNo(String group, String budgetNo) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("quotaGroup", group);
+        params.put("budgetNo", budgetNo);
         return this.get("from BudgetTx where isGroup = '1' AND quotaGroup=:quotaGroup AND budgetNo=:budgetNo", params);
     }
 

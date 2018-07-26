@@ -46,11 +46,15 @@ public interface BudgetService extends BaseService {
     
     BudgetImport getGroupByNo(String group);
     
+    BudgetImport getGroupByGroupAndNo(String group, String budgetNo);
+    
     List<Options> getProjectCombobox();
     
     List<BudgetImport> getBudgetImportList(String[] importIDs);
     
     BudgetTx getTxGroupByNo(String group);
+    
+    BudgetTx getTxGroupByGroupAndNo(String group, String budgetNo);
     
     BudgetTx checkPack(String budgetNo);
     
