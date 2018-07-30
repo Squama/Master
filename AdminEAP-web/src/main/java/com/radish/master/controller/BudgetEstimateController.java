@@ -120,7 +120,7 @@ public class BudgetEstimateController {
             
             txList.add(bt);
             
-            btGroup = budgetService.getTxGroupByNo(bt.getId());
+            btGroup = budgetService.getTxGroupByGroupAndNo(bi.getQuotaGroup(), bi.getBudgetNo());
             
             if(btGroup == null || !btGroup.getQuotaGroup().equalsIgnoreCase(bt.getQuotaGroup())){
                 btGroup = new BudgetTx();
@@ -395,7 +395,7 @@ public class BudgetEstimateController {
             budgetTx.setProjectID(bi.getProjectID());
             
             if(btGroup == null){
-            	btGroup = budgetService.getTxGroupByNo(bi.getId());
+            	btGroup = budgetService.getTxGroupByGroupAndNo(bi.getQuotaGroup(), bi.getBudgetNo());
             }
             
             if(btGroup == null){
