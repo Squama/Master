@@ -13,4 +13,22 @@
 		<column key="check_time" header="考核时间"  classType="java.util.Date" operator="between" width="150" dateFormat="yyyy-mm-dd"/>
 	</query>
 	
+	<query id="safejsjd_List" key="id" tableName="公司交底列表" widthType="px">
+        <sql>
+            <![CDATA[
+              SELECT wj.ID id, wj.create_time create_time,wj.number number, wj.dx dx,wj.ty ty,
+              p.project_name pName ,wj.proid pid ,wj.create_name create_name 
+			  FROM tbl_SafeSkillJD wj ,tbl_project p 
+			  WHERE 1=1 and wj.proid = p.id 
+            ]]>
+        </sql>
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="ty" header="是否专项" width="80" render="1=专项,2=非专项"/>
+        <column key="pName" header="所属项目" classType="String" width="150"/>
+        <column key="create_time" header="创建日期" classType="String" width="150" allowSort="true" />
+        <column key="number" header="编号" classType="String" width="150"/>
+        <column key="dx" header="对象" classType="String" width="150"/>
+    </query>
+	
 </queryContext>
