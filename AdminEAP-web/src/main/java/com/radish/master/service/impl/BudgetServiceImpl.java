@@ -171,7 +171,10 @@ public class BudgetServiceImpl extends BaseServiceImpl implements BudgetService 
                     String price = getCellValue(row.getCell(4));
                     bi.setPrice(price);
                     
-                    String unitPrice = getCellValue(row.getCell(9));
+                    Cell unitPriceCell = row.getCell(9);
+                    unitPriceCell.setCellType(0);
+                    
+                    String unitPrice = getCellValue(unitPriceCell);
                     bi.setUnitPrice(unitPrice);
                     
                     String artificiality = getCellValue(row.getCell(10));
