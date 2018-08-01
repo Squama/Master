@@ -67,7 +67,8 @@
                 	 }
                      if ( last !== group ) {
                          var ret = group;
-                         ajaxPost(basePath + "/budgetimport/getgroup/"+group, null, function (data) {
+                         var groupRowID = $(rows).eq(i).attr("id");
+                         ajaxPost(basePath + "/budgetimport/getgroup/"+groupRowID, null, function (data) {
                              ret=data.data;
                          });
                          $(rows).eq( i ).before(
