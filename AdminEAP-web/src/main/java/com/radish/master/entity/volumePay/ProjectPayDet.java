@@ -28,8 +28,6 @@ public class ProjectPayDet implements Serializable {
      * 主键ID自动生成策略
      */
     @Id
-    @GenericGenerator(name = "id", strategy = "uuid")
-    @GeneratedValue(generator = "id")
     @Column(name = "id", length = 64)
     private String id;
 
@@ -78,6 +76,14 @@ public class ProjectPayDet implements Serializable {
     @Column(name = "fkfs")
     private String fkfs;
 
+    @Header(name = "用途")
+    @Column(name = "useFact")
+    private String useFact;
+    
+    @Header(name = "审核人")
+    @Column(name = "shr")
+    private String shr;
+    
 	public String getId() {
 		return id;
 	}
@@ -172,6 +178,22 @@ public class ProjectPayDet implements Serializable {
 
 	public void setFkfs(String fkfs) {
 		this.fkfs = fkfs;
+	}
+
+	public String getUseFact() {
+		return useFact;
+	}
+
+	public void setUseFact(String useFact) {
+		this.useFact = useFact;
+	}
+
+	public String getShr() {
+		return shr;
+	}
+
+	public void setShr(String shr) {
+		this.shr = shr;
 	}
     
     

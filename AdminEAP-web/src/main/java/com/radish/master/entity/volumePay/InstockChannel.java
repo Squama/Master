@@ -64,7 +64,18 @@ public class InstockChannel implements Serializable {
     @Header(name = "供应商id")
     @Column(name = "qdid")
     private String qdid;
+    
+    @Header(name = "材料名称")
+    @Column(name = "matName")
+    private String matName;
+    
+    @Header(name = "材料型号")
+    @Column(name = "matStandard")
+    private String matStandard;
 
+    @Header(name = "单位")
+    @Column(name = "unit")
+    private String unit;
     
 	public String getMxid() {
 		return mxid;
@@ -136,6 +147,30 @@ public class InstockChannel implements Serializable {
 
 	public void setQdid(String qdid) {
 		this.qdid = qdid;
+	}
+
+	public String getMatName() {
+		return matName;
+	}
+
+	public void setMatName(String matName) {
+		this.matName = matName;
+	}
+
+	public String getMatStandard() {
+		return matStandard;
+	}
+
+	public void setMatStandard(String matStandard) {
+		this.matStandard = matStandard;
+	}
+
+	public String getUnit() {
+		return unit;
+	}
+
+	public void setUnit(String unit) {
+		this.unit = unit;
 	}
     
     

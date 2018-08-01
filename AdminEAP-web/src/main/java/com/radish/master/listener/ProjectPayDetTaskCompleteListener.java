@@ -57,9 +57,11 @@ public class ProjectPayDetTaskCompleteListener implements TaskListener {
             if (FALSE.equalsIgnoreCase(delegateTask.getVariable("approved").toString())) {
             	mx.setStatus("40");
             	mx.setBhdesc(suggestion);
+            	mx.setShr(SecurityUtil.getUser().getName());
             } else if (TRUE.equalsIgnoreCase(delegateTask.getVariable("approved").toString())) {
             	mx.setStatus("30");
             	mx.setBhdesc("");
+            	mx.setShr(SecurityUtil.getUser().getName());
             	baseService.update(mx);
             	boolean is = true;
             	List<ProjectPayDet> mxs = baseService.find(" from ProjectPayDet where projectPayId='"+mx.getProjectPayId()+"'");

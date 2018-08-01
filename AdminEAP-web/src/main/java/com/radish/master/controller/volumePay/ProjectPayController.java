@@ -23,8 +23,10 @@ import com.cnpc.framework.activiti.service.RuntimePageService;
 import com.cnpc.framework.base.entity.User;
 import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.base.service.BaseService;
+import com.cnpc.framework.utils.CodeException;
 import com.cnpc.framework.utils.SecurityUtil;
 import com.radish.master.entity.Instock;
+import com.radish.master.entity.InstockDet;
 import com.radish.master.entity.Labor;
 import com.radish.master.entity.Project;
 import com.radish.master.entity.ProjectVolume;
@@ -32,11 +34,13 @@ import com.radish.master.entity.project.SalaryDetail;
 import com.radish.master.entity.project.SalaryVolume;
 import com.radish.master.entity.skillManage.PlanFile;
 import com.radish.master.entity.volumePay.InstockChannel;
+import com.radish.master.entity.volumePay.InstockPay_Rt;
 import com.radish.master.entity.volumePay.ProjectPay;
 import com.radish.master.entity.volumePay.ProjectPayDet;
 import com.radish.master.entity.volumePay.VolumePay;
 import com.radish.master.service.BudgetService;
 import com.radish.master.system.Arith;
+import com.radish.master.system.GUID;
 
 @Controller
 @RequestMapping("/projectpay")
@@ -93,7 +97,7 @@ public class ProjectPayController {
 	
 	@RequestMapping("/doJs")
 	@ResponseBody
-	public Result doJs(HttpServletRequest request,ProjectPay fk){
+	public Result doJs(HttpServletRequest request,ProjectPay fk) throws CodeException{
 		Result r = new Result();
 		String pid = fk.getProjectId();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -164,19 +168,37 @@ public class ProjectPayController {
 						mxs.get(i).setBq(ari.add(Double.valueOf(sjrk.getZj()), Double.valueOf(mxs.get(i).getBq()))+"");
 						//期末相加
 						mxs.get(i).setQm(ari.add(Double.valueOf(sjrk.getZj()), Double.valueOf(mxs.get(i).getQm()))+"");
+						//插入关系表
+						InstockPay_Rt gx = new InstockPay_Rt();
+						gx.setInstockDetId(sjrk.getMxid());
+						gx.setPayDetId(mxs.get(i).getId());
+						baseService.save(gx);
+						
+						if(mxs.get(i).getUseFact().indexOf((sjrk.getMatName()+"("+sjrk.getMatStandard()+")材料款"))<0){
+							//用途增加
+							mxs.get(i).setUseFact(mxs.get(i).getUseFact()+","+sjrk.getMatName()+"("+sjrk.getMatStandard()+")材料款");
+						
+						}
 					}
 				}
 			}else{//未存在，新增
 				ProjectPayDet mx = new ProjectPayDet();
+				mx.setId(GUID.genTxNo(16));
 				mx.setChannelId(sjrk.getQdid());
 				mx.setChannelName(sjrk.getSupplier());
 				mx.setQc("0");//上次期末放入这次期初
 				mx.setBq(sjrk.getZj());
 				mx.setFk("0");
 				mx.setQm(sjrk.getZj());//未付款，无本期的期末等于期初
-				
+				mx.setUseFact(sjrk.getMatName()+"("+sjrk.getMatStandard()+")材料款");
 				mxs.add(mx);
 				gyss += sjrk.getSupplier()+"/";//方便查看本期是否有相同供应商
+				
+				//插入关系表
+				InstockPay_Rt gx = new InstockPay_Rt();
+				gx.setInstockDetId(sjrk.getMxid());
+				gx.setPayDetId(mx.getId());
+				baseService.save(gx);
 			}
 		}
 		baseService.save(fk);
@@ -298,6 +320,8 @@ public class ProjectPayController {
 		m.put("gys", mx.getChannelName());
 		m.put("je", mx.getFk());
 		m.put("fkfs", mx.getFkfs());
+		m.put("qm", mx.getQm());
+		m.put("qc", mx.getQc());
 		return m;
 	}
 	
