@@ -60,6 +60,7 @@
         <sql>
             <![CDATA[
               SELECT zf.id zfid, mx.channelName channelName ,mx.qc qc ,mx.bq bq ,mx.fk fk ,mx.qm qm ,mx.content content,mx.id id,mx.status status  ,mx.bhdesc bhdesc 
+			  ,mx.fjsl fjsl
 			  FROM tbl_projectPay zf ,tbl_projectPay_det mx 
 			  WHERE 1=1 and zf.id = mx.projectPayId
             ]]>
@@ -71,6 +72,7 @@
         <column key="bq" header="本期购入" classType="String" width="150"/>
         <column key="fk" header="本期付款" classType="String" width="150"/>
         <column key="qm" header="期末余款" classType="String" width="150"/>
+        <column key="fjsl" header="附件数量" classType="String" width="150"/>
         <column key="content" header="备注" classType="String" width="150"/>
         <column key="status" header="状态" classType="String" width="150"  render="10=新建,20=待支付,30=完成,40=驳回(待支付),50=审批"/>
         <column key="id" header="管理" classType="String" width="150"  fnRender="fnRenderZf"/>

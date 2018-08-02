@@ -12,7 +12,9 @@
             <div class="box">
                 <div class="dataTables_filter" id="searchDiv1" style="text-align:center;height:1px;">
                     <input type="search" id="pid" name="zf.id" class="form-control dn" operator="eq" style="display:none;" value="1">
+                    <input  id="sl" name="sl" class="form-control" placeholder="请输附件数量">
                     <div class="btn-group">
+                    	<button type="button" class="btn btn-primary" data-btn-type="addFjsl">变更附件数量</button>
                         <button type="button" class="btn btn-primary dn" data-btn-type="search">查询</button>
                         <button type="button" class="btn btn-default dn" data-btn-type="reset">重置</button>
                     </div>
@@ -35,8 +37,38 @@ var payid = '${payid?default(0)}'
         }
     	budgetImportTable = new CommonTable("attendance_import_table", "projectPay_DetZf", "searchDiv1");
     	
-       
-        
+       $('button[data-btn-type]').click(function() {
+           var actions = $(this).attr('data-btn-type');
+           var rowId=budgetImportTable.getSelectedRowId();
+           switch (actions) {
+           case 'addFjsl':
+        	   
+	          	 if(!rowId){
+	          		 modals.info('请选择要变更附件数量的支付单');
+	              	 return;
+	          	 }
+	          	 var fjsl = $("#sl").val();
+	          	 if(!fjsl){
+	          		modals.info('请输入附件数量');
+	              	 return;
+		         }
+	          	 if(isNaN(fjsl)){
+	          		modals.info('请输入正确的附件数量');
+	              	 return;
+		          }
+	
+	          	 ajaxPost(basePath+"/projectpay/EditFjsl",{fjsl:fjsl,zfid:rowId},function(data){
+	                   if(data.success){
+	                  	 $("#sl").val("");
+	                  	 budgetImportTable.reloadRowData();
+	                   }else{
+	                       modals.error("系统繁忙，请稍后重试");
+	                   }
+	               });
+               break;             
+           }
+
+       });
     });
     function fnRenderZf(value, type, rowObj){
     	var oper ="";

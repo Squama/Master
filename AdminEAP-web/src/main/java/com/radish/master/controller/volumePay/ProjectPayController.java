@@ -334,4 +334,15 @@ public class ProjectPayController {
 		baseService.update(mx);
 		return r;
 	}
+	@RequestMapping("/EditFjsl")
+	@ResponseBody
+	public Result EditFjsl(HttpServletRequest request){
+		Result r = new Result();
+		String fjsl = request.getParameter("fjsl");
+		String zfid = request.getParameter("zfid");
+		ProjectPayDet mx = baseService.get(ProjectPayDet.class, zfid);
+		mx.setFjsl(fjsl);
+		baseService.update(mx);
+		return r;
+	}
 }
