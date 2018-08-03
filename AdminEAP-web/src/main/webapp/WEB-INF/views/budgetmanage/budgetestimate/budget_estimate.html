@@ -11,6 +11,7 @@
 
 <script src="${basePath}/resources/common/libs/fileinput/js/fileinput.js"></script>
 <script src="${basePath}/resources/common/libs/fileinput/js/locales/zh.js"></script>
+<script src="${basePath}/resources/common/js/calculate.js"></script>
 
 <section class="content-header">
     <h1>
@@ -43,6 +44,15 @@
 	                </div>
 	                <div class="box-body">
 	                    <table id="budget_import_table" class="table table-bordered table-striped table-hover">
+		                    <tfoot>
+					            <tr>
+					                <th colspan="4" style="text-align:right">合计:</th>
+					                <th class="text-center">0</th>
+					                <th class="text-center">0</th>
+					                <th class="text-center">0</th>
+					                <th class="text-center">0</th>
+					            </tr>
+					        </tfoot>
 	                    </table>
 	                </div>
 	            </div>
@@ -64,6 +74,15 @@
                 </div>
                 <div class="box-body">
                     <table id="budget_tx_table" class="table table-bordered table-striped table-hover">
+	                    <tfoot>
+	                        <tr>
+	                            <th colspan="4" style="text-align:right">合计:</th>
+	                            <th class="text-center">0</th>
+	                            <th class="text-center">0</th>
+	                            <th class="text-center">0</th>
+	                            <th class="text-center">0</th>
+	                        </tr>
+	                    </tfoot>
                     </table>
                 </div>
             </div>
@@ -274,6 +293,55 @@
                      }
                      $(rows).eq( i ).attr('data-group' ,''+group+'');
                  } );
+             },
+             "footerCallback": function ( row, data, start, end, display ) {
+                 var api = this.api(), data;
+                 // Remove the formatting to get integer data for summation
+                 var intVal = function ( i ) {
+                     return typeof i === 'string' ?
+                         i.replace(/[\$,]/g, '')*1 :
+                         typeof i === 'number' ?
+                             i : 0;
+                 };
+      
+                 // Total over this page
+                 unitTotal = api
+                     .column( 4, { page: 'current'} )
+                     .data()
+                     .reduce( function (a, b) {
+                         return accAddition(intVal(a), intVal(b));
+                     }, 0 );
+                 labourTotal = api
+	                 .column( 5, { page: 'current'} )
+	                 .data()
+	                 .reduce( function (a, b) {
+	                     return accAddition(intVal(a), intVal(b));
+	                 }, 0 );
+                 matTotal = api
+	                 .column( 6, { page: 'current'} )
+	                 .data()
+	                 .reduce( function (a, b) {
+	                     return accAddition(intVal(a), intVal(b));
+	                 }, 0 );
+                 mechTotal = api
+	                 .column( 7, { page: 'current'} )
+	                 .data()
+	                 .reduce( function (a, b) {
+	                     return accAddition(intVal(a), intVal(b));
+	                 }, 0 );
+                 // Update footer
+                 $( api.column( 4 ).footer() ).html(
+                     '￥'+unitTotal
+                 );
+                 $( api.column( 5 ).footer() ).html(
+                     '￥'+labourTotal
+                 );
+                 $( api.column( 6 ).footer() ).html(
+                     '￥'+matTotal
+                 );
+                 $( api.column( 7 ).footer() ).html(
+                     '￥'+mechTotal
+                 );
              }
         });
         <!-- 初始化成本测算表  -->
@@ -316,6 +384,55 @@
                      }
                      $(rows).eq( i ).attr('data-group' ,''+group+'');
                  } );
+             },
+             "footerCallback": function ( row, data, start, end, display ) {
+                 var api = this.api(), data;
+                 // Remove the formatting to get integer data for summation
+                 var intVal = function ( i ) {
+                     return typeof i === 'string' ?
+                         i.replace(/[\$,]/g, '')*1 :
+                         typeof i === 'number' ?
+                             i : 0;
+                 };
+      
+                 // Total over this page
+                 unitTotal = api
+                     .column( 4, { page: 'current'} )
+                     .data()
+                     .reduce( function (a, b) {
+                         return accAddition(intVal(a), intVal(b));
+                     }, 0 );
+                 labourTotal = api
+                     .column( 5, { page: 'current'} )
+                     .data()
+                     .reduce( function (a, b) {
+                         return accAddition(intVal(a), intVal(b));
+                     }, 0 );
+                 matTotal = api
+                     .column( 6, { page: 'current'} )
+                     .data()
+                     .reduce( function (a, b) {
+                         return accAddition(intVal(a), intVal(b));
+                     }, 0 );
+                 mechTotal = api
+                     .column( 7, { page: 'current'} )
+                     .data()
+                     .reduce( function (a, b) {
+                         return accAddition(intVal(a), intVal(b));
+                     }, 0 );
+                 // Update footer
+                 $( api.column( 4 ).footer() ).html(
+                     '￥'+unitTotal
+                 );
+                 $( api.column( 5 ).footer() ).html(
+                     '￥'+labourTotal
+                 );
+                 $( api.column( 6 ).footer() ).html(
+                     '￥'+matTotal
+                 );
+                 $( api.column( 7 ).footer() ).html(
+                     '￥'+mechTotal
+                 );
              }
         });
 

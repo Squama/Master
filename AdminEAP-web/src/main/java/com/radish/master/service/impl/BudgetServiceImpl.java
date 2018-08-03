@@ -344,6 +344,11 @@ public class BudgetServiceImpl extends BaseServiceImpl implements BudgetService 
 
     @Override
     public Result startEstimateFlow(Budget budget, String processDefinitionKey) {
+        
+        if(!"10".equals(budget.getStatus())){
+            return new Result(false,"本次测算已提交。");
+        }
+        
         budget.setStatus("20");
         budget.setUpdateDateTime(new Date());
         
