@@ -1,0 +1,72 @@
+<section class="content-header">
+    <h1>
+        班组消耗
+        <small>列表</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
+        <li><a href="#">经营管理</a></li>
+        <li class="active">班组消耗查询</li>
+    </ol>
+</section>
+
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <!-- /.box-header -->
+                <div class="dataTables_filter" id="searchDiv">
+                    <select id="projectID" class="form-control select2" name="p.project_id" style="width:200px;" operator="eq">
+                        <option selected="selected" value="">选择一个项目</option>
+                    </select>
+                    <input type="search" placeholder="请输入班组名称" title="班组名称" name="pd.team_name" class="form-control" id="teamName" operator="like" likeOption="true">
+                    <input type="search"  name = "status" id="status" value="30" style="display:none;" operator="not_eq">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-primary" data-btn-type="search">查询</button>
+                        <button type="button" class="btn btn-default" data-btn-type="reset">重置</button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <table id="team_consume_list_table" class="table table-bordered table-striped table-hover">
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    var form = $("#searchDiv").form({baseEntity: false}), initData={};
+    var teamConsumeListTable, winId = "teamWin";
+    var projectOptions = '${projectOptions?default(0)}',options=0;
+    if(projectOptions != 0){
+        options = JSON.parse(projectOptions);
+    }
+    
+    $(function (){
+    	teamConsumeListTable = new CommonTable("team_table", "team_consume_list", "searchDiv", null);
+        
+        if(options != 0){
+            for (var i = 0, len = options.length; i < len; i++) {
+                var option = options[i];
+                $('#projectID').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+            }
+            $(".select2").select2();
+        }
+    });
+    
+    function showTeamConsume(that, value){
+        var rowId = $(that).parent().parent().attr('id');
+        modals.openWin({
+            winId: "teamConsumeWin",
+            width: "700px",
+            url: basePath + "/purchase/team/history/"+rowId,
+            title: "班组预算历史消耗"
+        });
+    }
+    
+    function fnRenderTeam(value, type, rowObj){
+        return "<a href='javascript:void(0)' onclick='showTeamConsume(this,\"" + rowObj.id + "\")'>查看</a>";
+    }
+    
+</script>

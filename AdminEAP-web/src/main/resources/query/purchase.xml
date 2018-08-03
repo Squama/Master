@@ -40,7 +40,7 @@
         <column key="matStandard" header="物料规格" classType="String" width="150"/>
         <column key="unit" header="单位" classType="String" width="150"/>
         <column key="quantity" header="数量" classType="String" width="150"/>
-        <column key="teamName" header="班组名称" classType="String" width="150"/>
+        <column key="teamName" header="班组名称" fnRender="fnRenderTeam"/>
         <column key="demandTime" header="需求时间" classType="java.util.Date" dateFormat="yyyy-mm-dd" width="150"/>
         <column key="channelName" header="渠道商" classType="String" width="150"/>
         <column key="channelID" header="选择渠道商" width="80" fnRender="fnRenderChannel"/>
@@ -98,6 +98,49 @@
         <column key="budget" header="预算量" align="right" width="100"/>
         <column key="cost" header="已消耗" align="right" width="100"/>
         <column key="apply" header="本次申请" align="right" width="100"/>
+    </query>
+    
+    <query id="team_consume_history" key="id" tableName="班组子项消耗" widthType="px">
+        <sql>
+            <![CDATA[
+                SELECT pd.id,p.budget_no, b.project_name,b.project_sub_name, pd.team_name,pd.demand_time,
+                pd.region_name, pd.mat_name,pd.mat_standard,pd.unit,pd.quantity,pd.price
+                FROM tbl_purchase p, tbl_purchase_det pd,tbl_budget b
+                WHERE p.id = pd.purchase_id AND p.budget_no = b.budget_no AND p.status IN ('40','50','60')
+                AND 1=1
+                ORDER BY pd.mat_number 
+            ]]>
+        </sql>
+        <column key="id" header="编号" hidden="true"/>
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="project_name" header="项目名称" hidden="true"/>
+        <column key="project_sub_name" header="所属子项" hidden="true"/>
+        <column key="team_name" header="班组名称" hidden="true"/>
+        <column key="demand_time" header="需求时间" classType="java.util.Date" dateFormat="yyyy-mm-dd" width="150"/>
+        <column key="region_name" header="部位" classType="String" width="150"/>
+        <column key="mat_name" header="物料" classType="String" width="150"/>
+        <column key="mat_standard" header="规格" classType="String" width="150"/>
+        <column key="unit" header="单位" classType="String" width="150"/>
+        <column key="quantity" header="数量" classType="String" width="150"/>
+        <column key="price" header="价格" classType="String" width="150"/>
+    </query>
+    
+    <query id="team_consume_list" key="id" tableName="班组消耗"列表 widthType="px">
+        <sql>
+            <![CDATA[
+                SELECT pd.id,p.budget_no, b.project_name,b.project_sub_name, pd.team_name
+                FROM tbl_purchase p, tbl_purchase_det pd,tbl_budget b
+                WHERE p.id = pd.purchase_id AND p.budget_no = b.budget_no 
+                AND 1=1
+            ]]>
+        </sql>
+        <column key="id" header="编号" hidden="true"/>
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="project_name" header="项目名称" hidden="true"/>
+        <column key="project_sub_name" header="所属子项" hidden="true"/>
+        <column key="budget_no" header="预算编号" hidden="true"/>
+        <column key="team_name" header="班组名称" hidden="true"/>
+        <column key="id" header="操作" fnRender="fnRenderDetail"/>
     </query>
     
 </queryContext>

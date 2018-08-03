@@ -78,6 +78,14 @@
                    modals.error(data.message);
                 }
             });
+        },showTeamConsume: function(that, value){
+            var rowId = $(that).parent().parent().attr('id');
+            modals.openWin({
+                winId: "teamConsumeWin",
+                width: "700px",
+                url: basePath + "/purchase/team/history/"+rowId,
+                title: "班组预算历史消耗"
+            });
         }
     }
     
@@ -115,5 +123,9 @@
     $(function(){
     	workflowCtrl.init("purchase-det-form", purchaseID);
     })
+    
+    function fnRenderTeam(value, type, rowObj){
+        return "<a href='javascript:void(0)' onclick='workflowCtrl.showTeamConsume(this,\"" + rowObj.id + "\")'>"+value+"</a>";
+    }
     
 </script>
