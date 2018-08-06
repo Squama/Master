@@ -41,7 +41,7 @@ public class FunctionController {
     @ResponseBody
     public List<Function> getAll() {
 
-        String hql = "from Function order by levelCode asc";
+        String hql = "from Function where (deleted=0 or deleted is null) order by levelCode";
         return functionService.find(hql.toString());
     }
     
