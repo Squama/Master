@@ -168,6 +168,7 @@ public class EmployeeQueryController {
                 oldJobID = oldUser.getJobId();
             }
             SpringUtil.copyPropertiesIgnoreNull(user, oldUser);
+            oldUser.setDutyContent(user.getDutyContent());
             oldUser.setUpdateDateTime(new Date());
             userService.update(oldUser);
             if (flag) {
