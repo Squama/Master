@@ -510,6 +510,7 @@ public class StockServiceImpl extends BaseServiceImpl implements StockService {
             saveHistory(targetProjectID,matID,quantity,"2",sp.getProjectName(),"");
         }
         dispatch.setStatus("60");//调度完成，调度单状态更新为已完成
+        dispatch.setUpdateDateTime(new Date());
         update(dispatch);
         return true;
     }
@@ -525,6 +526,7 @@ public class StockServiceImpl extends BaseServiceImpl implements StockService {
 
     	if(lx.equals("ck")){
             d.setStatus("20");//更新调度单状态：已出库
+            d.setCreateDateTime(new Date());
             update(d);
         }else if(lx.equals("rk")){
     	    //调度单冻结生效

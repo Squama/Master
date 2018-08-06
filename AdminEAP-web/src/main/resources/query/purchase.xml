@@ -125,7 +125,7 @@
         <column key="price" header="价格" classType="String" width="150"/>
     </query>
     
-    <query id="team_consume_list" key="id" tableName="班组消耗"列表 widthType="px">
+    <query id="team_consume_list" key="id" tableName="班组消耗列表" widthType="px">
         <sql>
             <![CDATA[
                 SELECT pd.id,p.budget_no, b.project_name,b.project_sub_name, pd.team_name
