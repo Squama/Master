@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface StockService extends BaseService {
 
-    Boolean saveHistory(String project_ID,String mat_ID,Double stockChangeNum,String useTpye,String stockSource,String remark,Double price);
+    Boolean saveHistory(String project_ID,String mat_ID,Double stockChangeNum,String useTpye,String stockSource,String remark,Double price,String channel_ID);
     Boolean stockChange(String project_ID,String mat_ID,Double stockChangeNum,int changeType,String useType);
 
     //采购单入库数量变更

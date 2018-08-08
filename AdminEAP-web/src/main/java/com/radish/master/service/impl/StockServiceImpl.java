@@ -36,7 +36,7 @@ public class StockServiceImpl extends BaseServiceImpl implements StockService {
      * @return
      */
     @Override
-    public Boolean saveHistory(String project_ID, String mat_ID, Double stockChangeNum, String useTpye, String stockSource, String remark,Double price) {
+    public Boolean saveHistory(String project_ID, String mat_ID, Double stockChangeNum, String useTpye, String stockSource, String remark,Double price,String channel_ID) {
         StockHistory tockHistory = new StockHistory();
         tockHistory.setProject_id(project_ID);
         tockHistory.setMat_id(mat_ID);
@@ -47,6 +47,7 @@ public class StockServiceImpl extends BaseServiceImpl implements StockService {
         tockHistory.setOperation_person_id(SecurityUtil.getUserId());
         tockHistory.setOperation_time(new Date());
         tockHistory.setPrice(price);
+        tockHistory.setChannel_id(channel_ID);
         save(tockHistory);
         return true;
     }
@@ -89,7 +90,7 @@ public class StockServiceImpl extends BaseServiceImpl implements StockService {
         //同步库存渠道表
         saveChannel(mat_id ,project_ID,channel_ID,stockNum,1);
         //新增历史库存记录
-        saveHistory(project_ID,mat_id,stockNum,"1",purchase_ID,"",0.0);
+        saveHistory(project_ID,mat_id,stockNum,"1",purchase_ID,"",0.0,channel_ID);
         //更新采购单余量
         savePurchaseChange(purchase_ID,mat_id,stockNum,"1", region_ID);
         return true;
@@ -136,7 +137,7 @@ public class StockServiceImpl extends BaseServiceImpl implements StockService {
         saveChannel(mat_id ,project_ID,channel_ID,stockNum,1);
         Double price = getChannelByID(channel_ID).getPrice();
         //新增历史库存记录
-        saveHistory(project_ID,mat_id,stockNum,"5","","",price);
+        saveHistory(project_ID,mat_id,stockNum,"5","","",price,channel_ID);
         return true;
     }
 
@@ -504,12 +505,12 @@ public class StockServiceImpl extends BaseServiceImpl implements StockService {
             stockChannel.setFrozen_num(arith.sub(stockChannel.getFrozen_num(),quantity));
             stockChannel.setStock_num(arith.sub(stockChannel.getStock_num(),quantity));
             update(stockChannel);
-            saveHistory(sourceProjectID,matID,quantity,"4",tp.getProjectName(),"",0.0);
+            saveHistory(sourceProjectID,matID,quantity,"4",tp.getProjectName(),"",0.0,channelID);
 
             //目标库存入库
             stockChange(targetProjectID, matID,quantity, 1, "2");
             saveChannel(matID,targetProjectID,channelID,quantity,1);
-            saveHistory(targetProjectID,matID,quantity,"2",sp.getProjectName(),"",0.0);
+            saveHistory(targetProjectID,matID,quantity,"2",sp.getProjectName(),"",0.0,channelID);
         }
         dispatch.setStatus("60");//调度完成，调度单状态更新为已完成
         dispatch.setUpdateDateTime(new Date());

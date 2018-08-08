@@ -66,6 +66,9 @@ public class StockHistory extends BaseEntity {
     @Column(name = "price")
     private Double price;
 
+    @Header(name = "供应商id")
+    @Column(name = "channel_id")
+    private String channel_id;
 
     public String getProject_id() {
         return project_id;
@@ -170,6 +173,14 @@ public class StockHistory extends BaseEntity {
 
 	public void setPrice(Double price) {
 		this.price = price;
+	}
+
+	public String getChannel_id() {
+		return channel_id;
+	}
+
+	public void setChannel_id(String channel_id) {
+		this.channel_id = channel_id;
 	}
     
 }
