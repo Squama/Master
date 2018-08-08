@@ -61,6 +61,10 @@ public class StockHistory extends BaseEntity {
     @Header(name = "预留字段3")
     @Column(name = "reserve3")
     private String reserve3;
+    
+    @Header(name = "价格")
+    @Column(name = "price")
+    private Double price;
 
 
     public String getProject_id() {
@@ -159,4 +163,13 @@ public class StockHistory extends BaseEntity {
     public void setOperation_bill_ID(String operation_bill_ID) {
         this.operation_bill_ID = operation_bill_ID;
     }
+
+	public Double getPrice() {
+		return price;
+	}
+
+	public void setPrice(Double price) {
+		this.price = price;
+	}
+    
 }

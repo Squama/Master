@@ -200,7 +200,7 @@ public class StockController {
             //同步库存渠道表 1:入库，2：出库
             stockService.saveChannel(pd.getMatNumber(),p.getProjectID(),"",pd.getQuantity(),2);
             //历史变更
-            stockService.saveHistory(purchaseID,pd.getMatNumber(),pd.getQuantity(),"3","stockOut","");
+            stockService.saveHistory(purchaseID,pd.getMatNumber(),pd.getQuantity(),"3","stockOut","",0.0);
         }
         //更新申请单明细状态
         String sql= "update tbl_purchase_det set status = '99' where purchase_id = '"+purchaseID+"'";

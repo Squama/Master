@@ -1,0 +1,403 @@
+
+<link rel="stylesheet" href="${basePath}/resources/common/libs/fileinput/css/fileinput.min.css">
+<script src="${basePath}/resources/common/libs/fileinput/js/fileinput.js"></script>
+<script src="${basePath}/resources/common/libs/fileinput/js/locales/zh.js"></script>
+<!--BaseFile组件-->
+<script src="${basePath}/resources/common/js/base-file.js"></script>
+ <style >
+     	#tb table{
+     		font-family: verdana,arial,sans-serif;
+	     	font-size:11px;
+	     	color:#333333;
+	      	border-width: 1px;
+	      	border-color: #666666;
+	      	border-collapse: collapse;
+	      	word-wrap:break-word; 
+	      	word-break:break-all;
+     	}
+      	#tb th{
+     		 border-width: 1px;
+		     padding: 8px;
+		     border-style: solid;
+		     border-color: #666666;
+		     background-color: 	#FFEFDB;
+		     text-align: center;
+		     font-size: 15px
+		     
+     	}
+     	#tb td{
+	     	 border-width: 1px;
+		     padding: 8px;
+		     border-style: solid;
+		     border-color: #666666;
+		     background-color: #ffffff;
+		     text-align: center
+     	}
+     	
+	</style>
+
+<section class="content-header">
+    <h1>
+        <span>统计管理</span>
+        <small>材料出入库明细</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
+        <li><a href="#">统计管理</a></li>
+        <li class="active">材料出入库明细</li>
+    </ol>
+</section>
+
+    
+
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <span>
+                        <i class="fa fa-edit">生成统计数据</i>
+                    </span>
+                </div>
+                <form id="import_form" name="attendance_form" class="form-horizontal">
+                    <div class="box-body">
+                        <div class="col-md-12">
+                        	
+
+		                    <div class="form-group">
+		                    	<label for="projectId" class="col-sm-5 control-label">项目名称</label>
+		                   		<div class="col-sm-2">
+			                   		<select id="projectId" class="form-control select2 "  name="projectId" style="width:100%" >
+			                   			<option selected="selected" value="">选择一个项目</option>
+			                   		</select>
+		                   		</div>
+		                    </div>
+		                    <div class="form-group">
+                                <label class="col-sm-5 control-label">开始时间</label>
+                                <div class="col-sm-2">
+                                    <input type="text" class="form-control date-picker" name="startdate" id="startdate" data-flag="datepicker" data-format="yyyy-mm-dd"  placeholder="" >
+                                </div>
+                            </div>
+                        	<div class="form-group">
+                                <label class="col-sm-5 control-label">截止时间</label>
+                                <div class="col-sm-2">
+                                    <input type="text" class="form-control date-picker" name="enddate" id="enddate" data-flag="datepicker" data-format="yyyy-mm-dd"  placeholder="" >
+                                </div>
+                            </div>
+                            <div class="form-group">
+		                    	<label for="matId" class="col-sm-5 control-label">物料</label>
+		                   		<div class="col-sm-2">
+			                   		<select id="matId" class="form-control select2 "  name="matId" style="width:100%" >
+			                   			<option selected="selected" value="">选择一个物料</option>
+			                   		</select>
+		                   		</div>
+		                    </div>
+                        </div>
+                    </div>
+                    <div class="box-footer text-center">
+                        <button type="submit" class="btn btn-default" data-btn-type="add" id ="add">生成</button>
+                    </div>
+                </form>
+            </div>
+            <div class="box">
+                <div class="box-body">
+                    <table style="width: 100%;text-align: center" id="tb">
+                    	<thead>
+                    		<tr>
+                    			<th rowspan="2" style="width: 10%">日期</th>
+                    			<th rowspan="2" style="width: 10%">摘要</th>
+                    			<th rowspan="2" style="width: 10%">单据号</th>
+                    			<th rowspan="2" style="width: 5%">规格</th>
+                    			<th rowspan="2" style="width: 5%">单位</th>
+                    			<th colspan="3" style="width: 12.5%">期初数</th>
+                    			<th colspan="3" style="width: 12.5%">入库</th>
+                    			<th colspan="3" style="width: 12.5%">出库</th>
+                    			<th colspan="3" style="width: 12.5%">结存</th>
+                    			<th rowspan="2" style="width: 10%">附注</th>
+                    		</tr>
+                    		<tr>
+                    			<th>数量</th>
+                    			<th>单价</th>
+                    			<th>金额</th>
+                    			<th>数量</th>
+                    			<th>单价</th>
+                    			<th>金额</th>
+                    			<th>数量</th>
+                    			<th>单价</th>
+                    			<th>金额</th>
+                    			<th>数量</th>
+                    			<th>单价</th>
+                    			<th>金额</th>
+                    		</tr>
+                    	</thead>
+                    	<tbody  id="tbs">
+                    	
+                    	</tbody>
+                    	<tfoot id="tfs">
+                    	
+                    	</tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+var pros = '${projectOptions?default(0)}',pro=0;
+if(pros != 0){
+	pro = JSON.parse(pros);
+}
+var mats = '${matOptions?default(0)}',mat=0;
+if(mats != 0){
+	mat = JSON.parse(mats);
+}
+
+    var importform;
+    $(function () {
+    	
+    	
+        //初始化表单 
+        importform = $("#import_form").form({baseEntity:false});
+        //数据校验
+        $("#import_form").bootstrapValidator({
+            message: '请输入有效值',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            submitHandler: function () {
+            	 modals.confirm('确认生成明细？', function() {
+                	 var start = $("#startdate").val();
+                	 var end = $("#enddate").val();
+                	 if(CompareDate(start,end)){
+                		 modals.info("开始日期不得大于截止日期");
+                		 $("#startdate").val("");
+                		 $("#enddate").val("");
+                		 return ;
+                   	  }
+                     //Save Data，对应'submit-提交'
+                     var params = importform.getFormSimpleData();
+                     	ajaxPost(basePath+'/matinandout/doInAndOutForMat', params, function(data) {
+                             if(data.success){
+                            	 loadInfo(data.id);
+                              }else{	
+                            	  modals.info("统计失败");
+                              }
+                         }); 
+               
+                      
+                 });
+            },
+            fields: {
+                "projectId": {
+                    validators: {
+                        notEmpty: {message: '请选择项目'}
+                    }
+                },
+                "enddate": {
+                    validators: {
+                        notEmpty: {message: '请选择截止时间'}
+                    }
+                },
+                "startdate": {
+                    validators: {
+                        notEmpty: {message: '请选择开始时间'}
+                    }
+                },
+                "matId": {
+                    validators: {
+                        notEmpty: {message: '请选择需统计的物料'}
+                    }
+                }
+                
+            }
+        });
+        //初始化控件
+        importform.initComponent();
+        if(pro != 0){
+            for (var i = 0, len = pro.length; i < len; i++) {
+                var u = pro[i];
+                $('#projectId').append("<option value='" + u.value + "'>" + u.data + "</option>");
+            }
+            $("#projectId").select2();
+        }
+        if(mat != 0){
+            for (var i = 0, len = mat.length; i < len; i++) {
+                var u = mat[i];
+                $('#matId').append("<option value='" + u.mat_number + "'>" + u.mat_name+"("+u.mat_standard+")" + "</option>");
+            }
+            $("#matId").select2();
+        }
+    });
+    function loadInfo(id){
+    	ajaxPost(basePath+'/matinandout/getInAndOutInfo', {id:id}, function(data) {
+    		$("#tbs").empty();
+    		$("#tfs").empty();
+           var mxjcs = data.mxjcs;
+           if(mxjcs.length==0){
+        	   modals.info("数据条数0，请重新选择条件");
+        	   return;
+           }
+		   var zqcsl=0;
+		   var zqcje=0;
+		   var zrksl=0;
+		   var zrkje=0;
+		   var zcksl=0;
+		   var zckje=0;
+		   var zjcsl=0;
+		   var zjcje=0;
+           
+           var tr ="";
+           for(var i=0;i<mxjcs.length;i++){
+               	var mx = mxjcs[i].mx;
+               	//计算总额
+               	if(mx.qcsl){
+               		zqcsl = parseInt(zqcsl)+parseInt(mx.qcsl);
+    			}
+               	if(mx.qcje){
+               		zqcje = parseInt(zqcje)+parseInt(getZje(mx.qcsl,mx.qcje));
+    			}
+               	if(mx.rksl){
+               		zrksl = parseInt(zrksl)+parseInt(mx.rksl);
+    			}
+               	if(mx.rkje){
+               		zrkje = parseInt(zrkje)+parseInt(getZje(mx.rksl,mx.rkje));
+    			}
+               	if(mx.cksl){
+               		zcksl = parseInt(zcksl)+parseInt(mx.cksl);
+    			}
+               	if(mx.ckje){
+               		zckje = parseInt(zckje)+parseInt(getZje(mx.cksl,mx.ckje));
+    			}
+               	var jcs = mxjcs[i].jcs;
+               	
+               	if(jcs.size<=1){
+               		tr +="<tr>";
+    				tr +="<td>"+jsonYearMonthDay(mx.rq)+"</td>"
+    				tr +="<td>"+qcnull(mx.bz)+"</td>"
+    				tr +="<td>"+qcnull(mx.number)+"</td>"
+    				tr +="<td>"+qcnull(mx.standard)+"</td>"
+    				tr +="<td>"+qcnull(mx.unit)+"</td>"
+    				tr +="<td>"+qcnull(mx.qcsl)+"</td>"
+    				tr +="<td>"+qcnull(mx.qcje)+"</td>"
+    				tr +="<td>"+getZje(mx.qcsl,mx.qcje)+"</td>"
+    				tr +="<td>"+qcnull(mx.rksl)+"</td>"
+    				tr +="<td>"+qcnull(mx.rkje)+"</td>"
+    				tr +="<td>"+getZje(mx.rksl,mx.rkje)+"</td>"
+    				tr +="<td>"+qcnull(mx.cksl)+"</td>"
+    				tr +="<td>"+qcnull(mx.ckje)+"</td>"
+    				tr +="<td>"+getZje(mx.cksl,mx.ckje)+"</td>"
+					if(jcs.size==0){
+						tr +="<td></td>"
+	    				tr +="<td></td>"
+	    				tr +="<td></td>"
+					}
+					if(jcs.size==1){
+						tr +="<td>"+qcnull(jcs[0].jcsl)+"</td>"
+	    				tr +="<td>"+qcnull(jcs[0].jcje)+"</td>"
+	    				tr +="<td>"+getZje(jcs[0].jcsl,jcs[0].jcje)+"</td>"
+					}
+					tr +="<td>"+qcnull(mx.fz)+"</td>"
+    				tr +="</tr>";
+                }else{
+                	tr +="<tr>";
+    				tr +="<td rowspan='"+jcs.length+"'>"+jsonYearMonthDay(mx.rq)+"</td>"
+    				tr +="<td rowspan='"+jcs.length+"'>"+qcnull(mx.bz)+"</td>"
+    				tr +="<td rowspan='"+jcs.length+"'>"+qcnull(mx.number)+"</td>"
+    				tr +="<td rowspan='"+jcs.length+"'>"+qcnull(mx.standard)+"</td>"
+    				tr +="<td rowspan='"+jcs.length+"'>"+qcnull(mx.unit)+"</td>"
+    				tr +="<td rowspan='"+jcs.length+"'>"+qcnull(mx.qcsl)+"</td>"
+    				tr +="<td rowspan='"+jcs.length+"'>"+qcnull(mx.qcje)+"</td>"
+    				tr +="<td rowspan='"+jcs.length+"'>"+getZje(mx.qcsl,mx.qcje)+"</td>"
+    				tr +="<td rowspan='"+jcs.length+"'>"+qcnull(mx.rksl)+"</td>"
+    				tr +="<td rowspan='"+jcs.length+"'>"+qcnull(mx.rkje)+"</td>"
+    				tr +="<td rowspan='"+jcs.length+"'>"+getZje(mx.rksl,mx.rkje)+"</td>"
+    				tr +="<td rowspan='"+jcs.length+"'>"+qcnull(mx.cksl)+"</td>"
+    				tr +="<td rowspan='"+jcs.length+"'>"+qcnull(mx.ckje)+"</td>"
+    				tr +="<td rowspan='"+jcs.length+"'>"+getZje(mx.cksl,mx.ckje)+"</td>"
+					
+					tr +="<td>"+qcnull(jcs[0].jcsl)+"</td>"
+    				tr +="<td>"+qcnull(jcs[0].jcje)+"</td>"
+    				tr +="<td>"+getZje(jcs[0].jcsl,jcs[0].jcje)+"</td>"
+				
+					tr +="<td rowspan='"+jcs.length+"'>"+qcnull(mx.fz)+"</td>"
+    				tr +="</tr>";
+    				for(var j=1;j<jcs.length;j++){
+    					tr +="<tr>";
+    					tr +="<td>"+qcnull(jcs[j].jcsl)+"</td>"
+        				tr +="<td>"+qcnull(jcs[j].jcje)+"</td>"
+        				tr +="<td>"+getZje(jcs[j].jcsl,jcs[j].jcje)+"</td>"
+        				tr +="</tr>";
+        			}
+                }
+              //最后一次，计算总结语
+               	if(i==(mxjcs.length-1)){
+               		for(var j=0;j<jcs.length;j++){
+    					if(jcs[j].jcsl){
+    						zjcsl = parseInt(zjcsl)+parseInt(jcs[j].jcsl);
+        				}
+    					if(jcs[j].jcje){
+    						zjcje = parseInt(zjcje)+parseInt(getZje(jcs[j].jcsl,jcs[j].jcje));
+        				}
+        			}
+                 }
+           }
+           $("#tbs").append(tr);
+           var tfs = "<tr>";
+           tfs += "<td colspan='2'>合计</td>";
+           tfs += "<td ></td>";
+           tfs += "<td ></td>";
+           tfs += "<td ></td>";
+           tfs += "<td >"+zqcsl+"</td>";
+           tfs += "<td ></td>";
+           tfs += "<td >"+zqcje+"</td>";
+           tfs += "<td >"+zrksl+"</td>";
+           tfs += "<td ></td>";
+           tfs += "<td >"+zrkje+"</td>";
+           tfs += "<td >"+zcksl+"</td>";
+           tfs += "<td ></td>";
+           tfs += "<td >"+zckje+"</td>";
+           tfs += "<td >"+zjcsl+"</td>";
+           tfs += "<td ></td>";
+           tfs += "<td >"+zjcje+"</td>";
+           tfs += "<td ></td>";
+           tfs += "</tr>";
+           $("#tfs").append(tfs);
+        }); 
+    }
+    function CompareDate(d1,d2)
+    {
+      return ((new Date(d1.replace(/-/g,"\/"))) > (new Date(d2.replace(/-/g,"\/"))));
+    }
+    function getZje(sl,dj){
+		if(sl&&dj){
+			return sl*dj;
+		}else{
+			return "";
+		}
+     }
+    function jsonYearMonthDay(milliseconds) {
+		if(milliseconds==null || milliseconds=="undefined"){
+			return "";
+		}
+		var datetime = new Date();
+		datetime.setTime(milliseconds);
+		var year = datetime.getFullYear();
+		var month = datetime.getMonth() + 1 < 10 ? "0"
+				+ (datetime.getMonth() + 1) : datetime.getMonth() + 1;
+		var date = datetime.getDate() < 10 ? "0" + datetime.getDate()
+				: datetime.getDate();
+		return year + "." + month + "." + date;
+
+	}
+
+	function qcnull(value){
+		if(!value){
+			return "";
+		}else{
+			return value;
+		}
+	}
+    
+</script>
