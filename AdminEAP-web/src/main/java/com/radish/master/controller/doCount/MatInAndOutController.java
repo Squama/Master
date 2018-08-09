@@ -30,6 +30,7 @@ import java.util.Map;
 
 
 
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
@@ -43,6 +44,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSONArray;
 import com.cnpc.framework.base.service.BaseService;
 import com.radish.master.entity.Materiel;
+import com.radish.master.entity.Project;
 import com.radish.master.entity.doCount.InAndOut;
 import com.radish.master.entity.doCount.InAndOutDet;
 import com.radish.master.entity.doCount.InAndOutDetJc;
@@ -77,10 +79,16 @@ public class MatInAndOutController {
 	public Map<String,Object> doInAndOutForMat(HttpServletRequest request,InAndOut tj){
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Map<String,Object> m = new HashMap<String,Object>();
-		tj.setStatus("10");
-		baseService.save(tj);
 		//拿到物料
 		List<Materiel> wl = baseService.find(" from Materiel where mat_number='"+tj.getMatId()+"'");
+		
+		tj.setStatus("10");
+		tj.setMatName(wl.get(0).getMat_name());
+		tj.setStandard(wl.get(0).getMat_standard());
+		Project xm = baseService.get(Project.class, tj.getProjectId());
+		tj.setProName(xm.getProjectName());
+		baseService.save(tj);
+		
 		//计算期初,拿到开始日期之前的结存
 		List<InAndOutDetJc> jcs = getQc(tj);
 		for(InAndOutDetJc jc :jcs){

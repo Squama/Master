@@ -54,6 +54,18 @@ public class InAndOut implements Serializable {
     @Header(name = "状态")
     @Column(name = "status")
     private String status;
+    
+    @Header(name = "物料名称")
+    @Column(name = "matName")
+    private String matName;
+    
+    @Header(name = "规格")
+    @Column(name = "standard")
+    private String standard;
+    
+    @Header(name = "项目名称")
+    @Column(name = "proName")
+    private String proName;
 
 	public String getId() {
 		return id;
@@ -101,6 +113,30 @@ public class InAndOut implements Serializable {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public String getMatName() {
+		return matName;
+	}
+
+	public void setMatName(String matName) {
+		this.matName = matName;
+	}
+
+	public String getStandard() {
+		return standard;
+	}
+
+	public void setStandard(String standard) {
+		this.standard = standard;
+	}
+
+	public String getProName() {
+		return proName;
+	}
+
+	public void setProName(String proName) {
+		this.proName = proName;
 	}
 
 	

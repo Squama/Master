@@ -16,6 +16,8 @@
         <column key="pName" header="所属项目" classType="String" width="150"/>
         <column key="create_name" header="创建人" classType="String" width="150" />
         <column key="create_time" header="创建日期" classType="String" width="150" allowSort="true" />
+        <column key="id" header="实施前图片" width="80" fnRender="fnRenderFjq"/>
+        <column key="id" header="实施后图片" width="80" fnRender="fnRenderFjh"/>
     </query>
     
     <query id="gsjd_List" key="id" tableName="公司交底列表" widthType="px">

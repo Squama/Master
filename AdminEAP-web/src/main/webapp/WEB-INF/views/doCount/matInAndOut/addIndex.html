@@ -33,6 +33,16 @@
 		     background-color: #ffffff;
 		     text-align: center
      	}
+     	#title td{
+     		 border-width: 0px;
+		     padding: 8px;
+		     border-color: #666666;
+		     background-color: #E0FFFF;
+		     text-align: center;
+		     font-size: 18px;
+		     font-weight: 500
+		     
+     	}
      	
 	</style>
 
@@ -102,8 +112,22 @@
             <div class="box">
                 <div class="box-body">
                     <table style="width: 100%;text-align: center" id="tb">
+                    	
                     	<thead>
-                    		<tr>
+	                    	<tr id="title">
+	                    		<td colspan="18" style="text-align: center;font-size: 25px;font-weight: 600">材料出入库明细帐</td>
+	                    	</tr>
+	                    	<tr id="title">
+	                    		<td colspan="" style="text-align: center">品名：</td>
+	                    		<td colspan="" style="text-align: left" id="matName"></td>
+	                    		<td colspan="" style="text-align: right">规格：</td>
+	                    		<td colspan="2" style="text-align: left" id="gg"></td>
+	                    		<td colspan="3" style="text-align: center">所属项目：</td>
+	                    		<td colspan="6" style="text-align: left" id="xm"></td>
+	                    		<td colspan="3" style="text-align: right">编号：</td>
+	                    		<td colspan="" style="text-align: left" id="num"></td>
+	                    	</tr>
+                    		<tr >
                     			<th rowspan="2" style="width: 10%">日期</th>
                     			<th rowspan="2" style="width: 10%">摘要</th>
                     			<th rowspan="2" style="width: 10%">单据号</th>
@@ -232,8 +256,18 @@ if(mats != 0){
     });
     function loadInfo(id){
     	ajaxPost(basePath+'/matinandout/getInAndOutInfo', {id:id}, function(data) {
+        	$("#matName").empty();
+        	$("#gg").empty();
+        	$("#num").empty();
     		$("#tbs").empty();
     		$("#tfs").empty();
+    		var tj = data.tj;
+
+    		$("#xm").html(tj.proName);
+        	$("#num").html(tj.matId);
+        	$("#matName").html(tj.matName);
+        	$("#gg").html(tj.standard);
+			
            var mxjcs = data.mxjcs;
            if(mxjcs.length==0){
         	   modals.info("数据条数0，请重新选择条件");
@@ -364,6 +398,7 @@ if(mats != 0){
            tfs += "<td ></td>";
            tfs += "</tr>";
            $("#tfs").append(tfs);
+          
         }); 
     }
     function CompareDate(d1,d2)

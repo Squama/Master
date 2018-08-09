@@ -125,5 +125,18 @@
         } 
         
     });
-    
+    function showDetail(fileId,type) {
+    	modals.openWin({
+            winId: "files",
+            width: "900px",
+            url: basePath + "/qcproject/projectdetailfile?id=" + fileId+"&type="+type,
+            title: "图片管理"
+        });
+    }
+    function fnRenderFjq(value){
+    	return "<a href='javascript:void(0)' onclick='showDetail(\"" + value + "\",\"1\")' style='margin-right:10px'>实施前图片管理</a>";
+    }
+    function fnRenderFjh(value){
+    	return "<a href='javascript:void(0)' onclick='showDetail(\"" + value + "\",\"2\")' style='margin-right:10px'>实施后图片管理</a>";
+    }
 </script>
