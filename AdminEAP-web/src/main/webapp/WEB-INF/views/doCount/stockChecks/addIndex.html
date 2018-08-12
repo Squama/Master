@@ -233,6 +233,7 @@ if(pros != 0){
     function loadInfo(id){
     	ajaxPost(basePath+'/stockchecks/getStockChecks', {id:id}, function(data) {
     		$("#tfs").empty();
+    		$("#tbs").empty();
     		$("#xm").html(data.tj.proName);
     		$("#rq").html(jsonYearMonthDay(data.tj.startdate)+" — "+ jsonYearMonthDay(data.tj.enddate))
            var mxjcs = data.mxjcs;
