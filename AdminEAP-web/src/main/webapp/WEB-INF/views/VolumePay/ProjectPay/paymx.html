@@ -77,10 +77,14 @@ var payid = '${payid?default(0)}'
     	}
     	if(rowObj.status=="完成"){
     		oper +="<a href='javascript:void(0)' onclick='Dy(\"" + value + "\")'>打印支付单</a>";
+    		if(rowObj.isrz=="10"&&rowObj.fk!=0){
+    			oper +="&nbsp;&nbsp;<a href='javascript:void(0)' onclick='doJz(\"" + value + "\")' style='color:red'>记账</a>";
+            }
     	}
     	if(rowObj.status=="驳回(待支付)"){
     		oper +="<a href='javascript:void(0)' onclick='Yy(\"" + rowObj.bhdesc + "\")'>驳回原因</a>&nbsp;&nbsp;<a href='javascript:void(0)' onclick='Zf(\"" + value + "\")'>支付审批</a>";
         }
+        
         return oper;
     }
     function Zf(id){
@@ -101,5 +105,16 @@ var payid = '${payid?default(0)}'
     }
     function Yy(value){
     	modals.info(value);
+    }
+
+    function doJz(id){
+    	modals.confirm("请确认是否记账？",function(){
+            ajaxPost(basePath+"/projectpay/doJz?id="+id,null,function(data){
+            	if(data.success){
+            		modals.info("成功记账");
+            		budgetImportTable.reloadData();
+            	}
+            });
+        })
     }
 </script>

@@ -1,0 +1,432 @@
+
+<link rel="stylesheet" href="${basePath}/resources/common/libs/fileinput/css/fileinput.min.css">
+<script src="${basePath}/resources/common/libs/fileinput/js/fileinput.js"></script>
+<script src="${basePath}/resources/common/libs/fileinput/js/locales/zh.js"></script>
+<!--BaseFile组件-->
+<script src="${basePath}/resources/common/js/base-file.js"></script>
+ <style >
+     	#tb table{
+     		font-family: verdana,arial,sans-serif;
+	     	font-size:11px;
+	     	color:#333333;
+	      	border-width: 1px;
+	      	border-color: #666666;
+	      	border-collapse: collapse;
+	      	word-wrap:break-word; 
+	      	word-break:break-all;
+     	}
+      	#tb th{
+     		 border-width: 1px;
+		     padding: 8px;
+		     border-style: solid;
+		     border-color: #666666;
+		     background-color: 	#FFEFDB;
+		     text-align: center;
+		     font-size: 15px
+		     
+     	}
+     	#tb td{
+	     	 border-width: 1px;
+		     padding: 8px;
+		     border-style: solid;
+		     border-color: #666666;
+		     background-color: #ffffff;
+		     text-align: center
+     	}
+     	#title td{
+     		 border-width: 0px;
+		     padding: 8px;
+		     border-color: #666666;
+		     background-color: #E0FFFF;
+		     text-align: center;
+		     font-size: 18px;
+		     font-weight: 500
+		     
+     	}
+     	
+
+     	
+	</style>
+
+<section class="content-header">
+    <h1>
+        <span>统计管理</span>
+        <small>库存盘点</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
+        <li><a href="#">统计管理</a></li>
+        <li class="active">库存盘点</li>
+    </ol>
+</section>
+
+    
+
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <span>
+                        <i class="fa fa-edit">生成统计数据</i>
+                    </span>
+                </div>
+                <form id="import_form" name="attendance_form" class="form-horizontal">
+                    <div class="box-body">
+                        <div class="col-md-12">
+                        	
+
+		                    <div class="form-group">
+		                    	<label for="projectId" class="col-sm-5 control-label">项目名称</label>
+		                   		<div class="col-sm-2">
+			                   		<select id="projectId" class="form-control select2 "  name="projectId" style="width:100%" >
+			                   			<option selected="selected" value="">选择一个项目</option>
+			                   		</select>
+		                   		</div>
+		                    </div>
+		                    <div class="form-group">
+                                <label class="col-sm-5 control-label">开始时间</label>
+                                <div class="col-sm-2">
+                                    <input type="text" class="form-control date-picker" name="startdate" id="startdate" data-flag="datepicker" data-format="yyyy-mm-dd"  placeholder="" >
+                                </div>
+                            </div>
+                        	<div class="form-group">
+                                <label class="col-sm-5 control-label">截止时间</label>
+                                <div class="col-sm-2">
+                                    <input type="text" class="form-control date-picker" name="enddate" id="enddate" data-flag="datepicker" data-format="yyyy-mm-dd"  placeholder="" >
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer text-center">
+                        <button type="submit" class="btn btn-default" data-btn-type="add" id ="add">生成</button>
+                    </div>
+                </form>
+            </div>
+            <div class="box">
+                <div class="box-body">
+                    <table style="width: 100%;text-align: center" id="tb">
+                    	
+                    	<thead>
+	                    	<tr id="title">
+	                    		<td colspan="17" style="text-align: center;font-size: 25px;font-weight: 600">库存盘点明细表</td>
+	                    	</tr>
+	                    	<tr id="title">
+	                    		<td style="text-align: center">所属项目：</td>
+	                    		<td colspan="3" style="text-align: left" id="xm"></td>
+	                    		<td colspan="9" style="text-align: center" id="rq"></td>
+	                    		<td colspan="3" style="text-align: left"></td>
+	                    		<td colspan="" style="text-align: right" >单位：元</td>
+	                    	</tr>
+                    		<tr >
+                    			<th rowspan="2" style="width: 5%">序号</th>
+                    			<th rowspan="2" style="width: 10%">品名</th>
+                    			<th rowspan="2" style="width: 5%">规格</th>
+                    			<th rowspan="2" style="width: 5%">单位</th>
+                    			<th colspan="3" style="width: 13.5%">期初数</th>
+                    			<th colspan="3" style="width: 13.5%">入库</th>
+                    			<th colspan="3" style="width: 13.5%">出库</th>
+                    			<th colspan="3" style="width: 13.5%">结存</th>
+                    			<th rowspan="2" style="width: 10%">附注</th>
+                    		</tr>
+                    		<tr>
+                    			<th>数量</th>
+                    			<th>单价</th>
+                    			<th>金额</th>
+                    			<th>数量</th>
+                    			<th>单价</th>
+                    			<th>金额</th>
+                    			<th>数量</th>
+                    			<th>单价</th>
+                    			<th>金额</th>
+                    			<th>数量</th>
+                    			<th>单价</th>
+                    			<th>金额</th>
+                    		</tr>
+                    	</thead>
+                    	<tbody  id="tbs">
+                    	
+                    	</tbody>
+                    	<tfoot id="tfs">
+                    	
+                    	</tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+var pros = '${projectOptions?default(0)}',pro=0;
+if(pros != 0){
+	pro = JSON.parse(pros);
+}
+
+
+    var importform;
+    $(function () {
+    	
+    	
+        //初始化表单 
+        importform = $("#import_form").form({baseEntity:false});
+        //数据校验
+        $("#import_form").bootstrapValidator({
+            message: '请输入有效值',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            submitHandler: function () {
+            	 modals.confirm('确认生成明细？', function() {
+                	 var start = $("#startdate").val();
+                	 var end = $("#enddate").val();
+                	 if(CompareDate(start,end)){
+                		 modals.info("开始日期不得大于截止日期");
+                		 $("#startdate").val("");
+                		 $("#enddate").val("");
+                		 return ;
+                   	  }
+                     //Save Data，对应'submit-提交'
+                     var params = importform.getFormSimpleData();
+                     	ajaxPost(basePath+'/stockchecks/dochecks', params, function(data) {
+                             if(data.success){
+                            	 loadInfo(data.id);
+                              }else{	
+                            	  modals.info("统计失败");
+                              }
+                         }); 
+               
+                      
+                 });
+            },
+            fields: {
+                "projectId": {
+                    validators: {
+                        notEmpty: {message: '请选择项目'}
+                    }
+                },
+                "enddate": {
+                    validators: {
+                        notEmpty: {message: '请选择截止时间'}
+                    }
+                },
+                "startdate": {
+                    validators: {
+                        notEmpty: {message: '请选择开始时间'}
+                    }
+                }
+                
+            }
+        });
+        //初始化控件
+        importform.initComponent();
+        if(pro != 0){
+            for (var i = 0, len = pro.length; i < len; i++) {
+                var u = pro[i];
+                $('#projectId').append("<option value='" + u.value + "'>" + u.data + "</option>");
+            }
+            $("#projectId").select2();
+        }
+       
+    });
+    function loadInfo(id){
+    	ajaxPost(basePath+'/stockchecks/getStockChecks', {id:id}, function(data) {
+    		$("#xm").html(data.tj.proName);
+    		$("#rq").html(jsonYearMonthDay(data.tj.startdate)+" — "+ jsonYearMonthDay(data.tj.enddate))
+           var mxjcs = data.mxjcs;
+           if(mxjcs.length==0){
+        	   modals.info("数据条数0，请重新选择条件");
+        	   return;
+           }
+		   var zqcsl=0;
+		   var zqcje=0;
+		   var zrksl=0;
+		   var zrkje=0;
+		   var zcksl=0;
+		   var zckje=0;
+		   var zjcsl=0;
+		   var zjcje=0;
+           
+           var tr ="";
+           for(var i=0;i<mxjcs.length;i++){
+               var mxs = mxjcs[i];
+               var jcs = mxs.jcs;
+               var mx = mxs.mx;
+               if(jcs.length==1){
+               	tr+="<tr>";
+               	tr+="<td >"+(i+1)+"</td>"
+               	tr+="<td >"+qcnull(mx.matName)+"</td>"
+               	tr+="<td >"+qcnull(mx.standard)+"</td>"
+               	tr+="<td >"+qcnull(mx.unit)+"</td>"
+               	tr+="<td >"+qcnull(jcs[0].qcsl)+"</td>"
+               	tr+="<td >"+qcnull(jcs[0].qcje)+"</td>"
+               	tr+="<td >"+getZje(jcs[0].qcsl,jcs[0].qcje)+"</td>"
+               	tr+="<td >"+qcnull(jcs[0].rksl)+"</td>"
+               	tr+="<td >"+qcnull(jcs[0].qcje)+"</td>"
+               	tr+="<td >"+getZje(jcs[0].rksl,jcs[0].qcje)+"</td>"
+               	tr+="<td >"+qcnull(jcs[0].cksl)+"</td>"
+               	tr+="<td >"+qcnull(jcs[0].qcje)+"</td>"
+               	tr+="<td >"+getZje(jcs[0].cksl,jcs[0].qcje)+"</td>"
+               	tr+="<td >"+qcnull(jcs[0].jcsl)+"</td>"
+               	tr+="<td >"+qcnull(jcs[0].qcje)+"</td>"
+               	tr+="<td >"+getZje(jcs[0].jcsl,jcs[0].qcje)+"</td>"
+               	tr+="<td>"+qcnull(jcs[0].fz)+"</td>"
+               	tr+="</tr>";
+               	if(jcs[0].qcsl){
+               		zqcsl = parseInt(zqcsl)+parseInt(jcs[0].qcsl);
+    			}
+               	if(jcs[0].qcje){
+               		zqcje = parseInt(zqcje)+parseInt(getZje(jcs[0].qcsl,jcs[0].qcje));
+    			}
+               	if(jcs[0].rksl){
+               		zrksl = parseInt(zrksl)+parseInt(jcs[0].rksl);
+               		zrkje = parseInt(zrkje)+parseInt(getZje(jcs[0].rksl,jcs[0].qcje));
+    			}
+               	if(jcs[0].cksl){
+               		zcksl = parseInt(zcksl)+parseInt(jcs[0].cksl);
+               		zckje = parseInt(zckje)+parseInt(getZje(jcs[0].cksl,jcs[0].qcje));
+    			}
+               	if(jcs[0].jcsl){
+               		zjcsl = parseInt(zjcsl)+parseInt(jcs[0].jcsl);
+    			}
+               	if(jcs[0].jcje){
+               		zjcje = parseInt(zjcje)+parseInt(getZje(jcs[0].jcsl,jcs[0].qcje));
+    			}
+               }else if(jcs.length>1){
+            	   	tr+="<tr>";
+                  	tr+="<td rowspan='"+mx.sl+"'>"+(i+1)+"</td>"
+                  	tr+="<td rowspan='"+mx.sl+"'>"+qcnull(mx.matName)+"</td>"
+                  	tr+="<td rowspan='"+mx.sl+"'>"+qcnull(mx.standard)+"</td>"
+                  	tr+="<td rowspan='"+mx.sl+"'>"+qcnull(mx.unit)+"</td>"
+                  	tr+="<td >"+qcnull(jcs[0].qcsl)+"</td>"
+                   	tr+="<td >"+qcnull(jcs[0].qcje)+"</td>"
+                   	tr+="<td >"+getZje(jcs[0].qcsl,jcs[0].qcje)+"</td>"
+                   	tr+="<td >"+qcnull(jcs[0].rksl)+"</td>"
+                   	tr+="<td >"+qcnull(jcs[0].qcje)+"</td>"
+                   	tr+="<td >"+getZje(jcs[0].rksl,jcs[0].qcje)+"</td>"
+                   	tr+="<td >"+qcnull(jcs[0].cksl)+"</td>"
+                   	tr+="<td >"+qcnull(jcs[0].qcje)+"</td>"
+                   	tr+="<td >"+getZje(jcs[0].cksl,jcs[0].qcje)+"</td>"
+                   	tr+="<td >"+qcnull(jcs[0].jcsl)+"</td>"
+                   	tr+="<td >"+qcnull(jcs[0].qcje)+"</td>"
+                   	tr+="<td >"+getZje(jcs[0].jcsl,jcs[0].qcje)+"</td>"
+                  	tr+="<td>"+qcnull(jcs[0].fz)+"</td>"
+                  	tr+="</tr>";
+                  	if(jcs[0].qcsl){
+                   		zqcsl = parseInt(zqcsl)+parseInt(jcs[0].qcsl);
+        			}
+                   	if(jcs[0].qcje){
+                   		zqcje = parseInt(zqcje)+parseInt(getZje(jcs[0].qcsl,jcs[0].qcje));
+        			}
+                   	if(jcs[0].rksl){
+                   		zrksl = parseInt(zrksl)+parseInt(jcs[0].rksl);
+                   		zrkje = parseInt(zrkje)+parseInt(getZje(jcs[0].rksl,jcs[0].qcje));
+        			}
+                   	if(jcs[0].cksl){
+                   		zcksl = parseInt(zcksl)+parseInt(jcs[0].cksl);
+                   		zckje = parseInt(zckje)+parseInt(getZje(jcs[0].cksl,jcs[0].qcje));
+        			}
+                   	if(jcs[0].jcsl){
+                   		zjcsl = parseInt(zjcsl)+parseInt(jcs[0].jcsl);
+        			}
+                   	if(jcs[0].jcje){
+                   		zjcje = parseInt(zjcje)+parseInt(getZje(jcs[0].jcsl,jcs[0].qcje));
+        			}
+                  	for(var j=1;j<jcs.length;j++){
+    					tr +="<tr>";
+    					tr+="<td >"+qcnull(jcs[j].qcsl)+"</td>"
+                       	tr+="<td >"+qcnull(jcs[j].qcje)+"</td>"
+                       	tr+="<td >"+getZje(jcs[j].qcsl,jcs[j].qcje)+"</td>"
+                       	tr+="<td >"+qcnull(jcs[j].rksl)+"</td>"
+                       	tr+="<td >"+qcnull(jcs[j].qcje)+"</td>"
+                       	tr+="<td >"+getZje(jcs[j].rksl,jcs[j].qcje)+"</td>"
+                       	tr+="<td >"+qcnull(jcs[j].cksl)+"</td>"
+                       	tr+="<td >"+qcnull(jcs[j].qcje)+"</td>"
+                       	tr+="<td >"+getZje(jcs[j].cksl,jcs[j].qcje)+"</td>"
+                       	tr+="<td >"+qcnull(jcs[j].jcsl)+"</td>"
+                       	tr+="<td >"+qcnull(jcs[j].qcje)+"</td>"
+                       	tr+="<td >"+getZje(jcs[j].jcsl,jcs[j].qcje)+"</td>"
+                       	tr+="<td>"+qcnull(jcs[j].fz)+"</td>"
+        				tr +="</tr>";
+    					if(jcs[j].qcsl){
+    	               		zqcsl = parseInt(zqcsl)+parseInt(jcs[j].qcsl);
+    	    			}
+    	               	if(jcs[j].qcje){
+    	               		zqcje = parseInt(zqcje)+parseInt(getZje(jcs[j].qcsl,jcs[j].qcje));
+    	    			}
+    	               	if(jcs[j].rksl){
+    	               		zrksl = parseInt(zrksl)+parseInt(jcs[j].rksl);
+    	               		zrkje = parseInt(zrkje)+parseInt(getZje(jcs[j].rksl,jcs[j].qcje));
+    	    			}
+    	               	if(jcs[j].cksl){
+    	               		zcksl = parseInt(zcksl)+parseInt(jcs[j].cksl);
+    	               		zckje = parseInt(zckje)+parseInt(getZje(jcs[j].cksl,jcs[j].qcje));
+    	    			}
+    	               	if(jcs[j].jcsl){
+    	               		zjcsl = parseInt(zjcsl)+parseInt(jcs[j].jcsl);
+    	    			}
+    	               	if(jcs[j].jcje){
+    	               		zjcje = parseInt(zjcje)+parseInt(getZje(jcs[j].jcsl,jcs[j].qcje));
+    	    			}
+        			}
+               }
+           }
+           $("#tbs").append(tr);
+           var tfs = "<tr>";
+           tfs += "<td colspan='2'>合计</td>";
+           tfs += "<td ></td>";
+           tfs += "<td ></td>";
+           tfs += "<td >"+zqcsl+"</td>";
+           tfs += "<td ></td>";
+           tfs += "<td >"+zqcje+"</td>";
+           tfs += "<td >"+zrksl+"</td>";
+           tfs += "<td ></td>";
+           tfs += "<td >"+zrkje+"</td>";
+           tfs += "<td >"+zcksl+"</td>";
+           tfs += "<td ></td>";
+           tfs += "<td >"+zckje+"</td>";
+           tfs += "<td >"+zjcsl+"</td>";
+           tfs += "<td ></td>";
+           tfs += "<td >"+zjcje+"</td>";
+           tfs += "<td ></td>";
+           tfs += "</tr>";
+           $("#tfs").append(tfs);
+          
+        }); 
+    }
+    function CompareDate(d1,d2)
+    {
+      return ((new Date(d1.replace(/-/g,"\/"))) > (new Date(d2.replace(/-/g,"\/"))));
+    }
+    function getZje(sl,dj){
+		if(sl&&dj){
+			return sl*dj;
+		}else{
+			return "";
+		}
+     }
+    function jsonYearMonthDay(milliseconds) {
+		if(milliseconds==null || milliseconds=="undefined"){
+			return "";
+		}
+		var datetime = new Date();
+		datetime.setTime(milliseconds);
+		var year = datetime.getFullYear();
+		var month = datetime.getMonth() + 1 < 10 ? "0"
+				+ (datetime.getMonth() + 1) : datetime.getMonth() + 1;
+		var date = datetime.getDate() < 10 ? "0" + datetime.getDate()
+				: datetime.getDate();
+		return year + "年" + month + "月" + date +"日";
+
+	}
+
+	function qcnull(value){
+		if(!value){
+			return "";
+		}else{
+			return value;
+		}
+	}
+    
+</script>

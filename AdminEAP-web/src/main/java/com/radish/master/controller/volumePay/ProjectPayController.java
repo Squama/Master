@@ -2,6 +2,7 @@ package com.radish.master.controller.volumePay;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +29,8 @@ import com.cnpc.framework.utils.SecurityUtil;
 import com.radish.master.entity.Instock;
 import com.radish.master.entity.InstockDet;
 import com.radish.master.entity.Labor;
+import com.radish.master.entity.ProAccount;
+import com.radish.master.entity.ProAccountDet;
 import com.radish.master.entity.Project;
 import com.radish.master.entity.ProjectVolume;
 import com.radish.master.entity.project.SalaryDetail;
@@ -344,5 +347,50 @@ public class ProjectPayController {
 		mx.setFjsl(fjsl);
 		baseService.update(mx);
 		return r;
+	}
+	
+	@RequestMapping("/doJz")
+	@ResponseBody
+	public Result doJz(HttpServletRequest request){
+		Arith arith = new Arith();
+		Result r = new Result();
+		String id =request.getParameter("id");
+		ProjectPayDet zfmx = baseService.get(ProjectPayDet.class, id);
+		ProjectPay zf = baseService.get(ProjectPay.class, zfmx.getProjectPayId());
+		Project xm = baseService.get(Project.class,zf.getProjectId());
+		List<ProAccount> xmz = baseService.find(" from ProAccount where projectId='"+zf.getProjectId()+"'");
+		
+		User u = SecurityUtil.getUser();
+		//账目明细
+		ProAccountDet mx = new ProAccountDet();
+		mx.setCreateDate(new Date());
+		mx.setAbstracts(zfmx.getChannelName()+"(供应商款项)");
+		mx.setZmtype("2");
+		mx.setOutMoney(zfmx.getFk());
+		mx.setAccounter(u.getName());
+		mx.setAccounterId(u.getId());
+		mx.setAuditName(u.getName());
+		mx.setAuditId(u.getId());
+		mx.setStatus("10");
+		if(xmz.size()<=0){//无账本，先生成账本
+			ProAccount zb = new ProAccount();
+			zb.setProjectId(zf.getProjectId());
+			zb.setAccountName(xm.getProjectName());
+			baseService.save(zb);
+			zb.setAllMoney(arith.sub(0.0,Double.valueOf(zfmx.getFk()))+"");
+			mx.setProjectAccountId(zb.getId());
+			baseService.save(mx);
+			baseService.update(zb);
+		}else{
+			ProAccount zb = xmz.get(0);
+			zb.setAllMoney(arith.sub(Double.valueOf(zb.getAllMoney()),Double.valueOf(zfmx.getFk()) )+"");
+			mx.setProjectAccountId(zb.getId());
+			baseService.save(mx);
+			baseService.update(zb);
+		}
+		zfmx.setIsrz("20");
+		baseService.update(zfmx);
+		return r;
+		
 	}
 }

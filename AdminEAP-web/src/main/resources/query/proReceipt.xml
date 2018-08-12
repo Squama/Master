@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<queryContext xmlns="http://www.example.org/query" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.example.org/query query.xsd">
+    
+    
+    <query id="proReceipt" key="id" tableName="项目收据" widthType="px">
+        <sql>
+            <![CDATA[
+              SELECT zf.id id,zf.number number ,zf.proId proId ,zf.createDate createDate ,xm.project_name pName ,
+              zf.jkr jkr ,zf.money money ,zf.isrz isrz 
+			  FROM tbl_pro_receipt zf ,tbl_project xm 
+			  WHERE 1=1 and zf.proId = xm.id
+            ]]>
+        </sql>
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="pName" header="所属项目" classType="String" allowSort="true" width="150"/>
+        <column key="createDate" header="填开日期" classType="String" width="150" dateFormat="yyyy-mm-dd" allowSort="true"/>
+        <column key="number" header="编号" classType="String" width="150"/>
+        <column key="jkr" header="交款单位" classType="String" width="150"/>
+        <column key="isrz" header="记账状态" classType="String" width="150" render="10=未记账,20=已记账"/>
+        <column key="id" header="操作" classType="String" width="150"  fnRender="fnRenderXQ"/>
+    </query>
+   
+</queryContext>

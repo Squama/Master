@@ -1,0 +1,226 @@
+<link rel="stylesheet" href="${basePath}/resources/common/libs/fileinput/css/fileinput.min.css">
+<style>
+
+#projectaddstep2 .krajee-default.file-preview-frame .kv-file-content {
+    height: auto;
+}
+
+#projectaddstep2 .krajee-default .file-footer-caption {
+    width: 100px;
+}
+
+</style>
+<script src="${basePath}/resources/common/libs/fileinput/js/fileinput.js"></script>
+<script src="${basePath}/resources/common/libs/fileinput/js/locales/zh.js"></script>
+<!--BaseFile组件-->
+<script src="${basePath}/resources/common/js/base-file.js"></script>
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><li class="fa fa-remove"></li></button>
+    <h5 class="modal-title"></h5>
+</div>
+<div class="modal-body" style="max-height:100%;overflow-y:auto;">
+
+    <form id="contract-form" name="contract-form" class="form-horizontal">
+     <input type="hidden" name="id" id= "id">
+       <div class="box-body">
+            <div class="col-md-6">
+                <div class="form-group">
+					<label  for="projectId" class="col-sm-3 control-label">所属项目</label>
+					<div class=" col-sm-8">
+						<select id="projectId" class="form-control select2 "  name="proId" style="width:100%" >
+                    		<option selected="selected" value="">选择一个项目</option>
+                    	</select>
+					</div>
+				</div>
+                
+                <div class="form-group">
+                    <label for="type" class="col-sm-3 control-label">付款方式</label>
+
+                    <div class="col-sm-8">
+                   		<select id="type" class="form-control select2 "  name="type" style="width:100%" >
+                    		<option selected="selected" value="">选择一种方式</option>
+                    		<option  value="10">现金</option>
+                    		<option  value="20">转账</option>
+                    		<option  value="30">电汇</option>
+                    	</select>
+                    </div>
+                </div>
+                <div class="form-group">
+                     <label class="col-sm-3 control-label">填开日期</label>
+                     <div class="col-sm-8">
+                         <input type="text" class="form-control date-picker" name="createDate" id="createDate" data-flag="datepicker" data-format="yyyy-mm-dd"  placeholder="" >
+                     </div>
+                 </div>
+            </div>
+            <div class="col-md-6">
+            	<div class="form-group">
+					<label  for="number" class="col-sm-3 control-label">编号</label>
+					<div class=" col-sm-8">
+						<input class="form-control " id="number" name="number"   placeholder="编号" readonly="readonly" >
+				
+					</div>
+				</div>
+            	<div class="form-group">
+                    <label  for="jkr" class="col-sm-3 control-label">交款单位</label>
+					<div class=" col-sm-8">
+						<input class="form-control " id="jkr" name="jkr"   placeholder="交款单位" >
+				
+					</div>
+                </div>
+				<div class="form-group">
+                    <label  for="money" class="col-sm-3 control-label">收款金额</label>
+					<div class=" col-sm-8">
+						<input class="form-control " id="money" name="money"   placeholder="收款金额">
+					</div>
+                </div>
+            </div>   
+        </div>
+        	<div class="form-group">
+                    <label for="content" class="col-sm-2 control-label">款项内容</label>
+
+                    <div class="col-sm-9">
+                        <textarea class="form-control" id="content" name="content" placeholder="款项内容" rows="6"></textarea>
+                    </div>
+            </div>
+            <div class="form-group">
+                    <label for="bz" class="col-sm-2 control-label">备注</label>
+
+                    <div class="col-sm-9">
+                        <textarea class="form-control" id="bz" name="bz" placeholder="款项内容" rows="6"></textarea>
+                    </div>
+            </div>
+        <div class="" style="text-align: center;">
+            <!--以下两种方式提交验证,根据所需选择-->
+            <button type="submit" class="btn btn-primary" data-btn-type="save" id="save">保存</button>
+        </div>
+        <!-- /.box-footer -->
+    </form>
+</div>
+<script>
+    var form =null;
+    var xms = '${projectOptions?default(0)}',xm=0;
+    if(xms != 0){
+    	xm = JSON.parse(xms);
+    }
+    var id="${id?default(0)}";
+    var type="${type?default(0)}";
+    var number="${number?default(0)}";
+    $(function() {
+        //初始化控件
+        form=$("#contract-form").form();
+        //数据校验
+        $("#contract-form").bootstrapValidator({
+            message : '请输入有效值',
+            feedbackIcons : {
+                valid : 'glyphicon glyphicon-ok',
+                invalid : 'glyphicon glyphicon-remove',
+                validating : 'glyphicon glyphicon-refresh'
+            },
+            submitHandler : function() {
+                modals.confirm('确认收据信息无误？', function() {
+                    //Save Data，对应'submit-提交'
+                    
+                    var params = form.getFormSimpleData();
+                    
+                    if(isNaN($("#money").val())){
+                    	modals.info("请输入正确的金额");
+                    	return;
+                    }
+                    	ajaxPost(basePath+'/proreceipt/save', params, function(data) {
+                            if(data.success){
+                            	modals.hideWin(winId);
+                            	volumeTable.reloadData();
+                                modals.info("保存成功");
+                                
+                            }                
+                        }); 
+              
+                     
+                });
+            },
+            fields : {
+            	type : {
+                    validators : {
+                        notEmpty : {
+                            message : '请选择收款方式'
+                        }
+                    }
+                },
+                proId : {
+                    validators : {
+                        notEmpty : {
+                            message : '请选择项目'
+                        }
+                    }
+                },
+                content : {
+                    validators : {
+                        notEmpty : {
+                            message : '请输入内容'
+                        }
+                    }
+                },
+                money : {
+                    validators : {
+                        notEmpty : {
+                            message : '请输入金额'
+                        }
+                    }
+                },
+                createDate : {
+                    validators : {
+                        notEmpty : {
+                            message : '请输入填开日期'
+                        }
+                    }
+                },
+                jkr : {
+                    validators : {
+                        notEmpty : {
+                            message : '请输入交款单位或个人'
+                        }
+                    }
+                }
+                
+            }
+        });
+        form.initComponent();
+
+        if(xm != 0){
+            for (var i = 0, len = xm.length; i < len; i++) {
+                var x = xm[i];
+                $('#projectId').append("<option value=\"" + x.value + "\">" + x.data + "</option>");
+            }
+            $("#projectId").select2();
+        }
+        
+        if(type=="look"){
+        	$('input,select,textarea',$('form[name="contract-form"]')).attr('disabled',true);
+        	$("#save").css("display","none");
+        }
+        if(number!=0){
+			$("#number").val(number);
+        }
+        if(id!=0){
+        	load();
+        }
+        
+        
+        
+        
+    });
+    function load(){
+    	var url=basePath+'/proreceipt/load?id='+id;
+    	
+    	ajaxPost(url, {}, function(data) {
+            formdata = data.data;
+            form.initFormData(formdata); 
+                            
+        }); 
+    }
+    function resetForm(){
+        form.clearForm();
+        $("#contract-form").data('bootstrapValidator').resetForm();
+    }
+	
+</script>

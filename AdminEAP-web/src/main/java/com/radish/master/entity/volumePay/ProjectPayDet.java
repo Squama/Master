@@ -88,6 +88,10 @@ public class ProjectPayDet implements Serializable {
     @Column(name = "fjsl")
     private String fjsl;
     
+    @Header(name = "是否记账")
+    @Column(name = "isrz")
+    private String isrz;
+    
 	public String getId() {
 		return id;
 	}
@@ -206,6 +210,14 @@ public class ProjectPayDet implements Serializable {
 
 	public void setFjsl(String fjsl) {
 		this.fjsl = fjsl;
+	}
+
+	public String getIsrz() {
+		return isrz;
+	}
+
+	public void setIsrz(String isrz) {
+		this.isrz = isrz;
 	}
     
     

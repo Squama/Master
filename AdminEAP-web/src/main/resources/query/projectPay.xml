@@ -60,7 +60,7 @@
         <sql>
             <![CDATA[
               SELECT zf.id zfid, mx.channelName channelName ,mx.qc qc ,mx.bq bq ,mx.fk fk ,mx.qm qm ,mx.content content,mx.id id,mx.status status  ,mx.bhdesc bhdesc 
-			  ,mx.fjsl fjsl
+			  ,mx.fjsl fjsl,mx.isrz isrz 
 			  FROM tbl_projectPay zf ,tbl_projectPay_det mx 
 			  WHERE 1=1 and zf.id = mx.projectPayId
             ]]>
