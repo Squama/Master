@@ -29,7 +29,7 @@
                      <button type="button" class="btn btn-default" data-btn-type="edit" id ="edit">编辑</button>
                      <button type="button" class="btn btn-default" data-btn-type="look" id ="look">查看</button>
                      <button type="button" class="btn btn-default" data-btn-type="delete" id ="delete">删除</button>
-                     <!-- <button type="button" class="btn btn-default" data-btn-type="print" id ="print">打印</button> -->
+                     <button type="button" class="btn btn-default" data-btn-type="print" id ="print">打印</button>
                     </div>
                 </div>
                 <div class="box-body">
@@ -48,7 +48,7 @@
     if(projectOptions != 0){
     	options = JSON.parse(projectOptions);
     }
-    
+    var zdr = '${zdr?default(0)}';
    
     $(function (){
     	volumeTable = new CommonTable("volume_table", "proReceipt", "searchDiv", null);
@@ -129,7 +129,7 @@
                     modals.info('请选择要打印的行');
                     return false;
                 }
-       			var url = basePath+"/ureport/preview?_u=file:projectpay.ureport.xml&_t=1,5&id="+rowId;
+       			var url = basePath+"/ureport/preview?_u=file:sj.ureport.xml&_t=1,5&id="+rowId+"&zdr="+zdr;
         	 	window.open(url);
            	break;
             }

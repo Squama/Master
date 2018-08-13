@@ -41,6 +41,7 @@ public class ProReceiptController {
 	@RequestMapping("/list")
 	public String list(HttpServletRequest request){
 		request.setAttribute("projectOptions", JSONArray.toJSONString(budgetService.getProjectCombobox()));
+		request.setAttribute("zdr", SecurityUtil.getUserId());
 		return prefix+"list";
 	}
 	public  String maxNum(){ 

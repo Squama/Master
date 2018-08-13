@@ -95,6 +95,10 @@ public class MatInAndOutController {
 			InAndOutDet qc = new InAndOutDet();
 			qc.setQcje(jc.getJcje());
 			qc.setQcsl(jc.getJcsl());
+			/*qc.setRkje("0");
+			qc.setRksl("0");
+			qc.setCkje("0");
+			qc.setCksl("0");*/
 			qc.setPid(tj.getId());
 			qc.setBz("期初数");
 			qc.setFz(sdf.format(tj.getStartdate())+"前仓库结存");
@@ -128,6 +132,10 @@ public class MatInAndOutController {
 					qc.setRkje("0");
 				}
 				qc.setBz(sts.get(i).getBz());
+				/*qc.setQcje("0");
+				qc.setQcsl("0");
+				qc.setCkje("0");
+				qc.setCksl("0");*/
 			}else{//出库
 				qc.setCksl(sts.get(i).getRkl());
 				if(sts.get(i).getPrice()!=null){
@@ -140,6 +148,10 @@ public class MatInAndOutController {
 				}else{
 					qc.setBz(sts.get(i).getBz());
 				}
+				/*qc.setQcje("0");
+				qc.setQcsl("0");
+				qc.setRkje("0");
+				qc.setRksl("0");*/
 			}
 			qc.setPid(tj.getId());
 			qc.setFz("");
@@ -208,7 +220,6 @@ public class MatInAndOutController {
 		Iterator<InAndOutDetJc> it = ls.iterator();
 		while(it.hasNext()){
 			InAndOutDetJc x = it.next();
-			
 		    if(sl.equals(Double.valueOf(x.getJcsl()))){
 		        it.remove();
 		    }

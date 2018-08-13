@@ -70,6 +70,7 @@
                     </span>
                 </div>
                 <form id="import_form" name="attendance_form" class="form-horizontal">
+                	<input type="text" id="Id" style="display: none" >
                     <div class="box-body">
                         <div class="col-md-12">
                         	
@@ -106,6 +107,7 @@
                     </div>
                     <div class="box-footer text-center">
                         <button type="submit" class="btn btn-default" data-btn-type="add" id ="add">生成</button>
+                        <button type="button" class="btn btn-default" data-btn-type="print" id ="print">打印</button>
                     </div>
                 </form>
             </div>
@@ -203,7 +205,9 @@ if(mats != 0){
                      //Save Data，对应'submit-提交'
                      var params = importform.getFormSimpleData();
                      	ajaxPost(basePath+'/matinandout/doInAndOutForMat', params, function(data) {
-                             if(data.success){
+                     		$("#Id").val("");
+                            if(data.success){
+                                 $("#Id").val(data.id);
                             	 loadInfo(data.id);
                               }else{	
                             	  modals.info("统计失败");
@@ -253,6 +257,15 @@ if(mats != 0){
             }
             $("#matId").select2();
         }
+        $("#print").on("click",function(){
+			var id = $("#Id").val();
+			if(id){
+				var url = basePath+"/ureport/preview?_u=file:matinandou.ureport.xml&_t=1,5&id="+id;
+		   	 	window.open(url);
+			}else{
+				modals.info("请先生成数据");
+			}
+        })
     });
     function loadInfo(id){
     	ajaxPost(basePath+'/matinandout/getInAndOutInfo', {id:id}, function(data) {
