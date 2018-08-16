@@ -104,9 +104,9 @@
         //form_init();
     })
     
-function fnRenderOperate(value, type, rowObj){
+function fnRenderDetail(value, type, rowObj){
     var oper = "";
-    if(rowObj.status == '10'){
+    if(rowObj.status == '新建'){
         oper += "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='packObject.startFlow(\"" + value + "\")'>提交审批</a>";
     }
     oper += "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='packObject.overview(\"" + value + "\")'>查看</a>";;

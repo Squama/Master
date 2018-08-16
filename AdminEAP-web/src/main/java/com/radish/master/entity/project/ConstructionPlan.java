@@ -22,7 +22,7 @@ import com.cnpc.framework.base.entity.BaseEntity;
  * 
  */
 @Entity
-@Table(name = "tbl_package")
+@Table(name = "tbl_construction_plan")
 public class ConstructionPlan extends BaseEntity {
 
     private static final long serialVersionUID = 3501456988513901889L;

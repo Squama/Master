@@ -22,7 +22,7 @@
         <column key="projectName" header="所属项目" classType="String" allowSort="true" width="150"/>
         <column key="projectSubName" header="项目子项" classType="String"/>
         <column key="budgetName" header="预算名称" classType="String"/>
-        <column key="status" header="预算状态" allowSort="true" width="150" render="10=新建,20=测算已提交,30=测算已完成"/>
+        <column key="status" header="预算状态" allowSort="true" width="150" render="10=新建,15=已终止测算,20=测算已提交,30=测算已完成"/>
         <column key="budgetNo" header="操作" width="80" fnRender="fnRenderOperate"/>
     </query>
     
@@ -278,7 +278,7 @@
         <column key="projectName" header="所属项目" classType="String" allowSort="true" width="150"/>
         <column key="projectSubName" header="项目子项" classType="String"/>
         <column key="budgetName" header="预算名称" classType="String"/>
-        <column key="status" header="预算状态" allowSort="true" width="150" render="10=新建,20=测算已提交,30=测算已完成"/>
+        <column key="status" header="预算状态" allowSort="true" width="150" render="10=新建,15=已终止测算,20=测算已提交,30=测算已完成"/>
         <column key="operator" header="消耗情况" classType="String" width="150" fnRender="fnRenderConsume"/>
     </query>
     
@@ -287,7 +287,7 @@
         <column key="projectName" header="所属项目" classType="String" allowSort="true" width="150"/>
         <column key="projectSubName" header="项目子项" classType="String"/>
         <column key="budgetName" header="预算名称" classType="String"/>
-        <column key="status" header="预算状态" allowSort="true" width="150" render="10=新建,20=测算已提交,30=测算已完成"/>
+        <column key="status" header="预算状态" allowSort="true" width="150" render="10=新建,15=已终止测算,20=测算已提交,30=测算已完成"/>
         <column key="budgetNo" header="查看预算" width="80" fnRender="fnRenderDetail"/>
     </query>
     
@@ -373,7 +373,7 @@
         <column key="price" header="单价" classType="String" width="150"/>
         <column key="total" header="总价" classType="String"/>
         <column key="final_pack" header="消耗" classType="String"/>
-        <column key="per" header="百分比" classType="String"/>
+        <column key="per" header="百分比" fnRender="fnRenderPercent"/>
     </query>
     
     <query id="construction_plan_list" key="id" tableName="施工计划" className="com.radish.master.entity.project.ConstructionPlan" widthType="px">

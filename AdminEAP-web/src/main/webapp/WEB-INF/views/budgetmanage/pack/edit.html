@@ -1,3 +1,4 @@
+<script src="${basePath}/resources/common/js/calculate.js"></script>
 <script type="text/javascript">
  $.fn.modal.Constructor.prototype.enforceFocus = function () {};
  </script>
@@ -55,9 +56,9 @@
                     <div class="dataTables_filter" style="text-align:center;margin-top:5px;">
                        <input type="hidden" name="packageID">
                        <input type="text" placeholder="名称" title="名称" name="name" class="form-control" id="matStandard" style="width:120px;" >
-                       <input type="text" placeholder="面积" title="面积" name="unit" class="form-control" id="unit" style="width:60px;">
-                       <input type="text" placeholder="单价" title="单价" name="quantity" class="form-control" id="quantity" style="width:60px;">
-                       <input type="text" placeholder="总价" title="总价" name="quantity" class="form-control" id="quantity" style="width:60px;" readonly="readonly">
+                       <input type="text" placeholder="面积" title="面积" name="area" class="form-control calculate" id="area" onkeyup="value=value.replace(/[^\d.]/g,'')" value="0" style="width:60px;">
+                       <input type="text" placeholder="单价" title="单价" name="price" class="form-control calculate" id="price" onkeyup="value=value.replace(/[^\d.]/g,'')" value="0" style="width:60px;">
+                       <input type="text" placeholder="总价" title="总价" name="total" class="form-control" id="total" style="width:60px;" readonly="readonly">
                        <div class="btn-group">
                            <button type="submit" class="btn btn-primary" data-btn-type="savetx">添加</button>
                        </div>
@@ -90,13 +91,13 @@
         options = JSON.parse(projectOptions);
     }
     
-    var purchaseID="${purchaseID?default(0)}";
-    initData.purchaseID = purchaseID;
+    var packageID="${packageID?default(0)}";
+    initData.packageID = packageID;
     packagedetailform.initFormData(initData);
     
     var packageEditObject = {
             deleteDetail: function (rowId) {
-                ajaxPost(basePath + '/budget/pack/deletedet', {id:rowId}, function (data) {
+                ajaxPost(basePath + '/budget/pack/deletedetail', {id:rowId}, function (data) {
                     if (data.success) {
                     	purchaseEditTable.table.page('first').draw(false);
                     } else {
@@ -212,7 +213,7 @@
             },
             submitHandler: function () {
                 var formData = packagedetailform.getFormSimpleData();
-                ajaxPost(basePath + '/budget/pack/savedet', formData, function (data) {
+                ajaxPost(basePath + '/budget/pack/savedetail', formData, function (data) {
                     if (data.success) {
                     	purchaseEditTable.table.page('first').draw(false);
                     } else {
@@ -240,7 +241,7 @@
             }
         });
         //编辑回填
-        if(purchaseID != 0){
+        if(packageID != 0){
             ajaxPost(basePath+"/budget/pack/getpackage",{packageID:packageID},function(data){
                 $('#package_det').show();
                 $('#packageformsave').hide();
@@ -271,6 +272,14 @@
         //初始化控件
         packageform.initComponent();
         packagedetailform.initComponent();
+        
+        $(".calculate").on("focusout", function(){
+            var area = parseFloat($('#area').val());
+            var price = parseFloat($('#price').val());
+            
+            var sub = accMultiplication(area, price);
+            $('#total').val(sub);
+        });
         
     });
     

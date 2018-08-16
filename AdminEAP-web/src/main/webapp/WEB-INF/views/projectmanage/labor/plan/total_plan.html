@@ -58,11 +58,11 @@
                     });
                 });
             },
-            detail: function (fileID){
+            showDetail: function (fileID){
             	modals.openWin({
                     winId: "fileWin",
                     width: "900px",
-                    url: basePath + "/labor/labordetailfile?id=" + fileId ,
+                    url: basePath + "/labor/plan/detail/" + fileID ,
                     title: "查看附件"
                 });
             }
@@ -73,7 +73,7 @@
         //绑定按钮事件
         $("button[data-btn-type]").click(function () {
             var action = $(this).data("btn-type");
-            var rowId = dutycheckTable.getSelectedRowId();
+            var rowId = totalTable.getSelectedRowId();
             switch (action) {
                 case "add":
                 	modals.openWin({
@@ -111,7 +111,7 @@
             $(".select2").select2();
         }
     });
-    function fnRenderDetail(value) {
+    function fnRenderDetail(value, type, rowObj) {
         var oper = "";
         if(rowObj.status == '新建'){
             oper += "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='totalObject.startFlow(\"" + value + "\")'>提交审批</a>";

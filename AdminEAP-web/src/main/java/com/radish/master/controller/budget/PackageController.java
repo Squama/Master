@@ -67,7 +67,7 @@ public class PackageController {
     
     @RequestMapping(value="/edit",method = RequestMethod.GET)
     public String edit(String id, HttpServletRequest request){
-        request.setAttribute("purchaseID", id);
+        request.setAttribute("packageID", id);
         
         return "budgetmanage/pack/edit";
     }
@@ -83,7 +83,7 @@ public class PackageController {
         } catch (Exception e) {
             return new Result(false,"该班组已在该项目下配置包工包料");
         }
-        return new Result(true);
+        return new Result(true, pack);
     }
     
     @RequestMapping(method = RequestMethod.POST, value="/savedetail")
@@ -100,6 +100,18 @@ public class PackageController {
         PackageDetail packageDetail = commonService.get(PackageDetail.class, id);
         commonService.delete(packageDetail);
         return new Result(true, "success");
+    }
+    
+    @RequestMapping(value="/getpackage")
+    @ResponseBody
+    public Result getPackage(String packageID){
+        Package pack = commonService.get(Package.class, packageID);
+        
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("projectName", pack.getProjectName());
+        map.put("teamName", pack.getTeamName());
+        
+        return new Result(true, map);
     }
     
     @RequestMapping(value = "/start", method = RequestMethod.POST)

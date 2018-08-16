@@ -196,7 +196,7 @@ public class ProjectServiceImpl extends BaseServiceImpl implements ProjectServic
     @Override
     public List<Options> getPackCombobox(String projectID, String teamID) {
         return this.findMapBySql(
-                "SELECT pd.id value, pd.`name` data FROM tbl_package_detail pd,tbl_package p WHERE pd.package_id = p.id AND p.project_id=? AND p.team_id=? ",
+                "SELECT pd.id value, pd.`name` data FROM tbl_package_detail pd,tbl_package p WHERE pd.package_id = p.id AND p.project_id=? AND p.team_id=? AND p.status='30'",
                 new Object[] { projectID, teamID }, new Type[] { StringType.INSTANCE, StringType.INSTANCE }, Options.class);
     }
 

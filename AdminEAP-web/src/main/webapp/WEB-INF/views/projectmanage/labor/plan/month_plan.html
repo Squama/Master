@@ -1,6 +1,6 @@
 <section class="content-header">
     <h1>
-        施工月度计划进度
+        施工月度计划
         <small>列表</small>
     </h1>
     <ol class="breadcrumb">
@@ -45,13 +45,12 @@
     if(projectOptions != 0){
         options = JSON.parse(projectOptions);
     }
-    
     var totalObject = {
             startFlow: function (rowID) {
                 modals.confirm("是否要提交审批？",function(){
                     ajaxPost(basePath + '/labor/plan/start', {id:rowID}, function (data) {
                         if (data.success) {
-                            totalTable.reloadData();
+                        	totalTable.reloadData();
                             modals.correct("流程已启动，请及时处理");
                         } else {
                             modals.error(data.message);
@@ -59,26 +58,25 @@
                     });
                 });
             },
-            detail: function (fileID){
-                modals.openWin({
+            showDetail: function (fileID){
+            	modals.openWin({
                     winId: "fileWin",
                     width: "900px",
-                    url: basePath + "/labor/labordetailfile?id=" + fileId ,
+                    url: basePath + "/labor/plan/detail/" + fileID ,
                     title: "查看附件"
                 });
             }
     }
-    
     $(function (){
         totalTable = new CommonTable("total_table", "construction_plan_list", "searchDiv");
         
         //绑定按钮事件
         $("button[data-btn-type]").click(function () {
             var action = $(this).data("btn-type");
-            var rowId = dutycheckTable.getSelectedRowId();
+            var rowId = totalTable.getSelectedRowId();
             switch (action) {
                 case "add":
-                    modals.openWin({
+                	modals.openWin({
                         winId:winId,
                         title:'新增计划',
                         width:'900px',
@@ -113,7 +111,7 @@
             $(".select2").select2();
         }
     });
-    function fnRenderDetail(value) {
+    function fnRenderDetail(value, type, rowObj) {
         var oper = "";
         if(rowObj.status == '新建'){
             oper += "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='totalObject.startFlow(\"" + value + "\")'>提交审批</a>";
