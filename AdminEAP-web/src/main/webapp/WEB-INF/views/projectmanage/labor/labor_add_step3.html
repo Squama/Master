@@ -24,8 +24,8 @@
     </h1>
     <ol class="breadcrumb">
         <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
-        <li><a href="#">项目管理</a></li>
-        <li class="active">新增劳务合同</li>
+        <li><a href="#">劳务管理</a></li>
+        <li class="active">劳务合同</li>
     </ol>
 </section>
 
@@ -56,6 +56,7 @@
                     </div>
                 </div>
                 <form id="labor_form" name="labor_form" class="form-horizontal">
+                    <input type="hidden" name="id" id="id" value="${id}">
                     <div class="box-body">
                         <div class="col-md-12">
                             <div class="form-group">
@@ -64,6 +65,55 @@
                                     <input type="text" class="form-control" id="contractPrice" name="contractPrice" readonly="readonly" value="${contractPrice}">
                                 </div>
                             </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">甲方</label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" id="gander" name="gander">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">乙方</label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" id="goose" name="goose">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">承包方式</label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" id="contractMode" name="contractMode">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">付款方式</label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" id="paymentMode" name="paymentMode">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">质保金约定（单位：元）</label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" id="guaranteeMoney" name="guaranteeMoney" onkeyup="value=value.replace(/[^\d.]/g,'')">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">劳务内容</label>
+                                <div class="col-sm-6">
+                                    <textarea class="form-control" id="serviceContent" name="serviceContent" rows="3" cols="100"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">质量目标</label>
+                                <div class="col-sm-6">
+                                    <textarea class="form-control" id="qualityTarget" name="qualityTarget" rows="3" cols="100"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">纠纷处理</label>
+                                <div class="col-sm-6">
+                                    <textarea class="form-control" id="issue" name="issue" rows="3" cols="100"></textarea>
+                                </div>
+                            </div>
+                            <!-- 甲方、乙方、劳务内容、承包方式、质量目标、付款方式、 质保金约定、纠纷处理-->
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">劳务合同<span style="color:red">*</span></label>
                                 <div class="col-sm-6">
@@ -105,14 +155,21 @@
             },
             submitHandler: function () {
                 var action = $(this).attr('$submitButton').attr('data-btn-type');
+                var formData = form.getFormSimpleData();
                 switch (action) {
-                    case "prev":
-                        loadPage(basePath+"/labor/list");
-                        break;
-                    case "save":
-                    	loadPage(basePath+"/labor/list");
-                        break;
-                }
+	                case "prev":
+	                    loadPage(basePath+"/labor/list");
+	                    break;
+	                case "save":
+	                	ajaxPost(basePath + '/labor/save', formData, function (data) {
+	                        if (data.success) {
+                                loadPage(basePath+"/labor/list");
+	                        } else {
+	                            modals.error("保存失败！");
+	                        }
+	                    });
+	                    break;
+	            }
             },
             fields: {
                 "contractPrice": {

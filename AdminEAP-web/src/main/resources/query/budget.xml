@@ -197,9 +197,6 @@
             <column key="budgetMech" header="机械预算" fnRender="fnRenderBase64"/>
             <column key="consumeMech" header="机械消耗" fnRender="fnRenderMechConsume"/>
             <column key="mechPer" header="百分比" fnRender="fnRenderMechPercent"/>
-            <column key="budgetPack" header="包工包料预算" fnRender="fnRenderBase64"/>
-            <column key="consumePack" header="包工包料消耗" fnRender="fnRenderPackConsume"/>
-            <column key="packPer" header="百分比" fnRender="fnRenderPackPercent"/>
     </query>
     
     <query id="budget_subconsume_list" key="id" tableName="预算消耗" widthType="px" order="b.id desc, b.create_date_time asc">
@@ -246,9 +243,6 @@
             <column key="budgetMech" header="机械预算" fnRender="fnRenderBase64"/>
             <column key="consumeMech" header="机械消耗" fnRender="fnRenderBase64"/>
             <column key="mechPer" header="百分比" fnRender="fnRenderMechPercent"/>
-            <column key="budgetPack" header="包工包料" fnRender="fnRenderBase64"/>
-            <column key="consumePack" header="消耗" fnRender="fnRenderBase64"/>
-            <column key="packPer" header="百分比" fnRender="fnRenderPackPercent"/>
     </query>
     
     <!-- 数量消耗列表 -->
@@ -337,6 +331,58 @@
         <column key="supplier" header="供应商" classType="String" width="150"/>
         <column key="price" header="价格" classType="String" width="150"/>
         <column key="supplier" header="选择供应商" classType="String" width="100" fnRender="fnRenderChoose"/>
+    </query>
+    
+    <query id="package_list" key="id" tableName="包工包料配置" className="com.radish.master.entity.project.Package" widthType="px">
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="id" header="编号" hidden="true"/>
+        <column key="projectName" header="项目名称" classType="String" width="150"/>
+        <column key="teamName" header="班组名称" classType="String" width="150"/>
+        <column key="status" header="状态" classType="String" render="10=新建,20=审批中,30=审批通过"/>
+        <column key="id" header="操作" classType="String" fnRender="fnRenderDetail"/>
+    </query>
+    
+    <query id="package_edit" key="id" tableName="包工包料编辑" className="com.radish.master.entity.project.PackageDetail" widthType="px">
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="id" header="编号" hidden="true"/>
+        <column key="name" header="名称" classType="String" width="150"/>
+        <column key="area" header="面积" classType="String" width="150"/>
+        <column key="price" header="单价" classType="String" width="150"/>
+        <column key="total" header="总价" classType="String"/>
+        <column key="id" header="操作" classType="String" fnRender="fnRenderDelete"/>
+    </query>
+    
+    <query id="package_detail" key="id" tableName="包工包料明细" widthType="px">
+        <sql>
+            <![CDATA[
+              SELECT p.project_name, p.team_name, pd.`name`, pd.area, pd.price, pd.total, pv.final_pack,'Per' per
+			  FROM tbl_package_detail pd
+			  JOIN tbl_package p
+			  ON pd.package_id = p.id
+			  LEFT JOIN tbl_project_volume pv
+			  ON pd.id = pv.package_detail_id AND pv.`status` = '70'
+			  WHERE 1=1
+            ]]>
+        </sql>
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="id" header="编号" hidden="true"/>
+        <column key="project_name" header="项目名称" classType="String" width="150"/>
+        <column key="team_name" header="班组名称" classType="String" width="150"/>
+        <column key="name" header="名称" classType="String" width="150"/>
+        <column key="area" header="面积" classType="String" width="150"/>
+        <column key="price" header="单价" classType="String" width="150"/>
+        <column key="total" header="总价" classType="String"/>
+        <column key="final_pack" header="消耗" classType="String"/>
+        <column key="per" header="百分比" classType="String"/>
+    </query>
+    
+    <query id="construction_plan_list" key="id" tableName="施工计划" className="com.radish.master.entity.project.ConstructionPlan" widthType="px">
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="id" header="编号" hidden="true"/>
+        <column key="projectName" header="项目名称" classType="String" width="150"/>
+        <column key="building" header="栋号" classType="String" width="150"/>
+        <column key="status" header="状态" classType="String" render="10=新建,20=审核中,30=审批通过"/>
+        <column key="id" header="操作" classType="String" fnRender="fnRenderDetail"/>
     </query>
     
 </queryContext>

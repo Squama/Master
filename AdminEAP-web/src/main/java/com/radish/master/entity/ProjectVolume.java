@@ -62,6 +62,10 @@ public class ProjectVolume extends BaseEntity {
     @Column(name = "project_sub_id")
     private String projectSubID;
 
+    @Header(name = "包工包料ID")
+    @Column(name = "package_detail_id")
+    private String packageDetailID;
+
     @Header(name = "工程量")
     @Column(name = "volume")
     private String volume;
@@ -407,6 +411,14 @@ public class ProjectVolume extends BaseEntity {
 
     public void setPackStatus(String packStatus) {
         this.packStatus = packStatus;
+    }
+
+    public String getPackageDetailID() {
+        return packageDetailID;
+    }
+
+    public void setPackageDetailID(String packageDetailID) {
+        this.packageDetailID = packageDetailID;
     }
 
 }

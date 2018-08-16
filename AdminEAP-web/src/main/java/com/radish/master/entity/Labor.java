@@ -103,6 +103,38 @@ public class Labor extends BaseEntity {
     @Column(name = "package_consume")
     private String packageConsume;
 
+    @Header(name = "甲方")
+    @Column(name = "gander")
+    private String gander;
+
+    @Header(name = "乙方")
+    @Column(name = "goose")
+    private String goose;
+
+    @Header(name = "劳务内容")
+    @Column(name = "service_content")
+    private String serviceContent;
+
+    @Header(name = "承包方式")
+    @Column(name = "contract_mode")
+    private String contractMode;
+
+    @Header(name = "质量目标")
+    @Column(name = "quality_target")
+    private String qualityTarget;
+
+    @Header(name = "付款方式")
+    @Column(name = "payment_mode")
+    private String paymentMode;
+
+    @Header(name = "质保金约定")
+    @Column(name = "guarantee_money")
+    private String guaranteeMoney;
+
+    @Header(name = "纠纷处理")
+    @Column(name = "issue")
+    private String issue;
+
     public String getProjectID() {
         return projectID;
     }
@@ -253,6 +285,70 @@ public class Labor extends BaseEntity {
 
     public void setPackageConsume(String packageConsume) {
         this.packageConsume = packageConsume;
+    }
+
+    public String getGander() {
+        return gander;
+    }
+
+    public void setGander(String gander) {
+        this.gander = gander;
+    }
+
+    public String getGoose() {
+        return goose;
+    }
+
+    public void setGoose(String goose) {
+        this.goose = goose;
+    }
+
+    public String getServiceContent() {
+        return serviceContent;
+    }
+
+    public void setServiceContent(String serviceContent) {
+        this.serviceContent = serviceContent;
+    }
+
+    public String getContractMode() {
+        return contractMode;
+    }
+
+    public void setContractMode(String contractMode) {
+        this.contractMode = contractMode;
+    }
+
+    public String getQualityTarget() {
+        return qualityTarget;
+    }
+
+    public void setQualityTarget(String qualityTarget) {
+        this.qualityTarget = qualityTarget;
+    }
+
+    public String getPaymentMode() {
+        return paymentMode;
+    }
+
+    public void setPaymentMode(String paymentMode) {
+        this.paymentMode = paymentMode;
+    }
+
+    public String getGuaranteeMoney() {
+        return guaranteeMoney;
+    }
+
+    public void setGuaranteeMoney(String guaranteeMoney) {
+        this.guaranteeMoney = guaranteeMoney;
+    }
+
+    public String getIssue() {
+        return issue;
+    }
+
+    public void setIssue(String issue) {
+        this.issue = issue;
     }
 
 }

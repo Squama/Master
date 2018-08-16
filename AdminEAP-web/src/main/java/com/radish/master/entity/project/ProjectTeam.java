@@ -42,13 +42,29 @@ public class ProjectTeam extends BaseEntity {
     @Header(name = "班组名称")
     @Column(name = "team_name")
     private String teamName;
-    
+
     /**
      * 10-普通班组，20-失效班组，30-管理人员班组
      */
     @Header(name = "状态")
     @Column(name = "status")
     private String status;
+
+    @Header(name = "班组长ID")
+    @Column(name = "team_leader_id")
+    private String teamLeaderID;
+
+    @Header(name = "班组长")
+    @Column(name = "team_leader")
+    private String teamLeader;
+
+    @Header(name = "注册信息")
+    @Column(name = "registion")
+    private String registion;
+
+    @Header(name = "施工内容")
+    @Column(name = "construction")
+    private String construction;
 
     public String getProjectID() {
         return projectID;
@@ -88,6 +104,38 @@ public class ProjectTeam extends BaseEntity {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getTeamLeaderID() {
+        return teamLeaderID;
+    }
+
+    public void setTeamLeaderID(String teamLeaderID) {
+        this.teamLeaderID = teamLeaderID;
+    }
+
+    public String getTeamLeader() {
+        return teamLeader;
+    }
+
+    public void setTeamLeader(String teamLeader) {
+        this.teamLeader = teamLeader;
+    }
+
+    public String getRegistion() {
+        return registion;
+    }
+
+    public void setRegistion(String registion) {
+        this.registion = registion;
+    }
+
+    public String getConstruction() {
+        return construction;
+    }
+
+    public void setConstruction(String construction) {
+        this.construction = construction;
     }
 
 }

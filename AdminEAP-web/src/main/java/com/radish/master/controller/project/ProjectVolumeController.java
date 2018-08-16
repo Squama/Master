@@ -154,6 +154,13 @@ public class ProjectVolumeController {
         return new Result(true, JSONArray.toJSONString(projectService.getProjectSubCombobox(projectID)));
     }
     
+    @RequestMapping(value="/getpack")
+    @ResponseBody
+    public Result getPack(String laborID){
+        Labor labor = projectService.get(Labor.class, laborID);
+        return new Result(true, JSONArray.toJSONString(projectService.getPackCombobox(labor.getProjectID(), labor.getConstructionTeamID())));
+    }
+    
     @RequestMapping(value="/getpingxing")
     @ResponseBody
     public Result getPX(String id){

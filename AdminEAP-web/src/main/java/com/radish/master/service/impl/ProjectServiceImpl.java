@@ -37,6 +37,7 @@ import com.radish.master.entity.Project;
 import com.radish.master.entity.ProjectFileItem;
 import com.radish.master.entity.ProjectVolume;
 import com.radish.master.entity.common.ActivitiSuggestion;
+import com.radish.master.entity.project.ConstructionPlan;
 import com.radish.master.pojo.Options;
 import com.radish.master.service.ProjectService;
 import com.radish.master.system.FileHelper;
@@ -191,7 +192,14 @@ public class ProjectServiceImpl extends BaseServiceImpl implements ProjectServic
         return this.findMapBySql("select id value, sub_name data from tbl_project_sub where project_id=? ", new Object[] { projectID },
                 new Type[] { StringType.INSTANCE }, Options.class);
     }
-    
+
+    @Override
+    public List<Options> getPackCombobox(String projectID, String teamID) {
+        return this.findMapBySql(
+                "SELECT pd.id value, pd.`name` data FROM tbl_package_detail pd,tbl_package p WHERE pd.package_id = p.id AND p.project_id=? AND p.team_id=? ",
+                new Object[] { projectID, teamID }, new Type[] { StringType.INSTANCE, StringType.INSTANCE }, Options.class);
+    }
+
     @Override
     public Result startVolumeFlow(ProjectVolume projectVolume, String processDefinitionKey) {
         User user = SecurityUtil.getUser();
@@ -258,6 +266,31 @@ public class ProjectServiceImpl extends BaseServiceImpl implements ProjectServic
         // 启动流程
         return runtimePageService.startProcessInstanceByKey(processDefinitionKey, name, variables, user.getId(), businessKey);
     }
+    
+    @Override
+    public Result startPlanFlow(ConstructionPlan plan, String processDefinitionKey) {
+        User user = SecurityUtil.getUser();
+
+        plan.setStatus("20");
+
+        this.update(plan);
+
+        String title = "10".equals(plan.getType())?"总":"月度";
+        
+        String name = "项目：" + plan.getProjectName() + "栋号：" + plan.getBuilding() + "【施工" + title + "计划进度审核】";
+
+        // businessKey
+        String businessKey = plan.getId();
+
+        // 配置流程变量
+        Map<String, Object> variables = new HashMap<>();
+        variables.put(Constants.VAR_APPLYUSER_NAME, user.getName());
+        variables.put(Constants.VAR_BUSINESS_KEY, businessKey);
+        variables.put("taskName", name);
+
+        // 启动流程
+        return runtimePageService.startProcessInstanceByKey(processDefinitionKey, name, variables, user.getId(), businessKey);
+    }
 
     @Override
     public List<Options> getTeamComboboxByProject(String projectID) {
@@ -270,6 +303,13 @@ public class ProjectServiceImpl extends BaseServiceImpl implements ProjectServic
         return this.findMapBySql(
                 "SELECT u.id value, u.name data FROM tbl_user u, tbl_user_team ut, tbl_project_team pt WHERE u.id = ut.user_id AND ut.team_id = pt.id AND pt.project_id =? AND pt.status = '30'",
                 new Object[] { projectID }, new Type[] { StringType.INSTANCE }, Options.class);
+    }
+    
+    @Override
+    public List<Options> getTeamMemberNonManagerComboboxByTeam(String teamID) {
+        return this.findMapBySql(
+                "SELECT u.id value, u.name data FROM tbl_user u, tbl_user_team ut, tbl_project_team pt WHERE u.id = ut.user_id AND ut.team_id = pt.id AND pt.id =? AND pt.status = '10'",
+                new Object[] { teamID }, new Type[] { StringType.INSTANCE }, Options.class);
     }
 
     @Override

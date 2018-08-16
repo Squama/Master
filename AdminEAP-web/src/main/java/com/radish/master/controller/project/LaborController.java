@@ -35,6 +35,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.cnpc.framework.annotation.VerifyCSRFToken;
 import com.cnpc.framework.base.pojo.FileResult;
 import com.cnpc.framework.base.pojo.Result;
+import com.cnpc.framework.utils.CodeException;
 import com.cnpc.framework.utils.DateUtil;
 import com.cnpc.framework.utils.PropertiesUtil;
 import com.cnpc.framework.utils.SecurityUtil;
@@ -42,6 +43,7 @@ import com.cnpc.framework.utils.StrUtil;
 import com.radish.master.controller.ProjectController;
 import com.radish.master.entity.Labor;
 import com.radish.master.entity.ProjectFileItem;
+import com.radish.master.entity.project.ConstructionPlan;
 import com.radish.master.entity.project.LaborSub;
 import com.radish.master.service.BudgetService;
 import com.radish.master.service.CommonService;
@@ -97,6 +99,49 @@ public class LaborController {
     public String list(HttpServletRequest request){
     	request.setAttribute("projectOptions", JSONArray.toJSONString(budgetService.getProjectCombobox()));
         return "projectmanage/labor/labor_list";
+    }
+    
+    @RequestMapping(value="/download/list",method = RequestMethod.GET)
+    public String downloadList(HttpServletRequest request){
+        request.setAttribute("projectOptions", JSONArray.toJSONString(budgetService.getProjectCombobox()));
+        return "projectmanage/labor/labor_download_list";
+    }
+    
+    @RequestMapping(value="/labordetailfile", method = RequestMethod.GET)
+    public String projectdetailfile(String id, HttpServletRequest request){
+        Labor labor = projectService.get(Labor.class, id);
+        List<ProjectFileItem> fileList=new ArrayList<ProjectFileItem>();
+        DetachedCriteria criteria = DetachedCriteria.forClass(ProjectFileItem.class);
+        criteria.add(Restrictions.eq("batchNo", labor.getContractFile()));
+        criteria.addOrder(Order.asc("createDateTime"));
+        fileList = projectService.findByCriteria(criteria);
+        if(!fileList.isEmpty()){
+            request.setAttribute("fields", fileList.get(0).getId());
+        }
+        
+        return "projectmanage/labor/query_file";
+    }
+    
+    /**
+     * 施工总计划
+     * @param request
+     * @return
+     */
+    @RequestMapping(value="/plan/masterlist",method = RequestMethod.GET)
+    public String masterList(HttpServletRequest request){
+        request.setAttribute("projectOptions", JSONArray.toJSONString(budgetService.getProjectCombobox()));
+        return "projectmanage/labor/plan/total_plan";
+    }
+    
+    /**
+     * 月度计划
+     * @param request
+     * @return
+     */
+    @RequestMapping(value="/plan/monthlylist",method = RequestMethod.GET)
+    public String monthlyList(HttpServletRequest request){
+        request.setAttribute("projectOptions", JSONArray.toJSONString(budgetService.getProjectCombobox()));
+        return "projectmanage/labor/plan/month_plan";
     }
     
     @RequestMapping(value="/detailouter/{id}",method = RequestMethod.GET)
@@ -342,6 +387,92 @@ public class LaborController {
             msg.setErrorkeys(arr);
         }
         projectService.update(labor);
+        FileResult preview=getPreivewSettings(fileList, id, fileField, request);
+        msg.setInitialPreview(preview.getInitialPreview());
+        msg.setInitialPreviewConfig(preview.getInitialPreviewConfig());
+        msg.setFileIds(preview.getFileIds());
+        return msg;
+    }
+    
+    @RequestMapping(value = "/plan/uploadMultipleFile", method = RequestMethod.POST)
+    @ResponseBody
+    public FileResult uploadMultipleFilePlan(@RequestParam(value = "file", required = false) MultipartFile[] files, String id, String fileField,
+            HttpServletRequest request, HttpServletResponse response) throws IOException, CodeException{
+
+        FileResult msg = new FileResult();
+
+        ArrayList<Integer> arr = new ArrayList<>();
+        //缓存当前的文件
+        List<ProjectFileItem> fileList=new ArrayList<>();
+        
+        ConstructionPlan plan = projectService.get(ConstructionPlan.class, id);
+        
+        if(plan == null){
+            plan = new ConstructionPlan();
+            plan.setId(GUID.genTxNo(20, true));
+            projectService.save(plan);
+        }
+        
+        String fileID = plan.getFilecode();
+        if(StrUtil.isEmpty(fileID)){
+            fileID = GUID.getTxNo();
+            plan.setFilecode(fileID);
+        }
+        
+        for (int i = 0; i < files.length; i++) {
+            MultipartFile file = files[i];
+
+            if (!file.isEmpty()) {
+                InputStream in = null;
+                OutputStream out = null;
+                try {
+                    File dir = new File(projectFilePath);
+                    if (!dir.exists())
+                        dir.mkdirs();
+                    //这样也可以上传同名文件了
+                    String filePrefixFormat="yyyyMMddHHmmssS";
+                    String sourceName = file.getOriginalFilename();
+                    String fileName=DateUtil.format(new Date(),filePrefixFormat)+"_"+file.getOriginalFilename();
+                    String filePath=dir.getAbsolutePath() + File.separator + fileName;
+                    File serverFile = new File(filePath);
+                    //将文件写入到服务器
+                    file.transferTo(serverFile);
+                    ProjectFileItem item = new ProjectFileItem();
+                    item.setBatchNo(fileID);
+                    item.setUploadUserID(SecurityUtil.getUserId());
+                    item.setFileName(fileName);
+                    item.setFilePath(projectFilePath+File.separator+fileName);
+                    item.setFileSize(file.getSize());
+                    item.setFileType(fileName.substring(fileName.lastIndexOf(".")+1));
+                    item.setSourceName(sourceName);
+                    
+                    item.setUpdateDateTime(new Date());
+                    
+                    projectService.save(item);
+                    fileList.add(item);
+
+                    logger.info("Server File Location=" + serverFile.getAbsolutePath());
+                } catch (Exception e) {
+                    logger.error(   file.getOriginalFilename()+"上传发生异常，异常原因："+e.getMessage());
+                    arr.add(i);
+                } finally {
+                    if (out != null) {
+                        out.close();
+                    }
+                    if (in != null) {
+                        in.close();
+                    }
+                }
+            } else {
+                arr.add(i);
+            }
+        }
+
+        if(!arr.isEmpty()) {
+            msg.setError("文件上传失败！");
+            msg.setErrorkeys(arr);
+        }
+        projectService.update(plan);
         FileResult preview=getPreivewSettings(fileList, id, fileField, request);
         msg.setInitialPreview(preview.getInitialPreview());
         msg.setInitialPreviewConfig(preview.getInitialPreviewConfig());

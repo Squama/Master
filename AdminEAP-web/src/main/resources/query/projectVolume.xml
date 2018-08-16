@@ -14,6 +14,19 @@
         <column key="id" header="操作" width="80" fnRender="fnRenderLabor"/>
     </query>
     
+    <query id="labor_download_list" key="id" tableName="劳务合同列表" className="com.radish.master.entity.Labor" widthType="px">
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="projectName" header="项目名称" classType="String" allowSort="true" width="150"/>
+        <column key="constructionTeam" header="施工班组" classType="String" allowSort="true" width="150"/>
+        <column key="contractName" header="合同名称" classType="String" width="150"/>
+        <column key="contractPrice" header="合同总价（元）" classType="String" allowSort="true" width="150"/>
+        <column key="contractor" header="承包人" classType="String" allowSort="true" width="150"/>
+        <column key="constructionManager" header="施工负责人" classType="String" allowSort="true" width="150"/>
+        <column key="status" header="状态" allowSort="true" width="150" render="10=新建,20=审核中,30=审核通过,40=审核不通过"/>
+        <column key="id" header="操作" width="80" fnRender="fnRenderDetail"/>
+    </query>
+    
     <query id="labor_sub_list" key="id" tableName="劳务合同分项列表" className="com.radish.master.entity.project.LaborSub" widthType="px">
         <column key="id" hidden="true" header="id" width="80"/>
         <column key="rowIndex" header="序号" width="80"/>

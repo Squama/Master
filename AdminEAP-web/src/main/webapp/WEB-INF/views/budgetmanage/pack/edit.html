@@ -1,0 +1,280 @@
+<script type="text/javascript">
+ $.fn.modal.Constructor.prototype.enforceFocus = function () {};
+ </script>
+ <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><li class="fa fa-remove"></li></button>
+    <h5 class="modal-title">包工包料</h5>
+</div>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            
+            <form id="package-form" name="package-form" class="form-horizontal">
+                <input type="hidden" name="id">
+                <input type="hidden" name="projectName">
+                <input type="hidden" name="teamName">
+                <div class="box box-info">
+                    <div class="box-header with-border">
+                        <span>
+                            <i class="fa fa-edit">添加包工包料</i>
+                        </span>
+                    </div>
+                    <div class="box-body">
+                        <!-- 内容 -->
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">选择项目<span style="color:red">*</span></label>
+                                <div class="col-sm-5">
+                                    <select id="projectID" class="form-control select2" name="projectID">
+                                        <option selected="selected" value="">选择一个项目</option>
+                                    </select>
+                                </div>
+                            </div> 
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">选择班组<span style="color:red">*</span></label>
+                                <div class="col-sm-5">
+                                    <select id="teamID" class="form-control select2" name="teamID">
+                                        <option selected="selected" value="">选择一个班组</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer text-center" id="packageformsave">
+                        <button type="submit" class="btn btn-primary" data-btn-type="next">保存并编辑明细</button>
+                    </div>
+                </div>
+            </form>
+            <form id="package-detail-form" name="package-detail-form" class="form-horizontal">
+                <div class="box box-success dn" id="package_det">
+                    <div class="box-header with-border">
+                        <span>
+                            <i class="fa fa-files-o">编辑包工包料详情</i>
+                        </span>
+                    </div>
+                    <div class="dataTables_filter" style="text-align:center;margin-top:5px;">
+                       <input type="hidden" name="packageID">
+                       <input type="text" placeholder="名称" title="名称" name="name" class="form-control" id="matStandard" style="width:120px;" >
+                       <input type="text" placeholder="面积" title="面积" name="unit" class="form-control" id="unit" style="width:60px;">
+                       <input type="text" placeholder="单价" title="单价" name="quantity" class="form-control" id="quantity" style="width:60px;">
+                       <input type="text" placeholder="总价" title="总价" name="quantity" class="form-control" id="quantity" style="width:60px;" readonly="readonly">
+                       <div class="btn-group">
+                           <button type="submit" class="btn btn-primary" data-btn-type="savetx">添加</button>
+                       </div>
+                    </div>
+                    <div class="dataTables_filter" id="searchDivPDet" style="text-align:center;height:1px;">
+                       <input type="search" name="packageID" class="form-control" operator="eq" style="display:none;">
+                       <div class="btn-group">
+                           <button type="button" class="btn btn-primary" data-btn-type="search" id="refresh" style="display:none;">查询</button>
+                       </div>
+                    </div>
+                    <div class="box-body">
+                        <!-- 内容 -->
+                        <table id="package_edit_table" class="table table-bordered table-striped table-hover">
+                        </table>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<script>
+    $.fn.modal.Constructor.prototype.enforceFocus =function(){};
+    var packageform = $("#package-form").form({baseEntity: false}), initData={},
+    packagedetailform = $("#package-detail-form").form({baseEntity: false}),options=0,tOptions=0;
+    var purchaseEditTable, winId = "purchaseDetWin", budgetNo=0;
+    
+    var projectOptions = '${projectOptions?default(0)}';
+    if(projectOptions != 0){
+        options = JSON.parse(projectOptions);
+    }
+    
+    var purchaseID="${purchaseID?default(0)}";
+    initData.purchaseID = purchaseID;
+    packagedetailform.initFormData(initData);
+    
+    var packageEditObject = {
+            deleteDetail: function (rowId) {
+                ajaxPost(basePath + '/budget/pack/deletedet', {id:rowId}, function (data) {
+                    if (data.success) {
+                    	purchaseEditTable.table.page('first').draw(false);
+                    } else {
+                        modals.error(data.message);
+                    }
+                });
+            }
+    }
+    
+    $(function (){
+    	purchaseEditTable = new CommonTable("package_edit_table", "package_edit", "searchDivPDet", {
+            "ordering" : false,
+            "lengthChange": false,
+            "displayLength": 20,
+            "scrollY": "200px",
+            "scrollCollapse": true
+        });
+        
+        if(options != 0){
+            
+            for (var i = 0, len = options.length; i < len; i++) {
+                var option = options[i];
+                $('#projectID').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+            }
+            
+            $('#projectID').select2();
+            
+            $('#projectID').bind("change", function () {
+                var projectID = $(this).val();
+                if (projectID === "") {
+                    return false;
+                }
+                
+                var name = "";
+                if ($("#projectID").prop('selectedIndex') > 0) {
+                    name = $("#projectID").find("option:selected").text();
+                }
+                $('input[name="projectName"]').val(name);
+                
+                ajaxPost(basePath+"/labor/getteamop",{projectID:projectID},function(data){
+                    var teamOptions = data.message;
+                    tOptions = JSON.parse(teamOptions);
+                    
+                    $('#teamID').empty();
+                    $('#teamID').append('<option selected="selected" value="">选择一个班组</option>');
+                    
+                    for (var i = 0, len = tOptions.length; i < len; i++) {
+                        var option = tOptions[i];
+                        $('#teamID').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+                    }
+                    
+                    $('#teamID').select2();
+                    
+                    $('#teamID').bind("change", function () {
+                        var value = $(this).val();
+                        if (value === "") {
+                            return false;
+                        }
+                        
+                        var name = "";
+                        if ($("#teamID").prop('selectedIndex') > 0) {
+                            name = $("#teamID").find("option:selected").text();
+                        }
+                        $('input[name="teamName"]').val(name);
+                    });
+                })
+            }); 
+        }
+        
+        $("#package-form").bootstrapValidator({
+            message: '请输入有效值',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            submitHandler: function () {
+                var formData = packageform.getFormSimpleData();
+                ajaxPost(basePath + '/budget/pack/save', formData, function (data) {
+                    if (data.success) {
+                        initData.packageID = data.data.id;
+                        packagedetailform.initFormData(initData);
+                        $('#package_det').show();
+                        $('#packageformsave').hide();
+                        
+                        $('#projectID').attr("disabled","disabled");
+                        $('#teamID').attr("disabled","disabled");
+                    } else {
+                        modals.error(data.message);
+                    }
+                });
+            },
+            fields: {
+                "projectID": {
+                    validators: {
+                        notEmpty: {message: '项目不能为空'}
+                    }
+                },
+                "teamID": {
+                    validators: {
+                        notEmpty: {message: '班组不能为空'}
+                    }
+                }
+            }
+        });
+        
+        $("#package-detail-form").bootstrapValidator({
+            message: '请输入有效值',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            submitHandler: function () {
+                var formData = packagedetailform.getFormSimpleData();
+                ajaxPost(basePath + '/budget/pack/savedet', formData, function (data) {
+                    if (data.success) {
+                    	purchaseEditTable.table.page('first').draw(false);
+                    } else {
+                        modals.error(data.message);
+                    }
+                });
+                
+            },
+            fields: {
+                "name": {
+                    validators: {
+                        notEmpty: {message: '名称不能为空'}
+                    }
+                },
+                "area": {
+                    validators: {
+                        notEmpty: {message: '面积不能为空'}
+                    }
+                },
+                "price": {
+                    validators: {
+                        notEmpty: {message: '单价不能为空'}
+                    }
+                }
+            }
+        });
+        //编辑回填
+        if(purchaseID != 0){
+            ajaxPost(basePath+"/budget/pack/getpackage",{packageID:packageID},function(data){
+                $('#package_det').show();
+                $('#packageformsave').hide();
+                
+                var projectName = data.data.projectName;
+                var teamName = data.data.teamName;
+                
+                var projectArea = $('#projectID').parent();
+                projectArea.empty();
+                $('<input>',{
+                    "value" : projectName,
+                    "type" : "text",
+                    "class" : "form-control",
+                    "readonly" : "readonly"
+                }).appendTo(projectArea);
+                
+                var teamArea = $('#teamID').parent();
+                teamArea.empty();
+                $('<input>',{
+                    "value" : teamName,
+                    "type" : "text",
+                    "class" : "form-control",
+                    "readonly" : "readonly"
+                }).appendTo(teamArea);
+            })
+        } 
+        
+        //初始化控件
+        packageform.initComponent();
+        packagedetailform.initComponent();
+        
+    });
+    
+    function fnRenderDelete(value){
+        return "<a href='javascript:void(0)' onclick='packageEditObject.deleteDetail(\"" + value + "\")'>删除</a>";
+    }
+</script>

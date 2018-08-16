@@ -136,11 +136,11 @@
         </sql>
         <column key="id" header="编号" hidden="true"/>
         <column key="rowIndex" header="序号" width="80"/>
-        <column key="project_name" header="项目名称" hidden="true"/>
-        <column key="project_sub_name" header="所属子项" hidden="true"/>
-        <column key="budget_no" header="预算编号" hidden="true"/>
-        <column key="team_name" header="班组名称" hidden="true"/>
-        <column key="id" header="操作" fnRender="fnRenderDetail"/>
+        <column key="project_name" header="项目名称" classType="String" />
+        <column key="project_sub_name" header="所属子项" classType="String" />
+        <column key="budget_no" header="预算编号" classType="String" />
+        <column key="team_name" header="班组名称" classType="String" />
+        <column key="id" header="操作" fnRender="fnRenderTeam"/>
     </query>
     
 </queryContext>

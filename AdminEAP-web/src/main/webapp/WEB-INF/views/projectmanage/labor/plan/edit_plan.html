@@ -1,0 +1,200 @@
+<link rel="stylesheet" href="${basePath}/resources/common/libs/fileinput/css/fileinput.min.css">
+<script src="${basePath}/resources/common/libs/fileinput/js/fileinput.js"></script>
+<script src="${basePath}/resources/common/libs/fileinput/js/locales/zh.js"></script>
+<!--BaseFile组件-->
+<script src="${basePath}/resources/common/js/base-file.js"></script>
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><li class="fa fa-remove"></li></button>
+    <h5 class="modal-title">编辑计划</h5>
+</div>
+
+<div class="modal-body">
+
+    <planForm id="plan-edit-planForm" name="plan-edit-planForm" class="planForm-horizontal">
+        <input type="hidden" name="id" id="id">
+        <input type="hidden" name="projectName" id="projectName">
+        <input type="hidden" name="type" id="type">
+        <div class="box-body">
+            <div class="col-md-12">
+                <div class="planForm-group">
+                    <label for="name" class="col-sm-3 control-label">项目<span style="color:red">*</span></label>
+                    <div class="input-group col-sm-8">
+                        <select id="projectAddID" class="planForm-control select2" name="projectID" style="width:100%;">
+                               <option selected="selected" value="">选择一个项目</option>
+                       </select>
+                    </div>
+                </div>
+                <div class="planForm-group">
+                    <label for="birthday" class="col-sm-3 control-label">栋号<span style="color:red">*</span></label>
+                    <div class="input-group col-sm-8">
+                        <input type="text" class="planForm-control" id="building" name="building" placeholder="班组名称">
+                    </div>
+                </div>
+                <div class="planForm-group">
+                    <label class="col-sm-3 control-label">计划文件<span style="color:red">*</span></label>
+                    <div class="col-sm-6">
+                        <input type="hidden" name="filecode" id="filecode">
+                        <div class="planForm-group">
+                            <div class="btn btn-default btn-file" id="filecodeupload">
+                                <i class="fa fa-paperclip"></i> 上传劳务合同(最大. 100MB)
+                            </div>
+                        </div>
+                        <div class="planForm-group">
+                            <input type="file" name="filecodeattachment" id="filecodeattachment">
+                        </div> 
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.box-body -->
+        <div class="box-footer text-right">
+            <!--以下两种方式提交验证,根据所需选择-->
+            <button type="button" class="btn btn-default" data-btn-type="cancel" data-dismiss="modal">取消</button>
+            <button type="submit" class="btn btn-primary" data-btn-type="save">提交</button>
+        </div>
+        <!-- /.box-footer -->
+    </planForm>
+
+</div>
+<script>
+    //tableId,queryId,conditionContainer
+    var planForm =null;
+    var id = "${id?default(0)}", type = "${type?default(0)}";
+    if(type != 0){
+    	$('#type',$('#plan-edit-planForm')).val(type);
+    }
+    $(function() {
+        //初始化控件
+        planForm=$("#plan-edit-planForm").planForm();
+        //数据校验
+        $("#plan-edit-planForm").bootstrapValidator({
+            message : '请输入有效值',
+            feedbackIcons : {
+                valid : 'glyphicon glyphicon-ok',
+                invalid : 'glyphicon glyphicon-remove',
+                validating : 'glyphicon glyphicon-refresh'
+            },
+            submitHandler : function(validator, userform, submitButton) {
+                modals.confirm('确认保存？', function() {
+                    //Save Data，对应'submit-提交'
+                    var params = planForm.getFormSimpleData();
+                    ajaxPost(basePath+'/labor/plan/save', params, function(data, status) {
+                        if(data.success){
+                            modals.hideWin(winId); 
+                            totalTable.reloadData(); 
+                        }else{
+                            modals.error("保存失败！");
+                        }            
+                    });
+                });
+            },
+            fields : {
+                projectID : {
+                    validators : {
+                        notEmpty : {
+                            message : '请选择项目'
+                        }
+                    }
+                },
+                building : {
+                    validators : {
+                        notEmpty : {
+                            message : '请输入栋号'
+                        }
+                    }
+                }
+            }
+        });
+        planForm.initComponent();
+        
+        if(options != 0){
+            for (var i = 0, len = options.length; i < len; i++) {
+                var option = options[i];
+                $('#projectAddID').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+            }
+            $("#projectAddID").select2();
+            $("#projectAddID").bind("change", function () {
+                var value = $(this).val();
+                if (value === "") {
+                    return false;
+                }
+                
+                var name = "";
+                if ($("#projectAddID").prop('selectedIndex') > 0) {
+                    name = $("#projectAddID").find("option:selected").text();
+                }
+                $('#projectName').val(name);
+            });
+        }
+        
+        //编辑回填
+        if(id!="0"){
+            ajaxPost(basePath+"/labor/plan/get",{id:id},function(data){
+                planForm.initFormData(data);
+            })
+        }
+        
+        $('#filecodeupload').on('click', function(e){
+            $("#plan-edit-planForm").data("bootstrapValidator").validate();
+            if(!$("#plan-edit-planForm").data("bootstrapValidator").isValid()){
+                e.preventDefault();
+            }
+        });
+        
+    });
+    
+    var fileinputDefaults = {
+            maxFileSize: 102400,
+            maxFileCount:10,
+            previewSettings: {
+                image: {width: "160px", height: "60px"},
+                text: {width: "213px", height: "160px"},
+                object: {width: "160px", height: "auto"},
+                pdf: {width: "160px", height: "160px"},
+                other: {width: "160px", height: "160px"}
+            },
+            previewZoomSettings: {
+                image: {width: "auto", height: "auto", 'max-width': "100%", 'max-height': "100%"},
+                text: {width: "100%", height: "100%", 'min-height': "480px"},
+                object: {width: "auto", height: "100%", 'min-height': "480px"},
+                pdf: {width: "100%", height: "100%", 'min-height': "480px"},
+                other: {width: "auto", height: "100%", 'min-height': "480px"}
+            },
+            uploadUrl: basePath + "/labor/plan/uploadMultipleFile",
+            deleteUrl: basePath + "/project/deletefile",
+            allowedPreviewTypes : ['image', 'object']
+      }
+      var defaults = {
+            title: "请上传附件",
+            getFileResultUrl: basePath+"/project/getFiles",
+            downloadFileUrl: basePath+"/project/download/",
+            fileinput: fileinputDefaults,
+            showType:'detail',
+            window:true,
+            callback:function(fileIds,oldfileIds){
+                this.showFiles({
+                    fileIds:fileIds,
+                    type:'preview'
+                });
+            }
+      }
+      
+      $("#filecodeupload").file($.extend({}, defaults, {
+          title:"请上传劳务合同",
+          fileinput:$.extend({}, fileinputDefaults, {
+              uploadExtraData: getFormData
+          }),
+          showContainer:'#filecodeattachment',
+          fileIdContainer:"[name='filecode']",
+          extraPreviewConfig:{
+              "fileField":"filecode"
+          }
+      }));
+    
+      function getFormData(){
+        var data = planForm.getFormSimpleData();
+        data.fileField = "filecode";
+        return data;
+      }
+</script>

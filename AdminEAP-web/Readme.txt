@@ -7,6 +7,14 @@ B-wang
         
 版本历史
 =======================================
+v1.0.2.07
+---------------------------------------
+1.增加表tbl_package,tbl_package_detail
+2.tbl_project_volume增加字段package_detail_id
+3.tbl_project_team增加四个字段
+4.tbl_labor增加若干字段
+
+
 v1.0.2.06
 ---------------------------------------
 1.新增表tbl_project_sub项目子项，废除表tbl_labor_sub;

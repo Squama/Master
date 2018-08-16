@@ -8,6 +8,7 @@
     <form id="team-edit-form" name="team-edit-form" class="form-horizontal">
         <input type="hidden" name="id" id="id">
         <input type="hidden" name="projectName" id="projectName">
+        <input type="hidden" name="teamLeader" id="teamLeader">
         <div class="box-body">
             <div class="col-md-12">
                 <div class="form-group">
@@ -30,6 +31,26 @@
                         <input type="text" class="form-control" id="teamCode" name="teamCode" placeholder="自动生成" readonly="readonly">
                     </div>
                 </div>
+                <div class="form-group">
+                    <label for="teamLeaderID" class="col-sm-3 control-label">班组长<span style="color:red">*</span></label>
+                    <div class="input-group col-sm-8">
+                        <select id="teamLeaderID" class="form-control select2" name="teamLeaderID" style="width:100%;">
+                               <option selected="selected" value="">在班组人员中选择一个班组长</option>
+                       </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="registion" class="col-sm-3 control-label">注册信息<span style="color:red">*</span></label>
+                    <div class="input-group col-sm-8">
+                        <input type="text" class="form-control" id="registion" name="registion" placeholder="注册信息">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="construction" class="col-sm-3 control-label">施工内容<span style="color:red">*</span></label>
+                    <div class="input-group col-sm-8">
+                        <input type="text" class="form-control" id="construction" name="construction" placeholder="施工内容">
+                    </div>
+                </div>
             </div>
         </div>
         <!-- /.box-body -->
@@ -46,6 +67,8 @@
     //tableId,queryId,conditionContainer
     var form =null;
     var id = "${id?default(0)}";
+    var leaderOptions = '${leaderOptions?default(0)}';
+    
     $(function() {
         //初始化控件
         form=$("#team-edit-form").form();
@@ -85,6 +108,27 @@
                             message : '请输入班组名称'
                         }
                     }
+                },
+                teamLeaderID : {
+                    validators : {
+                        notEmpty : {
+                            message : '请选择班组长'
+                        }
+                    }
+                },
+                registion : {
+                    validators : {
+                        notEmpty : {
+                            message : '请输入注册信息'
+                        }
+                    }
+                },
+                construction : {
+                    validators : {
+                        notEmpty : {
+                            message : '请输入施工内容'
+                        }
+                    }
                 }
             }
         });
@@ -107,6 +151,27 @@
                     name = $("#projectAddID").find("option:selected").text();
                 }
                 $('#projectName').val(name);
+            });
+        }
+        
+        if(leaderOptions != 0){
+            loptions = JSON.parse(leaderOptions);
+            for (var i = 0, len = loptions.length; i < len; i++) {
+                var option = loptions[i];
+                $('#teamLeaderID').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+            }
+            $("#teamLeaderID").select2();
+            $("#teamLeaderID").bind("change", function () {
+                var value = $(this).val();
+                if (value === "") {
+                    return false;
+                }
+                
+                var name = "";
+                if ($("#teamLeaderID").prop('selectedIndex') > 0) {
+                    name = $("#teamLeaderID").find("option:selected").text();
+                }
+                $('#teamLeader').val(name);
             });
         }
         

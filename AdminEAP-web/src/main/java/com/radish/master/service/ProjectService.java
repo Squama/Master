@@ -13,6 +13,7 @@ import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.base.service.BaseService;
 import com.radish.master.entity.Labor;
 import com.radish.master.entity.ProjectVolume;
+import com.radish.master.entity.project.ConstructionPlan;
 import com.radish.master.pojo.Options;
 
 /**
@@ -66,13 +67,19 @@ public interface ProjectService extends BaseService{
     
     List<Options> getProjectSubCombobox(String projectID);
     
+    List<Options> getPackCombobox(String projectID, String laborID);
+    
     public Result startVolumeFlow(ProjectVolume projectVolume, String processDefinitionKey);
     
     public Result startLaborFlow(Labor labor, String processDefinitionKey);
     
+    public Result startPlanFlow(ConstructionPlan plan, String processDefinitionKey);
+    
     List<Options> getTeamComboboxByProject(String projectID);
     
     List<Options> getTeamManagerComboboxByProject(String projectID);
+    
+    List<Options> getTeamMemberNonManagerComboboxByTeam(String teamID);
     
     List<Options> getMemberTeamComboboxByProject(String projectID);
     

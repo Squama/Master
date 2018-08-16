@@ -63,9 +63,11 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-5 control-label">扣款（元）<span style="color:red">*</span></label>
+                                <label class="col-sm-5 control-label">选择包工包料<span style="color:red">*</span></label>
                                 <div class="col-sm-6">
-                                    <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control calculate" id="applyDebit" name="applyDebit" placeholder="本次上报应扣款" value="0">
+                                    <select id="packageDetailID" class="form-control select2" name="packageDetailID">
+                                        <option selected="selected" value="">选择一个包工包料</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -102,6 +104,12 @@
                                 <label class="col-sm-3 control-label">人工费（元）<span style="color:red">*</span></label>
                                 <div class="col-sm-6">
                                     <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control calculate" id="applyLabour" name="applyLabour" placeholder="本次上报人工费" value="0">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">扣款（元）<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control calculate" id="applyDebit" name="applyDebit" placeholder="本次上报应扣款" value="0">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -216,6 +224,11 @@
                         notEmpty: {message: '材料费不能为空'}
                     }
                 },
+                "packageDetailID": {
+                    validators: {
+                        notEmpty: {message: '包工包料名称不能为空'}
+                    }
+                },
                 "applyPack": {
                     validators: {
                         notEmpty: {message: '包工包料不能为空'}
@@ -279,7 +292,19 @@
                         	$('#constructionManager').val(data.constructionManager);
                         	$('#contractPrice').val(data.contractPrice);
                         });
-                        
+                        //加载包工包料
+                        ajaxPost(basePath+"/projectvolume/getpack",{projectID:value,laborID:laborid},function(data){
+                            var packDetailOptions = data.message;
+                            pOptions = JSON.parse(packDetailOptions);
+                            $('#packageDetailID').empty();
+                            $('#packageDetailID').append('<option selected="selected" value="">选择一个包工包料</option>');
+                            for (var i = 0, len = pOptions.length; i < len; i++) {
+                                var option = pOptions[i];
+                                $('#packageDetailID').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+                            }
+                            $('#packageDetailID').select2();
+                        });
+                        //子项加载结束
                     });
                 });
                 //加载子项
