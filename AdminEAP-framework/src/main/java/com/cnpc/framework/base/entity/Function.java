@@ -14,7 +14,7 @@ import java.util.List;
 @Entity
 @Table(name = "tbl_function")
 @JsonIgnoreProperties(value = { "hibernateLazyInitializer", "handler", "fieldHandler" })
-public class Function extends BaseEntity {
+public class Function extends BaseEntity implements Comparable<Function>{
 
     /**
      *
@@ -169,4 +169,20 @@ public class Function extends BaseEntity {
         this.remark = remark;
     }
 
+    @Override
+    public int compareTo(Function f)
+    {
+        String thisCode = this.levelCode;
+        String fCode = f.getLevelCode();
+        if(thisCode.length() == 6 || fCode.length() == 6){
+            thisCode = this.levelCode.substring(0, 6);
+            fCode = fCode.substring(0, 6);
+        }
+        if(Integer.valueOf(thisCode) >= Integer.valueOf(fCode)){
+            return 1;
+        }
+        return -1;
+        
+    }
+    
 }

@@ -1,6 +1,7 @@
 package com.cnpc.framework.base.service.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -146,6 +147,7 @@ public class FunctionServiceImpl extends BaseServiceImpl implements FunctionServ
            }
 
         }
+        Collections.sort(list);
         return list;
     }
 
