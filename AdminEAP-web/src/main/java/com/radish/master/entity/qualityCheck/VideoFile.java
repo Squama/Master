@@ -75,6 +75,10 @@ public class VideoFile implements Serializable {
     @Header(name = "项目id")
     @Column(name = "proid")
     private String proid;
+    
+    @Header(name = "名称")
+    @Column(name = "name")
+    private String name;
 
 	public String getId() {
 		return id;
@@ -158,6 +162,14 @@ public class VideoFile implements Serializable {
 
 	public void setProid(String proid) {
 		this.proid = proid;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 

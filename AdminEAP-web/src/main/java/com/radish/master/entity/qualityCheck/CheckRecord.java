@@ -87,6 +87,10 @@ public class CheckRecord implements Serializable {
     @Header(name = "项目id")
     @Column(name = "proid")
     private String proid;
+    
+    @Header(name = "文件名")
+    @Column(name = "name")
+    private String name;
 
 	public String getId() {
 		return id;
@@ -190,6 +194,14 @@ public class CheckRecord implements Serializable {
 
 	public void setProid(String proid) {
 		this.proid = proid;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 

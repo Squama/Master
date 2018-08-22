@@ -32,6 +32,8 @@ public class MatInAndOut implements Serializable {
     private String price;
     private String type;
     private String bz;
+    private String channelid;
+    private String supplier;
 	public String getProjectId() {
 		return projectId;
 	}
@@ -97,6 +99,18 @@ public class MatInAndOut implements Serializable {
 	}
 	public void setBz(String bz) {
 		this.bz = bz;
+	}
+	public String getChannelid() {
+		return channelid;
+	}
+	public void setChannelid(String channelid) {
+		this.channelid = channelid;
+	}
+	public String getSupplier() {
+		return supplier;
+	}
+	public void setSupplier(String supplier) {
+		this.supplier = supplier;
 	}
     
     
