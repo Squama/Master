@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<queryContext xmlns="http://www.example.org/query" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.example.org/query query.xsd">
+    
+    
+    <query id="loan_gr" key="id" tableName="个人借款列表" widthType="px">
+        <sql>
+            <![CDATA[
+              SELECT jk.id id,jk.number number ,jk.enddate enddate,jk.status status,jk.money money ,jk.loanerid loanerid,jk.bmyj bmyj ,jk.bossyj bossyj 
+			  ,jk.type type 
+			  FROM tbl_loans jk 
+			  WHERE 1=1  
+            ]]>
+        </sql>
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="type" header="类型" classType="String" allowSort="true" width="150" render="10=公司借款,20=项目借款"/>
+        <column key="number" header="编号" classType="String" allowSort="true" width="150"/>
+        <column key="enddate" header="预计还款日期" classType="String" width="150"/>
+        <column key="money" header="借款金额" classType="String" width="150"/>
+        <column key="status" header="状态" classType="String" width="150" render="10=新建,20=部门审核,30=部门驳回,40=领导审核,50=领导驳回,60=财务放款,70=已放款,80=已还款"/>
+    	<column key="id" header="操作" classType="String" width="150"  fnRender="fnRenderXQ"/>
+    </query>
+    
+    <query id="loan_bm" key="id" tableName="个人借款列表_部门审核" widthType="px">
+        <sql>
+            <![CDATA[
+              SELECT jk.id id,jk.number number ,jk.enddate enddate,jk.status status,jk.money money ,jk.loanerid loanerid,jk.pid pid ,jk.loanname loanname 
+			  ,jk.type type 
+			  FROM tbl_loans jk 
+			  WHERE 1=1  and jk.status='20' 
+            ]]>
+        </sql>
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="type" header="类型" classType="String" allowSort="true" width="150" render="10=公司借款,20=项目借款"/>
+        <column key="number" header="编号" classType="String" allowSort="true" width="150"/>
+        <column key="loanname" header="借款人姓名" classType="String" allowSort="true" width="150"/>
+        <column key="enddate" header="预计还款日期" classType="String" width="150"/>
+        <column key="money" header="借款金额" classType="String" width="150"/>
+        <column key="status" header="状态" classType="String" width="150" render="10=新建,20=部门审核,30=部门驳回,40=领导审核,50=领导驳回,60=财务放款,70=已放款,80=已还款"/>
+    	<column key="id" header="操作" classType="String" width="150"  fnRender="fnRenderXQ"/>
+    </query>
+    
+    <query id="loan_cw" key="id" tableName="个人借款列表_财务付款" widthType="px">
+        <sql>
+            <![CDATA[
+              SELECT jk.id id,jk.number number ,jk.enddate enddate,jk.status status,jk.money money ,jk.loanerid loanerid,jk.pid pid ,jk.loanname loanname ,jk.dept dept,jk.isjz isjz,jk.ishk ishk  
+			  ,jk.type type 
+			  FROM tbl_loans jk 
+			  WHERE 1=1  and jk.status in ('60','70','80') 
+            ]]>
+        </sql>
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="type" header="类型" classType="String" allowSort="true" width="150" render="10=公司借款,20=项目借款"/>
+        <column key="number" header="编号" classType="String" allowSort="true" width="150"/>
+        <column key="dept" header="借款人部门" classType="String" allowSort="true" width="150"/>
+        <column key="loanname" header="借款人姓名" classType="String" allowSort="true" width="150"/>
+        <column key="enddate" header="预计还款日期" classType="String" width="150"/>
+        <column key="money" header="借款金额" classType="String" width="150"/>
+        <column key="status" header="状态" classType="String" width="150" render="10=新建,20=部门审核,30=部门驳回,40=领导审核,50=领导驳回,60=财务放款,70=已放款,80=已还款"/>
+    	<column key="id" header="操作" classType="String" width="150"  fnRender="fnRenderXQ"/>
+    </query>
+    
+</queryContext>

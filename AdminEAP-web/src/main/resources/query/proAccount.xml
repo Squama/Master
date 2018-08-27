@@ -17,6 +17,21 @@
 	        <column key="allMoney" header="账目当前总额" classType="String" width="150"  />
 			<column key="id" header="操作" width="80" fnRender="fnRenderDet"/>
 	</query>
+	<query id="projectAccount_listGs" key="id" tableName="公司账本列表" widthType="px">
+			<sql>
+		        <![CDATA[
+		          SELECT zm.id id, zm.accountName accountName ,zm.allMoney allMoney 
+		          FROM 
+                  tbl_projectAccount zm 
+                  WHERE zm.projectId = '1' and 1=1 
+		        ]]>
+		    </sql>
+		    <column key="rowIndex" header="序号" width="50" allowSort="false"/>
+	        <column key="id" header="账目id" classType="String" allowSort="true" width="150" hidden="true"/>
+		    <column key="accountName" header="账目名称" classType="String" width="150"/>
+	        <column key="allMoney" header="账目当前总额" classType="String" width="150"  />
+			<column key="id" header="操作" width="80" fnRender="fnRenderDet"/>
+	</query>
 	
 	<query id="projectAccountDet_list" key="id" tableName="账目列表" widthType="px">
 			<sql>

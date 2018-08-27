@@ -42,6 +42,10 @@ public class ProAccountController {
 		request.setAttribute("xm", JSONArray.toJSONString(xm));
 		return prefix +"addList";
 	}
+	@RequestMapping("/addListGs")
+	public String addListGs(HttpServletRequest request){
+		return prefix +"addListGs";
+	}
 	
 	@RequestMapping("/addAccountIndex")
 	public String addAccountIndex(HttpServletRequest request){

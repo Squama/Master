@@ -1,0 +1,232 @@
+<link rel="stylesheet" href="${basePath}/resources/common/libs/fileinput/css/fileinput.min.css">
+<style>
+
+#projectaddstep2 .krajee-default.file-preview-frame .kv-file-content {
+    height: auto;
+}
+
+#projectaddstep2 .krajee-default .file-footer-caption {
+    width: 100px;
+}
+
+</style>
+<script src="${basePath}/resources/common/libs/fileinput/js/fileinput.js"></script>
+<script src="${basePath}/resources/common/libs/fileinput/js/locales/zh.js"></script>
+<!--BaseFile组件-->
+<script src="${basePath}/resources/common/js/base-file.js"></script>
+<div class="modal-body" style="max-height:100%;overflow-y:auto;">
+	<span id="msg" style="color: red"></span>
+    <form id="contract-form" name="contract-form" class="form-horizontal">
+     <input type="hidden" name="id" id= "id">
+       <div class="box-body">
+            <div class="col-md-6">
+                <div class="form-group">
+					<label  for="projectId" class="col-sm-3 control-label">借款人</label>
+					<div class=" col-sm-8">
+						<input  id="loanerid" name="loanerid"   style="display: none">
+						<input class="form-control " id="loanname" name="loanname"   placeholder="借款人姓名" readonly="readonly" >
+					</div>
+				</div>
+                <div class="form-group">
+                    <label  for="money" class="col-sm-3 control-label">金额大写</label>
+					<div class=" col-sm-8">
+						<input class="form-control " id="dxmoney" name="dxmoney"   placeholder="金额大写" disabled="disabled" >
+					</div>
+                </div>
+                <div class="form-group">
+                    <label  for="money" class="col-sm-3 control-label">借款金额</label>
+					<div class=" col-sm-8">
+						<input class="form-control " id="money" name="money"   placeholder="收款金额"  readonly="readonly">
+					</div>
+                </div>
+                <div class="form-group">
+                     <label class="col-sm-3 control-label">借款类型</label>
+                     <div class="col-sm-8">
+                         <select  class="form-control" name="type" id="type" disabled="disabled">
+                         	<option value="10" selected="selected">公司借款</option>
+                         	<option value="20">项目借款</option>
+                         </select>
+                     </div>
+                 </div>
+                
+            </div>
+            <div class="col-md-6">
+            	<div class="form-group">
+					<label  for="number" class="col-sm-3 control-label">编号</label>
+					<div class=" col-sm-8">
+						<input class="form-control " id="number" name="number"   placeholder="编号" readonly="readonly" >
+				
+					</div>
+				</div>
+				<div class="form-group">
+                     <label class="col-sm-3 control-label">预计还款日期</label>
+                     <div class="col-sm-8">
+                         <input type="text" class="form-control date-picker" name="enddate" id="enddate" data-flag="datepicker" data-format="yyyy-mm-dd"  placeholder="" disabled="disabled">
+                     </div>
+                 </div>
+                 <div class="form-group">
+					<label  for="number" class="col-sm-3 control-label">部门审核人</label>
+					<div class=" col-sm-8">
+						<input class="form-control " id="bmshr" name="bmshr"   placeholder="部门审核人" readonly="readonly" >
+				
+					</div>
+				</div>
+				<div class="form-group" id="prodiv">
+                  	<label for="projectId" class="col-sm-3 control-label">项目名称</label>
+                 		<div class="col-sm-8">
+                  		<select id="proid" class="form-control select2 "  name="proid" style="width:100%" disabled="disabled">
+                  			<option selected="selected" value="">选择一个项目</option>
+                  		</select>
+                 		</div>
+                  </div>
+            </div>   
+        </div>
+        	<div class="form-group">
+                    <label for="content" class="col-sm-2 control-label">借款事由</label>
+
+                    <div class="col-sm-9">
+                        <textarea class="form-control" id="content" name="content" placeholder="借款事由" rows="6" disabled="disabled"></textarea>
+                    </div>
+            </div>
+            <div class="form-group">
+                    <label for="content" class="col-sm-2 control-label">审核意见</label>
+
+                    <div class="col-sm-9">
+                        <textarea class="form-control" id="bmyj" name="bmyj" placeholder="审核意见" rows="6" readonly="readonly" ></textarea>
+                    </div>
+            </div>
+        <!-- /.box-footer -->
+    </form>
+</div>
+<script>
+    var form =null;
+    var id="${id?default(0)}";
+    var pros = '${projectOptions?default(0)}',pro=0;
+    if(pros != 0){
+    	pro = JSON.parse(pros);
+    }
+    $(function() {
+        //初始化控件
+        form=$("#contract-form").form();
+        
+        form.initComponent();
+
+        if(pro != 0){
+            for (var i = 0, len = pro.length; i < len; i++) {
+                var u = pro[i];
+                $('#proid').append("<option value='" + u.value + "'>" + u.data + "</option>");
+            }
+            $("#proid").select2();
+        }
+        if(id!=0){
+        	load();
+        }
+        
+    });
+    function load(){
+    	var url=basePath+'/loans/load?id='+id;
+    	
+    	ajaxPost(url, {}, function(data) {
+            formdata = data.data;
+            form.initFormData(formdata); 
+            var dx =changeNumMoneyToChinese(formdata.money); 
+            $("#dxmoney").val(dx);  
+            var t = $("#type option:selected").val();
+			if(t=="10"){
+				$("#prodiv").css("display","none");
+			}else{
+				$("#prodiv").css("display","");
+			}              
+        }); 
+    }
+    function resetForm(){
+        form.clearForm();
+        $("#contract-form").data('bootstrapValidator').resetForm();
+    }
+    function getDxMoney(){
+		var money = $("#money").val();
+		var dx = changeNumMoneyToChinese(money);
+		$("#dxmoney").val(dx);
+    }
+    function changeNumMoneyToChinese(money) {
+		  var cnNums = new Array("零", "壹", "贰", "叁", "肆", "伍", "陆", "柒", "捌", "玖"); //汉字的数字
+		  var cnIntRadice = new Array("", "拾", "佰", "仟"); //基本单位
+		  var cnIntUnits = new Array("", "万", "亿", "兆"); //对应整数部分扩展单位
+		  var cnDecUnits = new Array("角", "分", "毫", "厘"); //对应小数部分单位
+		  var cnDecWUnits = new Array("仟", "佰", "拾"); //万对应小数部分单位
+		  var cnDecBWUnits = new Array("拾万", "万", "仟","佰", "拾"); //万对应小数部分单位
+		  var cnInteger = "整"; //整数金额时后面跟的字符
+		  var cnIntLast = "元"; //整型完以后的单位
+		  var maxNum = 999999999999999.9999; //最大处理的数字
+		  var IntegerNum; //金额整数部分
+		  var DecimalNum; //金额小数部分
+		  var ChineseStr = ""; //输出的中文金额字符串
+		  var parts; //分离金额后用的数组，预定义
+		  if (money == "") {
+		    return "";
+		  }
+		  money = parseFloat(money);
+		  if (money >= maxNum) {
+		    alert('超出最大处理数字');
+		    return "";
+		  }
+		  if (money == 0) {
+		    ChineseStr = cnNums[0] + cnIntLast + cnInteger;
+		    return ChineseStr;
+		  }
+		  money = money.toString(); //转换为字符串
+		  if (money.indexOf(".") == -1) {
+		    IntegerNum = money;
+		    DecimalNum = '';
+		  } else {
+		    parts = money.split(".");
+		    IntegerNum = parts[0];
+		    DecimalNum = parts[1].substr(0, 4);
+		  }
+		  if (parseInt(IntegerNum, 10) > 0) { //获取整型部分转换
+		    var zeroCount = 0;
+		    var IntLen = IntegerNum.length;
+		    for (var i = 0; i < IntLen; i++) {
+		      var n = IntegerNum.substr(i, 1);
+		      var p = IntLen - i - 1;
+		      var q = p / 4;
+		      var m = p % 4;
+		      if (n == "0") {
+		        zeroCount++;
+		      } else {
+		        if (zeroCount > 0) {
+		          ChineseStr += cnNums[0];
+		        }
+		        zeroCount = 0; //归零
+		        ChineseStr += cnNums[parseInt(n)] + cnIntRadice[m];
+		      }
+		      if (m == 0 && zeroCount < 4) {
+		        ChineseStr += cnIntUnits[q];
+		      }
+		    }
+		    ChineseStr += cnIntLast;
+		    //整型部分处理完毕
+		  }
+		  if (DecimalNum != '') { //小数部分
+		    var decLen = DecimalNum.length;
+		    for (var i = 0; i < decLen; i++) {
+		      var n = DecimalNum.substr(i, 1);
+		      if (n != '0'&&cnIntLast=="元"||cnIntLast=="美元") {
+		        ChineseStr += cnNums[Number(n)] + cnDecUnits[i];
+		      }else if(cnIntLast=="百万"){
+		    	 ChineseStr += cnNums[Number(n)] + cnDecBWUnits[i]; 
+		      }else if(cnIntLast=="万"){
+		    	  ChineseStr += cnNums[Number(n)] + cnDecWUnits[i]; 
+		      }
+		    }
+		  }
+		  if (ChineseStr == '') {
+		    ChineseStr += cnNums[0] + cnIntLast + cnInteger;
+		  } else if (DecimalNum == '') {
+		    ChineseStr += cnInteger;
+		  }
+		  return ChineseStr;
+		 
+		}
+	
+</script>
