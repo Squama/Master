@@ -73,6 +73,11 @@ $(function () {
                      return false;
                 }
             	var pid=p[0].id;
+            	if(p[0].nodes){
+            		modals.info('请选择最底层分类');
+                    return false;
+                }
+            	
                modals.openWin({
                 winId:"checkRecord",
                 title:'创建',
@@ -106,7 +111,10 @@ $(function () {
                  return false;
             }
         	var pid=p[0].id;
-
+        	if(p[0].nodes){
+        		modals.info('请选择最底层分类');
+                return false;
+            }
         	modals.openWin({
                 winId:"checkRecord",
                 title:'创建',

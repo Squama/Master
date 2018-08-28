@@ -134,6 +134,9 @@ public class CheckItemController {
     	Result r = new Result();
     	String fid = request.getParameter("fid");
     	User u = SecurityUtil.getUser();
+    	String fileids = request.getParameter("fileId");
+    	
+    	
     	if(cr.getId()==null){
     		cr.setParent_ID(fid);
     		cr.setCreate_time(new Date());
@@ -148,6 +151,21 @@ public class CheckItemController {
     		r.setCode(cr.getId());
     	}
     	r.setSuccess(true);
+    	if(fileids!=null&&fileids.length()>0){
+    		if(fileids.indexOf(",")<0){//单个
+    			CheckFile wj = baseService.get(CheckFile.class, fileids);
+    			wj.setFormId(r.getCode());
+    			baseService.update(wj);
+    		}else{//多个
+    			String[] ids = fileids.split(",");
+    			for(int i = 0;i<ids.length;i++){
+    				CheckFile wj = baseService.get(CheckFile.class, ids[i]);
+    				wj.setFormId(r.getCode());
+    				baseService.update(wj);
+    			}
+    		}
+    	}
+    	
     	return r;
     }
 
@@ -299,10 +317,10 @@ public class CheckItemController {
 			List<CheckFile> wjs = baseService.findMapBySql("select id  from tbl_checkfile where form_ID='"+mb.getId()+"'", new Object[]{}, new Type[]{StringType.INSTANCE}, CheckFile.class);
 	        
 			for(int i =0;i<wjs.size();i++){
-	        	if(i==wjs.size()-1){
+	        	if(wjs.size()==0){
 	        		wjid += wjs.get(i).getId();
 	        	}else {
-	        		wjid += wjs.get(i).getId()+",";
+	        		wjid += ","+wjs.get(i).getId();
 	        	}
 	        }
     	}
@@ -359,7 +377,7 @@ public class CheckItemController {
                     sysFile.setDeleted(0);
                     sysFile.setFileSize(file.getSize());
                     sysFile.setFilePath(uploaderPath+File.separator+savedName);
-                    sysFile.setFormId(psid);
+                    if(psid!=null)sysFile.setFormId(psid);
                     baseService.save(sysFile);
                     fileList.add(sysFile);
                     /*preview.add("<div class=\"file-preview-other\">\n" +
@@ -554,4 +572,5 @@ public class CheckItemController {
         fileResult.setFileIds(StrUtil.join(fileArr));
         return fileResult;
     }
+    
 }
