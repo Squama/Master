@@ -17,6 +17,7 @@ import com.radish.master.entity.Project;
 import com.radish.master.entity.qualityCheck.CheckFile;
 import com.radish.master.entity.qualityCheck.CheckItem;
 import com.radish.master.entity.qualityCheck.CheckRecord;
+import com.radish.master.entity.qualityCheck.CheckRecordMb;
 import com.radish.master.entity.review.MaxNumber;
 import com.radish.master.service.BudgetService;
 import com.radish.master.service.CheckItemService;
@@ -287,6 +288,29 @@ public class CheckItemController {
 		
         request.setAttribute("fields", wjid);
         request.setAttribute("id", id);
+        return "QualityChecks/checkRecord/query_file";
+    }
+    
+    @RequestMapping(value="/projectdetailfileMB", method = RequestMethod.GET)
+    public String projectdetailfileMB(String fid, HttpServletRequest request) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
+		List<CheckRecordMb> mbs = baseService.find("from CheckRecordMb where parent_ID='"+fid+"'");
+		String wjid = "";
+		for(CheckRecordMb mb :mbs){
+			List<CheckFile> wjs = baseService.findMapBySql("select id  from tbl_checkfile where form_ID='"+mb.getId()+"'", new Object[]{}, new Type[]{StringType.INSTANCE}, CheckFile.class);
+	        
+			for(int i =0;i<wjs.size();i++){
+	        	if(i==wjs.size()-1){
+	        		wjid += wjs.get(i).getId();
+	        	}else {
+	        		wjid += wjs.get(i).getId()+",";
+	        	}
+	        }
+    	}
+    	
+		
+        request.setAttribute("fields", wjid);
+        request.setAttribute("id", fid);
+        request.setAttribute("lx", "look");
         return "QualityChecks/checkRecord/query_file";
     }
 	
