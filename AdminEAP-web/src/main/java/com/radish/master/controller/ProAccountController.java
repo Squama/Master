@@ -71,6 +71,15 @@ public class ProAccountController {
 		request.setAttribute("zm", JSONArray.toJSONString(zm));
 		return prefix +"accountDetList";
 	}
+	@RequestMapping("/accountDetListGs")
+	public String accountDetListGs(HttpServletRequest request){
+		String zmid = request.getParameter("id");
+		request.setAttribute("zmid", zmid);
+		
+		ProAccount zm = baseService.get(ProAccount.class, zmid);
+		request.setAttribute("zm", JSONArray.toJSONString(zm));
+		return prefix +"accountDetListGs";
+	}
 	@RequestMapping("/addDetIndex")
 	public String addDetIndex(HttpServletRequest request){
 		String zmid = request.getParameter("zmid");
