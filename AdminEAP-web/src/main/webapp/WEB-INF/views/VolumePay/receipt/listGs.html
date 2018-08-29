@@ -6,7 +6,7 @@
     <ol class="breadcrumb">
         <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
         <li><a href="#">财务账目管理</a></li>
-        <li class="active">项目收款收据管理</li>
+        <li class="active">公司收款收据管理</li>
     </ol>
 </section>
 
@@ -16,9 +16,7 @@
             <div class="box">
                 <!-- /.box-header -->
                 <div class="dataTables_filter" id="searchDiv" >
-                    <select id="projectID" class="form-control select2" name="zf.proId" style="width:200px;" operator="eq">
-                    	<option selected="selected" value="">选择一个项目</option>
-                    </select>
+                    <input placeholder="请输入收据编号" name="zf.number" class="form-control" type="search" likeOption="true"operator="like" />
                     <div class="btn-group">
                         <button type="button" class="btn btn-primary" data-btn-type="search">查询</button>
                         <button type="button" class="btn btn-default" data-btn-type="reset">重置</button>
@@ -44,14 +42,11 @@
 <script>
     var form = $("#searchDiv").form({baseEntity: false}), initData={};
     var volumeTable, winId = "volumeWin";
-    var projectOptions = '${projectOptions?default(0)}',options=0;
-    if(projectOptions != 0){
-    	options = JSON.parse(projectOptions);
-    }
+    
     var zdr = '${zdr?default(0)}';
    
     $(function (){
-    	volumeTable = new CommonTable("volume_table", "proReceipt", "searchDiv", null);
+    	volumeTable = new CommonTable("volume_table", "proReceiptGs", "searchDiv", null);
         
         //绑定按钮事件
         $("button[data-btn-type]").click(function () {
@@ -63,7 +58,7 @@
                     winId:winId,
                     title:"新增收据信息",
                     width:'900px',
-                    url:basePath+"/proreceipt/edit",
+                    url:basePath+"/proreceipt/edit?lx=10",
                     hideFunc:function(){
                    	 volumeTable.reloadData();
                     }
@@ -83,7 +78,7 @@
                     winId:winId,
                     title:"编辑收据信息",
                     width:'900px',
-                    url:basePath+"/proreceipt/edit?id="+rowId,
+                    url:basePath+"/proreceipt/edit?id="+rowId+"&lx=10",
                     hideFunc:function(){
                    	 volumeTable.reloadData();
                     }
@@ -98,7 +93,7 @@
                     winId:winId,
                     title:"编辑收据信息",
                     width:'900px',
-                    url:basePath+"/proreceipt/edit?id="+rowId+"&type=look",
+                    url:basePath+"/proreceipt/edit?id="+rowId+"&type=look"+"&lx=10",
                     hideFunc:function(){
                    	 
                     }
@@ -135,13 +130,7 @@
             }
         });
         
-        if(options != 0){
-            for (var i = 0, len = options.length; i < len; i++) {
-                var option = options[i];
-                $('#projectID').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
-            }
-            $("#projectID").select2();
-        }
+        
         
     });
     

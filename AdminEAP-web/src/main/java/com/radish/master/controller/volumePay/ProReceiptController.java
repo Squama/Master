@@ -44,6 +44,11 @@ public class ProReceiptController {
 		request.setAttribute("zdr", SecurityUtil.getUserId());
 		return prefix+"list";
 	}
+	@RequestMapping("/listGs")
+	public String listGs(HttpServletRequest request){
+		request.setAttribute("zdr", SecurityUtil.getUserId());
+		return prefix+"listGs";
+	}
 	public  String maxNum(){ 
 		List<String> result = baseService.find("select max(mat.id) from com.radish.master.entity.review.MaxNumber mat");
 		if(result.size()>0&&!"".equals(result.get(0))&&StringHelper.isNotEmpty(result.get(0))){
@@ -66,6 +71,7 @@ public class ProReceiptController {
 		request.setAttribute("projectOptions", JSONArray.toJSONString(budgetService.getProjectCombobox()));
 		String id =request.getParameter("id");
 		String type = request.getParameter("type");
+		String lx = request.getParameter("lx");//判断是否公司收据
 		request.setAttribute("id", id);
 		request.setAttribute("type", type);
 		if(id==null){
@@ -77,7 +83,9 @@ public class ProReceiptController {
 			
 			request.setAttribute("number",strs);
 		}
-		
+		if("10".equals(lx)){
+			return prefix +"editGs";
+		}
 		return prefix +"edit";
 	}
 	@RequestMapping("/load")
@@ -131,13 +139,19 @@ public class ProReceiptController {
 		Result r = new Result();
 		String id = request.getParameter("id");
 		ProReceipt jk = baseService.get(ProReceipt.class, id);
-		Project xm = baseService.get(Project.class,jk.getProId());
-		List<ProAccount> xmz = baseService.find(" from ProAccount where projectId='"+jk.getProId()+"'");
+		String proid = "";
+		if(jk.getProId()==null){//公司收款
+			proid = "1";
+		}else{
+			proid = jk.getProId();
+		}
+		
+		List<ProAccount> xmz = baseService.find(" from ProAccount where projectId='"+proid+"'");
 		
 		//账目明细
 		ProAccountDet mx = new ProAccountDet();
 		mx.setCreateDate(jk.getCreateDate());
-		mx.setAbstracts(jk.getJkr()+"("+jk.getContent()+")");
+		mx.setAbstracts("收据编号（"+jk.getNumber()+"），"+jk.getJkr()+"("+jk.getContent()+")");
 		mx.setZmtype("1");
 		mx.setInMoney(jk.getMoney());
 		mx.setAccounter(u.getName());
@@ -147,8 +161,14 @@ public class ProReceiptController {
 		mx.setStatus("10");
 		if(xmz.size()<=0){//无账本，先生成账本
 			ProAccount zb = new ProAccount();
-			zb.setProjectId(jk.getProId());
-			zb.setAccountName(xm.getProjectName());
+			zb.setProjectId(proid);
+			if("1".equals(proid)){
+				zb.setAccountName("公司账本");
+			}else{
+				Project xm = baseService.get(Project.class,jk.getProId());
+				zb.setAccountName(xm.getProjectName());
+			}
+			
 			baseService.save(zb);
 			zb.setAllMoney(arith.add(Double.valueOf(jk.getMoney()), 0.0)+"");
 			mx.setProjectAccountId(zb.getId());
