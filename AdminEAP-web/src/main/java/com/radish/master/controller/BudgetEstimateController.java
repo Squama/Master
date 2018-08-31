@@ -602,6 +602,24 @@ public class BudgetEstimateController {
         return new Result(true);
     }
     
+    @RequestMapping(method = RequestMethod.POST, value = "/mark")
+    @ResponseBody
+    private Result mark(String id, HttpServletRequest request) {
+        BudgetImport bi = budgetService.get(BudgetImport.class, id);
+        bi.setIsPack("1");
+        budgetService.update(bi);
+        return new Result(true);
+    }
+    
+    @RequestMapping(method = RequestMethod.POST, value = "/remark")
+    @ResponseBody
+    private Result reMark(String id, HttpServletRequest request) {
+        BudgetImport bi = budgetService.get(BudgetImport.class, id);
+        bi.setIsPack("0");
+        budgetService.update(bi);
+        return new Result(true);
+    }
+    
     @RequestMapping(method = RequestMethod.POST, value = "/deletelabour")
     @ResponseBody
     private Result deleteBudgetLabour(String id, HttpServletRequest request) {

@@ -55,9 +55,13 @@
                     </div>
                     <div class="dataTables_filter" style="text-align:center;margin-top:5px;">
                        <input type="hidden" name="packageID">
-                       <input type="text" placeholder="名称" title="名称" name="name" class="form-control" id="matStandard" style="width:120px;" >
-                       <input type="text" placeholder="面积" title="面积" name="area" class="form-control calculate" id="area" onkeyup="value=value.replace(/[^\d.]/g,'')" value="0" style="width:60px;">
-                       <input type="text" placeholder="单价" title="单价" name="price" class="form-control calculate" id="price" onkeyup="value=value.replace(/[^\d.]/g,'')" value="0" style="width:60px;">
+                       <label>名称：</label>
+                       <input type="text" placeholder="名称" title="名称" name="name" class="form-control" id="matStandard" style="width:120px;margin-right:8px;" >
+                       <label>面积：</label>
+                       <input type="text" placeholder="面积" title="面积" name="area" class="form-control calculate" id="area" onkeyup="value=value.replace(/[^\d.]/g,'')" value="0" style="width:60px;margin-right:8px;">
+                       <label>单价（元）：</label>
+                       <input type="text" placeholder="单价" title="单价" name="price" class="form-control calculate" id="price" onkeyup="value=value.replace(/[^\d.]/g,'')" value="0" style="width:60px;margin-right:8px;">
+                       <label>总价（元）：</label>
                        <input type="text" placeholder="总价" title="总价" name="total" class="form-control" id="total" style="width:60px;" readonly="readonly">
                        <div class="btn-group">
                            <button type="submit" class="btn btn-primary" data-btn-type="savetx">添加</button>

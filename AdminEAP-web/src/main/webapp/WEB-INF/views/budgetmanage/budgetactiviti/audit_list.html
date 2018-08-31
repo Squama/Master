@@ -70,6 +70,12 @@
     $(function() { 
     	<!-- 初始化导入的预算表 -->
         budgetImportTable = new CommonTable("budget_import_table", "budget_estimate_left_list", "searchDivImport", {
+        	"createdRow": function( row, data, dataIndex ) {
+                if(data.isPack == '1'){
+                    $(row).css('background-color','orange');
+                    $(row).css('color','#fff');
+                }
+             },
              "dom": '<"top"i>rt<"bottom"flp><"clear">',
              "paging" : false,
              "drawCallback": function ( settings ) {

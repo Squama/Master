@@ -38,6 +38,23 @@
         <column key="quotaGroup" hidden="true" header="分组" width="80"/>
         <column key="orderNo" hidden="true" header="拆分合并标志" width="80"/>
         <column key="col" hidden="true" header="行高" width="80"/>
+        <column key="isPack" header="isPack" hidden="true"/>
+    </query>
+    
+    <query id="budget_estimate_left_list_pack" key="id" tableName="预算表" className="com.radish.master.entity.BudgetImport" widthType="px" pageSize="2000" order="quotaGroup asc,orderNo desc">
+        <column key="id" header="选择" width="10" fnRender="fnRenderCheckbox"/>
+        <column key="quotaNo" header="定额编号" width="120"/>
+        <column key="quotaName" header="子目名称" width="150" enableTooltip="true" maxLen="8"/>
+        <column key="quantities" header="工程量" width="100"/>
+        <column key="unitPrice" header="合价" width="150"/>
+        <column key="artificiality" header="合价（人工）" width="150"/>
+        <column key="materiels" header="合价（材料）" width="150"/>
+        <column key="mech" header="合价（机械）" width="150"/>
+        <column key="quotaGroup" hidden="true" header="分组" width="80"/>
+        <column key="orderNo" hidden="true" header="拆分合并标志" width="80"/>
+        <column key="col" hidden="true" header="行高" width="80"/>
+        <column key="id" header="包工包料" fnRender="fnRenderTxPack"/>
+        <column key="isPack" header="isPack" hidden="true"/>
     </query>
     
     <query id="budget_estimate_right_list" key="id" tableName="成本测算表" widthType="px" pageSize="2000" order="bt.quota_group asc,bt.order_no desc">
@@ -347,8 +364,8 @@
         <column key="id" header="编号" hidden="true"/>
         <column key="name" header="名称" classType="String" width="150"/>
         <column key="area" header="面积" classType="String" width="150"/>
-        <column key="price" header="单价" classType="String" width="150"/>
-        <column key="total" header="总价" classType="String"/>
+        <column key="price" header="单价（元）" classType="String" width="150"/>
+        <column key="total" header="总价（元）" classType="String"/>
         <column key="id" header="操作" classType="String" fnRender="fnRenderDelete"/>
     </query>
     

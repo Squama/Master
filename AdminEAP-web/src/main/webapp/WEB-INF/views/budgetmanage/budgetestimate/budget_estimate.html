@@ -253,12 +253,38 @@
                     });
                 });
                 
+            },
+            markPack: function (rowId) {
+        		ajaxPost(basePath + '/budget/estimate/mark', {id:rowId}, function (data) {
+                    if (data.success) {
+                        budgetImportTable.reloadData();
+                    } else {
+                        modals.error(data.message);
+                    }
+                });
+                
+            },
+            removeMarkPack: function (rowId) {
+        		ajaxPost(basePath + '/budget/estimate/remark', {id:rowId}, function (data) {
+                    if (data.success) {
+                        budgetImportTable.reloadData();
+                    } else {
+                        modals.error(data.message);
+                    }
+                });
+                
             }
     }
     
     $(function() { 
     	<!-- 初始化导入的预算表 -->
-        budgetImportTable = new CommonTable("budget_import_table", "budget_estimate_left_list", "searchDivImport", {
+        budgetImportTable = new CommonTable("budget_import_table", "budget_estimate_left_list_pack", "searchDivImport", {
+        	"createdRow": function( row, data, dataIndex ) {
+                if(data.isPack == '1'){
+                    $(row).css('background-color','orange');
+                    $(row).css('color','#fff');
+                }
+             },
              "dom": '<"top"i>rt<"bottom"flp><"clear">',
              "paging" : false,
              "drawCallback": function ( settings ) {
@@ -286,6 +312,7 @@
                              '<td class="text-center"><font color="#fff">'+ret.artificiality+'</font></td>'+
                              '<td class="text-center"><font color="#fff">'+ret.materiels+'</font></td>'+
                              '<td class="text-center"><font color="#fff">'+ret.mech+'</font></td>'+
+                             '<td class="text-center"><font color="#fff"></font></td>'+
                              '</tr>'
                          );
       
@@ -449,7 +476,7 @@
     
     function fnRenderCheckbox(value, type, rowObj){
     	var oper = "";
-        if(rowObj.orderNo==null || rowObj.orderNo=="")oper += "&nbsp;&nbsp;&nbsp;<input type='checkbox' name='choose' class='choose' value ='"+value+"'>";
+        if((rowObj.orderNo==null || rowObj.orderNo=="") && rowObj.isPack != "1")oper += "&nbsp;&nbsp;&nbsp;<input type='checkbox' name='choose' class='choose' value ='"+value+"'>";
         return oper;
     }
     function fnRenderCheckboxRight(value, type, rowObj){
@@ -466,7 +493,12 @@
         var selector = $(that).attr('data-container-id');
         $('[data-group="'+selector+'"]', '#budget_tx_table').toggle(100);
     }
-    
+    function fnRenderTxPack(value, type, rowObj){
+    	var oper = "";
+    	if((rowObj.orderNo==null || rowObj.orderNo=="") && rowObj.isPack == "0") oper += "<a href='javascript:void(0)' onclick='budgetEstimateObject.markPack(\"" + value +"\")'>标记包工包料</a>";
+    	if((rowObj.orderNo==null || rowObj.orderNo=="") && rowObj.isPack == "1") oper += "<a href='javascript:void(0)' onclick='budgetEstimateObject.removeMarkPack(\"" + value +"\")'>取消标记</a>";
+        return oper;
+    }
     function fnRenderTxDelete(value){
         return "<a href='javascript:void(0)' onclick='budgetEstimateObject.deleteBudgetTxEstimate(\"" + value + "\")'>删除</a>";
     }
