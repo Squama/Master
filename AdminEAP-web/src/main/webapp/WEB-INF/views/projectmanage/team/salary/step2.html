@@ -150,7 +150,16 @@
                 </div>
                 <div class="box-body">
                     <!-- 内容 -->
-                    <table id="salary_detail_table" class="table table-bordered table-striped table-hover">
+                    <table id="salary_detail_table" class="table table-bordered table-striped table-hover">\
+                        <tfoot>
+                            <tr>
+                                <th colspan="12" style="text-align:right">合计:</th>
+                                <th class="text-left">0</th>
+                                <th class="text-left"></th>
+                                <th class="text-left"></th>
+                                <th class="text-left"></th>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
             </div>
@@ -200,7 +209,30 @@
         }
     }
     $(function () {
-    	salaryDetailTable = new CommonTable("salary_detail_table", "team_salary_detail", "searchDiv", null);
+    	salaryDetailTable = new CommonTable("salary_detail_table", "team_salary_detail", "searchDiv", {
+            "footerCallback": function ( row, data, start, end, display ) {
+                var api = this.api(), data;
+                // Remove the formatting to get integer data for summation
+                var intVal = function ( i ) {
+                    return typeof i === 'string' ?
+                        i.replace(/[\$,]/g, '')*1 :
+                        typeof i === 'number' ?
+                            i : 0;
+                };
+     
+                // Total over this page
+                unitTotal = api
+                    .column( 12, { page: 'current'} )
+                    .data()
+                    .reduce( function (a, b) {
+                        return accAddition(intVal(a), intVal(b));
+                    }, 0 );
+                // Update footer
+                $( api.column( 12 ).footer() ).html(
+                    '￥'+unitTotal
+                );
+            }
+        });
         //初始化表单 
         form = $("#salary-detail-form").form({baseEntity:false});
         //数据校验

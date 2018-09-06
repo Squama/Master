@@ -10,6 +10,14 @@
                 </div>
                 <div class="box-body">
                     <table id="package_detail_table" class="table table-bordered table-striped table-hover">
+                        <tfoot>
+                            <tr>
+                                <th colspan="7" style="text-align:right">合计:</th>
+                                <th class="text-left">0</th>
+                                <th class="text-left">0</th>
+                                <th class="text-left"></th>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
                 <!-- /.box-body -->
@@ -33,7 +41,41 @@
             "displayLength": 450,
             "scrollY": "500px",
             "paging" : false,
-            "scrollCollapse": true
+            "scrollCollapse": true,
+            "footerCallback": function ( row, data, start, end, display ) {
+                var api = this.api(), data;
+                // Remove the formatting to get integer data for summation
+                var intVal = function ( i ) {
+                    return typeof i === 'string' ?
+                        i.replace(/[\$,]/g, '')*1 :
+                        typeof i === 'number' ?
+                            i : 0;
+                };
+     
+                // Total over this page
+                unitTotal = api
+                    .column( 7, { page: 'current'} )
+                    .data()
+                    .reduce( function (a, b) {
+                        return accAddition(intVal(a), intVal(b));
+                    }, 0 );
+                // Update footer
+                $( api.column( 7 ).footer() ).html(
+                    '￥'+unitTotal
+                );
+                
+                // Total over this page
+                consumeTotal = api
+                    .column( 8, { page: 'current'} )
+                    .data()
+                    .reduce( function (a, b) {
+                        return accAddition(intVal(a), intVal(b));
+                    }, 0 );
+                // Update footer
+                $( api.column( 8 ).footer() ).html(
+                    '￥'+consumeTotal
+                );
+            }
         });
 
     })

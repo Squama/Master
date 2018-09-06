@@ -4,7 +4,6 @@
 package com.radish.master.controller.project;
 
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -27,12 +26,10 @@ import com.cnpc.framework.annotation.VerifyCSRFToken;
 import com.cnpc.framework.base.entity.User;
 import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.utils.StrUtil;
-import com.radish.master.entity.Labor;
 import com.radish.master.entity.project.Salary;
 import com.radish.master.entity.project.SalaryDetail;
 import com.radish.master.entity.project.SalaryVolume;
 import com.radish.master.pojo.SalaryChooseVO;
-import com.radish.master.pojo.SalarySubInfo;
 import com.radish.master.service.CommonService;
 import com.radish.master.service.project.TeamSalaryService;
 
@@ -55,7 +52,7 @@ public class ProjectTeamSalaryController {
     @RequestMapping(value = "/detail/{id}", method = RequestMethod.GET)
     public String detail(@PathVariable("id") String id, HttpServletRequest request, HttpServletResponse response) {
         request.setAttribute("id", id);
-        String subInfo = "";
+        /* String subInfo = "";
         SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd");
         List<SalarySubInfo> list = teamSalaryService.getSubInfoList(id);
         for (SalarySubInfo sub : list) {
@@ -64,7 +61,7 @@ public class ProjectTeamSalaryController {
             subInfo = subInfo + "结束时间：" + myFormat.format(sub.getEndTime());
             subInfo = subInfo + "\\n";
         }
-        request.setAttribute("subInfo", subInfo);
+        request.setAttribute("subInfo", subInfo);*/
         return "projectmanage/team/salary/detail";
     }
 

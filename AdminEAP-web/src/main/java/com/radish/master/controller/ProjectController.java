@@ -444,6 +444,11 @@ public class ProjectController {
             }else{
                 previews.add("<div class='kv-preview-data file-preview-other-frame'><div class='file-preview-other'>" +
                         "<span class='file-other-icon'>"+getFileIcon(sysFile.getSourceName())+"</span></div></div>");
+                /*previews.add("<a href='http://ow365.cn/?i=16723&furl=http://www.qhjr0971.com:6535/admineap/resources/common/test2.xls' target='view_window' id='123'></a> " +
+                        "<script type='text/javascript'> " +
+                        "   $('#123').click(); " +
+                        "   $('#kvFileinputModal').remove(); " +
+                        "</script> ");*/
             }
             //上传后预览配置
             FileResult.PreviewConfig previewConfig=new FileResult.PreviewConfig();
@@ -503,6 +508,9 @@ public class ProjectController {
     
     @RequestMapping(value="/download/{id}",method = RequestMethod.GET)
     public void downloadFile(@PathVariable("id") String id,HttpServletRequest request,HttpServletResponse response) throws IOException {
+        if(id.contains(".")){
+            id = id.split(".")[0];
+        }
         ProjectFileItem item = projectService.get(ProjectFileItem.class, id);
 
         InputStream is = null;

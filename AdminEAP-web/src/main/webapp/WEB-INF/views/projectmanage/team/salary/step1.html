@@ -128,23 +128,6 @@
         }
     }
     $(function () {
-        var table_config={ 
-                           "scrollY":"370px",
-                           "scrollCollapse": true,
-                           "paging":false,
-                           "singleSelect":false,
-                           "scrollXInner":"450px", 
-                           "autoWidth":false
-                         };     
-        unselectedTable = new CommonTable("volume_unchoosen_table", "volume_unchoosen_list", "searchDiv_unselected",table_config);
-        var selected_config={
-                               "scrollY":"370px",
-                               "scrollCollapse": true,
-                               "paging":false,
-                               "singleSelect":false,
-                               "autoWidth":false
-                           };
-        selectedTable=new CommonTable("volume_choosen_table","volume_choosen_list","searchDiv_selected",selected_config);
         $("#btn_add_ur").click(function(){
             var rows=unselectedTable.getSelectedRowsData();
             var volumeList=[]; 
@@ -288,8 +271,8 @@
                         	teamName = $("#teamID").find("option:selected").text();
                         }
                         $('#teamName').val(teamName);
-                        $('#rightLaborID').val(laborID);
-                        $('#leftLaborID').val(laborID);
+                        $('#rightTeamID').val(laborID);
+                        $('#leftTeamID').val(laborID);
                     });
                     
                     
@@ -309,9 +292,27 @@
         	$('#btn1').hide();
             $('#btn2').show();
             $('#projectID').attr('disabled','disabled');
-            $('#laborID').attr('disabled','disabled');
+            $('#teamID').attr('disabled','disabled');
             $('.volumelist').show();
         }
+        
+        var table_config={ 
+			                "scrollY":"370px",
+			                "scrollCollapse": true,
+			                "paging":false,
+			                "singleSelect":false,
+			                "scrollXInner":"450px", 
+			                "autoWidth":false
+			              };     
+		unselectedTable = new CommonTable("volume_unchoosen_table", "volume_unchoosen_list", "searchDiv_unselected",table_config);
+		var selected_config={
+		                    "scrollY":"370px",
+		                    "scrollCollapse": true,
+		                    "paging":false,
+		                    "singleSelect":false,
+		                    "autoWidth":false
+		                  };
+		selectedTable=new CommonTable("volume_choosen_table","volume_choosen_list","searchDiv_selected",selected_config);
         
     });
 
