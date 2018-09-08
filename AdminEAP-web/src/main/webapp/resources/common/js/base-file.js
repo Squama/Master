@@ -230,6 +230,21 @@
             //点击下载
             window.location.href= url + $(this).data("key");
         });
+
+        var previews = $(fileobj).data('fileinput').$preview.find(".kv-preview-thumb .kv-file-zoom");
+        $.each(previews,function(index, preview){
+        	var thumb = $(preview).parents('.kv-preview-thumb');
+        	var type = $(thumb).find('img');
+        	if(type.length == 0){
+        		var data = url + $(preview).parent().find('.kv-file-down').data("key");
+        		$(preview).unbind("click");
+                $(preview).on("click",function(){
+                    window.open("http://ow365.cn/?i=16723&furl=http://www.qhjr0971.com:6535"+data,"_blank");
+                });
+        	}
+        });
+        
+
     }
     /**
      * 向targetIds里删除数据fileIds
