@@ -1,4 +1,9 @@
 <script src="${basePath}/resources/common/js/calculate.js"></script>
+<style>
+fieldset{padding:.35em .625em .75em;margin:0 2px;border:1px solid silver}
+
+legend{padding:.5em;border:0;width:auto}
+</style>
 <section class="content-header">
     <h1>
         <span>工程量上报</span>
@@ -133,6 +138,44 @@
                                 <textarea class="form-control" id="volume" name="volume" rows="8" cols="100"></textarea>
                             </div>
                         </div>
+                        <fieldset>
+	                    	<legend>总价措施项目费（选填）</legend>
+	                    	<div class="col-md-6">
+		                         <div class="form-group">
+		                             <label class="col-sm-5 control-label">费用类别</label>
+		                             <div class="col-sm-6">
+		                                 <select id="measureType" class="form-control select2" name="measureType">
+		                                     <option selected="selected" value="">选择一个类别</option>
+		                                     <option value="Safe">安全施工费</option>
+		                                     <option value="Civil">文明施工费</option>
+		                                     <option value="Envir">环境保护费</option>
+		                                     <option value="Temp">临设费</option>
+		                                     <option value="Night">夜间施工增加</option>
+		                                     <option value="Twice">二次搬运费</option>
+		                                     <option value="Winter">冬雨季施工费</option>
+		                                     <option value="Protect">已完工程及设备保护费</option>
+		                                     <option  value="Retest">工程定位复测费</option>
+		                                 </select>
+		                             </div>
+		                         </div>
+		                         <div class="form-group">
+		                             <label class="col-sm-5 control-label">点工班组</label>
+		                             <div class="col-sm-6">
+		                                 <select id="measureTeam" class="form-control select2" name="measureTeam">
+		                                     <option selected="selected" value="">选择点工班组</option>
+		                                 </select>
+		                             </div>
+		                         </div>
+	                        </div>
+	                        <div class="col-md-6">
+	                         <div class="form-group">
+	                             <label class="col-sm-3 control-label">费用金额（元）</label>
+	                             <div class="col-sm-6">
+	                                 <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control" id="measureAmount" name="measureAmount" value="0">
+	                             </div>
+	                         </div>
+	                        </div>
+	                    </fieldset>
                     </div>
                     <div class="box-footer text-center">
                         <button type="button" class="btn btn-default" data-btn-type="prev">返回</button>
@@ -171,6 +214,12 @@
             submitHandler: function () {
                 var action = $(this).attr('$submitButton').attr('data-btn-type');
                 var formData = form.getFormSimpleData();
+                if(formData.measureType != ""){
+                	if(formData.measureAmount == "0" || formData.measureAmount == "" || formData.measureAmount == null || formData.measureTeam == "" || formData.measureTeam == null){
+                		alert("选择总价措施项目费类别后，必须填写费用金额和点工班组！！");
+                    	return false;
+                	}
+                }
                 ajaxPost(basePath + '/projectvolume/save', formData, function (data) {
                     if (data.success) {
                         switch (action) {
@@ -320,6 +369,19 @@
                     $('#projectSubID').select2();
                 });
                 //子项加载结束
+                //加载点工班组
+                ajaxPost(basePath+"/labor/getteamop",{projectID:value},function(data){
+                    var laborSubOptions = data.message;
+                    var mOptions = JSON.parse(laborSubOptions);
+                    $('#measureTeam').empty();
+                    $('#measureTeam').append('<option selected="selected" value="">选择点工班组</option>');
+                    for (var i = 0, len = mOptions.length; i < len; i++) {
+                        var option = mOptions[i];
+                        $('#measureTeam').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+                    }
+                    $('#measureTeam').select2();
+                });
+                //点工班组加载结束
             });
         }
         

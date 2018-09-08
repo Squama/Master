@@ -164,7 +164,19 @@ public class ProjectVolume extends BaseEntity {
     @Header(name = "包工包料支付状态")
     @Column(name = "packStatus")
     private String packStatus;
-
+    
+    @Header(name = "总价措施项目费类别")
+    @Column(name = "measure_type")
+    private String measureType;
+    
+    @Header(name = "费用金额")
+    @Column(name = "measure_amount")
+    private String measureAmount;
+    
+    @Header(name = "点工班组")
+    @Column(name = "measure_team")
+    private String measureTeam;
+    
     public String getProjectID() {
         return projectID;
     }
@@ -420,5 +432,29 @@ public class ProjectVolume extends BaseEntity {
     public void setPackageDetailID(String packageDetailID) {
         this.packageDetailID = packageDetailID;
     }
+
+	public String getMeasureType() {
+		return measureType;
+	}
+
+	public void setMeasureType(String measureType) {
+		this.measureType = measureType;
+	}
+
+	public String getMeasureAmount() {
+		return measureAmount;
+	}
+
+	public void setMeasureAmount(String measureAmount) {
+		this.measureAmount = measureAmount;
+	}
+
+	public String getMeasureTeam() {
+		return measureTeam;
+	}
+
+	public void setMeasureTeam(String measureTeam) {
+		this.measureTeam = measureTeam;
+	}
 
 }

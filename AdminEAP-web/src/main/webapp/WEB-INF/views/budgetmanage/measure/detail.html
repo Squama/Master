@@ -1,0 +1,105 @@
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <form id="measure-form" name="measure-form" class="form-horizontal">
+                <div class="box box-info">
+                    <div class="box-header with-border">
+                    </div>
+                    <div class="box-body">
+                        <!-- 内容 -->
+                        <div class="col-md-12">
+                        	<div class="form-group">
+                                <label class="col-sm-3 control-label">名称：</label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" id="name" name="name" readonly="readonly">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">所属项目：</label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" id="projectName" name="projectName" readonly="readonly">
+                                </div>
+                            </div> 
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">所属子项：</label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" id="projectSubName" name="projectSubName" readonly="readonly">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">安全施工费（元）：</label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" id="safe" name="safe" readonly="readonly">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">文明施工费（元）：</label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" id="civil" name="civil" readonly="readonly">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">环境保护费（元）：</label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" id="envir" name="envir" readonly="readonly">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">临设费（元）：</label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" id="temp" name="temp" readonly="readonly">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">夜间施工增加（元）：</label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" id="night" name="night" readonly="readonly">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">二次搬运费（元）：</label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" id="twice" name="twice" readonly="readonly">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">冬雨季施工费（元）：</label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" id="winter" name="winter" readonly="readonly">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">已完工程及设备保护费（元）：</label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" id="protect" name="protect" readonly="readonly">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">工程定位复测费（元）：</label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" id="retest" name="retest" readonly="readonly">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<script>
+    var measureform = $("#measure-form").form({baseEntity: false}), initData={};
+    var measureID="${id?default(0)}";
+    $(function (){
+        //编辑回填
+        if(measureID != 0){
+        	ajaxPost(basePath+"/budget/measure/get",{id:measureID},function(data){
+        		measureform.initFormData(data);
+            })
+        } 
+        
+        //初始化控件
+        measureform.initComponent();
+    });
+</script>

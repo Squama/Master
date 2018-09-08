@@ -1,0 +1,251 @@
+<script type="text/javascript">
+ $.fn.modal.Constructor.prototype.enforceFocus = function () {};
+ </script>
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><li class="fa fa-remove"></li></button>
+    <h5 class="modal-title">总价措施项目费</h5>
+</div>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <form id="measure-form" name="measure-form" class="form-horizontal">
+                <input type="hidden" name="id">
+                <input type="hidden" name="projectName">
+                <input type="hidden" name="projectSubName">
+                <div class="box box-info">
+                    <div class="box-header with-border">
+                    </div>
+                    <div class="box-body">
+                        <!-- 内容 -->
+                        <div class="col-md-12">
+                        	<div class="form-group">
+                                <label class="col-sm-3 control-label">名称：<span style="color:red">*</span></label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" id="name" name="name" placeholder="总价措施项目费名称">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">选择项目<span style="color:red">*</span></label>
+                                <div class="col-sm-5">
+                                    <select id="projectIDModal" class="form-control select2" name="projectID" style="width:100%;">
+                                        <option selected="selected" value="">选择一个项目</option>
+                                    </select>
+                                </div>
+                            </div> 
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">选择子项<span style="color:red">*</span></label>
+                                <div class="col-sm-5">
+                                    <select id="projectSubID" class="form-control select2" name="projectSubID" style="width:100%;">
+                                        <option selected="selected" value="">选择一个子项</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">安全施工费（元）：<span style="color:red">*</span></label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" id="safe" name="safe" placeholder="安全施工费" value="0" onkeyup="value=value.replace(/[^\d.]/g,'')">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">文明施工费（元）：<span style="color:red">*</span></label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" id="civil" name="civil" placeholder="文明施工费" value="0" onkeyup="value=value.replace(/[^\d.]/g,'')">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">环境保护费（元）：<span style="color:red">*</span></label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" id="envir" name="envir" placeholder="环境保护费" value="0" onkeyup="value=value.replace(/[^\d.]/g,'')">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">临设费（元）：<span style="color:red">*</span></label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" id="temp" name="temp" placeholder="临设费" value="0" onkeyup="value=value.replace(/[^\d.]/g,'')">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">夜间施工增加（元）：<span style="color:red">*</span></label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" id="night" name="night" placeholder="夜间施工增加" value="0" onkeyup="value=value.replace(/[^\d.]/g,'')">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">二次搬运费（元）：<span style="color:red">*</span></label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" id="twice" name="twice" placeholder="二次搬运费" value="0" onkeyup="value=value.replace(/[^\d.]/g,'')">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">冬雨季施工费（元）：<span style="color:red">*</span></label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" id="winter" name="winter" placeholder="冬雨季施工费" value="0" onkeyup="value=value.replace(/[^\d.]/g,'')">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">已完工程及设备保护费（元）：<span style="color:red">*</span></label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" id="protect" name="protect" placeholder="已完工程及设备保护费" value="0" onkeyup="value=value.replace(/[^\d.]/g,'')">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">工程定位复测费（元）：<span style="color:red">*</span></label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" id="retest" name="retest" placeholder="工程定位复测费" value="0" onkeyup="value=value.replace(/[^\d.]/g,'')">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer text-center" id="measureformsave">
+                        <button type="submit" class="btn btn-primary" data-btn-type="next">保存</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<script>
+    $.fn.modal.Constructor.prototype.enforceFocus =function(){};
+    var measureform = $("#measure-form").form({baseEntity: false}), initData={};
+    var measureID="${id?default(0)}";
+    $(function (){
+        if(options != 0){
+            for (var i = 0, len = options.length; i < len; i++) {
+                var option = options[i];
+                $('#projectIDModal').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+            }
+            
+            $('#projectIDModal').select2();
+            
+            $('#projectIDModal').bind("change", function () {
+                var projectID = $(this).val();
+                if (projectID === "") {
+                    return false;
+                }
+                
+                var name = "";
+                if ($("#projectIDModal").prop('selectedIndex') > 0) {
+                    name = $("#projectIDModal").find("option:selected").text();
+                }
+                $('input[name="projectName"]').val(name);
+              	//加载子项
+                ajaxPost(basePath+"/projectvolume/getprojectsub",{projectID:projectID},function(data){
+                    var laborSubOptions = data.message;
+                    sOptions = JSON.parse(laborSubOptions);
+                    $('#projectSubID').empty();
+                    $('#projectSubID').append('<option selected="selected" value="">选择一个项目子项</option>');
+                    for (var i = 0, len = sOptions.length; i < len; i++) {
+                        var option = sOptions[i];
+                        $('#projectSubID').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+                    }
+                    $('#projectSubID').select2();
+                    $('#projectSubID').bind("change", function () {
+                        var projectSubID = $(this).val();
+                        if (projectSubID === "") {
+                            return false;
+                        }
+                        
+                        var name = "";
+                        if ($("#projectSubID").prop('selectedIndex') > 0) {
+                            name = $("#projectSubID").find("option:selected").text();
+                        }
+                        $('input[name="projectSubName"]').val(name);
+                    });
+                });
+                //子项加载结束
+            }); 
+        }
+        
+        $("#measure-form").bootstrapValidator({
+            message: '请输入有效值',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            submitHandler: function () {
+                var formData = measureform.getFormSimpleData();
+                ajaxPost(basePath + '/budget/measure/save', formData, function (data) {
+                    if (data.success) {
+                    	modals.hideWin(winId);
+                    } else {
+                        modals.error(data.message);
+                    }
+                });
+            },
+            fields: {
+            	"name": {
+                    validators: {
+                        notEmpty: {message: '名称不能为空'}
+                    }
+                },
+                "projectID": {
+                    validators: {
+                        notEmpty: {message: '项目不能为空'}
+                    }
+                },
+                "projectSubID": {
+                    validators: {
+                        notEmpty: {message: '项目子项不能为空'}
+                    }
+                },
+                "safe": {
+                    validators: {
+                        notEmpty: {message: '安全施工费不能为空'}
+                    }
+                },
+                "civil": {
+                    validators: {
+                        notEmpty: {message: '文明施工费不能为空'}
+                    }
+                },
+                "envir": {
+                    validators: {
+                        notEmpty: {message: '环境保护费不能为空'}
+                    }
+                },
+                "temp": {
+                    validators: {
+                        notEmpty: {message: '临设费不能为空'}
+                    }
+                },
+                "night": {
+                    validators: {
+                        notEmpty: {message: '夜间施工增加费不能为空'}
+                    }
+                },
+                "twice": {
+                    validators: {
+                        notEmpty: {message: '二次搬运费不能为空'}
+                    }
+                },
+                "winter": {
+                    validators: {
+                        notEmpty: {message: '冬雨季施工费不能为空'}
+                    }
+                },
+                "protect": {
+                    validators: {
+                        notEmpty: {message: '已完工程及设备保护费不能为空'}
+                    }
+                },
+                "retest": {
+                    validators: {
+                        notEmpty: {message: '工程定位复测费不能为空'}
+                    }
+                },
+            }
+        });
+        
+        //编辑回填
+        if(measureID != 0){
+        	ajaxPost(basePath+"/budget/measure/get",{id:measureID},function(data){
+        		measureform.initFormData(data);
+            })
+        } 
+        
+        //初始化控件
+        measureform.initComponent();
+    });
+</script>

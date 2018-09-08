@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<queryContext xmlns="http://www.example.org/query" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.example.org/query query.xsd">
+    <query id="measure_list" key="id" tableName="班组工资明细" className="com.radish.master.entity.project.Measure" widthType="px" pageSize="20">
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="name" header="名称" allowSort="true" width="150"/>
+        <column key="projectName" header="所属项目" allowSort="true" width="150"/>
+        <column key="projectSubName" header="所属子项" width="150"/>
+        <column key="safe" header="安全施工费" width="150"/>
+        <column key="civil" header="文明施工费" width="150"/>
+        <column key="envir" header="环境保护费" width="150"/>
+        <column key="temp" header="临设费" width="80"/>
+        <column key="night" header="夜间施工增加" width="80"/>
+        <column key="twice" header="二次搬运费" width="80"/>
+        <column key="winter" header="冬雨季施工费" width="80"/>
+        <column key="protect" header="已完工程及设备保护费" width="80"/>
+        <column key="retest" header="工程定位复测费" width="80"/>
+        <column key="status" header="状态" width="80" render="10=新建,20=审核中,30=审核通过"/>
+        <column key="id" header="操作" width="80" fnRender="fnRenderDetail"/>
+    </query>
+    <query id="measure_consume_list" key="project_sub_id" tableName="已配置工程单" widthType="px" pageSize="200">
+        <sql>
+            <![CDATA[
+              SELECT DISTINCT project_id, project_name, project_sub_id, project_sub_name
+			  FROM tbl_measure
+			  WHERE `status` = '30' AND 1=1
+            ]]>
+        </sql>
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="project_id" hidden="true" header="project_id" width="80"/>
+        <column key="project_sub_id" hidden="true" header="project_sub_id" width="80"/>
+        <column key="project_name" header="项目名称" allowSort="true" width="150"/>
+        <column key="project_sub_name" header="项目子项名称" allowSort="true" width="150"/>
+        <column key="id" header="操作" width="80" fnRender="fnRenderDetail"/>
+    </query>
+    
+    
+</queryContext>

@@ -3,6 +3,8 @@
  */
 package com.radish.master.listener;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
@@ -17,6 +19,7 @@ import com.cnpc.framework.utils.SecurityUtil;
 import com.radish.master.entity.Labor;
 import com.radish.master.entity.ProjectVolume;
 import com.radish.master.entity.common.ActivitiSuggestion;
+import com.radish.master.entity.project.MeasureConsume;
 import com.radish.master.system.SpringUtil;
 
 /**
@@ -157,6 +160,32 @@ public class ProjectVolumeTaskGeneralListener implements TaskListener {
                 baseService.save(labor);
 
                 pv.setStatus("70");
+                
+                String smeasureHql = "from MeasureConsume where projectID=:projectID AND projectSubID=:projectSubID";
+                Map<String, Object> consumeParams = new HashMap<>();
+                consumeParams.put("projectID", pv.getProjectID());
+                consumeParams.put("projectSubID", pv.getProjectSubID());
+                MeasureConsume mc = baseService.get(smeasureHql, consumeParams);
+                if(mc == null){
+                	mc = new MeasureConsume();
+                	mc.setProjectID(pv.getProjectID());
+                	mc.setProjectSubID(pv.getProjectSubID());
+                	baseService.save(mc);
+                }
+                try {
+                	String name = pv.getMeasureType();
+                    Method get = mc.getClass().getMethod("get"+name);
+					String value = (String) get.invoke(mc);
+					BigDecimal oldValue = new BigDecimal(value == null? "0" : value);
+					BigDecimal thisValue = new BigDecimal(pv.getMeasureAmount());
+					
+					Method set = mc.getClass().getMethod("set"+name, String.class);
+					set.invoke(mc, new Object[] { oldValue.add(thisValue).setScale(2, BigDecimal.ROUND_DOWN).toPlainString() });
+					
+					baseService.update(mc);
+				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
+					e.printStackTrace();
+				}
             }
 
             baseService.save(pv);
