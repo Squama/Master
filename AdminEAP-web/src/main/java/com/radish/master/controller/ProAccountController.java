@@ -1,7 +1,10 @@
 package com.radish.master.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.hibernate.Session;
@@ -10,16 +13,21 @@ import org.hibernate.type.StringType;
 import org.hibernate.type.Type;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONArray;
+import com.cnpc.framework.activiti.pojo.Constants;
+import com.cnpc.framework.activiti.service.RuntimePageService;
 import com.cnpc.framework.base.entity.User;
 import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.base.service.BaseService;
 import com.cnpc.framework.utils.SecurityUtil;
 import com.radish.master.entity.ProAccount;
 import com.radish.master.entity.ProAccountDet;
+import com.radish.master.entity.Project;
+import com.radish.master.entity.volumePay.ProjectPay;
 import com.radish.master.pojo.Options;
 import com.radish.master.system.Arith;
 
@@ -30,6 +38,8 @@ public class ProAccountController {
 	
 	@Autowired
 	private BaseService baseService;
+	@Resource
+	private RuntimePageService runtimePageService;
 	@Autowired
 	private SessionFactory sessionFactory;
 	public Session getCurrentSession() {
@@ -93,6 +103,21 @@ public class ProAccountController {
 		
 		return prefix +"addDetIndex";
 	}
+	/**
+	 * 复核审核页
+	 * @param request
+	 * @param zm
+	 * @return
+	 */
+	@RequestMapping("/auidt/{id}")//审核查看页
+	public String auidLook(@PathVariable("id") String id,HttpServletRequest request){
+		request.setAttribute("zmmxid",id);
+		List<User> ul = baseService.findMapBySql("select u.name name ,u.id id  from tbl_user u where u.audit_status = 10 ", new Object[]{}, new Type[]{StringType.INSTANCE}, User.class);
+		request.setAttribute("userOptions", JSONArray.toJSONString(ul));
+		
+		return prefix+"auidLook";
+		
+	}
 	
 	@RequestMapping("/saveAccount")
 	@ResponseBody
@@ -141,9 +166,9 @@ public class ProAccountController {
 				mx.setOutMoney(money);
 				zm.setAllMoney(arith.sub(Double.valueOf(zm.getAllMoney()), Double.valueOf(money))+"");
 			}
-			User sh = baseService.get(User.class, mx.getAuditId());
+			//User sh = baseService.get(User.class, mx.getAuditId());
 			User jz = baseService.get(User.class, mx.getAccounterId());
-			mx.setAuditName(sh.getName());
+			//mx.setAuditName(sh.getName());
 			mx.setAccounter(jz.getName());
 			mx.setStatus("10");
 			mx.setCreateId(SecurityUtil.getUserId());
@@ -169,9 +194,10 @@ public class ProAccountController {
 				zm.setAllMoney(arith.sub(Double.valueOf(zm.getAllMoney()), Double.valueOf(money))+"");
 			}
 			
-			User sh = baseService.get(User.class, mx.getAuditId());
+			//User sh = baseService.get(User.class, mx.getAuditId());
 			User jz = baseService.get(User.class, mx.getAccounterId());
-			m.setAuditName(sh.getName());
+			m.setAccounterId(mx.getAccounterId());
+			//m.setAuditName(sh.getName());
 			m.setAccounter(jz.getName());
 			m.setZmtype(mx.getZmtype());
 			m.setCreateDate(mx.getCreateDate());
@@ -190,9 +216,11 @@ public class ProAccountController {
 	public Result getAccountDet(HttpServletRequest request){
 		String mxid = request.getParameter("id");
 		ProAccountDet mx  = baseService.get(ProAccountDet.class, mxid);
+		ProAccount zm = baseService.get(ProAccount.class, mx.getProjectAccountId());
 		Result r = new Result();
 		r.setData(mx);
 		r.setSuccess(true);
+		r.setCode(zm.getAccountName());
 		return r;
 	}
 	@RequestMapping("/delAccountDet")
@@ -217,4 +245,30 @@ public class ProAccountController {
 		r.setSuccess(true);
 		return r;
 	}
+	
+	@RequestMapping("/doAudit")
+	@ResponseBody
+	public Result start(String id) {
+		ProAccountDet m = baseService.get(ProAccountDet.class, id);
+		ProAccount zm = baseService.get(ProAccount.class, m.getProjectAccountId());
+		
+		m.setStatus("20");
+		User user = SecurityUtil.getUser();
+		baseService.update(m);
+		
+
+        String name =user.getName()+"提交账目复核";
+
+        // businessKey
+        String businessKey = m.getId();
+
+        // 配置流程变量
+        Map<String, Object> variables = new HashMap<>();
+        variables.put(Constants.VAR_APPLYUSER_NAME, user.getName());
+        variables.put(Constants.VAR_BUSINESS_KEY, businessKey);
+        variables.put("taskName", name);
+
+        // 启动流程
+        return runtimePageService.startProcessInstanceByKey("ProAccountCheck", name, variables, user.getId(), businessKey);
+    }
 }

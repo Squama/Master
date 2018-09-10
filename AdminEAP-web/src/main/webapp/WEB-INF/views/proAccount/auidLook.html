@@ -9,18 +9,20 @@
                 <input type="hidden" name="id" id="accountDetId">
                 <input type="hidden" name="projectAccountId" id="accountId">
                 <div class="box box-info">
-                    <div class="box-header with-border">
-                        <span>
-                            <i class="fa fa-edit">账目信息</i>
-                        </span>
-                    </div>
+                    
                     <div class="box-body">
+	                    <div class="form-group">
+                                <label class="col-sm-3 control-label">所属账本</label>
+                                <div class="col-sm-8">
+                                     <input type="text" class="form-control" id="zbmc" name="zbmc" disabled="disabled">
+                                </div>
+                            </div>
                         <!-- 内容 -->
                         <div class="col-md-6">
 			                <div class="form-group">
                                 <label class="col-sm-3 control-label">收支类型<span style="color:red">*</span></label>
                                 <div class="col-sm-8">
-                                    <select id="zmtype" class="form-control select2" name="zmtype" style="width:100%">
+                                    <select id="zmtype" class="form-control select2" name="zmtype" style="width:100%" disabled="disabled">
                                        <option value="1">收入</option>
                                        <option value="2">支出</option>
                                     </select>
@@ -29,7 +31,7 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">金额<span style="color:red">*</span></label>
                                 <div class="col-sm-8">
-                                     <input type="text" class="form-control" id="money" name="money" placeholder="收支金额">
+                                     <input type="text" class="form-control" id="money" name="money" placeholder="收支金额" disabled="disabled">
                                 </div>
                             </div>
                             <!-- <div class="form-group">
@@ -47,13 +49,13 @@
 		            		<div class="form-group">
                                 <label class="col-sm-3 control-label">收支时间<span style="color:red">*</span></label>
                                 <div class="col-sm-8">
-                                     <input type="text" class="form-control date-picker" data-flag="datepicker"  id="createDate" name="createDate" placeholder="收支时间">
+                                     <input type="text" class="form-control date-picker" data-flag="datepicker"  id="createDate" name="createDate" placeholder="收支时间" disabled="disabled">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">记账人<span style="color:red">*</span></label>
                                 <div class="col-sm-8">
-                                     <select id="accounterId" class="form-control select2" name="accounterId" style="width:100%">
+                                     <select id="accounterId" class="form-control select2" name="accounterId" style="width:100%" disabled="disabled">
                                         <option selected="selected" value="">选择一个人员</option>
                                     </select>
                                 </div>
@@ -69,19 +71,17 @@
 	                    <label for="remark" class="col-sm-2 control-label">摘要<span style="color:red">*</span></label>
 	
 	                    <div class="col-sm-9">
-	                        <textarea class="form-control" id="abstracts" name="abstracts" placeholder="请输入摘要" rows="6"></textarea>
+	                        <textarea class="form-control" id="abstracts" name="abstracts" placeholder="请输入摘要" rows="6" disabled="disabled"></textarea>
 	                    </div>
 		            </div>
                     <div class="form-group">
 	                    <label for="remark" class="col-sm-2 control-label">备注</label>
 	
 	                    <div class="col-sm-9">
-	                        <textarea class="form-control" id="remark" name="remark" placeholder="请输入备注" rows="6"></textarea>
+	                        <textarea class="form-control" id="remark" name="remark" placeholder="请输入备注" rows="6" disabled="disabled"></textarea>
 	                    </div>
 		            </div>
-                    <div class="box-footer text-center" id="formsave">
-                        <button type="submit" class="btn btn-primary" data-btn-type="next">保存</button>
-                    </div>
+                    
                 </div>
             </form>
             
@@ -98,12 +98,9 @@
     if(pOptions != 0){
         options = JSON.parse(pOptions);
     }
-    var zmid = '${zmid?default(0)}'
    	var zmmxid = '${zmmxid?default(0)}'
     $(function (){
-    	if(zmid!=0){
-    		$("#accountId").val(zmid);
-    	}
+    	
     	if(zmmxid!=0){
     		$("#accountDetId").val(zmmxid);
     	}
@@ -174,7 +171,7 @@
             	}else{
             		$("#money").val(zm.outMoney);
             	}
-               
+               $("#zbmc").val(data.code);
                 
             })
         } 

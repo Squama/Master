@@ -88,6 +88,10 @@ public class ProAccountDet implements Serializable {
     @Header(name = "备用审核状态")
     @Column(name = "status")
     private String status;
+    
+    @Header(name = "审核意见")
+    @Column(name = "descs")
+    private String descs;
 
 	public String getId() {
 		return id;
@@ -207,6 +211,14 @@ public class ProAccountDet implements Serializable {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public String getDescs() {
+		return descs;
+	}
+
+	public void setDescs(String descs) {
+		this.descs = descs;
 	}
     
 	

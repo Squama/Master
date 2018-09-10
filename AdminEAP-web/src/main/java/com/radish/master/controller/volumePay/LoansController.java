@@ -272,8 +272,8 @@ public class LoansController {
 			mx.setOutMoney(j.getMoney());
 			mx.setAccounter(u.getName());
 			mx.setAccounterId(u.getId());
-			mx.setAuditName(u.getName());
-			mx.setAuditId(u.getId());
+			//mx.setAuditName(u.getName());
+			//mx.setAuditId(u.getId());
 			mx.setStatus("10");
 			if(xmz.size()<=0){//无账本，先生成账本
 				ProAccount zb = new ProAccount();

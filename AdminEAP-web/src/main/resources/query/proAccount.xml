@@ -37,7 +37,7 @@
 			<sql>
 		        <![CDATA[
 		          SELECT  mx.createDate createDate , mx.abstracts abstracts,mx.inMoney inMoney,mx.outMoney outMoney,
-		          mx.remark remark ,mx.id id ,mx.accounter accounter,mx.auditName auditName ,mx.status status 
+		          mx.remark remark ,mx.id id ,mx.accounter accounter,mx.auditName auditName ,mx.status status ,mx.descs descs 
 		          FROM 
                   tbl_projectAccount zm ,tbl_projectAccount_det mx  
                   WHERE 1=1 and zm.id = mx.projectAccountId order by mx.createDate desc
@@ -50,7 +50,8 @@
 	        <column key="inMoney" header="进账" classType="String" width="150"  />
 	        <column key="outMoney" header="出账" classType="String" width="150"  />
 	        <column key="remark" header="备注" classType="String" width="150"  />
-			<!-- <column key="id" header="操作" width="80" fnRender="fnRenderAuditDet"/> -->
+	        <column key="status" header="状态" classType="String" width="150" render="10=新建,20=复核确认,30=完成,40=复核驳回" />
+			<column key="id" header="操作" width="80" fnRender="fnRenderAuditDet"/>
 	</query>
 	
 </queryContext>
