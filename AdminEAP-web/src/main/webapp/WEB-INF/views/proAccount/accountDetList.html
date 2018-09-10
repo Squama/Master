@@ -92,6 +92,11 @@
                     modals.info('请选择要编辑的账目');
                     return false;
                 }
+                var shzt = budgetApplyTables.getSelectedRowData().status;
+                if(shzt!='新建'){
+               	 modals.info('该状态不可编辑');
+                    return false;
+                }
                 modals.openWin({
                     winId:winId,
                     title:'编辑账目',
@@ -106,6 +111,11 @@
             case 'del':
                 if(!rowId){
                     modals.info('请选择要删除的账目');
+                    return false;
+                }
+                var shzt = budgetApplyTables.getSelectedRowData().status;
+                if(shzt!='新建'){
+               	 modals.info('该状态不可删除');
                     return false;
                 }
                 ajaxPost(basePath + '/proaccount/delAccountDet', {id:rowId}, function (data) {
