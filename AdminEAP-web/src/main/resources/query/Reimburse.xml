@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<queryContext xmlns="http://www.example.org/query" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.example.org/query query.xsd">
+    
+    
+    <query id="reimburse_gr" key="id" tableName="个人报销列表" widthType="px">
+        <sql>
+            <![CDATA[
+              SELECT bx.id id ,bx.type type ,bx.number number ,bx.bxdate bxdate , 
+              bx.status status ,bx.reername reername ,bx.reerid reerid ,bx.money money,bx.bmyj bmyj ,bx.bossyj bossyj,bx.shcwyj shcwyj 
+			  FROM tbl_reimburse bx 
+			  WHERE 1=1  
+            ]]>
+        </sql>
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="type" header="类型" classType="String" allowSort="true" width="150" render="10=公司报销,20=项目报销"/>
+        <column key="number" header="编号" classType="String" allowSort="true" width="150"/>
+        <column key="bxdate" header="新增日期" classType="String" width="150"/>
+        <column key="money" header="报销总金额" classType="String" width="150"/>
+        <column key="status" header="状态" classType="String" width="150" render="10=新建,20=部门审核,30=部门驳回,40=财务核对,50=财务驳回,60=领导审核,70=领导驳回,80=财务放款,90=完成"/>
+    	<column key="id" header="操作" classType="String" width="150"  fnRender="fnRenderXQ"/>
+    </query>
+    <query id="reimburseMx_gr" key="id" tableName="个人报销明细列表" widthType="px">
+        <sql>
+            <![CDATA[
+              SELECT bx.id id ,bx.reimburseId reimburseId,bx.fpnumber fpnumber,bx.fptype fptype,bx.fpmoney fpmoney
+              ,bx.remark remark 
+			  FROM tbl_reimburseDet bx 
+			  WHERE 1=1  
+            ]]>
+        </sql>
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="fpnumber" header="发票编号" classType="String" allowSort="true" width="150"/>
+        <column key="fpmoney" header="金额" classType="String" width="150"/>
+        <column key="fptype" header="发票类型" classType="String" width="150"/>
+        <column key="remark" header="备注" classType="String" width="150"/>
+        <column key="id" header="操作" classType="String" width="150"  fnRender="fnRenderScMx"/>
+    </query>
+    
+    <query id="reimburse_bm" key="id" tableName="个人报销列表_部门" widthType="px">
+        <sql>
+            <![CDATA[
+              SELECT bx.id id ,bx.type type ,bx.number number ,bx.bxdate bxdate , 
+              bx.status status ,bx.reername reername ,bx.reerid reerid ,bx.money money 
+			  FROM tbl_reimburse bx 
+			  WHERE 1=1  and bx.status='20'
+            ]]>
+        </sql>
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="type" header="类型" classType="String" allowSort="true" width="150" render="10=公司报销,20=项目报销"/>
+        <column key="reername" header="申请人" classType="String" allowSort="true" width="150"/>
+        <column key="number" header="编号" classType="String" allowSort="true" width="150"/>
+        <column key="bxdate" header="新增日期" classType="String" width="150"/>
+        <column key="money" header="报销总金额" classType="String" width="150"/>
+        <column key="status" header="状态" classType="String" width="150" render="10=新建,20=部门审核,30=部门驳回,40=财务核对,50=财务驳回,60=领导审核,70=领导驳回,80=财务放款,90=完成"/>
+    	<column key="id" header="操作" classType="String" width="150"  fnRender="fnRenderXQ"/>
+    </query>
+    
+    <query id="reimburse_cw" key="id" tableName="个人报销列表_财务" widthType="px">
+        <sql>
+            <![CDATA[
+              SELECT bx.id id ,bx.type type ,bx.number number ,bx.bxdate bxdate , 
+              bx.status status ,bx.reername reername ,bx.reerid reerid ,bx.money money ,bx.isjz isjz  
+			  FROM tbl_reimburse bx 
+			  WHERE 1=1  and bx.status in('80','90')
+            ]]>
+        </sql>
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="type" header="类型" classType="String" allowSort="true" width="150" render="10=公司报销,20=项目报销"/>
+        <column key="reername" header="申请人" classType="String" allowSort="true" width="150"/>
+        <column key="number" header="编号" classType="String" allowSort="true" width="150"/>
+        <column key="bxdate" header="新增日期" classType="String" width="150"/>
+        <column key="money" header="报销总金额" classType="String" width="150"/>
+        <column key="status" header="状态" classType="String" width="150" render="10=新建,20=部门审核,30=部门驳回,40=财务核对,50=财务驳回,60=领导审核,70=领导驳回,80=财务放款,90=完成"/>
+    	<column key="id" header="操作" classType="String" width="150"  fnRender="fnRenderXQ"/>
+    </query>
+  
+</queryContext>

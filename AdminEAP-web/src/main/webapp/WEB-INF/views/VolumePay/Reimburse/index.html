@@ -1,12 +1,12 @@
 <section class="content-header">
     <h1>
-        个人借款申请
+        个人报销申请
         <small>列表</small>
     </h1>
     <ol class="breadcrumb">
         <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
         <li><a href="#">财务账目管理</a></li>
-        <li class="active">个人借款申请</li>
+        <li class="active">个人报销申请</li>
     </ol>
 </section>
 
@@ -16,14 +16,14 @@
             <div class="box">
                 <!-- /.box-header -->
                 <div class="dataTables_filter" id="searchDiv" >
-                    <input placeholder="请输入借款编号" name="jk.number" class="form-control" type="search" likeOption="true"operator="like" />
-                    <input id = "userid" name="jk.loanerid" class="form-control" type="search" style="display: none"/> 
+                    <input placeholder="请输入报销编号" name="jk.number" class="form-control" type="search" likeOption="true"operator="like" />
+                    <input id = "userid" name="bx.reerid" class="form-control" type="search" style="display: none"/> 
                     <div class="btn-group">
                         <button type="button" class="btn btn-primary" data-btn-type="search">查询</button>
                        
                     </div>
                     <div class="btn-group">
-                    <button type="button" class="btn btn-default" data-btn-type="add" id ="add">新增申请</button>
+                    <button type="button" class="btn btn-default" data-btn-type="add" id ="add">新增报销</button>
                     <button type="button" class="btn btn-default" data-btn-type="edit" id ="edit">修改</button>
                     <button type="button" class="btn btn-default" data-btn-type="look" id ="look">查看</button>
                     <button type="button" class="btn btn-default" data-btn-type="delete" id ="delete">删除</button>
@@ -48,7 +48,7 @@
     var volumeManageObject = {
             submit: function (id) {
             	modals.confirm("是否要提交部门审批？",function(){
-                    ajaxPost(basePath + '/loans/bmsh', {id:id}, function (data) {
+                    ajaxPost(basePath + '/reimburse/bmsh', {id:id}, function (data) {
                         if (data.success) {
                         	volumeTable.reloadData();
                             modals.correct("请提醒部门领导尽快审核");
@@ -61,7 +61,7 @@
     }
     
     $(function (){
-    	volumeTable = new CommonTable("volume_table", "loan_gr", "searchDiv", null);
+    	volumeTable = new CommonTable("volume_table", "reimburse_gr", "searchDiv", null);
         
         //绑定按钮事件
         $("button[data-btn-type]").click(function () {
@@ -73,7 +73,7 @@
                     winId:winId,
                     title:'创建',
                     width:'1000px',
-                    url:basePath+"/loans/add",
+                    url:basePath+"/reimburse/add",
                     hideFunc:function(){
                     	volumeTable.reloadData();
                     },
@@ -86,7 +86,7 @@
                     return false;
                 }
             	if(volumeTable.getSelectedRowData().status!='新建'&&volumeTable.getSelectedRowData().status!='部门驳回'
-            		&&volumeTable.getSelectedRowData().status!='领导驳回'){
+            		&&volumeTable.getSelectedRowData().status!='领导驳回'&&volumeTable.getSelectedRowData().status!='财务驳回'){
                 	modals.info('只能修改新建、驳回的数据');
                     return false;
                 }
@@ -94,7 +94,7 @@
                     winId:winId,
                     title:'修改',
                     width:'1000px',
-                    url:basePath+"/loans/add?id="+rowId,
+                    url:basePath+"/reimburse/add?id="+rowId,
                     hideFunc:function(){
                     	volumeTable.reloadData();
                     },
@@ -110,7 +110,7 @@
                     winId:winId,
                     title:'创建',
                     width:'1000px',
-                    url:basePath+"/loans/cwlook?lx=look&id="+rowId,
+                    url:basePath+"/reimburse/cwlook?lx=look&id="+rowId,
                     hideFunc:function(){
                     	volumeTable.reloadData();
                     }
@@ -123,12 +123,12 @@
                     return false;
                 }
             	if(volumeTable.getSelectedRowData().status!='新建'&&volumeTable.getSelectedRowData().status!='部门驳回'
-            		&&volumeTable.getSelectedRowData().status!='领导驳回'){
+            		&&volumeTable.getSelectedRowData().status!='领导驳回'&&volumeTable.getSelectedRowData().status!='财务驳回'){
                 	modals.info('只能删除新建、驳回的信息');
                     return false;
                 }
                 modals.confirm("是否要删除该行数据？",function(){
-                    ajaxPost(basePath+"/loans/delete?id="+rowId,null,function(data){
+                    ajaxPost(basePath+"/reimburse/deleteBx?id="+rowId,null,function(data){
                     	if(data.success){
                     		volumeTable.reloadData();
                     	}
@@ -153,6 +153,8 @@
     		oper +="<a href='javascript:void(0)'style='color:red' onclick='lookyy(\"" + rowObj.bmyj + "\")'>驳回原因</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='volumeManageObject.submit(\"" + value + "\")'>提交部门审核</a>";
         }else if(rowObj.status=="领导驳回"){
     		oper +="<a href='javascript:void(0)'style='color:red' onclick='lookyy(\"" + rowObj.bossyj + "\")'>驳回原因</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='volumeManageObject.submit(\"" + value + "\")'>提交部门审核</a>";
+        }else if(rowObj.status=="财务驳回"){
+    		oper +="<a href='javascript:void(0)'style='color:red' onclick='lookyy(\"" + rowObj.shcwyj + "\")'>驳回原因</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='volumeManageObject.submit(\"" + value + "\")'>提交部门审核</a>";
         }
         return oper;
     }

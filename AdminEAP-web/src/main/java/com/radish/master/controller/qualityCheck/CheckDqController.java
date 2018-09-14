@@ -1,5 +1,6 @@
 package com.radish.master.controller.qualityCheck;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -49,6 +50,7 @@ import com.cnpc.framework.utils.PropertiesUtil;
 import com.cnpc.framework.utils.SecurityUtil;
 import com.cnpc.framework.utils.StrUtil;
 import com.radish.master.entity.Project;
+import com.radish.master.entity.ProjectFileItem;
 import com.radish.master.entity.qualityCheck.CheckDq;
 import com.radish.master.entity.qualityCheck.CheckDqFile;
 import com.radish.master.entity.qualityCheck.CheckFkd;
@@ -56,6 +58,7 @@ import com.radish.master.entity.qualityCheck.LettersLook;
 import com.radish.master.entity.review.MaxNumber;
 import com.radish.master.entity.review.ReviewBid;
 import com.radish.master.service.BudgetService;
+import com.radish.master.system.FileHelper;
 
 @Controller
 @RequestMapping("/checkdq")
@@ -462,14 +465,14 @@ public class CheckDqController {
 	        List<String> previews=new ArrayList<>();
 	        List<FileResult.PreviewConfig> previewConfigs=new ArrayList<>();
 	        //缓存当前的文件
-	        String dirPath = request.getRealPath("/");
 	        String[] fileArr=new String[fileList.size()];
 	        int index=0;
 	        for (CheckDqFile sysFile : fileList) {
 	            //上传后预览 TODO 该预览样式暂时不支持theme:explorer的样式，后续可以再次扩展
 	            //如果其他文件可预览txt、xml、html、pdf等 可在此配置
+	        	String dirPath = request.getContextPath() + "/checkdq/showImage?imageID=" + sysFile.getId();
 	            if(FileUtil.isImage(uploaderPath+File.separator+sysFile.getSavedName())) {
-	                previews.add("<img src='." + sysFile.getFilePath().replace(File.separator, "/") + "' class='file-preview-image kv-preview-data' " +
+	                previews.add("<img src='" + dirPath+ "' class='file-preview-image kv-preview-data' " +
 	                        "style='width:auto;height:160px' alt='" + sysFile.getFileName() + " title='" + sysFile.getFileName() + "''>");
 	            }else{
 	                previews.add("<div class='kv-preview-data file-preview-other-frame'><div class='file-preview-other'>" +
@@ -583,14 +586,15 @@ public class CheckDqController {
 	        List<String> previews=new ArrayList<>();
 	        List<FileResult.PreviewConfig> previewConfigs=new ArrayList<>();
 	        //缓存当前的文件
-	        String dirPath = request.getRealPath("/");
+	        //String dirPath = request.getRealPath("/");
 	        String[] fileArr=new String[fileList.size()];
 	        int index=0;
 	        for (CheckDqFile sysFile : fileList) {
 	            //上传后预览 TODO 该预览样式暂时不支持theme:explorer的样式，后续可以再次扩展
 	            //如果其他文件可预览txt、xml、html、pdf等 可在此配置
+	        	String dirPath = request.getContextPath() + "/checkdq/showImage?imageID=" + sysFile.getId();
 	            if(FileUtil.isImage(uploaderPath+File.separator+sysFile.getSavedName())) {
-	                previews.add("<img src='." + sysFile.getFilePath().replace(File.separator, "/") + "' class='file-preview-image kv-preview-data' " +
+	                previews.add("<img src='" + dirPath+ "' class='file-preview-image kv-preview-data' " +
 	                        "style='width:auto;height:80px' alt='" + sysFile.getFileName() + " title='" + sysFile.getFileName() + "''>");
 	            }else{
 	                previews.add("<div class='kv-preview-data file-preview-other-frame'><div class='file-preview-other'>" +
@@ -611,6 +615,40 @@ public class CheckDqController {
 	        fileResult.setInitialPreviewConfig(previewConfigs);
 	        fileResult.setFileIds(StrUtil.join(fileArr));
 	        return fileResult;
+	    }
+	    @RequestMapping(value="/showImage",method = RequestMethod.GET)
+	    public String showImage(String imageID, HttpServletResponse response) throws IOException{
+	        
+	    	CheckDqFile item = baseService.get(CheckDqFile.class, imageID);
+
+	        byte[] fileBytes = getImage(item.getFilePath(), item.getFileName());
+	        
+	                
+	        if(fileBytes != null){
+	            BufferedOutputStream bos = null;
+	            try {
+	                bos = new BufferedOutputStream(response.getOutputStream());
+	                bos.write(fileBytes);
+	            } catch (IOException e) {
+	                throw e;
+	            } finally {
+	                if (bos != null)
+	                    bos.close();
+	            }
+	        }
+	        
+	        return null;
+	    }
+	    public byte[] getImage(String path, String name) {
+	        try {
+
+	            // 调接口写读文件
+	            return FileHelper.showImageFile(name, path);
+	        } catch (Exception e) {
+	            logger.error("", e);
+	        }
+
+	        return new byte[0];
 	    }
 	    
 }
