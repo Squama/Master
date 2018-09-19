@@ -89,6 +89,7 @@
                 /resources/**=anon
                 /wechat/callback=anon
                 /*/download/**=anon
+                /luobo/**=anon
                 /**=authc
             </value>
         </property>
