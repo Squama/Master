@@ -30,5 +30,36 @@
         <column key="number" header="编号" classType="String" width="150"/>
         <column key="dx" header="对象" classType="String" width="150"/>
     </query>
-	
+	<query id="checkRecordListAQ" key="id" tableName="安全管理文件列表" widthType="px">
+        <sql>
+            <![CDATA[
+              SELECT wj.ID id,wj.number number , wj.parent_ID parent_ID, wj.create_time create_time,
+              wj.update_time update_time ,p.project_name pName ,wj.proid pid ,wj.name name 
+			  FROM tbl_checkItemAQ wj ,tbl_project p 
+			  WHERE 1=1 and wj.proid = p.id 
+            ]]>
+        </sql>
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="number" header="文件编号" classType="String" allowSort="true" width="150"/>
+        <column key="name" header="文件名称" classType="String" allowSort="true" width="150"/>
+        <column key="pName" header="所属项目" classType="String" width="150"/>
+        <column key="create_time" header="创建日期" classType="String" width="150" allowSort="true" />
+        <column key="id" header="文件详情" width="80" fnRender="fnRenderXq"/>
+    </query>
+    <query id="checkRecordListMbAQ" key="id" tableName="安全管理模板列表" widthType="px">
+        <sql>
+            <![CDATA[
+              SELECT wj.ID id,wj.name name , wj.parent_ID parent_ID, wj.create_time create_time,
+              wj.update_time update_time 
+			  FROM tbl_checkItemMbAQ wj 
+			  WHERE 1=1 
+            ]]>
+        </sql>
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="name" header="模板名称" classType="String" allowSort="true" width="150"/>
+        <column key="create_time" header="创建日期" classType="String" width="150" allowSort="true" />
+        <column key="id" header="模板详情" width="80" fnRender="fnRenderXq"/>
+    </query>
 </queryContext>

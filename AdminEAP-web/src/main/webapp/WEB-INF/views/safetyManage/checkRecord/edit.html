@@ -1,0 +1,194 @@
+<link rel="stylesheet" href="${basePath}/resources/common/libs/fileinput/css/fileinput.min.css">
+<style>
+
+#projectaddstep2 .krajee-default.file-preview-frame .kv-file-content {
+    height: auto;
+}
+
+#projectaddstep2 .krajee-default .file-footer-caption {
+    width: 100px;
+}
+
+</style>
+<script src="${basePath}/resources/common/libs/fileinput/js/fileinput.js"></script>
+<script src="${basePath}/resources/common/libs/fileinput/js/locales/zh.js"></script>
+<!--BaseFile组件-->
+<script src="${basePath}/resources/common/js/base-file.js"></script>
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><li class="fa fa-remove"></li></button>
+    <h5 class="modal-title"></h5>
+</div>
+<div class="modal-body" style="max-height:100%;overflow-y:auto;">
+
+    <form id="contract-form" name="contract-form" class="form-horizontal">
+     <input type="hidden" name="id" id= "id">
+        <div class="box-body">
+            <div class="col-md-6">
+                
+				<div class="form-group">
+                    <label  for="check_time1" class="col-sm-3 control-label">所属项目</label>
+					<div class=" col-sm-8">
+						<select id="projectId" class="form-control select2 "  name="proid" style="width:100%" >
+                   			<option selected="selected" value="">选择一个项目</option>
+                   		</select>
+					</div>
+                </div>
+                <div class="form-group">
+                    <label  for="check_time1" class="col-sm-3 control-label">文件名称</label>
+					<div class=" col-sm-8">
+						<input class="form-control " id="name" name="name"   >
+				
+					</div>
+                </div>
+            </div>
+            <div class="col-md-6">
+            <div class="form-group">
+                    <label  for="check_time1" class="col-sm-3 control-label">编号</label>
+					<div class=" col-sm-8">
+						<input class="form-control " id="number" name="number"  readonly="readonly" >
+				
+					</div>
+                </div>
+            </div>        
+        </div>
+        <input type="hidden" name="fileId" id="fileId">
+					<div class="form-group" align="center" id="wjscid">
+						<div class="btn btn-default btn-file" id="uploadFile">
+							<i class="fa fa-paperclip"></i> 上传文件附件(Max. 10MB)
+						</div>
+					</div>
+					<div class="form-group" id="file_container">
+						<input type="file" name="file"  id="attachment">
+					</div>
+        <!-- /.box-body -->
+        <div class="" style="text-align: center;height:50px;width:100%;">
+            <!--以下两种方式提交验证,根据所需选择-->
+            <button type="submit" class="btn btn-primary" data-btn-type="save" id="b_sub">保存</button>
+            <button type="button" class="btn btn-primary" data-btn-type="sc" id="sc" style="display: none">上传附件</button>
+        </div>
+        <!-- /.box-footer -->
+    </form>
+    
+</div>
+<script>
+    var form =null;
+    
+    var pros = '${projectOptions?default(0)}',pro=0;
+    if(pros != 0){
+    	pro = JSON.parse(pros);
+    }
+    var  bh = '${bh}';
+    var  fid = '${fid}';
+    $(function() {
+        //初始化控件
+        form=$("#contract-form").form();
+        //数据校验
+        $("#contract-form").bootstrapValidator({
+            message : '请输入有效值',
+            feedbackIcons : {
+                valid : 'glyphicon glyphicon-ok',
+                invalid : 'glyphicon glyphicon-remove',
+                validating : 'glyphicon glyphicon-refresh'
+            },
+            submitHandler : function() {
+                modals.confirm('确认保存？', function() {
+                    //Save Data，对应'submit-提交'
+                    var params = form.getFormSimpleData();
+                    	ajaxPost(basePath+'/checkRecordAQ/saveWj?fid='+fid, params, function(data) {
+                            if(data.success){
+                                modals.info("数据保存成功");
+                                $("#id").val(data.code);
+                                //$("#sc").css("display","");
+                            }                
+                        }); 
+              
+                     
+                });
+            },
+            fields : {
+                proid : {
+                    validators : {
+                        notEmpty : {
+                            message : '请选择所属项目'
+                        }
+                    }
+                }
+            }
+        });
+        if(pro != 0){
+            for (var i = 0, len = pro.length; i < len; i++) {
+                var u = pro[i];
+                $('#projectId').append("<option value='" + u.id + "'>" + u.projectName + "</option>");
+            }
+            $("#projectId").select2();
+        }
+        if(bh){
+            $("#number").val(bh)
+            }
+        form.initComponent();
+        $("#sc").on("click",function(){
+        	modals.openWin({
+                winId:"checkRecord",
+                title:'上传',
+                width:'1000px',
+                url:basePath+"/checkRecordAQ/scWj?id="+$("#id").val(),
+                hideFunc:function(){
+                	volumeTable.reloadData();
+                }
+               });
+        })
+        
+    });
+    function resetForm(){
+        form.clearForm();
+        $("#contract-form").data('bootstrapValidator').resetForm();
+    }
+
+    var fileinputDefaults = {
+            maxFileSize: 102400,
+            maxFileCount:3,
+            previewSettings: {
+                image: {width: "160px", height: "60px"},
+                text: {width: "213px", height: "160px"},
+                object: {width: "160px", height: "auto"},
+                pdf: {width: "160px", height: "160px"},
+                other: {width: "160px", height: "160px"}
+            },
+            previewZoomSettings: {
+                image: {width: "auto", height: "auto", 'max-width': "100%", 'max-height': "100%"},
+                text: {width: "100%", height: "100%", 'min-height': "480px"},
+                object: {width: "auto", height: "100%", 'min-height': "480px"},
+                pdf: {width: "100%", height: "100%", 'min-height': "480px"},
+                other: {width: "auto", height: "100%", 'min-height': "480px"}
+            },
+            uploadUrl: basePath + "/checkRecordAQ/uploadMultipleFile",
+            deleteUrl: basePath + "/checkRecordAQ/deletefile",
+            allowedPreviewTypes : ['image', 'object']
+      }
+      var defaults = {
+            title: "请上传附件",
+            getFileResultUrl: basePath+"/checkRecordAQ/getFiles",
+            downloadFileUrl: basePath+"/checkRecordAQ/download/",
+            fileinput: fileinputDefaults,
+            showType:'detail',
+            window:true,
+            callback:function(fileId,oldfileIds){
+                this.showFiles({
+                    fileIds:fileId,
+                    type:'preview'
+                });
+            }
+      }
+      
+      $("#uploadFile").file($.extend({}, defaults, {
+          title:"请上传附件",
+          fileinput:$.extend({}, fileinputDefaults, {
+              uploadExtraData: {"fileField":"fileId"}
+          }),
+          showContainer:'#attachment',
+          fileIdContainer:"[name='fileId']",
+          extraPreviewConfig:{
+              "fileField":"fileId"
+          }
+      }));
+</script>

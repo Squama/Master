@@ -118,6 +118,17 @@ public class CheckDqController {
     	
         return prefix+"editIndex";
     }
+	@RequestMapping("/editlook")
+	public String editlook(HttpServletRequest request) {
+    	request.setAttribute("xm", JSONArray.toJSONString(budgetService.getProjectCombobox()));
+    	String id = request.getParameter("id");
+    	String lx = request.getParameter("lx");
+    	request.setAttribute("id", id);
+    	request.setAttribute("lx", lx);
+    	
+        return prefix+"editlookIndex";
+    }
+	
 	@RequestMapping("/auditHf/{id}")
 	public String auditHf(@PathVariable("id") String id,HttpServletRequest request){
 		

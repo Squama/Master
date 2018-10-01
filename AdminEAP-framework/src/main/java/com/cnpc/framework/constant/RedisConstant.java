@@ -52,6 +52,10 @@ public class RedisConstant {
      */
     public static final String CHECK_PRE="checkRecord:";
     /**
+     * 物料分类缓存前缀
+     */
+    public static final String SAFTY_PRE="saftyRecord:";
+    /**
      * 消息缓存前缀
      */
     public static final String MESSAGE_PRE = "message:";
