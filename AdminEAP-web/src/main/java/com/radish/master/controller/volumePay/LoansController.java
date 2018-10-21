@@ -67,6 +67,13 @@ public class LoansController {
 		return prefix+"auidLook";
 		
 	}
+	@RequestMapping("/auidtCw/{id}")//审核查看页
+	public String auidtCw(@PathVariable("id") String id,HttpServletRequest request){
+		request.setAttribute("projectOptions", JSONArray.toJSONString(budgetService.getProjectCombobox()));
+		request.setAttribute("id", id);
+		return prefix+"auidLookCw";
+		
+	}
 	//财务付款页
 	@RequestMapping("/cwfkindex")
 	public String cwfkindex(HttpServletRequest request){
@@ -208,7 +215,7 @@ public class LoansController {
 		User user = SecurityUtil.getUser();
 		Org bm = baseService.get(Org.class, j.getPid());
 		if("10".equals(lx)){//通过
-			j.setStatus("40");
+			j.setStatus("90");
 			String name ="部门："+bm.getName()+",姓名："+jk.getLoanname()+",借款【审核】";
 
 	        // businessKey

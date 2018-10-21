@@ -5,9 +5,12 @@ package com.radish.master.entity.qualityCheck;
 
 import com.cnpc.framework.annotation.Header;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -84,6 +87,19 @@ public class ProEditLetters implements Serializable {
     @Header(name = "名称")
     @Column(name = "name")
     private String name;
+    
+    @DateTimeFormat(pattern="yyyy-MM-dd")
+    @Header(name = "检查时间")
+    @Column(name = "checktime")
+    private Date checktime;
+    
+    @Header(name = "检查部位")
+    @Column(name = "checkBw")
+    private String checkBw;
+    
+    @Header(name = "文件描述")
+    @Column(name = "checkDesc")
+    private String checkDesc;
 
 	public String getId() {
 		return id;
@@ -183,6 +199,30 @@ public class ProEditLetters implements Serializable {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public Date getChecktime() {
+		return checktime;
+	}
+
+	public void setChecktime(Date checktime) {
+		this.checktime = checktime;
+	}
+
+	public String getCheckBw() {
+		return checkBw;
+	}
+
+	public void setCheckBw(String checkBw) {
+		this.checkBw = checkBw;
+	}
+
+	public String getCheckDesc() {
+		return checkDesc;
+	}
+
+	public void setCheckDesc(String checkDesc) {
+		this.checkDesc = checkDesc;
 	}
 
 

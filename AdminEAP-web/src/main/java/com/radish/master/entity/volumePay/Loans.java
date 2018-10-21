@@ -62,7 +62,7 @@ public class Loans implements Serializable {
     @Column(name = "enddate")
     private Date enddate;
     
-    @Header(name = "状态 10-新建,20-部门审核,30-部门驳回,40-领导审核,50-领导驳回,60-财务放款,70-完成,80-已还款")
+    @Header(name = "状态 10-新建,20-部门审核,30-部门驳回,40-领导审核,50-领导驳回,60-财务放款,70-完成,80-已还款,90-财务负责人审核,100-财务负责人驳回")
     @Column(name = "status")
     private String status;
     
@@ -81,6 +81,15 @@ public class Loans implements Serializable {
     @Header(name = "部门审核人")
     @Column(name = "bmshr")
     private String bmshr;
+    
+
+    @Header(name = "部门意见")
+    @Column(name = "cwshyj")
+    private String cwshyj;
+    
+    @Header(name = "部门审核人")
+    @Column(name = "cwshr")
+    private String cwshr;
     
     @Header(name = "领导意见")
     @Column(name = "bossyj")
@@ -256,6 +265,22 @@ public class Loans implements Serializable {
 
 	public void setProid(String proid) {
 		this.proid = proid;
+	}
+
+	public String getCwshyj() {
+		return cwshyj;
+	}
+
+	public void setCwshyj(String cwshyj) {
+		this.cwshyj = cwshyj;
+	}
+
+	public String getCwshr() {
+		return cwshr;
+	}
+
+	public void setCwshr(String cwshr) {
+		this.cwshr = cwshr;
 	}
 
 	

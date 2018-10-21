@@ -78,6 +78,13 @@ public class ReimburseController {
 		return prefix+"auidLookCw";
 		
 	}
+	@RequestMapping("/auidtCwfzr/{id}")//审核查看页
+	public String auidtCwfzr(@PathVariable("id") String id,HttpServletRequest request){
+		request.setAttribute("projectOptions", JSONArray.toJSONString(budgetService.getProjectCombobox()));
+		request.setAttribute("id", id);
+		return prefix+"auidtLookCwfzr";
+		
+	}
 	@RequestMapping("/auidtBoss/{id}")//审核查看页
 	public String auidtBoss(@PathVariable("id") String id,HttpServletRequest request){
 		request.setAttribute("projectOptions", JSONArray.toJSONString(budgetService.getProjectCombobox()));

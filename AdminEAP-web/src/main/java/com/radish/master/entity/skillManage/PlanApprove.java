@@ -49,7 +49,7 @@ public class PlanApprove implements Serializable {
     @Column(name = "proname")
     private String proname;
     
-    @Header(name = "状态 10新建 20总公审批 30 完成 40 驳回")
+    @Header(name = "状态 10新建 20总公审批 30 完成 40 驳回 50 指定人员审核  60 指定人员审核驳回")
     @Column(name = "status")
     private String status;
     
@@ -73,6 +73,14 @@ public class PlanApprove implements Serializable {
     @Header(name = "驳回原因")
     @Column(name = "bhdesc")
     private String bhdesc;
+    
+    @Header(name = "指定审核人")
+    @Column(name = "oneAuidt")
+    private String oneAuidt;
+    
+    @Header(name = "指定审核意见")
+    @Column(name = "AuidtDesc")
+    private String auidtDesc;
 
 
 	public String getId() {
@@ -162,6 +170,26 @@ public class PlanApprove implements Serializable {
 
 	public void setBhdesc(String bhdesc) {
 		this.bhdesc = bhdesc;
+	}
+
+
+	public String getOneAuidt() {
+		return oneAuidt;
+	}
+
+
+	public void setOneAuidt(String oneAuidt) {
+		this.oneAuidt = oneAuidt;
+	}
+
+
+	public String getAuidtDesc() {
+		return auidtDesc;
+	}
+
+
+	public void setAuidtDesc(String auidtDesc) {
+		this.auidtDesc = auidtDesc;
 	}
 
 	

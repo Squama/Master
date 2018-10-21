@@ -51,8 +51,10 @@ import com.cnpc.framework.utils.SecurityUtil;
 import com.cnpc.framework.utils.StrUtil;
 import com.radish.master.entity.Project;
 import com.radish.master.entity.ProjectFileItem;
+import com.radish.master.entity.project.ProjectTeam;
 import com.radish.master.entity.qualityCheck.CheckDq;
 import com.radish.master.entity.qualityCheck.CheckDqFile;
+import com.radish.master.entity.qualityCheck.CheckFile;
 import com.radish.master.entity.qualityCheck.CheckFkd;
 import com.radish.master.entity.qualityCheck.LettersLook;
 import com.radish.master.entity.review.MaxNumber;
@@ -249,7 +251,10 @@ public class CheckDqController {
     	String lx = request.getParameter("lx");
     	request.setAttribute("id", id);
     	request.setAttribute("lx", lx);
-    	
+    	CheckDq ck = baseService.get(CheckDq.class, id);
+    	String proid = ck.getProid();
+    	List<ProjectTeam> bz = baseService.find(" from ProjectTeam where project_id='"+proid+"'");
+    	request.setAttribute("bz", JSONArray.toJSONString(bz));
         return prefix+"fkdIndex";
     }
 	@RequestMapping("/loadFkd")
@@ -272,8 +277,21 @@ public class CheckDqController {
 			String strs = "FKD"+year+str;
 			fk.setNumber(strs);
 			r.setData(fk);
+			
+			
 		}else{
 			r.setData(fks.get(0));
+
+			List<CheckDqFile> wjs = baseService.findMapBySql("select id  from tbl_checkdqfile where form_ID='"+fks.get(0).getId()+"' and type='40'", new Object[]{}, new Type[]{StringType.INSTANCE}, CheckDqFile.class);
+	        String wjid = "";
+			for(int i =0;i<wjs.size();i++){
+	        	if(i==wjs.size()-1){
+	        		wjid += wjs.get(i).getId();
+	        	}else {
+	        		wjid += wjs.get(i).getId()+",";
+	        	}
+	        }
+			r.setCode(wjid);
 		}
 		return r;
 	}
@@ -308,6 +326,21 @@ public class CheckDqController {
 			baseService.update(f);
 			r.setCode(id);
 		}
+		String fileids = request.getParameter("fileId");
+		if(fileids!=null&&fileids.length()>0){
+    		if(fileids.indexOf(",")<0){//单个
+    			CheckDqFile wj = baseService.get(CheckDqFile.class, fileids);
+    			wj.setFormId(r.getCode());
+    			baseService.update(wj);
+    		}else{//多个
+    			String[] ids = fileids.split(",");
+    			for(int i = 0;i<ids.length;i++){
+    				CheckDqFile wj = baseService.get(CheckDqFile.class, ids[i]);
+    				wj.setFormId(r.getCode());
+    				baseService.update(wj);
+    			}
+    		}
+    	}
 		return r;
 	}
 	@RequestMapping("/delete")

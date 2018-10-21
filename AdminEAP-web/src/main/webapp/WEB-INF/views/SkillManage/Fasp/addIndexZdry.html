@@ -27,7 +27,7 @@
              <div class="form-group">
                     <label  for="proid" class="col-sm-2 control-label">所属项目</label>
 					<div class=" col-sm-9">
-						<select id="projectId" class="form-control select2 "  name="proid" style="width:100%" >
+						<select id="projectId" class="form-control select2 "  name="proid" style="width:100%" disabled="disabled">
                    			<option selected="selected" value="">选择一个项目</option>
                    		</select>
 					</div>
@@ -35,7 +35,7 @@
                 <div class="form-group">
                     <label  for="oneAuidt" class="col-sm-2 control-label">指定审核人员</label>
 					<div class=" col-sm-9">
-						<select id="oneAuidt" class="form-control select2 "  name="oneAuidt" style="width:100%" >
+						<select id="oneAuidt" class="form-control select2 "  name="oneAuidt" style="width:100%" disabled="disabled">
                    			<option selected="selected" value="">选择人员</option>
                    		</select>
 					</div>
@@ -46,7 +46,7 @@
            		<div class="form-group">
                     <label  for="type" class="col-sm-2 control-label">类型</label>
 					<div class=" col-sm-9">
-						<select id="type" class="form-control select2 "  name="type" style="width:100%" >
+						<select id="type" class="form-control select2 "  name="type" style="width:100%" disabled="disabled">
                    			<option selected="selected" value="">选择类型</option>
                    			<option  value="10">施工组织设计</option>
                    			<option value="20">专项施工方案</option>
@@ -58,19 +58,28 @@
             </div>   
                
         </div>
+        
         		<input type="hidden" name="fileId" id="fileId">
-					<div class="form-group" align="center" id="wjscid">
+					<!-- <div class="form-group" align="center" id="wjscid">
 						<div class="btn btn-default btn-file" id="uploadFile">
 							<i class="fa fa-paperclip"></i> 上传文件附件(Max. 10MB)
 						</div>
-					</div>
+					</div> -->
 					<div class="form-group" id="file_container">
-						<input type="file" name="file"  id="attachment">
+						<input type="file" name="file"  id="attachment" >
 					</div>
+					<div class="form-group">
+                    <label for="content" class="col-sm-2 control-label">审核意见</label>
+
+                    <div class="col-sm-9">
+                        <textarea class="form-control" id="bmyj" name="auidtDesc" placeholder="审核意见" rows="6" ></textarea>
+                    </div>
+            </div>
         <!-- /.box-body -->
         <div class="" style="text-align: center;height:50px;width:100%">
             <!--以下两种方式提交验证,根据所需选择-->
-            <button type="submit" class="btn btn-primary" data-btn-type="save" id="b_sub">保存</button>
+             <button type="button" class="btn btn-primary" data-btn-type="save" id="save">通过</button>
+            <button type="button" class="btn btn-warning" data-btn-type="save" id="donot">驳回</button>
         </div>
         <!-- /.box-footer -->
     </form>
@@ -89,46 +98,40 @@
     $(function() {
         //初始化控件
         form=$("#contract-form").form();
-        //数据校验
-        $("#contract-form").bootstrapValidator({
-            message : '请输入有效值',
-            feedbackIcons : {
-                valid : 'glyphicon glyphicon-ok',
-                invalid : 'glyphicon glyphicon-remove',
-                validating : 'glyphicon glyphicon-refresh'
-            },
-            submitHandler : function() {
-                modals.confirm('确认保存？', function() {
-                    //Save Data，对应'submit-提交'
-                    var params = form.getFormSimpleData();
-                    	ajaxPost(basePath+'/fasp/save', params, function(data) {
-                            if(data.success){
-                                modals.info("数据保存成功");
-                                $("#id").val(data.code);
-                            }                
-                        }); 
-              
-                     
-                });
-            },
-            proid : {
-            	projectId : {
-                    validators : {
-                        notEmpty : {
-                            message : '请选择项目'
-                        }
-                    }
-                },
-                type : {
-                    validators : {
-                        notEmpty : {
-                            message : '请选择类型'
-                        },
-                       
-                    }
-                }
+        $("#save").on("click",function(){
+       		var params = form.getFormSimpleData();
+       		if($("#bmyj").val()){
+       			modals.confirm("确认审核通过？",function(){
+	       			ajaxPost(basePath+'/fasp/start?lx=10', params, function(data) {
+	                    if(data.success){
+	                    	modals.hideWin(winId);
+	                    	dutycheckTable.reloadData();
+	                        modals.info("审核成功");
+	                        
+	                    }                
+	                }); 
+       			})
+           	}else{
+           		modals.info('请填写审核意见');
             }
-        });
+        })
+        $("#donot").on("click",function(){
+        	var params = form.getFormSimpleData();
+        	if($("#bmyj").val()){
+        		modals.confirm("确认驳回？",function(){
+	        		ajaxPost(basePath+'/fasp/start?lx=20', params, function(data) {
+	                    if(data.success){
+	                    	modals.hideWin(winId);
+	                    	dutycheckTable.reloadData();
+	                        modals.info("审核成功");
+	                        
+	                    }                
+	                });
+        		})
+           	}else{
+           		modals.info('请填写审核意见');
+            }
+        })
         if(pro != 0){
             for (var i = 0, len = pro.length; i < len; i++) {
                 var u = pro[i];
@@ -155,6 +158,7 @@
             formdata = data.data;
             form.initFormData(formdata); 
             $("#fileId").val(data.code);
+            $("#bmyj").val("");
                             
         }); 
     }

@@ -22,15 +22,32 @@ public class LoansTaskCompleteListener implements TaskListener {
         	String businessKey = delegateTask.getVariable(Constants.VAR_BUSINESS_KEY).toString();
             String suggestion = delegateTask.getVariable("suggestion").toString();
             BaseService baseService = (BaseService) SpringUtil.getObject("baseActServer");
+            String taskDefinitionKey = delegateTask.getTaskDefinitionKey();
             
             Loans jk = baseService.get(Loans.class, businessKey);
             if (FALSE.equalsIgnoreCase(delegateTask.getVariable("approved").toString())) {
-            	jk.setStatus("50");
+            	if ("auidt".equals(taskDefinitionKey)) {
+            		jk.setStatus("50");
+            		jk.setBossyj(suggestion);
+                    jk.setBoss(SecurityUtil.getUser().getName());
+            	}else if("cwfzr".equals(taskDefinitionKey)){
+            		jk.setStatus("40");
+            		jk.setCwshyj(suggestion);
+                    jk.setCwshr(SecurityUtil.getUser().getName());
+            	}
+            	
             } else if (TRUE.equalsIgnoreCase(delegateTask.getVariable("approved").toString())) {
-            	jk.setStatus("60");
+            	if ("auidt".equals(taskDefinitionKey)) {
+            		jk.setStatus("60");
+            		jk.setBossyj(suggestion);
+                    jk.setBoss(SecurityUtil.getUser().getName());
+            	}else if("cwfzr".equals(taskDefinitionKey)){
+            		jk.setStatus("100");
+            		jk.setCwshyj(suggestion);
+                    jk.setCwshr(SecurityUtil.getUser().getName());
+            	}
             }
-            jk.setBossyj(suggestion);
-            jk.setBoss(SecurityUtil.getUser().getName());
+            
             baseService.update(jk);
         }
 		

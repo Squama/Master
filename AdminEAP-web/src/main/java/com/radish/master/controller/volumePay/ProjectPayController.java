@@ -120,7 +120,7 @@ public class ProjectPayController {
 				return r;
 			}
 			fk.setStartdate(fks.get(0).getEnddate());
-			if(!"30".equals(fks.get(0).getStatus())){//如果上一条未审批完成，不能生成新数据
+			if(!"50".equals(fks.get(0).getStatus())){//如果上一条未审批完成，不能生成新数据
 				r.setMessage("此项目最新付款数据还未完成，不能生成新的付款数据");
 				r.setSuccess(false);
 				return r;
@@ -147,6 +147,7 @@ public class ProjectPayController {
 			for(ProjectPayDet scmx : scmxs){
 				if(scmx.getQm()!=null && Double.valueOf(scmx.getQm())>0){
 					ProjectPayDet mx = new ProjectPayDet();
+					mx.setId(GUID.genTxNo(16));
 					mx.setChannelId(scmx.getChannelId());
 					mx.setChannelName(scmx.getChannelName());
 					mx.setQc(scmx.getQm());//上次期末放入这次期初
@@ -243,9 +244,19 @@ public class ProjectPayController {
     }
 	@RequestMapping("/getZf")
 	@ResponseBody
-	public ProjectPay getZf(String id){
+	public Map<String,Object> getZf(String id){
+		Map<String,Object> m = new HashMap<String,Object>();
 		ProjectPay zf = baseService.get(ProjectPay.class, id);
-		return zf;
+		m.put("zf", zf);
+		String projectId = zf.getProjectId();
+		//查询对应的账目余额
+		List<ProAccount> zms = baseService.find(" from ProAccount where projectId='"+projectId+"'");
+		if(zms.size()>0){
+			m.put("ye", "账目余额："+zms.get(0).getAllMoney()+"元");
+		}else{
+			m.put("ye", "未生成账目信息");
+		}
+		return m;
 	}
 	@RequestMapping("/getMx")
 	@ResponseBody
@@ -392,5 +403,23 @@ public class ProjectPayController {
 		baseService.update(zfmx);
 		return r;
 		
+	}
+	/**
+	 * 根据输入的百分比统一设置支付明细的本期付款金额
+	 */
+	@RequestMapping("/doJsAllMx")
+	@ResponseBody
+	public Result doJsAllMx(HttpServletRequest request,Double bfb){
+		Result r= new Result();
+		String pid = request.getParameter("pid");
+		List<ProjectPayDet> scmxs = baseService.find(" from ProjectPayDet where projectPayId='"+pid+"'");
+		for(ProjectPayDet zf : scmxs){
+			Double je = ari.add(Double.valueOf(zf.getQc()), Double.valueOf(zf.getBq()));
+			zf.setFk(ari.mul(bfb, je)+"");
+			zf.setQm(ari.sub(je, Double.valueOf(zf.getFk()))+"");
+			baseService.update(zf);
+		}
+		r.setSuccess(true);
+		return r;
 	}
 }

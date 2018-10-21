@@ -155,6 +155,8 @@
     		oper +="<a href='javascript:void(0)'style='color:red' onclick='lookyy(\"" + rowObj.bossyj + "\")'>驳回原因</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='volumeManageObject.submit(\"" + value + "\")'>提交部门审核</a>";
         }else if(rowObj.status=="财务驳回"){
     		oper +="<a href='javascript:void(0)'style='color:red' onclick='lookyy(\"" + rowObj.shcwyj + "\")'>驳回原因</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='volumeManageObject.submit(\"" + value + "\")'>提交部门审核</a>";
+        }else if(rowObj.status=="财务负责人驳回"){
+    		oper +="<a href='javascript:void(0)'style='color:red' onclick='lookyy(\"" + rowObj.shcwfzryj + "\")'>驳回原因</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='volumeManageObject.submit(\"" + value + "\")'>提交部门审核</a>";
         }
         return oper;
     }

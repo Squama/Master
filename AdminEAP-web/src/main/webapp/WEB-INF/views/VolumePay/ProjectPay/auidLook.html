@@ -22,7 +22,7 @@
 		                    <div class="form-group">
 		                    	<label for="projectId" class="col-sm-5 control-label">项目名称</label>
 		                   		<div class="col-sm-2">
-			                   		<select id="projectId" class="form-control select2 "  name="projectId" style="width:100%" >
+			                   		<select id="projectId" class="form-control select2 "  name="projectId" style="width:100%" disabled="disabled">
 			                   			<option selected="selected" value="">选择一个项目</option>
 			                   		</select>
 		                   		</div>
@@ -30,13 +30,13 @@
 		                    <div class="form-group">
                                 <label class="col-sm-5 control-label">开始时间</label>
                                 <div class="col-sm-2">
-                                    <input type="text" class="form-control date-picker" name="startdate" id="startdate" data-flag="datepicker" data-format="yyyy-mm-dd"  placeholder="" >
+                                    <input type="text" class="form-control date-picker" name="startdate" id="startdate" data-flag="datepicker" data-format="yyyy-mm-dd"  placeholder="" disabled="disabled">
                                 </div>
                             </div>
                         	<div class="form-group">
                                 <label class="col-sm-5 control-label">截止时间</label>
                                 <div class="col-sm-2">
-                                    <input type="text" class="form-control date-picker" name="enddate" id="enddate" data-flag="datepicker" data-format="yyyy-mm-dd"  placeholder="" >
+                                    <input type="text" class="form-control date-picker" name="enddate" id="enddate" data-flag="datepicker" data-format="yyyy-mm-dd"  placeholder="" disabled="disabled">
                                 </div>
                             </div>
                             
@@ -44,10 +44,13 @@
                     </div>
                 </form>
             </div>
+            <div><h3 id="yeh3">项目帐余额：元</h3></div>
             <div class="box">
-                <div class="dataTables_filter" id="searchDiv" style="text-align:center;height:1px;">
+                <div class="dataTables_filter" id="searchDiv" style="text-align:right;height:1px;">
                     <input type="search" id="pid" name="zf.id" class="form-control dn" operator="eq" style="display:none;" value="1">
+                    <input  id="sl" name="sl" class="form-control" placeholder="请输入百分比"><span style="color:red">例如0.6（百分六十）</span>
                     <div class="btn-group">
+                    <button type="button" class="btn btn-primary" data-btn-type="addFjsl">生成本期付款</button>
                     </div>
                 </div>
                 <div class="box-body">
@@ -68,10 +71,43 @@ if(pid!=0){
 	$("#pid").val(pid);
 }
 
-    var importform,attendanceImportTable;
+    var importform,budgetImportTable;
     $(function () {
     	budgetImportTable = new CommonTable("attendance_import_table", "projectPay_DetSh", "searchDiv");
-    	
+    	 $('button[data-btn-type]').click(function() {
+             var actions = $(this).attr('data-btn-type');
+             switch (actions) {
+             case 'addFjsl':
+  	          	 var fjsl = $("#sl").val();
+  	          	 if(!fjsl){
+  	          		modals.info('请输入变更百分比');
+  	              	 return;
+  		         }
+  	          	 if(isNaN(fjsl)){
+  	          		modals.info('请输入正确的百分比');
+  	              	 return;
+  		          }
+ 		          if(parseFloat(fjsl)>1){
+ 		        	 modals.info('最大值为1');
+  	              	 return;
+ 	 		      }
+ 		         if(parseFloat(fjsl)<0){
+ 		        	 modals.info('最小值为0');
+  	              	 return;
+ 	 		      }
+  	
+  	          	 ajaxPost(basePath+"/projectpay/doJsAllMx",{bfb:fjsl,pid:pid},function(data){
+  	                   if(data.success){
+  	                  	 $("#sl").val("");
+  	                  	 budgetImportTable.reloadRowData();
+  	                   }else{
+  	                       modals.error("系统繁忙，请稍后重试");
+  	                   }
+  	               }); 
+                 break;             
+             }
+
+         });
         //初始化表单 
         importform = $("#import_form").form({baseEntity:false});
         //数据校验
@@ -97,7 +133,8 @@ if(pid!=0){
         }
         if(pid!=0){
         	ajaxPost(basePath + '/projectpay/getZf', {id:pid}, function (data) {
-        		importform.initFormData(data); 
+        		importform.initFormData(data.zf); 
+        		$("#yeh3").html(data.ye);
             });
         }
     });

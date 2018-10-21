@@ -89,18 +89,42 @@ public class PlanApproveController {
 		request.setAttribute("lx", lx);
 		return prefix +"list";
 	}
+	@RequestMapping("/ListOne")
+	public String ListOne(HttpServletRequest request){
+		String lx = request.getParameter("lx");
+		request.setAttribute("xm", JSONArray.toJSONString(budgetService.getProjectCombobox()));
+		request.setAttribute("lx", lx);
+		request.setAttribute("userid", SecurityUtil.getUserId());
+		return prefix +"ListOne";
+	}
 	
 	@RequestMapping("/add")
 	public String add(HttpServletRequest request){
 		request.setAttribute("xm", JSONArray.toJSONString(budgetService.getProjectCombobox()));
 		String id = request.getParameter("id");
 		request.setAttribute("id", id);
+		List<User> ul = baseService.findMapBySql("select u.name name ,u.id id  from tbl_user u where u.audit_status = 10", new Object[]{}, new Type[]{StringType.INSTANCE}, User.class);
+		request.setAttribute("userOptions", JSONArray.toJSONString(ul));
+		
 		return prefix +"addIndex";
 	}
+	@RequestMapping("/zdryAuidt")
+	public String zdryAuidt(HttpServletRequest request){
+		request.setAttribute("xm", JSONArray.toJSONString(budgetService.getProjectCombobox()));
+		String id = request.getParameter("id");
+		request.setAttribute("id", id);
+		List<User> ul = baseService.findMapBySql("select u.name name ,u.id id  from tbl_user u where u.audit_status = 10", new Object[]{}, new Type[]{StringType.INSTANCE}, User.class);
+		request.setAttribute("userOptions", JSONArray.toJSONString(ul));
+		
+		return prefix +"addIndexZdry";
+	}
+	
 	@RequestMapping("/auidt/{id}")
 	public String auditHf(@PathVariable("id") String id,HttpServletRequest request){
 		request.setAttribute("xm", JSONArray.toJSONString(budgetService.getProjectCombobox()));
 		request.setAttribute("id",id);
+		List<User> ul = baseService.findMapBySql("select u.name name ,u.id id  from tbl_user u where u.audit_status = 10", new Object[]{}, new Type[]{StringType.INSTANCE}, User.class);
+		request.setAttribute("userOptions", JSONArray.toJSONString(ul));
 		return prefix +"auidIndex";
 	}
 	
@@ -181,35 +205,62 @@ public class PlanApproveController {
 		baseService.delete(ck);
 		return r;
 	}
+	/**
+	 * 指定人员审核  模块
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("/submit")
+	@ResponseBody
+	public Result submit(String id) {
+		Result r = new Result();
+		PlanApprove ck = baseService.get(PlanApprove.class, id);
+		ck.setStatus("50");
+		baseService.update(ck);
+		return r;
+	}
 	
 	@RequestMapping("/start")
 	@ResponseBody
-	public Result start(String id) {
+	public Result start(HttpServletRequest request,PlanApprove c) {
+		String id = request.getParameter("id");
+		String type = request.getParameter("lx");
 		PlanApprove ck = baseService.get(PlanApprove.class, id);
-		ck.setStatus("20");
-		baseService.update(ck);
-		
-		User user = SecurityUtil.getUser();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		String lx = "";
-		if("10".equals(ck.getType())){
-			lx="施工组织设计";
-		}else if("20".equals(ck.getType())){
-			lx="专项施工方案";
+		if("10".equals(type)){//通过
+			ck.setStatus("20");
+			ck.setAuidtDesc(c.getAuidtDesc());
+			baseService.update(ck);
+			
+			User user = SecurityUtil.getUser();
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			String lx = "";
+			if("10".equals(ck.getType())){
+				lx="施工组织设计";
+			}else if("20".equals(ck.getType())){
+				lx="专项施工方案";
+			}
+	        String name =lx+"审批【"+ck.getProname()+"】";
+
+	        // businessKey
+	        String businessKey = ck.getId();
+
+	        // 配置流程变量
+	        Map<String, Object> variables = new HashMap<>();
+	        variables.put(Constants.VAR_APPLYUSER_NAME, user.getName());
+	        variables.put(Constants.VAR_BUSINESS_KEY, businessKey);
+	        variables.put("taskName", name);
+
+	        // 启动流程
+	        return runtimePageService.startProcessInstanceByKey("planApprove", name, variables, user.getId(), businessKey);
+		}else{
+			ck.setStatus("60");
+			ck.setAuidtDesc(c.getAuidtDesc());
+			baseService.update(ck);
+			return new Result();
 		}
-        String name =lx+"审批【"+ck.getProname()+"】";
-
-        // businessKey
-        String businessKey = ck.getId();
-
-        // 配置流程变量
-        Map<String, Object> variables = new HashMap<>();
-        variables.put(Constants.VAR_APPLYUSER_NAME, user.getName());
-        variables.put(Constants.VAR_BUSINESS_KEY, businessKey);
-        variables.put("taskName", name);
-
-        // 启动流程
-        return runtimePageService.startProcessInstanceByKey("planApprove", name, variables, user.getId(), businessKey);
+		
+		
+		
     }
 	
 	

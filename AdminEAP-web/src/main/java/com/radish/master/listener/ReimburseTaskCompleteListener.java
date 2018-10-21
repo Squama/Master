@@ -44,13 +44,17 @@ public class ReimburseTaskCompleteListener implements TaskListener {
             String suggestion = delegateTask.getVariable("suggestion").toString();
             if("true".equalsIgnoreCase(delegateTask.getVariable("approved").toString())){
             	if ("cw".equals(taskDefinitionKey)) {
-            		bx.setStatus("60");
+            		bx.setStatus("100");
             		bx.setShcw(SecurityUtil.getUser().getId());
             		bx.setShcwyj(suggestion);
                 } else if ("boss".equals(taskDefinitionKey)) {
                 	bx.setStatus("80");
                 	bx.setBoss(SecurityUtil.getUser().getId());
                 	bx.setBossyj(suggestion);
+                }else if ("cwfzr".equals(taskDefinitionKey)){
+                	bx.setStatus("60");
+                	bx.setShcwfzr(SecurityUtil.getUser().getId());
+                	bx.setShcwfzryj(suggestion);
                 }
             }else{
             	if ("cw".equals(taskDefinitionKey)) {
@@ -61,6 +65,10 @@ public class ReimburseTaskCompleteListener implements TaskListener {
                 	bx.setStatus("70");
                 	bx.setBoss(SecurityUtil.getUser().getId());
                 	bx.setBossyj(suggestion);
+                }else if ("cwfzr".equals(taskDefinitionKey)) {
+                	bx.setStatus("110");
+                	bx.setShcwfzr(SecurityUtil.getUser().getId());
+                	bx.setShcwfzryj(suggestion);
                 }
             }
             

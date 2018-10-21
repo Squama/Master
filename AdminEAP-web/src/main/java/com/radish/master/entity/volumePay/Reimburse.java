@@ -57,7 +57,7 @@ public class Reimburse implements Serializable {
     @Column(name = "bxdate")
     private Date bxdate;
     
-    @Header(name = "状态 10-新建,20-部门审核,30-部门驳回,40-财务核对,50-财务驳回,60-领导审核,70-领导驳回,80-财务放款,90-完成")
+    @Header(name = "状态 10-新建,20-部门审核,30-部门驳回,40-财务核对,50-财务驳回,60-领导审核,70-领导驳回,80-财务放款,90-完成,100-财务负责人审核，110-财务负责人驳回")
     @Column(name = "status")
     private String status;
     
@@ -85,13 +85,21 @@ public class Reimburse implements Serializable {
     @Column(name = "boss")
     private String boss;
     
-    @Header(name = "领导意见")
+    @Header(name = "财务意见")
     @Column(name = "shcwyj")
     private String shcwyj;
     
-    @Header(name = "审核领导")
+    @Header(name = "审核财务")
     @Column(name = "shcw")
     private String shcw;
+    
+    @Header(name = "财务负责人意见")
+    @Column(name = "shcwfzryj")
+    private String shcwfzryj;
+    
+    @Header(name = "审核财务负责人")
+    @Column(name = "shcwfzr")
+    private String shcwfzr;
     
     @Header(name = "事由")
     @Column(name = "content")
@@ -255,6 +263,22 @@ public class Reimburse implements Serializable {
 
 	public void setProid(String proid) {
 		this.proid = proid;
+	}
+
+	public String getShcwfzryj() {
+		return shcwfzryj;
+	}
+
+	public void setShcwfzryj(String shcwfzryj) {
+		this.shcwfzryj = shcwfzryj;
+	}
+
+	public String getShcwfzr() {
+		return shcwfzr;
+	}
+
+	public void setShcwfzr(String shcwfzr) {
+		this.shcwfzr = shcwfzr;
 	}
 
 	

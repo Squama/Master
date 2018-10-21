@@ -6,7 +6,7 @@
         <sql>
             <![CDATA[
               SELECT bx.id id ,bx.type type ,bx.number number ,bx.bxdate bxdate , 
-              bx.status status ,bx.reername reername ,bx.reerid reerid ,bx.money money,bx.bmyj bmyj ,bx.bossyj bossyj,bx.shcwyj shcwyj 
+              bx.status status ,bx.reername reername ,bx.reerid reerid ,bx.money money,bx.bmyj bmyj ,bx.bossyj bossyj,bx.shcwyj shcwyj ,bx.shcwfzryj shcwfzryj 
 			  FROM tbl_reimburse bx 
 			  WHERE 1=1  
             ]]>
@@ -17,7 +17,7 @@
         <column key="number" header="编号" classType="String" allowSort="true" width="150"/>
         <column key="bxdate" header="新增日期" classType="String" width="150"/>
         <column key="money" header="报销总金额" classType="String" width="150"/>
-        <column key="status" header="状态" classType="String" width="150" render="10=新建,20=部门审核,30=部门驳回,40=财务核对,50=财务驳回,60=领导审核,70=领导驳回,80=财务放款,90=完成"/>
+        <column key="status" header="状态" classType="String" width="150" render="10=新建,20=部门审核,30=部门驳回,40=财务核对,50=财务驳回,60=领导审核,70=领导驳回,80=财务放款,90=完成,100=财务负责人审核,110=财务负责人驳回"/>
     	<column key="id" header="操作" classType="String" width="150"  fnRender="fnRenderXQ"/>
     </query>
     <query id="reimburseMx_gr" key="id" tableName="个人报销明细列表" widthType="px">
@@ -54,7 +54,7 @@
         <column key="number" header="编号" classType="String" allowSort="true" width="150"/>
         <column key="bxdate" header="新增日期" classType="String" width="150"/>
         <column key="money" header="报销总金额" classType="String" width="150"/>
-        <column key="status" header="状态" classType="String" width="150" render="10=新建,20=部门审核,30=部门驳回,40=财务核对,50=财务驳回,60=领导审核,70=领导驳回,80=财务放款,90=完成"/>
+        <column key="status" header="状态" classType="String" width="150" render="10=新建,20=部门审核,30=部门驳回,40=财务核对,50=财务驳回,60=领导审核,70=领导驳回,80=财务放款,90=完成,100=财务负责人审核,110=财务负责人驳回"/>
     	<column key="id" header="操作" classType="String" width="150"  fnRender="fnRenderXQ"/>
     </query>
     
@@ -74,7 +74,7 @@
         <column key="number" header="编号" classType="String" allowSort="true" width="150"/>
         <column key="bxdate" header="新增日期" classType="String" width="150"/>
         <column key="money" header="报销总金额" classType="String" width="150"/>
-        <column key="status" header="状态" classType="String" width="150" render="10=新建,20=部门审核,30=部门驳回,40=财务核对,50=财务驳回,60=领导审核,70=领导驳回,80=财务放款,90=完成"/>
+        <column key="status" header="状态" classType="String" width="150" render="10=新建,20=部门审核,30=部门驳回,40=财务核对,50=财务驳回,60=领导审核,70=领导驳回,80=财务放款,90=完成,100=财务负责人审核,110=财务负责人驳回"/>
     	<column key="id" header="操作" classType="String" width="150"  fnRender="fnRenderXQ"/>
     </query>
   

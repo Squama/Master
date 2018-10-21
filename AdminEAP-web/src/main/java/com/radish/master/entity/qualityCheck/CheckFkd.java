@@ -90,6 +90,11 @@ public class CheckFkd implements Serializable {
     @Header(name = "罚款金额")
     @Column(name = "fkje")
     private String fkje;
+    
+    @Header(name = "违规班组id")
+    @Column(name = "wgbzid")
+    private String wgbzid;
+    
 
 	public String getId() {
 		return id;
@@ -193,6 +198,14 @@ public class CheckFkd implements Serializable {
 
 	public void setFkje(String fkje) {
 		this.fkje = fkje;
+	}
+
+	public String getWgbzid() {
+		return wgbzid;
+	}
+
+	public void setWgbzid(String wgbzid) {
+		this.wgbzid = wgbzid;
 	}
     
     

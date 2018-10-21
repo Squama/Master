@@ -6,7 +6,7 @@
         <sql>
             <![CDATA[
               SELECT jk.id id,jk.number number ,jk.enddate enddate,jk.status status,jk.money money ,jk.loanerid loanerid,jk.bmyj bmyj ,jk.bossyj bossyj 
-			  ,jk.type type 
+			  ,jk.type type ,jk.cwshyj cwshyj 
 			  FROM tbl_loans jk 
 			  WHERE 1=1  
             ]]>
@@ -17,7 +17,7 @@
         <column key="number" header="编号" classType="String" allowSort="true" width="150"/>
         <column key="enddate" header="预计还款日期" classType="String" width="150"/>
         <column key="money" header="借款金额" classType="String" width="150"/>
-        <column key="status" header="状态" classType="String" width="150" render="10=新建,20=部门审核,30=部门驳回,40=领导审核,50=领导驳回,60=财务放款,70=已放款,80=已还款"/>
+        <column key="status" header="状态" classType="String" width="150" render="10=新建,20=部门审核,30=部门驳回,40=领导审核,50=领导驳回,60=财务放款,70=已放款,80=已还款,90=财务负责人审核,100=财务负责人驳回"/>
     	<column key="id" header="操作" classType="String" width="150"  fnRender="fnRenderXQ"/>
     </query>
     
@@ -25,7 +25,7 @@
         <sql>
             <![CDATA[
               SELECT jk.id id,jk.number number ,jk.enddate enddate,jk.status status,jk.money money ,jk.loanerid loanerid,jk.pid pid ,jk.loanname loanname 
-			  ,jk.type type 
+			  ,jk.type type ,jk.cwshyj cwshyj 
 			  FROM tbl_loans jk 
 			  WHERE 1=1  and jk.status='20' 
             ]]>
@@ -37,7 +37,7 @@
         <column key="loanname" header="借款人姓名" classType="String" allowSort="true" width="150"/>
         <column key="enddate" header="预计还款日期" classType="String" width="150"/>
         <column key="money" header="借款金额" classType="String" width="150"/>
-        <column key="status" header="状态" classType="String" width="150" render="10=新建,20=部门审核,30=部门驳回,40=领导审核,50=领导驳回,60=财务放款,70=已放款,80=已还款"/>
+        <column key="status" header="状态" classType="String" width="150" render="10=新建,20=部门审核,30=部门驳回,40=领导审核,50=领导驳回,60=财务放款,70=已放款,80=已还款,90=财务负责人审核,100=财务负责人驳回"/>
     	<column key="id" header="操作" classType="String" width="150"  fnRender="fnRenderXQ"/>
     </query>
     
@@ -45,7 +45,7 @@
         <sql>
             <![CDATA[
               SELECT jk.id id,jk.number number ,jk.enddate enddate,jk.status status,jk.money money ,jk.loanerid loanerid,jk.pid pid ,jk.loanname loanname ,jk.dept dept,jk.isjz isjz,jk.ishk ishk  
-			  ,jk.type type 
+			  ,jk.type type ,jk.cwshyj cwshyj 
 			  FROM tbl_loans jk 
 			  WHERE 1=1  and jk.status in ('60','70','80') 
             ]]>
@@ -58,7 +58,7 @@
         <column key="loanname" header="借款人姓名" classType="String" allowSort="true" width="150"/>
         <column key="enddate" header="预计还款日期" classType="String" width="150"/>
         <column key="money" header="借款金额" classType="String" width="150"/>
-        <column key="status" header="状态" classType="String" width="150" render="10=新建,20=部门审核,30=部门驳回,40=领导审核,50=领导驳回,60=财务放款,70=已放款,80=已还款"/>
+        <column key="status" header="状态" classType="String" width="150" render="10=新建,20=部门审核,30=部门驳回,40=领导审核,50=领导驳回,60=财务放款,70=已放款,80=已还款,90=财务负责人审核,100=财务负责人驳回"/>
     	<column key="id" header="操作" classType="String" width="150"  fnRender="fnRenderXQ"/>
     </query>
     
