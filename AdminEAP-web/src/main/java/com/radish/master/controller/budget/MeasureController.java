@@ -3,6 +3,9 @@
  */
 package com.radish.master.controller.budget;
 
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -24,8 +27,10 @@ import com.cnpc.framework.base.entity.User;
 import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.utils.SecurityUtil;
 import com.cnpc.framework.utils.StrUtil;
+import com.radish.master.entity.Project;
 import com.radish.master.entity.project.Measure;
 import com.radish.master.entity.project.MeasureConsume;
+import com.radish.master.entity.project.ProjectSub;
 import com.radish.master.service.CommonService;
 import com.radish.master.system.SpringUtil;
 
@@ -50,6 +55,17 @@ public class MeasureController {
     @Resource
     private RuntimePageService runtimePageService;
     
+    List<String> propList = Arrays.asList("construct", "issue", "manage", "rule", "tax");
+    private static final Map<String, String> TYPEMAP = new HashMap<String, String>() {
+        {
+            put("construct", "安全文明施工费");
+            put("issue", "总价措施项目费");
+            put("manage", "管理费");
+            put("rule", "规费");
+            put("tax", "税金");
+        }
+    };
+    
     @RequestMapping(value="/list",method = RequestMethod.GET)
     public String list(HttpServletRequest request){
     	request.setAttribute("projectOptions", JSONArray.toJSONString(commonService.getProjectCombobox()));
@@ -69,16 +85,22 @@ public class MeasureController {
     }
     
     @RequestMapping(value="/consumedetail",method = RequestMethod.GET)
-    public String consumeDetail(String projectID, String projectSubID, HttpServletRequest request){
-    	String smeasureHql = "from Measure where projectID=:projectID AND projectSubID=:projectSubID";
-        Map<String, Object> consumeParams = new HashMap<>();
-        consumeParams.put("projectID", projectID);
-        consumeParams.put("projectSubID", projectSubID);
-        Measure m = commonService.get(smeasureHql, consumeParams);
-        request.setAttribute("projectID", m.getProjectID());
-        request.setAttribute("projectName", m.getProjectName());
-        request.setAttribute("projectSubID", m.getProjectSubID());
-        request.setAttribute("projectSubName", m.getProjectSubName());
+    public String consumeDetail(String projectSubID, String type, HttpServletRequest request){
+    	String subHql = "from ProjectSub where id=:projectSubID";
+        Map<String, Object> subParams = new HashMap<>();
+        subParams.put("projectSubID", projectSubID);
+        ProjectSub ps = commonService.get(subHql, subParams);
+        
+        String projectHql = "from Project where id=:projectID";
+        Map<String, Object> projectParams = new HashMap<>();
+        projectParams.put("projectID", ps.getProjectID());
+        Project project = commonService.get(projectHql, projectParams);
+        
+        request.setAttribute("projectName", project.getProjectName());
+        request.setAttribute("projectSubID", ps.getId());
+        request.setAttribute("projectSubName", ps.getSubName());
+        request.setAttribute("feeTypeName", TYPEMAP.get(type));
+        request.setAttribute("feeType", type);
         return "budgetmanage/measure/consume_detail";
     }
     
@@ -105,6 +127,24 @@ public class MeasureController {
         try {
         	if (StrUtil.isEmpty(measure.getId())) {
         		commonService.save(measure);
+        		List<MeasureConsume> list = new ArrayList<MeasureConsume>();
+        		for(String prop : propList){
+        		    MeasureConsume mc = new MeasureConsume();
+                    mc.setCreateDateTime(new Date());
+                    mc.setConsumeName("预算新增");
+                    mc.setProjectID(measure.getProjectID());
+                    mc.setProjectSubID(measure.getProjectSubID());
+                    mc.setOperator(SecurityUtil.getUser().getName());
+                    mc.setOperateTime(new Date());
+                    mc.setType(prop);
+                    Method get = measure.getClass().getMethod("get"+captureName(prop));
+                    String value = (String) get.invoke(measure);
+                    mc.setAmount(value);
+                    mc.setOp("+");
+                    list.add(mc);
+        		}
+        		commonService.batchSave(list);
+        		
         	}else{
         		Measure oldMeasure = commonService.get(Measure.class, measure.getId());
         		SpringUtil.copyPropertiesIgnoreNull(measure, oldMeasure);
@@ -123,7 +163,7 @@ public class MeasureController {
         return commonService.get(Measure.class, id);
     }
     
-    @RequestMapping(method = RequestMethod.POST, value = "/getsum")
+    /*@RequestMapping(method = RequestMethod.POST, value = "/getsum")
     @ResponseBody
     public Measure getMeasureSum(String projectID, String projectSubID){
     	String smeasureHql = "SELECT id,create_date_time,deleted,update_date_time,version, "
@@ -148,7 +188,7 @@ public class MeasureController {
         consumeParams.put("projectSubID", projectSubID);
         MeasureConsume mc = commonService.get(smeasureHql, consumeParams);
         return mc;
-    }
+    }*/
     
     @RequestMapping(value = "/start", method = RequestMethod.POST)
     @ResponseBody
@@ -176,6 +216,13 @@ public class MeasureController {
         //启动流程
         return runtimePageService.startProcessInstanceByKey("measureBudget", name, variables,
                 user.getId(), businessKey);
+    }
+    
+    //首字母大写
+    private String captureName(String name) {
+        char[] cs=name.toCharArray();
+        cs[0]-=32;
+        return String.valueOf(cs);
     }
     
 }

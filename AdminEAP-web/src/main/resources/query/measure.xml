@@ -1,37 +1,75 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <queryContext xmlns="http://www.example.org/query" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.example.org/query query.xsd">
+    
     <query id="measure_list" key="id" tableName="班组工资明细" className="com.radish.master.entity.project.Measure" widthType="px" pageSize="20">
         <column key="rowIndex" header="序号" width="80"/>
         <column key="id" hidden="true" header="id" width="80"/>
         <column key="name" header="名称" allowSort="true" width="150"/>
         <column key="projectName" header="所属项目" allowSort="true" width="150"/>
         <column key="projectSubName" header="所属子项" width="150"/>
-        <column key="safe" header="安全施工费" width="150"/>
-        <column key="civil" header="文明施工费" width="150"/>
-        <column key="envir" header="环境保护费" width="150"/>
-        <column key="temp" header="临设费" width="80"/>
-        <column key="night" header="夜间施工增加" width="80"/>
-        <column key="twice" header="二次搬运费" width="80"/>
-        <column key="winter" header="冬雨季施工费" width="80"/>
-        <column key="protect" header="已完工程及设备保护费" width="80"/>
-        <column key="retest" header="工程定位复测费" width="80"/>
+        <column key="construct" header="安全文明施工费" width="150"/>
+        <column key="issue" header="总价措施项目费" width="150"/>
+        <column key="manage" header="管理费" width="150"/>
+        <column key="rule" header="规费" width="80"/>
+        <column key="tax" header="税金" width="80"/>
         <column key="status" header="状态" width="80" render="10=新建,20=审核中,30=审核通过"/>
         <column key="id" header="操作" width="80" fnRender="fnRenderDetail"/>
     </query>
-    <query id="measure_consume_list" key="project_sub_id" tableName="已配置工程单" widthType="px" pageSize="200">
+    
+    <query id="measure_consume_list" key="id" tableName="已配置工程单" widthType="px" pageSize="200">
         <sql>
             <![CDATA[
-              SELECT DISTINCT project_id, project_name, project_sub_id, project_sub_name
-			  FROM tbl_measure
-			  WHERE `status` = '30' AND 1=1
+                SELECT * FROM 
+                (SELECT budget.id,budget.type,budget.project_id,budget.project_name,budget.project_sub_name,budget.budget,consume.consume,'Percent' AS percent,'construct' AS feetype FROM
+                (SELECT project_sub_id AS id,'安全文明施工费' AS type,project_name,project_id,project_sub_name,project_sub_id,construct budget FROM tbl_measure WHERE `status` = '30') budget,
+                (SELECT SUM(amount) consume,project_sub_id FROM tbl_measure_consume WHERE op='-' AND type='construct' GROUP BY project_sub_id) consume
+                WHERE budget.project_sub_id = consume.project_sub_id
+                UNION ALL
+                SELECT budget.id,budget.type,budget.project_id,budget.project_name,budget.project_sub_name,budget.budget,consume.consume,'Percent' AS percent,'issue' AS feetype FROM
+                (SELECT project_sub_id AS id,'总价措施项目费' AS type,project_name,project_id,project_sub_name,project_sub_id,issue budget FROM tbl_measure WHERE `status` = '30') budget,
+                (SELECT SUM(amount) consume,project_sub_id FROM tbl_measure_consume WHERE op='-' AND type='issue' GROUP BY project_sub_id) consume
+                WHERE budget.project_sub_id = consume.project_sub_id
+                UNION ALL
+                SELECT budget.id,budget.type,budget.project_id,budget.project_name,budget.project_sub_name,budget.budget,consume.consume,'Percent' AS percent,'manage' AS feetype FROM
+                (SELECT project_sub_id AS id,'管理费' AS type,project_name,project_id,project_sub_name,project_sub_id,issue budget FROM tbl_measure WHERE `status` = '30') budget,
+                (SELECT SUM(amount) consume,project_sub_id FROM tbl_measure_consume WHERE op='-' AND type='manage' GROUP BY project_sub_id) consume
+                WHERE budget.project_sub_id = consume.project_sub_id
+                UNION ALL
+                SELECT budget.id,budget.type,budget.project_id,budget.project_name,budget.project_sub_name,budget.budget,consume.consume,'Percent' AS percent,'rule' AS feetype FROM
+                (SELECT project_sub_id AS id,'规费' AS type,project_name,project_id,project_sub_name,project_sub_id,issue budget FROM tbl_measure WHERE `status` = '30') budget,
+                (SELECT SUM(amount) consume,project_sub_id FROM tbl_measure_consume WHERE op='-' AND type='rule' GROUP BY project_sub_id) consume
+                WHERE budget.project_sub_id = consume.project_sub_id
+                UNION ALL
+                SELECT budget.id,budget.type,budget.project_id,budget.project_name,budget.project_sub_name,budget.budget,consume.consume,'Percent' AS percent,'tax' AS feetype FROM
+                (SELECT project_sub_id AS id,'税金' AS type,project_name,project_id,project_sub_name,project_sub_id,issue budget FROM tbl_measure WHERE `status` = '30') budget,
+                (SELECT SUM(amount) consume,project_sub_id FROM tbl_measure_consume WHERE op='-' AND type='tax' GROUP BY project_sub_id) consume
+                WHERE budget.project_sub_id = consume.project_sub_id) t
+                WHERE 1=1
             ]]>
         </sql>
         <column key="rowIndex" header="序号" width="80"/>
-        <column key="project_id" hidden="true" header="project_id" width="80"/>
-        <column key="project_sub_id" hidden="true" header="project_sub_id" width="80"/>
+        <column key="type" header="费用类型" allowSort="true" width="150"/>
         <column key="project_name" header="项目名称" allowSort="true" width="150"/>
         <column key="project_sub_name" header="项目子项名称" allowSort="true" width="150"/>
-        <column key="id" header="操作" width="80" fnRender="fnRenderDetail"/>
+        <column key="budget" header="预算金额（元）" width="150"/>
+        <column key="consume" header="当前消耗量（元）" width="150"/>
+        <column key="percent" header="消耗进度" width="150" fnRender="fnRenderPercent"/>
+        <column key="id" header="详情" width="80" fnRender="fnRenderDetail"/>
+    </query>
+    
+
+    <query id="measure_consume_detail" key="id" tableName="预算消耗" widthType="px" pageSize="200">
+        <sql>
+            <![CDATA[
+                    SELECT id, consume_name,concat(op,amount) amount, operator, operate_time FROM tbl_measure_consume
+                    WHERE 1=1
+            ]]>
+        </sql>
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="consume_name" header="变更说明" allowSort="true" width="150"/>
+        <column key="amount" header="变更量（元）" allowSort="true" width="150"/>
+        <column key="operator" header="变更人" allowSort="true" width="150"/>
+        <column key="operate_time" header="变更时间" width="150" dateFormat="yyyy-mm-dd"/>
     </query>
     
     

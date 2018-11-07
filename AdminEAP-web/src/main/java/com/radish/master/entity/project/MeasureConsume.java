@@ -3,9 +3,16 @@
  */
 package com.radish.master.entity.project;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import com.cnpc.framework.annotation.Header;
 import com.cnpc.framework.base.entity.BaseEntity;
@@ -18,9 +25,9 @@ import com.cnpc.framework.base.entity.BaseEntity;
 @Table(name = "tbl_measure_consume")
 public class MeasureConsume extends BaseEntity {
 
-	private static final long serialVersionUID = -1015154647867433617L;
+    private static final long serialVersionUID = -1015154647867433617L;
 
-	@Header(name = "所属项目编码")
+    @Header(name = "所属项目编码")
     @Column(name = "project_id")
     private String projectID;
 
@@ -28,128 +35,106 @@ public class MeasureConsume extends BaseEntity {
     @Column(name = "project_sub_id")
     private String projectSubID;
 
-    @Header(name = "安全施工费")
-    @Column(name = "safe")
-    private String safe;
+    @Header(name = "消耗类型")
+    @Column(name = "type")
+    private String type;
 
-    @Header(name = "文明施工费")
-    @Column(name = "civil")
-    private String civil;
-    
-    @Header(name = "环境保护费")
-    @Column(name = "envir")
-    private String envir;
+    @Header(name = "消耗金额")
+    @Column(name = "amount")
+    private String amount;
 
-    @Header(name = "临设费")
-    @Column(name = "temp")
-    private String temp;
-    
-    @Header(name = "夜间施工增加")
-    @Column(name = "night")
-    private String night;
+    @Header(name = "操作")
+    @Column(name = "op")
+    private String op;
 
-    @Header(name = "二次搬运费")
-    @Column(name = "twice")
-    private String twice;
-    
-    @Header(name = "冬雨季施工费")
-    @Column(name = "winter")
-    private String winter;
+    @Header(name = "变更人")
+    @Column(name = "operator")
+    private String operator;
 
-    @Header(name = "已完工程及设备保护费")
-    @Column(name = "protect")
-    private String protect;
-    
-    @Header(name = "工程定位复测费")
-    @Column(name = "retest")
-    private String retest;
+    @Column(name = "operate_time")
+    @Temporal(TemporalType.TIMESTAMP)
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @CreationTimestamp
+    private Date operateTime;
 
-	public String getProjectID() {
-		return projectID;
-	}
+    @Header(name = "变更说明")
+    @Column(name = "consume_name")
+    private String consumeName;
 
-	public void setProjectID(String projectID) {
-		this.projectID = projectID;
-	}
+    @Header(name = "备注")
+    @Column(name = "remark")
+    private String remark;
 
-	public String getProjectSubID() {
-		return projectSubID;
-	}
+    public String getProjectID() {
+        return projectID;
+    }
 
-	public void setProjectSubID(String projectSubID) {
-		this.projectSubID = projectSubID;
-	}
+    public void setProjectID(String projectID) {
+        this.projectID = projectID;
+    }
 
-	public String getSafe() {
-		return safe;
-	}
+    public String getProjectSubID() {
+        return projectSubID;
+    }
 
-	public void setSafe(String safe) {
-		this.safe = safe;
-	}
+    public void setProjectSubID(String projectSubID) {
+        this.projectSubID = projectSubID;
+    }
 
-	public String getCivil() {
-		return civil;
-	}
+    public String getType() {
+        return type;
+    }
 
-	public void setCivil(String civil) {
-		this.civil = civil;
-	}
+    public void setType(String type) {
+        this.type = type;
+    }
 
-	public String getEnvir() {
-		return envir;
-	}
+    public String getOperator() {
+        return operator;
+    }
 
-	public void setEnvir(String envir) {
-		this.envir = envir;
-	}
+    public void setOperator(String operator) {
+        this.operator = operator;
+    }
 
-	public String getTemp() {
-		return temp;
-	}
+    public Date getOperateTime() {
+        return operateTime;
+    }
 
-	public void setTemp(String temp) {
-		this.temp = temp;
-	}
+    public void setOperateTime(Date operateTime) {
+        this.operateTime = operateTime;
+    }
 
-	public String getNight() {
-		return night;
-	}
+    public String getConsumeName() {
+        return consumeName;
+    }
 
-	public void setNight(String night) {
-		this.night = night;
-	}
+    public void setConsumeName(String consumeName) {
+        this.consumeName = consumeName;
+    }
 
-	public String getTwice() {
-		return twice;
-	}
+    public String getRemark() {
+        return remark;
+    }
 
-	public void setTwice(String twice) {
-		this.twice = twice;
-	}
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
 
-	public String getWinter() {
-		return winter;
-	}
+    public String getAmount() {
+        return amount;
+    }
 
-	public void setWinter(String winter) {
-		this.winter = winter;
-	}
+    public void setAmount(String amount) {
+        this.amount = amount;
+    }
 
-	public String getProtect() {
-		return protect;
-	}
+    public String getOp() {
+        return op;
+    }
 
-	public void setProtect(String protect) {
-		this.protect = protect;
-	}
+    public void setOp(String op) {
+        this.op = op;
+    }
 
-	public String getRetest() {
-		return retest;
-	}
-
-	public void setRetest(String retest) {
-		this.retest = retest;
-	}
-	
 }

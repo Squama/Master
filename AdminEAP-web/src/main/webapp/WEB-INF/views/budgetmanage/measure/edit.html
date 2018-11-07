@@ -41,57 +41,33 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">安全施工费（元）：<span style="color:red">*</span></label>
+                                <label class="col-sm-3 control-label">安全文明施工费（元）：<span style="color:red">*</span></label>
                                 <div class="col-sm-5">
-                                    <input type="text" class="form-control" id="safe" name="safe" placeholder="安全施工费" value="0" onkeyup="value=value.replace(/[^\d.]/g,'')">
+                                    <input type="text" class="form-control" id="construct" name="construct" placeholder="安全文明施工费" value="0" onkeyup="value=value.replace(/[^\d.]/g,'')">
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">文明施工费（元）：<span style="color:red">*</span></label>
+                                <label class="col-sm-3 control-label">总价措施项目费（元）：<span style="color:red">*</span></label>
                                 <div class="col-sm-5">
-                                    <input type="text" class="form-control" id="civil" name="civil" placeholder="文明施工费" value="0" onkeyup="value=value.replace(/[^\d.]/g,'')">
+                                    <input type="text" class="form-control" id="issue" name="issue" placeholder="总价措施项目费" value="0" onkeyup="value=value.replace(/[^\d.]/g,'')">
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">环境保护费（元）：<span style="color:red">*</span></label>
+                                <label class="col-sm-3 control-label">管理费（元）：<span style="color:red">*</span></label>
                                 <div class="col-sm-5">
-                                    <input type="text" class="form-control" id="envir" name="envir" placeholder="环境保护费" value="0" onkeyup="value=value.replace(/[^\d.]/g,'')">
+                                    <input type="text" class="form-control" id="manage" name="manage" placeholder="管理费" value="0" onkeyup="value=value.replace(/[^\d.]/g,'')">
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">临设费（元）：<span style="color:red">*</span></label>
+                                <label class="col-sm-3 control-label">规费（元）：<span style="color:red">*</span></label>
                                 <div class="col-sm-5">
-                                    <input type="text" class="form-control" id="temp" name="temp" placeholder="临设费" value="0" onkeyup="value=value.replace(/[^\d.]/g,'')">
+                                    <input type="text" class="form-control" id="rule" name="rule" placeholder="规费" value="0" onkeyup="value=value.replace(/[^\d.]/g,'')">
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">夜间施工增加（元）：<span style="color:red">*</span></label>
+                                <label class="col-sm-3 control-label">税金（元）：<span style="color:red">*</span></label>
                                 <div class="col-sm-5">
-                                    <input type="text" class="form-control" id="night" name="night" placeholder="夜间施工增加" value="0" onkeyup="value=value.replace(/[^\d.]/g,'')">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">二次搬运费（元）：<span style="color:red">*</span></label>
-                                <div class="col-sm-5">
-                                    <input type="text" class="form-control" id="twice" name="twice" placeholder="二次搬运费" value="0" onkeyup="value=value.replace(/[^\d.]/g,'')">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">冬雨季施工费（元）：<span style="color:red">*</span></label>
-                                <div class="col-sm-5">
-                                    <input type="text" class="form-control" id="winter" name="winter" placeholder="冬雨季施工费" value="0" onkeyup="value=value.replace(/[^\d.]/g,'')">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">已完工程及设备保护费（元）：<span style="color:red">*</span></label>
-                                <div class="col-sm-5">
-                                    <input type="text" class="form-control" id="protect" name="protect" placeholder="已完工程及设备保护费" value="0" onkeyup="value=value.replace(/[^\d.]/g,'')">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">工程定位复测费（元）：<span style="color:red">*</span></label>
-                                <div class="col-sm-5">
-                                    <input type="text" class="form-control" id="retest" name="retest" placeholder="工程定位复测费" value="0" onkeyup="value=value.replace(/[^\d.]/g,'')">
+                                    <input type="text" class="form-control" id="tax" name="tax" placeholder="税金" value="0" onkeyup="value=value.replace(/[^\d.]/g,'')">
                                 </div>
                             </div>
                         </div>
@@ -190,51 +166,31 @@
                         notEmpty: {message: '项目子项不能为空'}
                     }
                 },
-                "safe": {
+                "construct": {
                     validators: {
-                        notEmpty: {message: '安全施工费不能为空'}
+                        notEmpty: {message: '安全文明施工费不能为空'}
                     }
                 },
-                "civil": {
+                "issue": {
                     validators: {
-                        notEmpty: {message: '文明施工费不能为空'}
+                        notEmpty: {message: '总价措施项目费不能为空'}
                     }
                 },
-                "envir": {
+                "manage": {
                     validators: {
-                        notEmpty: {message: '环境保护费不能为空'}
+                        notEmpty: {message: '管理费不能为空'}
                     }
                 },
-                "temp": {
+                "rule": {
                     validators: {
-                        notEmpty: {message: '临设费不能为空'}
+                        notEmpty: {message: '规费不能为空'}
                     }
                 },
-                "night": {
+                "tax": {
                     validators: {
-                        notEmpty: {message: '夜间施工增加费不能为空'}
+                        notEmpty: {message: '税金不能为空'}
                     }
-                },
-                "twice": {
-                    validators: {
-                        notEmpty: {message: '二次搬运费不能为空'}
-                    }
-                },
-                "winter": {
-                    validators: {
-                        notEmpty: {message: '冬雨季施工费不能为空'}
-                    }
-                },
-                "protect": {
-                    validators: {
-                        notEmpty: {message: '已完工程及设备保护费不能为空'}
-                    }
-                },
-                "retest": {
-                    validators: {
-                        notEmpty: {message: '工程定位复测费不能为空'}
-                    }
-                },
+                }
             }
         });
         
