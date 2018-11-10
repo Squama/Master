@@ -84,7 +84,7 @@ public class UploaderController {
             // 文件名
             String fileName = user.getName() + "_" + (new Date()).getTime() + ".jpg";
             String relPath = PropertiesUtil.getValue("avatarPath");
-            String dirPath = request.getRealPath("/");
+            String dirPath = "";//request.getRealPath("/");
 
             String initParams = "";
 

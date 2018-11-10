@@ -83,7 +83,7 @@
         <column key="teamCode" header="班组编号" classType="String" width="150"/>
         <column key="teamName" header="班组名称" classType="String" allowSort="true" width="150"/>
         <column key="projectName" header="所属项目" classType="String" allowSort="true" width="150"/>
-        <column key="status" header="状态" allowSort="true" width="150" render="10=生效,20=失效"/>
+        <column key="status" header="状态" allowSort="true" width="150" render="10=专业作业班组,20=点工班组,30=管理人员班组"/>
     </query>
 
 </queryContext>
