@@ -77,7 +77,7 @@ var payid = '${payid?default(0)}'
     	}
     	if(rowObj.status=="完成"){
     		oper +="<a href='javascript:void(0)' onclick='Dy(\"" + value + "\")'>打印支付单</a>";
-    		if(rowObj.isrz=="10"&&rowObj.fk!=0){
+    		if(rowObj.isrz!="20"&&rowObj.fk!=0){
     			oper +="&nbsp;&nbsp;<a href='javascript:void(0)' onclick='doJz(\"" + value + "\")' style='color:red'>记账</a>";
             }
     	}

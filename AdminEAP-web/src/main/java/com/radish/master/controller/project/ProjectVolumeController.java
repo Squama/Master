@@ -29,12 +29,14 @@ import com.cnpc.framework.annotation.RefreshCSRFToken;
 import com.cnpc.framework.base.entity.User;
 import com.cnpc.framework.base.pojo.PageInfo;
 import com.cnpc.framework.base.pojo.Result;
+import com.cnpc.framework.base.service.BaseService;
 import com.cnpc.framework.query.entity.QueryCondition;
 import com.cnpc.framework.utils.SecurityUtil;
 import com.cnpc.framework.utils.StrUtil;
 import com.radish.master.entity.Labor;
 import com.radish.master.entity.ProjectVolume;
 import com.radish.master.entity.project.LaborSub;
+import com.radish.master.entity.project.ProjectTeam;
 import com.radish.master.service.BudgetService;
 import com.radish.master.service.ProjectService;
 import com.radish.master.system.SpringUtil;
@@ -379,5 +381,26 @@ public class ProjectVolumeController {
     @ResponseBody
     private ProjectVolume getProject(String id) {
         return projectService.get(ProjectVolume.class, id);
+    }
+    
+    @RequestMapping("/lookfkd")
+    public String lookfkd(HttpServletRequest request){
+    	String id = request.getParameter("id");//工程量id
+    	ProjectVolume gcl = projectService.get(ProjectVolume.class, id);
+    	if(gcl!=null){
+    		if(gcl.getLaborID()!=null){
+    			Labor ht = projectService.get(Labor.class, gcl.getLaborID());//劳务合同
+    			if(ht!=null){
+    				request.setAttribute("bzid", ht.getConstructionTeamID());//拿到班组id
+    			}else{
+    				request.setAttribute("bzid", "1");
+    			}
+    		}else{
+    			request.setAttribute("bzid", "1");
+    		}
+    	}else{
+    		request.setAttribute("bzid", "1");
+    	}
+    	return "projectmanage/volume/lookfkd";
     }
 }

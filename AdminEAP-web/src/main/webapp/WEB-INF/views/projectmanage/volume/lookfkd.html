@@ -1,0 +1,37 @@
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <!-- /.box-header -->
+                <div class="dataTables_filter" id="searchDiv1" style="display: none">
+                    <!--查询条件-->
+                    <!--查询条件-->
+                    <input style="display:none" name ="wgbzid" id = "bzid"/>
+       				 
+           
+                    <div class="btn-group">
+                        <!-- <button type="button" class="btn btn-primary" data-btn-type="search">查询</button> -->
+                    </div>
+                </div>
+                <div class="box-body">
+                    <table id="lwContract_table" class="table table-bordered table-striped table-hover">
+                    </table>
+                </div>
+            </div>
+           </div>
+         </div>
+         
+</section>
+
+<script>
+    var dutycheckTable, winId = "projectQueryWin";
+    var id = '${id?default(0)}';
+    console.log(id);
+   	$("#bzid").val(id);
+    $(function (){
+    	dutycheckTable = new CommonTable("lwContract_table", "lookfkdList", "searchDiv1");
+        
+        });
+
+       
+</script>

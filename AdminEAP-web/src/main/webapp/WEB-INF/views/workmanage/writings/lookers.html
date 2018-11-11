@@ -1,0 +1,38 @@
+
+<link rel="stylesheet" href="${basePath}/resources/common/libs/fileinput/css/fileinput.min.css">
+<script src="${basePath}/resources/common/libs/fileinput/js/fileinput.js"></script>
+<script src="${basePath}/resources/common/libs/fileinput/js/locales/zh.js"></script>
+<!--BaseFile组件-->
+<script src="${basePath}/resources/common/js/base-file.js"></script>
+<div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal" aria-hidden="true"><li class="fa fa-remove"></li></button>
+	<h5 class="modal-title">已查看人员</h5>
+</div> 
+
+    <div class="row" style="height:450px;">
+        <div class="col-xs-12">
+            <div class="box box-primary">
+                <div class="dataTables_filter" id="searchDiv2" style="text-align:right;height:1px;">
+                    <div class="btn-group">
+                    </div>
+                 <input id = "wjid" name="w.id" type="search"  style="display:none">
+                </div>
+                <div class="box-body">
+                    <table id="attendance_import_table" class="table table-bordered table-striped table-hover">
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+<script>
+	var id	 = '${id?default(0)}'
+	if(id!=0){
+		$("#wjid").val(id);
+		}
+    var attendanceImportTable;
+    $(function () {
+        
+    	budgetImportTable = new CommonTable("attendance_import_table", "writingsAdd_ListLookers", "searchDiv2");
+    	
+    });
+</script>

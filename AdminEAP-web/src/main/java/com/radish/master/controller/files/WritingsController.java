@@ -1,4 +1,4 @@
-package com.radish.master.controller.qualityCheck;
+package com.radish.master.controller.files;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -7,19 +7,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.hibernate.annotations.common.util.StringHelper;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -36,10 +32,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.alibaba.fastjson.JSONArray;
-import com.cnpc.framework.activiti.pojo.Constants;
-import com.cnpc.framework.activiti.service.RuntimePageService;
 import com.cnpc.framework.base.controller.UploaderController;
+import com.cnpc.framework.base.entity.Org;
 import com.cnpc.framework.base.entity.User;
 import com.cnpc.framework.base.pojo.FileResult;
 import com.cnpc.framework.base.pojo.Result;
@@ -49,346 +43,22 @@ import com.cnpc.framework.utils.FileUtil;
 import com.cnpc.framework.utils.PropertiesUtil;
 import com.cnpc.framework.utils.SecurityUtil;
 import com.cnpc.framework.utils.StrUtil;
-import com.radish.master.entity.Project;
-import com.radish.master.entity.ProjectFileItem;
-import com.radish.master.entity.project.ProjectTeam;
-import com.radish.master.entity.qualityCheck.CheckDq;
-import com.radish.master.entity.qualityCheck.CheckDqFile;
-import com.radish.master.entity.qualityCheck.CheckFile;
-import com.radish.master.entity.qualityCheck.CheckFkd;
-import com.radish.master.entity.qualityCheck.LettersLook;
-import com.radish.master.entity.review.MaxNumber;
-import com.radish.master.entity.review.ReviewBid;
-import com.radish.master.service.BudgetService;
+import com.radish.master.entity.files.Writings;
+import com.radish.master.entity.files.WritingsDept;
+import com.radish.master.entity.files.WritingsFile;
+import com.radish.master.entity.files.WritingsLook;
 import com.radish.master.system.FileHelper;
 
 @Controller
-@RequestMapping("/checkdq")
-public class CheckDqController {
-	private String prefix ="QualityChecks/checkdq/";
-	@Resource
-	 private RuntimePageService runtimePageService;
+@RequestMapping("/writings")
+public class WritingsController {
+private String prefix ="workmanage/writings/";
+	
 	@Autowired
 	private BaseService baseService;
-	@Resource
-    private BudgetService budgetService;
-	
-	@RequestMapping(method = RequestMethod.GET, value = "/list")
-	public String list(HttpServletRequest request) {
-    	request.setAttribute("xm", JSONArray.toJSONString(budgetService.getProjectCombobox()));
-    	
-        return prefix+"list_index";
-    }
-	@RequestMapping(method = RequestMethod.GET, value = "/look_list")
-	public String look_list(HttpServletRequest request) {
-    	request.setAttribute("xm", JSONArray.toJSONString(budgetService.getProjectCombobox()));
-    	
-        return prefix+"look_list";
-    }
-	
-	public  String maxNum(){ 
-		List<String> result = baseService.find("select max(mat.id) from com.radish.master.entity.review.MaxNumber mat");
-		if(result.size()>0&&!"".equals(result.get(0))&&StringHelper.isNotEmpty(result.get(0))){
-			String num = result.get(0);
-			
-			MaxNumber m = new MaxNumber();
-			Integer newId = Integer.valueOf(num)+1;
-			m.setId(newId+"");
-			baseService.save(m);
-			return num;
-		}else{
-			MaxNumber m = new MaxNumber();
-			m.setId("1001");
-			baseService.save(m);
-			return "1001";
-		}
-	}
-	@RequestMapping("/add")
-	public String add(HttpServletRequest request) {
-    	request.setAttribute("xm", JSONArray.toJSONString(budgetService.getProjectCombobox()));
-    	
-    	String str =maxNum();
-		
-		Calendar date = Calendar.getInstance();
-		String year = String.valueOf(date.get(Calendar.YEAR));
-		String strs = "CHEEK"+year+str;
-		
-		request.setAttribute("bh",strs);
-    	
-        return prefix+"addIndex";
-    }
-	@RequestMapping("/edit")
-	public String edit(HttpServletRequest request) {
-    	request.setAttribute("xm", JSONArray.toJSONString(budgetService.getProjectCombobox()));
-    	String id = request.getParameter("id");
-    	String lx = request.getParameter("lx");
-    	request.setAttribute("id", id);
-    	request.setAttribute("lx", lx);
-    	
-        return prefix+"editIndex";
-    }
-	@RequestMapping("/editlook")
-	public String editlook(HttpServletRequest request) {
-    	request.setAttribute("xm", JSONArray.toJSONString(budgetService.getProjectCombobox()));
-    	String id = request.getParameter("id");
-    	String lx = request.getParameter("lx");
-    	request.setAttribute("id", id);
-    	request.setAttribute("lx", lx);
-    	
-        return prefix+"editlookIndex";
-    }
-	
-	@RequestMapping("/auditHf/{id}")
-	public String auditHf(@PathVariable("id") String id,HttpServletRequest request){
-		
-		request.setAttribute("id",id);
-		return prefix +"auidHfIndex";
-	}
-	@RequestMapping("/auditFc/{id}")
-	public String auditFc(@PathVariable("id") String id,HttpServletRequest request){
-		
-		request.setAttribute("id",id);
-		return prefix +"auidFcIndex";
-	}
-	
-	
-	@RequestMapping("/save")
-	@ResponseBody
-	public Result save(HttpServletRequest request,CheckDq ck) {
-		Result r = new Result();
-		String id = request.getParameter("id");
-		User u = SecurityUtil.getUser();
-		if(id==null){//保存
-			ck.setCreate_time(new Date());
-    		ck.setCreate_name_ID(u.getId());
-    		ck.setCreate_name(u.getName());
-    		ck.setStatus("10");
-    		Project p = baseService.get(Project.class, ck.getProid());
-    		ck.setProname(p.getProjectName());
-    		ck.setIsfk("0");
-    		baseService.save(ck);
-    		r.setCode(ck.getId());
-		}else{//编辑
-			CheckDq c = baseService.get(CheckDq.class,id);
-			c.setProid(ck.getProid());
-			Project p = baseService.get(Project.class, ck.getProid());
-			c.setProname(p.getProjectName());
-			c.setCheckCont(ck.getCheckCont());
-			c.setJjjl(ck.getJjjl());
-			c.setSdfzr(ck.getSdfzr());
-			c.setXxjd(ck.getXxjd());
-			c.setZgqx(ck.getZgqx());
-			c.setXdfzr(ck.getXdfzr());
-			c.setChecktime(ck.getChecktime());
-			c.setZgjcnr(ck.getZgjcnr());
-			c.setXzgnr(ck.getXzgnr());
-			c.setJcbm(ck.getJcbm());
-			c.setSjbmr(ck.getSjbmr());
-			c.setJcr(ck.getJcr());
-			c.setSjbmrdh(ck.getSjbmrdh());
-			baseService.update(c);
-			r.setCode(c.getId());
-		}
-		r.setSuccess(true);
-		return r;
-	}
-	@RequestMapping("/saveHf")
-	@ResponseBody
-	public Result saveHf(String id,CheckDq c){
-		Result r = new Result();
-		CheckDq ck = baseService.get(CheckDq.class, id);
-		ck.setYzgnr(c.getYzgnr());
-		baseService.update(ck);
-		r.setSuccess(true);
-		return r;
-	}
-	@RequestMapping("/saveFc")
-	@ResponseBody
-	public Result saveFc(String id,CheckDq c){
-		Result r = new Result();
-		CheckDq ck = baseService.get(CheckDq.class, id);
-		ck.setFcqk(c.getFcqk());
-		ck.setFcbm(c.getFcbm());
-		ck.setFcr(c.getFcr());
-		ck.setFcrq(c.getFcrq());
-		ck.setSfcr(c.getSfcr());
-		ck.setBypj(c.getBypj());
-		ck.setZhpf(c.getZhpf());
-		baseService.update(ck);
-		r.setSuccess(true);
-		return r;
-	}
-	
-	@RequestMapping("/load")
-	@ResponseBody
-	public CheckDq load(String id){
-		CheckDq ck = baseService.get(CheckDq.class, id);
-		return ck;
-	}
-	@RequestMapping("/start")
-	@ResponseBody
-	public Result start(String id) {
-		CheckDq ck = baseService.get(CheckDq.class, id);
-		ck.setStatus("20");
-		baseService.update(ck);
-		
-		User user = SecurityUtil.getUser();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String name =ck.getProname()+"【定期检查("+sdf.format(ck.getChecktime())+")】";
-
-        // businessKey
-        String businessKey = ck.getId();
-
-        // 配置流程变量
-        Map<String, Object> variables = new HashMap<>();
-        variables.put(Constants.VAR_APPLYUSER_NAME, user.getName());
-        variables.put(Constants.VAR_BUSINESS_KEY, businessKey);
-        variables.put("taskName", name);
-
-        // 启动流程
-        return runtimePageService.startProcessInstanceByKey("checkDq", name, variables, user.getId(), businessKey);
-    }
-	/**
-	 * 罚款单相关
-	 */
-	@RequestMapping("/fkdIndex")
-	public String fkdIndex(HttpServletRequest request) {
-    	request.setAttribute("xm", JSONArray.toJSONString(budgetService.getProjectCombobox()));
-    	String id = request.getParameter("id");
-    	String lx = request.getParameter("lx");
-    	request.setAttribute("id", id);
-    	request.setAttribute("lx", lx);
-    	CheckDq ck = baseService.get(CheckDq.class, id);
-    	String proid = ck.getProid();
-    	List<ProjectTeam> bz = baseService.find(" from ProjectTeam where project_id='"+proid+"'");
-    	request.setAttribute("bz", JSONArray.toJSONString(bz));
-        return prefix+"fkdIndex";
-    }
-	@RequestMapping("/loadFkd")
-	@ResponseBody
-	public Result loadFkd(HttpServletRequest request){
-		String id = request.getParameter("id");
-		List<CheckFkd> fks = baseService.find(" from CheckFkd where checkDqId='"+id+"'");
-		Result r = new Result();
-		if(fks.size()==0){//无罚款数据
-			CheckDq ck = baseService.get(CheckDq.class, id);
-			CheckFkd fk = new CheckFkd();
-			fk.setCheckDqId(id);
-			fk.setProid(ck.getProid());
-			fk.setProname(ck.getProname());
-			
-			String str =maxNum();
-			
-			Calendar date = Calendar.getInstance();
-			String year = String.valueOf(date.get(Calendar.YEAR));
-			String strs = "FKD"+year+str;
-			fk.setNumber(strs);
-			r.setData(fk);
-			
-			
-		}else{
-			r.setData(fks.get(0));
-
-			List<CheckDqFile> wjs = baseService.findMapBySql("select id  from tbl_checkdqfile where form_ID='"+fks.get(0).getId()+"' and type='40'", new Object[]{}, new Type[]{StringType.INSTANCE}, CheckDqFile.class);
-	        String wjid = "";
-			for(int i =0;i<wjs.size();i++){
-	        	if(i==wjs.size()-1){
-	        		wjid += wjs.get(i).getId();
-	        	}else {
-	        		wjid += wjs.get(i).getId()+",";
-	        	}
-	        }
-			r.setCode(wjid);
-		}
-		return r;
-	}
-	@RequestMapping("/saveFkd")
-	@ResponseBody
-	public Result saveFkd(HttpServletRequest request,CheckFkd fk){
-		Result r = new Result();
-		String id = request.getParameter("id");
-		User u = SecurityUtil.getUser();
-		if(id==null){//保存
-			fk.setCreate_time(new Date());
-			fk.setCreate_name_ID(u.getId());
-			fk.setCreate_name(u.getName());
-			String proid = fk.getProid();
-			Project p = baseService.get(Project.class, proid);
-			fk.setProname(p.getProjectName());
-			baseService.save(fk);
-			r.setCode(fk.getId());
-			CheckDq dq = baseService.get(CheckDq.class, fk.getCheckDqId());
-			dq.setIsfk("1");
-			baseService.update(dq);
-		}else{
-			CheckFkd f = baseService.get(CheckFkd.class, id);
-			f.setProid(fk.getProid());
-			Project p = baseService.get(Project.class, fk.getProid());
-			f.setProname(p.getProjectName());
-			f.setWgtime(fk.getWgtime());
-			f.setWgbz(fk.getWgbz());
-			f.setWgdd(fk.getWgdd());
-			f.setFkje(fk.getFkje());
-			f.setWgCont(fk.getWgCont());
-			baseService.update(f);
-			r.setCode(id);
-		}
-		String fileids = request.getParameter("fileId");
-		if(fileids!=null&&fileids.length()>0){
-    		if(fileids.indexOf(",")<0){//单个
-    			CheckDqFile wj = baseService.get(CheckDqFile.class, fileids);
-    			wj.setFormId(r.getCode());
-    			baseService.update(wj);
-    		}else{//多个
-    			String[] ids = fileids.split(",");
-    			for(int i = 0;i<ids.length;i++){
-    				CheckDqFile wj = baseService.get(CheckDqFile.class, ids[i]);
-    				wj.setFormId(r.getCode());
-    				baseService.update(wj);
-    			}
-    		}
-    	}
-		return r;
-	}
-	@RequestMapping("/delete")
-	@ResponseBody
-	public Result delete(HttpServletRequest request){
-		Result r = new Result();
-		String jcid = request.getParameter("id");
-		CheckDq jc = baseService.get(CheckDq.class, jcid);
-		//删除罚款单
-		List<CheckFkd> fks = baseService.find(" from CheckFkd where checkDqId='"+jcid+"'");
-		for(CheckFkd fk:fks){
-			baseService.delete(fk);
-		}
-		//删除对应图片记录
-		List<CheckDqFile> tps = baseService.find(" from CheckDqFile where form_ID='"+jcid+"'");
-		for(CheckDqFile tp:tps){
-			String dirPath=request.getRealPath("/");
-	        FileUtil.delFile(uploaderPath+File.separator+tp.getSavedName());
-			baseService.delete(tp);
-		}
-		baseService.delete(jc);
-		
-		return r;
-	}
-	@RequestMapping("/deletefkd")
-	@ResponseBody
-	public Result deletefkd(HttpServletRequest request){
-		Result r = new Result();
-		String jcid = request.getParameter("id");
-		List<CheckFkd> fks = baseService.find(" from CheckFkd where checkDqId='"+jcid+"'");
-		for(CheckFkd fk:fks){
-			baseService.delete(fk);
-		}
-		CheckDq dq = baseService.get(CheckDq.class, jcid);
-		dq.setIsfk("0");
-		baseService.update(dq);
-		return r;
-	}
 	
 	private static Logger logger= LoggerFactory.getLogger(UploaderController.class);
-	private static final String uploaderPath=PropertiesUtil.getValue("qualityChecksFilePath")+"\\checkdq";
+	private static final String uploaderPath=PropertiesUtil.getValue("qualityChecksFilePath")+"\\writings";
 	 public static Map fileIconMap=new HashMap();
 	 static {
 	        fileIconMap.put("doc" ,"<i class='fa fa-file-word-o text-primary'></i>");
@@ -403,11 +73,78 @@ public class CheckDqController {
 	        fileIconMap.put("rar" ,"<i class='fa fa-file-archive-o text-muted'></i>");
 	        fileIconMap.put("default" ,"<i class='fa fa-file-o'></i>");
 	    }
-	
-		
-		@RequestMapping(value="/projectdetailfile", method = RequestMethod.GET)
-	    public String projectdetailfile(String id, HttpServletRequest request,String type,String lx) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
-			List<CheckDqFile> wjs = baseService.findMapBySql("select id  from tbl_checkdqfile where form_ID='"+id+"' and type='"+type+"'", new Object[]{}, new Type[]{StringType.INSTANCE}, CheckDqFile.class);
+	 
+	 @RequestMapping("/list")
+	public String gsList(HttpServletRequest request){
+		String lx = request.getParameter("lx");
+		request.setAttribute("lx",lx);
+		String useid = SecurityUtil.getUserId();
+		request.setAttribute("userid", useid);
+		return prefix +"list";
+	}
+	 
+	 @RequestMapping("/add")
+		public String add(HttpServletRequest request){
+			String ck = request.getParameter("ck");
+			String id=request.getParameter("id");
+			/*if(id==null){
+				String str =maxNum();
+				String strs = "HT"+str;
+				request.setAttribute("bh",strs);
+				
+			}*/
+			
+			request.setAttribute("ck",ck);
+			request.setAttribute("id",id);
+			
+			return prefix +"addIndex";
+		}
+	 	
+	 @RequestMapping("/save")
+		@ResponseBody
+		public Result save(HttpServletRequest request,Writings jd){
+			Result r = new Result();
+			String id = request.getParameter("id");
+			String fileId = request.getParameter("fileId");
+			User u = SecurityUtil.getUser();
+			if(id==null){//保存
+				jd.setCreate_time(new Date());
+				jd.setCreate_name_ID(u.getId());
+				jd.setCreate_name(u.getName());
+				jd.setIssend("0");
+				jd.setIsvalid("1");
+				baseService.save(jd);
+				r.setCode(jd.getId());
+				id = jd.getId();
+			}else{
+				Writings j = baseService.get(Writings.class, id);
+				j.setName(jd.getName());
+				j.setNumber(jd.getNumber());
+				j.setDescs(jd.getDescs());
+				baseService.update(j);
+				r.setCode(id);
+			}
+			if(fileId!=null&&fileId.length()>0){
+				if(fileId.indexOf(",")<0){//单张
+					WritingsFile wj = baseService.get(WritingsFile.class, fileId);
+					wj.setFormId(id);
+					baseService.update(wj);
+				}else{//多文件
+					String[] ids = fileId.split(",");
+					for(int i =0;i<ids.length;i++){
+						WritingsFile wj = baseService.get(WritingsFile.class, ids[i]);
+						wj.setFormId(id);
+						baseService.update(wj);
+					}
+				}
+			}
+			return r;
+		}
+	 
+	   @RequestMapping("/load")
+		@ResponseBody
+		public Result load(String id){
+			List<WritingsFile> wjs = baseService.findMapBySql("select id  from tbl_writtingsfile where form_ID='"+id+"'", new Object[]{}, new Type[]{StringType.INSTANCE}, WritingsFile.class);
 	        String wjid = "";
 			for(int i =0;i<wjs.size();i++){
 	        	if(i==wjs.size()-1){
@@ -416,15 +153,46 @@ public class CheckDqController {
 	        		wjid += wjs.get(i).getId()+",";
 	        	}
 	        }
-			request.setAttribute("lx", lx);
-			request.setAttribute("type", type);
+			Writings  jd= baseService.get(Writings.class, id);
+			 Result r = new Result();
+			 r.setData(jd);
+			 r.setCode(wjid);
+			return r;
+		}
+	   @RequestMapping("/delete")
+		@ResponseBody
+		public Result delete(String id,HttpServletRequest request){
+			Result r= new Result();
+			Writings jd =  baseService.get(Writings.class, id);
+			List<WritingsFile> wjs = baseService.find(" from WritingsFile where form_ID='"+id+"'");
+			for(WritingsFile tp:wjs){
+				String dirPath=request.getRealPath("/");
+		        FileUtil.delFile(uploaderPath+File.separator+tp.getSavedName());
+				baseService.delete(tp);
+			}
+			
+			baseService.delete(jd);
+			return r;
+		}
+	 	
+	 	@RequestMapping(value="/projectdetailfile", method = RequestMethod.GET)
+	    public String projectdetailfile(String id, HttpServletRequest request) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
+			List<WritingsFile> wjs = baseService.findMapBySql("select id  from tbl_writtingsfile where form_ID='"+id+"'", new Object[]{}, new Type[]{StringType.INSTANCE}, WritingsFile.class);
+	        String wjid = "";
+			for(int i =0;i<wjs.size();i++){
+	        	if(i==wjs.size()-1){
+	        		wjid += wjs.get(i).getId();
+	        	}else {
+	        		wjid += wjs.get(i).getId()+",";
+	        	}
+	        }
+			request.setAttribute("lx", request.getParameter("lx"));
 	        request.setAttribute("fields", wjid);
 	        request.setAttribute("id", id);
 	        return prefix+"query_file";
 	    }
-		
-		
-		/**
+	 	
+	 	/**
 	     * 多文件上传，用于uploadAsync=false(同步多文件上传使用)
 	     * @param files
 	     * @param request
@@ -441,7 +209,7 @@ public class CheckDqController {
 	        String id = request.getParameter("id");
 	        ArrayList<Integer> arr = new ArrayList<>();
 	        //缓存当前的文件
-	        List<CheckDqFile> fileList=new ArrayList<>();
+	        List<WritingsFile> fileList=new ArrayList<>();
 	        String dirPath = request.getRealPath("/");
 	        for (int i = 0; i < files.length; i++) {
 	            MultipartFile file = files[i];
@@ -461,7 +229,7 @@ public class CheckDqController {
 	                    //将文件写入到服务器
 	                    //FileUtil.copyInputStreamToFile(file.getInputStream(),serverFile);
 	                    file.transferTo(serverFile);
-	                    CheckDqFile sysFile=new CheckDqFile();
+	                    WritingsFile sysFile=new WritingsFile();
 	                    sysFile.setFileName(file.getOriginalFilename());
 	                    sysFile.setSavedName(savedName);
 	                    sysFile.setCreateDateTime(new Date());
@@ -471,7 +239,6 @@ public class CheckDqController {
 	                    sysFile.setFileSize(file.getSize());
 	                    sysFile.setFilePath(uploaderPath+File.separator+savedName);
 	                    sysFile.setFormId(id);
-	                    sysFile.setType(type);
 	                    baseService.save(sysFile);
 	                    fileList.add(sysFile);
 	                    /*preview.add("<div class=\"file-preview-other\">\n" +
@@ -511,17 +278,17 @@ public class CheckDqController {
 	     * @param request
 	     * @return initialPreiview initialPreviewConfig fileIds
 	     */
-	    public FileResult getPreivewSettings(List<CheckDqFile> fileList,HttpServletRequest request){
+	    public FileResult getPreivewSettings(List<WritingsFile> fileList,HttpServletRequest request){
 	        FileResult fileResult=new FileResult();
 	        List<String> previews=new ArrayList<>();
 	        List<FileResult.PreviewConfig> previewConfigs=new ArrayList<>();
 	        //缓存当前的文件
 	        String[] fileArr=new String[fileList.size()];
 	        int index=0;
-	        for (CheckDqFile sysFile : fileList) {
+	        for (WritingsFile sysFile : fileList) {
 	            //上传后预览 TODO 该预览样式暂时不支持theme:explorer的样式，后续可以再次扩展
 	            //如果其他文件可预览txt、xml、html、pdf等 可在此配置
-	        	String dirPath = request.getContextPath() + "/checkdq/showImage?imageID=" + sysFile.getId();
+	        	String dirPath = request.getContextPath() + "/writings/showImage?imageID=" + sysFile.getId();
 	            if(FileUtil.isImage(uploaderPath+File.separator+sysFile.getSavedName())) {
 	                previews.add("<img src='" + dirPath+ "' class='file-preview-image kv-preview-data' " +
 	                        "style='width:auto;height:160px' alt='" + sysFile.getFileName() + " title='" + sysFile.getFileName() + "''>");
@@ -557,8 +324,8 @@ public class CheckDqController {
 	    
 	    @RequestMapping(value="/deletefile",method = RequestMethod.POST)
 	    @ResponseBody
-	    public Result delete(String id, HttpServletRequest request){
-	    	CheckDqFile sysFile=baseService.get(CheckDqFile.class,id);
+	    public Result deletefile(String id, HttpServletRequest request){
+	    	WritingsFile sysFile=baseService.get(WritingsFile.class,id);
 	        String dirPath=request.getRealPath("/");
 	        FileUtil.delFile(uploaderPath+File.separator+sysFile.getSavedName());
 	        baseService.delete(sysFile);
@@ -566,7 +333,7 @@ public class CheckDqController {
 	    }
 	    @RequestMapping(value="/download/{id}",method = RequestMethod.GET)
 	    public void downloadFile(@PathVariable("id") String id,HttpServletRequest request,HttpServletResponse response) throws IOException {
-	    	CheckDqFile sysfile = baseService.get(CheckDqFile.class, id);
+	    	WritingsFile sysfile = baseService.get(WritingsFile.class, id);
 
 	        InputStream is = null;
 	        OutputStream os = null;
@@ -617,10 +384,10 @@ public class CheckDqController {
 	    @RequestMapping(value="/getFiles",method = RequestMethod.POST)
 	    @ResponseBody
 	    public FileResult getFiles(String fileIds, String type, HttpServletRequest request){
-	        List<CheckDqFile> fileList=new ArrayList<>();
+	        List<WritingsFile> fileList=new ArrayList<>();
 	        if(!StrUtil.isEmpty(fileIds)) {
 	            String[] fileIdArr = fileIds.split(",");
-	            DetachedCriteria criteria = DetachedCriteria.forClass(CheckDqFile.class);
+	            DetachedCriteria criteria = DetachedCriteria.forClass(WritingsFile.class);
 	            criteria.add(Restrictions.in("id", fileIdArr));
 	            criteria.addOrder(Order.asc("createDateTime"));
 	            fileList = baseService.findByCriteria(criteria);
@@ -632,7 +399,7 @@ public class CheckDqController {
 	        }
 	        
 	    }
-	    public FileResult getPreivewSettingsPreview(List<CheckDqFile> fileList,HttpServletRequest request){
+	    public FileResult getPreivewSettingsPreview(List<WritingsFile> fileList,HttpServletRequest request){
 	        FileResult fileResult=new FileResult();
 	        List<String> previews=new ArrayList<>();
 	        List<FileResult.PreviewConfig> previewConfigs=new ArrayList<>();
@@ -640,10 +407,10 @@ public class CheckDqController {
 	        //String dirPath = request.getRealPath("/");
 	        String[] fileArr=new String[fileList.size()];
 	        int index=0;
-	        for (CheckDqFile sysFile : fileList) {
+	        for (WritingsFile sysFile : fileList) {
 	            //上传后预览 TODO 该预览样式暂时不支持theme:explorer的样式，后续可以再次扩展
 	            //如果其他文件可预览txt、xml、html、pdf等 可在此配置
-	        	String dirPath = request.getContextPath() + "/checkdq/showImage?imageID=" + sysFile.getId();
+	        	String dirPath = request.getContextPath() + "/writings/showImage?imageID=" + sysFile.getId();
 	            if(FileUtil.isImage(uploaderPath+File.separator+sysFile.getSavedName())) {
 	                previews.add("<img src='" + dirPath+ "' class='file-preview-image kv-preview-data' " +
 	                        "style='width:auto;height:80px' alt='" + sysFile.getFileName() + " title='" + sysFile.getFileName() + "''>");
@@ -670,7 +437,7 @@ public class CheckDqController {
 	    @RequestMapping(value="/showImage",method = RequestMethod.GET)
 	    public String showImage(String imageID, HttpServletResponse response) throws IOException{
 	        
-	    	CheckDqFile item = baseService.get(CheckDqFile.class, imageID);
+	    	WritingsFile item = baseService.get(WritingsFile.class, imageID);
 
 	        byte[] fileBytes = getImage(item.getFilePath(), item.getFileName());
 	        
@@ -701,5 +468,107 @@ public class CheckDqController {
 
 	        return new byte[0];
 	    }
-	    
+	    /**
+	     * 选择发送弹框
+	     */
+	    @RequestMapping("/dosendPage")
+		public String dosendPage(HttpServletRequest request){
+			String id=request.getParameter("id");
+			
+			request.setAttribute("id",id);
+			
+			return prefix +"dosendPage";
+		}
+	    /**
+	     * 查看已读人员列表
+	     */
+	    @RequestMapping("/lookers")
+		public String lookers(HttpServletRequest request){
+			String id=request.getParameter("id");
+			
+			request.setAttribute("id",id);
+			
+			return prefix +"lookers";
+		}
+	   /**
+	    * 发送按钮
+	    */
+	    @RequestMapping("/dosend")
+	    @ResponseBody
+	    public Result dosend(HttpServletRequest request){
+	    	Result r = new Result();
+	    	String fjid = request.getParameter("fjid");
+	    	Writings wj = baseService.get(Writings.class, fjid);
+	    	
+	    	String bmids = request.getParameter("bmids");
+	    	if(bmids.indexOf(",")<0){//单选
+	    		Org bm = baseService.get(Org.class, bmids);
+	    		WritingsDept jsbm = new WritingsDept();
+	    		jsbm.setDeptid(bmids);
+	    		jsbm.setWritingid(fjid);
+	    		baseService.save(jsbm);
+	    		List<User> us = baseService.find(" from User where deptId='"+bmids+"'");
+	    		for(User u :us){
+	    			WritingsLook l = new WritingsLook();
+	    			l.setIslook("0");
+	    			l.setLookid(u.getId());
+	    			l.setLookname(u.getName());
+	    			l.setDeptName(bm.getName());
+	    			l.setCreateDate(new Date());
+	    			l.setWritingid(fjid);
+	    			baseService.save(l);
+	    		}
+	    		
+	    	}else{//多选
+	    		String[] ids = bmids.split(",");
+	    		for(int i =0;i<ids.length;i++){
+	    			String bmid = ids[i];
+	    			Org bm = baseService.get(Org.class, bmid);
+		    		WritingsDept jsbm = new WritingsDept();
+		    		jsbm.setDeptid(bmid);
+		    		jsbm.setWritingid(fjid);
+		    		baseService.save(jsbm);
+		    		List<User> us = baseService.find(" from User where deptId='"+bmid+"'");
+		    		for(User u :us){
+		    			WritingsLook l = new WritingsLook();
+		    			l.setIslook("0");
+		    			l.setLookid(u.getId());
+		    			l.setLookname(u.getName());
+		    			l.setDeptName(bm.getName());
+		    			l.setCreateDate(new Date());
+		    			l.setWritingid(fjid);
+		    			baseService.save(l);
+		    		}
+	    		}
+	    	}
+	    	wj.setIssend("1");
+	    	baseService.update(wj);
+	    	r.setSuccess(true);
+	    	return r;
+	    }
+	    /**
+	     * 收文查看页面
+	     */
+	    @RequestMapping("/swlook")
+		public String swlook(HttpServletRequest request){
+	    	String useid = SecurityUtil.getUserId();
+	    	request.setAttribute("userid", useid);
+			return prefix +"swlook";
+		}
+	    @RequestMapping("/addlook")
+		public String addlook(HttpServletRequest request){
+			String ck = request.getParameter("ck");
+			String id=request.getParameter("id");
+			
+			request.setAttribute("ck",ck);
+			request.setAttribute("id",id);
+			//编辑查看状态
+			String lookid = request.getParameter("lookid");
+			WritingsLook l = baseService.get(WritingsLook.class, lookid);
+			l.setIslook("1");
+			l.setCreateDate(new Date());
+			baseService.update(l);
+			
+			return prefix +"addIndex";
+		}
 }

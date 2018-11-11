@@ -106,6 +106,13 @@
     	bz = JSON.parse(bzs);
     }
     var  id = '${id}';
+    var lx = '${lx?default(0)}'
+    if(lx=="look"){
+		$("#b_sub").css("display","none")
+		$("#print").css("display","none")
+		$("#wjscid").css("display","none")
+		$("#attachment").css("display","none")
+    }
     $(function() {
         //初始化控件
         form=$("#fkd-form").form();

@@ -171,9 +171,9 @@ legend{padding:.5em;border:0;width:auto}
                                 </div>
                             </div>
                         </div>
-                       <!-- <div class="col-sm-6" style="text-align: center;margin-left:25%">
+                       <div class="col-sm-6" style="text-align: center;margin-left:25%">
                             <button type="button" class="btn btn-success" id="lookFkd">班组罚款单</button>
-                       </div> -->
+                       </div>
                     </div>
                 </form>
             </div>
@@ -321,7 +321,12 @@ legend{padding:.5em;border:0;width:auto}
         })
     });
     function lookFkd(){
-		console.log($("#constructionTeam option:selected").val());
+    	modals.openWin({
+            winId:"lookfkd",
+            title:'班组罚款详情',
+            width:'1000px',
+            url:basePath+"/projectvolume/lookfkd?id="+id            
+           });
     }
     
 </script>

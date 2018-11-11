@@ -90,4 +90,14 @@
         <column key="isfk" header="罚款详情" width="80" fnRender="fnRenderFk"/>
         <column key="id" header="管理" width="80" fnRender="fnRenderGl"/>
     </query>
+    
+    <query id="lookfkdList" key="id" tableName="罚款单列表" className="com.radish.master.entity.qualityCheck.CheckFkd"
+		pageSize="10"  widthType="px" order="wgtime asc">
+		<column key="rowIndex" header="序号" width="50" allowSort="false"/>
+		<column key="id" header="id" hidden="true"/>
+		<column key="wgbz" header="违规班组" operator="like" width="100"  />
+		<column key="wgtime" header="罚款时间" operator="like" width="80" allowSort="true" dateFormat="yyyy-mm-dd" />
+		<column key="wgdd" header="违规地点" operator="like" width="80"  />
+		<column key="fkje" header="罚款金额" align="left" operator="eq" width="100"  />
+	</query>
 </queryContext>

@@ -1,0 +1,79 @@
+
+<link rel="stylesheet" href="${basePath}/resources/common/libs/fileinput/css/fileinput.min.css">
+<script src="${basePath}/resources/common/libs/fileinput/js/fileinput.js"></script>
+<script src="${basePath}/resources/common/libs/fileinput/js/locales/zh.js"></script>
+<!--BaseFile组件-->
+<script src="${basePath}/resources/common/js/base-file.js"></script>
+<div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal" aria-hidden="true"><li class="fa fa-remove"></li></button>
+	<h5 class="modal-title">选择接收部门</h5>
+</div> 
+
+    <div class="row" style="height:450px;">
+        <div class="col-xs-12">
+            <div class="box box-primary">
+                <div class="dataTables_filter" id="searchDiv2" style="text-align:right;height:1px;">
+                    <div class="btn-group">
+                    	<button type="button" class="btn btn-primary" data-btn-type="addFjsl">发送</button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <table id="attendance_import_table" class="table table-bordered table-striped table-hover">
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+<script>
+	var id	 = '${id?default(0)}'
+    var attendanceImportTable;
+	var table_config={ 
+			   "scrollY":"370px",
+	        "scrollCollapse": true,
+	        "pagingType":"full",//simple numbers simple_numbers full full_numbers
+	        "singleSelect":false,
+	        "scrollXInner":"450px", 
+	        "autoWidth":false
+	        //"lengthChange":false
+	      }; 
+    $(function () {
+        
+    	budgetImportTable = new CommonTable("attendance_import_table", "writingsAdd_ChooseDept", "searchDiv2",table_config);
+    	
+       $('button[data-btn-type]').click(function() {
+           var actions = $(this).attr('data-btn-type');
+           var rowId=budgetImportTable.getSelectedRowId();
+           switch (actions) {
+           case 'addFjsl':
+        	   var rows=budgetImportTable.getSelectedRowsData();
+               var urlist=""; 
+               if(!rows){ 
+               	modals.info("请选择要接收的部门");
+               	return;
+               }
+               $.each(rows,function(index,row){                	
+               		if(urlist){
+               			urlist +=","+row.id;
+                   	}else{
+                   		urlist = row.id
+                     }
+               });
+               if(confirm("确定发送？")){
+            	   ajaxPost(basePath+"/writings/dosend",{fjid:id,bmids:urlist},function(data){
+	                   if(data.success){
+	                	   modals.hideWin("files");
+	                	   dutycheckTable.reloadData();
+	                	   modals.info("发送成功");
+	                	   
+	                   }else{
+	                       modals.error("系统繁忙，请稍后重试");
+	                   }
+	               });
+               }
+	          	
+               break;             
+           }
+
+       });
+    });
+</script>
