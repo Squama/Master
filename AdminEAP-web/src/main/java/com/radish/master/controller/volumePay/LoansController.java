@@ -138,6 +138,13 @@ public class LoansController {
 	public String look(HttpServletRequest request){
 		return prefix+"look";
 	}
+	@RequestMapping("/zffs")
+	public String zffs(HttpServletRequest request){
+		String id = request.getParameter("id");
+		request.setAttribute("id", id);
+		request.setAttribute("zdr", SecurityUtil.getUserId());
+		return prefix +"zffs";
+	}
 	
 	@RequestMapping("/load")
 	@ResponseBody

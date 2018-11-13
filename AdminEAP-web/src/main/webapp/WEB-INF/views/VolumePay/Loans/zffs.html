@@ -1,0 +1,59 @@
+<link rel="stylesheet" href="${basePath}/resources/common/libs/fileinput/css/fileinput.min.css">
+<style>
+
+#projectaddstep2 .krajee-default.file-preview-frame .kv-file-content {
+    height: auto;
+}
+
+#projectaddstep2 .krajee-default .file-footer-caption {
+    width: 100px;
+}
+
+</style>
+<script src="${basePath}/resources/common/libs/fileinput/js/fileinput.js"></script>
+<script src="${basePath}/resources/common/libs/fileinput/js/locales/zh.js"></script>
+<!--BaseFile组件-->
+<script src="${basePath}/resources/common/js/base-file.js"></script>
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><li class="fa fa-remove"></li></button>
+    <h5 class="modal-title"></h5>
+</div>
+<div class="modal-body" style="max-height:700px;overflow-y:auto;">
+	<span id="msg" style="color: red"></span>
+    <form id="dy-form" name="dy-form" class="form-horizontal">
+       <div class="box-body">
+			<div class="form-group">
+                     <label class="col-sm-3 control-label">报销类型</label>
+                     <div class="col-sm-9">
+                         <select id="fkfs" class="form-control select2 "  name="fkfs" >
+                    		<option selected="selected" value="">选择一种方式</option>
+                    		<option  value="10">现金</option>
+                    		<option  value="20">转账</option>
+                    		<option  value="30">电汇</option>
+                    	</select>
+                     </div>
+                 </div>        
+        </div>
+      </form>
+       <div class="" style="text-align: center;">
+      	<button type="button" class="btn btn-success" id="doPrint">打印</button>
+      </div>
+</div>
+<script>
+    var id="${id?default(0)}";
+    var zdr="${zdr?default(0)}";
+    $(function() {
+        //初始化控件
+       	$("#doPrint").on("click",function(){
+           	var fkfs = $("#fkfs option:selected").val();
+           if(!fkfs){
+           		modals.info("请选择付款方式");
+           		return ;
+             } 
+           	var url = basePath+"/ureport/preview?_u=file:ZfLoans.ureport.xml&_t=1,5&id="+id+"&zdr="+zdr+"&fkfs="+fkfs;
+    	 	window.open(url); 
+        })
+        
+    });
+	
+</script>

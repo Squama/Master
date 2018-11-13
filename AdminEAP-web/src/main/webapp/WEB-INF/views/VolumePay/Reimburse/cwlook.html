@@ -113,6 +113,7 @@
         <div class="" style="text-align: center;">
             <!--以下两种方式提交验证,根据所需选择-->
             <button type="button" class="btn btn-primary" data-btn-type="save" id="save">确认付款</button>
+            <button type="button" class="btn btn-success" id="printZfd">打印支付单</button>
         </div>
         <!-- /.box-footer -->
     </form>
@@ -169,6 +170,14 @@
 	                    }                
 	                }); 
        			})
+        })
+        $("#printZfd").on("click",function(){
+        	modals.openWin({
+                winId:"printZf",
+                title:'支付单支付方式确认',
+                width:'500px',
+                url:basePath+"/reimburse/zffs?id="+id
+            });
         })
         form.initComponent();
        	if(pro != 0){

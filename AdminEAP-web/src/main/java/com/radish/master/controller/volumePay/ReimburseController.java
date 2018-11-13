@@ -153,7 +153,20 @@ public class ReimburseController {
 		request.setAttribute("bxid", bxid);
 		return prefix +"addMX";
 	}
-	
+	@RequestMapping("/zffs")
+	public String zffs(HttpServletRequest request){
+		String id = request.getParameter("id");
+		request.setAttribute("id", id);
+		request.setAttribute("zdr", SecurityUtil.getUserId());
+		return prefix +"zffs";
+	}
+	@RequestMapping("/fjsl")
+	public String fjsl(HttpServletRequest request){
+		String id = request.getParameter("id");
+		request.setAttribute("id", id);
+		//request.setAttribute("zdr", SecurityUtil.getUserId());
+		return prefix +"fjsl";
+	}
 	
 	@RequestMapping("/saveBx")
 	@ResponseBody

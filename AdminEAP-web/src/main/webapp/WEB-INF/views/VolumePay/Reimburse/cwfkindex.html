@@ -20,7 +20,7 @@
                     <input placeholder="请输入申请人姓名" name="bx.reername" class="form-control" type="search" likeOption="true"operator="like" />
                     <div class="btn-group">
                         <button type="button" class="btn btn-primary" data-btn-type="search">查询</button>
-                       
+                       <button type="button" class="btn btn-success" data-btn-type="printBxd"id = "">打印报销单</button>
                     </div>
                     <div class="btn-group">
                     
@@ -82,14 +82,17 @@
              var action = $(this).data("btn-type");
              var rowId = volumeTable.getSelectedRowId();
              switch (action) {
-             case "print":
+             case "printBxd":
              	 if(!rowId){
  	                    modals.info('请选择要打印的行');
  	                    return false;
  	                }
- 	                var url = basePath+"/ureport/preview?_u=file:jk.ureport.xml&_t=1,5&id="+rowId;
-             	 	window.open(url);
- 	                
+             	 modals.openWin({
+                     winId:"printBx",
+                     title:'支付单附件数确认',
+                     width:'500px',
+                     url:basePath+"/reimburse/fjsl?id="+rowId
+                 });
                  break;       		
              }
          }); 

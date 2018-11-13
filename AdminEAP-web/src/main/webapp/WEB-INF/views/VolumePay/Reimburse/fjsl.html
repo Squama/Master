@@ -1,0 +1,54 @@
+<link rel="stylesheet" href="${basePath}/resources/common/libs/fileinput/css/fileinput.min.css">
+<style>
+
+#projectaddstep2 .krajee-default.file-preview-frame .kv-file-content {
+    height: auto;
+}
+
+#projectaddstep2 .krajee-default .file-footer-caption {
+    width: 100px;
+}
+
+</style>
+<script src="${basePath}/resources/common/libs/fileinput/js/fileinput.js"></script>
+<script src="${basePath}/resources/common/libs/fileinput/js/locales/zh.js"></script>
+<!--BaseFile组件-->
+<script src="${basePath}/resources/common/js/base-file.js"></script>
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><li class="fa fa-remove"></li></button>
+    <h5 class="modal-title"></h5>
+</div>
+<div class="modal-body" style="max-height:700px;overflow-y:auto;">
+	<span id="msg" style="color: red"></span>
+    <form id="dy-form" name="dy-form" class="form-horizontal">
+       <div class="box-body">
+			<div class="form-group">
+                     <label class="col-sm-3 control-label">附件数量</label>
+                     <div class="col-sm-9">
+                         <input class="form-control " id="fjsl"name="fjsl" value="0" >
+                     </div>
+                 </div>        
+        </div>
+      </form>
+       <div class="" style="text-align: center;">
+      	<button type="button" class="btn btn-success" id="doPrintBx">打印</button>
+      </div>
+</div>
+<script>
+    var id="${id?default(0)}";
+    var zdr="${zdr?default(0)}";
+    $(function() {
+        //初始化控件
+       	$("#doPrintBx").on("click",function(){
+           	var fjsl = $("#fjsl").val();
+           if(!fjsl){
+           		modals.info("请输入附件数量");
+           		return ;
+             } 
+           	var url = basePath+"/ureport/preview?_u=file:Reimburse.ureport.xml&_t=1,5&id="+id+"&zdr="+zdr+"&fjsl="+fjsl;
+    	 	window.open(url); 
+        })
+        
+    });
+	
+</script>
