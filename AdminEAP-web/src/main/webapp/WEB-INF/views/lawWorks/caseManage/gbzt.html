@@ -1,0 +1,109 @@
+<link rel="stylesheet" href="${basePath}/resources/common/libs/fileinput/css/fileinput.min.css">
+<style>
+
+#projectaddstep2 .krajee-default.file-preview-frame .kv-file-content {
+    height: auto;
+}
+
+#projectaddstep2 .krajee-default .file-footer-caption {
+    width: 100px;
+}
+
+</style>
+<script src="${basePath}/resources/common/libs/fileinput/js/fileinput.js"></script>
+<script src="${basePath}/resources/common/libs/fileinput/js/locales/zh.js"></script>
+<!--BaseFile组件-->
+<script src="${basePath}/resources/common/js/base-file.js"></script>
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><li class="fa fa-remove"></li></button>
+    <h5 class="modal-title"></h5>
+</div>
+<div class="modal-body" style="max-height:100%;overflow-y:auto;height:200px">
+    <form id="contract-form" name="contract-form" class="form-horizontal">
+     <input type="hidden" name="id" id= "id">
+        <div class="box-body">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label  for="check_time1" class="col-sm-3 control-label">状态</label>
+					<div class=" col-sm-8">
+                   		<select class="form-control select2 "  name="caseStatus" style="width:100%" >
+                   			<option selected="selected" value="">请选择状态</option>
+                   			<option value="10">案件准备</option>
+                   			<option  value="20">已立案</option>
+                   			<option  value="30">进行中</option>
+                   			<option  value="40">执行中</option>
+                   			<option  value="50">已结案</option>
+                   		</select>
+					</div>
+                </div>
+            </div>
+            <div class="col-md-6">
+            </div>        
+        </div>
+        <!-- /.box-body -->
+        <div class="" style="text-align: center;height:50px;width:100%;">
+            <!--以下两种方式提交验证,根据所需选择-->
+            <button type="submit" class="btn btn-primary" data-btn-type="save" id="b_sub">确定状态</button>
+        </div>
+        <!-- /.box-footer -->
+    </form>
+    
+</div>
+<script>
+    var form =null;
+    var  id = '${id?default(0)}';
+    $(function() {
+        //初始化控件
+        form=$("#contract-form").form();
+        //数据校验
+        $("#contract-form").bootstrapValidator({
+            message : '请输入有效值',
+            feedbackIcons : {
+                valid : 'glyphicon glyphicon-ok',
+                invalid : 'glyphicon glyphicon-remove',
+                validating : 'glyphicon glyphicon-refresh'
+            },
+            submitHandler : function() {
+                modals.confirm('确认保存？', function() {
+                    //Save Data，对应'submit-提交'
+                    var params = form.getFormSimpleData();
+                    	ajaxPost(basePath+'/casemanage/dochangeZt', params, function(data) {
+                            if(data.success){
+                                modals.info("修改成功");
+                                $("#id").val(data.code);
+                            }                
+                        }); 
+              
+                     
+                });
+            },
+            fields : {
+            	caseStatus : {
+                    validators : {
+                        notEmpty : {
+                            message : '请选择状态'
+                        }
+                    }
+                }
+            }
+        });
+        
+        if(id!=0){
+            load(id);
+         }
+        form.initComponent();
+
+    });
+    function load(id){
+    	ajaxPost(basePath+'/casemanage/load', {id:id}, function(data) {
+    		$("#contract-form").form().initFormData(data.data);   
+    		$("#fileId").val(data.code);       
+        }); 
+    }
+    function resetForm(){
+        form.clearForm();
+        $("#contract-form").data('bootstrapValidator').resetForm();
+    }
+
+    </script>

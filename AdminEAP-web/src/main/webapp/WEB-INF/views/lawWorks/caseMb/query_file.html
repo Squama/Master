@@ -1,0 +1,91 @@
+<link rel="stylesheet" href="${basePath}/resources/common/libs/fileinput/css/fileinput.min.css">
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="col-md-12">
+                    <form id="project_file_form" name="project_file_form" class="form-horizontal" enctype="multipart/form-data">
+                        <input type="hidden" name="fileId" id="fileId">
+						
+						<div class="form-group" id="file_container">
+							<input type="file" name="file"  id="attachment">
+						</div>
+						<div class="form-group" align="center" id="wjscid">
+							<div class="btn btn-default btn-file" id="uploadFile">
+								<i class="fa fa-paperclip"></i> 上传附件(Max. 10MB)
+							</div>
+						</div>
+                    </form>
+		        </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--用于附件上传回填使用-->
+<script src="${basePath}/resources/common/libs/fileinput/js/fileinput.min.js"></script>
+<script src="${basePath}/resources/common/libs/fileinput/js/locales/zh.js"></script>
+<script type="text/javascript" src="${basePath}/resources/common/js/base-file.js"/>
+<script>
+    
+    var fields="${fields?default(0)}";
+    var id="${id}";
+    var lx = "${lx?default(0)}";
+    if(fields != 0) $('#fileId').val(fields);
+
+    if(lx!=0){
+    	$("#wjscid").css("display","none")
+    	$("#attachment").css("display","none")
+    }
+   $(function (){
+    	
+    })
+    
+
+   var fileinputDefaults = {
+           maxFileSize: 102400,
+           maxFileCount:3,
+           previewSettings: {
+               image: {width: "160px", height: "60px"},
+               text: {width: "213px", height: "160px"},
+               object: {width: "160px", height: "auto"},
+               pdf: {width: "160px", height: "160px"},
+               other: {width: "160px", height: "160px"}
+           },
+           previewZoomSettings: {
+               image: {width: "auto", height: "auto", 'max-width': "100%", 'max-height': "100%"},
+               text: {width: "100%", height: "100%", 'min-height': "480px"},
+               object: {width: "auto", height: "100%", 'min-height': "480px"},
+               pdf: {width: "100%", height: "100%", 'min-height': "480px"},
+               other: {width: "auto", height: "100%", 'min-height': "480px"}
+           },
+           uploadUrl: basePath + "/casemb/uploadMultipleFile?id="+id,
+           deleteUrl: basePath + "/casemb/deletefile",
+           allowedPreviewTypes : ['image', 'object']
+     }
+     var defaults = {
+           title: "请上传附件",
+           getFileResultUrl: basePath+"/casemb/getFiles",
+           downloadFileUrl: basePath+"/casemb/download/",
+           fileinput: fileinputDefaults,
+           showType:'detail',
+           window:true,
+           callback:function(fileId,oldfileIds){
+               this.showFiles({
+                   fileIds:fileId,
+                   type:'preview'
+               });
+           }
+     }
+     
+     $("#uploadFile").file($.extend({}, defaults, {
+         title:"请上传附件",
+         fileinput:$.extend({}, fileinputDefaults, {
+             uploadExtraData: {"fileField":"fileId"}
+         }),
+         showContainer:'#attachment',
+         fileIdContainer:"[name='fileId']",
+         extraPreviewConfig:{
+             "fileField":"fileId"
+         }
+     }));
+</script>

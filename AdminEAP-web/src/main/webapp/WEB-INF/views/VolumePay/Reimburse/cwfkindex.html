@@ -1,12 +1,12 @@
 <section class="content-header">
     <h1>
-       	报销财务放款
+       	报销财务付款
         <small>列表</small>
     </h1>
     <ol class="breadcrumb">
         <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
         <li><a href="#">财务账目管理</a></li>
-        <li class="active">报销财务放款</li>
+        <li class="active">报销财务付款</li>
     </ol>
 </section>
 
@@ -97,7 +97,7 @@
     
     function fnRenderXQ(value, type, rowObj){
     	var oper ="";
-    	if(rowObj.status=="财务放款"){
+    	if(rowObj.status=="财务付款"){
     		oper += "<a href='javascript:void(0)' onclick='volumeManageObject.submit(\"" + value + "\")'>查看付款</a>";
        	}else if(rowObj.status=="完成"){
        		oper += "<a href='javascript:void(0)' onclick='volumeManageObject.look(\"" + value + "\")'>查看</a>";

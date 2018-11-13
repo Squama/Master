@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<queryContext xmlns="http://www.example.org/query" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.example.org/query query.xsd">
+    
+    <query id="caseMb_List" key="id" tableName="涉法文书管理" className="com.radish.master.entity.lawWorks.CaseMb" widthType="px" pageSize="200">
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="name" header="名称" classType="String" width="150"/>
+        <column key="filetype" header="类型" classType="String" width="150"/>
+        <column key="create_name" header="创建人" classType="String" width="150"/>
+        <column key="id" header="附件" width="100" fnRender="fnFj"/>
+    </query>
+    <query id="caseDemo_List" key="id" tableName="法务案例参考" className="com.radish.master.entity.lawWorks.CaseDemo" widthType="px" pageSize="200">
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="name" header="法律法规" classType="String" width="150"/>
+        <column key="filetype" header="类型" classType="String" width="150" render="10=刑事案件,20=民事案件,30=劳动仲裁,40=其他"/>
+        <column key="create_name" header="创建人" classType="String" width="150"/>
+        <column key="id" header="附件" width="100" fnRender="fnFj"/>
+    </query>
+    
+    <query id="caseManage_List" key="id" tableName="案件管理" className="com.radish.master.entity.lawWorks.CaseManage" widthType="px" pageSize="200">
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="name" header="案件名称" classType="String" width="150"/>
+        <column key="caseType" header="案件类型" classType="String" width="150" render="10=刑事案件,20=民事案件,30=劳动仲裁,40=其他"/>
+        <column key="court" header="受理法院" classType="String" width="150"/>
+        <column key="judge" header="法官" classType="String" width="150"/>
+         <column key="judgeTel" header="法官电话" classType="String" width="150"/>
+         <column key="caseStatus" header="状态" classType="String" width="150" render="10=案件准备,20=已立案,30=进行中,40=执行中,50=已结案"/>
+        <column key="id" header="相关操作" width="100" fnRender="fnFj"/>
+    </query>
+    
+    <query id="yg_List" key="id" tableName="原告列表" className="com.radish.master.entity.lawWorks.CasePeople" widthType="px" pageSize="200">
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="name" header="原告姓名" classType="String" width="150"/>
+        <column key="tel" header="联系电话" classType="String" width="150" />
+        <column key="idcode" header="证件号" classType="String" width="150"/>
+        <column key="id" header="操作" width="100" fnRender="fnRy"/>
+    </query>
+    
+    <query id="bg_List" key="id" tableName="被告列表" className="com.radish.master.entity.lawWorks.CasePeople" widthType="px" pageSize="200">
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="name" header="被告姓名" classType="String" width="150"/>
+        <column key="tel" header="联系电话" classType="String" width="150" />
+        <column key="idcode" header="证件号" classType="String" width="150"/>
+        <column key="id" header="操作" width="100" fnRender="fnRy"/>
+    </query>
+    
+    <query id="jz_List" key="id" tableName="案件进展列表" className="com.radish.master.entity.lawWorks.CaseSchedule"
+     widthType="px" pageSize="200" order="scheTime asc">
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="scheTime" header="开始时间" classType="Date"  operator="between" width="150" dateFormat="yyyy-mm-dd"/>
+        <column key="jzqk" header="进度情况" classType="String" width="150" />
+        <column key="plan" header="节点工作计划" classType="String" width="150"/>
+        <column key="finalTime" header="完成时间" classType="Date"  operator="between" width="150" dateFormat="yyyy-mm-dd"/>
+        <column key="id" header="操作" width="100" fnRender="fnRy"/>
+    </query>
+    
+</queryContext>

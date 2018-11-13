@@ -1,0 +1,516 @@
+<link rel="stylesheet" href="${basePath}/resources/common/libs/fileinput/css/fileinput.min.css">
+<style>
+
+#projectaddstep2 .krajee-default.file-preview-frame .kv-file-content {
+    height: auto;
+}
+
+#projectaddstep2 .krajee-default .file-footer-caption {
+    width: 100px;
+}
+
+</style>
+<script src="${basePath}/resources/common/libs/fileinput/js/fileinput.js"></script>
+<script src="${basePath}/resources/common/libs/fileinput/js/locales/zh.js"></script>
+<!--BaseFile组件-->
+<script src="${basePath}/resources/common/js/base-file.js"></script>
+<section class="content-header">
+	<h1>
+		录入案件信息
+	</h1>
+	<ol class="breadcrumb">
+		<li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
+		<li><a href="#">法务管理</a></li>
+		<li class="active">录入案件信息</li>
+	</ol>
+</section>
+<section class="content">
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="box">
+
+    <form id="contract-form" name="contract-form" class="form-horizontal">
+     <input type="hidden" name="id" id= "id">
+        <div class="box-body">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label  for="check_time1" class="col-sm-3 control-label">案件名称</label>
+					<div class=" col-sm-8">
+                   		<input class="form-control " id="name" name="name"   >
+					</div>
+                </div>
+                
+                <div class="form-group" style="background-color: #FFF5EE">
+                	<div class="dataTables_filter" id="searchDivYg" style="display: none">
+	                    <div class="btn-group">
+	                    	<input style="display: none" id="ygcase" name="caseid" value="0"/>
+	                    	<input style="display: none" id="ygtype" name="pType" value="10"/>
+	                       <!-- <button type="button" class="btn btn-primary" data-btn-type="searchYg">查询</button> -->
+	                    </div>
+	                    <div class="btn-group">
+	                    	<button type="button" class="btn btn-primary" data-btn-type="add" id="addYg">新增原告</button>
+	                    	<button type="button" class="btn btn-default" data-btn-type="edit" id="editYg">编辑</button>
+	                        <button type="button" class="btn btn-default" data-btn-type="delete" id="deleteYg">删除</button>
+	                    </div>
+                	</div>
+	                <div class="box-body">
+	                    <table id="Yg_table" class="table table-bordered table-striped table-hover">
+	                    </table>
+	                </div>
+                </div>
+				
+				<div class="form-group">
+                    <label  for="check_time1" class="col-sm-3 control-label">受理法院</label>
+					<div class=" col-sm-8">
+                   		<input class="form-control " id="court" name="court"   >
+					</div>
+                </div>
+                <div class="form-group">
+                    <label  for="check_time1" class="col-sm-3 control-label">法官电话</label>
+					<div class=" col-sm-8">
+                   		<input class="form-control " id="judgeTel" name="judgeTel"   >
+					</div>
+                </div>
+                 <div class="form-group">
+                    <label  for="check_time1" class="col-sm-3 control-label">受理法官</label>
+					<div class=" col-sm-8">
+                   		<input class="form-control " id="judge" name="judge"   >
+					</div>
+                </div>
+                
+            </div>
+            <div class="col-md-6">
+            	<div class="form-group">
+                    <label  for="check_time1" class="col-sm-3 control-label">类型</label>
+					<div class=" col-sm-8">
+                   		<select id="caseType" class="form-control select2 "  name="caseType" style="width:100%" >
+                   			<option selected="selected" value="10">刑事案件</option>
+                   			<option  value="20">民事案件</option>
+                   			<option  value="30">劳动仲裁</option>
+                   			<option  value="40">其他</option>
+                   		</select>
+					</div>
+                </div>
+                
+                <div class="form-group" style="background-color:#F4F4F4">
+                	<div class="dataTables_filter" id="searchDivBg" style="display: none">
+	                    <div class="btn-group">
+	                    	<input style="display: none" id="bgcase" name="caseid" value="0"/>
+	                    	<input style="display: none" id="bgtype" name="pType" value="20"/>
+	                        <!-- <button type="button" class="btn btn-primary" data-btn-type="searchYg">查询</button> -->
+	                    </div>
+	                    <div class="btn-group">
+	                    	<button type="button" class="btn btn-primary" data-btn-type="add" id="addBg">新增被告</button>
+	                    	<button type="button" class="btn btn-default" data-btn-type="edit" id="editBg">编辑</button>
+	                        <button type="button" class="btn btn-default" data-btn-type="delete" id="deleteBg">删除</button>
+	                    </div>
+                	</div>
+	                <div class="box-body">
+	                    <table id="Bg_table" class="table table-bordered table-striped table-hover">
+	                    </table>
+	                </div>
+                </div>
+                
+                <div class="form-group">
+                   
+                </div>
+            </div>        
+        </div>
+        <div class="form-group">
+                    <label for="descs" class="col-sm-2 control-label">诉讼要求</label>
+
+                    <div class="col-sm-9">
+                        <textarea class="form-control" id="descs" name="descs" placeholder="诉讼要求" rows="5"></textarea>
+                    </div>
+            </div>
+        <div class="box-body">
+            <div class="col-md-6">
+            	<div class="form-group">
+					<label  for="LAtime" class="col-sm-3 control-label">立案时间</label>
+					<div class=" col-sm-8">
+						<input class="form-control date-picker" id="latime" name="latime"  data-flag="datepicker" data-format="yyyy-mm-dd"  placeholder="立案时间"  >
+				
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<label  for="JZQXtime" class="col-sm-3 control-label">举证期限日</label>
+					<div class=" col-sm-8">
+						<input class="form-control date-picker" id="jzqxtime" name="jzqxtime"  data-flag="datepicker" data-format="yyyy-mm-dd"  placeholder="举证期限日"  >
+				
+					</div>
+				</div>
+				<div class="form-group">
+					<label  for="KYtime" class="col-sm-3 control-label">裁定送达时间</label>
+					<div class=" col-sm-8">
+						<input class="form-control date-picker" id="cdsdtime" name="cdsdtime"  data-flag="datepicker" data-format="yyyy-mm-dd"  placeholder="裁定送达时间"  >
+				
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<label  for="CFtime" class="col-sm-3 control-label">查封到期日</label>
+					<div class=" col-sm-8">
+						<input class="form-control date-picker" id="cftime" name="cftime"  data-flag="datepicker" data-format="yyyy-mm-dd"  placeholder="查封到期日"  >
+				
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<label  for="KYtime" class="col-sm-3 control-label">扣押到期日</label>
+					<div class=" col-sm-8">
+						<input class="form-control date-picker" id="kytime" name="kytime"  data-flag="datepicker" data-format="yyyy-mm-dd"  placeholder="扣押到期日"  >
+				
+					</div>
+				</div>
+				
+				
+            </div>
+            <div class="col-md-6">
+            	<div class="form-group">
+					<label  for="KTtime" class="col-sm-3 control-label">开庭时间</label>
+					<div class=" col-sm-8">
+						<input class="form-control date-picker" id="kttime" name="kttime"  data-flag="datepicker" data-format="yyyy-mm-dd"  placeholder="开庭时间"  >
+				
+					</div>
+				</div>
+				<div class="form-group">
+					<label  for="PJSDtime" class="col-sm-3 control-label">判决送达时间</label>
+					<div class=" col-sm-8">
+						<input class="form-control date-picker" id="PJSDtime" name="pjsdtime"  data-flag="datepicker" data-format="yyyy-mm-dd"  placeholder="判决送达时间"  >
+				
+					</div>
+				</div>
+				<div class="form-group">
+					<label  for="YYtime" class="col-sm-3 control-label">管辖异议截止日</label>
+					<div class=" col-sm-8">
+						<input class="form-control date-picker" id="yytime" name="yytime"  data-flag="datepicker" data-format="yyyy-mm-dd"  placeholder="管辖异议截止日"  >
+				
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<label  for="DJtime" class="col-sm-3 control-label">冻结到期日</label>
+					<div class=" col-sm-8">
+						<input class="form-control date-picker" id="djtime" name="djtime"  data-flag="datepicker" data-format="yyyy-mm-dd"  placeholder="冻结到期日"  >
+				
+					</div>
+				</div>
+				<div class="form-group">
+                    <label  for="money" class="col-sm-3 control-label">标的额（元）</label>
+					<div class=" col-sm-8">
+                   		<input class="form-control " id="money" name="money"   >
+					</div>
+                </div>
+            </div>
+        </div>
+        <input type="hidden" name="fileId" id="fileId">
+					<div class="form-group" align="center" id="wjscid">
+						<div class="btn btn-default btn-file" id="uploadFile">
+							<i class="fa fa-paperclip"></i> 上传相关文书(Max. 10MB)
+						</div>
+					</div>
+					<div class="form-group" id="file_container">
+						<input type="file" name="file"  id="attachment">
+					</div>
+        <!-- /.box-body -->
+        <div class="" style="text-align: center;height:50px;width:100%;">
+            <!--以下两种方式提交验证,根据所需选择-->
+            <button type="submit" class="btn btn-primary" data-btn-type="save" id="b_sub">保存</button>
+            <button type="button" class="btn btn-success" data-btn-type="returnlist" id="returnList">返回列表</button>
+        </div>
+        <!-- /.box-footer -->
+    </form>
+    
+</div>
+</div>
+</div>
+</section>
+<script>
+    var form =null;
+    var   bh = '${bh?default(0)}';
+    var  id = '${id?default(0)}';
+    var  ck = '${ck?default(0)}';
+    if(ck!=0){
+		$("#b_sub").css("display","none")
+		$("#wjscid").css("display","none")
+    	$("#attachment").css("display","none")
+
+    	$("#addYg").css("display","none")
+    	$("#editYg").css("display","none")
+    	$("#deleteYg").css("display","none")
+    	$("#addBg").css("display","none")
+    	$("#editBg").css("display","none")
+    	$("#deleteBg").css("display","none")
+    }
+    if(id!=0){
+    	$("#ygcase").val(id);
+        $("#bgcase").val(id);
+    }
+    var ygTable,bgTable, winId = "projectQueryWin";
+    $(function() {
+    	ygTable = new CommonTable("Yg_table", "yg_List", "searchDivYg");
+    	bgTable = new CommonTable("Bg_table", "bg_List", "searchDivBg");
+        //初始化控件
+        form=$("#contract-form").form();
+        //数据校验
+        $("#contract-form").bootstrapValidator({
+            message : '请输入有效值',
+            feedbackIcons : {
+                valid : 'glyphicon glyphicon-ok',
+                invalid : 'glyphicon glyphicon-remove',
+                validating : 'glyphicon glyphicon-refresh'
+            },
+            submitHandler : function() {
+                modals.confirm('确认保存？', function() {
+                    //Save Data，对应'submit-提交'
+                    var params = form.getFormSimpleData();
+                    	ajaxPost(basePath+'/casemanage/save', params, function(data) {
+                            if(data.success){
+                                modals.info("保存成功");
+                                $("#id").val(data.code);
+                                $("#ygcase").val(data.code);
+                                $("#bgcase").val(data.code);
+                            }                
+                        }); 
+              
+                     
+                });
+            },
+            fields : {
+            	name : {
+                    validators : {
+                        notEmpty : {
+                            message : '请输入案件名称'
+                        }
+                    }
+                }
+            }
+        });
+        if(bh!=0){
+            $("#number").val(bh)
+            }
+        if(id!=0){
+            load(id);
+         }
+        form.initComponent();
+
+        $("#addYg").on("click",function(){
+        	addpeople(10);
+        });
+        $("#addBg").on("click",function(){
+        	addpeople(20);
+        });
+
+        $("#editYg").on("click",function(){
+        	editYg();
+        });
+        $("#editBg").on("click",function(){
+        	editBg();
+        });
+        $("#deleteYg").on("click",function(){
+        	deleteYg();
+        });
+        $("#deleteBg").on("click",function(){
+        	deleteBg();
+        });
+        $("#returnList").on("click",function(){
+        	loadPage(basePath+"/casemanage/list");
+        });
+    });
+    function load(id){
+    	ajaxPost(basePath+'/casemanage/load', {id:id}, function(data) {
+    		$("#contract-form").form().initFormData(data.data);   
+    		$("#fileId").val(data.code);       
+        }); 
+    }
+    function resetForm(){
+        form.clearForm();
+        $("#contract-form").data('bootstrapValidator').resetForm();
+    }
+
+    var fileinputDefaults = {
+            maxFileSize: 102400,
+            maxFileCount:3,
+            previewSettings: {
+                image: {width: "160px", height: "60px"},
+                text: {width: "213px", height: "160px"},
+                object: {width: "160px", height: "auto"},
+                pdf: {width: "160px", height: "160px"},
+                other: {width: "160px", height: "160px"}
+            },
+            previewZoomSettings: {
+                image: {width: "auto", height: "auto", 'max-width': "100%", 'max-height': "100%"},
+                text: {width: "100%", height: "100%", 'min-height': "480px"},
+                object: {width: "auto", height: "100%", 'min-height': "480px"},
+                pdf: {width: "100%", height: "100%", 'min-height': "480px"},
+                other: {width: "auto", height: "100%", 'min-height': "480px"}
+            },
+            uploadUrl: basePath + "/casemanage/uploadMultipleFile",
+            deleteUrl: basePath + "/casemanage/deletefile",
+            allowedPreviewTypes : ['image', 'object']
+      }
+      var defaults = {
+            title: "请上传附件",
+            getFileResultUrl: basePath+"/casemanage/getFiles",
+            downloadFileUrl: basePath+"/casemanage/download/",
+            fileinput: fileinputDefaults,
+            showType:'detail',
+            window:true,
+            callback:function(fileId,oldfileIds){
+                this.showFiles({
+                    fileIds:fileId,
+                    type:'preview'
+                });
+            }
+      }
+      
+      $("#uploadFile").file($.extend({}, defaults, {
+          title:"请上传附件",
+          fileinput:$.extend({}, fileinputDefaults, {
+              uploadExtraData: {"fileField":"fileId"}
+          }),
+          showContainer:'#attachment',
+          fileIdContainer:"[name='fileId']",
+          extraPreviewConfig:{
+              "fileField":"fileId"
+          }
+      }));
+	
+    
+    //新增原告10  被告20
+	function addpeople(type){
+		var caseid =  $("#id").val();
+		var til = "原告";
+		if(type=="20"){
+			til = "被告";
+		}
+		if(!caseid){//如果案件不存在，则先保存案件
+			 modals.confirm('案件信息未保存，是否确定保存再添加'+til+'？', function() {
+                	 //Save Data，对应'submit-提交'
+                	 if(!$("#name").val()){
+                		 modals.info("案件名称未输入！");
+                		 return;
+                    	}
+                 	var params = form.getFormSimpleData();
+                 	ajaxPost(basePath+'/casemanage/save', params, function(data) {
+                         if(data.success){
+                             $("#id").val(data.code);
+                             $("#ygcase").val(data.code);
+                             $("#bgcase").val(data.code);
+                             caseid = data.code
+                            
+                             modals.openWin({
+                 	            winId:winId,
+                 	            title:"新增"+til,
+                 	            width:'1000px',
+                 	            url:basePath+"/casemanage/addpeople?caseid="+caseid+"&type="+type,
+                                hideFunc:function(){
+                                	if(type=="10"){
+                                		ygTable.reloadData();
+                                    }else if(type=="20"){
+                                		bgTable.reloadData();
+                                    }
+                                }
+                 	           });
+                         }                
+                     }); 
+           
+                  
+             });
+		}else{
+			modals.openWin({
+	            winId:winId,
+	            title:til,
+	            width:'1000px',
+	            url:basePath+"/casemanage/addpeople?caseid="+caseid+"&type="+type,
+                hideFunc:function(){
+                	if(type=="10"){
+                		ygTable.reloadData();
+                    }else if(type=="20"){
+                		bgTable.reloadData();
+                    }
+                }
+	           });
+		}
+		
+    }
+
+	function fnRy(value){
+		return "<a onclick='lookRy(\""+value+"\")'>详情</a>"
+    }
+    //查看
+	function lookRy(value){
+		 modals.openWin({
+	            winId:"ryxq",
+	            title:"详情",
+	            width:'1000px',
+	            url:basePath+"/casemanage/addpeople?id="+value+"&ryck=look"
+	           });
+	}
+	//修改原告
+	function editYg(){
+		var rowId = ygTable.getSelectedRowId();
+		if(!rowId){
+            modals.info('请选择要编辑的原告');
+            return false;
+        }
+		modals.openWin({
+            winId:"ryxq",
+            title:"详情",
+            width:'1000px',
+            url:basePath+"/casemanage/addpeople?id="+rowId,
+            hideFunc:function(){
+            		ygTable.reloadData();
+            }
+           });
+        
+	}
+	//删除原告
+	function deleteYg(){
+		var rowId = ygTable.getSelectedRowId();
+		if(!rowId){
+            modals.info('请选择要删除的原告');
+            return false;
+        }
+		modals.confirm("是否要删除该原告？",function(){
+            ajaxPost(basePath+"/casemanage/deletePeople?id="+rowId,null,function(data){
+            	if(data.success){
+            		ygTable.reloadData();
+            	}
+            });
+        })
+	}
+	//修改被告
+	function editBg(){
+		var rowId = bgTable.getSelectedRowId();
+		if(!rowId){
+            modals.info('请选择要编辑的被告');
+            return false;
+        }
+		modals.openWin({
+            winId:"ryxq",
+            title:"详情",
+            width:'1000px',
+            url:basePath+"/casemanage/addpeople?id="+rowId,
+            hideFunc:function(){
+            	bgTable.reloadData();
+            }
+           });
+	}
+	//删除被告
+	function deleteBg(){
+		var rowId = bgTable.getSelectedRowId();
+		if(!rowId){
+            modals.info('请选择要删除的被告');
+            return false;
+        }
+		modals.confirm("是否要删除该原告？",function(){
+            ajaxPost(basePath+"/casemanage/deletePeople?id="+rowId,null,function(data){
+            	if(data.success){
+            		bgTable.reloadData();
+            	}
+            });
+        })
+	}
+    </script>

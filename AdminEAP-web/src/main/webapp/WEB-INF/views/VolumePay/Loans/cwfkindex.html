@@ -97,9 +97,9 @@
     
     function fnRenderXQ(value, type, rowObj){
     	var oper ="";
-    	if(rowObj.status=="财务放款"){
+    	if(rowObj.status=="财务付款"){
     		oper += "<a href='javascript:void(0)' onclick='volumeManageObject.submit(\"" + value + "\")'>查看付款</a>";
-       	}else if(rowObj.status=="已放款"){
+       	}else if(rowObj.status=="已付款"){
        		oper += "<a href='javascript:void(0)' onclick='volumeManageObject.look(\"" + value + "\")'>查看</a>";
        		if(rowObj.isjz=="0"){
        			oper += "&nbsp;&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='volumeManageObject.jz(\"" + value + "\")'>记账</a>";

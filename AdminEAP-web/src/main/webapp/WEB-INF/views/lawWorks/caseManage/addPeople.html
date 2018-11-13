@@ -1,0 +1,138 @@
+<link rel="stylesheet" href="${basePath}/resources/common/libs/fileinput/css/fileinput.min.css">
+<style>
+
+#projectaddstep2 .krajee-default.file-preview-frame .kv-file-content {
+    height: auto;
+}
+
+#projectaddstep2 .krajee-default .file-footer-caption {
+    width: 100px;
+}
+
+</style>
+<script src="${basePath}/resources/common/libs/fileinput/js/fileinput.js"></script>
+<script src="${basePath}/resources/common/libs/fileinput/js/locales/zh.js"></script>
+<!--BaseFile组件-->
+<script src="${basePath}/resources/common/js/base-file.js"></script>
+<section class="content">
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="box">
+
+    <form id="people-form" name="people-form" class="form-horizontal">
+     <input type="hidden" name="id" >
+        <div class="box-body">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label  for="name" class="col-sm-3 control-label">姓名</label>
+					<div class=" col-sm-8">
+                   		<input class="form-control " name="name"   >
+					</div>
+                </div>
+                
+				
+				<div class="form-group">
+                    <label  for="tel" class="col-sm-3 control-label">电话</label>
+					<div class=" col-sm-8">
+                   		<input class="form-control "  name="tel"   >
+					</div>
+                </div>
+                
+            </div>
+            <div class="col-md-6">
+            	
+                
+                <div class="form-group">
+                    <label  for="check_time1" class="col-sm-3 control-label">证件号</label>
+					<div class=" col-sm-8">
+                   		<input class="form-control "  name="idcode"   >
+					</div>
+                </div>
+                <div class="form-group">
+                    <label  for="address" class="col-sm-3 control-label">住址</label>
+					<div class=" col-sm-8">
+                   		<input class="form-control "  name="address"   >
+					</div>
+                </div>
+            </div>        
+        </div>
+        <!-- /.box-body -->
+        <div class="" style="text-align: center;height:50px;width:100%;">
+            <!--以下两种方式提交验证,根据所需选择-->
+            <button type="submit" class="btn btn-primary" data-btn-type="save" id="saveP">保存</button>
+        </div>
+        <!-- /.box-footer -->
+    </form>
+    
+</div>
+</div>
+</div>
+</section>
+<script>
+    var form1 =null;
+    var  ryid = '${id?default(0)}';
+    var  ryck = '${ck?default(0)}';
+    var ajid = '${caseid?default(0)}';
+    var ptype = '${type?default(0)}';
+    if(ryck!=0){
+		$("#saveP").css("display","none")
+    }
+    $(function() {
+        //初始化控件
+        form1=$("#people-form").form();
+        //数据校验
+        $("#people-form").bootstrapValidator({
+            message : '请输入有效值',
+            feedbackIcons : {
+                valid : 'glyphicon glyphicon-ok',
+                invalid : 'glyphicon glyphicon-remove',
+                validating : 'glyphicon glyphicon-refresh'
+            },
+            submitHandler : function() {
+                modals.confirm('确认保存？', function() {
+                    //Save Data，对应'submit-提交'
+                    var params = form1.getFormSimpleData();
+                    	ajaxPost(basePath+'/casemanage/savepeople?caseid='+ajid+"&type="+ptype, params, function(data) {
+                            if(data.success){
+                                modals.info("保存成功");
+                                
+                            }                
+                        }); 
+              
+                     
+                });
+            },
+            fields : {
+            	name : {
+                    validators : {
+                        notEmpty : {
+                            message : '请输入姓名'
+                        }
+                    }
+                },
+                idcode : {
+                    validators : {
+                        notEmpty : {
+                            message : '请输入证件号'
+                        }
+                    }
+                }
+            }
+        });
+        if(ryid!=0){
+            load(ryid);
+         }
+        form1.initComponent();
+        
+    });
+    function load(id){
+    	ajaxPost(basePath+'/casemanage/loadPeople', {id:id}, function(data) {
+    		$("#people-form").form().initFormData(data.data);   
+        }); 
+    }
+    function resetForm(){
+    	form1.clearForm();
+        $("#people-form").data('bootstrapValidator').resetForm();
+    }
+
+</script>
