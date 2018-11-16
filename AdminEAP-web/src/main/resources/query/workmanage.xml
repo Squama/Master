@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <queryContext xmlns="http://www.example.org/query" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.example.org/query query.xsd">
-    <query id="member_project_list" key="id" tableName="项目人员管理" widthType="px">
+    <query id="member_project_list" key="id" tableName="项目人员管理" widthType="px" pageSize="20">
         <sql>
             <![CDATA[
               SELECT p.id id,project_code projectCode, project_name projectName, name projectManager, status 

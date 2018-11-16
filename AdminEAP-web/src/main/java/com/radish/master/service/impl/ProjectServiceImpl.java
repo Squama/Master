@@ -16,6 +16,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.hibernate.type.IntegerType;
 import org.hibernate.type.StringType;
 import org.hibernate.type.Type;
 import org.slf4j.Logger;
@@ -266,7 +267,7 @@ public class ProjectServiceImpl extends BaseServiceImpl implements ProjectServic
         // 启动流程
         return runtimePageService.startProcessInstanceByKey(processDefinitionKey, name, variables, user.getId(), businessKey);
     }
-    
+
     @Override
     public Result startPlanFlow(ConstructionPlan plan, String processDefinitionKey) {
         User user = SecurityUtil.getUser();
@@ -275,8 +276,8 @@ public class ProjectServiceImpl extends BaseServiceImpl implements ProjectServic
 
         this.update(plan);
 
-        String title = "10".equals(plan.getType())?"总":"月度";
-        
+        String title = "10".equals(plan.getType()) ? "总" : "月度";
+
         String name = "项目：" + plan.getProjectName() + "栋号：" + plan.getBuilding() + "【施工" + title + "计划进度审核】";
 
         // businessKey
@@ -304,24 +305,35 @@ public class ProjectServiceImpl extends BaseServiceImpl implements ProjectServic
                 "SELECT u.id value, u.name data FROM tbl_user u, tbl_user_team ut, tbl_project_team pt WHERE u.id = ut.user_id AND ut.team_id = pt.id AND pt.project_id =? AND pt.status = '30'",
                 new Object[] { projectID }, new Type[] { StringType.INSTANCE }, Options.class);
     }
-    
+
     @Override
     public List<Options> getTeamMemberNonManagerComboboxByTeam(String teamID) {
         return this.findMapBySql(
-                "SELECT u.id value, u.name data FROM tbl_user u, tbl_user_team ut, tbl_project_team pt WHERE u.id = ut.user_id AND ut.team_id = pt.id AND pt.id =? AND pt.status = '10'",
+                "SELECT u.id value, u.name data FROM tbl_worker u, tbl_user_team ut, tbl_project_team pt WHERE u.id = ut.user_id AND ut.team_id = pt.id AND pt.id =?",
                 new Object[] { teamID }, new Type[] { StringType.INSTANCE }, Options.class);
     }
 
     @Override
     public List<Options> getMemberTeamComboboxByProject(String projectID) {
-        return this.findMapBySql("select id value, team_name data from tbl_project_team where project_id=? AND status != '20'", new Object[] { projectID },
+        return this.findMapBySql("select id value, team_name data from tbl_project_team where project_id=?", new Object[] { projectID },
                 new Type[] { StringType.INSTANCE }, Options.class);
+    }
+
+    @Override
+    public List<Options> getMemberTeamComboboxByProjectAndStatus(String projectID, int status) {
+        return this.findMapBySql("select id value, team_name data from tbl_project_team where project_id=? AND Status=?", new Object[] { projectID, status },
+                new Type[] { StringType.INSTANCE, IntegerType.INSTANCE }, Options.class);
     }
 
     @Override
     public List<Options> getUserCombobox() {
         return this.findMapBySql("select id value, name data from tbl_user where audit_status is not null", new Object[] {}, new Type[] { StringType.INSTANCE },
                 Options.class);
+    }
+
+    @Override
+    public List<Options> getWorkerCombobox() {
+        return this.findMapBySql("select id value, name data from tbl_worker", new Object[] {}, new Type[] { }, Options.class);
     }
 
     @Override

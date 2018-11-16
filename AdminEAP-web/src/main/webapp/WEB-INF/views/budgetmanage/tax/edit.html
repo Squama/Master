@@ -3,7 +3,7 @@
  </script>
 <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><li class="fa fa-remove"></li></button>
-    <h5 class="modal-title">总价措施项目费</h5>
+    <h5 class="modal-title">规费消耗</h5>
 </div>
 <section class="content">
     <div class="row">
@@ -18,12 +18,6 @@
                     <div class="box-body">
                         <!-- 内容 -->
                         <div class="col-md-12">
-                        	<div class="form-group">
-                                <label class="col-sm-3 control-label">名称：<span style="color:red">*</span></label>
-                                <div class="col-sm-5">
-                                    <input type="text" class="form-control" id="name" name="name" placeholder="总价措施项目费名称">
-                                </div>
-                            </div>
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">选择项目<span style="color:red">*</span></label>
                                 <div class="col-sm-5">
@@ -41,33 +35,9 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">安全文明施工费（元）：<span style="color:red">*</span></label>
+                                <label class="col-sm-3 control-label">消耗税金（元）：<span style="color:red">*</span></label>
                                 <div class="col-sm-5">
-                                    <input type="text" class="form-control" id="construct" name="construct" placeholder="安全文明施工费" value="0" onkeyup="value=value.replace(/[^\d.]/g,'')">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">总价措施项目费（元）：<span style="color:red">*</span></label>
-                                <div class="col-sm-5">
-                                    <input type="text" class="form-control" id="issue" name="issue" placeholder="总价措施项目费" value="0" onkeyup="value=value.replace(/[^\d.]/g,'')">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">管理费（元）：<span style="color:red">*</span></label>
-                                <div class="col-sm-5">
-                                    <input type="text" class="form-control" id="manage" name="manage" placeholder="管理费" value="0" onkeyup="value=value.replace(/[^\d.]/g,'')">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">规费（元）：<span style="color:red">*</span></label>
-                                <div class="col-sm-5">
-                                    <input type="text" class="form-control" id="rule" name="rule" placeholder="规费" value="0" onkeyup="value=value.replace(/[^\d.]/g,'')">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">税金（元）：<span style="color:red">*</span></label>
-                                <div class="col-sm-5">
-                                    <input type="text" class="form-control" id="tax" name="tax" placeholder="税金" value="0" onkeyup="value=value.replace(/[^\d.]/g,'')">
+                                    <input type="text" class="form-control" id="amount" name="amount" placeholder="税金" value="0" onkeyup="value=value.replace(/[^\d.]/g,'')">
                                 </div>
                             </div>
                         </div>
@@ -84,7 +54,7 @@
 <script>
     $.fn.modal.Constructor.prototype.enforceFocus =function(){};
     var measureform = $("#measure-form").form({baseEntity: false}), initData={};
-    var measureID="${id?default(0)}";
+    var taxID="${taxID?default(0)}";
     $(function (){
         if(options != 0){
             for (var i = 0, len = options.length; i < len; i++) {
@@ -142,7 +112,7 @@
             },
             submitHandler: function () {
                 var formData = measureform.getFormSimpleData();
-                ajaxPost(basePath + '/budget/measure/save', formData, function (data) {
+                ajaxPost(basePath + '/tax/save', formData, function (data) {
                     if (data.success) {
                     	modals.hideWin(winId);
                     } else {
@@ -151,11 +121,6 @@
                 });
             },
             fields: {
-            	"name": {
-                    validators: {
-                        notEmpty: {message: '名称不能为空'}
-                    }
-                },
                 "projectID": {
                     validators: {
                         notEmpty: {message: '项目不能为空'}
@@ -166,37 +131,17 @@
                         notEmpty: {message: '项目子项不能为空'}
                     }
                 },
-                "construct": {
+                "amount": {
                     validators: {
-                        notEmpty: {message: '安全文明施工费不能为空'}
-                    }
-                },
-                "issue": {
-                    validators: {
-                        notEmpty: {message: '总价措施项目费不能为空'}
-                    }
-                },
-                "manage": {
-                    validators: {
-                        notEmpty: {message: '管理费不能为空'}
-                    }
-                },
-                "rule": {
-                    validators: {
-                        notEmpty: {message: '规费不能为空'}
-                    }
-                },
-                "tax": {
-                    validators: {
-                        notEmpty: {message: '税金不能为空'}
+                        notEmpty: {message: '消耗税金不能为空'}
                     }
                 }
             }
         });
         
         //编辑回填
-        if(measureID != 0){
-        	ajaxPost(basePath+"/budget/measure/get",{id:measureID},function(data){
+        if(taxID != 0){
+        	ajaxPost(basePath+"/tax/get",{taxID:taxID},function(data){
         		measureform.initFormData(data);
             })
         } 

@@ -28,8 +28,12 @@ public interface CommonService extends BaseService{
     
     List<Options> getEthnicCombobox();
     
+    List<Options> getFeeCombobox();
+    
     List<Options> getDepartmentCombobox();
     
     List<Options> getUserCombobox();
+    
+    List<Options> getWorkerCombobox();
     
 }

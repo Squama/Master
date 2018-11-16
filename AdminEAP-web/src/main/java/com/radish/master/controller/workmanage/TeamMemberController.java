@@ -22,6 +22,7 @@ import com.cnpc.framework.base.entity.User;
 import com.cnpc.framework.base.pojo.Result;
 import com.radish.master.entity.project.ProjectTeam;
 import com.radish.master.entity.project.UserTeam;
+import com.radish.master.entity.project.Worker;
 import com.radish.master.service.ProjectService;
 
 /**
@@ -52,7 +53,11 @@ public class TeamMemberController {
     public String edit(@PathVariable("id") String id,HttpServletRequest request) {
         request.setAttribute("id", id);
         request.setAttribute("teamOptions", JSONArray.toJSONString(projectService.getMemberTeamComboboxByProject(id)));
+        request.setAttribute("proTeamOptions", JSONArray.toJSONString(projectService.getMemberTeamComboboxByProjectAndStatus(id, 10)));
+        request.setAttribute("pointTeamOptions", JSONArray.toJSONString(projectService.getMemberTeamComboboxByProjectAndStatus(id, 20)));
+        request.setAttribute("manageTeamOptions", JSONArray.toJSONString(projectService.getMemberTeamComboboxByProjectAndStatus(id, 30)));
         request.setAttribute("userOptions", JSONArray.toJSONString(projectService.getUserCombobox()));
+        request.setAttribute("workerOptions", JSONArray.toJSONString(projectService.getWorkerCombobox()));
         request.setAttribute("userTeamOptions", JSONArray.toJSONString(projectService.getUserTeamCombobox()));
         return "workmanage/teammember/edit";
     }
@@ -60,13 +65,24 @@ public class TeamMemberController {
     @VerifyCSRFToken
     @RequestMapping(value="/save")
     @ResponseBody
-    public Result save(String projectID, String teamID, String userID, HttpServletRequest request){
+    public Result save(String projectID, String teamID, String userID, String status, HttpServletRequest request){
         ProjectTeam projectTeam = projectService.get(ProjectTeam.class, teamID);
-        User user = projectService.get(User.class, userID);
+        String userTeamUserID = "";
+        String userTeamUserName = "";
+        if("30".equals(status)){
+            User user = projectService.get(User.class, userID);
+            userTeamUserID = user.getId();
+            userTeamUserName = user.getName();
+        }else{
+            Worker worker = projectService.get(Worker.class, userID);
+            userTeamUserID = worker.getId();
+            userTeamUserName = worker.getName();
+        }
+        
         
         UserTeam userTeam = new UserTeam();
-        userTeam.setUserID(user.getId());
-        userTeam.setUserName(user.getName());
+        userTeam.setUserID(userTeamUserID);
+        userTeam.setUserName(userTeamUserName);
         userTeam.setTeamID(projectTeam.getId());
         userTeam.setTeamCode(projectTeam.getTeamCode());
         userTeam.setTeamName(projectTeam.getTeamName());

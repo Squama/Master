@@ -26,6 +26,17 @@
                         <!-- 内容 -->
                         <div class="col-md-12">
                             <div class="form-group">
+                                <label class="col-sm-3 control-label">班组类型<span style="color:red">*</span></label>
+                                <div class="col-sm-5">
+                                    <select id="status" class="form-control select2" name="status">
+				                        <option selected="selected" value="">选择一个班组类型</option>
+				                        <option value="10">专业作业班组</option>
+				                        <option value="20">点工班组</option>
+				                        <option value="30">管理人员</option>
+				                    </select>
+                                </div>
+                            </div> 
+                            <div class="form-group">
                                 <label class="col-sm-3 control-label">班组<span style="color:red">*</span></label>
                                 <div class="col-sm-5">
                                     <select id="teamID" class="form-control select2" name="teamID">
@@ -85,21 +96,40 @@
     initData.projectID = projectID;
     form.initFormData(initData);
     
-    var teamOptions = '${teamOptions?default(0)}',tOptions=0;
+    var teamOptions = '${teamOptions?default(0)}',tOptions=0;//全部班组
     if(teamOptions != 0){
         tOptions = JSON.parse(teamOptions);
     }
     
-    var userOptions = '${userOptions?default(0)}',uOptions=0;
+    var proTeamOptions = '${proTeamOptions?default(0)}',ptOptions=0;//专业作业班组
+    if(proTeamOptions != 0){
+    	ptOptions = JSON.parse(proTeamOptions);
+    }
+    
+    var pointTeamOptions = '${pointTeamOptions?default(0)}',potOptions=0;//点工班组
+    if(pointTeamOptions != 0){
+    	potOptions = JSON.parse(pointTeamOptions);
+    }
+    
+    var manageTeamOptions = '${manageTeamOptions?default(0)}',mtOptions=0;//管理班组
+    if(manageTeamOptions != 0){
+    	mtOptions = JSON.parse(manageTeamOptions);
+    }
+    
+    var userOptions = '${userOptions?default(0)}',uOptions=0;//机关人员
     if(userOptions != 0){
         uOptions = JSON.parse(userOptions);
+    }
+    
+    var workerOptions = '${workerOptions?default(0)}',wOptions=0;//务工人员
+    if(workerOptions != 0){
+        wOptions = JSON.parse(workerOptions);
     }
     
     var userTeamOptions = '${userTeamOptions?default(0)}',utOptions=0;
     if(userTeamOptions != 0){
         utOptions = JSON.parse(userTeamOptions);
     }
-    console.log(utOptions);
     
     var memberManageObject = {
             initButtonEvent: function () {
@@ -131,7 +161,7 @@
                 api.column(4, {page:'current'} ).data().each( function ( group, i ) {
                     if ( last !== group ) {
                         var ret = group;
-                        var info = '所属班组：' + group;
+                        var info = '所属班组：' + this.data()[i].teamName;
                         $(rows).eq( i ).before(
                             '<tr class="group"  style="background-color:#3c8dbc;" data-container-id="'+group+'" onclick="toggleContainer(this);return false;">'+
                             '<td class="text-left" colspan="6"><font color="#fff">'+info+'</font></td>'+
@@ -177,6 +207,11 @@
                 });
             },
             fields: {
+            	"status": {
+                    validators: {
+                        notEmpty: {message: '班组类型不能为空'}
+                    }
+                },
                 "teamID": {
                     validators: {
                         notEmpty: {message: '班组不能为空'}
@@ -198,6 +233,46 @@
         //初始化控件
         form.initComponent();
         memberManageObject.initButtonEvent();
+        
+        $("#status").select2();
+        $("#status").bind("change", function () {
+            var value = $(this).val();
+            if (value === "") {
+                return false;
+            }
+            
+            $('#teamID').empty();
+            $('#teamID').append('<option selected="selected" value="">选择一个班组类型</option>');
+            $('#userID').empty();
+            $('#userID').append('<option selected="selected" value="">选择一个人员</option>');
+            var tempOptions;
+            switch (value) {
+	            case "10":
+	                tempOptions = ptOptions;
+	                tempUsers = wOptions;
+	                break;
+	            case "20":
+	            	tempOptions = potOptions;
+                    tempUsers = wOptions;
+	                break;
+	            case "30":
+	            	tempOptions = mtOptions;
+                    tempUsers = uOptions;
+                    break;
+            }
+            
+            for (var i = 0, len = tempOptions.length; i < len; i++) {
+                var tOption = tempOptions[i];
+                $('#teamID').append("<option value=\"" + tOption.value + "\">" + tOption.data + "</option>");
+            }
+            $('#teamID').select2();
+            
+            for (var i = 0, len = tempUsers.length; i < len; i++) {
+                var tOption = tempUsers[i];
+                $('#userID').append("<option value=\"" + tOption.value + "\">" + tOption.data + "</option>");
+            }
+            $('#userID').select2();
+        });
         
         if(tOptions != 0){
             for (var i = 0, len = tOptions.length; i < len; i++) {

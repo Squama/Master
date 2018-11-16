@@ -6,7 +6,7 @@
     <ol class="breadcrumb">
         <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
         <li><a href="#">劳务管理</a></li>
-        <li class="active">专业作业班组</li>
+        <li class="active">班组管理</li>
     </ol>
 </section>
 
@@ -19,8 +19,13 @@
                     <select id="projectID" class="form-control select2" name="projectID" style="width:200px;" operator="eq">
                         <option selected="selected" value="">选择一个项目</option>
                     </select>
+                    <select id="status" class="form-control select2" name="status" style="width:200px;" operator="in">
+                        <option selected="selected" value="10,20">选择一个班组类型</option>
+                        <option value="10">专业作业班组</option>
+                        <option value="20">点工班组</option>
+                    </select>
                     <input type="search" placeholder="请输入班组名称" title="班组名称" name="teamName" class="form-control" id="teamName" operator="like" likeOption="true">
-                    <input type="search"  name = "status" id="status" value="30" style="display:none;" operator="not_eq">
+                    <!-- <input type="search"  name = "status" id="status" value="30" style="display:none;" operator="not_eq"> -->
                     <div class="btn-group">
                         <button type="button" class="btn btn-primary" data-btn-type="search">查询</button>
                         <button type="button" class="btn btn-default" data-btn-type="reset">重置</button>

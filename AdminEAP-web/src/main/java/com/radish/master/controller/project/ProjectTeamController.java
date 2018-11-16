@@ -20,12 +20,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSONArray;
 import com.cnpc.framework.annotation.RefreshCSRFToken;
 import com.cnpc.framework.annotation.VerifyCSRFToken;
-import com.cnpc.framework.base.entity.User;
 import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.utils.StrUtil;
 import com.radish.master.entity.project.ProjectTeam;
 import com.radish.master.entity.project.UserTeam;
+import com.radish.master.entity.project.Worker;
 import com.radish.master.service.BudgetService;
+import com.radish.master.service.CommonService;
 import com.radish.master.service.ProjectService;
 
 /**
@@ -49,6 +50,9 @@ public class ProjectTeamController {
     @Resource
     private BudgetService budgetService;
     
+    @Resource
+    private CommonService commonService;
+    
     @RequestMapping(value="/list",method = RequestMethod.GET)
     public String list(HttpServletRequest request){
         request.setAttribute("projectOptions", JSONArray.toJSONString(budgetService.getProjectCombobox()));
@@ -58,7 +62,7 @@ public class ProjectTeamController {
     @RefreshCSRFToken
     @RequestMapping(value="/add",method = RequestMethod.GET)
     public String add(HttpServletRequest request){
-        request.setAttribute("leaderOptions", JSONArray.toJSONString(projectService.getUserCombobox()));
+        request.setAttribute("leaderOptions", JSONArray.toJSONString(commonService.getWorkerCombobox()));
         return "projectmanage/team/add";
     }
     
@@ -83,14 +87,13 @@ public class ProjectTeamController {
         
         
         if(StrUtil.isEmpty(projectTeam.getId())){
-            projectTeam.setStatus("10");
             projectTeam.setUpdateDateTime(new Date());
             projectService.save(projectTeam);
-            User user = projectService.get(User.class, projectTeam.getTeamLeaderID());
+            Worker worker = commonService.get(Worker.class, projectTeam.getTeamLeaderID());
             
             UserTeam userTeam = new UserTeam();
-            userTeam.setUserID(user.getId());
-            userTeam.setUserName(user.getName());
+            userTeam.setUserID(worker.getId());
+            userTeam.setUserName(worker.getName());
             userTeam.setTeamID(projectTeam.getId());
             userTeam.setTeamCode(projectTeam.getTeamCode());
             userTeam.setTeamName(projectTeam.getTeamName());

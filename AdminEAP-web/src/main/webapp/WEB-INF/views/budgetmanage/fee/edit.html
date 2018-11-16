@@ -1,0 +1,305 @@
+<script src="${basePath}/resources/common/js/calculate.js"></script>
+<script type="text/javascript">
+ $.fn.modal.Constructor.prototype.enforceFocus = function () {};
+ </script>
+ <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><li class="fa fa-remove"></li></button>
+    <h5 class="modal-title">规费上报</h5>
+</div>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            
+            <form id="package-form" name="package-form" class="form-horizontal">
+                <input type="hidden" name="id">
+                <input type="hidden" name="projectName">
+                <input type="hidden" name="projectSubName">
+                <div class="box box-info">
+                    <div class="box-header with-border">
+                        <span>
+                            <i class="fa fa-edit">新增规费上报</i>
+                        </span>
+                    </div>
+                    <div class="box-body">
+                        <!-- 内容 -->
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">选择项目<span style="color:red">*</span></label>
+                                <div class="col-sm-5">
+                                    <select id="detailProjectID" class="form-control select2" name="projectID">
+                                        <option selected="selected" value="">选择一个项目</option>
+                                    </select>
+                                </div>
+                            </div> 
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">选择子项<span style="color:red">*</span></label>
+                                <div class="col-sm-5">
+                                    <select id="projectSubID" class="form-control select2" name="projectSubID">
+                                        <option selected="selected" value="">选择一个子项</option>
+                                    </select>
+                                </div>
+                            </div> 
+                        </div>
+                    </div>
+                    <div class="box-footer text-center" id="packageformsave">
+                        <button type="submit" class="btn btn-primary" data-btn-type="next">保存并编辑明细</button>
+                    </div>
+                </div>
+            </form>
+            <form id="package-detail-form" name="package-detail-form" class="form-horizontal">
+                <div class="box box-success dn" id="package_det">
+                    <div class="box-header with-border">
+                        <span>
+                            <i class="fa fa-files-o">编辑规费上报详情</i>
+                        </span>
+                    </div>
+                    <div class="dataTables_filter" style="text-align:center;margin-top:5px;">
+                       <input type="hidden" name="feeID">
+                       <input type="hidden" name="name" id="detailNameHidden">
+                       <label>规费种类：</label>
+                       <select id="detailName" class="form-control select2" name="remark" style="width:220px;">
+                           <option selected="selected" value="">选择一个规费种类</option>
+                       </select>
+                       <label>说明：</label>
+                       <input type="text" name="nothing" class="form-control" id="showRemark" style="width:220px;margin-right:8px;" readonly="readonly">
+                       <label>上报金额（元）：</label>
+                       <input type="text" placeholder="上报金额" name="price" class="form-control calculate" id="price" onkeyup="value=value.replace(/[^\d.]/g,'')" value="0" style="width:60px;margin-right:8px;">
+                       <div class="btn-group">
+                           <button type="submit" class="btn btn-primary" data-btn-type="savetx">添加</button>
+                       </div>
+                    </div>
+                    <div class="dataTables_filter" id="searchDivPDet" style="text-align:center;height:1px;">
+                       <input type="search" name="feeID" class="form-control" operator="eq" style="display:none;">
+                       <div class="btn-group">
+                           <button type="button" class="btn btn-primary" data-btn-type="search" id="refresh" style="display:none;">查询</button>
+                       </div>
+                    </div>
+                    <div class="box-body">
+                        <!-- 内容 -->
+                        <table id="package_edit_table" class="table table-bordered table-striped table-hover">
+                        </table>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<script>
+    $.fn.modal.Constructor.prototype.enforceFocus =function(){};
+    var packageform = $("#package-form").form({baseEntity: false}), initData={},
+    packagedetailform = $("#package-detail-form").form({baseEntity: false}),tOptions=0,fOptions=0;
+    var purchaseEditTable, winId = "purchaseDetWin", budgetNo=0;
+    
+    var feeOptions = '${feeOptions?default(0)}';
+    if(feeOptions != 0){
+        fOptions = JSON.parse(feeOptions);
+        console.log(fOptions);
+    }
+    
+    var feeID="${feeID?default(0)}";
+    initData.feeID = feeID;
+    packagedetailform.initFormData(initData);
+    
+    var packageEditObject = {
+            deleteDetail: function (rowId) {
+                ajaxPost(basePath + '/project/feevolume/deletedetail', {id:rowId}, function (data) {
+                    if (data.success) {
+                        purchaseEditTable.table.page('first').draw(false);
+                    } else {
+                        modals.error(data.message);
+                    }
+                });
+            }
+    }
+    
+    $(function (){
+        purchaseEditTable = new CommonTable("package_edit_table", "fee_detail_list", "searchDivPDet", {
+            "ordering" : false,
+            "lengthChange": false,
+            "displayLength": 20,
+            "scrollY": "200px",
+            "scrollCollapse": true
+        });
+        
+        if(options != 0){
+            
+            for (var i = 0, len = options.length; i < len; i++) {
+                var option = options[i];
+                $('#detailProjectID').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+            }
+            
+            $('#detailProjectID').select2();
+            
+            $('#detailProjectID').bind("change", function () {
+                var projectID = $(this).val();
+                if (projectID === "") {
+                    return false;
+                }
+                
+                var name = "";
+                if ($("#detailProjectID").prop('selectedIndex') > 0) {
+                    name = $("#detailProjectID").find("option:selected").text();
+                }
+                $('input[name="projectName"]').val(name);
+                
+                //加载子项
+                ajaxPost(basePath+"/projectvolume/getprojectsub",{projectID:projectID},function(data){
+                    var laborSubOptions = data.message;
+                    sOptions = JSON.parse(laborSubOptions);
+                    $('#projectSubID').empty();
+                    $('#projectSubID').append('<option selected="selected" value="">选择一个项目子项</option>');
+                    for (var i = 0, len = sOptions.length; i < len; i++) {
+                        var option = sOptions[i];
+                        $('#projectSubID').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+                    }
+                    $('#projectSubID').select2();
+                    
+                    $('#projectSubID').bind("change", function () {
+                        var value = $(this).val();
+                        if (value === "") {
+                            return false;
+                        }
+                        
+                        var name = "";
+                        if ($("#projectSubID").prop('selectedIndex') > 0) {
+                            name = $("#projectSubID").find("option:selected").text();
+                        }
+                        $('input[name="projectSubName"]').val(name);
+                    });
+                });
+                //子项加载结束
+            }); 
+        }
+        
+        if(fOptions != 0){
+            
+            for (var i = 0, len = fOptions.length; i < len; i++) {
+                var option = fOptions[i];
+                $('#detailName').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+            }
+            
+            $('#detailName').select2();
+            
+            $('#detailName').bind("change", function () {
+                var value = $(this).val();
+                if (value === "") {
+                    return false;
+                }
+                
+                var name = "";
+                if ($("#detailName").prop('selectedIndex') > 0) {
+                    name = $("#detailName").find("option:selected").text();
+                }
+                $('#detailNameHidden').val(name);
+                $('#showRemark').val(value);
+            }); 
+        }
+        
+        $("#package-form").bootstrapValidator({
+            message: '请输入有效值',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            submitHandler: function () {
+                var formData = packageform.getFormSimpleData();
+                ajaxPost(basePath + '/project/feevolume/save', formData, function (data) {
+                    if (data.success) {
+                        initData.feeID = data.data.id;
+                        packagedetailform.initFormData(initData);
+                        $('#package_det').show();
+                        $('#packageformsave').hide();
+                        
+                        $('#detailProjectID').attr("disabled","disabled");
+                        $('#projectSubID').attr("disabled","disabled");
+                    } else {
+                        modals.error(data.message);
+                    }
+                });
+            },
+            fields: {
+                "projectID": {
+                    validators: {
+                        notEmpty: {message: '项目不能为空'}
+                    }
+                },
+                "projectSubID": {
+                    validators: {
+                        notEmpty: {message: '项目子项不能为空'}
+                    }
+                }
+            }
+        });
+        
+        $("#package-detail-form").bootstrapValidator({
+            message: '请输入有效值',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            submitHandler: function () {
+                var formData = packagedetailform.getFormSimpleData();
+                ajaxPost(basePath + '/project/feevolume/savedetail', formData, function (data) {
+                    if (data.success) {
+                        purchaseEditTable.table.page('first').draw(false);
+                    } else {
+                        modals.error(data.message);
+                    }
+                });
+                
+            },
+            fields: {
+                "name": {
+                    validators: {
+                        notEmpty: {message: '名称不能为空'}
+                    }
+                },
+                "price": {
+                    validators: {
+                        notEmpty: {message: '上报金额不能为空'}
+                    }
+                }
+            }
+        });
+        //编辑回填
+        if(feeID != 0){
+            ajaxPost(basePath+"/project/feevolume/getfee",{feeID:feeID},function(data){
+                $('#package_det').show();
+                $('#packageformsave').hide();
+                
+                var projectName = data.data.projectName;
+                var projectSubName = data.data.projectSubName;
+                
+                var projectArea = $('#detailProjectID').parent();
+                projectArea.empty();
+                $('<input>',{
+                    "value" : projectName,
+                    "type" : "text",
+                    "class" : "form-control",
+                    "readonly" : "readonly"
+                }).appendTo(projectArea);
+                
+                var teamArea = $('#projectSubID').parent();
+                teamArea.empty();
+                $('<input>',{
+                    "value" : projectSubName,
+                    "type" : "text",
+                    "class" : "form-control",
+                    "readonly" : "readonly"
+                }).appendTo(teamArea);
+            })
+        } 
+        
+        //初始化控件
+        packageform.initComponent();
+        packagedetailform.initComponent();
+        
+    });
+    
+    function fnRenderDelete(value){
+        return "<a href='javascript:void(0)' onclick='packageEditObject.deleteDetail(\"" + value + "\")'>删除</a>";
+    }
+</script>

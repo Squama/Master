@@ -40,7 +40,7 @@
                 api.column(4, {page:'current'} ).data().each( function ( group, i ) {
                     if ( last !== group ) {
                         var ret = group;
-                        var info = '所属班组：' + group;
+                        var info = '所属班组：' + this.data()[i].teamName;
                         $(rows).eq( i ).before(
                             '<tr class="group"  style="background-color:#3c8dbc;" data-container-id="'+group+'" onclick="toggleContainer(this);return false;">'+
                             '<td class="text-left" colspan="6"><font color="#fff">'+info+'</font></td>'+

@@ -43,6 +43,12 @@ public class CommonServiceImpl extends BaseServiceImpl implements CommonService 
         return this.findMapBySql("select code value, name data from tbl_dict where parent_id = '402881f053e55e710153e570c0890001'", new Object[] {},
                 new Type[] { StringType.INSTANCE }, Options.class);
     }
+    
+    @Override
+    public List<Options> getFeeCombobox() {
+        return this.findMapBySql("select remark value, name data from tbl_dict where parent_id = '40280cac5f2edcd6015f2ee042510099'", new Object[] {},
+                new Type[] { StringType.INSTANCE }, Options.class);
+    }
 
     @Override
     public List<Options> getDepartmentCombobox() {
@@ -54,5 +60,10 @@ public class CommonServiceImpl extends BaseServiceImpl implements CommonService 
         return this.findMapBySql("select id value, name data from tbl_user where audit_status = 10", new Object[] {}, new Type[] { StringType.INSTANCE },
                 Options.class);
     }
-    
+
+    @Override
+    public List<Options> getWorkerCombobox() {
+        return this.findMapBySql("select id value, name data from tbl_worker", new Object[] {}, new Type[] { StringType.INSTANCE }, Options.class);
+    }
+
 }
