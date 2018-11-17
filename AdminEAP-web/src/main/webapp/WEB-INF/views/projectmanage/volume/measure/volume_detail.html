@@ -1,14 +1,10 @@
-<style>
-fieldset{padding:.35em .625em .75em;margin:0 2px;border:1px solid silver}
-
-legend{padding:.5em;border:0;width:auto}
-</style>
 <section class="content">
     <div class="row">
         <div class="col-xs-12">
             <div class="box box-info">
                 <form id="volume_form" name="project_form" class="form-horizontal">
                     <input type="hidden" name="projectName" id="projectName">
+                    <input type="hidden" name="teamName" id="teamName">
                     <div class="box-body">
                         <div class="col-md-6">
                             <div class="form-group">
@@ -20,17 +16,11 @@ legend{padding:.5em;border:0;width:auto}
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-5 control-label">选择合同<span style="color:red">*</span></label>
+                                <label class="col-sm-5 control-label">点工班组<span style="color:red">*</span></label>
                                 <div class="col-sm-6">
-                                    <select id="laborID" class="form-control select2" name="laborID" disabled="disabled">
-                                        <option selected="selected" value="">选择一个合同</option>
+                                    <select id="teamID" class="form-control select2" name="teamID" disabled="disabled">
+                                        <option selected="selected" value="">选择一个点工班组</option>
                                     </select>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-5 control-label">施工班组<span style="color:red">*</span></label>
-                                <div class="col-sm-6">
-                                    <input type="text" class="form-control" id="constructionTeam" name="constructionTeam" placeholder="施工班组" readonly="readonly">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -70,15 +60,13 @@ legend{padding:.5em;border:0;width:auto}
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">合同总价（元）</label>
+                                <label class="col-sm-3 control-label">措施费类别<span style="color:red">*</span></label>
                                 <div class="col-sm-6">
-                                    <input type="text" class="form-control" id="contractPrice" name="contractPrice" placeholder="合同总价" readonly="readonly">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">施工负责人<span style="color:red">*</span></label>
-                                <div class="col-sm-6">
-                                    <input type="text" class="form-control" id="constructionManager" name="constructionManager" readonly="readonly">
+                                    <select id="measureType" class="form-control select2" name="measureType" disabled="disabled">
+                                        <option selected="selected" value="">选择一个措施费</option>
+                                        <option value="construct">安全文明施工费</option>
+                                        <option value="issue">总价措施项目费</option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -176,32 +164,49 @@ legend{padding:.5em;border:0;width:auto}
                 }
                 $('#projectName').val(name);
                 
-                ajaxPost(basePath+"/projectvolume/getlabor",{projectID:value},function(data){
-                    var laborOptions = data.message;
-                    lOptions = JSON.parse(laborOptions);
-                    $('#laborID').empty();
-                    $('#laborID').append('<option selected="selected" value="">选择一个合同</option>');
-                    for (var i = 0, len = lOptions.length; i < len; i++) {
-                        var lOption = lOptions[i];
-                        $('#laborID').append("<option value=\"" + lOption.value + "\">" + lOption.data + "</option>");
+                //加载点工班组
+                ajaxPost(basePath+"/measurevolume/getpoint",{projectID:value},function(data){
+                    var packDetailOptions = data.message;
+                    pOptions = JSON.parse(packDetailOptions);
+                    $('#teamID').empty();
+                    $('#teamID').append('<option selected="selected" value="">选择一个点工班组</option>');
+                    for (var i = 0, len = pOptions.length; i < len; i++) {
+                        var option = pOptions[i];
+                        $('#teamID').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
                     }
-                    $('#laborID').select2();
-                    $('#laborID').unbind("change.Labor");
-                    $('#laborID').bind("change.Labor", function(){
-                        laborid = $(this).val();
-                        if (laborid === "") {
+                    $('#teamID').select2();
+                    
+                    $("#teamID").bind("change", function () {
+                        var teamID = $(this).val();
+                        if (teamID === "") {
                             return false;
                         }
-                        ajaxPost(basePath+"/projectvolume/getlaborinfo",{laborID:laborid},function(data){
-                            $('#constructionTeam').val(data.constructionTeam);
-                            $('#constructionManager').val(data.constructionManager);
-                            $('#contractPrice').val(data.contractPrice);
-                        });
                         
+                        var name = "";
+                        if ($("#teamID").prop('selectedIndex') > 0) {
+                            name = $("#teamID").find("option:selected").text();
+                        }
+                        $('#teamName').val(name);
+                        
+                        //加载包工包料
+                        ajaxPost(basePath+"/measurevolume/getpack",{projectID:value,teamID:teamID},function(data){
+                            var packDetailOptions = data.message;
+                            pOptions = JSON.parse(packDetailOptions);
+                            $('#packageDetailID').empty();
+                            $('#packageDetailID').append('<option selected="selected" value="">选择一个包工包料</option>');
+                            for (var i = 0, len = pOptions.length; i < len; i++) {
+                                var option = pOptions[i];
+                                $('#packageDetailID').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+                            }
+                            $('#packageDetailID').select2();
+                        });
+                        //包工包料加载结束
                     });
+                    
                 });
+                //点工班组加载结束
                 //加载子项
-                ajaxPost(basePath+"/projectvolume/getprojectsub",{projectID:value},function(data){
+                ajaxPost(basePath+"/measurevolume/getprojectsub",{projectID:value},function(data){
                     var laborSubOptions = data.message;
                     sOptions = JSON.parse(laborSubOptions);
                     $('#projectSubID').empty();
@@ -218,12 +223,12 @@ legend{padding:.5em;border:0;width:auto}
         
         //编辑回填
         if(id!="0"){
-            ajaxPost(basePath+"/projectvolume/get",{id:id},function(data){
+            ajaxPost(basePath+"/measurevolume/get",{id:id},function(data){
                 form.initFormData(data);
                 $('#laborSubID').val(data.laborSubID).trigger("change");
                 if(data.status=="20" || data.status=="30"){
                 	$('#pingxing').show();
-                	ajaxPost(basePath+"/projectvolume/getpingxing",{id:data.id},function(data){
+                	ajaxPost(basePath+"/measurevolume/getpingxing",{id:data.id},function(data){
                         var px = data.data;
                         handlePX('zhiliang', data.data.zhiliang, data.data.zhiliangsugg);
                         handlePX('anquan', data.data.anquan, data.data.anquansugg);

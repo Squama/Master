@@ -12,6 +12,7 @@ v1.0.2.08
 1.tbl_measure和tbl_measure_consume删除重新建表
 2.增加表tbl_fee、tbl_fee_detail
 3.增加表tbl_tax
+4.增加表tbl_measure_volume
 
 v1.0.2.07
 ---------------------------------------

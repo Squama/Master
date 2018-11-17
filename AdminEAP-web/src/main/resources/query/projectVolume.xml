@@ -77,6 +77,19 @@
         <column key="id" header="操作" width="80" fnRender="fnRenderVolume"/>
     </query>
     
+    <query id="measure_volume_list" key="id" tableName="工程量上报列表" className="com.radish.master.entity.MeasureVolume" widthType="px">
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="projectName" header="项目名称" classType="String" allowSort="true" width="150"/>
+        <column key="teamName" header="点工班组" classType="String" width="150"/>
+        <column key="startTime" header="起始时间" classType="String" width="150" dateFormat="yyyy-mm-dd"/>
+        <column key="endTime" header="结束时间" classType="String" width="150" dateFormat="yyyy-mm-dd"/>
+        <column key="applySub" header="申报工程款（元）" classType="String" width="150"/>
+        <column key="finalSub" header="审核工程款（元）" classType="String" width="150"/>
+        <column key="status" header="审核状态" allowSort="true" width="150" render="10=新建,20=综合审核,30=施工负责人,40=经营科审核,50=经理审批,60=财务负责人,70=已完成"/>
+        <column key="id" header="操作" width="80" fnRender="fnRenderVolume"/>
+    </query>
+    
     <query id="project_team_list" key="id" tableName="项目班组列表" className="com.radish.master.entity.project.ProjectTeam" widthType="px">
         <column key="id" hidden="true" header="id" width="80"/>
         <column key="rowIndex" header="序号" width="80"/>

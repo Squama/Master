@@ -141,7 +141,7 @@
                 }
                 $('input[name="projectName"]').val(name);
                 
-                ajaxPost(basePath+"/labor/getteamop",{projectID:projectID},function(data){
+                ajaxPost(basePath+"/budget/pack/getteam",{projectID:projectID},function(data){
                     var teamOptions = data.message;
                     tOptions = JSON.parse(teamOptions);
                     

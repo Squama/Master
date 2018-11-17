@@ -114,6 +114,12 @@ public class PackageController {
         return new Result(true, map);
     }
     
+    @RequestMapping(value="/getteam")
+    @ResponseBody
+    public Result getPoint(String projectID){
+        return new Result(true, JSONArray.toJSONString(commonService.getTeamComboboxByProject(projectID)));
+    }
+    
     @RequestMapping(value = "/start", method = RequestMethod.POST)
     @ResponseBody
     public Result start(String id) {

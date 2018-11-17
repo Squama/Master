@@ -34,6 +34,7 @@ import com.cnpc.framework.utils.PropertiesUtil;
 import com.cnpc.framework.utils.SecurityUtil;
 import com.cnpc.framework.utils.StrUtil;
 import com.radish.master.entity.Labor;
+import com.radish.master.entity.MeasureVolume;
 import com.radish.master.entity.Project;
 import com.radish.master.entity.ProjectFileItem;
 import com.radish.master.entity.ProjectVolume;
@@ -244,6 +245,49 @@ public class ProjectServiceImpl extends BaseServiceImpl implements ProjectServic
         // 启动流程
         return runtimePageService.startProcessInstanceByKey(processDefinitionKey, name, variables, user.getId(), businessKey);
     }
+    
+    @Override
+    public Result startMeasureVolumeFlow(MeasureVolume measureVolume, String processDefinitionKey) {
+        User user = SecurityUtil.getUser();
+
+        measureVolume.setStatus("20");
+
+        this.update(measureVolume);
+
+        String name = "项目：" + measureVolume.getProjectName() + "总价措施项目费工程量上报";
+
+        // businessKey
+        String businessKey = measureVolume.getId();
+
+        // 配置流程变量
+        Map<String, Object> variables = new HashMap<>();
+        variables.put(Constants.VAR_APPLYUSER_NAME, user.getName());
+        variables.put(Constants.VAR_BUSINESS_KEY, businessKey);
+        variables.put("taskName", name);
+
+        String suggestionHql = "from ActivitiSuggestion where businessKey=:businessKey AND taskNode=:taskNode";
+        Map<String, Object> suggestionParams = new HashMap<>();
+        suggestionParams.put("businessKey", businessKey);
+        suggestionParams.put("taskNode", "caozuoyuan");
+        ActivitiSuggestion as = this.get(suggestionHql, suggestionParams);
+
+        if (as == null) {
+            as = new ActivitiSuggestion();
+            as.setCreateDateTime(new Date());
+            as.setUpdateDateTime(new Date());
+            as.setBusinessKey(businessKey);
+            as.setTaskNode("caozuoyuan");
+            as.setApprove("true");
+        }
+
+        as.setSuggestion("");
+        as.setOperator(SecurityUtil.getUser().getName());
+        as.setUpdateDateTime(new Date());
+        this.save(as);
+
+        // 启动流程
+        return runtimePageService.startProcessInstanceByKey(processDefinitionKey, name, variables, user.getId(), businessKey);
+    }
 
     @Override
     public Result startLaborFlow(Labor labor, String processDefinitionKey) {
@@ -296,6 +340,12 @@ public class ProjectServiceImpl extends BaseServiceImpl implements ProjectServic
     @Override
     public List<Options> getTeamComboboxByProject(String projectID) {
         return this.findMapBySql("select id value, team_name data from tbl_project_team where project_id=? AND status = '10'", new Object[] { projectID },
+                new Type[] { StringType.INSTANCE }, Options.class);
+    }
+    
+    @Override
+    public List<Options> getPointTeamComboboxByProject(String projectID) {
+        return this.findMapBySql("select id value, team_name data from tbl_project_team where project_id=? AND status = '20'", new Object[] { projectID },
                 new Type[] { StringType.INSTANCE }, Options.class);
     }
 
@@ -383,6 +433,31 @@ public class ProjectServiceImpl extends BaseServiceImpl implements ProjectServic
         }
 
         return this.findBySql(buffer.toString(), params, ProjectVolume.class);
+    }
+    
+    @Override
+    public List<MeasureVolume> checkMeasureTimePeriod(String projectID, String measureType, String projectSubID, String startTimeStr, String endTimeStr, String volumeID) {
+        StringBuilder buffer = new StringBuilder();
+
+        buffer.append("SELECT * FROM tbl_measure_volume ");
+        buffer.append("WHERE UNIX_TIMESTAMP(start_time) <= UNIX_TIMESTAMP(:endTime) ");
+        buffer.append("AND UNIX_TIMESTAMP(end_time) >= UNIX_TIMESTAMP(:startTime) ");
+        buffer.append("AND project_id=:projectID AND project_sub_id=:projectSubID AND measure_type=:measureType ");
+
+        Map<String, Object> params = new HashMap<String, Object>();
+
+        params.put("endTime", endTimeStr);
+        params.put("startTime", startTimeStr);
+        params.put("projectID", projectID);
+        params.put("measureType", measureType);
+        params.put("projectSubID", projectSubID);
+
+        if (!StrUtil.isEmpty(volumeID)) {
+            buffer.append(" AND id <> :id");
+            params.put("id", volumeID);
+        }
+
+        return this.findBySql(buffer.toString(), params, MeasureVolume.class);
     }
 
 }

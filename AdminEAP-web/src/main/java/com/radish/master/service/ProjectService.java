@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.base.service.BaseService;
 import com.radish.master.entity.Labor;
+import com.radish.master.entity.MeasureVolume;
 import com.radish.master.entity.ProjectVolume;
 import com.radish.master.entity.project.ConstructionPlan;
 import com.radish.master.pojo.Options;
@@ -71,11 +72,15 @@ public interface ProjectService extends BaseService{
     
     public Result startVolumeFlow(ProjectVolume projectVolume, String processDefinitionKey);
     
+    public Result startMeasureVolumeFlow(MeasureVolume measureVolume, String processDefinitionKey);
+    
     public Result startLaborFlow(Labor labor, String processDefinitionKey);
     
     public Result startPlanFlow(ConstructionPlan plan, String processDefinitionKey);
     
     List<Options> getTeamComboboxByProject(String projectID);
+    
+    List<Options> getPointTeamComboboxByProject(String projectID);
     
     List<Options> getTeamManagerComboboxByProject(String projectID);
     
@@ -92,4 +97,6 @@ public interface ProjectService extends BaseService{
     Map<String, String> getUserTeamCombobox();
     
     List<ProjectVolume> checkTimePeriod(String projectID, String laborID, String laborSubID, String startTimeStr, String endTimeStr, String volumeID);
+    
+    List<MeasureVolume> checkMeasureTimePeriod(String projectID, String measureType, String projectSubID, String startTimeStr, String endTimeStr, String volumeID);
 }
