@@ -40,17 +40,17 @@ public class Salary extends BaseEntity {
     @Column(name = "team_name")
     private String teamName;
 
-    @Header(name = "施工开始时间")
+    @Header(name = "开始时间")
     @Column(name = "start_time")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date startTime;
 
-    @Header(name = "施工结束时间")
+    @Header(name = "结束时间")
     @Column(name = "end_time")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date endTime;
 
-    // 10-班组 20-管理人员
+    // 10-专业作业班组班组 20-管理人员30-点工班组40-机关人员
     @Header(name = "工资单类型")
     @Column(name = "type")
     private String type;
@@ -66,7 +66,7 @@ public class Salary extends BaseEntity {
     /*
      * 10-new 20-负责人审批 30-办公室主任审批 40-总经理审批 50-财务审批 60-已完成 70-审核不通过
      */
-    @Header(name = "所属项目名称")
+    @Header(name = "状态")
     @Column(name = "status")
     private String status;
 

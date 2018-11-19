@@ -4,6 +4,7 @@
 package com.radish.master.controller.project;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -22,13 +23,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.cnpc.framework.annotation.RefreshCSRFToken;
-import com.cnpc.framework.annotation.VerifyCSRFToken;
 import com.cnpc.framework.base.entity.User;
 import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.utils.StrUtil;
 import com.radish.master.entity.project.Salary;
 import com.radish.master.entity.project.SalaryDetail;
 import com.radish.master.entity.project.SalaryVolume;
+import com.radish.master.entity.project.Worker;
 import com.radish.master.pojo.SalaryChooseVO;
 import com.radish.master.service.CommonService;
 import com.radish.master.service.project.TeamSalaryService;
@@ -127,6 +128,35 @@ public class ProjectTeamSalaryController {
                 return new Result(false);
             }
             total = salary.getTotal();
+            
+            // 直接录入全部明细
+            List<Worker> managerList = teamSalaryService.getProMemberByProject(salary.getProjectID());
+            List<SalaryDetail> detailList = new ArrayList<SalaryDetail>();
+            for (Worker user : managerList) {
+                SalaryDetail detail = new SalaryDetail();
+                detail.setCreateDateTime(new Date());
+                detail.setUpdateDateTime(new Date());
+
+                detail.setSalaryID(salary.getId());
+                detail.setUserID(user.getId());
+                detail.setName(user.getName());
+                detail.setMobile(user.getMobile());
+                detail.setIdentificationNumber(user.getIdentificationNumber());
+                detail.setWorkType(user.getWorkType());
+
+                detail.setAttendance("0");
+                detail.setPayable("0");
+                detail.setLoan("0");
+                detail.setMedical("0");
+                detail.setSocial("0");
+                detail.setTax("0");
+                detail.setActual("0");
+                detail.setRemark("");
+
+                detailList.add(detail);
+
+            }
+            teamSalaryService.batchSave(detailList);
         } else {
             Salary oldSalary = teamSalaryService.get(Salary.class, salary.getId());
             oldSalary.setProjectID(salary.getProjectID());
@@ -204,10 +234,17 @@ public class ProjectTeamSalaryController {
         Map<String, Object> params = new HashMap<>();
         params.put("salaryID", id);
         List<SalaryDetail> detailList = teamSalaryService.find(hql, params);
+        
+        String hqlVolume = "from SalaryVolume where salaryID=:salaryID";
+        Map<String, Object> paramsVolume = new HashMap<>();
+        params.put("salaryID", id);
+        List<SalaryVolume> volumeList = teamSalaryService.find(hqlVolume, paramsVolume);
+        
         if (detailList.isEmpty()) {
             try {
                 Salary salary = teamSalaryService.get(Salary.class, id);
                 teamSalaryService.delete(salary);
+                teamSalaryService.batchDelete(volumeList);
             } catch (Exception e) {
                 return new Result(false);
             }
@@ -222,12 +259,11 @@ public class ProjectTeamSalaryController {
     public String step2(Salary salary, HttpServletRequest request) {
         request.setAttribute("id", salary.getId());
         request.setAttribute("total", salary.getTotal());
-        request.setAttribute("userOptions", JSONArray.toJSONString(teamSalaryService.getUserComboboxByTeam(salary.getTeamID())));
         return "projectmanage/team/salary/step2";
     }
 
-    @VerifyCSRFToken
-    @RequestMapping(value = "/savedetail")
+    
+    /*@RequestMapping(value = "/savedetail")
     @ResponseBody
     public Result saveDetail(SalaryDetail detail, String total, HttpServletRequest request) {
 
@@ -261,7 +297,7 @@ public class ProjectTeamSalaryController {
         Map<String, String> map = new HashMap<String, String>();
         map.put("id", detail.getId());
         return new Result(true, map);
-    }
+    }*/
 
     @RequestMapping(value = "/deletedetail/{id}", method = RequestMethod.POST)
     @ResponseBody

@@ -1,12 +1,12 @@
 <section class="content-header">
     <h1>
-        班组工资
+        机关人员工资
         <small>列表</small>
     </h1>
     <ol class="breadcrumb">
         <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
-        <li><a href="#">劳务管理管理</a></li>
-        <li class="active">专业作业班组工资表</li>
+        <li><a href="#">劳务管理</a></li>
+        <li class="active">机关人员工资表</li>
     </ol>
 </section>
 
@@ -16,10 +16,7 @@
             <div class="box">
                 <!-- /.box-header -->
                 <div class="dataTables_filter" id="searchDiv">
-                    <input type="search" name = "type" id="type" value="10" style="display:none">
-                    <select id="projectID" class="form-control select2" name="projectID" style="width:200px;" operator="eq">
-                        <option selected="selected" value="">选择一个项目</option>
-                    </select>
+                    <input type="search" name = "type" id="type" value="40" style="display:none">
                     <div class="btn-group">
                         <button type="button" class="btn btn-primary" data-btn-type="search">查询</button>
                         <button type="button" class="btn btn-default" data-btn-type="reset">重置</button>
@@ -50,7 +47,7 @@
     var teamSalaryObject = {
             startFlow: function (mechID) {
                 modals.confirm("是否要提交审批？",function(){
-                    ajaxPost(basePath + '/project/team/salary/start', {id:mechID}, function (data) {
+                    ajaxPost(basePath + '/project/organ/salary/start', {id:mechID}, function (data) {
                         if (data.success) {
                         	teamSalaryTable.reloadData();
                             modals.correct("流程已启动，请及时处理");
@@ -63,15 +60,15 @@
             overview: function (rowID) {
                 modals.openWin({
                     winId:winId,
-                    title:'班组工资表总览',
+                    title:'管理人员工资表总览',
                     width:'1400px',
-                    url:basePath+"/project/team/salary/detail/"+rowID
+                    url:basePath+"/project/organ/salary/detailouter/"+rowID
                    });
             }
     }
     
     $(function (){
-    	teamSalaryTable = new CommonTable("team_salary_table", "team_salary_list", "searchDiv", null);
+    	teamSalaryTable = new CommonTable("team_salary_table", "organ_salary_list", "searchDiv", null);
         
         //绑定按钮事件
         $("button[data-btn-type]").click(function () {
@@ -84,7 +81,7 @@
 	                    return false;
 	                }
 	                modals.confirm("是否要删除该行数据？",function(){
-	                    ajaxPost(basePath+"/project/team/salary/delete/"+rowId,null,function(data){
+	                    ajaxPost(basePath+"/project/manager/salary/delete/"+rowId,null,function(data){
 	                        if(data.success){
 	                        	teamSalaryTable.reloadRowData();
 	                        }else{
@@ -103,21 +100,13 @@
                     	modals.info('审核中或审核完成的条目不可编辑!');
                     	return false;
                     }
-                    loadPage(basePath+"/project/team/salary/edit/" +rowId);
+                    loadPage(basePath+"/project/organ/salary/edit/" +rowId);
                     break;
                 case "add":
-                    loadPage(basePath+"/project/team/salary/add");
+                    loadPage(basePath+"/project/organ/salary/add");
                     break;
             }
         });
-        
-        if(options != 0){
-            for (var i = 0, len = options.length; i < len; i++) {
-                var option = options[i];
-                $('#projectID').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
-            }
-            $("#projectID").select2();
-        }
         
     });
     

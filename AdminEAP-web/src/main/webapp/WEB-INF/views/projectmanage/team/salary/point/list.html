@@ -1,12 +1,12 @@
 <section class="content-header">
     <h1>
-        班组工资
+      点工  班组工资
         <small>列表</small>
     </h1>
     <ol class="breadcrumb">
         <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
-        <li><a href="#">劳务管理管理</a></li>
-        <li class="active">专业作业班组工资表</li>
+        <li><a href="#">劳务管理</a></li>
+        <li class="active">点工班组工资表</li>
     </ol>
 </section>
 
@@ -16,7 +16,7 @@
             <div class="box">
                 <!-- /.box-header -->
                 <div class="dataTables_filter" id="searchDiv">
-                    <input type="search" name = "type" id="type" value="10" style="display:none">
+                    <input type="search" name = "type" id="type" value="30" style="display:none">
                     <select id="projectID" class="form-control select2" name="projectID" style="width:200px;" operator="eq">
                         <option selected="selected" value="">选择一个项目</option>
                     </select>
@@ -50,7 +50,7 @@
     var teamSalaryObject = {
             startFlow: function (mechID) {
                 modals.confirm("是否要提交审批？",function(){
-                    ajaxPost(basePath + '/project/team/salary/start', {id:mechID}, function (data) {
+                    ajaxPost(basePath + '/project/point/salary/start', {id:mechID}, function (data) {
                         if (data.success) {
                         	teamSalaryTable.reloadData();
                             modals.correct("流程已启动，请及时处理");
@@ -65,7 +65,7 @@
                     winId:winId,
                     title:'班组工资表总览',
                     width:'1400px',
-                    url:basePath+"/project/team/salary/detail/"+rowID
+                    url:basePath+"/project/point/salary/detail/"+rowID
                    });
             }
     }
@@ -103,10 +103,10 @@
                     	modals.info('审核中或审核完成的条目不可编辑!');
                     	return false;
                     }
-                    loadPage(basePath+"/project/team/salary/edit/" +rowId);
+                    loadPage(basePath+"/project/point/salary/edit/" +rowId);
                     break;
                 case "add":
-                    loadPage(basePath+"/project/team/salary/add");
+                    loadPage(basePath+"/project/point/salary/add");
                     break;
             }
         });

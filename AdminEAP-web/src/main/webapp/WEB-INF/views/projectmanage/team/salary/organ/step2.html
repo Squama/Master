@@ -13,17 +13,17 @@
     </h1>
     <ol class="breadcrumb">
         <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
-        <li><a href="#">劳务管理</a></li>
+        <li><a href="#">项目管理</a></li>
         <li class="active">新增班组工资单</li>
     </ol>
 </section>
 <section class="content">
     <div class="row">
         <div class="col-xs-12">
-            <div class="box box-info">
+            <div class="box box-success">
                 <div class="box-header with-border">
                     <span>
-                        <i class="fa fa-files-o">本次可申报工资总额:<font color="red" size="6"><span id="aTotal"></span>元</font></i>
+                        <i class="fa fa-files-o">工资单明细</i>
                     </span>
                 </div>
                 <div id="stepbar" class="add stepbar">
@@ -58,7 +58,7 @@
                     <table id="salary_detail_table" class="table table-bordered table-striped table-hover">
                         <tfoot>
                             <tr>
-                                <th colspan="11" style="text-align:right">合计:</th>
+                                <th colspan="12" style="text-align:right">合计:</th>
                                 <th class="text-left">0</th>
                                 <th class="text-left"></th>
                                 <th class="text-left"></th>
@@ -72,12 +72,10 @@
     </div>
 </section>
 <script>
-    var form;
-    var id = "${id}", total = "${total}";
+    var form,salaryEditor;
+    var id = "${id}";
     $('#salaryID').val(id);
     $('#salaryID',$('#searchDiv')).val(id);
-    $('#total').val(total);
-    $('#aTotal').html(total);
     var userOptions = '${userOptions?default(0)}',options=0;
     if(userOptions != 0){
         options = JSON.parse(userOptions);
@@ -86,12 +84,12 @@
     var salaryDetailCtrl = {
         initButtonEvent: function () {
             $("button[data-btn-type='prev']").click(function () {
-                loadPage(basePath+"/project/team/salary/list");
+                loadPage(basePath+"/project/organ/salary/list");
             });
         },
         deleteDetail: function (rowId) {
             modals.confirm("是否要删除该行数据？",function(){
-                ajaxPost(basePath+"/project/team/salary/deletedetail/"+rowId,null,function(data){
+                ajaxPost(basePath+"/project/manager/salary/deletedetail/"+rowId,null,function(data){
                     if(data.success){
                     	salaryDetailTable.reloadRowData();
                     }else{
@@ -101,6 +99,10 @@
             })
         },
         attendanceDetail: function (name){
+        	/* var name = "1";
+            if ($("#userID").prop('selectedIndex') > 0) {
+                name = $("#userID").find("option:selected").text();
+            } */
             modals.openWin({
                 winId:winId,
                 title:'考勤详情',
@@ -114,25 +116,28 @@
                 table: "#salary_detail_table",
                 idSrc:  'id',
                 fields: [ 
-                    {label:"attendance:", name:"attendance",type:"text"},
-                    {label:"payable:", name:"payable",type:"text"},
-                    {label:"loan:", name:"loan",type:"text"},
-                    {label:"medical:", name:"medical",type:"text"},
-                    {label:"social:", name:"social",type:"text"},
-                    {label:"tax:", name:"tax",type:"text"},
-                    {label:"actual:", name:"actual",type:"text"}
+                	{label:"attendance:", name:"attendance",type:"text"},
+                	{label:"payable:", name:"payable",type:"text"},
+                	{label:"loan:", name:"loan",type:"text"},
+                	{label:"medical:", name:"medical",type:"text"},
+                	{label:"social:", name:"social",type:"text"},
+                	{label:"tax:", name:"tax",type:"text"},
+                	{label:"actual:", name:"actual",type:"text"}
                 ]
             } );
             
             $('#salary_detail_table').on( 'click', 'tbody td:not(:first-child)', function (e) {
-                salaryEditor.inline( this, {
+            	salaryEditor.inline( this, {
                     onBlur: 'submit'
                 });
+                /* salaryEditor.inline( this, {
+                    buttons: { label: '&gt;', fn: function () { this.submit(); } }
+                } ); */
             } );
         }
     }
     $(function () {
-    	salaryDetailTable = new CommonTable("salary_detail_table", "team_salary_detail", "searchDiv", {
+    	salaryDetailTable = new CommonTable("salary_detail_table", "manager_salary_detail", "searchDiv", {
             "footerCallback": function ( row, data, start, end, display ) {
                 var api = this.api(), data;
                 // Remove the formatting to get integer data for summation
@@ -145,13 +150,13 @@
      
                 // Total over this page
                 unitTotal = api
-                    .column( 11, { page: 'current'} )
+                    .column( 12, { page: 'current'} )
                     .data()
                     .reduce( function (a, b) {
                         return accAddition(intVal(a), intVal(b));
                     }, 0 );
                 // Update footer
-                $( api.column( 11 ).footer() ).html(
+                $( api.column( 12 ).footer() ).html(
                     '￥'+unitTotal
                 );
             }

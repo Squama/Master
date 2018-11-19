@@ -1,12 +1,12 @@
 <section class="content-header">
     <h1>
-        <span>管理人员工资单</span>
+        <span>机关人员工资单</span>
         <small>新增</small>
     </h1>
     <ol class="breadcrumb">
         <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
-        <li><a href="#">办公管理</a></li>
-        <li class="active">新增管理人员工资单</li>
+        <li><a href="#">劳务管理</a></li>
+        <li class="active">新增机关人员工资单</li>
     </ol>
 </section>
 
@@ -38,17 +38,8 @@
                 </div>
                 <form id="team-salary-form" name="team-salary-form" class="form-horizontal">
                     <input type="hidden" name="id" id="id">
-                    <input type="hidden" name="projectName" id="projectName">
                     <div class="box-body">
                         <div class="col-md-12">
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">选择项目<span style="color:red">*</span></label>
-                                <div class="col-sm-6">
-                                    <select id="projectID" class="form-control select2" name="projectID">
-                                            <option selected="selected" value="">选择一个项目</option>
-                                    </select>
-                                </div>
-                            </div>
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">开始时间<span style="color:red">*</span></label>
                                 <div class="col-sm-6">
@@ -85,7 +76,7 @@
     var salaryCtrl = {
         initButtonEvent: function () {
             $("button[data-btn-type='prev']").click(function () {
-                loadPage(basePath+"/project/manager/salary/list");
+                loadPage(basePath+"/project/organ/salary/list");
             });
         }
     }
@@ -103,14 +94,14 @@
             submitHandler: function () {
                 var action = $(this).attr('$submitButton').attr('data-btn-type');
                 var formData = form.getFormSimpleData();
-                ajaxPost(basePath + '/project/manager/salary/savesalary', formData, function (data) {
+                ajaxPost(basePath + '/project/organ/salary/savesalary', formData, function (data) {
                     if (data.success) {
                         switch (action) {
                             case "next":
-                                loadPage(basePath+"/project/manager/salary/step2", undefined, data.data);
+                                loadPage(basePath+"/project/organ/salary/step2", undefined, data.data);
                                 break;
                             case "save":
-                                loadPage(basePath+"/project/manager/salary/list");
+                                loadPage(basePath+"/project/organ/salary/list");
                                 break;
                         }
                     } else {
@@ -119,11 +110,6 @@
                 });
             },
             fields: {
-                "projectID": {
-                    validators: {
-                        notEmpty: {message: '项目不能为空'}
-                    }
-                },
                 "startTime": {
                     validators: {
                         notEmpty: {message: '开始时间不能为空'}
@@ -139,26 +125,6 @@
         //初始化控件
         form.initComponent();
         salaryCtrl.initButtonEvent();
-        
-        if(options != 0){
-            for (var i = 0, len = options.length; i < len; i++) {
-                var option = options[i];
-                $('#projectID').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
-            }
-            $(".select2").select2();
-            $("#projectID").bind("change", function () {
-                var value = $(this).val();
-                if (value === "") {
-                    return false;
-                }
-                
-                var name = "";
-                if ($("#projectID").prop('selectedIndex') > 0) {
-                    name = $("#projectID").find("option:selected").text();
-                }
-                $('#projectName').val(name);
-            });
-        }
         
         //编辑回填
         if(id!="0"){

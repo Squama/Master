@@ -1,3 +1,11 @@
+<script src="${basePath}/resources/cinder/editor/dataTables.editor.min.js"></script>
+<script src="${basePath}/resources/common/js/calculate.js"></script>
+<link rel="stylesheet" href="${basePath}/resources/cinder/editor/dataTables.editor.css">
+<link rel="stylesheet" href="${basePath}/resources/cinder/editor/editor.dataTables.min.css">
+<style>
+.fixed-button-area{position:fixed;z-index:1;left:45%;}
+.DTE_Field_InputControl{color:black;}
+</style>
 <section class="content-header">
     <h1>
         <span>班组工资单</span>
@@ -9,13 +17,15 @@
         <li class="active">新增班组工资单</li>
     </ol>
 </section>
-
-    
-
 <section class="content">
     <div class="row">
         <div class="col-xs-12">
-            <div class="box box-info">
+            <div class="box box-success">
+                <div class="box-header with-border">
+                    <span>
+                        <i class="fa fa-files-o">工资单明细</i>
+                    </span>
+                </div>
                 <div id="stepbar" class="add stepbar">
                     <div>
                         <div class="step">
@@ -36,114 +46,25 @@
                         <div class="stepinfo undoneinfo">完成</div>
                     </div>
                 </div>
-                <form id="salary-detail-form" name="salary-detail-form" class="form-horizontal">
-                	<input type="hidden" name="salaryID" id="salaryID">
-                    <input type="hidden" name="name" id="name">
-                    <div class="box-body">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">名称<span style="color:red">*</span></label>
-                                <div class="col-sm-8">
-                                    <select id="userID" class="form-control select2" name="userID">
-				                        <option selected="selected" value="">选择一个成员</option>
-				                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">身份证号<span style="color:red">*</span></label>
-                                <div class="col-sm-8">
-                                    <input type="text" class="form-control" id="identificationNumber" name="identificationNumber" readonly="readonly">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">出勤天数<span style="color:red">*</span></label>
-                                <div class="col-sm-7">
-                                    <input type="text" class="form-control" id="attendance" name="attendance" onkeyup="value=value.replace(/[^\d.]/g,'')" placeholder="出勤天数">
-                                </div>
-                                <span style="line-height: 35px;"><a href="javascript:void(0)" onclick='salaryDetailCtrl.attendanceDetail();return false;'>查看考勤</a></span>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">借款扣除（元）<span style="color:red">*</span></label>
-                                <div class="col-sm-8">
-                                    <input type="text" class="form-control" onkeyup="value=value.replace(/[^\d.]/g,'')" value="0" id="loan" name="loan" placeholder="借款扣除">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">社保扣除（元）<span style="color:red">*</span></label>
-                                <div class="col-sm-8">
-                                    <input type="text" class="form-control" onkeyup="value=value.replace(/[^\d.]/g,'')" value="0" id="social" name="social" placeholder="社保扣除">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">实发工资（元）<span style="color:red">*</span></label>
-                                <div class="col-sm-8">
-                                    <input type="text" class="form-control" onkeyup="value=value.replace(/[^\d.]/g,'')" value="0" id="actual" name="actual" placeholder="实发工资">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">备注</label>
-                                <div class="col-sm-8">
-                                    <input type="text" class="form-control" id="remark" name="remark">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">工种<span style="color:red">*</span></label>
-                                <div class="col-sm-8">
-                                    <input type="text" class="form-control" id="workType" name="workType" readonly="readonly">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">基本工资<span style="color:red">*</span></label>
-                                <div class="col-sm-8">
-                                    <input type="text" class="form-control" id="basicSalary" name="basicSalary" readonly="readonly">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">应付工资<span style="color:red">*</span></label>
-                                <div class="col-sm-8">
-                                    <input type="text" class="form-control" id="payable" name="payable" value="0" onkeyup="value=value.replace(/[^\d.]/g,'')" placeholder="应付工资">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">医保扣除（元）<span style="color:red">*</span></label>
-                                <div class="col-sm-8">
-                                    <input type="text" class="form-control" onkeyup="value=value.replace(/[^\d.]/g,'')" value="0" id="medical"  name="medical" placeholder="医保扣除">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">个税扣除（元）<span style="color:red">*</span></label>
-                                <div class="col-sm-8">
-                                    <input type="text" class="form-control" onkeyup="value=value.replace(/[^\d.]/g,'')" value="0" id="tax" name="tax" placeholder="个税扣除" >
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">联系电话<span style="color:red">*</span></label>
-                                <div class="col-sm-8">
-                                    <input type="text" class="form-control" id="mobile" name="mobile" placeholder="联系电话" readonly="readonly">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="box-footer text-center">
-                        <button type=submit class="btn btn-success ml10" data-btn-type="save">添加明细</button>
-                        <button type="button" class="btn btn-default" data-btn-type="prev">返回列表</button>
-                    </div>
-                </form>
-            </div>
-            <div class="box box-success">
-                <div class="box-header with-border">
-                    <span>
-                        <i class="fa fa-files-o">工资单明细</i>
-                    </span>
-                </div>
                 <div class="dataTables_filter" id="searchDiv" style="display:none;">
                    <input type="search" name="salaryID" id="salaryID" class="form-control" operator="eq" style="display:none;">
+                   
+                   <div class="btn-group">
+                       <button type="button" class="btn btn-info" data-btn-type="prev" style="float:right">返回列表</button>
+                   </div>
                 </div>
                 <div class="box-body">
                     <!-- 内容 -->
                     <table id="salary_detail_table" class="table table-bordered table-striped table-hover">
+                        <tfoot>
+                            <tr>
+                                <th colspan="12" style="text-align:right">合计:</th>
+                                <th class="text-left">0</th>
+                                <th class="text-left"></th>
+                                <th class="text-left"></th>
+                                <th class="text-left"></th>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
             </div>
@@ -151,7 +72,7 @@
     </div>
 </section>
 <script>
-    var form;
+    var form,salaryEditor;
     var id = "${id}";
     $('#salaryID').val(id);
     $('#salaryID',$('#searchDiv')).val(id);
@@ -177,101 +98,76 @@
                 });
             })
         },
-        attendanceDetail: function (){
-        	var name = "1";
+        attendanceDetail: function (name){
+        	/* var name = "1";
             if ($("#userID").prop('selectedIndex') > 0) {
                 name = $("#userID").find("option:selected").text();
-            }
+            } */
             modals.openWin({
                 winId:winId,
                 title:'考勤详情',
                 width:'1000px',
                 url:basePath+"/attendance/detail/" + name
                });
+        },
+        initSalaryEditor:function(){
+            salaryEditor = new $.fn.dataTable.Editor( {
+                ajax: basePath+"/project/manager/salary/rowedit",
+                table: "#salary_detail_table",
+                idSrc:  'id',
+                fields: [ 
+                	{label:"attendance:", name:"attendance",type:"text"},
+                	{label:"payable:", name:"payable",type:"text"},
+                	{label:"loan:", name:"loan",type:"text"},
+                	{label:"medical:", name:"medical",type:"text"},
+                	{label:"social:", name:"social",type:"text"},
+                	{label:"tax:", name:"tax",type:"text"},
+                	{label:"actual:", name:"actual",type:"text"}
+                ]
+            } );
+            
+            $('#salary_detail_table').on( 'click', 'tbody td:not(:first-child)', function (e) {
+            	salaryEditor.inline( this, {
+                    onBlur: 'submit'
+                });
+                /* salaryEditor.inline( this, {
+                    buttons: { label: '&gt;', fn: function () { this.submit(); } }
+                } ); */
+            } );
         }
     }
     $(function () {
-    	salaryDetailTable = new CommonTable("salary_detail_table", "team_salary_detail", "searchDiv", null);
-        //初始化表单 
-        form = $("#salary-detail-form").form({baseEntity:false});
-        //数据校验
-        $("#salary-detail-form").bootstrapValidator({
-            message: '请输入有效值',
-            feedbackIcons: {
-                valid: 'glyphicon glyphicon-ok',
-                invalid: 'glyphicon glyphicon-remove',
-                validating: 'glyphicon glyphicon-refresh'
-            },
-            submitHandler: function () {
-                var action = $(this).attr('$submitButton').attr('data-btn-type');
-                var formData = form.getFormSimpleData();
-                ajaxPost(basePath + '/project/manager/salary/savedetail', formData, function (data) {
-                    if (data.success) {
-                    	salaryDetailTable.reloadData();
-                    } else {
-                        modals.error(data.message);
-                    }
-                });
-            },
-            fields: {
-                "attendance": {
-                    validators: {
-                        notEmpty: {message: '出勤天数不能为空'}
-                    }
-                },
-                "payable": {
-                    validators: {
-                        notEmpty: {message: '应付工资不能为空'}
-                    }
-                },
-                "loan": {
-                    validators: {
-                        notEmpty: {message: '借款扣除不能为空'}
-                    }
-                },
-                "medical": {
-                    validators: {
-                        notEmpty: {message: '医保扣除不能为空'}
-                    }
-                },
-                "social": {
-                    validators: {
-                        notEmpty: {message: '社保扣除不能为空'}
-                    }
-                },
-                "tax": {
-                    validators: {
-                        notEmpty: {message: '个税扣除不能为空'}
-                    }
-                }
+    	salaryDetailTable = new CommonTable("salary_detail_table", "manager_salary_detail", "searchDiv", {
+            "footerCallback": function ( row, data, start, end, display ) {
+                var api = this.api(), data;
+                // Remove the formatting to get integer data for summation
+                var intVal = function ( i ) {
+                    return typeof i === 'string' ?
+                        i.replace(/[\$,]/g, '')*1 :
+                        typeof i === 'number' ?
+                            i : 0;
+                };
+     
+                // Total over this page
+                unitTotal = api
+                    .column( 12, { page: 'current'} )
+                    .data()
+                    .reduce( function (a, b) {
+                        return accAddition(intVal(a), intVal(b));
+                    }, 0 );
+                // Update footer
+                $( api.column( 12 ).footer() ).html(
+                    '￥'+unitTotal
+                );
             }
         });
-        //初始化控件
-        form.initComponent();
         salaryDetailCtrl.initButtonEvent();
-        
-        if(options != 0){
-            for (var i = 0, len = options.length; i < len; i++) {
-                var option = options[i];
-                $('#userID').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
-            }
-            $("#userID").select2();
-            $("#userID").bind("change", function () {
-                var value = $(this).val();
-                if (value === "") {
-                    return false;
-                }
-                
-                ajaxPost(basePath+"/project/manager/salary/getinfo",{userID:value},function(data){
-                	form.initFormData(data);
-                });
-            });
-        }
-        
+        salaryDetailCtrl.initSalaryEditor();
     });
     
     function fnRenderSalaryDetail(value, type, rowObj){
-        var oper = "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='salaryDetailCtrl.deleteDetail(\"" + value + "\")'>删除</a>";
+    	var oper = "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='salaryDetailCtrl.attendanceDetail(\"" + rowObj.name + "\")'>查看考勤</a>";
+        oper += "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='salaryDetailCtrl.deleteDetail(\"" + value + "\")'>删除</a>";
         return oper;
     }
 

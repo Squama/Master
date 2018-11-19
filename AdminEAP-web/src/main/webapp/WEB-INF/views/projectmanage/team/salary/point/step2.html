@@ -13,7 +13,7 @@
     </h1>
     <ol class="breadcrumb">
         <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
-        <li><a href="#">劳务管理</a></li>
+        <li><a href="#">项目管理</a></li>
         <li class="active">新增班组工资单</li>
     </ol>
 </section>
@@ -86,7 +86,7 @@
     var salaryDetailCtrl = {
         initButtonEvent: function () {
             $("button[data-btn-type='prev']").click(function () {
-                loadPage(basePath+"/project/team/salary/list");
+                loadPage(basePath+"/project/point/salary/list");
             });
         },
         deleteDetail: function (rowId) {

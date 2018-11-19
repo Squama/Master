@@ -3,9 +3,12 @@
  */
 package com.radish.master.controller.project;
 
+import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,28 +25,28 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONArray;
 import com.cnpc.framework.annotation.RefreshCSRFToken;
-import com.cnpc.framework.annotation.VerifyCSRFToken;
 import com.cnpc.framework.base.entity.User;
 import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.utils.StrUtil;
 import com.radish.master.entity.project.ProjectTeam;
 import com.radish.master.entity.project.Salary;
 import com.radish.master.entity.project.SalaryDetail;
+import com.radish.master.pojo.RowEdit;
 import com.radish.master.service.CommonService;
 import com.radish.master.service.project.TeamSalaryService;
 import com.radish.master.system.SpringUtil;
 
 /**
-* 类说明
-* 
-* <pre>
+ * 类说明
+ * 
+ * <pre>
 * Modify Information:
 * Author        Date          Description
 * ============ =========== ============================
 * dongyan      2018年5月7日    Create this file
-* </pre>
-* 
-*/
+ * </pre>
+ * 
+ */
 @Controller
 @RequestMapping("/project/manager/salary")
 public class ProjectManagerSalaryController {
@@ -59,7 +62,7 @@ public class ProjectManagerSalaryController {
         request.setAttribute("projectOptions", JSONArray.toJSONString(commonService.getProjectCombobox()));
         return "projectmanage/team/salary/manager/list";
     }
-    
+
     @RequestMapping(value = "/detailouter/{id}", method = RequestMethod.GET)
     public String detailOuter(@PathVariable("id") String id, HttpServletRequest request, HttpServletResponse response) {
         request.setAttribute("id", id);
@@ -71,7 +74,7 @@ public class ProjectManagerSalaryController {
         request.setAttribute("id", id);
         return "projectmanage/team/salary/manager/detail";
     }
-    
+
     @RequestMapping(method = RequestMethod.POST, value = "/get")
     @ResponseBody
     public Salary getSalaryInfo(String id) {
@@ -89,28 +92,27 @@ public class ProjectManagerSalaryController {
         request.setAttribute("projectOptions", JSONArray.toJSONString(commonService.getProjectCombobox()));
         return "projectmanage/team/salary/manager/step1";
     }
-    
+
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
     public String edit(@PathVariable("id") String id, HttpServletRequest request) {
         request.setAttribute("id", id);
         request.setAttribute("projectOptions", JSONArray.toJSONString(commonService.getProjectCombobox()));
         return "projectmanage/team/salary/manager/step1";
     }
-    
+
     @RequestMapping(value = "/savesalary")
     @ResponseBody
     public Result saveSalary(Salary salary, HttpServletRequest request) {
-        SimpleDateFormat myFormat=new SimpleDateFormat("yyyy-MM-dd");
-        if(salary.getStartTime().compareTo(salary.getEndTime()) != -1){
+        SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd");
+        if (salary.getStartTime().compareTo(salary.getEndTime()) != -1) {
             return new Result(false, "开始时间必须小于结束时间");
         }
-        
+
         String startTime = myFormat.format(salary.getStartTime()) + " 00:00:00";
         String endTime = myFormat.format(salary.getEndTime()) + " 23:59:59";
-        
-        
+
         List<Salary> list = teamSalaryService.checkTimePeriod(salary.getProjectID(), startTime, endTime, salary.getId());
-        if(!list.isEmpty()){
+        if (!list.isEmpty()) {
             return new Result(false, "工资时间段不可重叠");
         }
         if (StrUtil.isEmpty(salary.getId())) {
@@ -119,11 +121,41 @@ public class ProjectManagerSalaryController {
             salary.setStatus("10");
             salary.setType("20");
             salary.setApplySum("0");
+            salary.setTotal("无");
             try {
                 teamSalaryService.save(salary);
             } catch (Exception e) {
                 return new Result(false);
             }
+            // 直接录入全部明细
+            List<User> managerList = teamSalaryService.getManageMemberByProject(salary.getProjectID());
+            List<SalaryDetail> detailList = new ArrayList<SalaryDetail>();
+            for (User user : managerList) {
+                SalaryDetail detail = new SalaryDetail();
+                detail.setCreateDateTime(new Date());
+                detail.setUpdateDateTime(new Date());
+
+                detail.setSalaryID(salary.getId());
+                detail.setUserID(user.getId());
+                detail.setName(user.getName());
+                detail.setMobile(user.getMobile());
+                detail.setIdentificationNumber(user.getIdentificationNumber());
+                detail.setWorkType(user.getWorkType());
+                detail.setBasicSalary(user.getBasicSalary());
+
+                detail.setAttendance("0");
+                detail.setPayable("0");
+                detail.setLoan("0");
+                detail.setMedical("0");
+                detail.setSocial("0");
+                detail.setTax("0");
+                detail.setActual("0");
+                detail.setRemark("");
+
+                detailList.add(detail);
+
+            }
+            teamSalaryService.batchSave(detailList);
         } else {
             Salary oldSalary = teamSalaryService.get(Salary.class, salary.getId());
             SpringUtil.copyPropertiesIgnoreNull(salary, oldSalary);
@@ -136,7 +168,7 @@ public class ProjectManagerSalaryController {
         map.put("projectID", salary.getProjectID());
         return new Result(true, map);
     }
-    
+
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.POST)
     @ResponseBody
     public Result delete(@PathVariable("id") String id) {
@@ -162,13 +194,76 @@ public class ProjectManagerSalaryController {
     @RequestMapping(value = "/step2", method = RequestMethod.POST)
     public String step2(Salary salary, HttpServletRequest request) {
         request.setAttribute("id", salary.getId());
-        request.setAttribute("userOptions", JSONArray.toJSONString(
-                teamSalaryService.getManageUserComboboxByProject(salary.getProjectID())));
         return "projectmanage/team/salary/manager/step2";
     }
 
-    @VerifyCSRFToken
-    @RequestMapping(value = "/savedetail")
+    @RequestMapping(value = "/rowedit", method = RequestMethod.POST)
+    @ResponseBody
+    public String singleEstimate(String action, HttpServletRequest request) throws Exception {
+        String id = "";
+        String field = "";
+        String value = "";
+        
+        RowEdit re = new RowEdit();
+        List<Object> list = new ArrayList<Object>();
+        
+        Enumeration<String> key = request.getParameterNames();
+        while (key.hasMoreElements()) {
+            String paramName = (String) key.nextElement();
+            if ("action".equals(paramName)) {
+                continue;
+            }
+            String[] paramValues = request.getParameterValues(paramName);
+            if (paramValues.length == 1) {
+                String paramValue = paramValues[0];
+                if (paramValue.length() != 0) {
+                    int idIndexStart = paramName.indexOf("[");
+                    int idIndexEnd = paramName.indexOf("]");
+                    int fieldIndexStart = paramName.lastIndexOf("[");
+                    int fieldIndexEnd = paramName.lastIndexOf("]");
+                    id = paramName.substring(idIndexStart + 1, idIndexEnd);
+                    field = paramName.substring(fieldIndexStart + 1, fieldIndexEnd);
+                    value = paramValue;
+                }
+            }
+        }
+
+        if (!teamSalaryService.isNumber(value)) {
+            list.add(new SalaryDetail());
+            re.setData(list);
+            return JSONArray.toJSONString(re);
+        }
+
+        SalaryDetail detail = teamSalaryService.get(SalaryDetail.class, id);
+
+        Method set = detail.getClass().getMethod("set" + teamSalaryService.captureName(field), String.class);
+        set.invoke(detail, value);
+
+        teamSalaryService.save(detail);
+        
+        
+        if("actual".equals(field)){
+            String hqlSalary = "from SalaryDetail where salaryID=:salaryID";
+            Map<String, Object> paramsSalary = new HashMap<>();
+            paramsSalary.put("salaryID", detail.getSalaryID());
+            List<SalaryDetail> detailList = teamSalaryService.find(hqlSalary, paramsSalary);
+            BigDecimal a = new BigDecimal("0");
+            for (SalaryDetail sd : detailList) {
+                BigDecimal actual = new BigDecimal(sd.getActual());
+
+                a = a.add(actual);
+            }
+            Salary salary = teamSalaryService.get(Salary.class, detail.getSalaryID());
+            salary.setApplySum(a.setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
+            teamSalaryService.save(salary);
+        }
+        
+        list.add(detail);
+        re.setData(list);
+        return JSONArray.toJSONString(re);
+    }
+
+    /*@RequestMapping(value = "/savedetail")
     @ResponseBody
     public Result saveDetail(SalaryDetail detail, String total, HttpServletRequest request) {
 
@@ -177,9 +272,9 @@ public class ProjectManagerSalaryController {
         paramsSalary.put("salaryID", detail.getSalaryID());
         List<SalaryDetail> detailList = teamSalaryService.find(hqlSalary, paramsSalary);
         BigDecimal a = new BigDecimal("0");
-        for(SalaryDetail sd : detailList){
+        for (SalaryDetail sd : detailList) {
             BigDecimal actual = new BigDecimal(sd.getActual());
-            
+
             a = a.add(actual);
         }
         BigDecimal d = new BigDecimal(detail.getActual());
@@ -198,7 +293,7 @@ public class ProjectManagerSalaryController {
         Map<String, String> map = new HashMap<String, String>();
         map.put("id", detail.getId());
         return new Result(true, map);
-    }
+    }*/
 
     @RequestMapping(value = "/deletedetail/{id}", method = RequestMethod.POST)
     @ResponseBody
@@ -231,7 +326,7 @@ public class ProjectManagerSalaryController {
         Map<String, Object> paramsPT = new HashMap<>();
         paramsPT.put("projectID", salary.getProjectID());
         ProjectTeam projectTeam = teamSalaryService.get(hqlPT, paramsPT);
-        
+
         String hql = "from UserTeam where teamID=:teamID";
         Map<String, Object> params = new HashMap<>();
         params.put("teamID", projectTeam.getId());
