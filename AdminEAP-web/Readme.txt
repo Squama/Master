@@ -13,6 +13,7 @@ v1.0.2.08
 2.增加表tbl_fee、tbl_fee_detail
 3.增加表tbl_tax
 4.增加表tbl_measure_volume
+5.tbl_purchase_det增加市场指导价guidance_price
 
 v1.0.2.07
 ---------------------------------------

@@ -25,6 +25,8 @@ import com.radish.master.system.SpringUtil;
 
 public class PurchaseApplyTaskReplyListener implements TaskListener {
 
+    private static final long serialVersionUID = -5449229131938290086L;
+
     @Override
     public void notify(DelegateTask delegateTask) {
         String eventName = delegateTask.getEventName();
@@ -39,7 +41,7 @@ public class PurchaseApplyTaskReplyListener implements TaskListener {
              }else{
                  //审核通过
                  Purchase purchase = baseService.get(Purchase.class, businessKey);
-                 purchase.setStatus("30");
+                 purchase.setStatus("25");
                  baseService.save(purchase);
              }
         }

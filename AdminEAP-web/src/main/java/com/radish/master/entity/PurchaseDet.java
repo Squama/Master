@@ -1,18 +1,15 @@
 package com.radish.master.entity;
 
-import com.cnpc.framework.annotation.Header;
-import com.cnpc.framework.base.entity.BaseEntity;
-
 import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
-import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
+
+import com.cnpc.framework.annotation.Header;
+import com.cnpc.framework.base.entity.BaseEntity;
 
 @Entity
 @Table(name = "tbl_purchase_det")
@@ -59,6 +56,10 @@ public class PurchaseDet extends BaseEntity {
     @Header(name = "单价")
     @Column(name = "price")
     private String price;
+
+    @Header(name = "市场指导价")
+    @Column(name = "guidance_price")
+    private String guidancePrice;
 
     @Header(name = "采购量")
     @Column(name = "quantity")
@@ -235,6 +236,14 @@ public class PurchaseDet extends BaseEntity {
 
     public void setDemandTime(Date demandTime) {
         this.demandTime = demandTime;
+    }
+
+    public String getGuidancePrice() {
+        return guidancePrice;
+    }
+
+    public void setGuidancePrice(String guidancePrice) {
+        this.guidancePrice = guidancePrice;
     }
 
 }

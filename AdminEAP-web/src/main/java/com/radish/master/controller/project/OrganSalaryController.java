@@ -159,6 +159,6 @@ public class OrganSalaryController {
 
         Salary salary = teamSalaryService.get(Salary.class, id);
 
-        return teamSalaryService.startManagerSalaryFlow(salary, "organSalary");
+        return teamSalaryService.startOrganSalaryFlow(salary, "organSalary");
     }
 }
