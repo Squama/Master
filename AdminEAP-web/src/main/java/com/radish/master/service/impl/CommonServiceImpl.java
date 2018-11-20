@@ -49,6 +49,12 @@ public class CommonServiceImpl extends BaseServiceImpl implements CommonService 
         return this.findMapBySql("select remark value, name data from tbl_dict where parent_id = '40280cac5f2edcd6015f2ee042510099'", new Object[] {},
                 new Type[] { StringType.INSTANCE }, Options.class);
     }
+    
+    @Override
+    public List<Options> getFeeManageCombobox() {
+        return this.findMapBySql("select remark value, name data from tbl_dict where parent_id = '40280cac5f2edcd6015f2ee042510098'", new Object[] {},
+                new Type[] { StringType.INSTANCE }, Options.class);
+    }
 
     @Override
     public List<Options> getDepartmentCombobox() {

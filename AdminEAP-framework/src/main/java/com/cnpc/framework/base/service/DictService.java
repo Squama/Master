@@ -12,4 +12,6 @@ public interface DictService extends BaseService {
     List<TreeNode> getTreeDataByCode(String code);
 
     List<Dict> getDictsByCode(String code);
+    
+    List<TreeNode> getMeasureTreeData();
 }

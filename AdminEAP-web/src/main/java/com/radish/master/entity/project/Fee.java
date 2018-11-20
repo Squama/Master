@@ -55,6 +55,10 @@ public class Fee extends BaseEntity {
     @Column(name = "status")
     private String status;
 
+    @Header(name = "类型")
+    @Column(name = "type")
+    private String type;
+
     public String getProjectID() {
         return projectID;
     }
@@ -109,6 +113,14 @@ public class Fee extends BaseEntity {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
 }

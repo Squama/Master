@@ -29,7 +29,7 @@
                 <div class="box-header with-border">
                     <div class="btn-group">
                         <button type="button" class="btn btn-default" data-btn-type="add">
-                            <li class="fa fa-plus">&nbsp;新增规费种类</li>
+                            <li class="fa fa-plus">&nbsp;新增下级种类</li>
                         </button>
                         <button type="button" class="btn btn-default" data-btn-type="edit">
                             <li class="fa fa-edit">&nbsp;编辑当前种类</li>
@@ -208,7 +208,7 @@
                 	formWritable(action);
                     form.clearForm();
                     //填充上级字典和层级编码
-                    fillParentAndLevelCode($("#tree").data("treeview").getNode(0));
+                    fillParentAndLevelCode(selectedNode);
                     btntype = 'add';
                     break;
                 case 'edit':
@@ -274,7 +274,7 @@
             collapseIcon: "glyphicon glyphicon-unchecked",
             levels: 1,
             onNodeSelected: function (event, data) {
-            	if(data.nodeId == 0){
+            	if(data.levelCode.length == 6){
                     $('button[data-btn-type="delete"]').hide();
                     $('button[data-btn-type="edit"]').hide();
                 }else{

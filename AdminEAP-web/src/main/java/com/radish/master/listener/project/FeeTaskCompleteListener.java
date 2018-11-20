@@ -48,14 +48,22 @@ public class FeeTaskCompleteListener implements TaskListener {
              
              if("true".equalsIgnoreCase(delegateTask.getVariable("approved").toString())){
                  fee.setStatus("30");
+                 
                  MeasureConsume mc = new MeasureConsume();
+                 
+                 if("10".equals(fee.getType())){
+                     mc.setConsumeName("规费上报审核消耗");
+                     mc.setType("rule");
+                 }else if("20".equals(fee.getType())){
+                     mc.setConsumeName("管理费上报审核消耗");
+                     mc.setType("manage");
+                 }
+                 
                  mc.setCreateDateTime(new Date());
-                 mc.setConsumeName("规费上报审核消耗");
                  mc.setProjectID(fee.getProjectID());
                  mc.setProjectSubID(fee.getProjectSubID());
                  mc.setOperator(SecurityUtil.getUser().getName());
                  mc.setOperateTime(new Date());
-                 mc.setType("rule");
                  mc.setAmount(fee.getAmount());
                  mc.setOp("-");
                  baseService.save(mc);

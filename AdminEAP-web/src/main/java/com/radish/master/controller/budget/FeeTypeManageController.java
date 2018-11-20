@@ -57,7 +57,7 @@ public class FeeTypeManageController {
     @ResponseBody
     public List<TreeNode> getTreeData() {
 
-        return dictService.getTreeDataByCode("FEES");
+        return dictService.getMeasureTreeData();
     }
 
     @RequestMapping(value = "/get/{id}", method = RequestMethod.POST)

@@ -61,6 +61,18 @@ public class FeeVolumeController {
         return "budgetmanage/fee/fee_query_list";
     }
     
+    @RequestMapping(method = RequestMethod.GET, value = "/listmanage")
+    private String listManage(HttpServletRequest request) {
+        request.setAttribute("projectOptions", JSONArray.toJSONString(commonService.getProjectCombobox()));
+        return "budgetmanage/fee/manage/fee_report_list";
+    }
+    
+    @RequestMapping(method = RequestMethod.GET, value = "/querylistmanage")
+    private String queryListManage(HttpServletRequest request) {
+        request.setAttribute("projectOptions", JSONArray.toJSONString(commonService.getProjectCombobox()));
+        return "budgetmanage/fee/manage/fee_query_list";
+    }
+    
     @RequestMapping(value="/detail/{id}",method = RequestMethod.GET)
     public String detail(@PathVariable("id") String id, HttpServletRequest request){
         request.setAttribute("feeID", id);
@@ -81,13 +93,45 @@ public class FeeVolumeController {
         return "budgetmanage/fee/edit";
     }
     
+    @RequestMapping(value="/addmanage",method = RequestMethod.GET)
+    public String addManage(HttpServletRequest request){
+        request.setAttribute("projectOptions", JSONArray.toJSONString(commonService.getProjectCombobox()));
+        request.setAttribute("feeOptions", JSONArray.toJSONString(commonService.getFeeManageCombobox()));
+        return "budgetmanage/fee/manage/edit";
+    }
+    
+    @RequestMapping(value="/editmanage",method = RequestMethod.GET)
+    public String editManage(String id, HttpServletRequest request){
+        request.setAttribute("feeID", id);
+        request.setAttribute("feeOptions", JSONArray.toJSONString(commonService.getFeeManageCombobox()));
+        return "budgetmanage/fee/manage/edit";
+    }
+    
     @RequestMapping(method = RequestMethod.POST, value="/save")
     @ResponseBody
     public Result save(Fee fee, HttpServletRequest request){
         fee.setStatus("10");
+        fee.setType("10");
         fee.setUpdateDateTime(new Date());
         fee.setAmount("0");
         fee.setName(SecurityUtil.getUser().getName() + "上报规费" + TimeUtil.getCurrentTime());
+        
+        try {
+            commonService.save(fee);
+        } catch (Exception e) {
+            return new Result(false,"保存失败，请联系管理员");
+        }
+        return new Result(true, fee);
+    }
+    
+    @RequestMapping(method = RequestMethod.POST, value="/savemanage")
+    @ResponseBody
+    public Result saveManage(Fee fee, HttpServletRequest request){
+        fee.setStatus("10");
+        fee.setType("20");
+        fee.setUpdateDateTime(new Date());
+        fee.setAmount("0");
+        fee.setName(SecurityUtil.getUser().getName() + "上报管理费" + TimeUtil.getCurrentTime());
         
         try {
             commonService.save(fee);
@@ -117,6 +161,13 @@ public class FeeVolumeController {
     public Result deleteDet(String id, HttpServletRequest request){
         FeeDetail feeDetail = commonService.get(FeeDetail.class, id);
         commonService.delete(feeDetail);
+        
+        Fee fee = commonService.get(Fee.class, feeDetail.getFeeID());
+        BigDecimal oldValue = new BigDecimal(fee.getAmount());
+        BigDecimal thisValue = new BigDecimal(feeDetail.getPrice());
+        fee.setAmount(oldValue.subtract(thisValue).setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
+        commonService.save(fee);
+        
         return new Result(true, "success");
     }
     
@@ -144,6 +195,34 @@ public class FeeVolumeController {
         //给流程起个名字
         User user = SecurityUtil.getUser();
         String name = user.getName() + "上报规费，项目：" + fee.getProjectName() +",子项：" + fee.getProjectSubName();
+        
+        //businessKey
+        String businessKey = fee.getId();
+        
+        //配置流程变量
+        Map<String, Object> variables = new HashMap<>();
+        variables.put(Constants.VAR_APPLYUSER_NAME, user.getName());
+        variables.put(Constants.VAR_BUSINESS_KEY, businessKey);
+        variables.put("taskName", name);
+        
+        
+        //启动流程
+        return runtimePageService.startProcessInstanceByKey("feeBudget", name, variables,
+                user.getId(), businessKey);
+    }
+    
+    @RequestMapping(value = "/startmanage", method = RequestMethod.POST)
+    @ResponseBody
+    public Result startManage(String id) {
+        Fee fee = commonService.get(Fee.class, id);
+        fee.setStatus("20");
+        fee.setUpdateDateTime(new Date());
+        
+        commonService.update(fee);
+        
+        //给流程起个名字
+        User user = SecurityUtil.getUser();
+        String name = user.getName() + "上报管理费，项目：" + fee.getProjectName() +",子项：" + fee.getProjectSubName();
         
         //businessKey
         String businessKey = fee.getId();

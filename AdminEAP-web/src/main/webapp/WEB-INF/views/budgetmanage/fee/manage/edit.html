@@ -4,7 +4,7 @@
  </script>
  <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><li class="fa fa-remove"></li></button>
-    <h5 class="modal-title">规费上报</h5>
+    <h5 class="modal-title">管理费上报</h5>
 </div>
 <section class="content">
     <div class="row">
@@ -17,7 +17,7 @@
                 <div class="box box-info">
                     <div class="box-header with-border">
                         <span>
-                            <i class="fa fa-edit">新增规费上报</i>
+                            <i class="fa fa-edit">新增管理费上报</i>
                         </span>
                     </div>
                     <div class="box-body">
@@ -50,15 +50,15 @@
                 <div class="box box-success dn" id="package_det">
                     <div class="box-header with-border">
                         <span>
-                            <i class="fa fa-files-o">编辑规费上报详情</i>
+                            <i class="fa fa-files-o">编辑管理费上报详情</i>
                         </span>
                     </div>
                     <div class="dataTables_filter" style="text-align:center;margin-top:5px;">
                        <input type="hidden" name="feeID">
                        <input type="hidden" name="name" id="detailNameHidden">
-                       <label>规费种类：</label>
+                       <label>管理费种类：</label>
                        <select id="detailName" class="form-control select2" name="remark" style="width:220px;">
-                           <option selected="selected" value="">选择一个规费种类</option>
+                           <option selected="selected" value="">选择一个管理费种类</option>
                        </select>
                        <label>说明：</label>
                        <input type="text" name="nothing" class="form-control" id="showRemark" style="width:220px;margin-right:8px;" readonly="readonly">
@@ -105,7 +105,7 @@
             deleteDetail: function (rowId) {
                 ajaxPost(basePath + '/project/feevolume/deletedetail', {id:rowId}, function (data) {
                     if (data.success) {
-                    	packageTable.table.page('first').draw(false);
+                        purchaseEditTable.table.page('first').draw(false);
                     } else {
                         modals.error(data.message);
                     }
@@ -205,7 +205,7 @@
             },
             submitHandler: function () {
                 var formData = packageform.getFormSimpleData();
-                ajaxPost(basePath + '/project/feevolume/save', formData, function (data) {
+                ajaxPost(basePath + '/project/feevolume/savemanage', formData, function (data) {
                     if (data.success) {
                         initData.feeID = data.data.id;
                         packagedetailform.initFormData(initData);
@@ -244,7 +244,7 @@
                 var formData = packagedetailform.getFormSimpleData();
                 ajaxPost(basePath + '/project/feevolume/savedetail', formData, function (data) {
                     if (data.success) {
-                        purchaseEditTable.table.page('first').draw(false);
+                    	packageTable.table.page('first').draw(false);
                     } else {
                         modals.error(data.message);
                     }

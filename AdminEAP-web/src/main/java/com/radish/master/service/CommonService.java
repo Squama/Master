@@ -30,6 +30,8 @@ public interface CommonService extends BaseService{
     
     List<Options> getFeeCombobox();
     
+    List<Options> getFeeManageCombobox();
+    
     List<Options> getDepartmentCombobox();
     
     List<Options> getUserCombobox();
