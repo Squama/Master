@@ -21,27 +21,27 @@
             <![CDATA[
                 SELECT * FROM 
                 (SELECT budget.id,budget.type,budget.project_id,budget.project_name,budget.project_sub_name,budget.budget,consume.consume,'Percent' AS percent,'construct' AS feetype FROM
-                (SELECT project_sub_id AS id,'安全文明施工费' AS type,project_name,project_id,project_sub_name,project_sub_id,SUM(construct) budget FROM tbl_measure WHERE `status` = '30') budget,
+                (SELECT project_sub_id AS id,'安全文明施工费' AS type,project_name,project_id,project_sub_name,project_sub_id,SUM(construct) budget FROM tbl_measure WHERE `status` = '30' GROUP BY project_sub_id) budget,
                 (SELECT SUM(amount) consume,project_sub_id FROM tbl_measure_consume WHERE op='-' AND type='construct' GROUP BY project_sub_id) consume
                 WHERE budget.project_sub_id = consume.project_sub_id
                 UNION ALL
                 SELECT budget.id,budget.type,budget.project_id,budget.project_name,budget.project_sub_name,budget.budget,consume.consume,'Percent' AS percent,'issue' AS feetype FROM
-                (SELECT project_sub_id AS id,'总价措施项目费' AS type,project_name,project_id,project_sub_name,project_sub_id,SUM(issue) budget FROM tbl_measure WHERE `status` = '30') budget,
+                (SELECT project_sub_id AS id,'总价措施项目费' AS type,project_name,project_id,project_sub_name,project_sub_id,SUM(issue) budget FROM tbl_measure WHERE `status` = '30' GROUP BY project_sub_id) budget,
                 (SELECT SUM(amount) consume,project_sub_id FROM tbl_measure_consume WHERE op='-' AND type='issue' GROUP BY project_sub_id) consume
                 WHERE budget.project_sub_id = consume.project_sub_id
                 UNION ALL
                 SELECT budget.id,budget.type,budget.project_id,budget.project_name,budget.project_sub_name,budget.budget,consume.consume,'Percent' AS percent,'manage' AS feetype FROM
-                (SELECT project_sub_id AS id,'管理费' AS type,project_name,project_id,project_sub_name,project_sub_id,SUM(manage) budget FROM tbl_measure WHERE `status` = '30') budget,
+                (SELECT project_sub_id AS id,'管理费' AS type,project_name,project_id,project_sub_name,project_sub_id,SUM(manage) budget FROM tbl_measure WHERE `status` = '30' GROUP BY project_sub_id) budget,
                 (SELECT SUM(amount) consume,project_sub_id FROM tbl_measure_consume WHERE op='-' AND type='manage' GROUP BY project_sub_id) consume
                 WHERE budget.project_sub_id = consume.project_sub_id
                 UNION ALL
                 SELECT budget.id,budget.type,budget.project_id,budget.project_name,budget.project_sub_name,budget.budget,consume.consume,'Percent' AS percent,'rule' AS feetype FROM
-                (SELECT project_sub_id AS id,'规费' AS type,project_name,project_id,project_sub_name,project_sub_id,SUM(rule) budget FROM tbl_measure WHERE `status` = '30') budget,
+                (SELECT project_sub_id AS id,'规费' AS type,project_name,project_id,project_sub_name,project_sub_id,SUM(rule) budget FROM tbl_measure WHERE `status` = '30' GROUP BY project_sub_id) budget,
                 (SELECT SUM(amount) consume,project_sub_id FROM tbl_measure_consume WHERE op='-' AND type='rule' GROUP BY project_sub_id) consume
                 WHERE budget.project_sub_id = consume.project_sub_id
                 UNION ALL
                 SELECT budget.id,budget.type,budget.project_id,budget.project_name,budget.project_sub_name,budget.budget,consume.consume,'Percent' AS percent,'tax' AS feetype FROM
-                (SELECT project_sub_id AS id,'税金' AS type,project_name,project_id,project_sub_name,project_sub_id,SUM(tax) budget FROM tbl_measure WHERE `status` = '30') budget,
+                (SELECT project_sub_id AS id,'税金' AS type,project_name,project_id,project_sub_name,project_sub_id,SUM(tax) budget FROM tbl_measure WHERE `status` = '30' GROUP BY project_sub_id) budget,
                 (SELECT SUM(amount) consume,project_sub_id FROM tbl_measure_consume WHERE op='-' AND type='tax' GROUP BY project_sub_id) consume
                 WHERE budget.project_sub_id = consume.project_sub_id) t
                 WHERE 1=1
