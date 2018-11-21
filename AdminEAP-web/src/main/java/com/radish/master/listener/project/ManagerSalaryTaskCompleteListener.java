@@ -3,8 +3,11 @@
  */
 package com.radish.master.listener.project;
 
+import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.activiti.engine.delegate.DelegateTask;
@@ -14,6 +17,7 @@ import com.cnpc.framework.activiti.pojo.Constants;
 import com.cnpc.framework.base.service.BaseService;
 import com.cnpc.framework.utils.SecurityUtil;
 import com.radish.master.entity.common.ActivitiSuggestion;
+import com.radish.master.entity.project.Measure;
 import com.radish.master.entity.project.MeasureConsume;
 import com.radish.master.entity.project.Salary;
 import com.radish.master.system.SpringUtil;
@@ -75,17 +79,50 @@ public class ManagerSalaryTaskCompleteListener implements TaskListener{
                     salary.setStatus("50");
                 } else if ("account".equals(delegateTask.getTaskDefinitionKey())) {
                     salary.setStatus("60");
-                    MeasureConsume mc = new MeasureConsume();
-                    mc.setCreateDateTime(new Date());
-                    mc.setConsumeName("上报审核消耗");
-                    mc.setProjectID(salary.getProjectID());
-                    mc.setProjectSubID("");
-                    mc.setOperator(SecurityUtil.getUser().getName());
-                    mc.setOperateTime(new Date());
-                    mc.setType("manage");
-                    mc.setAmount(salary.getApplySum());
-                    mc.setOp("-");
-                    baseService.save(mc);
+                    
+                    StringBuilder buffer = new StringBuilder();
+
+                    buffer.append("SELECT id,project_id,project_sub_id,SUM(manage) AS manage, ");
+                    buffer.append("create_date_time,deleted,update_date_time,version,name,project_name,project_sub_name,construct,issue,rule,tax,status ");
+                    buffer.append("FROM tbl_measure   ");
+                    buffer.append("WHERE project_id=:projectID  GROUP BY project_sub_id ");
+
+                    Map<String, Object> params = new HashMap<String, Object>();
+
+                    params.put("projectID", salary.getProjectID());
+
+                    List<Measure> measureList =  baseService.findBySql(buffer.toString(), params, Measure.class);
+                    
+                    BigDecimal sum = new BigDecimal("0");
+                    for(Measure measure : measureList){
+                        sum = sum.add(new BigDecimal(measure.getManage()));
+                    }
+                    
+                    for(Measure measure : measureList){
+                        
+                        BigDecimal consume = new BigDecimal(measure.getManage());
+                        BigDecimal result = new BigDecimal("0");
+                        BigDecimal sumSalary = new BigDecimal(salary.getApplySum());
+                        
+                        result = consume.divide(sum);
+                        
+                        NumberFormat percent = NumberFormat.getPercentInstance();
+                        percent.setMaximumFractionDigits(2);
+                        
+                        MeasureConsume mc = new MeasureConsume();
+                        mc.setCreateDateTime(new Date());
+                        mc.setConsumeName("管理人员工资，按比例消耗，申请时比例：" + percent.format(result.doubleValue()));
+                        mc.setProjectID(salary.getProjectID());
+                        mc.setProjectSubID(measure.getProjectSubID());
+                        mc.setOperator(SecurityUtil.getUser().getName());
+                        mc.setOperateTime(new Date());
+                        mc.setType("manage");
+                        mc.setAmount(sumSalary.multiply(result).setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
+                        mc.setOp("-");
+                        baseService.save(mc);
+                    }
+                    
+                    
                 }
             }
 
