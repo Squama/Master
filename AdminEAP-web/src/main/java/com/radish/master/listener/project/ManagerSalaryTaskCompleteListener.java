@@ -104,7 +104,7 @@ public class ManagerSalaryTaskCompleteListener implements TaskListener{
                         BigDecimal result = new BigDecimal("0");
                         BigDecimal sumSalary = new BigDecimal(salary.getApplySum());
                         
-                        result = consume.divide(sum);
+                        result = consume.divide(sum, 2, BigDecimal.ROUND_HALF_DOWN);
                         
                         NumberFormat percent = NumberFormat.getPercentInstance();
                         percent.setMaximumFractionDigits(2);
@@ -117,7 +117,7 @@ public class ManagerSalaryTaskCompleteListener implements TaskListener{
                         mc.setOperator(SecurityUtil.getUser().getName());
                         mc.setOperateTime(new Date());
                         mc.setType("manage");
-                        mc.setAmount(sumSalary.multiply(result).setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
+                        mc.setAmount(sumSalary.multiply(result).setScale(2, BigDecimal.ROUND_HALF_DOWN).toPlainString());
                         mc.setOp("-");
                         baseService.save(mc);
                     }
