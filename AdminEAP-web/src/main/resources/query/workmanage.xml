@@ -16,7 +16,7 @@
         <column key="id" header="操作" width="100" fnRender="fnRenderMember"/>
     </query>
     
-    <query id="member_tx_list" key="id" tableName="班组人员" className="com.radish.master.entity.project.UserTeam" widthType="px" pageSize="200">
+    <query id="member_tx_list" key="id" tableName="班组人员" className="com.radish.master.entity.project.UserTeam" widthType="px" pageSize="200" order="teamCode asc">
         <column key="id" hidden="true" header="id" width="80"/>
         <column key="rowIndex" header="序号" width="80"/>
         <column key="userName" header="用户名" classType="String" width="150"/>
@@ -26,7 +26,7 @@
         <column key="id" header="操作" width="100" fnRender="fnMemberDelete"/>
     </query>
     
-    <query id="member_tx_detail" key="id" tableName="班组人员" className="com.radish.master.entity.project.UserTeam" widthType="px" pageSize="200">
+    <query id="member_tx_detail" key="id" tableName="班组人员" className="com.radish.master.entity.project.UserTeam" widthType="px" pageSize="200" order="teamCode asc">
         <column key="id" hidden="true" header="id" width="80"/>
         <column key="rowIndex" header="序号" width="80"/>
         <column key="userName" header="用户名" classType="String" width="150"/>

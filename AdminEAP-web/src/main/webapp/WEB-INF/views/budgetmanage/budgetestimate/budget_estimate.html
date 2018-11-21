@@ -167,6 +167,7 @@
 		                    	ajaxPost(basePath + '/budget/estimate/start', {budgetNo:budgetNo}, function (data) {
 		                            if (data.success) {
 		                                modals.correct("流程已启动，请及时处理");
+		                                loadPage(basePath+"/budget/estimate/list");
 		                            } else {
 		                                modals.error(data.message);
 		                            }

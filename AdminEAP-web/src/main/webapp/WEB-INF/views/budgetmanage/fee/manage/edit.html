@@ -26,7 +26,7 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">选择项目<span style="color:red">*</span></label>
                                 <div class="col-sm-5">
-                                    <select id="detailProjectID" class="form-control select2" name="projectID">
+                                    <select id="detailProjectID" class="form-control select2" name="projectID" style="width:100%;">
                                         <option selected="selected" value="">选择一个项目</option>
                                     </select>
                                 </div>
@@ -34,7 +34,7 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">选择子项<span style="color:red">*</span></label>
                                 <div class="col-sm-5">
-                                    <select id="projectSubID" class="form-control select2" name="projectSubID">
+                                    <select id="projectSubID" class="form-control select2" name="projectSubID" style="width:100%;">
                                         <option selected="selected" value="">选择一个子项</option>
                                     </select>
                                 </div>
@@ -244,7 +244,7 @@
                 var formData = packagedetailform.getFormSimpleData();
                 ajaxPost(basePath + '/project/feevolume/savedetail', formData, function (data) {
                     if (data.success) {
-                    	packageTable.table.page('first').draw(false);
+                    	purchaseEditTable.table.page('first').draw(false);
                     } else {
                         modals.error(data.message);
                     }

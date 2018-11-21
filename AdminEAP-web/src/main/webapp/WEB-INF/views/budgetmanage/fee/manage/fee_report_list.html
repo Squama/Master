@@ -103,7 +103,10 @@
                     winId:winId,
                     title:'编辑管理费上报',
                     width:'1200px',
-                    url:basePath+"/project/feevolume/editmanage?id="+rowId
+                    url:basePath+"/project/feevolume/editmanage?id="+rowId,
+                    hideFunc:function(){
+                    	packageTable.reloadData();
+                    }
                    });
                break;
             }
