@@ -505,7 +505,7 @@
             modals.info('请选择要删除的被告');
             return false;
         }
-		modals.confirm("是否要删除该原告？",function(){
+		modals.confirm("是否要删除该被告？",function(){
             ajaxPost(basePath+"/casemanage/deletePeople?id="+rowId,null,function(data){
             	if(data.success){
             		bgTable.reloadData();

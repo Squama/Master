@@ -46,7 +46,7 @@
         </sql>
         <column key="id" hidden="true" header="id" width="80"/>
         <column key="rowIndex" header="序号" width="80"/>
-         <column key="type" header="变更函件类型" classType="String" width="150" render="10=图纸会审纪要,20=设计变更单,30=工程签证单,40=工程联系单,50=文件收发登记表"/>
+         <column key="type" header="变更函件类型" classType="String" width="150" render="10=图纸会审纪要,20=设计变更单,30=工程签证单,40=工程联系单,50=文件收发登记表,60=原材料进场验收表"/>
         <column key="number" header="文件编号" classType="String" allowSort="true" width="150"/>
         <column key="name" header="文件名称" classType="String" allowSort="true" width="150"/>
         <column key="pName" header="所属项目" classType="String" width="150"/>
