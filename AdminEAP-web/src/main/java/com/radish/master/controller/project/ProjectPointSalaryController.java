@@ -99,7 +99,7 @@ public class ProjectPointSalaryController {
             total = salary.getTotal();
             
             // 直接录入全部明细
-            List<Worker> managerList = teamSalaryService.getPointMemberByProject(salary.getProjectID());
+            List<Worker> managerList = teamSalaryService.getPointMemberByProject(salary.getProjectID(), salary.getTeamID());
             List<SalaryDetail> detailList = new ArrayList<SalaryDetail>();
             for (Worker user : managerList) {
                 SalaryDetail detail = new SalaryDetail();

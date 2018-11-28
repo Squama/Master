@@ -130,7 +130,7 @@ public class ProjectTeamSalaryController {
             total = salary.getTotal();
             
             // 直接录入全部明细
-            List<Worker> managerList = teamSalaryService.getProMemberByProject(salary.getProjectID());
+            List<Worker> managerList = teamSalaryService.getProMemberByProject(salary.getProjectID(), salary.getTeamID());
             List<SalaryDetail> detailList = new ArrayList<SalaryDetail>();
             for (Worker user : managerList) {
                 SalaryDetail detail = new SalaryDetail();
@@ -237,7 +237,7 @@ public class ProjectTeamSalaryController {
         
         String hqlVolume = "from SalaryVolume where salaryID=:salaryID";
         Map<String, Object> paramsVolume = new HashMap<>();
-        params.put("salaryID", id);
+        paramsVolume.put("salaryID", id);
         List<SalaryVolume> volumeList = teamSalaryService.find(hqlVolume, paramsVolume);
         
         if (detailList.isEmpty()) {

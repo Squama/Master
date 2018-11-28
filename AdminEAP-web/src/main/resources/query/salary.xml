@@ -2,7 +2,7 @@
 <queryContext xmlns="http://www.example.org/query" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.example.org/query query.xsd">
     
     <!-- 班组工资 start -->
-    <query id="team_salary_list" key="id" tableName="班组工资" className="com.radish.master.entity.project.Salary" widthType="px" pageSize="100">
+    <query id="team_salary_list" key="id" tableName="班组工资" className="com.radish.master.entity.project.Salary" widthType="px" pageSize="50">
         <column key="rowIndex" header="序号" width="80"/>
         <column key="id" hidden="true" header="id" width="80"/>
         <column key="projectName" header="所属项目" allowSort="true" width="150"/>
@@ -12,7 +12,7 @@
         <column key="status" header="状态" allowSort="true" width="150" render="10=新建,20=负责人审批,30=办公室主任审批,40=总经理审批,50=财务审批,60=已完成,70=审核不通过"/>
         <column key="id" header="操作" width="80" fnRender="fnRenderSalary"/>
     </query>
-    <query id="manager_salary_list" key="id" tableName="非班组工资" className="com.radish.master.entity.project.Salary" widthType="px" pageSize="100">
+    <query id="manager_salary_list" key="id" tableName="非班组工资" className="com.radish.master.entity.project.Salary" widthType="px" pageSize="50">
         <column key="rowIndex" header="序号" width="80"/>
         <column key="id" hidden="true" header="id" width="80"/>
         <column key="projectName" header="所属项目" allowSort="true" width="150"/>
@@ -22,7 +22,7 @@
         <column key="status" header="状态" allowSort="true" width="150" render="10=新建,20=负责人审批,30=办公室主任审批,40=总经理审批,50=财务审批,60=已完成,70=审核不通过"/>
         <column key="id" header="操作" width="80" fnRender="fnRenderSalary"/>
     </query>
-    <query id="organ_salary_list" key="id" tableName="非班组工资" className="com.radish.master.entity.project.Salary" widthType="px" pageSize="100">
+    <query id="organ_salary_list" key="id" tableName="非班组工资" className="com.radish.master.entity.project.Salary" widthType="px" pageSize="50">
         <column key="rowIndex" header="序号" width="80"/>
         <column key="id" hidden="true" header="id" width="80"/>
         <column key="startTime" header="开始时间" allowSort="true" dateFormat="yyyy-mm-dd" width="80"/>

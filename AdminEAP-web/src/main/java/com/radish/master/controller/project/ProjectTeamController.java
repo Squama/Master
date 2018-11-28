@@ -80,7 +80,6 @@ public class ProjectTeamController {
         return projectService.get(ProjectTeam.class, id);
     }
     
-    @VerifyCSRFToken
     @RequestMapping(value="/save")
     @ResponseBody
     public Result save(ProjectTeam projectTeam, HttpServletRequest request){
@@ -100,7 +99,11 @@ public class ProjectTeamController {
             userTeam.setProjectID(projectTeam.getProjectID());
             userTeam.setProjectName(projectTeam.getProjectName());
             
-            projectService.save(userTeam);
+            try {
+                projectService.save(userTeam);
+            } catch (Exception e) {
+                return new Result(false);
+            }
         }else{
             ProjectTeam oldPT = projectService.get(ProjectTeam.class, projectTeam.getId());
             oldPT.setProjectID(projectTeam.getProjectID());

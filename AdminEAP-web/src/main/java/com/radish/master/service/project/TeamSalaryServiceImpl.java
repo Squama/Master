@@ -93,7 +93,7 @@ public class TeamSalaryServiceImpl extends BaseServiceImpl implements TeamSalary
     }
     
     @Override
-    public List<Worker> getProMemberByProject(String projectID) {
+    public List<Worker> getProMemberByProject(String projectID, String teamID) {
         StringBuilder buffer = new StringBuilder();
 
         buffer.append("SELECT U.* ");
@@ -101,16 +101,18 @@ public class TeamSalaryServiceImpl extends BaseServiceImpl implements TeamSalary
         buffer.append("WHERE U.id=UT.user_id AND UT.project_id = PT.project_id  ");
         buffer.append("AND UT.team_id=PT.id AND PT.status='10'  ");
         buffer.append("AND UT.project_id=:projectID ");
+        buffer.append("AND UT.team_id=:teamID ");
 
         Map<String, Object> params = new HashMap<String, Object>();
 
         params.put("projectID", projectID);
+        params.put("teamID", teamID);
 
         return this.findBySql(buffer.toString(), params, Worker.class);
     }
     
     @Override
-    public List<Worker> getPointMemberByProject(String projectID) {
+    public List<Worker> getPointMemberByProject(String projectID, String teamID) {
         StringBuilder buffer = new StringBuilder();
 
         buffer.append("SELECT U.* ");
@@ -118,10 +120,12 @@ public class TeamSalaryServiceImpl extends BaseServiceImpl implements TeamSalary
         buffer.append("WHERE U.id=UT.user_id AND UT.project_id = PT.project_id  ");
         buffer.append("AND UT.team_id=PT.id AND PT.status='20'  ");
         buffer.append("AND UT.project_id=:projectID ");
+        buffer.append("AND UT.team_id=:teamID ");
 
         Map<String, Object> params = new HashMap<String, Object>();
 
         params.put("projectID", projectID);
+        params.put("teamID", teamID);
 
         return this.findBySql(buffer.toString(), params, Worker.class);
     }

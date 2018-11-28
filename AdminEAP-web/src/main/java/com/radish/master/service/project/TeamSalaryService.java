@@ -24,9 +24,9 @@ public interface TeamSalaryService extends BaseService {
 
     List<User> getManageMemberByProject(String projectID);
     
-    List<Worker> getProMemberByProject(String projectID);
+    List<Worker> getProMemberByProject(String projectID, String teamID);
     
-    List<Worker> getPointMemberByProject(String projectID);
+    List<Worker> getPointMemberByProject(String projectID, String teamID);
     
     List<User> getOrganMember();
 
