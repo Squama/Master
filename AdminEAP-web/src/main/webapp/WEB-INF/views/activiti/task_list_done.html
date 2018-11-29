@@ -111,9 +111,9 @@
     function fnRenderOperator(value, type, rowObj) {
         var oper = "";
         oper += "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='taskDoneObj.showMonitor(\"" + value + "\")'>流程明细</a>";
-        if(rowObj.flowState=="0"&&rowObj.canWithdraw=="1") {
+        /* if(rowObj.flowState=="0"&&rowObj.canWithdraw=="1") {
             oper += "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='taskDoneObj.withdrawTask(\"" + value + "\")'>撤回</a>";
-        }
+        } */
         return oper;
     }
 </script>
