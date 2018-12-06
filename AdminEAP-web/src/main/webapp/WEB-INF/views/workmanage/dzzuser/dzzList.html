@@ -91,7 +91,7 @@
         	}
         	if(rowObj.zzStatus=='转正驳回'){
         		s = "<a href='javascript:void(0)' onclick='volumeManageObject.submit(\"" + value + "\")'>转正(开始部门考核)</a> ";
-        		s +=" &nbsp;&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='volumeManageObject.look(\"" + rowObj.zzFaildDesc + "\")'>驳回原因</a>"
+        		s +=" &nbsp;&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='volumeManageObject.look(\"" + rowObj.zzFaildDesc.replace(/[\r\n]/g,'') + "\")'>驳回原因</a>"
         	}
         	return s;
         }

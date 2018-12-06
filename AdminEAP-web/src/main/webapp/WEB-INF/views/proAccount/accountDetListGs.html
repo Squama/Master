@@ -140,7 +140,7 @@
         	 str = "<a href='javascript:void(0)' onclick='accountDetObject.auditDet(\"" + value + "\")'>复核</a>";
         }else if(rowObj.status=="复核驳回"){
         	str += "<a href='javascript:void(0)' onclick='accountDetObject.auditDet(\"" + value + "\")'>复核</a>&nbsp;&nbsp;";
-        	str += "<a href='javascript:void(0)' onclick='lookYy(\"" + rowObj.descs + "\")'>驳回原因</a>";
+        	str += "<a href='javascript:void(0)' onclick='lookYy(\"" + rowObj.descs.replace(/[\r\n]/g,'') + "\")'>驳回原因</a>";
         }else{
         	return "";
         }

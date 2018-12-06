@@ -88,7 +88,7 @@
                         modals.info('请选择要编辑的行');
                         return false;
                     }
-            		if(dutycheckTable.getSelectedRowData().status!='新建'&&dutycheckTable.getSelectedRowData().status!='驳回'){
+            		if(dutycheckTable.getSelectedRowData().status!='新建'&&dutycheckTable.getSelectedRowData().status!='驳回'&&dutycheckTable.getSelectedRowData().status!='指定人员审核驳回'){
                     	modals.info('该状态不能编辑');
                         return false;
                     }
@@ -107,7 +107,7 @@
                         modals.info('请选择要删除的行');
                         return false;
                     }
-                	if(dutycheckTable.getSelectedRowData().status!='新建'&&dutycheckTable.getSelectedRowData().status!='驳回'){
+                	if(dutycheckTable.getSelectedRowData().status!='新建'&&dutycheckTable.getSelectedRowData().status!='驳回'&&dutycheckTable.getSelectedRowData().status!='指定人员审核驳回'){
                     	modals.info('该状态不能删除');
                         return false;
                     }
@@ -152,9 +152,9 @@
 		if(obj.status=="新建"){
 			return "<a href='javascript:void(0)' onclick='submit(\"" + value + "\")'>提交</a>";
 		}else if(obj.status=="驳回"){
-			return "<a href='javascript:void(0)' onclick='submit(\"" + value + "\")' style='margin-right:10px'>提交</a><a href='javascript:void(0)' onclick='showYy(\"" + obj.bhdesc + "\")'>驳回原因</a>";
+			return "<a href='javascript:void(0)' onclick='submit(\"" + value + "\")' style='margin-right:10px'>提交</a><a href='javascript:void(0)' onclick='showYy(\"" + obj.bhdesc.replace(/[\r\n]/g,'') + "\")'>驳回原因</a>";
 		}else if(obj.status=="指定人员审核驳回"){
-			return "<a href='javascript:void(0)' onclick='submit(\"" + value + "\")' style='margin-right:10px'>提交</a><a href='javascript:void(0)' onclick='showYy(\"" + obj.auidtDesc + "\")'>驳回原因</a>";
+			return "<a href='javascript:void(0)' onclick='submit(\"" + value + "\")' style='margin-right:10px'>提交</a><a href='javascript:void(0)' onclick='showYy(\"" + obj.auidtDesc.replace(/[\r\n]/g,'') + "\")'>驳回原因</a>";
 		}
 		return "";
     }
@@ -171,6 +171,7 @@
         });
     }
     function showYy(value){
+   		console.log(value);
     	 modals.info(value);
     }
     
