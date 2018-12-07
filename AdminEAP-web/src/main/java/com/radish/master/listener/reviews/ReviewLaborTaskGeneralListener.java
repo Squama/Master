@@ -46,7 +46,6 @@ import com.radish.master.system.SpringUtil;
 public class ReviewLaborTaskGeneralListener implements TaskListener {
 
     private static final long serialVersionUID = -665720800903137257L;
-    
     private static final Map<String, String> TASKMAP = new HashMap<String, String>(){{
         put("jinying", "经营部门");
         put("gongchen", "工程部门");
