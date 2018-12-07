@@ -3,32 +3,18 @@
  */
 package com.radish.master.listener.reviews;
 
-import java.math.BigDecimal;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.activiti.engine.delegate.DelegateTask;
 import org.activiti.engine.delegate.TaskListener;
 
-import com.alibaba.fastjson.JSONObject;
 import com.cnpc.framework.activiti.pojo.Constants;
-import com.cnpc.framework.base.entity.TaskWechat;
-import com.cnpc.framework.base.entity.WechatConfig;
-import com.cnpc.framework.base.pojo.AccessToken;
 import com.cnpc.framework.base.service.BaseService;
-import com.cnpc.framework.utils.CodeException;
-import com.cnpc.framework.utils.PropertiesUtil;
 import com.cnpc.framework.utils.SecurityUtil;
-import com.cnpc.framework.utils.WeChatUtil;
-import com.radish.master.entity.Labor;
-import com.radish.master.entity.ProjectVolume;
 import com.radish.master.entity.common.ActivitiReview;
-import com.radish.master.entity.common.ActivitiSuggestion;
 import com.radish.master.entity.review.ReviewLabor;
-import com.radish.master.entity.review.ReviewMat;
 import com.radish.master.system.SpringUtil;
 
 /**

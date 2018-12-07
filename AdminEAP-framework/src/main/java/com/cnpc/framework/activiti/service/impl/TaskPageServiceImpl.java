@@ -1,19 +1,24 @@
 package com.cnpc.framework.activiti.service.impl;
 
-import com.cnpc.framework.activiti.entity.Module;
-import com.cnpc.framework.activiti.pojo.Constants;
-import com.cnpc.framework.activiti.pojo.TaskDoneVo;
-import com.cnpc.framework.activiti.pojo.TaskVo;
-import com.cnpc.framework.activiti.service.IdentityPageService;
-import com.cnpc.framework.activiti.service.RuntimePageService;
-import com.cnpc.framework.activiti.service.TaskPageService;
-import com.cnpc.framework.base.pojo.PageInfo;
-import com.cnpc.framework.base.pojo.Result;
-import com.cnpc.framework.base.service.impl.BaseServiceImpl;
-import com.cnpc.framework.query.entity.QueryCondition;
-import com.cnpc.framework.utils.DateUtil;
-import com.cnpc.framework.utils.StrUtil;
-import org.activiti.engine.*;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.annotation.Resource;
+
+import org.activiti.engine.FormService;
+import org.activiti.engine.HistoryService;
+import org.activiti.engine.IdentityService;
+import org.activiti.engine.ManagementService;
+import org.activiti.engine.RepositoryService;
+import org.activiti.engine.RuntimeService;
+import org.activiti.engine.TaskService;
 import org.activiti.engine.form.FormProperty;
 import org.activiti.engine.history.HistoricActivityInstance;
 import org.activiti.engine.history.HistoricProcessInstance;
@@ -31,16 +36,30 @@ import org.activiti.engine.impl.pvm.process.ActivityImpl;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.Execution;
 import org.activiti.engine.runtime.ProcessInstance;
-import org.activiti.engine.task.*;
+import org.activiti.engine.task.DelegationState;
+import org.activiti.engine.task.IdentityLink;
+import org.activiti.engine.task.IdentityLinkType;
+import org.activiti.engine.task.Task;
+import org.activiti.engine.task.TaskQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
-import java.text.ParseException;
-import java.util.*;
+import com.cnpc.framework.activiti.entity.Module;
+import com.cnpc.framework.activiti.pojo.Constants;
+import com.cnpc.framework.activiti.pojo.TaskDoneVo;
+import com.cnpc.framework.activiti.pojo.TaskVo;
+import com.cnpc.framework.activiti.service.IdentityPageService;
+import com.cnpc.framework.activiti.service.RuntimePageService;
+import com.cnpc.framework.activiti.service.TaskPageService;
+import com.cnpc.framework.base.pojo.PageInfo;
+import com.cnpc.framework.base.pojo.Result;
+import com.cnpc.framework.base.service.impl.BaseServiceImpl;
+import com.cnpc.framework.query.entity.QueryCondition;
+import com.cnpc.framework.utils.DateUtil;
+import com.cnpc.framework.utils.StrUtil;
 
 /**
  * Created by billJiang on 2017/6/21.
@@ -391,7 +410,7 @@ public class TaskPageServiceImpl extends BaseServiceImpl implements TaskPageServ
      */
     @Override
     public Result canWithdraw(HistoricProcessInstance processInstance, String userId) {
-        List<HistoricTaskInstance> taskInstances = historyService.createHistoricTaskInstanceQuery().processUnfinished()
+        /*List<HistoricTaskInstance> taskInstances = historyService.createHistoricTaskInstanceQuery().processUnfinished()
                 .processInstanceId(processInstance.getId()).orderByTaskCreateTime().desc().orderByTaskId().desc()
                 .list();
         //Task activeTask=taskService.createTaskQuery().processInstanceId(processInstance.getId()).singleResult();
@@ -413,7 +432,7 @@ public class TaskPageServiceImpl extends BaseServiceImpl implements TaskPageServ
                 }
             }
 
-        }
+        }*/
         return new Result(false, null, "任务被签收或办理，不可撤回");
     }
 
