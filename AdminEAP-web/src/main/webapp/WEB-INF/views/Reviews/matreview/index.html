@@ -61,6 +61,18 @@
                         }
                     });
                 });
+            },
+            fj: function (psid) {
+    			modals.openWin({
+                    winId:winId,
+                    title:'施工合同',
+                    width:'1000px',
+                    url:basePath+"/matreview/projectdetailfile?id="+psid,
+                    hideFunc:function(){
+                    	budgetApplyTable.reloadData();
+                    },
+                    
+                   }); 
             }
     }
     $(function() { 
@@ -155,6 +167,12 @@
     	if(rowObj.status=='新建'){
     		s = "<a href='javascript:void(0)' onclick='volumeManageObject.submit(\"" + value + "\")'>提交</a>";
     	}
+        return s;
+    }
+
+    function fnRenderFj(value, type, rowObj){
+    	var s =  "<a href='javascript:void(0)' onclick='volumeManageObject.fj(\"" + value + "\")'>采购合同</a>";
+    	
         return s;
     }
     

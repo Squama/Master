@@ -44,8 +44,17 @@ public class BuildDiaryController {
 		User u = SecurityUtil.getUser();
 		request.setAttribute("use", JSONArray.toJSONString(u));
 		
-		List xm = baseService.findMapBySql("select id value, project_name data from tbl_project", new Object[]{}, new Type[]{StringType.INSTANCE}, Options.class);
-		request.setAttribute("xm", JSONArray.toJSONString(xm));
+		//判断人员是否存在班组人员表，存在，搜出班组的项目，不存在 搜出全部项目
+		String sql = "select a.id value, a.project_name data from tbl_project a where "
+				+ " exists (select b.* from tbl_user_team b where a.id = b.project_id and b.user_id = '"+u.getId()+"')";
+		List tjxm = baseService.findMapBySql(sql, new Object[]{}, new Type[]{StringType.INSTANCE}, Options.class);
+		if(tjxm.size()>0){
+			request.setAttribute("xm", JSONArray.toJSONString(tjxm));
+		}else{
+			List xm = baseService.findMapBySql("select id value, project_name data from tbl_project", new Object[]{}, new Type[]{StringType.INSTANCE}, Options.class);
+			request.setAttribute("xm", JSONArray.toJSONString(xm));
+		}
+		
 		return  prefix +"add_Index";
 	}
 	

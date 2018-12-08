@@ -105,7 +105,8 @@ public class PlanApproveController {
 		request.setAttribute("id", id);
 		List<User> ul = baseService.findMapBySql("select u.name name ,u.id id  from tbl_user u where u.audit_status = 10", new Object[]{}, new Type[]{StringType.INSTANCE}, User.class);
 		request.setAttribute("userOptions", JSONArray.toJSONString(ul));
-		
+		//指定工程部人员---代角色确定再改
+		String tsu ="";
 		return prefix +"addIndex";
 	}
 	@RequestMapping("/zdryAuidt")

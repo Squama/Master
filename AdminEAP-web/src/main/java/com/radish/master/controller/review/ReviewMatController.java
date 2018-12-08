@@ -141,6 +141,7 @@ public class ReviewMatController {
 	@ResponseBody
 	public Result save(HttpServletRequest request,ReviewMat ps){
 		String id = request.getParameter("id");
+		String fileId = request.getParameter("fileId");
 		Result r = new Result();
 		if(StringHelper.isNotEmpty(id)){//修改
 			ReviewMat p = baseService.get(ReviewMat.class,id);
@@ -164,6 +165,19 @@ public class ReviewMatController {
 			ps.setCreateDate(new Date());
 			baseService.save(ps);
 			r.setSuccess(true);
+			id = ps.getId();
+		}
+		if(fileId.indexOf(",")<0){
+			ReviewFile wj = baseService.get(ReviewFile.class, fileId);
+			wj.setFormId(id);
+			baseService.update(wj);
+		}else{
+			String[] fid = fileId.split(",");
+			for(int i=0;i<fid.length;i++){
+				ReviewFile wj = baseService.get(ReviewFile.class, fid[i]);
+				wj.setFormId(id);
+				baseService.update(wj);
+			}
 		}
 		return r;
 	}
@@ -172,11 +186,21 @@ public class ReviewMatController {
 	@ResponseBody
 	public Result load(HttpServletRequest request){
 		String id = request.getParameter("id");
+		List<ReviewFile> wjs = baseService.findMapBySql("select id  from tbl_reviewfile where form_ID='"+id+"'", new Object[]{}, new Type[]{StringType.INSTANCE}, ReviewFile.class);
+        String wjid = "";
+		for(int i =0;i<wjs.size();i++){
+        	if(i==wjs.size()-1){
+        		wjid += wjs.get(i).getId();
+        	}else {
+        		wjid += wjs.get(i).getId()+",";
+        	}
+        }
 		ReviewMat sp = baseService.get(ReviewMat.class,id);
 		Result r = new Result();
 		
 		r.setSuccess(true);
 		r.setData(sp);
+		r.setCode(wjid);
 		return r;
 	}
 	@RequestMapping("/loadSpyj")
@@ -357,15 +381,16 @@ public class ReviewMatController {
         List<String> previews=new ArrayList<>();
         List<FileResult.PreviewConfig> previewConfigs=new ArrayList<>();
         //缓存当前的文件
-        String dirPath = request.getRealPath("/");
+        //String dirPath = request.getRealPath("/");
         String[] fileArr=new String[fileList.size()];
         int index=0;
         for (ReviewFile sysFile : fileList) {
             //上传后预览 TODO 该预览样式暂时不支持theme:explorer的样式，后续可以再次扩展
             //如果其他文件可预览txt、xml、html、pdf等 可在此配置
+        	String dirPath = request.getContextPath() + "/laborreview/showImage?imageID=" + sysFile.getId();
             if(FileUtil.isImage(uploaderPath+File.separator+sysFile.getSavedName())) {
-                previews.add("<img src='." + sysFile.getFilePath().replace(File.separator, "/") + "' class='file-preview-image kv-preview-data' " +
-                        "style='width:auto;height:160px' alt='" + sysFile.getFileName() + " title='" + sysFile.getFileName() + "''>");
+                previews.add("<img src='" + dirPath+ "' class='file-preview-image kv-preview-data' " +
+                        "style='width:auto;height:80px' alt='" + sysFile.getFileName() + " title='" + sysFile.getFileName() + "''>");
             }else{
                 previews.add("<div class='kv-preview-data file-preview-other-frame'><div class='file-preview-other'>" +
                         "<span class='file-other-icon'>"+getFileIcon(sysFile.getFileName())+"</span></div></div>");
@@ -478,14 +503,15 @@ public class ReviewMatController {
         List<String> previews=new ArrayList<>();
         List<FileResult.PreviewConfig> previewConfigs=new ArrayList<>();
         //缓存当前的文件
-        String dirPath = request.getRealPath("/");
+        //String dirPath = request.getRealPath("/");
         String[] fileArr=new String[fileList.size()];
         int index=0;
         for (ReviewFile sysFile : fileList) {
             //上传后预览 TODO 该预览样式暂时不支持theme:explorer的样式，后续可以再次扩展
             //如果其他文件可预览txt、xml、html、pdf等 可在此配置
+        	String dirPath = request.getContextPath() + "/laborreview/showImage?imageID=" + sysFile.getId();
             if(FileUtil.isImage(uploaderPath+File.separator+sysFile.getSavedName())) {
-                previews.add("<img src='." + sysFile.getFilePath().replace(File.separator, "/") + "' class='file-preview-image kv-preview-data' " +
+                previews.add("<img src='" + dirPath+ "' class='file-preview-image kv-preview-data' " +
                         "style='width:auto;height:80px' alt='" + sysFile.getFileName() + " title='" + sysFile.getFileName() + "''>");
             }else{
                 previews.add("<div class='kv-preview-data file-preview-other-frame'><div class='file-preview-other'>" +

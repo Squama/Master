@@ -146,9 +146,12 @@
             $("#projectName").select2();
         }
     })
-    function fnRenderSubmit(value, type, rowObj){
-    	var s =  "<a href='javascript:void(0)' onclick='volumeManageObject.submit(\"" + value + "\")'>评审附件</a>";
+    function fnRenderFj(value, type, rowObj){
+    	var s =  "<a href='javascript:void(0)' onclick='volumeManageObject.submit(\"" + value + "\")'>采购合同附件</a>";
+    	
         return s;
+    }
+    function fnRenderSubmit(value, type, rowObj){
     }
     
 </script>

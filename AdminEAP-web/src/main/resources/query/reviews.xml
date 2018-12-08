@@ -19,6 +19,7 @@
 			<column key="purchase" header="采购单位" classType="String" width="150" operator="like" />
 	        <column key="supply" header="供货单位" classType="String" width="150"/>
 	        <column key="status" header="评审状态" classType="String" width="150" render="10=新建,20=综合评审,30=副经理评审,40=总经理评审,50=经营科总结,60=完成"/>
+	        <column key="id" header="采购合同附件" width="80" fnRender="fnRenderFj"/>
 	        <column key="id" header="操作" width="80" fnRender="fnRenderSubmit"/>
 	</query>
 	
@@ -40,6 +41,7 @@
 			<column key="builder" header="建设单位" classType="String" width="150" operator="like" />
 	        <column key="contracter" header="承包单位" classType="String" width="150"/>
 	        <column key="status" header="评审状态" classType="String" width="150" render="10=新建,20=综合评审,30=副经理评审,40=总经理评审,50=经营科总结,60=完成"/>
+	        <column key="id" header="施工合同附件" width="80" fnRender="fnRenderFj"/>
 	        <column key="id" header="操作" width="80" fnRender="fnRenderSubmit"/>
 	</query>
 	<query id="reviewbid_lists" key="id" tableName="招标文件评审列表" widthType="px">
@@ -60,6 +62,7 @@
 			<column key="builder" header="建设单位" classType="String" width="150" operator="like" />
 	        <column key="bider" header="招标单位" classType="String" width="150"/>
 	        <column key="status" header="评审状态" classType="String" width="150" render="10=新建,20=综合评审,30=副经理评审,40=总经理评审,50=经营科总结,60=完成"/>
+	        <column key="id" header="招标文件附件" width="80" fnRender="fnRenderFj"/>
 	        <column key="id" header="操作" width="80" fnRender="fnRenderSubmit"/>
 	</query>
 	<query id="reviewquali_lists" key="id" tableName="招标资格评审列表" widthType="px">
@@ -78,6 +81,7 @@
 			<column key="builder" header="建设单位" classType="String" width="150" operator="like" />
 	        <column key="bider" header="招标单位" classType="String" width="150"/>
 	        <column key="status" header="评审状态" classType="String" width="150" render="10=新建,20=综合评审,30=副经理评审,40=总经理评审,50=经营科总结,60=完成"/>
+	        <column key="id" header="招标资格附件" width="80" fnRender="fnRenderFj"/>
 	        <column key="id" header="操作" width="80" fnRender="fnRenderSubmit"/>
 	</query>
 </queryContext>

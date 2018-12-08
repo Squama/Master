@@ -1,11 +1,11 @@
 <section class="content-header">
     <h1>
-        招标文件评审<small>列表</small>
+        招标资格评审<small>列表</small>
     </h1>
     <ol class="breadcrumb">
         <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
         <li><a href="#">评审管理</a></li>
-        <li class="active">招标文件评审</li>
+        <li class="active">招标资格评审</li>
     </ol>
 </section> 
 
@@ -61,6 +61,18 @@
                         }
                     });
                 });
+            },
+            fj: function (psid) {
+    			modals.openWin({
+                    winId:winId,
+                    title:'招标资格附件',
+                    width:'1000px',
+                    url:basePath+"/qualireview/projectdetailfile?id="+psid,
+                    hideFunc:function(){
+                    	budgetApplyTable.reloadData();
+                    },
+                    
+                   }); 
             }
     }
     $(function() { 
@@ -155,6 +167,12 @@
     	if(rowObj.status=='新建'){
     		s = "<a href='javascript:void(0)' onclick='volumeManageObject.submit(\"" + value + "\")'>提交</a>";
     	}
+        return s;
+    }
+
+    function fnRenderFj(value, type, rowObj){
+    	var s =  "<a href='javascript:void(0)' onclick='volumeManageObject.fj(\"" + value + "\")'>招标资格附件</a>";
+    	
         return s;
     }
     
