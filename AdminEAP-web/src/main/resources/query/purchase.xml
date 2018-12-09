@@ -30,7 +30,22 @@
         <column key="quantity" header="数量" classType="String" width="150"/>
         <column key="teamName" header="班组名称" classType="String" width="150"/>
         <column key="demandTime" header="需求时间" classType="java.util.Date" dateFormat="yyyy-mm-dd" width="150"/>
+        <column key="remain" header="当时剩余量" classType="String" width="150"/>
         <column key="id" header="删除" width="80" fnRender="fnRenderDelete"/>
+    </query>
+    
+    <query id="purchase_det_apply_detail" key="id" tableName="采购申请明细" className="com.radish.master.entity.PurchaseDet" widthType="px" pageSize="50">
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="regionName" header="部位" classType="String" width="150"/>
+        <column key="matName" header="物料" classType="String" width="150"/>
+        <column key="matStandard" header="物料规格" classType="String" width="150"/>
+        <column key="unit" header="单位" classType="String" width="150"/>
+        <column key="quantity" header="数量" classType="String" width="150"/>
+        <column key="teamName" header="班组名称" classType="String" width="150"/>
+        <column key="demandTime" header="需求时间" classType="java.util.Date" dateFormat="yyyy-mm-dd" width="150"/>
+        <column key="guidancePrice" header="市场指导价" classType="String" width="150"/>
+        <column key="channelName" header="渠道商" classType="String" width="150"/>
+        <column key="price" header="单价" classType="String" width="150"/>
     </query>
     
     <query id="purchase_det_channel_edit_list" key="id" tableName="采购申请明细" className="com.radish.master.entity.PurchaseDet" widthType="px" pageSize="20">
@@ -44,6 +59,8 @@
         <column key="demandTime" header="需求时间" classType="java.util.Date" dateFormat="yyyy-mm-dd" width="150"/>
         <column key="guidancePrice" header="市场指导价" classType="String" width="150"/>
         <column key="channelName" header="渠道商" classType="String" width="150"/>
+        <column key="price" header="单价" classType="String" width="150"/>
+        <column key="remark" header="财务审核备注" align="right" width="100"/>
         <column key="channelID" header="选择渠道商" width="80" fnRender="fnRenderChannel"/>
         <column key="stockType" hidden="true" header="type" width="80"/>
         <column key="dispatchStatus" hidden="true" header="dispatch" width="80"/>
@@ -60,6 +77,7 @@
         <column key="teamName" header="班组名称" fnRender="fnRenderTeam"/>
         <column key="demandTime" header="需求时间" classType="java.util.Date" dateFormat="yyyy-mm-dd" width="150"/>
         <column key="guidancePrice" header="市场指导价" classType="String" width="150"/>
+        <column key="remark" header="财务审核备注" width="100"/>
         <column key="stockType" hidden="true" header="type" width="80"/>
         <column key="dispatchStatus" hidden="true" header="dispatch" width="80"/>
         <column key="id" hidden="true" header="id" width="80"/>

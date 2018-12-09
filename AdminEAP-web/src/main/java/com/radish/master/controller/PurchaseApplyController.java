@@ -4,6 +4,7 @@
 package com.radish.master.controller;
 
 import java.lang.reflect.Method;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
@@ -31,6 +32,7 @@ import com.radish.master.entity.Budget;
 import com.radish.master.entity.Project;
 import com.radish.master.entity.Purchase;
 import com.radish.master.entity.PurchaseDet;
+import com.radish.master.pojo.Options;
 import com.radish.master.pojo.RowEdit;
 import com.radish.master.service.PurchaseService;
 import com.radish.master.service.project.TeamSalaryService;
@@ -103,6 +105,13 @@ public class PurchaseApplyController {
         request.setAttribute("purchaseID", id);
 
         return "purchase/apply/apply_edit";
+    }
+    
+    @RequestMapping(value = "/detail", method = RequestMethod.GET)
+    public String detail(String id, HttpServletRequest request) {
+        request.setAttribute("purchaseID", id);
+
+        return "purchase/apply/apply_detail";
     }
 
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.POST)
@@ -182,6 +191,31 @@ public class PurchaseApplyController {
         purchaseDet.setCreateDateTime(new Date());
         purchaseDet.setSurplusQuantity(purchaseDet.getQuantity());
         purchaseDet.setGuidancePrice("0");
+        
+        Purchase pur = purchaseService.get(Purchase.class, purchaseDet.getPurchaseID());
+        String budgetNo = pur.getBudgetNo();
+        String regionCode = purchaseDet.getRegionID();
+        String matNumber = purchaseDet.getMatNumber();
+        //预算
+        List<Options> budgetSum = purchaseService.findMapBySql("SELECT CAST(sum(e.quantity) AS char) value, '' data FROM tbl_budget_tx tx,tbl_budget_estimate e where tx.id=e.budget_tx_id and tx.budget_no = ? and tx.region_code= ? AND e.mat_number=?",
+                        new Object[] { budgetNo, regionCode, matNumber }, new Type[] { StringType.INSTANCE, StringType.INSTANCE , StringType.INSTANCE  }, Options.class);
+        
+        //已消耗
+        List<Options> consumeSum = purchaseService.findMapBySql("SELECT CAST(sum(pd.quantity) AS char) value, '' data FROM tbl_purchase p, tbl_purchase_det pd WHERE p.id = pd.purchase_id AND p.budget_no=? AND pd.region_id=? AND pd.mat_number=?",
+                new Object[] { budgetNo, regionCode, matNumber }, new Type[] { StringType.INSTANCE, StringType.INSTANCE , StringType.INSTANCE  }, Options.class);
+        
+        String result = "";
+        
+        if(!consumeSum.isEmpty()){
+        	BigDecimal budgetMat = new BigDecimal(budgetSum.get(0).getValue() == null? "0" : budgetSum.get(0).getValue());
+            BigDecimal consumeMat = new BigDecimal(consumeSum.get(0).getValue() == null? "0" : consumeSum.get(0).getValue());
+            result = budgetMat.subtract(consumeMat).setScale(2, BigDecimal.ROUND_DOWN).toPlainString();
+        }else{
+        	result = budgetSum.get(0).getValue();
+        }
+        
+        
+        purchaseDet.setRemain(result);
         purchaseService.save(purchaseDet);
         return new Result(true, "success");
     }
@@ -263,12 +297,6 @@ public class PurchaseApplyController {
             }
         }
 
-        if (!teamSalaryService.isNumber(value)) {
-            list.add(new PurchaseDet());
-            re.setData(list);
-            return JSONArray.toJSONString(re);
-        }
-
         PurchaseDet det = purchaseService.get(PurchaseDet.class, id);
 
         Method set = det.getClass().getMethod("set" + teamSalaryService.captureName(field), String.class);
@@ -280,7 +308,7 @@ public class PurchaseApplyController {
         re.setData(list);
         return JSONArray.toJSONString(re);
     }
-
+    
     @RequestMapping(value = "/choose/{id}", method = RequestMethod.GET)
     public String channelChoose(@PathVariable("id") String id, HttpServletRequest request) {
         request.setAttribute("purchaseDetID", id);

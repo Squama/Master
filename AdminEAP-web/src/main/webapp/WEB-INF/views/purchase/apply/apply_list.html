@@ -55,6 +55,14 @@
                         }
                     });
                 });
+            },
+            detail:function(purchaseID){
+            	modals.openWin({
+	                 winId:winId,
+	                 title:'申请详情',
+	                 width:'1200px',
+	                 url:basePath+"/purchase/apply/detail?id="+purchaseID
+                });
             }
     }
     
@@ -143,7 +151,7 @@
     })
     
 function fnRenderOperate(value, type, rowObj){
-    var oper = "";
+    var oper = "<a href='javascript:void(0)' onclick='purchaseApplyObject.detail(\"" + value + "\")'>查看详情</a>";
     if(rowObj.statusJudge == '10'){
     	oper += "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='purchaseApplyObject.startFlow(\"" + value + "\")'>提交审批</a>";
     }

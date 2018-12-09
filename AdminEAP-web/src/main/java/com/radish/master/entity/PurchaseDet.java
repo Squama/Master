@@ -15,235 +15,259 @@ import com.cnpc.framework.base.entity.BaseEntity;
 @Table(name = "tbl_purchase_det")
 public class PurchaseDet extends BaseEntity {
 
-    private static final long serialVersionUID = 5365926552161649689L;
+	private static final long serialVersionUID = 5365926552161649689L;
 
-    @Header(name = "采购单ID")
-    @Column(name = "purchase_id")
-    private String purchaseID;
+	@Header(name = "采购单ID")
+	@Column(name = "purchase_id")
+	private String purchaseID;
 
-    @Header(name = "部位ID")
-    @Column(name = "region_id")
-    private String regionID;
+	@Header(name = "部位ID")
+	@Column(name = "region_id")
+	private String regionID;
 
-    @Header(name = "部位名称")
-    @Column(name = "region_name")
-    private String regionName;
+	@Header(name = "部位名称")
+	@Column(name = "region_name")
+	private String regionName;
 
-    @Header(name = "物料ID")
-    @Column(name = "mat_number")
-    private String matNumber;
+	@Header(name = "物料ID")
+	@Column(name = "mat_number")
+	private String matNumber;
 
-    @Header(name = "物料名称")
-    @Column(name = "mat_name")
-    private String matName;
+	@Header(name = "物料名称")
+	@Column(name = "mat_name")
+	private String matName;
 
-    @Header(name = "物料规格")
-    @Column(name = "mat_standard")
-    private String matStandard;
+	@Header(name = "物料规格")
+	@Column(name = "mat_standard")
+	private String matStandard;
 
-    @Header(name = "物料单位")
-    @Column(name = "unit")
-    private String unit;
+	@Header(name = "物料单位")
+	@Column(name = "unit")
+	private String unit;
 
-    @Header(name = "渠道名")
-    @Column(name = "channel_name")
-    private String channelName;
+	@Header(name = "渠道名")
+	@Column(name = "channel_name")
+	private String channelName;
 
-    @Header(name = "渠道ID")
-    @Column(name = "channel_id")
-    private String channelID;
+	@Header(name = "渠道ID")
+	@Column(name = "channel_id")
+	private String channelID;
 
-    @Header(name = "单价")
-    @Column(name = "price")
-    private String price;
+	@Header(name = "单价")
+	@Column(name = "price")
+	private String price;
 
-    @Header(name = "市场指导价")
-    @Column(name = "guidance_price")
-    private String guidancePrice;
+	@Header(name = "市场指导价")
+	@Column(name = "guidance_price")
+	private String guidancePrice;
 
-    @Header(name = "采购量")
-    @Column(name = "quantity")
-    private Double quantity;
+	@Header(name = "采购量")
+	@Column(name = "quantity")
+	private Double quantity;
 
-    @Header(name = "剩余采购量")
-    @Column(name = "surplus_quantity")
-    private Double surplusQuantity;
+	@Header(name = "剩余采购量")
+	@Column(name = "surplus_quantity")
+	private Double surplusQuantity;
 
-    @Header(name = "采购类型")
-    @Column(name = "stock_type")
-    private String stockType;
+	@Header(name = "采购类型")
+	@Column(name = "stock_type")
+	private String stockType;
 
-    @Header(name = "存储状态")
-    @Column(name = "status")
-    private String status;
+	@Header(name = "存储状态")
+	@Column(name = "status")
+	private String status;
 
-    @Header(name = "已有部分被调度标识")
-    @Column(name = "dispatch_status")
-    private String dispatchStatus;
+	@Header(name = "已有部分被调度标识")
+	@Column(name = "dispatch_status")
+	private String dispatchStatus;
 
-    @Header(name = "班组编号")
-    @Column(name = "team_code")
-    private String teamCode;
+	@Header(name = "班组编号")
+	@Column(name = "team_code")
+	private String teamCode;
 
-    @Header(name = "班组名称")
-    @Column(name = "team_name")
-    private String teamName;
+	@Header(name = "班组名称")
+	@Column(name = "team_name")
+	private String teamName;
 
-    @Header(name = "需求时间")
-    @Column(name = "demand_time")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date demandTime;
+	@Header(name = "需求时间")
+	@Column(name = "demand_time")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date demandTime;
 
-    public String getPurchaseID() {
-        return purchaseID;
-    }
+	@Header(name = "财务审核备注")
+	@Column(name = "remark")
+	private String remark;
+	
+	@Header(name = "即时剩余量")
+	@Column(name = "remain")
+	private String remain;
 
-    public void setPurchaseID(String purchaseID) {
-        this.purchaseID = purchaseID;
-    }
+	public String getPurchaseID() {
+		return purchaseID;
+	}
 
-    public String getRegionID() {
-        return regionID;
-    }
+	public void setPurchaseID(String purchaseID) {
+		this.purchaseID = purchaseID;
+	}
 
-    public void setRegionID(String regionID) {
-        this.regionID = regionID;
-    }
+	public String getRegionID() {
+		return regionID;
+	}
 
-    public String getRegionName() {
-        return regionName;
-    }
+	public void setRegionID(String regionID) {
+		this.regionID = regionID;
+	}
 
-    public void setRegionName(String regionName) {
-        this.regionName = regionName;
-    }
+	public String getRegionName() {
+		return regionName;
+	}
 
-    public String getMatName() {
-        return matName;
-    }
+	public void setRegionName(String regionName) {
+		this.regionName = regionName;
+	}
 
-    public void setMatName(String matName) {
-        this.matName = matName;
-    }
+	public String getMatName() {
+		return matName;
+	}
 
-    public String getMatNumber() {
-        return matNumber;
-    }
+	public void setMatName(String matName) {
+		this.matName = matName;
+	}
 
-    public void setMatNumber(String matNumber) {
-        this.matNumber = matNumber;
-    }
+	public String getMatNumber() {
+		return matNumber;
+	}
 
-    public String getChannelName() {
-        return channelName;
-    }
+	public void setMatNumber(String matNumber) {
+		this.matNumber = matNumber;
+	}
 
-    public void setChannelName(String channelName) {
-        this.channelName = channelName;
-    }
+	public String getChannelName() {
+		return channelName;
+	}
 
-    public String getChannelID() {
-        return channelID;
-    }
+	public void setChannelName(String channelName) {
+		this.channelName = channelName;
+	}
 
-    public void setChannelID(String channelID) {
-        this.channelID = channelID;
-    }
+	public String getChannelID() {
+		return channelID;
+	}
 
-    public String getPrice() {
-        return price;
-    }
+	public void setChannelID(String channelID) {
+		this.channelID = channelID;
+	}
 
-    public void setPrice(String price) {
-        this.price = price;
-    }
+	public String getPrice() {
+		return price;
+	}
 
-    public Double getQuantity() {
-        return quantity;
-    }
+	public void setPrice(String price) {
+		this.price = price;
+	}
 
-    public void setQuantity(Double quantity) {
-        this.quantity = quantity;
-    }
+	public Double getQuantity() {
+		return quantity;
+	}
 
-    public Double getSurplusQuantity() {
-        return surplusQuantity;
-    }
+	public void setQuantity(Double quantity) {
+		this.quantity = quantity;
+	}
 
-    public void setSurplusQuantity(Double surplusQuantity) {
-        this.surplusQuantity = surplusQuantity;
-    }
+	public Double getSurplusQuantity() {
+		return surplusQuantity;
+	}
 
-    public String getStockType() {
-        return stockType;
-    }
+	public void setSurplusQuantity(Double surplusQuantity) {
+		this.surplusQuantity = surplusQuantity;
+	}
 
-    public void setStockType(String stockType) {
-        this.stockType = stockType;
-    }
+	public String getStockType() {
+		return stockType;
+	}
 
-    public String getMatStandard() {
-        return matStandard;
-    }
+	public void setStockType(String stockType) {
+		this.stockType = stockType;
+	}
 
-    public void setMatStandard(String matStandard) {
-        this.matStandard = matStandard;
-    }
+	public String getMatStandard() {
+		return matStandard;
+	}
 
-    public String getUnit() {
-        return unit;
-    }
+	public void setMatStandard(String matStandard) {
+		this.matStandard = matStandard;
+	}
 
-    public void setUnit(String unit) {
-        this.unit = unit;
-    }
+	public String getUnit() {
+		return unit;
+	}
 
-    public String getStatus() {
-        return status;
-    }
+	public void setUnit(String unit) {
+		this.unit = unit;
+	}
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
+	public String getStatus() {
+		return status;
+	}
 
-    public String getDispatchStatus() {
-        return dispatchStatus;
-    }
+	public void setStatus(String status) {
+		this.status = status;
+	}
 
-    public void setDispatchStatus(String dispatchStatus) {
-        this.dispatchStatus = dispatchStatus;
-    }
+	public String getDispatchStatus() {
+		return dispatchStatus;
+	}
 
-    public String getTeamCode() {
-        return teamCode;
-    }
+	public void setDispatchStatus(String dispatchStatus) {
+		this.dispatchStatus = dispatchStatus;
+	}
 
-    public void setTeamCode(String teamCode) {
-        this.teamCode = teamCode;
-    }
+	public String getTeamCode() {
+		return teamCode;
+	}
 
-    public String getTeamName() {
-        return teamName;
-    }
+	public void setTeamCode(String teamCode) {
+		this.teamCode = teamCode;
+	}
 
-    public void setTeamName(String teamName) {
-        this.teamName = teamName;
-    }
+	public String getTeamName() {
+		return teamName;
+	}
 
-    public Date getDemandTime() {
-        return demandTime;
-    }
+	public void setTeamName(String teamName) {
+		this.teamName = teamName;
+	}
 
-    public void setDemandTime(Date demandTime) {
-        this.demandTime = demandTime;
-    }
+	public Date getDemandTime() {
+		return demandTime;
+	}
 
-    public String getGuidancePrice() {
-        return guidancePrice;
-    }
+	public void setDemandTime(Date demandTime) {
+		this.demandTime = demandTime;
+	}
 
-    public void setGuidancePrice(String guidancePrice) {
-        this.guidancePrice = guidancePrice;
-    }
+	public String getGuidancePrice() {
+		return guidancePrice;
+	}
+
+	public void setGuidancePrice(String guidancePrice) {
+		this.guidancePrice = guidancePrice;
+	}
+
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
+	public String getRemain() {
+		return remain;
+	}
+
+	public void setRemain(String remain) {
+		this.remain = remain;
+	}
 
 }

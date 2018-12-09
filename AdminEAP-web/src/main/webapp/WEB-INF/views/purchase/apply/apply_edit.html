@@ -114,6 +114,11 @@
     
     $(function (){
     	purchaseDetTable = new CommonTable("purchase_det_table", "purchase_det_apply_edit", "searchDivPDet", {
+    		"createdRow": function( row, data, dataIndex ) {
+                if(parseFloat(data.remain) < parseFloat(data.quantity)){
+                    $(row).css('background-color','yellow');
+                }
+             },
             "ordering" : false,
             "lengthChange": false,
             "displayLength": 20,

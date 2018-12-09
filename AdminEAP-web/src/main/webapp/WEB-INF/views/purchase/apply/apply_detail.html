@@ -1,0 +1,158 @@
+<script type="text/javascript">
+ $.fn.modal.Constructor.prototype.enforceFocus = function () {};
+ </script>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            
+            <form id="purchase-form" name="purchase-form" class="form-horizontal">
+                <input type="hidden" name="id">
+                <div class="box box-info">
+                    <div class="box-header with-border">
+                        <span>
+                            <i class="fa fa-edit">物料申请</i>
+                        </span>
+                    </div>
+                    <div class="box-body">
+                        <!-- 内容 -->
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">所属项目<span style="color:red">*</span></label>
+                                <div class="col-sm-5">
+                                    <select id="projectID" class="form-control select2" name="projectID" disabled="disabled">
+                                        <option selected="selected" value="">选择一个项目</option>
+                                    </select>
+                                </div>
+                            </div> 
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">所属预算<span style="color:red">*</span></label>
+                                <div class="col-sm-5">
+                                    <select id="budgetNo" class="form-control select2" name="budgetNo" disabled="disabled">
+                                        <option selected="selected" value="">选择一个预算</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <form id="purchase-det-form" name="purchase-det-form" class="form-horizontal">
+                <div class="box box-success dn" id="purchase_det">
+                    <div class="box-header with-border">
+                        <span>
+                            <i class="fa fa-files-o">申请详情</i>
+                        </span>
+                    </div>
+                    <div class="dataTables_filter" id="searchDivPDet" style="text-align:center;height:1px;">
+                       <input type="search" name="purchaseID" class="form-control" operator="eq" style="display:none;">
+                       <div class="btn-group">
+                           <button type="button" class="btn btn-primary" data-btn-type="search" id="refresh" style="display:none;">查询</button>
+                       </div>
+                    </div>
+                    <div class="box-body">
+                        <!-- 内容 -->
+                        <table id="purchase_det_table" class="table table-bordered table-striped table-hover">
+                        </table>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<script>
+    $.fn.modal.Constructor.prototype.enforceFocus =function(){};
+    var purchaseform = $("#purchase-form").form({baseEntity: false}), initData={},
+    purchasedetform = $("#purchase-det-form").form({baseEntity: false}),options=0,bOptions=0,mats=0,regions=0;
+    var purchaseDetTable, winId = "purchaseDetWin", budgetNo=0;
+    
+    var projectOptions = '${projectOptions?default(0)}';
+    if(projectOptions != 0){
+        options = JSON.parse(projectOptions);
+    }
+    
+    var purchaseID="${purchaseID?default(0)}";
+    initData.purchaseID = purchaseID;
+    purchasedetform.initFormData(initData);
+    
+    $(function (){
+    	purchaseDetTable = new CommonTable("purchase_det_table", "purchase_det_apply_detail", "searchDivPDet", {
+            "ordering" : false,
+            "lengthChange": false,
+            "displayLength": 20,
+            "scrollY": "200px",
+            "scrollCollapse": true
+        });
+    	
+        if(options != 0){
+        	
+            for (var i = 0, len = options.length; i < len; i++) {
+                var option = options[i];
+                $('#projectID').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+            }
+            
+            $('#projectID').select2();
+            
+            $('#projectID').bind("change", function () {
+                var projectID = $(this).val();
+
+                ajaxPost(basePath+"/purchase/apply/getbudgetop",{projectID:projectID},function(data){
+                    var budgetOptions = data.message;
+                    bOptions = JSON.parse(budgetOptions);
+                    $('#budgetNo').empty();
+                    $('#budgetNo').append('<option selected="selected" value="">选择一个预算</option>');
+                    for (var i = 0, len = bOptions.length; i < len; i++) {
+                        var bOption = bOptions[i];
+                        $('#budgetNo').append("<option value=\"" + bOption.value + "\">" + bOption.data + "</option>");
+                    }
+                    
+                    $('#budgetNo').bind("change", function(){
+                    	budgetNo = $(this).val();
+                    });
+                    
+                    $('#budgetNo').select2();
+                })
+            }); 
+        }
+        
+        //编辑回填
+        if(purchaseID != 0){
+            ajaxPost(basePath+"/purchase/apply/getpurchase",{purchaseID:purchaseID},function(data){
+            	mats = JSON.parse(data.data.mats);
+                regions = JSON.parse(data.data.regions);
+                teams = JSON.parse(data.data.teams);
+                
+                $('#purchase_det').show();
+                $('#purchaseformsave').hide();
+                
+                var projectName = data.data.projectName;
+                var budgetName = data.data.budgetName;
+                
+                budgetNo = data.data.budgetNo;
+                
+                var projectArea = $('#projectID').parent();
+                projectArea.empty();
+                $('<input>',{
+                	"value" : projectName,
+                	"type" : "text",
+                	"class" : "form-control",
+                	"readonly" : "readonly"
+                }).appendTo(projectArea);
+                
+                var budgetArea = $('#budgetNo').parent();
+                budgetArea.empty();
+                $('<input>',{
+                    "value" : budgetName,
+                    "type" : "text",
+                    "class" : "form-control",
+                    "readonly" : "readonly"
+                }).appendTo(budgetArea);
+            })
+        } 
+        
+        //初始化控件
+        purchaseform.initComponent();
+        purchasedetform.initComponent();
+        
+    });
+</script>
