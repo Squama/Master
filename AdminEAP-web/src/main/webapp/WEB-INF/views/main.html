@@ -80,6 +80,16 @@
           <!-- User Account: style can be found in dropdown.less -->
           <li class="dropdown user user-menu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <span class="hidden-xs" id="dept_main"></span>
+            </a>
+          </li>
+          <li class="dropdown user user-menu">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <span class="hidden-xs" id="job_main"></span>
+            </a>
+          </li>
+          <li class="dropdown user user-menu">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               <!--  <img src="${basePath}/resources/adminlte/dist/img/user0-160x160.jpg" class="user-image" alt="User Image"> -->
               <span class="hidden-xs">${user.name}</span>
             </a>
@@ -451,6 +461,20 @@ var basePath="${basePath}";//给外部js文件传递路径参数
            }
        }); 
    });
+   
+   var dep = '${user.deptId?default(0)}';
+   var job = '${user.jobId?default(0)}';
+   
+   if(dep != '0'){
+	   ajaxPost(basePath+'/org/get/'+dep, null, function(data) {
+	       $('#dept_main').html(data.name);
+	   });
+   }
+   if(job != '0'){
+	   ajaxPost(basePath+'/dict/get/'+job, null, function(data) {
+	       $('#job_main').html(data.name);
+	   });
+   }   
    
    function changePWD(){
 	   modals.openWin({

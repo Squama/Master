@@ -497,6 +497,7 @@ public class BudgetEstimateController {
         BudgetTx bt = budgetService.get(BudgetTx.class, budgetEstimate.getBudgetTxID());
         
         bt.setMateriels(sum.toPlainString());
+        bt.setUnitPrice(getUnitPrice(bt));
         
         budgetService.update(bt);
         
@@ -521,6 +522,7 @@ public class BudgetEstimateController {
         BudgetTx bt = budgetService.get(BudgetTx.class, budgetLabour.getBudgetTxID());
         
         bt.setArtificiality(sum.toPlainString());
+        bt.setUnitPrice(getUnitPrice(bt));
         
         budgetService.update(bt);
         
@@ -545,10 +547,20 @@ public class BudgetEstimateController {
         BudgetTx bt = budgetService.get(BudgetTx.class, budgetMech.getBudgetTxID());
         
         bt.setMech(sum.toPlainString());
+        bt.setUnitPrice(getUnitPrice(bt));
         
         budgetService.update(bt);
         
         return new Result(true);
+    }
+    
+    private String getUnitPrice(BudgetTx bt){
+        BigDecimal result = new BigDecimal("0");
+        BigDecimal labour = new BigDecimal(bt.getArtificiality());
+        BigDecimal mat = new BigDecimal(bt.getMateriels());
+        BigDecimal mech = new BigDecimal(bt.getMech());
+        
+        return result.add(labour.add(mat.add(mech))).toPlainString();
     }
     
     @RequestMapping(method = RequestMethod.POST, value = "/savepackage")
@@ -598,6 +610,25 @@ public class BudgetEstimateController {
     @ResponseBody
     private Result deleteBudgetEstimate(String id, HttpServletRequest request) {
         BudgetEstimate budgetEstimate = budgetService.get(BudgetEstimate.class, id);
+        
+        List<BudgetEstimate> list = budgetService.getBudgetEstimateCount(budgetEstimate.getBudgetTxID());
+        //汇总合价
+        list = budgetService.getBudgetEstimateCount(budgetEstimate.getBudgetTxID());
+        BigDecimal sum = new BigDecimal("0");
+        for(BudgetEstimate be : list){
+            BigDecimal quantity = new BigDecimal(be.getQuantity());
+            BigDecimal price = new BigDecimal(be.getBudgetPrice());
+            
+            sum = sum.add(quantity.multiply(price));
+        }
+        
+        BudgetTx bt = budgetService.get(BudgetTx.class, budgetEstimate.getBudgetTxID());
+        
+        bt.setMateriels(sum.toPlainString());
+        bt.setUnitPrice(getUnitPrice(bt));
+        
+        budgetService.update(bt);
+        
         budgetService.delete(budgetEstimate);
         return new Result(true);
     }
@@ -625,6 +656,24 @@ public class BudgetEstimateController {
     private Result deleteBudgetLabour(String id, HttpServletRequest request) {
         BudgetLabour budgetLabour = budgetService.get(BudgetLabour.class, id);
         budgetService.delete(budgetLabour);
+        
+        List<BudgetLabour> list = budgetService.getBudgetLabourCount(budgetLabour.getBudgetTxID());
+        //汇总合价
+        BigDecimal sum = new BigDecimal("0");
+        for(BudgetLabour be : list){
+            BigDecimal quantity = new BigDecimal(be.getLabourQuantity());
+            BigDecimal price = new BigDecimal(be.getForecastPrice());
+            
+            sum = sum.add(quantity.multiply(price));
+        }
+        
+        BudgetTx bt = budgetService.get(BudgetTx.class, budgetLabour.getBudgetTxID());
+        
+        bt.setArtificiality(sum.toPlainString());
+        bt.setUnitPrice(getUnitPrice(bt));
+        
+        budgetService.update(bt);
+        
         return new Result(true);
     }
     
@@ -633,6 +682,24 @@ public class BudgetEstimateController {
     private Result deleteBudgetMech(String id, HttpServletRequest request) {
         BudgetMech budgetMech = budgetService.get(BudgetMech.class, id);
         budgetService.delete(budgetMech);
+        
+        List<BudgetMech> list = budgetService.getBudgetMechCount(budgetMech.getBudgetTxID());
+        //汇总合价
+        BigDecimal sum = new BigDecimal("0");
+        for(BudgetMech be : list){
+            BigDecimal quantity = new BigDecimal(be.getMechQuantity());
+            BigDecimal price = new BigDecimal(be.getMechPrice());
+            
+            sum = sum.add(quantity.multiply(price));
+        }
+        
+        BudgetTx bt = budgetService.get(BudgetTx.class, budgetMech.getBudgetTxID());
+        
+        bt.setMech(sum.toPlainString());
+        bt.setUnitPrice(getUnitPrice(bt));
+        
+        budgetService.update(bt);
+        
         return new Result(true);
     }
     
