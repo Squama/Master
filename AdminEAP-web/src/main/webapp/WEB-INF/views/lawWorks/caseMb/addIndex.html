@@ -31,6 +31,13 @@
                    		<input class="form-control " id="filetype" name="filetype"   >
 					</div>
                 </div>
+                <div class="form-group">
+                    <label  for="check_time1" class="col-sm-3 control-label">案件名称</label>
+					<div class=" col-sm-8">
+						<input class="form-control " id="casename" name="casename"   >
+				
+					</div>
+                </div>
             </div>
             <div class="col-md-6">
             	<!-- <div class="form-group">
@@ -41,7 +48,7 @@
 					</div>
                 </div> -->
                 <div class="form-group">
-                    <label  for="check_time1" class="col-sm-3 control-label">文件名称</label>
+                    <label  for="check_time1" class="col-sm-3 control-label">文书名称</label>
 					<div class=" col-sm-8">
 						<input class="form-control " id="name" name="name"   >
 				
@@ -59,7 +66,7 @@
         <input type="hidden" name="fileId" id="fileId">
 					<div class="form-group" align="center" id="wjscid">
 						<div class="btn btn-default btn-file" id="uploadFile">
-							<i class="fa fa-paperclip"></i> 上传文件附件(Max. 10MB)
+							<i class="fa fa-paperclip"></i> 上传文书附件(Max. 10MB)
 						</div>
 					</div>
 					<div class="form-group" id="file_container">
@@ -113,7 +120,14 @@
             	name : {
                     validators : {
                         notEmpty : {
-                            message : '请输入文件名称'
+                            message : '请输入文书名称'
+                        }
+                    }
+                },
+                casename: {
+                    validators : {
+                        notEmpty : {
+                            message : '请输入案件名称'
                         }
                     }
                 }

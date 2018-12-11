@@ -84,6 +84,10 @@
     var users = '${userOptions?default(0)}',user=0;
     if(users != 0){
     	user = JSON.parse(users);
+    }tzry
+    var tzrys = '${tzry?default(0)}',tzry=0;
+    if(tzrys != 0){
+    	tzry = JSON.parse(tzrys);
     }
     var id="${id?default(0)}";
     $(function() {
@@ -136,9 +140,9 @@
             }
             $(".projectId").select2();
         }
-        if(user != 0){
-            for (var i = 0, len = user.length; i < len; i++) {
-                var u = user[i];
+        if(tzry != 0){
+            for (var i = 0, len = tzry.length; i < len; i++) {
+                var u = tzry[i];
                 $('#oneAuidt').append("<option value='" + u.id + "'>" + u.name + "</option>");
             }
             $(".oneAuidt").select2();

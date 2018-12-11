@@ -107,6 +107,7 @@ public class CaseMbController {
 				j.setName(jd.getName());
 				j.setFiletype(jd.getFiletype());
 				j.setDescs(jd.getDescs());
+				j.setCasename(jd.getCasename());
 				baseService.update(j);
 				r.setCode(id);
 			}

@@ -63,6 +63,10 @@ public class CaseMb implements Serializable {
     @Header(name = "备注")
     @Column(name = "descs")
     private String descs;
+    
+    @Header(name = "案件名称")
+    @Column(name = "casename")
+    private String casename;
 
 	public String getId() {
 		return id;
@@ -126,6 +130,14 @@ public class CaseMb implements Serializable {
 
 	public void setDescs(String descs) {
 		this.descs = descs;
+	}
+
+	public String getCasename() {
+		return casename;
+	}
+
+	public void setCasename(String casename) {
+		this.casename = casename;
 	}
     
     
