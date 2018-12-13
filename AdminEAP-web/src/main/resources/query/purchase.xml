@@ -46,6 +46,7 @@
         <column key="guidancePrice" header="市场指导价" classType="String" width="150"/>
         <column key="channelName" header="渠道商" classType="String" width="150"/>
         <column key="price" header="单价" classType="String" width="150"/>
+        <column key="remark" header="财务审核备注" width="100"/>
     </query>
     
     <query id="purchase_det_channel_edit_list" key="id" tableName="采购申请明细" className="com.radish.master.entity.PurchaseDet" widthType="px" pageSize="20">

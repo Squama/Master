@@ -1,3 +1,10 @@
+<script src="${basePath}/resources/cinder/editor/dataTables.editor.min.js"></script>
+<link rel="stylesheet" href="${basePath}/resources/cinder/editor/dataTables.editor.css">
+<link rel="stylesheet" href="${basePath}/resources/cinder/editor/editor.dataTables.min.css">
+<style>
+.fixed-button-area{position:fixed;z-index:1;left:45%;}
+.DTE_Field_InputControl{color:black;}
+</style>
 <div class="modal-body">
 	<section class="content">
 	    <div class="row">
@@ -86,6 +93,22 @@
                 url: basePath + "/purchase/team/history/"+rowId,
                 title: "班组预算历史消耗"
             });
+        },
+        initGuidanceEditor:function(){
+            guidanceEditor = new $.fn.dataTable.Editor( {
+                ajax: basePath+"/purchase/apply/rowedit",
+                table: "#purchase_det_table",
+                idSrc:  'id',
+                fields: [ 
+                    {label:"remark:", name:"remark",type:"text"}
+                ]
+            } );
+            
+            $('#purchase_det_table').on( 'click', 'tbody td:not(:first-child)', function (e) {
+                guidanceEditor.inline( this, {
+                    onBlur: 'submit'
+                });
+            } );
         }
     }
     
@@ -122,6 +145,7 @@
     
     $(function(){
     	workflowCtrl.init("purchase-det-form", purchaseID);
+    	workflowCtrl.initGuidanceEditor();
     })
     
     function fnRenderTeam(value, type, rowObj){
