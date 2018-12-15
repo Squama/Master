@@ -28,16 +28,16 @@
   <script src="${basePath}/resources/common/libs/respond/respond.min.js"></script>
   <![endif]-->
     <!-- table and edit -->
-	<link rel="stylesheet" href="${basePath}/resources/adminlte/plugins/datatables/dataTables.bootstrap.css">
-	<link rel="stylesheet" href="${basePath}/resources/adminlte/plugins/datatables/select.bootstrap.min.css">
-	<link rel="stylesheet" href="${basePath}/resources/adminlte/plugins/bootstrap-validator/dist/css/bootstrap-validator.css"/>
-	<link rel="stylesheet" href="${basePath}/resources/adminlte/plugins/iCheck/all.css">
+    <link rel="stylesheet" href="${basePath}/resources/adminlte/plugins/datatables/dataTables.bootstrap.css">
+    <link rel="stylesheet" href="${basePath}/resources/adminlte/plugins/datatables/select.bootstrap.min.css">
+    <link rel="stylesheet" href="${basePath}/resources/adminlte/plugins/bootstrap-validator/dist/css/bootstrap-validator.css"/>
+    <link rel="stylesheet" href="${basePath}/resources/adminlte/plugins/iCheck/all.css">
     <!-- daterangepicker -->
     <!--<link rel="stylesheet" href="${basePath}/resources/adminlte/plugins/daterangepicker/daterangepicker.css">-->
-	<link rel="stylesheet" href="${basePath}/resources/adminlte/plugins/datepicker/datepicker3.css">
+    <link rel="stylesheet" href="${basePath}/resources/adminlte/plugins/datepicker/datepicker3.css">
     <link rel="stylesheet" href="${basePath}/resources/adminlte/plugins/select2/select2.min.css">
-	<!-- treeview -->
-	<link rel="stylesheet" href="${basePath}/resources/adminlte/plugins/bootstrap-treeview/bootstrap-treeview.min.css" />
+    <!-- treeview -->
+    <link rel="stylesheet" href="${basePath}/resources/adminlte/plugins/bootstrap-treeview/bootstrap-treeview.min.css" />
   <!-- Theme style -->
   <link rel="stylesheet" href="${basePath}/resources/adminlte/dist/css/AdminLTE.min.css">
   <link rel="stylesheet" href="${basePath}/resources/adminlte/dist/css/skins/_all-skins.css">
@@ -391,7 +391,7 @@ var basePath="${basePath}";//给外部js文件传递路径参数
 
 <!-- dataTable -->
 <script src="${basePath}/resources/adminlte/plugins/datatables/jquery.dataTables.js"></script>
-<script	src="${basePath}/resources/adminlte/plugins/datatables/dataTables.bootstrap.min.js"></script>
+<script src="${basePath}/resources/adminlte/plugins/datatables/dataTables.bootstrap.min.js"></script>
 <script src="${basePath}/resources/common/js/dataTables.js"></script>
 <!-- form -->
 <script src="${basePath}/resources/adminlte/plugins/bootstrap-validator/dist/js/bootstrap-validator.js"></script>
@@ -405,7 +405,7 @@ var basePath="${basePath}";//给外部js文件传递路径参数
 <script src="${basePath}/resources/adminlte/plugins/datepicker/locales/bootstrap-datepicker.zh-CN.js"></script>
 <!-- treeview -->
 <script src="${basePath}/resources/adminlte/plugins/bootstrap-treeview/bootstrap-treeview.min.js"></script>
-		
+        
 <!-- AdminLTE for demo purposes -->
 <script src="${basePath}/resources/adminlte/dist/js/demo.js"></script>
 <!--select2-->
@@ -420,44 +420,103 @@ var basePath="${basePath}";//给外部js文件传递路径参数
 <script>
    //加载菜单
    ajaxPost(basePath+"/function/rolefunc",null,function(data){
-	  var $li,$menu_f_ul;
-	  $.each(data,function(index,item){
-		  if(item.levelCode.length==6){	
-			  $li=$('<li class="treeview"></li>');
-			  var $menu_f=$('<a href="#">\n'+
-					           '<i class="'+item.icon+'"></i> <span>'+item.name+'</span>\n'+
+      var $li,$menu_f_ul;
+      var $menu_s_th;//有第三级的二级菜单
+      var $menu_f_ul_th;//存在第三级菜单
+      $.each(data,function(index,item){
+          /* if(item.levelCode.length==6){ 
+              $li=$('<li class="treeview"></li>');
+              var $menu_f=$('<a href="#">\n'+
+                               '<i class="'+item.icon+'"></i> <span>'+item.name+'</span>\n'+
                                 ' <span class="pull-right-container">\n'+
-					           '<i class="fa fa-angle-left pull-right"></i>\n'+
-				            '</span></a>');
-			  $li.append($menu_f);
-			  $menu_f_ul=$('<ul class="treeview-menu"></ul>');
-			  $li.append($menu_f_ul);
-			  $("ul.sidebar-menu").append($li); 
-		  } 
-		  else if(item.levelCode.length==12){
-			  $menu_s=$('<li><a href="#" data-url="${basePath}'+item.url+'"><i class="'+item.icon+'"></i>'+item.name+'</a></li>');
-			  $menu_f_ul.append($menu_s); 
-		  }
-	  });
+                               '<i class="fa fa-angle-left pull-right"></i>\n'+
+                            '</span></a>');
+              $li.append($menu_f);
+              $menu_f_ul=$('<ul class="treeview-menu"></ul>');
+              $li.append($menu_f_ul);
+              $("ul.sidebar-menu").append($li); 
+          } 
+          else if(item.levelCode.length==12){
+              $menu_s=$('<li><a href="#" data-url="${basePath}'+item.url+'"><i class="'+item.icon+'"></i>'+item.name+'</a></li>');
+              $menu_f_ul.append($menu_s); 
+          } */
+    	  if(item.rightID.length==6){ 
+              $li=$('<li class="treeview"></li>');
+              var $menu_f=$('<a href="#">\n'+
+                               '<i class="'+item.icon+'"></i> <span>'+item.name+'</span>\n'+
+                                ' <span class="pull-right-container">\n'+
+                               '<i class="fa fa-angle-left pull-right"></i>\n'+
+                            '</span></a>');
+              $li.append($menu_f);
+              $menu_f_ul=$('<ul class="treeview-menu"></ul>');
+              $li.append($menu_f_ul);
+              $("ul.sidebar-menu").append($li); 
+          } 
+          else if(item.rightID.length==12){
+        	  if(item.rightType == '1'){
+        		  $menu_s=$('<li><a href="#" data-url="${basePath}'+item.url+'"><i class="'+item.icon+'"></i>'+item.name+'</a></li>');
+                  $menu_f_ul.append($menu_s);
+        	  }else{
+        		  $menu_s_th=$('<li class="treeview"><a href="#"><i class="'+item.icon+'"></i>'+item.name+'<span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a></li>');
+        	      $menu_f_ul_th=$('<ul class="treeview-menu"></ul>');
+        	      
+        	      $menu_s_th.append($menu_f_ul_th);
+        	      $menu_f_ul.append($menu_s_th);
+        	  }
+               
+          }
+          else if(item.rightID.length==18){
+        	  $menu_s=$('<li><a href="#" data-url="${basePath}'+item.url+'"><i class="'+item.icon+'"></i>'+item.name+'</a></li>');
+              $menu_f_ul_th.append($menu_s);
+          }
+      });
+      
+      /* //一级菜单
+      $li=$('<li class="treeview"></li>');
+      var $menu_f=$('<a href="#">\n'+
+                       '<i class="fa fa-share"></i> <span>多级菜单</span>\n'+
+                        ' <span class="pull-right-container">\n'+
+                       '<i class="fa fa-angle-left pull-right"></i>\n'+
+                    '</span></a>');
+      $li.append($menu_f);
+      $menu_f_ul=$('<ul class="treeview-menu"></ul>');
+      $li.append($menu_f_ul);
+      $("ul.sidebar-menu").append($li); 
+      //二级菜单
+      $menu_s=$('<li><a href="#" data-url="#"><i class="fa fa-circle-o"></i>第二级(可点)</a></li>');
+      $menu_f_ul.append($menu_s);
+      
+      $menu_s_th=$('<li class="treeview"><a href="#"><i class="fa fa-circle-o"></i>第二级(有三级)<span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a></li>');
+      $menu_f_ul_th=$('<ul class="treeview-menu"></ul>');
+      
+      $menu_s_th.append($menu_f_ul_th);
+      $menu_f_ul.append($menu_s_th);
+      //三级菜单
+      $menu_s=$('<li><a href="#" data-url="#"><i class="fa fa-circle-o"></i>第三级</a></li>');
+      $menu_f_ul_th.append($menu_s);
+      $menu_s=$('<li><a href="#" data-url="#"><i class="fa fa-circle-o"></i>第三级</a></li>');
+      $menu_f_ul_th.append($menu_s);
+      $menu_s=$('<li><a href="#" data-url="#"><i class="fa fa-circle-o"></i>第三级</a></li>');
+      $menu_f_ul_th.append($menu_s); */
    });  
    
    $(function(){ 
-	   //首页默认加载
+       //首页默认加载
        loadPage("${basePath}/homePage");
        //loadPage("${basePath}/activiti/task/todo/list");
        //loadPage("${basePath}/activiti/delegate/list");
-	   //loadPage("${basePath}/markdown/preview?id=402880e958ecdff60158ed0c62ba0001")
-	   $("a[data-url]").click(function(evt){
-		   loadPage($(this).data("url"));
-		   $("ul.treeview-menu li").removeClass("active");
-		   $(this).parent().addClass("active");
-	   });
-		//判断是否为办公室人员，如果是，就判断近期有无转正人员
-	   ajaxPost(basePath+'/employeeQuery/getZzUser', {}, function(data) {
+       //loadPage("${basePath}/markdown/preview?id=402880e958ecdff60158ed0c62ba0001")
+       $("a[data-url]").click(function(evt){
+           loadPage($(this).data("url"));
+           $("ul.treeview-menu li").removeClass("active");
+           $(this).parent().addClass("active");
+       });
+        //判断是否为办公室人员，如果是，就判断近期有无转正人员
+       ajaxPost(basePath+'/employeeQuery/getZzUser', {}, function(data) {
            if(data.success){
-        	   modals.info(data.message);
+               modals.info(data.message);
            }else{
-				console.log(data.message);
+                console.log(data.message);
            }
        }); 
    });
@@ -466,18 +525,18 @@ var basePath="${basePath}";//给外部js文件传递路径参数
    var job = '${user.jobId?default(0)}';
    
    if(dep != '0'){
-	   ajaxPost(basePath+'/org/get/'+dep, null, function(data) {
-	       $('#dept_main').html(data.name);
-	   });
+       ajaxPost(basePath+'/org/get/'+dep, null, function(data) {
+           $('#dept_main').html(data.name);
+       });
    }
    if(job != '0'){
-	   ajaxPost(basePath+'/dict/get/'+job, null, function(data) {
-	       $('#job_main').html(data.name);
-	   });
+       ajaxPost(basePath+'/dict/get/'+job, null, function(data) {
+           $('#job_main').html(data.name);
+       });
    }   
    
    function changePWD(){
-	   modals.openWin({
+       modals.openWin({
            winId: "CHANGEPASSWORD",
            width: 600,
            title: '修改密码',

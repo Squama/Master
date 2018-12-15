@@ -14,7 +14,7 @@ import java.util.List;
 @Entity
 @Table(name = "tbl_function")
 @JsonIgnoreProperties(value = { "hibernateLazyInitializer", "handler", "fieldHandler" })
-public class Function extends BaseEntity implements Comparable<Function>{
+public class Function extends BaseEntity implements Comparable<Function> {
 
     /**
      *
@@ -50,6 +50,15 @@ public class Function extends BaseEntity implements Comparable<Function>{
     @Header(name = "菜单类型")
     @Column(name = "functype")
     private String functype;
+
+    @Header(name = "三级菜单权限编码")
+    @Column(name = "right_id", length = 36)
+    private String rightID;
+
+    // 0：一级 1：二级可点 2：二级有三级 3：三级
+    @Header(name = "三级菜单类型")
+    @Column(name = "right_type")
+    private String rightType;
 
     @Header(name = "备注")
     @Column(name = "remark", length = 1000)
@@ -169,20 +178,39 @@ public class Function extends BaseEntity implements Comparable<Function>{
         this.remark = remark;
     }
 
+    public String getRightID() {
+        return rightID;
+    }
+
+    public void setRightID(String rightID) {
+        this.rightID = rightID;
+    }
+
+    public String getRightType() {
+        return rightType;
+    }
+
+    public void setRightType(String rightType) {
+        this.rightType = rightType;
+    }
+
     @Override
-    public int compareTo(Function f)
-    {
-        String thisCode = this.levelCode;
-        String fCode = f.getLevelCode();
-        if(thisCode.length() == 6 || fCode.length() == 6){
-            thisCode = this.levelCode.substring(0, 6);
+    public int compareTo(Function f) {
+        String thisCode = this.rightID;
+        String fCode = f.getRightID();
+        if (thisCode.length() == 6 || fCode.length() == 6) {
+            thisCode = this.rightID.substring(0, 6);
             fCode = fCode.substring(0, 6);
         }
-        if(Integer.valueOf(thisCode) >= Integer.valueOf(fCode)){
+        if (thisCode.length() == 12 || fCode.length() == 12) {
+            thisCode = this.rightID.substring(0, 12);
+            fCode = fCode.substring(0, 12);
+        }
+        if (Integer.valueOf(thisCode) >= Integer.valueOf(fCode)) {
             return 1;
         }
         return -1;
-        
+
     }
-    
+
 }

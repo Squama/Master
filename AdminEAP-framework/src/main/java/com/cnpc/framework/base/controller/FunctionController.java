@@ -41,7 +41,7 @@ public class FunctionController {
     @ResponseBody
     public List<Function> getAll() {
 
-        String hql = "from Function where (deleted=0 or deleted is null) order by levelCode";
+        String hql = "from Function where (deleted=0 or deleted is null) order by rightID";
         return functionService.find(hql.toString());
     }
     
@@ -89,6 +89,8 @@ public class FunctionController {
     @ResponseBody
     public Result save(Function function) {
         function.setUpdateDateTime(new Date());
+        function.setRightID(function.getLevelCode());
+        function.setRightType(function.getFunctype());
         functionService.saveOrUpdate(function);
         return new Result(true);
     }

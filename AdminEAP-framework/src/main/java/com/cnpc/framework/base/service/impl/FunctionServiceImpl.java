@@ -39,7 +39,7 @@ public class FunctionServiceImpl extends BaseServiceImpl implements FunctionServ
         Map<String, TreeNode> nodelist = new LinkedHashMap<String, TreeNode>();
         for (Function func : funcs) {
             TreeNode node = new TreeNode();
-            node.setText(func.getName());
+            node.setText(func.getName() + "(" + func.getRightID() + ")");
             node.setId(func.getId());
             node.setParentId(func.getParentId());
             node.setLevelCode(func.getLevelCode());
@@ -52,7 +52,7 @@ public class FunctionServiceImpl extends BaseServiceImpl implements FunctionServ
 
     @Override
     public List<Function> getAll() {
-        String hql = "from Function where (deleted=0 or deleted is null) order by levelCode";
+        String hql = "from Function where (deleted=0 or deleted is null) order by rightID";
         return this.find(hql);
     }
 
