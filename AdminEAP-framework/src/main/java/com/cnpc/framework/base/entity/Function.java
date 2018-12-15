@@ -206,7 +206,7 @@ public class Function extends BaseEntity implements Comparable<Function> {
             thisCode = this.rightID.substring(0, 12);
             fCode = fCode.substring(0, 12);
         }
-        if (Integer.valueOf(thisCode) >= Integer.valueOf(fCode)) {
+        if (Long.valueOf(thisCode) >= Long.valueOf(fCode)) {
             return 1;
         }
         return -1;
