@@ -16,201 +16,207 @@ import java.util.List;
 @JsonIgnoreProperties(value = { "hibernateLazyInitializer", "handler", "fieldHandler" })
 public class Function extends BaseEntity implements Comparable<Function> {
 
-    /**
-     *
-     */
-    private static final long serialVersionUID = 7823895619744279485L;
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = 7823895619744279485L;
 
-    @ForeignShow
-    @Header(name = "名称")
-    @Column(name = "name", length = 50)
-    private String name;
+	@ForeignShow
+	@Header(name = "名称")
+	@Column(name = "name", length = 50)
+	private String name;
 
-    @Header(name = "编码")
-    @Column(name = "code", length = 50)
-    private String code;
+	@Header(name = "编码")
+	@Column(name = "code", length = 50)
+	private String code;
 
-    @Header(name = "url")
-    @Column(name = "url", length = 200)
-    private String url;
+	@Header(name = "url")
+	@Column(name = "url", length = 200)
+	private String url;
 
-    @Header(name = "父级ID")
-    @Column(name = "parent_id")
-    private String parentId;
+	@Header(name = "父级ID")
+	@Column(name = "parent_id")
+	private String parentId;
 
-    @Header(name = "层级编码")
-    @Column(name = "levelCode", length = 36)
-    private String levelCode;
+	@Header(name = "层级编码")
+	@Column(name = "levelCode", length = 36)
+	private String levelCode;
 
-    @Header(name = "图标")
-    @Column(name = "icon")
-    private String icon;
+	@Header(name = "图标")
+	@Column(name = "icon")
+	private String icon;
 
-    // 0=目录 1=功能 2=按钮
-    @Header(name = "菜单类型")
-    @Column(name = "functype")
-    private String functype;
+	// 0=目录 1=功能 2=按钮
+	@Header(name = "菜单类型")
+	@Column(name = "functype")
+	private String functype;
 
-    @Header(name = "三级菜单权限编码")
-    @Column(name = "right_id", length = 36)
-    private String rightID;
+	@Header(name = "三级菜单权限编码")
+	@Column(name = "right_id", length = 36)
+	private String rightID;
 
-    // 0：一级 1：二级可点 2：二级有三级 3：三级
-    @Header(name = "三级菜单类型")
-    @Column(name = "right_type")
-    private String rightType;
+	// 0：一级 1：二级可点 2：二级有三级 3：三级
+	@Header(name = "三级菜单类型")
+	@Column(name = "right_type")
+	private String rightType;
 
-    @Header(name = "备注")
-    @Column(name = "remark", length = 1000)
-    private String remark;
+	@Header(name = "备注")
+	@Column(name = "remark", length = 1000)
+	private String remark;
 
-    @Transient
-    private String parentName;
+	@Transient
+	private String parentName;
 
-    @Transient
-    private List<FunctionFilter> fflist;
+	@Transient
+	private List<FunctionFilter> fflist;
 
-    @Transient
-    private String roleId;
+	@Transient
+	private String roleId;
 
-    public String getRoleId() {
-        return roleId;
-    }
+	public String getRoleId() {
+		return roleId;
+	}
 
-    public void setRoleId(String roleId) {
-        this.roleId = roleId;
-    }
+	public void setRoleId(String roleId) {
+		this.roleId = roleId;
+	}
 
-    public List<FunctionFilter> getFflist() {
-        return fflist;
-    }
+	public List<FunctionFilter> getFflist() {
+		return fflist;
+	}
 
-    public void setFflist(List<FunctionFilter> fflist) {
-        this.fflist = fflist;
-    }
+	public void setFflist(List<FunctionFilter> fflist) {
+		this.fflist = fflist;
+	}
 
-    public String getParentName() {
-        return parentName;
-    }
+	public String getParentName() {
+		return parentName;
+	}
 
-    public void setParentName(String parentName) {
+	public void setParentName(String parentName) {
 
-        this.parentName = parentName;
-    }
+		this.parentName = parentName;
+	}
 
-    public String getFunctype() {
+	public String getFunctype() {
 
-        return functype;
-    }
+		return functype;
+	}
 
-    public void setFunctype(String functype) {
+	public void setFunctype(String functype) {
 
-        this.functype = functype;
-    }
+		this.functype = functype;
+	}
 
-    public String getName() {
+	public String getName() {
 
-        return name;
-    }
+		return name;
+	}
 
-    public void setName(String name) {
+	public void setName(String name) {
 
-        this.name = name;
-    }
+		this.name = name;
+	}
 
-    public String getCode() {
+	public String getCode() {
 
-        return code;
-    }
+		return code;
+	}
 
-    public void setCode(String code) {
+	public void setCode(String code) {
 
-        this.code = code;
-    }
+		this.code = code;
+	}
 
-    public String getUrl() {
+	public String getUrl() {
 
-        return url;
-    }
+		return url;
+	}
 
-    public void setUrl(String url) {
+	public void setUrl(String url) {
 
-        this.url = url;
-    }
+		this.url = url;
+	}
 
-    public String getParentId() {
+	public String getParentId() {
 
-        return parentId;
-    }
+		return parentId;
+	}
 
-    public void setParentId(String parentId) {
+	public void setParentId(String parentId) {
 
-        this.parentId = parentId;
-    }
+		this.parentId = parentId;
+	}
 
-    public String getLevelCode() {
+	public String getLevelCode() {
 
-        return levelCode;
-    }
+		return levelCode;
+	}
 
-    public void setLevelCode(String levelCode) {
+	public void setLevelCode(String levelCode) {
 
-        this.levelCode = levelCode;
-    }
+		this.levelCode = levelCode;
+	}
 
-    public String getIcon() {
+	public String getIcon() {
 
-        return icon;
-    }
+		return icon;
+	}
 
-    public void setIcon(String icon) {
+	public void setIcon(String icon) {
 
-        this.icon = icon;
-    }
+		this.icon = icon;
+	}
 
-    public String getRemark() {
+	public String getRemark() {
 
-        return remark;
-    }
+		return remark;
+	}
 
-    public void setRemark(String remark) {
+	public void setRemark(String remark) {
 
-        this.remark = remark;
-    }
+		this.remark = remark;
+	}
 
-    public String getRightID() {
-        return rightID;
-    }
+	public String getRightID() {
+		return rightID;
+	}
 
-    public void setRightID(String rightID) {
-        this.rightID = rightID;
-    }
+	public void setRightID(String rightID) {
+		this.rightID = rightID;
+	}
 
-    public String getRightType() {
-        return rightType;
-    }
+	public String getRightType() {
+		return rightType;
+	}
 
-    public void setRightType(String rightType) {
-        this.rightType = rightType;
-    }
+	public void setRightType(String rightType) {
+		this.rightType = rightType;
+	}
 
-    @Override
-    public int compareTo(Function f) {
-        String thisCode = this.rightID;
-        String fCode = f.getRightID();
-        if (thisCode.length() == 6 || fCode.length() == 6) {
-            thisCode = this.rightID.substring(0, 6);
-            fCode = fCode.substring(0, 6);
-        }
-        if (thisCode.length() == 12 || fCode.length() == 12) {
-            thisCode = this.rightID.substring(0, 12);
-            fCode = fCode.substring(0, 12);
-        }
-        if (Long.valueOf(thisCode) >= Long.valueOf(fCode)) {
-            return 1;
-        }
-        return -1;
+	@Override
+	public int compareTo(Function f) {
+		String thisCode = addZeroForNum(this.rightID, 18);
+		String fCode = addZeroForNum(f.getRightID(), 18);
 
-    }
+		if (Long.valueOf(thisCode) >= Long.valueOf(fCode)) {
+			return 1;
+		}
+
+		return -1;
+
+	}
+
+	private String addZeroForNum(String str, int strLength) {
+		int strLen = str.length();
+		StringBuffer sb = null;
+		while (strLen < strLength) {
+			sb = new StringBuffer();
+			sb.append(str).append("0");//右补0
+			str = sb.toString();
+			strLen = str.length();
+		}
+		return str;
+	}
 
 }
