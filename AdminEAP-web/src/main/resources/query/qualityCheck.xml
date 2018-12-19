@@ -100,4 +100,24 @@
 		<column key="wgdd" header="违规地点" operator="like" width="80"  />
 		<column key="fkje" header="罚款金额" align="left" operator="eq" width="100"  />
 	</query>
+	
+	<query id="gcqzd_list" key="id" tableName="工程签证单列表" className="com.radish.master.entity.qualityCheck.Gcqzd"
+		pageSize="10"  widthType="px" order="create_time asc">
+		<column key="rowIndex" header="序号" width="50" allowSort="false"/>
+		<column key="id" header="id" hidden="true"/>
+		<column key="proname" header="所属项目" operator="like" width="100"  />
+		<column key="number" header="编号" operator="like" width="100"  />
+		<column key="create_name" header="创建人" operator="like" width="100"  />
+		<column key="create_time" header="创建时间" operator="like" width="80" allowSort="true" dateFormat="yyyy-mm-dd" />
+	</query>
+	
+	<query id="gclxd_list" key="id" tableName="工程联系单列表" className="com.radish.master.entity.qualityCheck.Gclxd"
+		pageSize="10"  widthType="px" order="create_time asc">
+		<column key="rowIndex" header="序号" width="50" allowSort="false"/>
+		<column key="id" header="id" hidden="true"/>
+		<column key="proname" header="所属项目" operator="like" width="100"  />
+		<column key="number" header="编号" operator="like" width="100"  />
+		<column key="create_name" header="创建人" operator="like" width="100"  />
+		<column key="create_time" header="创建时间" operator="like" width="80" allowSort="true" dateFormat="yyyy-mm-dd" />
+	</query>
 </queryContext>
