@@ -98,5 +98,14 @@
         <column key="projectName" header="所属项目" classType="String" allowSort="true" width="150"/>
         <column key="status" header="类型" allowSort="true" width="150" render="10=专业作业班组,20=点工班组,30=管理人员班组"/>
     </query>
+    
+    <query id="activiti_volume_list" key="id" tableName="审批意见" className="com.radish.master.entity.common.ActivitiSuggestion" widthType="px">
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="taskNode" header="审核节点" classType="String" render="caozuoyuan=新建,zhiliang=质量员,anquan=安全员,shigong=施工员,fuzeren=项目负责人,yusuan=经营科,boss=总负责人,account=财务人员"/>
+        <column key="approve" header="审核结论" classType="String" render="true=审核通过,false=审核驳回"/>
+        <column key="suggestion" header="审核意见" classType="String" />
+        <column key="operator" header="审批人" classType="String" />
+    </query>
 
 </queryContext>

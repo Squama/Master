@@ -1,0 +1,32 @@
+<div class="form-group" style="display:none;">
+    <label class="control-label col-xs-3">审批结果</label>
+    <div class="col-xs-7">
+        <label class="control-label" id="agreeLabel">
+            <input type="radio" name="approved" data-flag="icheck" checked="checked" class="square-blue" value="true"> 同意
+        </label> &nbsp;
+    </div>
+</div>
+<div class="form-group">
+    <label class="control-label col-xs-3">审批意见</label>
+    <div class="col-xs-7">
+        <textarea name="suggestion" id="suggestion" placeholder="请填写审批意见" class="form-control">已完成</textarea>
+    </div>
+</div>
+<script>
+    var workflowCtrl = {
+        thisForm: null,
+        init: function (formId,businessKey) {
+            this.thisForm = $("#" + formId).form({baseEntity: false});
+            this.thisForm.initComponent();
+            return this.thisForm;
+        },
+        validators: function () {
+            var fields = {
+                suggestion: {validators: {notEmpty: {message: "请选择审批意见"}}}
+
+            };
+            return fields;
+        }
+    }
+
+</script>

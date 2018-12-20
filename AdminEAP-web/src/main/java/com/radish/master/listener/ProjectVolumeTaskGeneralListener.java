@@ -39,11 +39,13 @@ public class ProjectVolumeTaskGeneralListener implements TaskListener {
 
     private static final String FALSE = "false";
 
-    private static final String ZHILIANG = "zhiliangApproved";
+    private static final String ZHILIANG = "zhiliangApproved";// 代表项目经理
 
-    private static final String SHIGONG = "shigongApproved";
+    private static final String ANQUAN = "anquanApproved";// 代表总经理
+    
+    private static final String FUZEREN = "fuzerenApproved";// 代表项目经理
 
-    private static final String ANQUAN = "anquanApproved";
+    private static final String BOSS = "bossApproved";// 代表总经理
 
     private static final Map<String, String> TASKMAP = new HashMap<String, String>() {
         {
@@ -84,105 +86,105 @@ public class ProjectVolumeTaskGeneralListener implements TaskListener {
             }
 
             if (FALSE.equalsIgnoreCase(delegateTask.getVariable("approved").toString())) {
-                if ("zhiliang".equals(taskDefinitionKey)) {
-                    delegateTask.setVariable(ZHILIANG, FALSE);
-                } else if ("shigong".equals(taskDefinitionKey)) {
-                    delegateTask.setVariable(SHIGONG, FALSE);
-                } else if ("anquan".equals(taskDefinitionKey)) {
-                    delegateTask.setVariable(ANQUAN, FALSE);
+                if ("fuzeren".equals(taskDefinitionKey)) {
+                    delegateTask.setVariable(FUZEREN, FALSE);
+                } else if ("boss".equals(taskDefinitionKey)) {
+                    delegateTask.setVariable(BOSS, FALSE);
                 }
                 as.setApprove("false");
+                pv.setStatus("10");
             } else if (TRUE.equalsIgnoreCase(delegateTask.getVariable("approved").toString())) {
                 if ("zhiliang".equals(taskDefinitionKey)) {
                     delegateTask.setVariable(ZHILIANG, TRUE);
-                } else if ("shigong".equals(taskDefinitionKey)) {
-                    delegateTask.setVariable(SHIGONG, TRUE);
                 } else if ("anquan".equals(taskDefinitionKey)) {
                     delegateTask.setVariable(ANQUAN, TRUE);
                 }
-                if (delegateTask.getVariable(ZHILIANG) != null && delegateTask.getVariable(SHIGONG) != null && delegateTask.getVariable(ANQUAN) != null
-                        && TRUE.equals(delegateTask.getVariable(ZHILIANG).toString()) && TRUE.equals(delegateTask.getVariable(SHIGONG).toString())
-                        && TRUE.equals(delegateTask.getVariable(ANQUAN).toString())) {
+                if (delegateTask.getVariable(ZHILIANG) != null && delegateTask.getVariable(ANQUAN) != null
+                        && TRUE.equals(delegateTask.getVariable(ZHILIANG).toString()) && TRUE.equals(delegateTask.getVariable(ANQUAN).toString())) {
                     pv.setStatus("30");
                 }
+                if ("fuzeren".equals(taskDefinitionKey)) {
+                    delegateTask.setVariable(FUZEREN, TRUE);
+                    pv.setStatus("40");
+                } else if ("boss".equals(taskDefinitionKey)) {
+                    delegateTask.setVariable(BOSS, TRUE);
+                    pv.setStatus("60");
+                }
+                as.setApprove("true");
             }
 
-            if ("fuzeren".equals(taskDefinitionKey)) {
-                pv.setStatus("40");
-            } else if ("yusuan".equals(taskDefinitionKey)) {
+            if ("yusuan".equals(taskDefinitionKey)) {
                 pv.setStatus("50");
-            } else if ("boss".equals(taskDefinitionKey)) {
-                pv.setStatus("60");
             } else if ("account".equals(taskDefinitionKey)) {
                 // 在流程审核完成时，统计该合同下的各次工程量上报金额，记录到合同的消耗字段中。 即tbl_labor新加的字段
                 /*
-                String hql = "from ProjectVolume where laborID=:laborID AND status=:status";
-                Map<String, Object> params = new HashMap<>();
-                params.put("laborID", pv.getLaborID());
-                params.put("status", "70");
-                List<ProjectVolume> pvList = baseService.find(hql, params);
-                BigDecimal sum = new BigDecimal("0");
-                for (ProjectVolume proV : pvList) {
-                    BigDecimal consume = new BigDecimal(proV.getFinalSub());
+                 * String hql =
+                 * "from ProjectVolume where laborID=:laborID AND status=:status"
+                 * ; Map<String, Object> params = new HashMap<>();
+                 * params.put("laborID", pv.getLaborID()); params.put("status",
+                 * "70"); List<ProjectVolume> pvList = baseService.find(hql,
+                 * params); BigDecimal sum = new BigDecimal("0"); for
+                 * (ProjectVolume proV : pvList) { BigDecimal consume = new
+                 * BigDecimal(proV.getFinalSub());
+                 * 
+                 * sum = sum.add(consume); }
+                 * 
+                 * BigDecimal thisVolume = new BigDecimal(pv.getFinalSub()); sum
+                 * = sum.add(thisVolume);
+                 * 
+                 * 
+                 * labor.setConsumePrice(sum.setScale(2,
+                 * BigDecimal.ROUND_DOWN).toPlainString());
+                 */
 
-                    sum = sum.add(consume);
-                }
-
-                BigDecimal thisVolume = new BigDecimal(pv.getFinalSub());
-                sum = sum.add(thisVolume);
-                 
-                
-                labor.setConsumePrice(sum.setScale(2,
-                BigDecimal.ROUND_DOWN).toPlainString());
-                */
-                
                 Labor labor = baseService.get(Labor.class, pv.getLaborID());
 
-                BigDecimal oldLabour = new BigDecimal(labor.getLabourConsume() == null? "0" : labor.getLabourConsume());
-                BigDecimal oldMat = new BigDecimal(labor.getMatConsume() == null? "0" : labor.getMatConsume());
-                BigDecimal oldMech = new BigDecimal(labor.getMechConsume() == null? "0" : labor.getMechConsume());
-                BigDecimal oldPack = new BigDecimal(labor.getPackageConsume() == null? "0" : labor.getPackageConsume());
-                
+                BigDecimal oldLabour = new BigDecimal(labor.getLabourConsume() == null ? "0" : labor.getLabourConsume());
+                BigDecimal oldMat = new BigDecimal(labor.getMatConsume() == null ? "0" : labor.getMatConsume());
+                BigDecimal oldMech = new BigDecimal(labor.getMechConsume() == null ? "0" : labor.getMechConsume());
+                BigDecimal oldPack = new BigDecimal(labor.getPackageConsume() == null ? "0" : labor.getPackageConsume());
+
                 BigDecimal thisLabour = new BigDecimal(pv.getFinalLabour());
                 BigDecimal thisMat = new BigDecimal(pv.getFinalMat());
                 BigDecimal thisMech = new BigDecimal(pv.getFinalMech());
                 BigDecimal thisPack = new BigDecimal(pv.getFinalPack());
-                
+
                 labor.setLabourConsume(oldLabour.add(thisLabour).setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
                 labor.setMatConsume(oldMat.add(thisMat).setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
                 labor.setMechConsume(oldMech.add(thisMech).setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
                 labor.setPackageConsume(oldPack.add(thisPack).setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
-                
-                
+
                 baseService.save(labor);
 
                 pv.setStatus("70");
-                
-                /*String smeasureHql = "from MeasureConsume where projectID=:projectID AND projectSubID=:projectSubID";
-                Map<String, Object> consumeParams = new HashMap<>();
-                consumeParams.put("projectID", pv.getProjectID());
-                consumeParams.put("projectSubID", pv.getProjectSubID());
-                MeasureConsume mc = baseService.get(smeasureHql, consumeParams);
-                if(mc == null){
-                	mc = new MeasureConsume();
-                	mc.setProjectID(pv.getProjectID());
-                	mc.setProjectSubID(pv.getProjectSubID());
-                	baseService.save(mc);
-                }
-                try {
-                	String name = pv.getMeasureType();
-                    Method get = mc.getClass().getMethod("get"+name);
-					String value = (String) get.invoke(mc);
-					BigDecimal oldValue = new BigDecimal(value == null? "0" : value);
-					BigDecimal thisValue = new BigDecimal(pv.getMeasureAmount());
-					
-					Method set = mc.getClass().getMethod("set"+name, String.class);
-					set.invoke(mc, new Object[] { oldValue.add(thisValue).setScale(2, BigDecimal.ROUND_DOWN).toPlainString() });
-					
-					baseService.update(mc);
-				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
-					e.printStackTrace();
-				}*/
+
+                /*
+                 * String smeasureHql =
+                 * "from MeasureConsume where projectID=:projectID AND projectSubID=:projectSubID"
+                 * ; Map<String, Object> consumeParams = new HashMap<>();
+                 * consumeParams.put("projectID", pv.getProjectID());
+                 * consumeParams.put("projectSubID", pv.getProjectSubID());
+                 * MeasureConsume mc = baseService.get(smeasureHql,
+                 * consumeParams); if(mc == null){ mc = new MeasureConsume();
+                 * mc.setProjectID(pv.getProjectID());
+                 * mc.setProjectSubID(pv.getProjectSubID());
+                 * baseService.save(mc); } try { String name =
+                 * pv.getMeasureType(); Method get =
+                 * mc.getClass().getMethod("get"+name); String value = (String)
+                 * get.invoke(mc); BigDecimal oldValue = new BigDecimal(value ==
+                 * null? "0" : value); BigDecimal thisValue = new
+                 * BigDecimal(pv.getMeasureAmount());
+                 * 
+                 * Method set = mc.getClass().getMethod("set"+name,
+                 * String.class); set.invoke(mc, new Object[] {
+                 * oldValue.add(thisValue).setScale(2,
+                 * BigDecimal.ROUND_DOWN).toPlainString() });
+                 * 
+                 * baseService.update(mc); } catch (IllegalAccessException |
+                 * IllegalArgumentException | InvocationTargetException |
+                 * NoSuchMethodException | SecurityException e) {
+                 * e.printStackTrace(); }
+                 */
             }
 
             baseService.save(pv);

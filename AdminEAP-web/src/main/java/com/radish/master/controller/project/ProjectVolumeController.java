@@ -72,7 +72,12 @@ public class ProjectVolumeController {
         return "projectmanage/volume/volume_list";
     }
     
-    @RefreshCSRFToken
+    @RequestMapping(value="/detaillist",method = RequestMethod.GET)
+    public String detailList(HttpServletRequest request){
+        request.setAttribute("projectOptions", JSONArray.toJSONString(budgetService.getProjectCombobox()));
+        return "projectmanage/volume/detail_list";
+    }
+    
     @RequestMapping(value="/add",method = RequestMethod.GET)
     public String add(HttpServletRequest request){
         request.setAttribute("projectOptions", JSONArray.toJSONString(budgetService.getProjectCombobox()));
@@ -80,7 +85,6 @@ public class ProjectVolumeController {
         return "projectmanage/volume/volume_edit";
     }
     
-    @RefreshCSRFToken
     @RequestMapping(value="/edit/{id}",method = RequestMethod.GET)
     public String edit(@PathVariable("id") String id,HttpServletRequest request,HttpServletResponse response) {
         request.setAttribute("id", id);
@@ -88,7 +92,6 @@ public class ProjectVolumeController {
         return "projectmanage/volume/volume_edit";
     }
     
-    @RefreshCSRFToken
     @RequestMapping(value="/detail/{id}",method = RequestMethod.GET)
     public String detail(@PathVariable("id") String id,HttpServletRequest request,HttpServletResponse response) {
         request.setAttribute("id", id);
@@ -96,7 +99,6 @@ public class ProjectVolumeController {
         return "projectmanage/volume/volume_detail";
     }
     
-    @RefreshCSRFToken
     @RequestMapping(value="/detailbusiness/{id}",method = RequestMethod.GET)
     public String detailBusiness(@PathVariable("id") String id,HttpServletRequest request,HttpServletResponse response) {
         request.setAttribute("id", id);
@@ -104,12 +106,18 @@ public class ProjectVolumeController {
         return "projectmanage/volume/volume_detail_business";
     }
     
-    @RefreshCSRFToken
     @RequestMapping(value="/detailfinal/{id}",method = RequestMethod.GET)
     public String detailFinal(@PathVariable("id") String id,HttpServletRequest request,HttpServletResponse response) {
         request.setAttribute("id", id);
         request.setAttribute("projectOptions", JSONArray.toJSONString(budgetService.getProjectCombobox()));
         return "projectmanage/volume/volume_detail_final";
+    }
+    
+    @RequestMapping(value="/detailouter/{id}",method = RequestMethod.GET)
+    public String detailOuter(@PathVariable("id") String id,HttpServletRequest request,HttpServletResponse response) {
+        request.setAttribute("id", id);
+        request.setAttribute("projectOptions", JSONArray.toJSONString(budgetService.getProjectCombobox()));
+        return "projectmanage/volume/detail_outer";
     }
     
     @RequestMapping(value="/check",method = RequestMethod.POST)
@@ -118,7 +126,7 @@ public class ProjectVolumeController {
         ProjectVolume pv = projectService.get(ProjectVolume.class, businessKey);
         
         if("20".equals(pv.getStatus())){
-            return new Result(false,"质量员、安全员和施工员尚未全部同意！！");
+            return new Result(false,"质量员和施工员尚未全部同意！！");
         }else{
             return new Result(true);
         }

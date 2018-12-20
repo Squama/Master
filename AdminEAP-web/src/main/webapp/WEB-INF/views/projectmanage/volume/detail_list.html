@@ -1,0 +1,95 @@
+<section class="content-header">
+    <h1>
+        工程量上报
+        <small>列表</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
+        <li><a href="#">项目信息</a></li>
+        <li class="active">工程量上报查询</li>
+    </ol>
+</section>
+
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <!-- /.box-header -->
+                <div class="dataTables_filter" id="searchDiv" >
+                    <select id="projectID" class="form-control select2" name="pv.project_id" style="width:200px;" operator="eq">
+                        <option selected="selected" value="">选择一个项目</option>
+                    </select>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-primary" data-btn-type="search">查询</button>
+                        <button type="button" class="btn btn-default" data-btn-type="reset">重置</button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <table id="volume_table" class="table table-bordered table-striped table-hover">
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    var form = $("#searchDiv").form({baseEntity: false}), initData={};
+    var volumeTable, winId = "volumeWin";
+    var projectOptions = '${projectOptions?default(0)}',options=0;
+    if(projectOptions != 0){
+        options = JSON.parse(projectOptions);
+    }
+    
+    var volumeManageObject = {
+            toAudit: function (volumeID) {
+                modals.openWin({
+	                 winId:winId,
+	                 title:'工程量上报详情',
+	                 width:'1200px',
+	                 url:basePath+"/projectvolume/detailouter/"+volumeID            
+                });
+            }
+    }
+    
+    $(function (){
+        volumeTable = new CommonTable("volume_table", "volume_list", "searchDiv", null);
+        
+        //绑定按钮事件
+        $("button[data-btn-type]").click(function () {
+            var action = $(this).data("btn-type");
+            var rowId = volumeTable.getSelectedRowId();
+            switch (action) {
+                case "edit":
+                    if(!rowId){
+                        modals.info('请选择要编辑的行');
+                        return false;
+                    }
+                    var data = volumeTable.getSelectedRowData();
+                    if(data.status != '新建'){
+                        modals.info('审核中或审核完成的条目不可编辑!');
+                        return false;
+                    }
+                    loadPage(basePath+"/projectvolume/edit/" +rowId);
+                    break;
+                case "add":
+                    loadPage(basePath+"/projectvolume/add");
+                    break;
+            }
+        });
+        
+        if(options != 0){
+            for (var i = 0, len = options.length; i < len; i++) {
+                var option = options[i];
+                $('#projectID').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+            }
+            $(".select2").select2();
+        }
+        
+    });
+    
+    function fnRenderVolume(value, type, rowObj){
+        var oper = "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='volumeManageObject.toAudit(\"" + rowObj.id + "\")'>查看详情</a>";
+        return oper;
+    }
+</script>

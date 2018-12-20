@@ -118,22 +118,16 @@ legend{padding:.5em;border:0;width:auto}
                         </div>
                         <div id="pingxing" class="dn">
                             <div class="col-md-12">
-                                  <div class="col-md-4">
+                                  <div class="col-md-6">
                                         <div class="callout callout-info" id="zhiliangT" style="margin-bottom:8px;">
                                             <h4>质量员【<span id="zhiliang">未处理</span>】</h4>
                                             <p>审批意见：<span id="zhiliangsugg">尚未审批</span></p>
                                         </div>
                                   </div>
-                                  <div class="col-md-4">
+                                  <div class="col-md-6">
                                         <div class="callout callout-info" id="anquanT" style="margin-bottom:8px;">
                                             <h4>安全员【<span id="anquan">未处理</span>】</h4>
                                             <p>审批意见：<span id="anquansugg">尚未审批</span></p>
-                                        </div>
-                                  </div>
-                                  <div class="col-md-4">
-                                        <div class="callout callout-info" id="shigongT" style="margin-bottom:8px;">
-                                            <h4>分管施工员【<span id="shigong">未处理</span>】</h4>
-                                            <p>审批意见：<span id="shigongsugg">尚未审批</span></p>
                                         </div>
                                   </div>
                             </div>
@@ -227,7 +221,6 @@ legend{padding:.5em;border:0;width:auto}
                         var px = data.data;
                         handlePX('zhiliang', data.data.zhiliang, data.data.zhiliangsugg);
                         handlePX('anquan', data.data.anquan, data.data.anquansugg);
-                        handlePX('shigong', data.data.shigong, data.data.shigongsugg);
                     });
                 }
             })
