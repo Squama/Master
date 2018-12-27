@@ -1,0 +1,31 @@
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <!-- /.box-header -->
+                <div class="dataTables_filter" id="searchDiv2" >
+                    <input name="driver" class="form-control" type="search"  placeholder="请输入驾驶人"/> 
+                    <input name="status" value="30" style="display: none"/>
+                    <input id="clid" name="carid" value="30" style="display: none"/>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-primary" data-btn-type="search">查询</button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <table id="volume_table" class="table table-bordered table-striped table-hover">
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    var form = $("#searchDiv").form({baseEntity: false}), initData={};
+    var volumeTable, winId = "volumeWin";
+    var carid = '${carid?default(0)}';
+    $("#clid").val(carid);
+    $(function (){
+    	volumeTable = new CommonTable("volume_table", "carList_useMx", "searchDiv2", null);
+    });   
+</script>
