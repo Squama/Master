@@ -1,0 +1,247 @@
+
+<link rel="stylesheet" href="${basePath}/resources/common/libs/fileinput/css/fileinput.min.css">
+<script src="${basePath}/resources/common/libs/fileinput/js/fileinput.js"></script>
+<script src="${basePath}/resources/common/libs/fileinput/js/locales/zh.js"></script>
+<!--BaseFile组件-->
+<script src="${basePath}/resources/common/js/base-file.js"></script>
+ <style >
+     	#tb table{
+     		font-family: verdana,arial,sans-serif;
+	     	font-size:11px;
+	     	color:#333333;
+	      	border-width: 1px;
+	      	border-color: #666666;
+	      	border-collapse: collapse;
+	      	word-wrap:break-word; 
+	      	word-break:break-all;
+     	}
+      	#tb th{
+     		 border-width: 1px;
+		     padding: 8px;
+		     border-style: solid;
+		     border-color: #666666;
+		     background-color: 	#FFEFDB;
+		     text-align: center;
+		     font-size: 15px
+		     
+     	}
+     	#tb td{
+	     	 border-width: 1px;
+		     padding: 8px;
+		     border-style: solid;
+		     border-color: #666666;
+		     background-color: #ffffff;
+		     text-align: center
+     	}
+     	#title td{
+     		 border-width: 0px;
+		     padding: 8px;
+		     border-color: #666666;
+		     background-color: #E0FFFF;
+		     text-align: center;
+		     font-size: 18px;
+		     font-weight: 500
+		     
+     	}
+     	
+	</style>
+
+<section class="content-header">
+    <h1>
+        <span>印章管理</span>
+        <small>印章申请查询打印</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
+        <li><a href="#">印章管理</a></li>
+        <li class="active">印章申请查询打印</li>
+    </ol>
+</section>
+
+    
+
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <span>
+                        <i class="fa fa-edit">生成打印数据</i>
+                    </span>
+                </div>
+                <form id="import_form" name="attendance_form" class="form-horizontal">
+                	<input type="text" id="Id" style="display: none" >
+                    <div class="box-body">
+                        <div class="col-md-12">
+		                    <div class="form-group">
+                                <label class="col-sm-5 control-label">开始时间</label>
+                                <div class="col-sm-2">
+                                    <input type="text" class="form-control date-picker" name="startdate" id="startdate" data-flag="datepicker" data-format="yyyy-mm-dd"  placeholder="" >
+                                </div>
+                            </div>
+                        	<div class="form-group">
+                                <label class="col-sm-5 control-label">截止时间</label>
+                                <div class="col-sm-2">
+                                    <input type="text" class="form-control date-picker" name="enddate" id="enddate" data-flag="datepicker" data-format="yyyy-mm-dd"  placeholder="" >
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer text-center">
+                        <button type="submit" class="btn btn-primary" data-btn-type="add" id ="add">查询</button>
+                        <button type="button" class="btn btn-success" data-btn-type="print" id ="print">打印</button>
+                        <button type="button" class="btn btn-default" data-btn-type="returnYz" id ="returnYz">返回印章管理</button>
+                    </div>
+                </form>
+            </div>
+            <div class="box">
+                <div class="box-body">
+                    <table style="width: 100%;text-align: center" id="tb">
+                    	
+                    	<thead>
+	                    	<tr id="title">
+	                    		<td colspan="18" style="text-align: center;font-size: 25px;font-weight: 600">印章申请记录</td>
+	                    	</tr>
+                    		<tr >
+                    			<th  style="width: 10%">日期</th>
+                    			<th  style="width: 20%">公司及项目部名称</th>
+                    			<th  style="width: 20%">用印名称</th>
+                    			<th  style="width: 20%">用印部门</th>
+                    			<th  style="width: 10%">份数</th>
+                    			<th  style="width: 10%">审批人</th>
+                    		</tr>
+                    	</thead>
+                    	<tbody  id="tbs">
+                    	
+                    	</tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+    var importform;
+    var czy= '${czy?default(0)}';
+    $(function () {
+    	
+    	
+        //初始化表单 
+        importform = $("#import_form").form({baseEntity:false});
+        //数据校验
+        $("#import_form").bootstrapValidator({
+            message: '请输入有效值',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            submitHandler: function () {
+                	 var start = $("#startdate").val();
+                	 var end = $("#enddate").val();
+                	 if(CompareDate(start,end)){
+                		 modals.info("开始日期不得大于截止日期");
+                		 $("#startdate").val("");
+                		 $("#enddate").val("");
+                		 return ;
+                   	  }
+                     //Save Data，对应'submit-提交'
+                     var params = importform.getFormSimpleData();
+                     	ajaxPost(basePath+'/seals/getDyInfo', params, function(data) {
+                            if(data.success){
+                            	 loadInfo(data);
+                              }else{	
+                            	  modals.info("查询失败");
+                              }
+                         }); 
+            },
+            fields: {
+                "enddate": {
+                    validators: {
+                        notEmpty: {message: '请选择截止时间'}
+                    }
+                },
+                "startdate": {
+                    validators: {
+                        notEmpty: {message: '请选择开始时间'}
+                    }
+                }
+                
+            }
+        });
+        //初始化控件
+        importform.initComponent();
+        $("#print").on("click",function(){
+             
+        	 var start = $("#startdate").val();
+        	 var end = $("#enddate").val();
+        	 if(!start||!end){
+        		 modals.info("请选择打印时间范围");
+        		 return ;
+           	  }
+        	 if(CompareDate(start,end)){
+        		 modals.info("开始日期不得大于截止日期");
+        		 $("#startdate").val("");
+        		 $("#enddate").val("");
+        		 return ;
+           	  }
+          	console.log(start+"---"+end);
+			var url = basePath+"/ureport/preview?_u=file:seals.ureport.xml&_t=1,5&kssj="+start+"&jssj="+end+"&iszb=1&ryid="+czy;
+	   	 	window.open(url);
+        })
+        $("#returnYz").on("click",function(){
+        	loadPage(basePath+"/seals/index");
+        })
+    });
+    function loadInfo(data){
+    		$("#tbs").empty();
+    		var tj = data.data;
+			
+           if(tj.length==0){
+        	   modals.info("数据条数0，请重新选择条件");
+        	   return;
+           }
+           var tr ="";
+           for(var i=0;i<tj.length;i++){
+               	var mx = tj[i];
+               	console.log(mx);
+               	tr+="<tr>";
+               	tr+="<td>"+qcnull(mx.sqtime)+"</td>";
+               	tr+="<td>"+qcnull(mx.gsmc)+"</td>";
+               	tr+="<td>"+qcnull(mx.name)+"</td>";
+               	tr+="<td>"+qcnull(mx.deptname)+"</td>";
+               	tr+="<td>"+qcnull(mx.sl)+"</td>";
+               	tr+="<td>"+qcnull(mx.bmshr)+"</td>";
+               	tr+="</tr>";
+           }
+           $("#tbs").append(tr);
+          
+    }
+    function CompareDate(d1,d2)
+    {
+      return ((new Date(d1.replace(/-/g,"\/"))) > (new Date(d2.replace(/-/g,"\/"))));
+    }
+    function jsonYearMonthDay(milliseconds) {
+		if(milliseconds==null || milliseconds=="undefined"){
+			return "";
+		}
+		var datetime = new Date();
+		datetime.setTime(milliseconds);
+		var year = datetime.getFullYear();
+		var month = datetime.getMonth() + 1 < 10 ? "0"
+				+ (datetime.getMonth() + 1) : datetime.getMonth() + 1;
+		var date = datetime.getDate() < 10 ? "0" + datetime.getDate()
+				: datetime.getDate();
+		return year + "." + month + "." + date;
+
+	}
+
+	function qcnull(value){
+		if(!value){
+			return "";
+		}else{
+			return value;
+		}
+	}
+    
+</script>

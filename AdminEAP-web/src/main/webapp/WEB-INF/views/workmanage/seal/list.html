@@ -1,0 +1,148 @@
+<section class="content-header">
+    <h1>
+        印章管理
+        <small>列表</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
+        <li><a href="#">印章管理</a></li>
+        <li class="active">印章管理</li>
+    </ol>
+</section>
+
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <!-- /.box-header -->
+                <div class="dataTables_filter" id="searchDiv1" style="display: none">
+                    <!--查询条件-->
+                    <!--查询条件-->
+                    <input placeholder="请输入印章名称" name="name" class="form-control" type="search" likeOption="true"operator="like" /> 
+                    <input id="" name="isvalid" value="1" style="display:none"/>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-primary" data-btn-type="search">查询</button>
+                    </div>
+                    <div class="btn-group">
+                    	<button type="button" class="btn btn-default" data-btn-type="add" id="add">新增</button>
+                    	<button type="button" class="btn btn-default" data-btn-type="edit" id="edit">编辑</button>
+                    	<button type="button" class="btn btn-default" data-btn-type="look" id="look">查看</button>
+                        <button type="button" class="btn btn-default" data-btn-type="delete" id="delete">删除</button>
+                        <button type="button" class="btn btn-success" data-btn-type="print" id="print">申请记录</button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <table id="lwContract_table" class="table table-bordered table-striped table-hover">
+                    </table>
+                </div>
+            </div>
+           </div>
+         </div>
+         
+</section>
+
+<script>
+    var form = $("#searchDiv1").form({baseEntity: false}), initData={};
+    var lx = '${lx?default(0)}';
+    var dutycheckTable, winId = "projectQueryWin";
+    $(function (){
+    	dutycheckTable = new CommonTable("lwContract_table", "sealList", "searchDiv1");
+        
+        
+        
+        //绑定按钮事件
+        $("button[data-btn-type]").click(function () {
+            var action = $(this).data("btn-type");
+            var rowId = dutycheckTable.getSelectedRowId();
+            switch (action) {
+            	case "add":
+            		modals.openWin({
+                        winId:winId,
+                        title:'创建',
+                        width:'1000px',
+                        url:basePath+"/seals/add",
+                        hideFunc:function(){
+                        	dutycheckTable.reloadData();
+                        },
+                        
+                       });
+            	break;
+            	case "edit":
+            		if(!rowId){
+                        modals.info('请选择要编辑的行');
+                        return false;
+                    }
+                    modals.openWin({
+                        winId:winId,
+                        title:'编辑',
+                        width:'1000px',
+                        url:basePath+"/seals/add?id="+rowId,
+                        hideFunc:function(){
+                        	dutycheckTable.reloadData();
+                        }
+                       });
+            	break;
+            	case "look":
+            		if(!rowId){
+                        modals.info('请选择要编辑的行');
+                        return false;
+                    }
+                    modals.openWin({
+                        winId:winId,
+                        title:'编辑',
+                        width:'1000px',
+                        url:basePath+"/seals/add?id="+rowId+"&ck=look"
+                       });
+            	break;
+                case "delete":
+                	if(!rowId){
+                        modals.info('请选择要删除的行');
+                        return false;
+                    }
+                    modals.confirm("是否要删除该行数据？",function(){
+                        ajaxPost(basePath+"/seals/delete?id="+rowId,null,function(data){
+                        	if(data.success){
+                        		dutycheckTable.reloadData();
+                        	}
+                        	
+                  
+                        });
+                    })
+                	break;
+                case "print":
+                	loadPage(basePath+"/seals/dyList");
+                    break;
+                              
+            }
+        });
+        if(lx=="look"){
+            $("#add").css("display","none");
+            $("#edit").css("display","none");
+            $("#delete").css("display","none");
+            $("#print").css("display","none");
+         }
+    });
+    function fnFj(value, type, obj){
+		return "<a href='javascript:void(0)' onclick='lookfj(\"" + value + "\")'>附件</a>";
+    }
+    function lookfj(mbid){
+    	modals.openWin({
+            winId: "files",
+            width: "900px",
+            url: basePath + "/seals/projectdetailfile?id=" + mbid+"&lx="+lx ,
+            title: "查看附件"
+        });
+    }
+    function fnJl(value, type, obj){
+    	return"<a href='javascript:void(0)' onclick='usejl(\"" + value + "\")'>使用记录</a>";
+    }
+    function usejl(id){
+    	modals.openWin({
+            winId: "files",
+            width: "900px",
+            url: basePath + "/seals/useMx?carid=" + id ,
+            title: "车辆使用记录"
+        });
+    }
+    
+</script>

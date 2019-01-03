@@ -196,4 +196,33 @@
         <column key="driver" header="驾驶人" classType="String" width="150"/>
         <column key="cctime" header="出车时间" width="150"  allowSort="true"  dateFormat="yyyy-mm-dd"/>
     </query>
+    
+    <query id="sealList" key="id" tableName="印章管理列表" className="com.radish.master.entity.workmanage.Seal" widthType="px" pageSize="200">
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="name" header="印章名称" classType="String" width="150"/>
+        <column key="descs" header="备注" classType="String" width="150" />
+    </query>
+    <query id="sealList_use" key="id" tableName="印章申请列表" className="com.radish.master.entity.workmanage.Sealuse" widthType="px" pageSize="200">
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="sqtime" header="申请时间" width="150"  allowSort="true"  dateFormat="yyyy-mm-dd"/>
+        <column key="gsmc" header="公司及项目名称" classType="String" width="150"/>
+         <column key="name" header="用章名称" classType="String" width="150"/>
+        <column key="deptname" header="用章部门" classType="String" width="150"/>
+        <column key="sl" header="数量" classType="String" width="150"/>
+         <column key="status" header="状态" classType="String" width="150" render="10=新建,20=部门审核,30=部门驳回,40=办公室审核,50=办公室驳回,60=完成"/>
+        <column key="id" header="管理" width="100" fnRender="fnFj"/>
+    </query>
+    <query id="sealList_bmsp" key="id" tableName="印章部门审批列表" className="com.radish.master.entity.workmanage.Sealuse" widthType="px" pageSize="200">
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="sqtime" header="申请时间" width="150"  allowSort="true"  dateFormat="yyyy-mm-dd"/>
+        <column key="sqr" header="申请人" classType="String" width="150"/>
+        <column key="gsmc" header="公司及项目名称" classType="String" width="150"/>
+         <column key="name" header="用章名称" classType="String" width="150"/>
+        <column key="deptname" header="用章部门" classType="String" width="150"/>
+        <column key="sl" header="数量" classType="String" width="150"/>
+        <column key="id" header="管理" width="100" fnRender="fnFj"/>
+    </query>
 </queryContext>

@@ -1,0 +1,154 @@
+<section class="content-header">
+    <h1>
+        印章申请
+        <small>列表</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
+        <li><a href="#">印章管理</a></li>
+        <li class="active">印章申请</li>
+    </ol>
+</section>
+
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <!-- /.box-header -->
+                <div class="dataTables_filter" id="searchDiv1" style="display: none">
+                    <!--查询条件-->
+                    <!--查询条件-->
+                    <input placeholder="请输入用章名称" name="name" class="form-control" type="search" likeOption="true"operator="like" />
+                     <input placeholder="请输入公司及项目名称" name="gsmc" class="form-control" type="search" likeOption="true"operator="like" />
+                    <input id="user" name="sqrid" style="display:none"/>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-primary" data-btn-type="search">查询</button>
+                    </div>
+                    <div class="btn-group">
+                    	<button type="button" class="btn btn-default" data-btn-type="add" id="add">新增</button>
+                    	<button type="button" class="btn btn-default" data-btn-type="edit" id="edit">编辑</button>
+                    	<button type="button" class="btn btn-default" data-btn-type="look" id="look">查看</button>
+                        <button type="button" class="btn btn-default" data-btn-type="delete" id="delete">删除</button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <table id="lwContract_table" class="table table-bordered table-striped table-hover">
+                    </table>
+                </div>
+            </div>
+           </div>
+         </div>
+         
+</section>
+
+<script>
+    var form = $("#searchDiv1").form({baseEntity: false}), initData={};
+    var lx = '${lx?default(0)}';
+    var dutycheckTable, winId = "projectQueryWin";
+    var userid = '${userid?default(0)}';
+    $("#user").val(userid);
+    $(function (){
+    	dutycheckTable = new CommonTable("lwContract_table", "sealList_use", "searchDiv1");
+        //绑定按钮事件
+        $("button[data-btn-type]").click(function () {
+            var action = $(this).data("btn-type");
+            var rowId = dutycheckTable.getSelectedRowId();
+            switch (action) {
+            	case "add":
+            		modals.openWin({
+                        winId:winId,
+                        title:'创建',
+                        width:'1000px',
+                        url:basePath+"/seals/useadd",
+                        hideFunc:function(){
+                        	dutycheckTable.reloadData();
+                        },
+                        
+                       });
+            	break;
+            	case "edit":
+            		if(!rowId){
+                        modals.info('请选择要编辑的行');
+                        return false;
+                    }
+            		if(dutycheckTable.getSelectedRowData().status!="新建"){
+            			modals.info('只能编辑新建的数据');
+                        return false;
+            		}
+                    modals.openWin({
+                        winId:winId,
+                        title:'编辑',
+                        width:'1000px',
+                        url:basePath+"/seals/useadd?id="+rowId,
+                        hideFunc:function(){
+                        	dutycheckTable.reloadData();
+                        }
+                       });
+            	break;
+            	case "look":
+            		if(!rowId){
+                        modals.info('请选择要编辑的行');
+                        return false;
+                    }
+                    modals.openWin({
+                        winId:winId,
+                        title:'编辑',
+                        width:'1000px',
+                        url:basePath+"/seals/useadd?id="+rowId+"&ck=look"
+                       });
+            	break;
+                case "delete":
+                	if(!rowId){
+                        modals.info('请选择要删除的行');
+                        return false;
+                    }
+                	if(dutycheckTable.getSelectedRowData().status!="新建"&&dutycheckTable.getSelectedRowData().status!="不同意用车"){
+            			modals.info('不能删除该状态下的数据');
+                        return false;
+            		}
+                    modals.confirm("是否要删除该行数据？",function(){
+                        ajaxPost(basePath+"/seals/usedelete?id="+rowId,null,function(data){
+                        	if(data.success){
+                        		dutycheckTable.reloadData();
+                        	}
+                        	
+                  
+                        });
+                    })
+                	break;
+                              
+            }
+        });
+        if(lx=="look"){
+            $("#add").css("display","none");
+            $("#edit").css("display","none");
+            $("#delete").css("display","none");
+         }
+    });
+    function fnFj(value, type, obj){
+        if(obj.status=="新建"){
+        	return "<a href='javascript:void(0)' onclick='lookfj(\"" + value + "\")'>提交审批</a>";
+		}else if(obj.status=="部门驳回"){
+			return "<a href='javascript:void(0)'style='color:red' onclick='lookyy(\"" + obj.bmbhyy.replace(/[\r\n]/g,'') + "\")'>部门驳回原因</a>&nbsp;&nbsp;<a href='javascript:void(0)' onclick='lookfj(\"" + value + "\")'>提交审批</a>";
+		}else if(obj.status=="办公室驳回"){
+			return "<a href='javascript:void(0)'style='color:red' onclick='lookyy(\"" + obj.bgsbhyy.replace(/[\r\n]/g,'') + "\")'>办公室驳回原因</a>&nbsp;&nbsp;<a href='javascript:void(0)' onclick='lookfj(\"" + value + "\")'>提交审批</a>";
+		}
+		
+    }
+    function lookfj(mbid){
+    	 modals.confirm("是否要提交审核？",function(){
+             ajaxPost(basePath+"/seals/dosubmit?id="+mbid,null,function(data){
+             	if(data.success){
+             		dutycheckTable.reloadData();
+             		modals.info("提交成功");
+             	}
+             	
+       
+             });
+         })
+    }
+    function lookyy(value){
+    	modals.info(value);
+    } 
+    
+</script>

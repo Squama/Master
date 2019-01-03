@@ -13,6 +13,7 @@ import com.cnpc.framework.base.service.BaseService;
 import com.cnpc.framework.utils.SecurityUtil;
 import com.radish.master.entity.qualityCheck.CheckDq;
 import com.radish.master.entity.volumePay.Reimburse;
+import com.radish.master.entity.workmanage.Sealuse;
 import com.radish.master.system.SpringUtil;
 
 /**
@@ -27,7 +28,7 @@ import com.radish.master.system.SpringUtil;
  * 
  */
 
-public class ReimburseTaskCompleteListener implements TaskListener {
+public class SealTaskCompleteListener implements TaskListener {
 
     private static final long serialVersionUID = -665720800903137257L;
     
@@ -40,36 +41,20 @@ public class ReimburseTaskCompleteListener implements TaskListener {
             
             BaseService baseService = (BaseService) SpringUtil.getObject("baseActServer");
 
-            Reimburse bx = baseService.get(Reimburse.class, businessKey);
+            Sealuse bx = baseService.get(Sealuse.class, businessKey);
             String suggestion = delegateTask.getVariable("suggestion").toString();
             if("true".equalsIgnoreCase(delegateTask.getVariable("approved").toString())){
-            	if ("cw".equals(taskDefinitionKey)) {
-            		bx.setStatus("100");
-            		bx.setShcw(SecurityUtil.getUser().getName());
-            		bx.setShcwyj(suggestion);
-                } else if ("boss".equals(taskDefinitionKey)) {
-                	bx.setStatus("80");
-                	bx.setBoss(SecurityUtil.getUser().getName());
-                	bx.setBossyj(suggestion);
-                }else if ("cwfzr".equals(taskDefinitionKey)){
-                	bx.setStatus("60");
-                	bx.setShcwfzr(SecurityUtil.getUser().getName());
-                	bx.setShcwfzryj(suggestion);
-                }
+            	if ("bgs".equals(taskDefinitionKey)) {
+            		bx.setStatus("60");
+            		bx.setBgsshr(SecurityUtil.getUser().getName());
+            		bx.setBgsbhyy(suggestion);
+            	}
             }else{
-            	if ("cw".equals(taskDefinitionKey)) {
+            	if ("bgs".equals(taskDefinitionKey)) {
             		bx.setStatus("50");
-            		bx.setShcw(SecurityUtil.getUser().getName());
-            		bx.setShcwyj(suggestion);
-                } else if ("boss".equals(taskDefinitionKey)) {
-                	bx.setStatus("70");
-                	bx.setBoss(SecurityUtil.getUser().getName());
-                	bx.setBossyj(suggestion);
-                }else if ("cwfzr".equals(taskDefinitionKey)) {
-                	bx.setStatus("110");
-                	bx.setShcwfzr(SecurityUtil.getUser().getName());
-                	bx.setShcwfzryj(suggestion);
-                }
+            		bx.setBgsshr(SecurityUtil.getUser().getName());
+            		bx.setBgsbhyy(suggestion);
+                } 
             }
             
             baseService.update(bx);
