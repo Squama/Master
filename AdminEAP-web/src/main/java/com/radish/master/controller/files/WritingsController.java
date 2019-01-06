@@ -78,6 +78,8 @@ private String prefix ="workmanage/writings/";
 	public String gsList(HttpServletRequest request){
 		String lx = request.getParameter("lx");
 		request.setAttribute("lx",lx);
+		String bm = request.getParameter("bm");
+		request.setAttribute("bm",bm);
 		String useid = SecurityUtil.getUserId();
 		request.setAttribute("userid", useid);
 		return prefix +"list";
@@ -514,7 +516,7 @@ private String prefix ="workmanage/writings/";
 	    			l.setLookid(u.getId());
 	    			l.setLookname(u.getName());
 	    			l.setDeptName(bm.getName());
-	    			l.setCreateDate(new Date());
+	    			//l.setCreateDate(new Date());
 	    			l.setWritingid(fjid);
 	    			baseService.save(l);
 	    		}
@@ -535,7 +537,7 @@ private String prefix ="workmanage/writings/";
 		    			l.setLookid(u.getId());
 		    			l.setLookname(u.getName());
 		    			l.setDeptName(bm.getName());
-		    			l.setCreateDate(new Date());
+		    			//l.setCreateDate(new Date());
 		    			l.setWritingid(fjid);
 		    			baseService.save(l);
 		    		}

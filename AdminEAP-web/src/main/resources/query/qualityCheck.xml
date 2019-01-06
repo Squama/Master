@@ -120,4 +120,14 @@
 		<column key="create_name" header="创建人" operator="like" width="100"  />
 		<column key="create_time" header="创建时间" operator="like" width="80" allowSort="true" dateFormat="yyyy-mm-dd" />
 	</query>
+	<query id="yclrc_list" key="id" tableName="原材料入场记录" className="com.radish.master.entity.qualityCheck.Yclrc"
+		pageSize="10"  widthType="px" order="create_time asc">
+		<column key="rowIndex" header="序号" width="50" allowSort="false"/>
+		<column key="id" header="id" hidden="true"/>
+		<column key="proname" header="所属项目" operator="like" width="100"  />
+		<column key="number" header="编号" operator="like" width="100"  />
+		<column key="matname" header="材料名称" operator="like" width="100"  />
+		<column key="create_name" header="创建人" operator="like" width="100"  />
+		<column key="create_time" header="创建时间" operator="like" width="80" allowSort="true" dateFormat="yyyy-mm-dd" />
+	</query>
 </queryContext>
