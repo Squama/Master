@@ -1,0 +1,190 @@
+<link rel="stylesheet" href="${basePath}/resources/common/libs/fileinput/css/fileinput.min.css">
+<script src="${basePath}/resources/common/libs/fileinput/js/fileinput.js"></script>
+<script src="${basePath}/resources/common/libs/fileinput/js/locales/zh.js"></script>
+<style >
+     	table{
+     		font-family: verdana,arial,sans-serif;
+	     	font-size:11px;
+	     	color:#333333;
+	      	border-width: 1px;
+	      	border-color: #666666;
+	      	border-collapse: collapse;
+     	}
+     	th{
+     		 border-width: 1px;
+		     padding: 8px;
+		     border-style: solid;
+		     border-color: #666666;
+		     background-color: #dedede;
+		     font-size: 12px
+     	}
+     	td{
+	     	 border-width: 1px;
+		     padding: 2px 8px;
+		     border-style: solid;
+		     border-color: #666666;
+		     background-color: #ffffff;
+		     text-align: center
+     	}
+     	input{
+     		width:100%;
+     		text-align: left;
+     		font-size: 15px;
+     		border: none;
+     		height:25px
+     	}
+     	span{
+     		font-size: 13px;
+     		font-weight: 600
+     	}
+     	textarea{
+     		width:100%;
+     		text-align: left;
+     		font-size: 15px;
+     		border: none;
+     		overflow:auto;
+     		 resize:none; 
+     		 
+     	}
+	</style>
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><li class="fa fa-remove"></li></button>
+    <h5 class="modal-title"></h5>
+</div>
+<section class="content">
+	<div class="row" style="height:650px;overflow-y:auto;">
+		<div class="col-xs-12">
+			<div class="box">
+
+<form style="width:100%" id="RzForm" name="RzForm" class="form-horizontal">
+<input type="hidden" name="id" id="rzids">
+ <div style="text-align: center;width:100%"><h2>施工日志表</h2></div>
+ <div style="margin: 2px 0 5px 20px">
+ 	<span>天气状况：<input id="weather"name="weather" style="width:30%;text-align: left;" /></span>
+ 	<span>气温：<input id="airTemp"name="airTemp" style="width:15%;text-align: left;"/>℃</span>
+ 	<br>
+ 	<span>所属项目：<input id="xmmc" name="xmmc" style="width:40%;text-align: left;" disabled="disabled"/></span>
+ 	</span>
+ 	<span>日期：<input id="rzdate2"  name="rzdate" style="width:20%;text-align: left;" disabled="disabled"/></span>
+ 	<span>人员：<input id="rymc"  name="rymc"style="width:20%;text-align: left;" disabled="disabled"/></span>
+ </div>
+  <table cellSpacing=0 cellPadding=0  style="width:100%;table-layout:fixed;border-collapse:collapse">
+	<tr style="display: none">
+		<th style="width:10%"></th>
+		<td style="width:15%"></th>
+		<th style="width:10%"></th>
+		<td style="width:15%"></th>
+		<th style="width:10%"></th>
+		<td style="width:15%"></th>
+		<td style="width:10%"></th>
+		<td style="width:15%"></th>
+	</tr>
+	<tr>
+		<th colspan="1">施工部位</th>
+		<td colspan="7">
+			<textarea id="sgnr" name ="sgnr" rows="10" ></textarea>
+		</td>
+	</tr>
+	<tr>
+		<th >施工内容</th>
+		<td colspan="7">
+		<textarea id="remark" name ="remark" rows="10" ></textarea>
+		</td>
+	</tr>
+</table>
+<div class="" style="text-align: center;position:fixed; height:50px;width:100%;bottom:0px;">
+            <!--以下两种方式提交验证,根据所需选择-->
+            <button type="submit" class="btn btn-primary" data-btn-type="save" id="savebtn">保存</button>
+            <button type="button" class="btn btn-success" data-btn-type="print" id="printbtn" >打印</button>
+        </div>
+</form>
+      
+</div>
+</div>
+</div>
+</section>
+<script>
+    var form2 =null;
+    var xmid = '${xmid?default(0)}';
+    var dqrq = '${rq?default(0)}';
+    var dqry = '${ryid?default(0)}';
+    var rzid = '${rzid?default(0)}';
+    var lx = '${lx?default(0)}';
+    var xmmc = '${xmmc?default(0)}';
+    var rymc = '${rymc?default(0)}';
+
+	$("#xmmc").val(xmmc);
+	$("#rymc").val(rymc);
+	$("#rzdate2").val(dqrq);
+	    
+    $(function() {
+        //初始化控件
+        form2=$("#RzForm").form();
+        //数据校验
+        $("#RzForm").bootstrapValidator({
+            message : '请输入有效值',
+            feedbackIcons : {
+                valid : 'glyphicon glyphicon-ok',
+                invalid : 'glyphicon glyphicon-remove',
+                validating : 'glyphicon glyphicon-refresh'
+            },
+            submitHandler : function() {
+                modals.confirm('确认保存？', function() {
+                    //Save Data，对应'submit-提交'
+                    var params = form2.getFormSimpleData();
+                    	ajaxPost(basePath+'/prodiary/save?xmid='+xmid+"&userid="+dqry+"&rzdate="+dqrq, params, function(data) {
+                            if(data.success){
+                                modals.info("数据保存成功");
+                                $("#rzids").val(data.code);
+                                $("#printbtn").css("display","")
+                            }                
+                        }); 
+              
+                     
+                });
+            }
+        });
+        form2.initComponent();
+        if(rzid!=0){
+			loaddata();
+        }else{
+			$("#printbtn").css("display","none")
+        }
+        if(lx!=0){
+        	$("#savebtn").css("display","none")
+        }
+        $("#printbtn").on("click",function(){
+			var id = $("#rzids").val();
+			 var url = basePath+"/ureport/preview?_u=file:diary.ureport.xml&_t=1,5&id="+id;
+	    	 	window.open(url); 
+        })
+        
+    });
+    function loaddata(){
+    	ajaxPost(basePath+'/prodiary/load?id='+rzid, {}, function(data) {
+            formdata = data.data.rz;
+            formdata.rzdate = jsonYearMonthDay(formdata.rzdate);
+            form2.initFormData(formdata); 
+        });
+    }
+    function jsonYearMonthDay(milliseconds) {
+		if(milliseconds == "" || milliseconds == undefined || milliseconds == null){
+			return "";
+		}else{
+			var datetime = new Date();
+			datetime.setTime(milliseconds);
+			var year = datetime.getFullYear();
+			var month = datetime.getMonth() + 1 < 10 ? "0"
+					+ (datetime.getMonth() + 1) : datetime.getMonth() + 1;
+			var date = datetime.getDate() < 10 ? "0" + datetime.getDate()
+					: datetime.getDate();
+			return year + "-" + month + "-" + date;
+		}
+	}
+    
+    function resetForm(){
+    	form2.clearForm();
+        $("#contract-form").data('bootstrapValidator').resetForm();
+    }
+	
+</script>

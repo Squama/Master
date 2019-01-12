@@ -1,0 +1,196 @@
+<link rel="stylesheet" href="${basePath}/resources/common/libs/fileinput/css/fileinput.min.css">
+<script src="${basePath}/resources/common/libs/fileinput/js/fileinput.js"></script>
+<script src="${basePath}/resources/common/libs/fileinput/js/locales/zh.js"></script>
+<style >
+     	input{
+     		width:100%;
+     		text-align: left;
+     		font-size: 15px;
+     		height:25px
+     	}
+     	span{
+     		font-size: 13px;
+     		font-weight: 600
+     	}
+     	.rqd{
+     		border-radius:10px;
+     		height:50px;
+     		width:50px;
+     		border:1px solid #ccc;
+     		display: inline-block;
+     		margin:10px;
+     		text-align: center;
+     	}
+     	.rqspan{
+     		font-size:25px;
+     		line-height:50px;
+     	}
+	</style>
+
+<section class="content" id="projectaddstep2">
+<section class="content-header">
+	<h1>
+		施工日志日期选择
+	</h1>
+	<ol class="breadcrumb">
+		<li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
+		<li><a href="#">施工日志</a></li>
+		<li class="active">施工日志日期选择</li>
+	</ol>
+</section>
+<section class="content">
+	<div class="row" style="max-height:100%;overflow-y:auto;">
+		<div class="col-xs-12">
+			<div class="box">
+
+<form style="width:100%" id="RqForm" name="RqForm" class="form-horizontal">
+<div class="modal-body" style="max-height:100%;overflow-y:auto;">
+	<span>姓名：<input id="username"name="username" style="width:8%;text-align: left;" readonly="readonly"/>
+		<input id="userid" name="ryid"  style="display: none"/>
+	</span>
+ 	<span>项目：
+ 		<select id="xmid" class="select2 " name="xmid" style="width:10%">
+        		<option selected="selected" value="">选择一个项目</option>
+        	</select>
+ 	</span>
+ 	<span>年月选择：<input id="rzdate"name="rzdate" style="width:8%;text-align: left;" class="date-picker" data-flag="datepicker" data-format="yyyy-mm-dd" /></span>
+ 	<button type="submit" class="btn btn-primary" data-btn-type="save" id="getRq">确定月份</button>
+ 	<span style="display: inline-block;width:40px;background:#ADFF2F;height:50px;line-height: 50px">有日志</span>
+ 	<span  style="display: inline-block;width:40px;background:#FF4040;height:50px;line-height: 50px">无日志</span>
+ </div>
+ <div class="modal-body">
+ 	<div style="padding-left: 15%;padding-right: 15%;" id="rqdiv">
+ 		
+ 	</div>
+ </div>
+ 
+</form>
+      
+</div>
+</div>
+</div>
+</section>
+<script>
+		var dateMonthConfig = {
+		  language: "zh-CN", //语言
+		  todayHighlight: true, //是否今日高亮
+		  format: 'yyyy-mm', //点击月份后显示在input中的格式
+		  autoclose: true, //是否开启自动关闭
+		  startView: 'months', //开始视图层，为月视图层
+		  maxViewMode:'years', //最大视图层，为年视图层
+		  minViewMode:'months' //最小视图层，为月视图层
+		  //startDate:moment().subtract(11,'month').toDate(), //控制可选的最早月份，为前12个月（含当前月）
+		  //endDate:moment().toDate() //控制可选的最晚月份，为当前月
+		};
+		$('#rzdate').datepicker(dateMonthConfig);
+		var xms = '${xm?default(0)}',xm=0;
+	    if(xms != 0){
+	    	xm = JSON.parse(xms);
+	    }
+	    var ryxm = '${ry?default(0)}';
+	    var ryid = '${ryid?default(0)}';
+	    $("#username").val(ryxm);
+	    $("#userid").val(ryid);
+	    	
+	
+    var form =null;
+    $(function() {
+        //初始化控件
+        form=$("#RqForm").form();
+        //数据校验
+        $("#RqForm").bootstrapValidator({
+            message : '请输入有效值',
+            feedbackIcons : {
+                valid : 'glyphicon glyphicon-ok',
+                invalid : 'glyphicon glyphicon-remove',
+                validating : 'glyphicon glyphicon-refresh'
+            },
+            submitHandler : function() {
+            	if(!$("#rzdate").val()){
+            		modals.info("请选择年月");
+            		return ;
+            	}
+            	if(!$("#xmid option:selected").val()){
+            		modals.info("请选择项目");
+            		return ;
+            	}
+            	tcsj();
+            }
+        });
+        form.initComponent();
+        if(xm != 0){
+            for (var i = 0, len = xm.length; i < len; i++) {
+                var u = xm[i];
+                $('#xmid').append("<option value='" + u.value + "'>" + u.data + "</option>");
+            }
+            $(".select2").select2();
+        }
+        
+    });
+    function tcsj(){
+    	$("#rqdiv").empty();
+        //获取当前月日志
+        var params = form.getFormSimpleData();
+        	ajaxPost(basePath+'/prodiary/getRq', params, function(data) {
+                if(data.success){
+                   var result = data.data;
+                   for(var i=0;i<result.length;i++){
+						var divs ="";
+						if(result[i].ishave=="1"){
+							divs += '<div class="rqd" style="background-color:#ADFF2F;" onclick="addRz(\''+result[i].rq+'\',\''+result[i].rzid+'\')">';
+						}else{
+							divs += '<div class="rqd" style="background-color:#FF4040;" onclick="addRz(\''+result[i].rq+'\')">';
+						}
+						
+						divs+="<span class='rqspan' >"+result[i].ts+"</span>";
+						divs+='</div>';
+						$("#rqdiv").append(divs);
+                   }
+                }                
+            }); 
+    }
+    
+    function addRz(rq,rzid){
+    	if(!$("#xmid option:selected").val()){
+    		modals.info("请选择项目");
+    		return ;
+    	}
+    
+
+    	s1 = new Date(rq.replace(/-/g, "/"));
+    	s2 = new Date();
+		if(s1>s2){
+			modals.info("选择日期未到，不能编写日志！");
+    		return ;
+		}
+    	var days = s2.getTime() - s1.getTime();
+    	var time = parseInt(days / (1000 * 60 * 60 * 24));
+    	if(parseFloat(time)>parseFloat(2)&&!rzid){
+    		modals.info("选择日期已超两日期限，不能编写日志！");
+    		return ;
+        }
+    	
+    	var url = basePath+"/prodiary/addindex?xmid="+$("#xmid option:selected").val()+"&rq="+rq+"&ryid="+ryid;
+    	if(rzid){
+			url += "&rzid="+rzid;
+			if(parseFloat(time)>parseFloat(2)){
+				url += "&lx=look";
+			}
+        }
+    	modals.openWin({
+            winId:"rz",
+            title:'日志',
+            width:'1000px',
+            url:url,
+            hideFunc:function(){
+            	tcsj();
+            }
+           }); 
+    }
+    
+    function resetForm(){
+        form.clearForm();
+        $("#contract-form").data('bootstrapValidator').resetForm();
+    }
+	
+</script>

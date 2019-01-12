@@ -196,6 +196,14 @@ public class BuildDiary implements Serializable {
     @Column(name = "remark")
     private String remark;
     
+    @Header(name = "项目名称")
+    @Column(name = "xmmc")
+    private String xmmc;
+    
+    @Header(name = "人员名称")
+    @Column(name = "rymc")
+    private String rymc;
+    
 	public String getRemark() {
 		return remark;
 	}
@@ -524,6 +532,22 @@ public class BuildDiary implements Serializable {
 
 	public void setRyddqk(String ryddqk) {
 		this.ryddqk = ryddqk;
+	}
+
+	public String getXmmc() {
+		return xmmc;
+	}
+
+	public void setXmmc(String xmmc) {
+		this.xmmc = xmmc;
+	}
+
+	public String getRymc() {
+		return rymc;
+	}
+
+	public void setRymc(String rymc) {
+		this.rymc = rymc;
 	}
     
     
