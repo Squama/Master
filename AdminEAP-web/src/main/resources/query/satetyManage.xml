@@ -26,7 +26,7 @@
         <column key="rowIndex" header="序号" width="80"/>
         <column key="ty" header="是否专项" width="80" render="1=专项,2=非专项"/>
         <column key="pName" header="所属项目" classType="String" width="150"/>
-        <column key="create_time" header="创建日期" classType="String" width="150" allowSort="true" />
+        <column key="create_time" header="创建日期" classType="String" width="150" allowSort="true" operator="between"/>
         <column key="number" header="编号" classType="String" width="150"/>
         <column key="dx" header="对象" classType="String" width="150"/>
     </query>

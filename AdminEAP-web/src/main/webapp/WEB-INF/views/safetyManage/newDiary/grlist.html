@@ -30,12 +30,12 @@
 <section class="content" id="projectaddstep2">
 <section class="content-header">
 	<h1>
-		施工日志日期选择
+		安全施工日志日期选择
 	</h1>
 	<ol class="breadcrumb">
 		<li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
 		<li><a href="#">施工日志</a></li>
-		<li class="active">施工日志日期选择</li>
+		<li class="active">安全施工日志日期选择</li>
 	</ol>
 </section>
 <section class="content">
@@ -133,7 +133,7 @@
     	$("#rqdiv").empty();
         //获取当前月日志
         var params = form.getFormSimpleData();
-        	ajaxPost(basePath+'/prodiary/getRq', params, function(data) {
+        	ajaxPost(basePath+'/safediary/getRq', params, function(data) {
                 if(data.success){
                    var result = data.data;
                    for(var i=0;i<result.length;i++){
@@ -176,7 +176,7 @@
     		return ;
         }
     	
-    	var url = basePath+"/prodiary/addindex?xmid="+$("#xmid option:selected").val()+"&rq="+rq+"&ryid="+ryid;
+    	var url = basePath+"/safediary/addindex?xmid="+$("#xmid option:selected").val()+"&rq="+rq+"&ryid="+ryid;
     	if(rzid){
 			url += "&rzid="+rzid;
 			if(parseFloat(time)>parseFloat(2)){

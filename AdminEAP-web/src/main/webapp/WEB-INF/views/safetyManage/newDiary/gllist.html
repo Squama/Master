@@ -30,12 +30,12 @@
 <section class="content" id="projectaddstep2">
 <section class="content-header">
 	<h1>
-		施工日志日期选择
+		安全施工日志查看
 	</h1>
 	<ol class="breadcrumb">
 		<li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
 		<li><a href="#">施工日志</a></li>
-		<li class="active">施工日志日期选择</li>
+		<li class="active">安全施工日志查看</li>
 	</ol>
 </section>
 <section class="content">
@@ -45,20 +45,21 @@
 
 <form style="width:100%" id="RqForm" name="RqForm" class="form-horizontal">
 <div class="modal-body" style="max-height:100%;overflow-y:auto;">
-	<span>姓名：<input id="username"name="username" style="width:8%;text-align: left;" readonly="readonly"/>
-		<input id="userid" name="ryid"  style="display: none"/>
-	</span>
- 	<span>项目：
- 		<select id="xmid" class="select2 " name="xmid" style="width:10%">
+	<span>项目：
+ 		<select id="xmid" class="select2 " name="xmid" style="width:10%" onchange="getRy()">
         		<option selected="selected" value="">选择一个项目</option>
         	</select>
  	</span>
+	<span>姓名：
+		<select id="ryid" class="select2 " name="ryid" style="width:10%">
+        		<option selected="selected" value="">选择一个人员</option>
+        	</select>
+	</span>
+ 	
  	<span>年月选择：<input id="rzdate"name="rzdate" style="width:8%;text-align: left;" class="date-picker" data-flag="datepicker" data-format="yyyy-mm-dd" /></span>
  	<button type="submit" class="btn btn-primary" data-btn-type="save" id="getRq">确定月份</button>
  	<span style="display: inline-block;width:40px;background:#ADFF2F;height:50px;line-height: 50px">有日志</span>
  	<span  style="display: inline-block;width:40px;background:#FF4040;height:50px;line-height: 50px">无日志</span>
- 	<span  style="display: inline-block;width:60px;background:#ccc;height:50px;line-height: 50px">日期未到</span>
- 	
  </div>
  <div class="modal-body">
  	<div style="padding-left: 15%;padding-right: 15%;" id="rqdiv">
@@ -89,11 +90,7 @@
 	    if(xms != 0){
 	    	xm = JSON.parse(xms);
 	    }
-	    var ryxm = '${ry?default(0)}';
-	    var ryid = '${ryid?default(0)}';
-	    $("#username").val(ryxm);
-	    $("#userid").val(ryid);
-	    	
+	   	
 	
     var form =null;
     $(function() {
@@ -108,14 +105,19 @@
                 validating : 'glyphicon glyphicon-refresh'
             },
             submitHandler : function() {
-            	if(!$("#rzdate").val()){
-            		modals.info("请选择年月");
-            		return ;
-            	}
             	if(!$("#xmid option:selected").val()){
             		modals.info("请选择项目");
             		return ;
             	}
+            	if(!$("#ryid option:selected").val()){
+            		modals.info("请选择人员");
+            		return ;
+            	}
+            	if(!$("#rzdate").val()){
+            		modals.info("请选择年月");
+            		return ;
+            	}
+            	
             	tcsj();
             }
         });
@@ -133,19 +135,15 @@
     	$("#rqdiv").empty();
         //获取当前月日志
         var params = form.getFormSimpleData();
-        	ajaxPost(basePath+'/prodiary/getRq', params, function(data) {
+        	ajaxPost(basePath+'/safediary/getRq', params, function(data) {
                 if(data.success){
                    var result = data.data;
                    for(var i=0;i<result.length;i++){
-                	   s1 = new Date(result[i].rq.replace(/-/g, "/"));
-                  		s2 = new Date();
 						var divs ="";
-						if(result[i].ishave=="1"&&s1<=s2){
+						if(result[i].ishave=="1"){
 							divs += '<div class="rqd" style="background-color:#ADFF2F;" onclick="addRz(\''+result[i].rq+'\',\''+result[i].rzid+'\')">';
-						}else if(s1<=s2){
+						}else{
 							divs += '<div class="rqd" style="background-color:#FF4040;" onclick="addRz(\''+result[i].rq+'\')">';
-						}else if(s1>s2){
-							divs += '<div class="rqd" style="background-color:#ccc;" onclick="addRz(\''+result[i].rq+'\')">';
 						}
 						
 						divs+="<span class='rqspan' >"+result[i].ts+"</span>";
@@ -155,33 +153,34 @@
                 }                
             }); 
     }
-    
-    function addRz(rq,rzid){
-    	if(!$("#xmid option:selected").val()){
-    		modals.info("请选择项目");
-    		return ;
-    	}
-    
-
-    	s1 = new Date(rq.replace(/-/g, "/"));
-    	s2 = new Date();
-		if(s1>s2){
-			modals.info("选择日期未到，不能编写日志！");
-    		return ;
+    function getRy(){
+		var xmid = $("#xmid option:selected").val();
+		$("#ryid").empty();
+		if(xmid){
+			ajaxPost(basePath+'/safediary/getRy', {xmid:xmid}, function(data) {
+                if(data.success){
+                    var result = data.data;
+                    $("#ryid").append('<option selected="selected" value="">选择一个人员</option>');
+                    for(var i = 0, len = result.length; i < len; i++){
+                        var u = result[i];
+                    	$('#ryid').append("<option value='" + u.value + "'>" + u.data + "</option>");
+                    }
+                }                
+            });
+			$("#ryid").select2();
+		}else{
+			$("#ryid").append('<option selected="selected" value="">选择一个人员</option>');
+			$("#ryid").select2();
 		}
-    	var days = s2.getTime() - s1.getTime();
-    	var time = parseInt(days / (1000 * 60 * 60 * 24));
-    	if(parseFloat(time)>parseFloat(2)&&!rzid){
-    		modals.info("选择日期已超两日期限，不能编写日志！");
-    		return ;
+    }
+    function addRz(rq,rzid){
+        if(!rzid){
+        	modals.info(rq+"当天无日志数据");
+        	return ;
         }
-    	
-    	var url = basePath+"/prodiary/addindex?xmid="+$("#xmid option:selected").val()+"&rq="+rq+"&ryid="+ryid;
+    	var url = basePath+"/safediary/addindex?xmid="+$("#xmid option:selected").val()+"&rq="+rq+"&ryid="+ryid;
     	if(rzid){
-			url += "&rzid="+rzid;
-			if(parseFloat(time)>parseFloat(2)){
-				url += "&lx=look";
-			}
+			url += "&rzid="+rzid+"&lx=look";
         }
     	modals.openWin({
             winId:"rz",
@@ -189,7 +188,6 @@
             width:'1000px',
             url:url,
             hideFunc:function(){
-            	tcsj();
             }
            }); 
     }

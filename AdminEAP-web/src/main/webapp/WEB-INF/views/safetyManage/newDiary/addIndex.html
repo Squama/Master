@@ -58,7 +58,7 @@
 
 <form style="width:100%" id="RzForm" name="RzForm" class="form-horizontal">
 <input type="hidden" name="id" id="rzids">
- <div style="text-align: center;width:100%"><h2>施工日志表</h2></div>
+ <div style="text-align: center;width:100%"><h2>安全施工日志表</h2></div>
  <div style="margin: 2px 0 5px 20px">
  	<span>天气状况：<input id="weather"name="weather" style="width:30%;text-align: left;" /></span>
  	<span>气温：<input id="airTemp"name="airTemp" style="width:15%;text-align: left;"/>℃</span>
@@ -80,13 +80,13 @@
 		<td style="width:15%"></th>
 	</tr>
 	<tr>
-		<th colspan="1">施工部位</th>
+		<th colspan="1">安全施工部位</th>
 		<td colspan="7">
 			<textarea id="sgnr" name ="sgnr" rows="10" ></textarea>
 		</td>
 	</tr>
 	<tr>
-		<th >施工内容</th>
+		<th >安全施工内容</th>
 		<td colspan="7">
 		<textarea id="remark" name ="remark" rows="10" ></textarea>
 		</td>
@@ -130,13 +130,13 @@
             },
             submitHandler : function() {
                 modals.confirm('确认保存？', function() {
-                	if(!$("#remark").val()){
-                   	 modals.info("请填写施工内容");
-                   	 return;
+                    if(!$("#remark").val()){
+                    	 modals.info("请填写安全施工内容");
+                    	 return;
 					}
                     //Save Data，对应'submit-提交'
                     var params = form2.getFormSimpleData();
-                    	ajaxPost(basePath+'/prodiary/save?xmid='+xmid+"&userid="+dqry+"&rzdate="+dqrq, params, function(data) {
+                    	ajaxPost(basePath+'/safediary/save?xmid='+xmid+"&userid="+dqry+"&rzdate="+dqrq, params, function(data) {
                             if(data.success){
                                 modals.info("数据保存成功");
                                 $("#rzids").val(data.code);
@@ -159,13 +159,13 @@
         }
         $("#printbtn").on("click",function(){
 			var id = $("#rzids").val();
-			 var url = basePath+"/ureport/preview?_u=file:diary.ureport.xml&_t=1,5&id="+id;
+			 var url = basePath+"/ureport/preview?_u=file:safediary.ureport.xml&_t=1,5&id="+id;
 	    	 	window.open(url); 
         })
         
     });
     function loaddata(){
-    	ajaxPost(basePath+'/prodiary/load?id='+rzid, {}, function(data) {
+    	ajaxPost(basePath+'/safediary/load?id='+rzid, {}, function(data) {
             formdata = data.data.rz;
             formdata.rzdate = jsonYearMonthDay(formdata.rzdate);
             form2.initFormData(formdata); 

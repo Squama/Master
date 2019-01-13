@@ -1,4 +1,4 @@
-package com.radish.master.controller.project;
+package com.radish.master.controller.safty;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -22,13 +22,14 @@ import com.cnpc.framework.base.service.BaseService;
 import com.cnpc.framework.utils.SecurityUtil;
 import com.radish.master.entity.BuildDiary;
 import com.radish.master.entity.Project;
+import com.radish.master.entity.safty.SafeBuildDiary;
 import com.radish.master.pojo.Options;
 
 @Controller
-@RequestMapping("/prodiary")
-public class ProjectDiary {
+@RequestMapping("/safediary")
+public class SafeDiaryController {
 	
-	private String prefix = "newDiary/";
+	private String prefix = "safetyManage/newDiary/";
 	@Autowired
 	private BaseService baseService;
 	
@@ -114,13 +115,13 @@ public class ProjectDiary {
 			sj.add(m);
 		}
 		//获取 人员-项目-日期 的施工日志
-		String hql = " from BuildDiary where xmid='"+xmid+"' "
+		String hql = " from SafeBuildDiary where xmid='"+xmid+"' "
 				+ " and userid='"+ryid+"' "
 				+ " and date_format(rzdate, '%Y-%m') = '"+rq+"' ";
 		
-		List<BuildDiary> rzs = baseService.find(hql);
+		List<SafeBuildDiary> rzs = baseService.find(hql);
 		//将查出的结果填入对于的list，
-		for(BuildDiary rz:rzs){
+		for(SafeBuildDiary rz:rzs){
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(rz.getRzdate());
 			int t = cal.get(Calendar.DATE);
@@ -134,7 +135,7 @@ public class ProjectDiary {
 	}
 	@RequestMapping("/save")
 	@ResponseBody
-	public Result save(HttpServletRequest request,BuildDiary rz ){
+	public Result save(HttpServletRequest request,SafeBuildDiary rz ){
 		String rzid = rz.getId();
 		Result r = new Result();
 		Project xm = baseService.get(Project.class, rz.getXmid());
@@ -145,7 +146,7 @@ public class ProjectDiary {
 			String i = (String)baseService.save(rz);
 			r.setCode(i);
 		}else{
-			BuildDiary lrz = baseService.get(BuildDiary.class, rzid);
+			SafeBuildDiary lrz = baseService.get(SafeBuildDiary.class, rzid);
 			lrz.setWeather(rz.getWeather());
 			lrz.setAirTemp(rz.getAirTemp());
 			lrz.setSgnr(rz.getSgnr());
@@ -158,7 +159,7 @@ public class ProjectDiary {
 	@ResponseBody
 	public Result load(HttpServletRequest request){
 		String id = request.getParameter("id");
-		BuildDiary rz= baseService.get(BuildDiary.class, id);
+		SafeBuildDiary rz= baseService.get(SafeBuildDiary.class, id);
 		Map<String,Object> map = new HashMap<String,Object>();
 		map.put("rz", rz);
 		Result r = new Result();
