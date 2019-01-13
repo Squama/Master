@@ -55,8 +55,8 @@
  	</span>
  	<span>年月选择：<input id="rzdate"name="rzdate" style="width:8%;text-align: left;" class="date-picker" data-flag="datepicker" data-format="yyyy-mm-dd" /></span>
  	<button type="submit" class="btn btn-primary" data-btn-type="save" id="getRq">确定月份</button>
- 	<span style="display: inline-block;width:40px;background:#ADFF2F;height:50px;line-height: 50px">有日志</span>
- 	<span  style="display: inline-block;width:40px;background:#FF4040;height:50px;line-height: 50px">无日志</span>
+ 	<span style="display: inline-block;width:60px;background:#ADFF2F;height:50px;line-height: 50px">有日志</span>
+ 	<span  style="display: inline-block;width:60px;background:#FF4040;height:50px;line-height: 50px">无日志</span>
  	<span  style="display: inline-block;width:60px;background:#ccc;height:50px;line-height: 50px">日期未到</span>
  	
  </div>
@@ -97,6 +97,12 @@
 	
     var form =null;
     $(function() {
+    	//初始化时间框
+   	 	 var date=new Date;
+		 var year=date.getFullYear(); 
+		 var month=date.getMonth()+1;
+		 month =(month<10 ? "0"+month:month);
+		 $("#rzdate").val(year+"-"+month);
         //初始化控件
         form=$("#RqForm").form();
         //数据校验

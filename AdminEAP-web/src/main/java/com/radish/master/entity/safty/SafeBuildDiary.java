@@ -72,6 +72,10 @@ public class SafeBuildDiary implements Serializable {
     @Header(name = "人员名称")
     @Column(name = "rymc")
     private String rymc;
+    
+    @Header(name = "岗位")
+    @Column(name = "jobname")
+    private String jobname;
 
 	public String getId() {
 		return id;
@@ -151,6 +155,14 @@ public class SafeBuildDiary implements Serializable {
 
 	public void setRymc(String rymc) {
 		this.rymc = rymc;
+	}
+
+	public String getJobname() {
+		return jobname;
+	}
+
+	public void setJobname(String jobname) {
+		this.jobname = jobname;
 	}
   
     

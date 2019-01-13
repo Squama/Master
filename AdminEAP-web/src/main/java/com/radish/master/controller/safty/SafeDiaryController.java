@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONArray;
+import com.cnpc.framework.base.entity.Dict;
 import com.cnpc.framework.base.entity.User;
 import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.base.service.BaseService;
@@ -78,6 +79,18 @@ public class SafeDiaryController {
 		request.setAttribute("xmmc", xm.getProjectName());
 		request.setAttribute("rymc", u.getName());
 		
+		String jobid = u.getJobId();
+		if(jobid==null){
+			request.setAttribute("job", "");
+		}else{
+			Dict d = baseService.get(Dict.class, jobid);
+			if(d==null){
+				request.setAttribute("job", "");
+			}else{
+				request.setAttribute("job", d.getName());
+			}
+		}
+		
 		return prefix +"addIndex";
 	}
 	
@@ -97,7 +110,7 @@ public class SafeDiaryController {
 		c.set(year, month, 0); 
 		//获取选择月的天数
 		int dayOfMonth = c.get(Calendar.DAY_OF_MONTH);
-		System.out.println(dayOfMonth);
+		//System.out.println(dayOfMonth);
 		List<Map<String,Object>> sj = new ArrayList<Map<String,Object>>();
 		for(int i=1;i<=dayOfMonth;i++){
 			Map<String,Object> m = new HashMap<String, Object>();
@@ -151,6 +164,7 @@ public class SafeDiaryController {
 			lrz.setAirTemp(rz.getAirTemp());
 			lrz.setSgnr(rz.getSgnr());
 			lrz.setRemark(rz.getRemark());
+			lrz.setJobname(rz.getJobname());
 			baseService.update(lrz);
 		}
 		return r;
@@ -174,7 +188,8 @@ public class SafeDiaryController {
 		String xmid = request.getParameter("xmid");
 		
 		String sql = "select a.id value, a.name data from tbl_user a where "
-				+ " exists (select b.* from tbl_user_team b where a.id = b.user_id and b.project_id = '"+xmid+"')";
+				+ " (exists (select b.* from tbl_user_team b where a.id = b.user_id and b.project_id = '"+xmid+"')"
+				+ " or exists  (select c.* from v_gckry c where a.id = c.id) )";
 		List tjxm = baseService.findMapBySql(sql, new Object[]{}, new Type[]{StringType.INSTANCE}, Options.class);
 		r.setData(tjxm);
 		return r;

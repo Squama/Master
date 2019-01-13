@@ -60,13 +60,14 @@
 <input type="hidden" name="id" id="rzids">
  <div style="text-align: center;width:100%"><h2>安全施工日志表</h2></div>
  <div style="margin: 2px 0 5px 20px">
- 	<span>天气状况：<input id="weather"name="weather" style="width:30%;text-align: left;" /></span>
- 	<span>气温：<input id="airTemp"name="airTemp" style="width:15%;text-align: left;"/>℃</span>
+ 	<span>天气状况：<input id="weather"name="weather" style="width:40%;text-align: left;" /></span>
+ 	<span>气温：<input id="airTemp"name="airTemp" style="width:20%;text-align: left;"/>℃</span>
+ 	<span>人员：<input id="rymc"  name="rymc"style="width:20%;text-align: left;" disabled="disabled"/></span>
  	<br>
  	<span>所属项目：<input id="xmmc" name="xmmc" style="width:40%;text-align: left;" disabled="disabled"/></span>
  	</span>
  	<span>日期：<input id="rzdate2"  name="rzdate" style="width:20%;text-align: left;" disabled="disabled"/></span>
- 	<span>人员：<input id="rymc"  name="rymc"style="width:20%;text-align: left;" disabled="disabled"/></span>
+ 	<span>岗位：<input id="jobname"  name="jobname"style="width:20%;text-align: left;" /></span>
  </div>
   <table cellSpacing=0 cellPadding=0  style="width:100%;table-layout:fixed;border-collapse:collapse">
 	<tr style="display: none">
@@ -112,10 +113,14 @@
     var lx = '${lx?default(0)}';
     var xmmc = '${xmmc?default(0)}';
     var rymc = '${rymc?default(0)}';
+    var job = '${job?default(0)}';
 
 	$("#xmmc").val(xmmc);
 	$("#rymc").val(rymc);
 	$("#rzdate2").val(dqrq);
+	if(job!=0){
+		$("#jobname").val(job);
+	}
 	    
     $(function() {
         //初始化控件
