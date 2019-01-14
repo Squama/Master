@@ -66,7 +66,7 @@ public class OrgServiceImpl extends BaseServiceImpl implements OrgService {
 
     public boolean referByUser(String orgId) {
         Org org = this.get(Org.class, orgId);
-        String sql = "select id from tbl_user u left join tbl_org o on u.dept_id=o.id " +
+        String sql = "select u.id from tbl_user u left join tbl_org o on u.dept_id=o.id " +
                 " where o.levelCode like :levelCode";
         Map<String,Object> param=new HashMap<>();
         param.put("levelCode",org.getLevelCode()+"%");
