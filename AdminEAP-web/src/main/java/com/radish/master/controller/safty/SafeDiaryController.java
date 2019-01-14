@@ -167,6 +167,7 @@ public class SafeDiaryController {
 			lrz.setJobname(rz.getJobname());
 			lrz.setZgnr(rz.getZgnr());
 			baseService.update(lrz);
+			r.setCode(rzid);
 		}
 		return r;
 	}
