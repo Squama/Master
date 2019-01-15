@@ -129,5 +129,6 @@
 		<column key="matname" header="材料名称" operator="like" width="100"  />
 		<column key="create_name" header="创建人" operator="like" width="100"  />
 		<column key="create_time" header="创建时间" operator="like" width="80" allowSort="true" dateFormat="yyyy-mm-dd" />
+		 <column key="id" header="图片" width="80" fnRender="fnRenderfj"/>
 	</query>
 </queryContext>
