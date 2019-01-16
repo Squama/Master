@@ -165,6 +165,7 @@ public class ProjectDiaryController {
 			lrz.setRemark(rz.getRemark());
 			lrz.setJobname(rz.getJobname());
 			baseService.update(lrz);
+			r.setCode(rzid);
 		}
 		return r;
 	}

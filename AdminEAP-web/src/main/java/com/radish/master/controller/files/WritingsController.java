@@ -10,6 +10,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -37,16 +38,20 @@ import com.cnpc.framework.base.entity.Org;
 import com.cnpc.framework.base.entity.User;
 import com.cnpc.framework.base.pojo.FileResult;
 import com.cnpc.framework.base.pojo.Result;
+import com.cnpc.framework.base.pojo.TreeNode;
 import com.cnpc.framework.base.service.BaseService;
 import com.cnpc.framework.utils.DateUtil;
 import com.cnpc.framework.utils.FileUtil;
 import com.cnpc.framework.utils.PropertiesUtil;
 import com.cnpc.framework.utils.SecurityUtil;
 import com.cnpc.framework.utils.StrUtil;
+import com.cnpc.framework.utils.TreeUtil;
 import com.radish.master.entity.files.Writings;
 import com.radish.master.entity.files.WritingsDept;
 import com.radish.master.entity.files.WritingsFile;
 import com.radish.master.entity.files.WritingsLook;
+import com.radish.master.entity.safty.SafeFile;
+import com.radish.master.pojo.OptionsDept;
 import com.radish.master.system.FileHelper;
 
 @Controller
@@ -502,47 +507,46 @@ private String prefix ="workmanage/writings/";
 	    	String fjid = request.getParameter("fjid");
 	    	Writings wj = baseService.get(Writings.class, fjid);
 	    	
-	    	String bmids = request.getParameter("bmids");
+	    	String bmids = request.getParameter("bmids");//部门id组合
+	    	String ryids = request.getParameter("ryids");//人员id组合
 	    	if(bmids.indexOf(",")<0){//单选
-	    		Org bm = baseService.get(Org.class, bmids);
 	    		WritingsDept jsbm = new WritingsDept();
 	    		jsbm.setDeptid(bmids);
 	    		jsbm.setWritingid(fjid);
 	    		baseService.save(jsbm);
-	    		List<User> us = baseService.find(" from User where deptId='"+bmids+"'");
-	    		for(User u :us){
-	    			WritingsLook l = new WritingsLook();
-	    			l.setIslook("0");
-	    			l.setLookid(u.getId());
-	    			l.setLookname(u.getName());
-	    			l.setDeptName(bm.getName());
-	    			//l.setCreateDate(new Date());
-	    			l.setWritingid(fjid);
-	    			baseService.save(l);
-	    		}
-	    		
 	    	}else{//多选
 	    		String[] ids = bmids.split(",");
 	    		for(int i =0;i<ids.length;i++){
 	    			String bmid = ids[i];
-	    			Org bm = baseService.get(Org.class, bmid);
 		    		WritingsDept jsbm = new WritingsDept();
 		    		jsbm.setDeptid(bmid);
 		    		jsbm.setWritingid(fjid);
 		    		baseService.save(jsbm);
-		    		List<User> us = baseService.find(" from User where deptId='"+bmid+"'");
-		    		for(User u :us){
-		    			WritingsLook l = new WritingsLook();
-		    			l.setIslook("0");
-		    			l.setLookid(u.getId());
-		    			l.setLookname(u.getName());
-		    			l.setDeptName(bm.getName());
-		    			//l.setCreateDate(new Date());
-		    			l.setWritingid(fjid);
-		    			baseService.save(l);
-		    		}
 	    		}
 	    	}
+	    	if(ryids.indexOf(",")<0){//单选
+	    		User u = baseService.get(User.class, ryids);
+	    		WritingsLook l = new WritingsLook();
+				l.setIslook("0");
+				l.setLookid(u.getId());
+				l.setLookname(u.getName());
+				l.setDeptName(u.getDeptName());
+				l.setWritingid(fjid);
+				baseService.save(l);
+	    	}else{
+	    		String[] ids = ryids.split(",");
+	    		for(int i =0;i<ids.length;i++){
+	    			User u = baseService.get(User.class, ids[i]);
+		    		WritingsLook l = new WritingsLook();
+					l.setIslook("0");
+					l.setLookid(u.getId());
+					l.setLookname(u.getName());
+					l.setDeptName(u.getDeptName());
+					l.setWritingid(fjid);
+					baseService.save(l);
+	    		}
+	    	}
+	    	
 	    	wj.setIssend("1");
 	    	baseService.update(wj);
 	    	r.setSuccess(true);
@@ -572,5 +576,32 @@ private String prefix ="workmanage/writings/";
 			baseService.update(l);
 			
 			return prefix +"addIndex";
+		}
+	    @RequestMapping("/deptTree")
+		@ResponseBody
+		public List<TreeNode> deptTree(){
+			// 获取数据
+	        String hql = "select id value,name data,pname pdata  from v_depts  ";
+	        List<OptionsDept> funcs = baseService.findMapBySql(hql, new Object[]{}, new Type[]{StringType.INSTANCE}, OptionsDept.class);
+	        Map<String, TreeNode> nodelist = new LinkedHashMap<String, TreeNode>();
+	        for (OptionsDept func : funcs) {
+	        	//部门级
+	        	TreeNode node = new TreeNode();
+	            node.setText(func.getPdata()+"——"+func.getData());
+	            node.setId(func.getValue());
+	            nodelist.put(node.getId(), node);
+	        	List<User> rys = baseService.find(" from User where dept_id='"+func.getValue()+"'");
+	        	for(User ry:rys){
+	        		//人员级
+	        		TreeNode node1 = new TreeNode();
+	        		node1.setText(ry.getName());
+	        		node1.setId(ry.getId());
+	        		node1.setParentId(func.getValue());
+	        		//node1.setLevelCode(func.getLevelCode());
+		            nodelist.put(node1.getId(), node1);
+	        	}
+	        }
+	        // 构造树形结构
+	        return TreeUtil.getNodeList(nodelist);
 		}
 }
