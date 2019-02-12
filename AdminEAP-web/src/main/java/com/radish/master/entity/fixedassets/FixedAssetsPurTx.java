@@ -4,6 +4,8 @@
 package com.radish.master.entity.fixedassets;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 import com.cnpc.framework.annotation.Header;
 import com.cnpc.framework.base.entity.BaseEntity;
@@ -15,14 +17,15 @@ import com.cnpc.framework.base.entity.BaseEntity;
 * Modify Information:
 * Author        Date          Description
 * ============ =========== ============================
-* dongyan      2019年1月9日    Create this file
+* dongyan      2019年2月12日    Create this file
  * </pre>
  * 
  */
-
-public class FixedAssets extends BaseEntity {
-
-    private static final long serialVersionUID = 8787799691593939611L;
+@Entity
+@Table(name = "tbl_fixedassets_pur_tx")
+public class FixedAssetsPurTx extends BaseEntity {
+    
+    private static final long serialVersionUID = 1133208699894833264L;
 
     @Header(name = "名称")
     @Column(name = "name")
@@ -35,14 +38,6 @@ public class FixedAssets extends BaseEntity {
     @Header(name = "型号")
     @Column(name = "model")
     private String model;
-
-    @Header(name = "所属库存")
-    @Column(name = "belonged_stock")
-    private String belongedStock;
-
-    @Header(name = "保管部门")
-    @Column(name = "keeped_dept")
-    private String keepedDept;
 
     @Header(name = "规格")
     @Column(name = "norm")
@@ -63,6 +58,14 @@ public class FixedAssets extends BaseEntity {
     @Header(name = "生产厂商")
     @Column(name = "vendor")
     private String vendor;
+
+    @Header(name = "渠道ID")
+    @Column(name = "channel_id")
+    private String channelID;
+
+    @Header(name = "渠道名称")
+    @Column(name = "channel_name")
+    private String channelName;
 
     public String getName() {
         return name;
@@ -86,22 +89,6 @@ public class FixedAssets extends BaseEntity {
 
     public void setModel(String model) {
         this.model = model;
-    }
-
-    public String getBelongedStock() {
-        return belongedStock;
-    }
-
-    public void setBelongedStock(String belongedStock) {
-        this.belongedStock = belongedStock;
-    }
-
-    public String getKeepedDept() {
-        return keepedDept;
-    }
-
-    public void setKeepedDept(String keepedDept) {
-        this.keepedDept = keepedDept;
     }
 
     public String getNorm() {
@@ -142,6 +129,22 @@ public class FixedAssets extends BaseEntity {
 
     public void setVendor(String vendor) {
         this.vendor = vendor;
+    }
+
+    public String getChannelID() {
+        return channelID;
+    }
+
+    public void setChannelID(String channelID) {
+        this.channelID = channelID;
+    }
+
+    public String getChannelName() {
+        return channelName;
+    }
+
+    public void setChannelName(String channelName) {
+        this.channelName = channelName;
     }
 
 }

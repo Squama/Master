@@ -4,6 +4,8 @@
 package com.radish.master.entity.fixedassets;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 import com.cnpc.framework.annotation.Header;
 import com.cnpc.framework.base.entity.BaseEntity;
@@ -19,8 +21,9 @@ import com.cnpc.framework.base.entity.BaseEntity;
  * </pre>
  * 
  */
-
-public class FixedAssetsTx extends BaseEntity {
+@Entity
+@Table(name = "tbl_fixedassets_stk_tx")
+public class FixedAssetsStkTx extends BaseEntity {
 
     private static final long serialVersionUID = 2329499931060350521L;
 
