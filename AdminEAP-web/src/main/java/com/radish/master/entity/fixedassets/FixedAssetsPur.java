@@ -23,9 +23,13 @@ import com.cnpc.framework.base.entity.BaseEntity;
  */
 @Entity
 @Table(name = "tbl_fixedassets_pur")
-public class FixedAssetsPur extends BaseEntity{
+public class FixedAssetsPur extends BaseEntity {
 
     private static final long serialVersionUID = -8219170334393570630L;
+
+    @Header(name = "请购单名称")
+    @Column(name = "name")
+    private String name;
 
     @Header(name = "保管部门ID")
     @Column(name = "dept_id")
@@ -58,6 +62,14 @@ public class FixedAssetsPur extends BaseEntity{
     @Header(name = "采购合同编号")
     @Column(name = "file_id")
     private String fileID;
+
+    @Header(name = "状态")
+    @Column(name = "status")
+    private String status;
+
+    @Header(name = "申请人")
+    @Column(name = "applyer")
+    private String applyer;
 
     public String getDeptID() {
         return deptID;
@@ -121,6 +133,30 @@ public class FixedAssetsPur extends BaseEntity{
 
     public void setFileID(String fileID) {
         this.fileID = fileID;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getApplyer() {
+        return applyer;
+    }
+
+    public void setApplyer(String applyer) {
+        this.applyer = applyer;
     }
 
 }

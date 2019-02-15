@@ -12,7 +12,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.List;
 
 @Entity
-@Table(name = "tbl_function_copy")
+@Table(name = "tbl_function")
 @JsonIgnoreProperties(value = { "hibernateLazyInitializer", "handler", "fieldHandler" })
 public class Function extends BaseEntity implements Comparable<Function> {
 

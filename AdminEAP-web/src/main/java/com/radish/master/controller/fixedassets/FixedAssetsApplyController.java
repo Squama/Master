@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 * 
 */
 @Controller
-@RequestMapping("/fixedassets")
-public class FixedAssetsQueryController {
+@RequestMapping("/fixedassets/apply")
+public class FixedAssetsApplyController {
 
 }

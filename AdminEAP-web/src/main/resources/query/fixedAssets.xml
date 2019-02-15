@@ -1,5 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <queryContext xmlns="http://www.example.org/query" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.example.org/query query.xsd">
     
+    <query id="fixedassets_apply_list" key="id" tableName="请购表" className="com.radish.master.entity.fixedassets.FixedAssetsPur" widthType="px" pageSize="20">
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="purNo" header="编号" width="150"/>
+        <column key="name" header="名称" allowSort="true" width="150"/>
+        <column key="deptName" header="部门" allowSort="true" width="150"/>
+        <column key="applyer" header="申请人" width="150"/>
+        <column key="createDateTime" header="申请时间" classType="String" width="150" dateFormat="yyyy-mm-dd"/>
+        <column key="status" header="状态" width="80" render="10=新建"/>
+        <column key="id" header="操作" width="80" fnRender="fnRenderOperate"/>
+    </query>
+    
+    <query id="fixedassets_apply_tx_list" key="id" tableName="请购表" className="com.radish.master.entity.fixedassets.FixedAssetsPurTx" widthType="px" pageSize="20">
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="name" header="名称" allowSort="true" width="150"/>
+        <column key="englishName" header="英文名称" width="150"/>
+        <column key="model" header="型号" width="150"/>
+        <column key="norm" header="规格" width="150"/>
+        <column key="unit" header="单位" width="150"/>
+        <column key="price" header="单价" width="150"/>
+        <column key="quantity" header="数量" width="150"/>
+        <column key="vendor" header="生产厂商" width="150"/>
+        <column key="channelName" header="渠道" width="150"/>
+        <column key="id" header="操作" width="80" fnRender="fnRenderOperate"/>
+    </query>
+    
+    <query id="fixedassets_stock_list" key="id" tableName="请购表" className="com.radish.master.entity.fixedassets.FixedAssetsStk" widthType="px" pageSize="20">
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="name" header="名称" allowSort="true" width="150"/>
+        <column key="englishName" header="英文名称" width="150"/>
+        <column key="model" header="型号" width="150"/>
+        <column key="keepedDeptName" header="保管部门" width="150"/>
+        <column key="price" header="单价" width="150"/>
+        <column key="quantity" header="数量" width="150"/>
+        <column key="quantityAvl" header="可用数量" width="150"/>
+        <column key="vendor" header="生产厂商" width="150"/>
+        <column key="id" header="操作" width="80" fnRender="fnRenderOperate"/>
+    </query>
+    
+    <query id="fixedassets_stock_tx_list" key="id" tableName="请购表" className="com.radish.master.entity.fixedassets.FixedAssetsStkTx" widthType="px" pageSize="20">
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="operation" header="操作类型" allowSort="true" width="150"/>
+        <column key="amount" header="发生额" width="150"/>
+        <column key="balance" header="余额" width="150"/>
+        <column key="remark" header="备注" width="150"/>
+        <column key="operator" header="操作员" width="150"/>
+        <column key="operateTime" header="操作时间" width="150"/>
+        <column key="id" header="操作" width="80" fnRender="fnRenderOperate"/>
+    </query>
     
 </queryContext>

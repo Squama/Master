@@ -14,10 +14,10 @@ import com.cnpc.framework.base.entity.BaseEntity;
  * 类说明
  * 
  * <pre>
-* Modify Information:
-* Author        Date          Description
-* ============ =========== ============================
-* dongyan      2019年2月12日    Create this file
+ * Modify Information:
+ * Author        Date          Description
+ * ============ =========== ============================
+ * dongyan      2019年2月12日    Create this file
  * </pre>
  * 
  */
