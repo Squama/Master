@@ -52,8 +52,8 @@ public class FixedAssetsPur extends BaseEntity {
     private String reason;
 
     @Header(name = "购买用途")
-    @Column(name = "use")
-    private String use;
+    @Column(name = "purpose")
+    private String purpose;
 
     @Header(name = "备注")
     @Column(name = "remark")
@@ -70,6 +70,13 @@ public class FixedAssetsPur extends BaseEntity {
     @Header(name = "申请人")
     @Column(name = "applyer")
     private String applyer;
+
+    /**
+     * 10=固定资产 20=器具、工具 30=办公用品
+     */
+    @Header(name = "单据类型")
+    @Column(name = "fa_type")
+    private String faType;
 
     public String getDeptID() {
         return deptID;
@@ -111,12 +118,12 @@ public class FixedAssetsPur extends BaseEntity {
         this.reason = reason;
     }
 
-    public String getUse() {
-        return use;
+    public String getPurpose() {
+        return purpose;
     }
 
-    public void setUse(String use) {
-        this.use = use;
+    public void setPurpose(String purpose) {
+        this.purpose = purpose;
     }
 
     public String getRemark() {
@@ -157,6 +164,14 @@ public class FixedAssetsPur extends BaseEntity {
 
     public void setApplyer(String applyer) {
         this.applyer = applyer;
+    }
+
+    public String getFaType() {
+        return faType;
+    }
+
+    public void setFaType(String faType) {
+        this.faType = faType;
     }
 
 }

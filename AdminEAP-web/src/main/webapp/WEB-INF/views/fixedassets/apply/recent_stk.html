@@ -1,0 +1,126 @@
+<script type="text/javascript">
+ $.fn.modal.Constructor.prototype.enforceFocus = function () {};
+ </script>
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><li class="fa fa-remove"></li></button>
+    <h5 class="modal-title">选择已有资产</h5>
+</div>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <form id="assets-stk-form" name="assets-stk-form" class="form-horizontal">
+                <input type="hidden" name="purID" value="${purID}">
+                <input type="hidden" name="faType" value="${faType}">
+                <div class="box box-info">
+                    <div class="box-header with-border">
+                    </div>
+                    <div class="box-body">
+                        <!-- 内容 -->
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">选择资产<span style="color:red">*</span></label>
+                                <div class="col-sm-5">
+                                    <select id="assetsStkID" class="form-control select2" name="assetsStkID" style="width:100%;">
+                                        <option selected="selected" value="">选择一个已有资产</option>
+                                    </select>
+                                </div>
+                            </div> 
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">数量：<span style="color:red">*</span></label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" id="num" name="num" placeholder="数量" onkeyup="value=value.replace(/[^\d.]/g,'')">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">型号：<span style="color:red">*</span></label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" id="model" name="model" readonly="readonly">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">规格：<span style="color:red">*</span></label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" id="norm" name="norm" readonly="readonly">                                
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">生产厂商：<span style="color:red">*</span></label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" id="vendor" name="vendor" readonly="readonly">                                
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer text-center" id="assetsstksave">
+                        <button type="submit" class="btn btn-primary" data-btn-type="next">保存</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<script>
+    $.fn.modal.Constructor.prototype.enforceFocus =function(){};
+    var assetsstkform = $("#assets-stk-form").form({baseEntity: false}), initData={};
+    var stkOptions = '${stkOptions?default(0)}',options=0;
+    if(stkOptions != 0){
+    	faOptions = JSON.parse(stkOptions);
+    }
+    $(function (){
+        if(faOptions != 0){
+            for (var i = 0, len = faOptions.length; i < len; i++) {
+                var option = faOptions[i];
+                $('#assetsStkID').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+            }
+            
+            $('#assetsStkID').select2();
+            
+            $('#assetsStkID').bind("change", function () {
+                var stkID = $(this).val();
+                if (stkID === "") {
+                    return false;
+                }
+                //加载库存详情
+                ajaxPost(basePath+"/fixedassets/apply/getstkdet",{stkID:stkID},function(data){
+                	assetsstkform.initFormData(data);
+                });
+                //子项加载结束
+            }); 
+        }
+        
+        $("#assets-stk-form").bootstrapValidator({
+            message: '请输入有效值',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            submitHandler: function () {
+                var formData = assetsstkform.getFormSimpleData();
+                ajaxPost(basePath + '/fixedassets/apply/recentstk/save', formData, function (data) {
+                    if (data.success) {
+                        modals.hideWin(winId);
+                    } else {
+                        modals.error(data.message);
+                    }
+                });
+            },
+            fields: {
+                "assetsStkID": {
+                    validators: {
+                        notEmpty: {message: '请选择一个资产'}
+                    }
+                },
+                "num": {
+                    validators: {
+                        notEmpty: {message: '数量不能为空'}
+                    }
+                }
+            }
+        });
+        
+        //初始化控件
+        assetsstkform.initComponent();
+    });
+</script>

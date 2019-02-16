@@ -78,6 +78,13 @@ public class FixedAssetsStk extends BaseEntity {
     @Column(name = "vendor")
     private String vendor;
 
+    /**
+     * 10=固定资产 20=器具、工具 30=办公用品
+     */
+    @Header(name = "单据类型")
+    @Column(name = "fa_type")
+    private String faType;
+
     public String getName() {
         return name;
     }
@@ -172,6 +179,14 @@ public class FixedAssetsStk extends BaseEntity {
 
     public void setQuantityAvl(String quantityAvl) {
         this.quantityAvl = quantityAvl;
+    }
+
+    public String getFaType() {
+        return faType;
+    }
+
+    public void setFaType(String faType) {
+        this.faType = faType;
     }
 
 }

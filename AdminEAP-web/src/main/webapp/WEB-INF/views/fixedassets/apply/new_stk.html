@@ -1,0 +1,147 @@
+<script type="text/javascript">
+ $.fn.modal.Constructor.prototype.enforceFocus = function () {};
+ </script>
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><li class="fa fa-remove"></li></button>
+    <h5 class="modal-title">采购新类别资产</h5>
+</div>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <form id="assets-stk-form" name="assets-stk-form" class="form-horizontal">
+                <input type="hidden" name="purID" value="${purID}">
+                <input type="hidden" name="faType" value="${faType}">
+                <div class="box box-info">
+                    <div class="box-header with-border">
+                    </div>
+                    <div class="box-body">
+                        <!-- 内容 -->
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">名称<span style="color:red">*</span></label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" id="name" name="name" placeholder="名称">
+                                </div>
+                            </div> 
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">英文名称<span style="color:red">*</span></label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" id="englishName" name="englishName" placeholder="英文名称">
+                                </div>
+                            </div> 
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">型号：<span style="color:red">*</span></label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" id="model" name="model" placeholder="型号">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">规格：<span style="color:red">*</span></label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" id="norm" name="norm" placeholder="规格">                                
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">单位：<span style="color:red">*</span></label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" id="unit" name="unit" placeholder="单位">                                
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">单价（元）：<span style="color:red">*</span></label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" id="price" name="price" placeholder="价格" onkeyup="value=value.replace(/[^\d.]/g,'')">                                
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">数量：<span style="color:red">*</span></label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" id="quantity" name="quantity" placeholder="数量" onkeyup="value=value.replace(/[^\d.]/g,'')">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">生产厂商：<span style="color:red">*</span></label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" id="vendor" name="vendor" placeholder="生产厂商">                                
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer text-center" id="assetsstksave">
+                        <button type="submit" class="btn btn-primary" data-btn-type="next">保存</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<script>
+    $.fn.modal.Constructor.prototype.enforceFocus =function(){};
+    var assetsstkform = $("#assets-stk-form").form({baseEntity: false}), initData={};
+    $(function (){
+        $("#assets-stk-form").bootstrapValidator({
+            message: '请输入有效值',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            submitHandler: function () {
+                var formData = assetsstkform.getFormSimpleData();
+                ajaxPost(basePath + '/fixedassets/apply/newstk/save', formData, function (data) {
+                    if (data.success) {
+                        modals.hideWin(winId);
+                    } else {
+                        modals.error(data.message);
+                    }
+                });
+            },
+            fields: {
+                "name": {
+                    validators: {
+                        notEmpty: {message: '名称不能为空'}
+                    }
+                },
+                "englishName": {
+                    validators: {
+                        notEmpty: {message: '英文名称不能为空'}
+                    }
+                },
+                "model": {
+                    validators: {
+                        notEmpty: {message: '型号不能为空'}
+                    }
+                },
+                "norm": {
+                    validators: {
+                        notEmpty: {message: '规格不能为空'}
+                    }
+                },
+                "unit": {
+                    validators: {
+                        notEmpty: {message: '单位不能为空'}
+                    }
+                },
+                "price": {
+                    validators: {
+                        notEmpty: {message: '单价不能为空'}
+                    }
+                },
+                "quantity": {
+                    validators: {
+                        notEmpty: {message: '数量不能为空'}
+                    }
+                },
+                "vendor": {
+                    validators: {
+                        notEmpty: {message: '生产厂商不能为空'}
+                    }
+                }
+            }
+        });
+        
+        //初始化控件
+        assetsstkform.initComponent();
+    });
+</script>

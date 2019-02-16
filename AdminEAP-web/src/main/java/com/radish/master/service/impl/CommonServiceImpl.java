@@ -33,6 +33,16 @@ public class CommonServiceImpl extends BaseServiceImpl implements CommonService 
     }
 
     @Override
+    public List<Options> getDeptCombobox() {
+        return this.findMapBySql("select code value, name data from tbl_org", new Object[] {}, new Type[] {}, Options.class);
+    }
+
+    @Override
+    public List<Options> getAssetsCombobox(String type) {
+        return this.findMapBySql("select id value, name data from tbl_fixedassets_stk where fa_type=?", new Object[] {type}, new Type[] {StringType.INSTANCE}, Options.class);
+    }
+    
+    @Override
     public List<Options> getEducationCombobox() {
         return this.findMapBySql("select code value, name data from tbl_dict where parent_id = '402881f053cd670d0153cd6d6be40000' ", new Object[] {},
                 new Type[] { StringType.INSTANCE }, Options.class);
@@ -43,13 +53,13 @@ public class CommonServiceImpl extends BaseServiceImpl implements CommonService 
         return this.findMapBySql("select code value, name data from tbl_dict where parent_id = '402881f053e55e710153e570c0890001'", new Object[] {},
                 new Type[] { StringType.INSTANCE }, Options.class);
     }
-    
+
     @Override
     public List<Options> getFeeCombobox() {
         return this.findMapBySql("select remark value, name data from tbl_dict where parent_id = '40280cac5f2edcd6015f2ee042510099'", new Object[] {},
                 new Type[] { StringType.INSTANCE }, Options.class);
     }
-    
+
     @Override
     public List<Options> getFeeManageCombobox() {
         return this.findMapBySql("select remark value, name data from tbl_dict where parent_id = '40280cac5f2edcd6015f2ee042510098'", new Object[] {},
@@ -71,7 +81,7 @@ public class CommonServiceImpl extends BaseServiceImpl implements CommonService 
     public List<Options> getWorkerCombobox() {
         return this.findMapBySql("select id value, name data from tbl_worker", new Object[] {}, new Type[] { StringType.INSTANCE }, Options.class);
     }
-    
+
     @Override
     public List<Options> getTeamComboboxByProject(String projectID) {
         return this.findMapBySql("select id value, team_name data from tbl_project_team where project_id=? AND status != '30'", new Object[] { projectID },

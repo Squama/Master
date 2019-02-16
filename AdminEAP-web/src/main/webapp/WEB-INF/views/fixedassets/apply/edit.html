@@ -1,0 +1,222 @@
+<script src="${basePath}/resources/common/js/calculate.js"></script>
+<script type="text/javascript">
+ $.fn.modal.Constructor.prototype.enforceFocus = function () {};
+ </script>
+ <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><li class="fa fa-remove"></li></button>
+    <h5 class="modal-title">请购</h5>
+</div>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <form id="assets-form" name="assets-form" class="form-horizontal">
+                <input type="hidden" name="id">
+                <input type="hidden" name="deptID" id="deptID">
+                <input type="hidden" name="faType" id="faType" value="${faType}">
+                <div class="box box-info">
+                    <div class="box-header with-border">
+                        <span>
+                            <i class="fa fa-edit">添加请购</i>
+                        </span>
+                    </div>
+                    <div class="box-body">
+                        <!-- 内容 -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-sm-6 control-label">编号<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" id="purNo" name="purNo" placeholder="编号">
+                                </div>
+                            </div> 
+                            <div class="form-group">
+                                <label class="col-sm-6 control-label">部门<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" id="deptName" name="deptName" readonly="readonly">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">请购单名称<span style="color:red">*</span></label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" id="name" name="name" placeholder="请购单名称">
+                                </div>
+                            </div> 
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">库房<span style="color:red">*</span></label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" id="stock" name="stock" value="总库" readonly="readonly">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">请购原因<span style="color:red">*</span></label>
+                                <div class="col-sm-5">
+                                    <textarea class="form-control" id="reason" name="reason" rows="4" cols="100"></textarea>
+                                </div>
+                            </div> 
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">请购用途<span style="color:red">*</span></label>
+                                <div class="col-sm-5">
+                                    <textarea class="form-control" id="purpose" name="purpose" rows="4" cols="100"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer text-center" id="assetsformsave">
+                        <button type="submit" class="btn btn-primary" data-btn-type="next">保存并编辑明细</button>
+                    </div>
+                </div>
+            </form>
+            <div class="box box-success dn" id="assets_tx">
+                <div class="box-header with-border">
+                    <span>
+                        <i class="fa fa-files-o">请购明细</i>
+                    </span>
+                </div>
+                <div class="dataTables_filter" style="text-align:center;margin-top:5px;">
+                   <div class="btn-group">
+                       <button type="button" class="btn btn-primary" id="add_stock">已有库存增购</button>
+                       <button type="button" class="btn btn-info" id="new_stock">采购新类别</button>
+                   </div>
+                </div>
+                <div class="dataTables_filter" id="searchDivPDet" style="text-align:center;height:1px;">
+                   <input type="search" name="purID" class="form-control" operator="eq" style="display:none;">
+                   <div class="btn-group">
+                       <button type="button" class="btn btn-primary" data-btn-type="search" id="refresh" style="display:none;">查询</button>
+                   </div>
+                </div>
+                <div class="box-body">
+                    <!-- 内容 -->
+                    <table id="assets_tx_table" class="table table-bordered table-striped table-hover">
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    $.fn.modal.Constructor.prototype.enforceFocus =function(){};
+    var assetsform = $("#assets-form").form({baseEntity: false}), initData={}, faOptions=0;
+    var assetsTxTable, winId = "assetsDetWin";
+    
+    var purID="${purID?default(0)}",deptID="${deptID?default(0)}",deptName="${deptName?default(0)}";
+    $('#purID',$('#searchDivPDet')).val(purID);
+    $('#deptID',$('#assets-form')).val(deptID);
+    $('#deptName',$('#assets-form')).val(deptName);
+    
+    if(purID != 0 && deptID == 'nondept'){
+    	modals.closeWin(assetsWinId);
+    	modals.error("请先为当前操作员分配部门！！");
+    }
+    
+    var assetsEditObject = {
+            deleteDetail: function (rowId) {
+                ajaxPost(basePath + '/fixedassets/apply/deletedetail', {id:rowId}, function (data) {
+                    if (data.success) {
+                    	assetsTxTable.table.page('first').draw(false);
+                    } else {
+                        modals.error(data.message);
+                    }
+                });
+            },
+            initBtn:function(){
+            	$('#add_stock').on('click', function(){
+            		modals.openWin({
+                        winId:winId,
+                        width:'1200px',
+                        url:basePath+"/fixedassets/apply/addstock?faType="+ $('#faType',$('#assets-form')).val() +"&purID=" + $('#purID',$('#searchDivPDet')).val(),
+                        hideFunc:function(){
+                        	assetsTxTable.reloadData();
+                        }
+                    });
+            	});
+            	$('#new_stock').on('click', function(){
+                    modals.openWin({
+                        winId:winId,
+                        width:'1200px',
+                        url:basePath+"/fixedassets/apply/newstock?faType="+ $('#faType',$('#assets-form')).val() +"&purID=" + $('#purID',$('#searchDivPDet')).val(),
+                        hideFunc:function(){
+                            assetsTxTable.reloadData();
+                        }
+                    });
+                });
+            }
+    }
+    
+    $(function (){
+    	assetsTxTable = new CommonTable("assets_tx_table", "fixedassets_apply_tx_list", "searchDivPDet", {
+            "ordering" : false,
+            "lengthChange": false,
+            "displayLength": 20,
+            "scrollY": "200px",
+            "scrollCollapse": true
+        });
+        
+        $("#assets-form").bootstrapValidator({
+            message: '请输入有效值',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            submitHandler: function () {
+                var formData = assetsform.getFormSimpleData();
+                ajaxPost(basePath + '/fixedassets/apply/save', formData, function (data) {
+                    if (data.success) {
+                        $('#purID',$('#searchDivPDet')).val(data.data.id);
+                        
+                        $('#assets_tx').show();
+                        $('#assetsformsave').hide();
+                        
+                        $('.form-control',$('#assets-form')).attr("disabled","disabled");
+                    } else {
+                        modals.error(data.message);
+                    }
+                });
+            },
+            fields: {
+                "purNo": {
+                    validators: {
+                        notEmpty: {message: '请购单编号不能为空'}
+                    }
+                },
+                "name": {
+                    validators: {
+                        notEmpty: {message: '请购单名称不能为空'}
+                    }
+                },
+                "reason": {
+                    validators: {
+                        notEmpty: {message: '请购原因不能为空'}
+                    }
+                },
+                "purpose": {
+                    validators: {
+                        notEmpty: {message: '请购用途不能为空'}
+                    }
+                }
+            }
+        });
+        
+        //编辑回填
+        if(purID != 0){
+            ajaxPost(basePath+"/fixedassets/apply/getpur",{purID:purID},function(data){
+            	$('#assets_tx').show();
+                $('#assetsformsave').hide();
+                assetsform.initFormData(data);
+                $('.form-control',$('#assets-form')).attr("disabled","disabled");
+            })
+        } 
+        
+        //初始化控件
+        assetsform.initComponent();
+        assetsEditObject.initBtn();
+    });
+    
+    function fnRenderOperate(value){
+        return "<a href='javascript:void(0)' onclick='assetsEditObject.deleteDetail(\"" + value + "\")'>删除</a>";
+    }
+</script>

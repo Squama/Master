@@ -24,8 +24,16 @@ import com.cnpc.framework.base.entity.BaseEntity;
 @Entity
 @Table(name = "tbl_fixedassets_pur_tx")
 public class FixedAssetsPurTx extends BaseEntity {
-    
+
     private static final long serialVersionUID = 1133208699894833264L;
+
+    @Header(name = "与库存对应")
+    @Column(name = "stk_id")
+    private String stkID;
+
+    @Header(name = "主表主键")
+    @Column(name = "pur_id")
+    private String purID;
 
     @Header(name = "名称")
     @Column(name = "name")
@@ -66,6 +74,21 @@ public class FixedAssetsPurTx extends BaseEntity {
     @Header(name = "渠道名称")
     @Column(name = "channel_name")
     private String channelName;
+
+    /**
+     * 10=固定资产 20=器具、工具 30=办公用品
+     */
+    @Header(name = "单据类型")
+    @Column(name = "fa_type")
+    private String faType;
+
+    public String getPurID() {
+        return purID;
+    }
+
+    public void setPurID(String purID) {
+        this.purID = purID;
+    }
 
     public String getName() {
         return name;
@@ -145,6 +168,22 @@ public class FixedAssetsPurTx extends BaseEntity {
 
     public void setChannelName(String channelName) {
         this.channelName = channelName;
+    }
+
+    public String getStkID() {
+        return stkID;
+    }
+
+    public void setStkID(String stkID) {
+        this.stkID = stkID;
+    }
+
+    public String getFaType() {
+        return faType;
+    }
+
+    public void setFaType(String faType) {
+        this.faType = faType;
     }
 
 }
