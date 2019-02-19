@@ -88,4 +88,11 @@ public class CommonServiceImpl extends BaseServiceImpl implements CommonService 
                 new Type[] { StringType.INSTANCE }, Options.class);
     }
 
+    // 首字母大写
+    @Override
+    public String captureName(String name) {
+        char[] cs = name.toCharArray();
+        cs[0] -= 32;
+        return String.valueOf(cs);
+    }
 }

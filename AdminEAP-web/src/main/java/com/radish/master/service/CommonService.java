@@ -44,4 +44,6 @@ public interface CommonService extends BaseService{
     
     List<Options> getTeamComboboxByProject(String projectID);
     
+    String captureName(String name);
+    
 }

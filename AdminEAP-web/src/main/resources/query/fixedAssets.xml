@@ -9,11 +9,11 @@
         <column key="deptName" header="部门" allowSort="true" width="150"/>
         <column key="applyer" header="申请人" width="150"/>
         <column key="createDateTime" header="申请时间" classType="String" width="150" dateFormat="yyyy-mm-dd"/>
-        <column key="status" header="状态" width="80" render="10=新建"/>
+        <column key="status" header="状态" width="80" render="10=新建,11=总经理审批,12=采购员填写渠道,13=总经理审批渠道,14=上传合同,15=合同评审,21=项目经理审批,22=总经理审批,23=采购员编辑渠道,24=选择采购渠道,31=总经理审批,40=已生成采购单,50=部分入库,60=已全部入库"/>
         <column key="id" header="操作" width="80" fnRender="fnRenderOperate"/>
     </query>
     
-    <query id="fixedassets_apply_tx_list" key="id" tableName="请购表" className="com.radish.master.entity.fixedassets.FixedAssetsPurTx" widthType="px" pageSize="20">
+    <query id="fixedassets_apply_tx_list" key="id" tableName="请购表明细" className="com.radish.master.entity.fixedassets.FixedAssetsPurTx" widthType="px" pageSize="20">
         <column key="rowIndex" header="序号" width="80"/>
         <column key="id" hidden="true" header="id" width="80"/>
         <column key="name" header="名称" allowSort="true" width="150"/>
@@ -28,7 +28,7 @@
         <column key="id" header="操作" width="80" fnRender="fnRenderOperate"/>
     </query>
     
-    <query id="fixedassets_stock_list" key="id" tableName="请购表" className="com.radish.master.entity.fixedassets.FixedAssetsStk" widthType="px" pageSize="20">
+    <query id="fixedassets_stock_list" key="id" tableName="库存查看表" className="com.radish.master.entity.fixedassets.FixedAssetsStk" widthType="px" pageSize="20">
         <column key="rowIndex" header="序号" width="80"/>
         <column key="id" hidden="true" header="id" width="80"/>
         <column key="name" header="名称" allowSort="true" width="150"/>
@@ -42,7 +42,7 @@
         <column key="id" header="操作" width="80" fnRender="fnRenderOperate"/>
     </query>
     
-    <query id="fixedassets_stock_tx_list" key="id" tableName="请购表" className="com.radish.master.entity.fixedassets.FixedAssetsStkTx" widthType="px" pageSize="20">
+    <query id="fixedassets_stock_tx_list" key="id" tableName="库存明细表" className="com.radish.master.entity.fixedassets.FixedAssetsStkTx" widthType="px" pageSize="20">
         <column key="rowIndex" header="序号" width="80"/>
         <column key="id" hidden="true" header="id" width="80"/>
         <column key="operation" header="操作类型" allowSort="true" width="150"/>
