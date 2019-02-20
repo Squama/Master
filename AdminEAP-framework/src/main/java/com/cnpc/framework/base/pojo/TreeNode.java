@@ -12,6 +12,8 @@ public class TreeNode {
 
     private String parentId;
 
+    private String rightType;
+
     private String levelCode;
 
     private List<TreeNode> nodes;
@@ -86,6 +88,14 @@ public class TreeNode {
     public void setNodes(List<TreeNode> nodes) {
 
         this.nodes = nodes;
+    }
+
+    public String getRightType() {
+        return rightType;
+    }
+
+    public void setRightType(String rightType) {
+        this.rightType = rightType;
     }
 
 }

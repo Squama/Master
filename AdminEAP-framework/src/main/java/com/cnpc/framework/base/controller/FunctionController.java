@@ -72,6 +72,13 @@ public class FunctionController {
         return functionService.getTreeData();
     }
 
+    @RequestMapping(value = "/thirdtreeData", method = RequestMethod.POST)
+    @ResponseBody
+    public List<TreeNode> getThirdTreeData() {
+
+        return functionService.getThirdLevelTreeData();
+    }
+    
     @RequestMapping(value = "/get/{id}", method = RequestMethod.POST)
     @ResponseBody
     public Function get(@PathVariable("id") String id) {

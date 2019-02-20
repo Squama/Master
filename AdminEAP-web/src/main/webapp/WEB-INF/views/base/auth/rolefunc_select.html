@@ -94,6 +94,7 @@
                     break;
                 case "save":
                     var nodes = $("#tree").data("treeview").getChecked();
+                    console.log(nodes);
                     var rflist = [];
                     for (var i = 0; i < nodes.length; i++) {
                         var curNode = nodes[i];
@@ -118,7 +119,7 @@
 
     function initTree(selectNodeId) {
         var treeData = null;
-        ajaxPost(basePath + "/function/treeData", null, function (data) {
+        ajaxPost(basePath + "/function/thirdtreeData", null, function (data) {
             treeData = data;
         });
         $("#tree").treeview({
@@ -126,7 +127,7 @@
             showBorder: true,
             /*expandIcon : "glyphicon glyphicon-stop",
              collapseIcon : "glyphicon glyphicon-unchecked",*/
-            levels: 2,
+            levels: 3,
             showCheckbox: true,
             showIcon: false,
             onNodeSelected: function (event, data) {

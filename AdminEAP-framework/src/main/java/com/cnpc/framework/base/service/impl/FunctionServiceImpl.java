@@ -49,6 +49,27 @@ public class FunctionServiceImpl extends BaseServiceImpl implements FunctionServ
         // 构造树形结构
         return TreeUtil.getNodeList(nodelist);
     }
+    
+    @Override
+    public List<TreeNode> getThirdLevelTreeData() {
+
+        // 获取数据
+        String hql = "from Function order by rightID asc";
+        List<Function> funcs = this.find(hql);
+        Map<String, TreeNode> nodelist = new LinkedHashMap<String, TreeNode>();
+        for (Function func : funcs) {
+            TreeNode node = new TreeNode();
+            node.setText(func.getName() + "(" + func.getRightID() + ")");
+            node.setId(func.getId());
+            node.setParentId(func.getParentId());
+            node.setRightType(func.getRightType());
+            node.setLevelCode(func.getRightID());
+            node.setIcon(func.getIcon());
+            nodelist.put(node.getId(), node);
+        }
+        // 构造树形结构
+        return TreeUtil.getThirdNodeList(nodelist);
+    }
 
     @Override
     public List<Function> getAll() {
