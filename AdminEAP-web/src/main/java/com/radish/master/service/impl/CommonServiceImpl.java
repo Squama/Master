@@ -43,6 +43,11 @@ public class CommonServiceImpl extends BaseServiceImpl implements CommonService 
     }
     
     @Override
+    public List<Options> getAssetsCombobox() {
+        return this.findMapBySql("select id value, name data from tbl_fixedassets_stk", new Object[] {}, new Type[] {}, Options.class);
+    }
+    
+    @Override
     public List<Options> getEducationCombobox() {
         return this.findMapBySql("select code value, name data from tbl_dict where parent_id = '402881f053cd670d0153cd6d6be40000' ", new Object[] {},
                 new Type[] { StringType.INSTANCE }, Options.class);

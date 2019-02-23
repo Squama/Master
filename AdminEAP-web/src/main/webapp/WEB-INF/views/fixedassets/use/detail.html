@@ -19,7 +19,7 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">选择资产<span style="color:red">*</span></label>
                                 <div class="col-sm-5">
-                                    <select id="assetsStkID" class="form-control select2" name="stkID" style="width:100%;">
+                                    <select id="assetsStkID" class="form-control select2" name="stkID" style="width:100%;" disabled="disabled">
                                         <option selected="selected" value="">选择一个已有资产</option>
                                     </select>
                                 </div>
@@ -27,7 +27,7 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">数量：<span style="color:red">*</span></label>
                                 <div class="col-sm-5">
-                                    <input type="text" class="form-control" id="quantity" name="quantity" placeholder="数量" onkeyup="value=value.replace(/[^\d.]/g,'')">
+                                    <input type="text" class="form-control" id="quantity" name="quantity" placeholder="数量" onkeyup="value=value.replace(/[^\d.]/g,'')" readonly="readonly">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -49,9 +49,6 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="box-footer text-center" id="assetsstksave">
-                        <button type="submit" class="btn btn-primary" data-btn-type="next">保存</button>
                     </div>
                 </div>
             </form>
@@ -90,37 +87,6 @@
                 //子项加载结束
             }); 
         }
-        
-        $("#assets-stk-form").bootstrapValidator({
-            message: '请输入有效值',
-            feedbackIcons: {
-                valid: 'glyphicon glyphicon-ok',
-                invalid: 'glyphicon glyphicon-remove',
-                validating: 'glyphicon glyphicon-refresh'
-            },
-            submitHandler: function () {
-                var formData = assetsstkform.getFormSimpleData();
-                ajaxPost(basePath + '/fixedassets/use/save', formData, function (data) {
-                    if (data.success) {
-                        modals.hideWin(assetsWinId);
-                    } else {
-                        modals.error(data.message);
-                    }
-                });
-            },
-            fields: {
-                "assetsStkID": {
-                    validators: {
-                        notEmpty: {message: '请选择一个资产'}
-                    }
-                },
-                "num": {
-                    validators: {
-                        notEmpty: {message: '数量不能为空'}
-                    }
-                }
-            }
-        });
         
         //编辑回填
         if(id != 0){

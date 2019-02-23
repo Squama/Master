@@ -390,7 +390,7 @@ public class FixedAssetsApplyController {
     /** 办公用品end */
     
     @RequestMapping(value="/add",method = RequestMethod.GET)
-    public String assetsAdd(HttpServletRequest request){
+    public String assetsAdd(String faType, HttpServletRequest request){
         String deptID = SecurityUtil.getUser().getDeptId();
         Org org = commonService.get(Org.class, deptID);
         if(org == null){
@@ -400,7 +400,7 @@ public class FixedAssetsApplyController {
             request.setAttribute("deptID", deptID);
             request.setAttribute("deptName", org.getName());
         }
-        
+        request.setAttribute("faType", faType);
         return "fixedassets/apply/edit";
     }
     

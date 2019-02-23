@@ -1,10 +1,46 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
-<body>
+<script type="text/javascript">
+ $.fn.modal.Constructor.prototype.enforceFocus = function () {};
+ </script>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box box-success" id="assets_tx">
+                <div class="box-header with-border">
+                    <span>
+                        <i class="fa fa-files-o">库存明细</i>
+                    </span>
+                </div>
+                <div class="dataTables_filter" id="searchDivPDet" style="text-align:center;height:1px;">
+                   <input type="search" name="fixedAssetsID" value="${fixedAssetsID}" class="form-control" operator="eq" style="display:none;">
+                   <div class="btn-group">
+                       <button type="button" class="btn btn-primary" data-btn-type="search" id="refresh" style="display:none;">查询</button>
+                   </div>
+                </div>
+                <div class="box-body">
+                    <!-- 内容 -->
+                    <table id="assets_tx_table" class="table table-bordered table-striped table-hover">
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
-</body>
-</html>
+<script>
+    $.fn.modal.Constructor.prototype.enforceFocus =function(){};
+    var assetsTxTable, winId = "assetsDetWin";
+    
+    $(function (){
+        assetsTxTable = new CommonTable("assets_tx_table", "fixedassets_stock_tx_list", "searchDivPDet", {
+            "ordering" : false,
+            "lengthChange": false,
+            "displayLength": 20,
+            "scrollY": "200px",
+            "scrollCollapse": true
+        });
+    });
+    
+    function fnRenderOperate(value){
+        return "";
+    }
+</script>

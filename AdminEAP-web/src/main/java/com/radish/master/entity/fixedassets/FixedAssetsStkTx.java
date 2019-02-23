@@ -3,9 +3,16 @@
  */
 package com.radish.master.entity.fixedassets;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import com.cnpc.framework.annotation.Header;
 import com.cnpc.framework.base.entity.BaseEntity;
@@ -43,6 +50,10 @@ public class FixedAssetsStkTx extends BaseEntity {
     @Column(name = "balance")
     private String balance;
 
+    @Header(name = "入库单价")
+    @Column(name = "price")
+    private String price;
+
     @Header(name = "备注")
     @Column(name = "remark")
     private String remark;
@@ -53,11 +64,21 @@ public class FixedAssetsStkTx extends BaseEntity {
 
     @Header(name = "操作时间")
     @Column(name = "operate_time")
-    private String operateTime;
+    @Temporal(TemporalType.TIMESTAMP)
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @CreationTimestamp
+    private Date operateTime;
 
     @Header(name = "来源ID")
     @Column(name = "source_tx_id")
     private String sourceTxID;
+
+    /**
+     * 10=不需要 20=需要
+     */
+    @Header(name = "是否需要归还")
+    @Column(name = "need_return")
+    private String needReturn;
 
     public String getFixedAssetsID() {
         return fixedAssetsID;
@@ -107,11 +128,11 @@ public class FixedAssetsStkTx extends BaseEntity {
         this.operator = operator;
     }
 
-    public String getOperateTime() {
+    public Date getOperateTime() {
         return operateTime;
     }
 
-    public void setOperateTime(String operateTime) {
+    public void setOperateTime(Date operateTime) {
         this.operateTime = operateTime;
     }
 
@@ -121,6 +142,22 @@ public class FixedAssetsStkTx extends BaseEntity {
 
     public void setSourceTxID(String sourceTxID) {
         this.sourceTxID = sourceTxID;
+    }
+
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
+    }
+
+    public String getNeedReturn() {
+        return needReturn;
+    }
+
+    public void setNeedReturn(String needReturn) {
+        this.needReturn = needReturn;
     }
 
 }

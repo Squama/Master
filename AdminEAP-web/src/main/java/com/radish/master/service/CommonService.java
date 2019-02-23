@@ -28,6 +28,8 @@ public interface CommonService extends BaseService{
     
     List<Options> getAssetsCombobox(String type);
     
+    List<Options> getAssetsCombobox();
+    
     List<Options> getEducationCombobox();
     
     List<Options> getEthnicCombobox();
