@@ -154,16 +154,18 @@ public class ReviewQualificationController {
 			r.setSuccess(true);
 			id = ps.getId();
 		}
-		if(fileId.indexOf(",")<0){
-			ReviewFile wj = baseService.get(ReviewFile.class, fileId);
-			wj.setFormId(id);
-			baseService.update(wj);
-		}else{
-			String[] fid = fileId.split(",");
-			for(int i=0;i<fid.length;i++){
-				ReviewFile wj = baseService.get(ReviewFile.class, fid[i]);
+		if(fileId!=null){
+			if(fileId.indexOf(",")<0){
+				ReviewFile wj = baseService.get(ReviewFile.class, fileId);
 				wj.setFormId(id);
 				baseService.update(wj);
+			}else{
+				String[] fid = fileId.split(",");
+				for(int i=0;i<fid.length;i++){
+					ReviewFile wj = baseService.get(ReviewFile.class, fid[i]);
+					wj.setFormId(id);
+					baseService.update(wj);
+				}
 			}
 		}
 		return r;

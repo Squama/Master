@@ -1,12 +1,12 @@
 <section class="content-header">
     <h1>
-        安全方案技术交底
+        安全协议
         <small>列表</small>
     </h1>
     <ol class="breadcrumb">
         <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
         <li><a href="#">安全管理</a></li>
-        <li class="active">安全方案技术交底</li>
+        <li class="active">安全协议</li>
     </ol>
 </section>
 
@@ -18,20 +18,8 @@
                 <div class="dataTables_filter" id="searchDiv1" style="display: none">
                     <!--查询条件-->
                     <!--查询条件-->
-                    <select id="projectID" class="form-control select2" name="proid" style="width:200px;" operator="eq">
-        				<option selected="selected" value="">选择一个项目</option>
-       				 </select>
-       				  <select  class="form-control select2" name="ty" style="width:200px;" operator="eq">
-        				<option selected="selected" value="">选择类型</option>
-        				<option value="1">专项方案交底</option>
-                 			<option value="2">安全技术交底</option>
-                 			<option value="3">安全交底</option>
-       				 </select>
-       				 日期范围：
-       				 <input name="jdtime"  class="form-control date-picker" data-flag="datepicker" data-format="yyyy-mm-dd" operator="between"/>
-       				 ——
-       				 <input name="jdtime"  class="form-control date-picker" data-flag="datepicker" data-format="yyyy-mm-dd" operator="between"/>
-           			 <input name="type" value="10" style="display: none"/>
+                    <input placeholder="请输入名称" name="name" class="form-control" type="search" likeOption="true"operator="like" /> 
+                    <input placeholder="请输入编号" name="number" class="form-control" type="search" likeOption="true"operator="like" /> 
                     <div class="btn-group">
                         <button type="button" class="btn btn-primary" data-btn-type="search">查询</button>
                     </div>
@@ -39,7 +27,6 @@
                     	<button type="button" class="btn btn-default" data-btn-type="add" id="add">新增</button>
                     	<button type="button" class="btn btn-default" data-btn-type="edit" id="edit">编辑</button>
                     	<button type="button" class="btn btn-default" data-btn-type="look" id="look">查看</button>
-                    	<button type="button" class="btn btn-default" data-btn-type="print" id="print">打印</button>
                         <button type="button" class="btn btn-default" data-btn-type="delete" id="delete">删除</button>
                     </div>
                 </div>
@@ -55,14 +42,10 @@
 
 <script>
     var form = $("#searchDiv1").form({baseEntity: false}), initData={};
-    var xms = '${xm?default(0)}',xm=0;
-    if(xms != 0){
-    	xm = JSON.parse(xms);
-    }
     var lx = '${lx?default(0)}';
     var dutycheckTable, winId = "projectQueryWin";
     $(function (){
-    	dutycheckTable = new CommonTable("lwContract_table", "safejsjd_List", "searchDiv1");
+    	dutycheckTable = new CommonTable("lwContract_table", "aqxy_List", "searchDiv1");
         
         
         
@@ -76,7 +59,7 @@
                         winId:winId,
                         title:'创建',
                         width:'1000px',
-                        url:basePath+"/safejsjd/add?type=10",
+                        url:basePath+"/aqxy/add",
                         hideFunc:function(){
                         	dutycheckTable.reloadData();
                         },
@@ -92,7 +75,7 @@
                         winId:winId,
                         title:'编辑',
                         width:'1000px',
-                        url:basePath+"/safejsjd/add?id="+rowId+"&type=10",
+                        url:basePath+"/aqxy/add?id="+rowId,
                         hideFunc:function(){
                         	dutycheckTable.reloadData();
                         }
@@ -107,7 +90,7 @@
                         winId:winId,
                         title:'编辑',
                         width:'1000px',
-                        url:basePath+"/safejsjd/add?id="+rowId+"&ck=look&type=10"
+                        url:basePath+"/aqxy/add?id="+rowId+"&ck=look"
                        });
             	break;
                 case "delete":
@@ -116,7 +99,7 @@
                         return false;
                     }
                     modals.confirm("是否要删除该行数据？",function(){
-                        ajaxPost(basePath+"/safejsjd/delete?id="+rowId,null,function(data){
+                        ajaxPost(basePath+"/aqxy/delete?id="+rowId,null,function(data){
                         	if(data.success){
                         		dutycheckTable.reloadData();
                         	}
@@ -125,30 +108,25 @@
                         });
                     })
                 	break;
-                case "print":
-            		if(!rowId){
-                        modals.info('请选择要打印的行');
-                        return false;
-                    }
-            		var url = basePath+"/ureport/preview?_u=file:aqjsjd.ureport.xml&_t=1,5&id="+rowId;
-            	 	window.open(url);     
-            	break;
-               
+                              
             }
         });
-
-        if(xm != 0){
-            for (var i = 0, len = xm.length; i < len; i++) {
-                var u = xm[i];
-                $('#projectID').append("<option value='" + u.value + "'>" + u.data + "</option>");
-            }
-            $(".select2").select2();
-        } 
         if(lx=="look"){
             $("#add").css("display","none");
             $("#edit").css("display","none");
             $("#delete").css("display","none");
          }
     });
+    function fnFj(value, type, obj){
+		return "<a href='javascript:void(0)' onclick='lookfj(\"" + value + "\")'>附件</a>";
+    }
+    function lookfj(mbid){
+    	modals.openWin({
+            winId: "files",
+            width: "900px",
+            url: basePath + "/aqxy/projectdetailfile?id=" + mbid+"&lx="+lx ,
+            title: "查看附件"
+        });
+    }
     
 </script>

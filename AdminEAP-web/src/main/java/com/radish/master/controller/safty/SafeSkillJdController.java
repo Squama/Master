@@ -177,7 +177,12 @@ public class SafeSkillJdController {
 			j.setTy(jd.getTy());
 			j.setDx(jd.getDx());
 			j.setJtwz(jd.getJtwz());
-			j.setContent(jd.getJtwz());
+			j.setContent(jd.getContent());
+			j.setJdname(jd.getJdname());
+			j.setJsjd(jd.getJsjd());
+			j.setJdtime(jd.getJdtime());
+			j.setBmfzr(jd.getBmfzr());
+			j.setGz(jd.getGz());
 			baseService.update(j);
 			r.setCode(id);
 		}

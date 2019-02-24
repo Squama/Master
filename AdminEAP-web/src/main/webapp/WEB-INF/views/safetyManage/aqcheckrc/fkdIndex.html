@@ -18,39 +18,38 @@
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><li class="fa fa-remove"></li></button>
     <h5 class="modal-title"></h5>
 </div>
-<div class="modal-body" style="max-height:550px;overflow-y:auto;">
+<div class="modal-body" style="max-height:100%;overflow-y:auto;">
 
-    <form id="contract-form" name="contract-form" class="form-horizontal">
-     <input type="hidden" name="id" id= "id">
+    <form id="fkd-form" name="fkd-form" class="form-horizontal">
+     <input type="hidden" name="id" id= "id2">
+     <input type="hidden" name="checkDqId" id= "checkDqId">
         <div class="box-body">
             <div class="col-md-6">
                 
 				<div class="form-group">
-                    <label  for="proid" class="col-sm-3 control-label">所属项目</label>
+                    <label  for="check_time1" class="col-sm-3 control-label">所属项目</label>
 					<div class=" col-sm-8">
 						<select id="projectId" class="form-control select2 "  name="proid" style="width:100%" >
                    			<option selected="selected" value="">选择一个项目</option>
                    		</select>
 					</div>
                 </div>
-                
                 <div class="form-group">
-                    <label  for="ty" class="col-sm-3 control-label">交底类型</label>
+                    <label  for="wgtime" class="col-sm-3 control-label">违规时间</label>
 					<div class=" col-sm-8">
-						<select id="ty" class="form-control select2 "  name="ty" style="width:100%" >
-                   			<option selected="selected" value="1">专项方案交底</option>
-                   			<option value="2">安全技术交底</option>
-                   			<option value="3">安全交底</option>
-                   		</select>
+						<input class="form-control date-picker" data-flag="datepicker" data-format="yyyy-mm-dd" id="wgtime" name="wgtime">
 					</div>
                 </div>
                 <div class="form-group">
-					<label  for="jdtime" class="col-sm-3 control-label">交底时间</label>
+                    <label  for="wgbz" class="col-sm-3 control-label">违规班组</label>
 					<div class=" col-sm-8">
-					<input class="form-control date-picker" id="jdtime" name="jdtime"  data-flag="datepicker" data-format="yyyy-mm-dd"  placeholder="交底时间"  >
-				
+						<input class="form-control " id="wgbz" name="wgbz" style="display: none">
+						<select id="wgbzid" class="form-control select2 "  name="wgbzid" style="width:100%" onchange="setBz()" >
+                   			<option selected="selected" value="">选择一个班组</option>
+                   		</select>
 					</div>
-				</div>
+                </div>
+                
             </div>
             <div class="col-md-6">
             	<div class="form-group">
@@ -60,64 +59,37 @@
 				
 					</div>
                 </div>
-                
-            </div>
-            <div class="col-md-6">
-            	<div class="form-group">
-                    <label  for="gz" class="col-sm-3 control-label">工种</label>
+                <div class="form-group">
+                    <label  for="wgdd" class="col-sm-3 control-label">违规地点</label>
 					<div class=" col-sm-8">
-						<input class="form-control " id="gz" name="gz"   placeholder="工种" >
+						<input class="form-control " id="wgdd" name="wgdd">
 				
 					</div>
                 </div>
-                
-            </div>
-            <div class="col-md-6">
-            	<div class="form-group">
-                    <label  for="bmfzr" class="col-sm-3 control-label">部门负责人</label>
+                <div class="form-group">
+                    <label  for="fkje" class="col-sm-3 control-label">罚款金额</label>
 					<div class=" col-sm-8">
-						<input class="form-control " id="bmfzr" name="bmfzr"   placeholder="部门负责人" >
+						<input class="form-control " id="fkje" name="fkje">
 				
 					</div>
                 </div>
-                
             </div>
-            </div>
-            
-            <div class="form-group">
-                    <label for="jdname" class="col-sm-2 control-label">交底人</label>
-
-                    <div class="col-sm-9">
-                        <textarea class="form-control" id="jdname" name="jdname" placeholder="交底人" rows="3"></textarea>
-                    </div>
-            </div>
-            <div class="form-group">
-                    <label for="jsjd" class="col-sm-2 control-label">被交底人</label>
-
-                    <div class="col-sm-9">
-                        <textarea class="form-control" id="jsjd" name="jsjd" placeholder="被交底人" rows="3"></textarea>
-                    </div>
-            </div>
-            <div class="form-group">
-                    <label for="content" class="col-sm-2 control-label">交底内容</label>
-
-                    <div class="col-sm-9">
-                        <textarea class="form-control" id="content" name="content" placeholder="交底内容" rows="5"></textarea>
-                    </div>
             </div>
             <input type="hidden" name="fileId" id="fileId">
-					<div class="form-group" align="center" id="wjscid">
-						<div class="btn btn-default btn-file" id="uploadFile">
-							<i class="fa fa-paperclip"></i> 上传文件附件(Max. 10MB)
-						</div>
+				<div class="form-group" align="center" id="wjscid">
+					<div class="btn btn-default btn-file" id="uploadFile">
+						<i class="fa fa-paperclip"></i> 上传罚款图片(Max. 10MB)
 					</div>
-					<div class="form-group" id="file_container">
-						<input type="file" name="file"  id="attachment">
-					</div>
+				</div>
+				<div class="form-group" id="file_container">
+				<input type="file" name="file"  id="attachment">
+			</div>
+     
         <!-- /.box-body -->
         <div class="" style="text-align: center;height:50px;width:100%;">
             <!--以下两种方式提交验证,根据所需选择-->
             <button type="submit" class="btn btn-primary" data-btn-type="save" id="b_sub">保存</button>
+            <button type="button" class="btn btn-primary" data-btn-type="save" id="print">打印罚款单</button>
         </div>
         <!-- /.box-footer -->
     </form>
@@ -129,16 +101,23 @@
     if(pros != 0){
     	pro = JSON.parse(pros);
     }
-    var  bh = '${bh?default(0)}';
-    var  type = '${type?default(0)}';
-    var proid = '${proid?default(0)}';
-    var ck = '${ck?default(0)}';
-    var id = '${id?default(0)}';
+    var bzs = '${bz?default(0)}',bz=0;
+    if(bzs != 0){
+    	bz = JSON.parse(bzs);
+    }
+    var  id = '${id}';
+    var lx = '${lx?default(0)}'
+    if(lx=="look"){
+		$("#b_sub").css("display","none")
+		$("#print").css("display","none")
+		$("#wjscid").css("display","none")
+		$("#attachment").css("display","none")
+    }
     $(function() {
         //初始化控件
-        form=$("#contract-form").form();
+        form=$("#fkd-form").form();
         //数据校验
-        $("#contract-form").bootstrapValidator({
+        $("#fkd-form").bootstrapValidator({
             message : '请输入有效值',
             feedbackIcons : {
                 valid : 'glyphicon glyphicon-ok',
@@ -149,14 +128,10 @@
                 modals.confirm('确认保存？', function() {
                     //Save Data，对应'submit-提交'
                     var params = form.getFormSimpleData();
-                    var url = basePath+'/safejsjd/save?type='+type;
-                    if(proid!=0){
-                    	url = basePath+'/safejsjd/save?type='+type+"&proId="+proid;
-                     }
-                    	ajaxPost(url, params, function(data) {
+                    	ajaxPost(basePath+'/aqcheck/saveFkd', params, function(data) {
                             if(data.success){
                                 modals.info("数据保存成功");
-                                $("#id").val(data.code);
+                                $("#id2").val(data.code);
                             }                
                         }); 
               
@@ -171,17 +146,24 @@
                         }
                     }
                 },
-                content : {
+                wgCont : {
                     validators : {
                         notEmpty : {
-                            message : '请输入内容'
+                            message : '请输入罚款事实'
                         }
                     }
                 },
-                dx : {
+                wgbz : {
                     validators : {
                         notEmpty : {
-                            message : '请输入对象'
+                            message : '请输入罚款班组'
+                        }
+                    }
+                },
+                fkje : {
+                    validators : {
+                        notEmpty : {
+                            message : '请输入罚款金额'
                         }
                     }
                 }
@@ -194,31 +176,39 @@
             }
             $("#projectId").select2();
         }
-        if(bh!=0){
-            $("#number").val(bh)
+        if(bz != 0){
+            for (var i = 0, len = bz.length; i < len; i++) {
+                var u = bz[i];
+                $('#wgbzid').append("<option value='" + u.id + "'>" + u.teamName + "</option>");
             }
-        if(proid!=0){//项目交底
-        	$('#projectId').val(proid);
-        	$('#projectId').attr("disabled",true);
-         }
-        if(ck!=0){
-			$("#b_sub").css("display","none");
-			$("#wjscid").css("display","none")
+            $("#wgbzid").select2();
         }
-        if(id!=0){
-        	ajaxPost(basePath+'/safejsjd/load', {id:id}, function(data) {
-        		$("#contract-form").form().initFormData(data.data);   
-        		$("#fileId").val(data.code);       
-            }); 
-        }
-        form.initComponent();
         
+        form.initComponent();
+        ajaxPost(basePath+'/aqcheck/loadFkd', {id:id}, function(data) {
+    		$("#fkd-form").form().initFormData(data.data); 
+    		if(!data.data.id){
+				$("#print").css("display","none");
+        	}
+    		 $('#fileId').val(data.code);         
+        });
+        $("#print").on("click",function(){
+        	ajaxPost(basePath+'/aqcheck/loadFkd', {id:id}, function(data) {
+        		var url = basePath+"/ureport/preview?_u=file:fk.ureport.xml&_t=1,5&id="+data.data.id;
+        	 	window.open(url);         
+            });
+        	
+        })
         
     });
+    function setBz(){
+		$("#wgbz").val($("#wgbzid option:selected").html());
+    }
     function resetForm(){
         form.clearForm();
-        $("#contract-form").data('bootstrapValidator').resetForm();
+        $("#fkd-form").data('bootstrapValidator').resetForm();
     }
+
     var fileinputDefaults = {
             maxFileSize: 102400,
             maxFileCount:3,
@@ -236,14 +226,14 @@
                 pdf: {width: "100%", height: "100%", 'min-height': "480px"},
                 other: {width: "auto", height: "100%", 'min-height': "480px"}
             },
-            uploadUrl: basePath + "/safejsjd/uploadMultipleFile",
-            deleteUrl: basePath + "/safejsjd/deletefile",
+            uploadUrl: basePath + "/aqcheck/uploadMultipleFile?type=40",
+            deleteUrl: basePath + "/aqcheck/deletefile",
             allowedPreviewTypes : ['image', 'object']
       }
       var defaults = {
             title: "请上传附件",
-            getFileResultUrl: basePath+"/safejsjd/getFiles",
-            downloadFileUrl: basePath+"/safejsjd/download/",
+            getFileResultUrl: basePath+"/aqcheck/getFiles",
+            downloadFileUrl: basePath+"/aqcheck/download/",
             fileinput: fileinputDefaults,
             showType:'detail',
             window:true,

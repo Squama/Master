@@ -1,0 +1,133 @@
+<link rel="stylesheet" href="${basePath}/resources/common/libs/fileinput/css/fileinput.min.css">
+<style>
+
+#projectaddstep2 .krajee-default.file-preview-frame .kv-file-content {
+    height: auto;
+}
+
+#projectaddstep2 .krajee-default .file-footer-caption {
+    width: 100px;
+}
+
+</style>
+<script src="${basePath}/resources/common/libs/fileinput/js/fileinput.js"></script>
+<script src="${basePath}/resources/common/libs/fileinput/js/locales/zh.js"></script>
+<!--BaseFile组件-->
+<script src="${basePath}/resources/common/js/base-file.js"></script>
+<section class="content" id="projectaddstep2">
+<section class="content-header">
+	<h1>
+		三级教育内容维护
+	</h1>
+	<ol class="breadcrumb">
+		<li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
+		<li><a href="#">安全教育</a></li>
+		<li class="active">三级教育内容维护</li>
+	</ol>
+</section>
+<section class="content">
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="box">
+
+    <form id="contract-form" name="contract-form" class="form-horizontal">
+     <input type="hidden" name="id" id= "id">
+        <div class="box-body">
+         <div class="form-group">
+                    <label for="gsname" class="col-sm-2 control-label">公司教育内容</label>
+
+                    <div class="col-sm-9">
+                        <textarea class="form-control" id="gsname" name="gsname" placeholder="请输入公司教育内容" rows="8"></textarea>
+                    </div>
+            </div>
+            <div class="form-group">
+                    <label for="xmname" class="col-sm-2 control-label">项目教育内容</label>
+
+                    <div class="col-sm-9">
+                        <textarea class="form-control" id="xmname" name="xmname" placeholder="请输入项目教育内容" rows="8"></textarea>
+                    </div>
+            </div>
+            <div class="form-group">
+                    <label for="bzname" class="col-sm-2 control-label">班组教育内容</label>
+
+                    <div class="col-sm-9">
+                        <textarea class="form-control" id="bzname" name="bzname" placeholder="请输入班组教育内容" rows="8"></textarea>
+                    </div>
+            </div>
+          </div>
+        <!-- /.box-body -->
+        <div class="box-footer text-center">
+            <!--以下两种方式提交验证,根据所需选择-->
+            <button type="submit" class="btn btn-primary" data-btn-type="save">保存</button>
+        </div>
+        <!-- /.box-footer -->
+    </form>
+</div>
+</div>
+</div>
+</section>
+<script>
+    var form =null;
+    $(function() {
+        //初始化控件
+        form=$("#contract-form").form();
+        //数据校验
+        $("#contract-form").bootstrapValidator({
+            message : '请输入有效值',
+            feedbackIcons : {
+                valid : 'glyphicon glyphicon-ok',
+                invalid : 'glyphicon glyphicon-remove',
+                validating : 'glyphicon glyphicon-refresh'
+            },
+            submitHandler : function() {
+                modals.confirm('确认保存？', function() {
+                    //Save Data，对应'submit-提交'
+                    var params = form.getFormSimpleData();
+                    	ajaxPost(basePath+'/sjjynr/savenr', params, function(data) {
+                            if(data.success){
+                                modals.info("保存成功");
+                            }                
+                        }); 
+              
+                     
+                });
+            },
+            fields : {
+            	bzname : {
+                    validators : {
+                        notEmpty : {
+                            message : '请输入班组教育内容'
+                        }
+                    }
+                },
+                gsname : {
+                    validators : {
+                        notEmpty : {
+                            message : '请输入公司教育内容'
+                        }
+                    }
+                },
+                xmname : {
+                    validators : {
+                        notEmpty : {
+                            message : '请输入项目教育内容'
+                        }
+                    }
+                }
+            }
+        });
+        form.initComponent();
+        load();
+        
+    });
+    function load(){
+    	ajaxPost(basePath+'/sjjynr/load', {}, function(data) {
+    		$("#contract-form").form().initFormData(data);          
+        }); 
+    }
+    function resetForm(){
+        form.clearForm();
+        $("#contract-form").data('bootstrapValidator').resetForm();
+    }
+	
+</script>

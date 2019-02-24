@@ -103,6 +103,15 @@ public class Worker extends BaseEntity {
     @Header(name = "头像")
     @Column(name = "avatar")
     private String avatar;
+    
+    @Header(name = "进场时间")
+    @Column(name = "jctime")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date jctime;
+    
+    @Header(name = "文化程度")
+    @Column(name = "whcd")
+    private String whcd;
 
     public String getName() {
         return name;
@@ -247,5 +256,21 @@ public class Worker extends BaseEntity {
     public void setAvatar(String avatar) {
         this.avatar = avatar;
     }
+
+	public Date getJctime() {
+		return jctime;
+	}
+
+	public void setJctime(Date jctime) {
+		this.jctime = jctime;
+	}
+
+	public String getWhcd() {
+		return whcd;
+	}
+
+	public void setWhcd(String whcd) {
+		this.whcd = whcd;
+	}
 
 }

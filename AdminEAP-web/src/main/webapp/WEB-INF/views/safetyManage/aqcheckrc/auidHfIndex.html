@@ -1,0 +1,140 @@
+<link rel="stylesheet" href="${basePath}/resources/common/libs/fileinput/css/fileinput.min.css">
+<style>
+
+#projectaddstep2 .krajee-default.file-preview-frame .kv-file-content {
+    height: auto;
+}
+
+#projectaddstep2 .krajee-default .file-footer-caption {
+    width: 100px;
+}
+
+</style>
+<script src="${basePath}/resources/common/libs/fileinput/js/fileinput.js"></script>
+<script src="${basePath}/resources/common/libs/fileinput/js/locales/zh.js"></script>
+<!--BaseFile组件-->
+<script src="${basePath}/resources/common/js/base-file.js"></script>
+
+<div class="modal-body" style="max-height:100%;overflow-y:auto;">
+
+    <form id="contract-form1" name="contract-form" class="form-horizontal">
+        <div class="" style="text-align: center;height:50px;width:100%;">
+            <!--以下两种方式提交验证,根据所需选择-->
+            <button type="button" class="btn btn-primary btn-sm"  id="look1">查看检查信息</button>
+            <button type="button" class="btn btn-primary btn-sm"  id="bgf1" >不规范图片</button>
+            <button type="button" class="btn btn-primary btn-sm"  id="gf1" >规范图片</button>
+        </div>
+           <div class="box-body">
+            <div class="form-group">
+                    <label for="yzgnr" class="col-sm-2 control-label">整改措施</label>
+
+                    <div class="col-sm-9">
+                        <textarea class="form-control" id="zgcs" name="zgcs" placeholder="整改措施" rows="7"></textarea>
+                    </div>
+            </div>
+            
+        </div>
+        <!-- /.box-body -->
+        <div class="" style="text-align: center;height:50px;width:100%;">
+            <!--以下两种方式提交验证,根据所需选择-->
+            <button type="submit" class="btn btn-primary" data-btn-type="save" id="b_sub1">保存</button>
+            <button type="button" class="btn btn-primary"  id="zg" >整改附件上传</button>
+            
+        </div>
+        <!-- /.box-footer -->
+    </form>
+</div>
+<script>
+    var form1 =null;
+    var  id = '${id}';
+    var types = '${types?default(0)}';
+    $(function() {
+        //初始化控件
+        form1=$("#contract-form1").form();
+        //数据校验
+        $("#contract-form1").bootstrapValidator({
+            message : '请输入有效值',
+            feedbackIcons : {
+                valid : 'glyphicon glyphicon-ok',
+                invalid : 'glyphicon glyphicon-remove',
+                validating : 'glyphicon glyphicon-refresh'
+            },
+            submitHandler : function() {
+                modals.confirm('确认保存？', function() {
+                    //Save Data，对应'submit-提交'
+                    var params = form1.getFormSimpleData();
+                    	ajaxPost(basePath+'/aqcheck/saveHf', params, function(data) {
+                            if(data.success){
+                                modals.info("数据保存成功");
+                            }                
+                        }); 
+              
+                     
+                });
+            },
+            fields : {
+            	yzgnr : {
+                    validators : {
+                        notEmpty : {
+                            message : '请输入整改措施'
+                        }
+                    }
+                }
+            }
+        });
+        form1.initComponent();
+        $("#gf1").on("click",function(){
+            
+            	modals.openWin({
+                    winId:"checkRecord",
+                    title:'上传',
+                    width:'1000px',
+                    url:basePath+"/aqcheck/projectdetailfile?id="+id+"&type=10&lx=look",
+                    hideFunc:function(){
+                    	
+                    }
+                   });
+        })
+        $("#bgf1").on("click",function(){
+            	modals.openWin({
+                    winId:"checkRecord",
+                    title:'上传',
+                    width:'1000px',
+                    url:basePath+"/aqcheck/projectdetailfile?id="+id+"&type=20&lx=look",
+                    hideFunc:function(){
+                    	
+                    }
+                   });
+        	
+        })
+        $("#zg").on("click",function(){
+            	modals.openWin({
+                    winId:"checkRecord",
+                    title:'上传',
+                    width:'1000px',
+                    url:basePath+"/aqcheck/projectdetailfile?id="+id+"&type=30",
+                    hideFunc:function(){
+                    	
+                    }
+                   });
+        	
+        })
+        $("#look1").on("click",function(){
+        	modals.openWin({
+                winId:"look",
+                title:'查看',
+                width:'1000px',
+                url:basePath+"/aqcheck/edit?id="+id+"&lx=look&types="+types,
+               });
+            })
+        if(id){
+        	ajaxPost(basePath+'/aqcheck/load', {id:id}, function(data) {
+        		$("#contract-form1").form().initFormData(data);          
+            }); 
+         }
+    });
+    function resetForm(){
+        form.clearForm();
+        $("#contract-form").data('bootstrapValidator').resetForm();
+    }
+</script>

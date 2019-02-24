@@ -18,14 +18,13 @@
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><li class="fa fa-remove"></li></button>
     <h5 class="modal-title"></h5>
 </div>
-<div class="modal-body" style="max-height:550px;overflow-y:auto;">
+<div class="modal-body" style="max-height:700px;overflow-y:auto;">
 
     <form id="contract-form" name="contract-form" class="form-horizontal">
      <input type="hidden" name="id" id= "id">
         <div class="box-body">
             <div class="col-md-6">
-                
-				<div class="form-group">
+                <div class="form-group">
                     <label  for="proid" class="col-sm-3 control-label">所属项目</label>
 					<div class=" col-sm-8">
 						<select id="projectId" class="form-control select2 "  name="proid" style="width:100%" >
@@ -33,82 +32,54 @@
                    		</select>
 					</div>
                 </div>
-                
                 <div class="form-group">
-                    <label  for="ty" class="col-sm-3 control-label">交底类型</label>
+                    <label  for="bz" class="col-sm-3 control-label">验收部位</label>
 					<div class=" col-sm-8">
-						<select id="ty" class="form-control select2 "  name="ty" style="width:100%" >
-                   			<option selected="selected" value="1">专项方案交底</option>
-                   			<option value="2">安全技术交底</option>
-                   			<option value="3">安全交底</option>
-                   		</select>
+						<input class="form-control " id="bz" name="bz"   placeholder="验收部位" >
 					</div>
                 </div>
                 <div class="form-group">
-					<label  for="jdtime" class="col-sm-3 control-label">交底时间</label>
+					<label  for="ystime" class="col-sm-3 control-label">验收时间</label>
 					<div class=" col-sm-8">
-					<input class="form-control date-picker" id="jdtime" name="jdtime"  data-flag="datepicker" data-format="yyyy-mm-dd"  placeholder="交底时间"  >
+					<input class="form-control date-picker" id="ystime" name="ystime"  data-flag="datepicker" data-format="yyyy-mm-dd"  placeholder="验收时间"  >
 				
 					</div>
 				</div>
-            </div>
+            </div> 
             <div class="col-md-6">
-            	<div class="form-group">
+           		 <div class="form-group">
                     <label  for="check_time1" class="col-sm-3 control-label">编号</label>
 					<div class=" col-sm-8">
-						<input class="form-control " id="number" name="number"  readonly="readonly" >
+						<input class="form-control " id="number" name="number"   readonly="readonly">
 				
 					</div>
                 </div>
-                
-            </div>
-            <div class="col-md-6">
-            	<div class="form-group">
-                    <label  for="gz" class="col-sm-3 control-label">工种</label>
+                <div class="form-group">
+                    <label  for="bz" class="col-sm-3 control-label">验收人</label>
 					<div class=" col-sm-8">
-						<input class="form-control " id="gz" name="gz"   placeholder="工种" >
-				
+						<input class="form-control " id="ysr" name="ysr"   placeholder="验收人" >
 					</div>
                 </div>
-                
-            </div>
-            <div class="col-md-6">
-            	<div class="form-group">
-                    <label  for="bmfzr" class="col-sm-3 control-label">部门负责人</label>
-					<div class=" col-sm-8">
-						<input class="form-control " id="bmfzr" name="bmfzr"   placeholder="部门负责人" >
-				
-					</div>
-                </div>
-                
-            </div>
-            </div>
-            
-            <div class="form-group">
-                    <label for="jdname" class="col-sm-2 control-label">交底人</label>
+            </div>        
+        </div>
+         <div class="form-group">
+                    <label for="content" class="col-sm-2 control-label">验收内容</label>
 
                     <div class="col-sm-9">
-                        <textarea class="form-control" id="jdname" name="jdname" placeholder="交底人" rows="3"></textarea>
+                        <textarea class="form-control" id="content" name="content" placeholder="验收内容" rows="5"></textarea>
                     </div>
             </div>
             <div class="form-group">
-                    <label for="jsjd" class="col-sm-2 control-label">被交底人</label>
+                    <label for="content" class="col-sm-2 control-label">验收结论意见</label>
 
                     <div class="col-sm-9">
-                        <textarea class="form-control" id="jsjd" name="jsjd" placeholder="被交底人" rows="3"></textarea>
+                        <textarea class="form-control" id="yj" name="yj" placeholder="验收结论意见" rows="5"></textarea>
                     </div>
             </div>
-            <div class="form-group">
-                    <label for="content" class="col-sm-2 control-label">交底内容</label>
-
-                    <div class="col-sm-9">
-                        <textarea class="form-control" id="content" name="content" placeholder="交底内容" rows="5"></textarea>
-                    </div>
-            </div>
-            <input type="hidden" name="fileId" id="fileId">
+        <input type="hidden" name="fileId" id="fileId">
 					<div class="form-group" align="center" id="wjscid">
 						<div class="btn btn-default btn-file" id="uploadFile">
-							<i class="fa fa-paperclip"></i> 上传文件附件(Max. 10MB)
+							<i class="fa fa-paperclip"></i> 上传附件(Max. 10MB)
 						</div>
 					</div>
 					<div class="form-group" id="file_container">
@@ -121,19 +92,22 @@
         </div>
         <!-- /.box-footer -->
     </form>
+    
 </div>
 <script>
     var form =null;
-    
+    var   bh = '${bh?default(0)}';
+    var  id = '${id?default(0)}';
+    var  ck = '${ck?default(0)}';
+    if(ck!=0){
+		$("#b_sub").css("display","none")
+		$("#wjscid").css("display","none")
+    	$("#attachment").css("display","none")
+    }
     var pros = '${xm?default(0)}',pro=0;
     if(pros != 0){
     	pro = JSON.parse(pros);
     }
-    var  bh = '${bh?default(0)}';
-    var  type = '${type?default(0)}';
-    var proid = '${proid?default(0)}';
-    var ck = '${ck?default(0)}';
-    var id = '${id?default(0)}';
     $(function() {
         //初始化控件
         form=$("#contract-form").form();
@@ -149,11 +123,7 @@
                 modals.confirm('确认保存？', function() {
                     //Save Data，对应'submit-提交'
                     var params = form.getFormSimpleData();
-                    var url = basePath+'/safejsjd/save?type='+type;
-                    if(proid!=0){
-                    	url = basePath+'/safejsjd/save?type='+type+"&proId="+proid;
-                     }
-                    	ajaxPost(url, params, function(data) {
+                    	ajaxPost(basePath+'/aqys/save', params, function(data) {
                             if(data.success){
                                 modals.info("数据保存成功");
                                 $("#id").val(data.code);
@@ -164,29 +134,18 @@
                 });
             },
             fields : {
-                proid : {
+            	name : {
                     validators : {
                         notEmpty : {
-                            message : '请选择所属项目'
-                        }
-                    }
-                },
-                content : {
-                    validators : {
-                        notEmpty : {
-                            message : '请输入内容'
-                        }
-                    }
-                },
-                dx : {
-                    validators : {
-                        notEmpty : {
-                            message : '请输入对象'
+                            message : '请输入名称'
                         }
                     }
                 }
             }
         });
+        if(bh!=0){
+            $("#number").val(bh)
+            }
         if(pro != 0){
             for (var i = 0, len = pro.length; i < len; i++) {
                 var u = pro[i];
@@ -194,31 +153,23 @@
             }
             $("#projectId").select2();
         }
-        if(bh!=0){
-            $("#number").val(bh)
-            }
-        if(proid!=0){//项目交底
-        	$('#projectId').val(proid);
-        	$('#projectId').attr("disabled",true);
-         }
-        if(ck!=0){
-			$("#b_sub").css("display","none");
-			$("#wjscid").css("display","none")
-        }
         if(id!=0){
-        	ajaxPost(basePath+'/safejsjd/load', {id:id}, function(data) {
-        		$("#contract-form").form().initFormData(data.data);   
-        		$("#fileId").val(data.code);       
-            }); 
-        }
+            load(id);
+         }
         form.initComponent();
         
-        
     });
+    function load(id){
+    	ajaxPost(basePath+'/aqys/load', {id:id}, function(data) {
+    		$("#contract-form").form().initFormData(data.data);   
+    		$("#fileId").val(data.code);       
+        }); 
+    }
     function resetForm(){
         form.clearForm();
         $("#contract-form").data('bootstrapValidator').resetForm();
     }
+
     var fileinputDefaults = {
             maxFileSize: 102400,
             maxFileCount:3,
@@ -236,14 +187,14 @@
                 pdf: {width: "100%", height: "100%", 'min-height': "480px"},
                 other: {width: "auto", height: "100%", 'min-height': "480px"}
             },
-            uploadUrl: basePath + "/safejsjd/uploadMultipleFile",
-            deleteUrl: basePath + "/safejsjd/deletefile",
+            uploadUrl: basePath + "/aqys/uploadMultipleFile",
+            deleteUrl: basePath + "/aqys/deletefile",
             allowedPreviewTypes : ['image', 'object']
       }
       var defaults = {
             title: "请上传附件",
-            getFileResultUrl: basePath+"/safejsjd/getFiles",
-            downloadFileUrl: basePath+"/safejsjd/download/",
+            getFileResultUrl: basePath+"/aqys/getFiles",
+            downloadFileUrl: basePath+"/aqys/download/",
             fileinput: fileinputDefaults,
             showType:'detail',
             window:true,

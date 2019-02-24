@@ -1,0 +1,184 @@
+<link rel="stylesheet" href="${basePath}/resources/common/libs/fileinput/css/fileinput.min.css">
+<style>
+
+#projectaddstep2 .krajee-default.file-preview-frame .kv-file-content {
+    height: auto;
+}
+
+#projectaddstep2 .krajee-default .file-footer-caption {
+    width: 100px;
+}
+
+</style>
+<script src="${basePath}/resources/common/libs/fileinput/js/fileinput.js"></script>
+<script src="${basePath}/resources/common/libs/fileinput/js/locales/zh.js"></script>
+<!--BaseFile组件-->
+<script src="${basePath}/resources/common/js/base-file.js"></script>
+
+<div class="modal-body" style="max-height:100%;overflow-y:auto;">
+
+    <form id="contract-form2" name="contract-form" class="form-horizontal">
+        <div class="" style="text-align: center;height:50px;width:100%;">
+            <!--以下两种方式提交验证,根据所需选择-->
+            <button type="button" class="btn btn-primary btn-sm"  id="look1">查看检查信息</button>
+            <button type="button" class="btn btn-primary btn-sm"  id="bgf1" >不规范图片</button>
+            <button type="button" class="btn btn-primary btn-sm"  id="gf1" >规范图片</button>
+            <button type="button" class="btn btn-primary btn-sm"  id="zg" >整改附件</button>
+        </div>
+           <div class="box-body">
+             <div class="form-group">
+                    <label for="yzgnr" class="col-sm-2 control-label">整改措施</label>
+
+                    <div class="col-sm-9">
+                        <textarea class="form-control" id="zgcs" name="zgcs" placeholder="整改措施" rows="7"></textarea>
+                    </div>
+            </div>
+            <div class="form-group">
+                    <label for="fcqk" class="col-sm-2 control-label">整改情况</label>
+                    <div class="col-sm-9">
+                        <textarea class="form-control" id="fcqk" name="fcqk" placeholder="复查整改情况" rows="5" ></textarea>
+                    </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label  for="fcr" class="col-sm-3 control-label">复查人</label>
+					<div class=" col-sm-8">
+						<input class="form-control " id="fcr" name="fcr">
+				
+					</div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                	<label  for="fcrq" class="col-sm-3 control-label">复查日期</label>
+					<div class=" col-sm-8">
+						<input class="form-control date-picker" data-flag="datepicker" data-format="yyyy-mm-dd" id="fcrq" name="fcrq">
+					</div>
+				</div>
+            </div>
+        </div>
+        <!-- /.box-body -->
+        <div class="" style="text-align: center;height:50px;width:100%;">
+            <!--以下两种方式提交验证,根据所需选择-->
+            <button type="submit" class="btn btn-primary" data-btn-type="save" id="b_sub1">保存</button>
+            <button type="button" class="btn btn-primary"  id="fkd" >罚款单</button>
+        </div>
+        <!-- /.box-footer -->
+    </form>
+</div>
+<script>
+    var form1 =null;
+    var  id = '${id}';
+    var types = '${types?default(0)}';
+    $(function() {
+        //初始化控件
+        form1=$("#contract-form2").form();
+        //数据校验
+        $("#contract-form2").bootstrapValidator({
+            message : '请输入有效值',
+            feedbackIcons : {
+                valid : 'glyphicon glyphicon-ok',
+                invalid : 'glyphicon glyphicon-remove',
+                validating : 'glyphicon glyphicon-refresh'
+            },
+            submitHandler : function() {
+                modals.confirm('确认保存？', function() {
+                    //Save Data，对应'submit-提交'
+                    var params = form1.getFormSimpleData();
+                    	ajaxPost(basePath+'/aqcheck/saveFc?ids='+id, params, function(data) {
+                            if(data.success){
+                                modals.info("数据保存成功");
+                            }                
+                        }); 
+              
+                     
+                });
+            },
+            fields : {
+            	fcqk : {
+                    validators : {
+                        notEmpty : {
+                            message : '请输入复查情况'
+                        }
+                    }
+                },
+                fcr : {
+                    validators : {
+                        notEmpty : {
+                            message : '请输入复查人'
+                        }
+                    }
+                },
+                fcrq : {
+                    validators : {
+                        notEmpty : {
+                            message : '请输入复查复查日期'
+                        }
+                    }
+                }
+            }
+        });
+        form1.initComponent();
+        $("#gf1").on("click",function(){
+            
+            	modals.openWin({
+                    winId:"checkRecord",
+                    title:'上传',
+                    width:'1000px',
+                    url:basePath+"/aqcheck/projectdetailfile?id="+id+"&type=10&lx=look",
+                    hideFunc:function(){
+                    	
+                    }
+                   });
+        })
+        $("#bgf1").on("click",function(){
+            	modals.openWin({
+                    winId:"checkRecord",
+                    title:'上传',
+                    width:'1000px',
+                    url:basePath+"/aqcheck/projectdetailfile?id="+id+"&type=20&lx=look",
+                    hideFunc:function(){
+                    	
+                    }
+                   });
+        	
+        })
+        $("#zg").on("click",function(){
+            	modals.openWin({
+                    winId:"checkRecord",
+                    title:'上传',
+                    width:'1000px',
+                    url:basePath+"/aqcheck/projectdetailfile?id="+id+"&type=30&lx=look",
+                    hideFunc:function(){
+                    	
+                    }
+                   });
+        	
+        })
+        $("#look1").on("click",function(){
+        	modals.openWin({
+                winId:"looks",
+                title:'查看',
+                width:'1000px',
+                url:basePath+"/aqcheck/edit?id="+id+"&lx=look&types="+types,
+               });
+            })
+         $("#fkd").on("click",function(){
+        	 modals.openWin({
+                 winId:"fks",
+                 title:'查看',
+                 width:'1000px',
+                 url:basePath+"/aqcheck/fkdIndex?id="+id+"&lx=add"
+                });
+            })
+        if(id){
+        	ajaxPost(basePath+'/aqcheck/load', {id:id}, function(data) {
+        		$("#contract-form2").form().initFormData(data);          
+            }); 
+         }
+    });
+    function resetForm(){
+        form.clearForm();
+        $("#contract-form2").data('bootstrapValidator').resetForm();
+    }
+</script>

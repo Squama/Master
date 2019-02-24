@@ -7,6 +7,7 @@ import com.cnpc.framework.annotation.Header;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 
@@ -96,7 +97,21 @@ public class SafeSkillJd implements Serializable {
     @Header(name = "'接受交底人")
     @Column(name = "jsjd")
     private String jsjd;
+    
+    @Header(name = "工种")
+    @Column(name = "gz")
+    private String gz;
 
+    @Header(name = "部门负责人")
+    @Column(name = "bmfzr")
+    private String bmfzr;
+    
+    @DateTimeFormat(pattern="yyyy-MM-dd")
+    @Header(name = "交底日期")
+    @Column(name = "jdtime")
+    private Date jdtime;
+    
+    
 	public String getId() {
 		return id;
 	}
@@ -215,6 +230,30 @@ public class SafeSkillJd implements Serializable {
 
 	public void setJsjd(String jsjd) {
 		this.jsjd = jsjd;
+	}
+
+	public String getGz() {
+		return gz;
+	}
+
+	public void setGz(String gz) {
+		this.gz = gz;
+	}
+
+	public String getBmfzr() {
+		return bmfzr;
+	}
+
+	public void setBmfzr(String bmfzr) {
+		this.bmfzr = bmfzr;
+	}
+
+	public Date getJdtime() {
+		return jdtime;
+	}
+
+	public void setJdtime(Date jdtime) {
+		this.jdtime = jdtime;
 	}
     
     
