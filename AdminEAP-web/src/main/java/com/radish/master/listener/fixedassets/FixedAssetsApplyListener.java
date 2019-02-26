@@ -75,8 +75,6 @@ public class FixedAssetsApplyListener implements TaskListener {
                     fixedAssetsPur.setStatus("14");
                 }else if ("upload".equals(delegateTask.getTaskDefinitionKey())) {
                     fixedAssetsPur.setStatus("15");
-                }else if ("audit".equals(delegateTask.getTaskDefinitionKey())) {
-                    fixedAssetsPur.setStatus("40");
                 }
             }
 

@@ -1,3 +1,19 @@
+<link rel="stylesheet" href="${basePath}/resources/common/libs/fileinput/css/fileinput.min.css">
+<style>
+
+#assets-form .krajee-default.file-preview-frame .kv-file-content {
+    height: auto;
+}
+
+#assets-form .krajee-default .file-footer-caption {
+    width: 100px;
+}
+</style>
+
+<script src="${basePath}/resources/common/libs/fileinput/js/fileinput.js"></script>
+<script src="${basePath}/resources/common/libs/fileinput/js/locales/zh.js"></script>
+<!--BaseFile组件-->
+<script src="${basePath}/resources/common/js/base-file.js"></script>
 <script src="${basePath}/resources/common/js/calculate.js"></script>
 <script type="text/javascript">
  $.fn.modal.Constructor.prototype.enforceFocus = function () {};
@@ -59,6 +75,22 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-md-12 dn applyfile">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">采购合同<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="hidden" name="fileID" id="fileID">
+                                    <div class="form-group">
+                                        <div class="btn btn-default btn-file" id="fileupload">
+                                            <i class="fa fa-paperclip"></i> 上传采购合同(最大. 100MB)
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="file" name="fileidattachment" id="fileidattachment">
+                                    </div> 
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="box-footer text-center" id="assetsformsave">
                         <button type="submit" class="btn btn-primary" data-btn-type="next">保存并编辑明细</button>
@@ -72,7 +104,7 @@
                     </span>
                 </div>
                 <div class="dataTables_filter" id="searchDivPDet" style="text-align:center;height:1px;">
-                   <input type="search" name="purID" class="form-control" operator="eq" style="display:none;">
+                   <input type="search" name="purID" id="purID" class="form-control" operator="eq" style="display:none;">
                    <div class="btn-group">
                        <button type="button" class="btn btn-primary" data-btn-type="search" id="refresh" style="display:none;">查询</button>
                    </div>
@@ -123,6 +155,12 @@
                 $('#assetsformsave').hide();
                 assetsform.initFormData(data);
                 $('.form-control',$('#assets-form')).attr("disabled","disabled");
+                if(data.faType == '10'){
+                	$('.applyfile').show();
+                }
+                if(data.status == '11' || data.status == '12' || data.status == '13' || data.status == '10'){
+                	$('.applyfile').hide();
+                }
             })
         } 
         
@@ -133,4 +171,52 @@
     function fnRenderOperate(value){
         return "";
     }
+    
+    var fileinputDefaults = {
+            maxFileSize: 102400,
+            maxFileCount:10,
+            previewSettings: {
+                image: {width: "160px", height: "60px"},
+                text: {width: "213px", height: "160px"},
+                object: {width: "160px", height: "auto"},
+                pdf: {width: "160px", height: "160px"},
+                other: {width: "160px", height: "160px"}
+            },
+            previewZoomSettings: {
+                image: {width: "auto", height: "auto", 'max-width': "100%", 'max-height': "100%"},
+                text: {width: "100%", height: "100%", 'min-height': "480px"},
+                object: {width: "auto", height: "100%", 'min-height': "480px"},
+                pdf: {width: "100%", height: "100%", 'min-height': "480px"},
+                other: {width: "auto", height: "100%", 'min-height': "480px"}
+            },
+            uploadUrl: basePath + "/fixedassets/apply/uploadMultipleFile",
+            deleteUrl: basePath + "/project/deletefile",
+            allowedPreviewTypes : ['image', 'object']
+      }
+      var defaults = {
+            title: "请上传附件",
+            getFileResultUrl: basePath+"/project/getFiles",
+            downloadFileUrl: basePath+"/project/download/",
+            fileinput: fileinputDefaults,
+            showType:'detail',
+            window:false,
+            callback:function(fileIds,oldfileIds){
+                this.showFiles({
+                    fileIds:fileIds,
+                    type:'preview'
+                });
+            }
+      }
+    
+      $("#fileupload").file($.extend({}, defaults, {
+          title:"请上传劳务合同",
+          fileinput:$.extend({}, fileinputDefaults, {
+              uploadExtraData: {"id":purID,"fileField":"fileID"}
+          }),
+          showContainer:'#fileidattachment',
+          fileIdContainer:"[name='fileID']",
+          extraPreviewConfig:{
+              "fileField":"fileID"
+          }
+      }));
 </script>
