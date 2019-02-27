@@ -1,0 +1,125 @@
+<script type="text/javascript">
+ $.fn.modal.Constructor.prototype.enforceFocus = function () {};
+ </script>
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><li class="fa fa-remove"></li></button>
+    <h5 class="modal-title">渠道</h5>
+</div>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <form id="form" name="form" class="form-horizontal">
+                <div class="box box-info">
+                    <div class="box-header with-border">
+                        <span>
+                            <i class="fa fa-edit">添加渠道</i>
+                        </span>
+                    </div>
+                    <div class="box-body">
+                        <!-- 内容 -->
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">渠道名称<span style="color:red">*</span></label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" name="channelName" placeholder="渠道名称"></input>
+                                </div>
+                            </div> 
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">价格<span style="color:red">*</span></label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" name="price" placeholder="价格"></input>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer text-center">
+                        <button type="submit" class="btn btn-primary" data-btn-type="next">保存</button>
+                    </div>
+                </div>
+            </form>
+            <div class="box box-success">
+                <div class="dataTables_filter" id="searchDiv" style="text-align:center;height:1px;">
+                   <input type="search" name="purTxID" id="purTxID" class="form-control" operator="eq" style="display:none;">
+                   <div class="btn-group">
+                       <button type="button" class="btn btn-primary" data-btn-type="search" id="refresh" style="display:none;">查询</button>
+                   </div>
+                </div>
+                <div class="box-body">
+                    <!-- 内容 -->
+                    <table id="channel_table" class="table table-bordered table-striped table-hover">
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    $.fn.modal.Constructor.prototype.enforceFocus =function(){};
+    var form = $("#form").form({baseEntity: false});
+    var channelTable;
+    
+    var purTxID="${purTxID?default(0)}";
+    $('#purTxID',$('#searchDiv')).val(purTxID);
+    
+    var assetsChannelObject = {
+            deleteChannel: function (rowId) {
+                ajaxPost(basePath + '/fixedassets/apply/deletechannel', {id:rowId}, function (data) {
+                    if (data.success) {
+                    	channelTable.table.page('first').draw(false);
+                    } else {
+                        modals.error(data.message);
+                    }
+                });
+            }
+    }
+    
+    $(function (){
+    	channelTable = new CommonTable("channel_table", "fixedassets_channel_list", "searchDiv", {
+            "ordering" : false,
+            "lengthChange": false,
+            "displayLength": 20,
+            "scrollY": "200px",
+            "scrollCollapse": true
+        });
+        
+        $("#form").bootstrapValidator({
+            message: '请输入有效值',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            submitHandler: function () {
+                var formData = form.getFormSimpleData();
+                formData.purTxID = purTxID;
+                ajaxPost(basePath + '/fixedassets/apply/savechannel', formData, function (data) {
+                    if (data.success) {
+                    	channelTable.table.page('first').draw(false);
+                    } else {
+                        modals.error(data.message);
+                    }
+                });
+            },
+            fields: {
+                "channelName": {
+                    validators: {
+                        notEmpty: {message: '渠道名称不能为空'}
+                    }
+                },
+                "price": {
+                    validators: {
+                        notEmpty: {message: '渠道价格不能为空'}
+                    }
+                }
+            }
+        });
+        
+        //初始化控件
+        form.initComponent();
+    });
+    
+    function fnRenderOperate(value){
+        return "<a href='javascript:void(0)' onclick='assetsChannelObject.deleteChannel(\"" + value + "\")'>删除</a>";
+    }
+</script>

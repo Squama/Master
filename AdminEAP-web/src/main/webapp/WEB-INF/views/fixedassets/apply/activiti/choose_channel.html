@@ -1,0 +1,68 @@
+<script type="text/javascript">
+ $.fn.modal.Constructor.prototype.enforceFocus = function () {};
+ </script>
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><li class="fa fa-remove"></li></button>
+    <h5 class="modal-title">渠道</h5>
+</div>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box box-success">
+                <div class="dataTables_filter" id="searchDiv" style="text-align:center;height:1px;">
+                   <input type="search" name="purTxID" id="purTxID" class="form-control" operator="eq" style="display:none;">
+                   <div class="btn-group">
+                       <button type="button" class="btn btn-primary" data-btn-type="search" id="refresh" style="display:none;">查询</button>
+                   </div>
+                </div>
+                <div class="box-body">
+                    <!-- 内容 -->
+                    <table id="channel_table" class="table table-bordered table-striped table-hover">
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    $.fn.modal.Constructor.prototype.enforceFocus =function(){};
+    var channelTable;
+    
+    var purTxID="${purTxID?default(0)}";
+    $('#purTxID',$('#searchDiv')).val(purTxID);
+    
+    var assetsChannelObject = {
+            chooseChannel: function (rowId) {
+            	var params = {};
+            	var rowData = channelTable.getRowDataByRowId(rowId);
+            	params.channelName = rowData.channelName;
+            	params.purTxID = purTxID;
+            	params.price = rowData.price;
+            	params.id = rowData.id;
+            	
+                ajaxPost(basePath + '/fixedassets/apply/choosechannel', params, function (data) {
+                    if (data.success) {
+                    	modals.hideWin(winId);
+                    	channelTable.table.page('first').draw(false);
+                    } else {
+                        modals.error(data.message);
+                    }
+                });
+            }
+    }
+    
+    $(function (){
+    	channelTable = new CommonTable("channel_table", "fixedassets_channel_list", "searchDiv", {
+            "ordering" : false,
+            "lengthChange": false,
+            "displayLength": 20,
+            "scrollY": "200px",
+            "scrollCollapse": true
+        });
+    });
+    
+    function fnRenderOperate(value){
+        return "<a href='javascript:void(0)' onclick='assetsChannelObject.chooseChannel(\"" + value + "\")'>选择</a>";
+    }
+</script>

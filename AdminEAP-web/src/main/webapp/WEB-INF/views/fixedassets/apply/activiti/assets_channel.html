@@ -103,14 +103,12 @@
     $('#purID',$('#searchDivPDet')).val(purID);
     
     var assetsEditObject = {
-            deleteDetail: function (rowId) {
-                ajaxPost(basePath + '/fixedassets/apply/deletedetail', {id:rowId}, function (data) {
-                    if (data.success) {
-                        assetsTxTable.table.page('first').draw(false);
-                    } else {
-                        modals.error(data.message);
-                    }
-                });
+    		editChannel: function (rowId) {
+                modals.openWin({
+                    winId:winId,
+                    width:'1200px',
+                    url:basePath+"/fixedassets/apply/editchannel?id="+rowId
+                   });
             },
             initGuidanceEditor:function(){
                 guidanceEditor = new $.fn.dataTable.Editor( {
@@ -152,10 +150,12 @@
         
         //初始化控件
         assetsform.initComponent();
-        assetsEditObject.initGuidanceEditor();
+        //assetsEditObject.initGuidanceEditor();
     });
     
     function fnRenderOperate(value){
-        return "";
+    	var oper = "";
+    	oper += "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='assetsEditObject.editChannel(\"" + value + "\")'>编辑渠道</a>";
+        return oper;
     }
 </script>

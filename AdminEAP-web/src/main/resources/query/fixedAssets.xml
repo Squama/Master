@@ -68,4 +68,12 @@
         <column key="id" header="操作" width="80" fnRender="fnRenderOperate"/>
     </query>
     
+    <query id="fixedassets_channel_list" key="id" tableName="明细渠道表" className="com.radish.master.entity.fixedassets.FixedAssetsPurChannel" widthType="px" pageSize="20">
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="channelName" header="渠道名称" width="150"/>
+        <column key="price" header="渠道价格" width="150"/>
+        <column key="id" header="操作" width="80" fnRender="fnRenderOperate"/>
+    </query>
+    
 </queryContext>

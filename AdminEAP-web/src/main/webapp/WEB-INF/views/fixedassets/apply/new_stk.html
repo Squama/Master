@@ -48,12 +48,6 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">单价（元）：<span style="color:red">*</span></label>
-                                <div class="col-sm-5">
-                                    <input type="text" class="form-control" id="price" name="price" placeholder="价格" onkeyup="value=value.replace(/[^\d.]/g,'')">                                
-                                </div>
-                            </div>
-                            <div class="form-group">
                                 <label class="col-sm-3 control-label">数量：<span style="color:red">*</span></label>
                                 <div class="col-sm-5">
                                     <input type="text" class="form-control" id="quantity" name="quantity" placeholder="数量" onkeyup="value=value.replace(/[^\d.]/g,'')">
@@ -121,11 +115,6 @@
                 "unit": {
                     validators: {
                         notEmpty: {message: '单位不能为空'}
-                    }
-                },
-                "price": {
-                    validators: {
-                        notEmpty: {message: '单价不能为空'}
                     }
                 },
                 "quantity": {

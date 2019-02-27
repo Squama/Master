@@ -45,6 +45,7 @@ import com.cnpc.framework.utils.SecurityUtil;
 import com.cnpc.framework.utils.StrUtil;
 import com.radish.master.entity.ProjectFileItem;
 import com.radish.master.entity.fixedassets.FixedAssetsPur;
+import com.radish.master.entity.fixedassets.FixedAssetsPurChannel;
 import com.radish.master.entity.fixedassets.FixedAssetsPurTx;
 import com.radish.master.entity.fixedassets.FixedAssetsStk;
 import com.radish.master.pojo.AssetsApplyVO;
@@ -310,6 +311,56 @@ public class FixedAssetsApplyController {
         String ext = StrUtil.getExtName(fileName);
         return fileIconMap.get(ext) == null ? fileIconMap.get("default").toString() : fileIconMap.get(ext).toString();
     }
+    
+    @RequestMapping(value="/editchannel",method = RequestMethod.GET)
+    public String editChannel(String id, HttpServletRequest request){
+        request.setAttribute("purTxID", id);
+        return "fixedassets/apply/activiti/edit_channel";
+    }
+    
+    @RequestMapping(method = RequestMethod.POST, value="/savechannel")
+    @ResponseBody
+    public Result saveChannel(FixedAssetsPurChannel fapc, HttpServletRequest request){
+    	fapc.setUpdateDateTime(new Date());
+    	fapc.setCreateDateTime(new Date());
+        
+        try {
+            commonService.save(fapc);
+        } catch (Exception e) {
+            return new Result(false,"保存失败，请联系系统管理员！");
+        }
+        return new Result(true, fapc);
+    }
+    
+    @RequestMapping(method = RequestMethod.POST, value="/deletechannel")
+    @ResponseBody
+    public Result deleteChannel(String id, HttpServletRequest request){
+    	FixedAssetsPurChannel tx = commonService.get(FixedAssetsPurChannel.class, id);
+        commonService.delete(tx);
+        return new Result(true, "success");
+    }
+    
+    @RequestMapping(value="/gotochannel",method = RequestMethod.GET)
+    public String gotoChannel(String id, HttpServletRequest request){
+        request.setAttribute("purTxID", id);
+        return "fixedassets/apply/activiti/choose_channel";
+    }
+    
+    @RequestMapping(method = RequestMethod.POST, value = "/choosechannel")
+    @ResponseBody
+    private Result chooseChannel(FixedAssetsPurChannel fapc, HttpServletRequest request) {
+        FixedAssetsPurTx tx = commonService.get(FixedAssetsPurTx.class, fapc.getPurTxID());
+
+        tx.setChannelID(fapc.getId());
+        tx.setChannelName(fapc.getChannelName());
+        tx.setPrice(fapc.getPrice());
+        tx.setUpdateDateTime(new Date());
+
+        commonService.save(tx);
+
+        return new Result(true);
+    }
+    
     /** 固定资产end */
     
     

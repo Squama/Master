@@ -122,12 +122,19 @@
 <script>
     $.fn.modal.Constructor.prototype.enforceFocus =function(){};
     var assetsform = $("#assets-form").form({baseEntity: false}), initData={}, faOptions=0;
-    var assetsTxTable, winId = "assetsDetWin";
+    var assetsTxTable, winId = "assetsDetWin", status;
     
     var purID="${purID?default(0)}";
     $('#purID',$('#searchDivPDet')).val(purID);
     
     var assetsEditObject = {
+    		chooseChannel: function (rowId) {
+                modals.openWin({
+                    winId:winId,
+                    width:'1200px',
+                    url:basePath+"/fixedassets/apply/gotochannel?id="+rowId
+                   });
+            },
             deleteDetail: function (rowId) {
                 ajaxPost(basePath + '/fixedassets/apply/deletedetail', {id:rowId}, function (data) {
                     if (data.success) {
@@ -161,6 +168,7 @@
                 if(data.status == '11' || data.status == '12' || data.status == '13' || data.status == '10'){
                 	$('.applyfile').hide();
                 }
+                status = data.status;
             })
         } 
         
@@ -169,7 +177,11 @@
     });
     
     function fnRenderOperate(value){
-        return "";
+    	var oper = "";
+	    if(status == '13'){
+	        oper += "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='assetsEditObject.chooseChannel(\"" + value + "\")'>选择渠道</a>";
+	    }
+	    return oper;
     }
     
     var fileinputDefaults = {
