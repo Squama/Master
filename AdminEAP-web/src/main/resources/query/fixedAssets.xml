@@ -21,10 +21,10 @@
         <column key="model" header="型号" width="150"/>
         <column key="norm" header="规格" width="150"/>
         <column key="unit" header="单位" width="150"/>
-        <column key="price" header="单价" width="150"/>
         <column key="quantity" header="数量" width="150"/>
         <column key="vendor" header="生产厂商" width="150"/>
-        <column key="channelName" header="渠道" width="150"/>
+        <column key="price" header="单价" width="150"/>
+        <column key="channelName" header="供应商" width="150"/>
         <column key="id" header="操作" width="80" fnRender="fnRenderOperate"/>
     </query>
     
@@ -71,7 +71,7 @@
     <query id="fixedassets_channel_list" key="id" tableName="明细渠道表" className="com.radish.master.entity.fixedassets.FixedAssetsPurChannel" widthType="px" pageSize="20">
         <column key="rowIndex" header="序号" width="80"/>
         <column key="id" hidden="true" header="id" width="80"/>
-        <column key="channelName" header="渠道名称" width="150"/>
+        <column key="channelName" header="供应商" width="150"/>
         <column key="price" header="渠道价格" width="150"/>
         <column key="id" header="操作" width="80" fnRender="fnRenderOperate"/>
     </query>

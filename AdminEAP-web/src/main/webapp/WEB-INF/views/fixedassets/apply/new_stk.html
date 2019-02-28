@@ -24,7 +24,7 @@
                                 </div>
                             </div> 
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">英文名称<span style="color:red">*</span></label>
+                                <label class="col-sm-3 control-label">英文名称</label>
                                 <div class="col-sm-5">
                                     <input type="text" class="form-control" id="englishName" name="englishName" placeholder="英文名称">
                                 </div>
@@ -54,7 +54,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">生产厂商：<span style="color:red">*</span></label>
+                                <label class="col-sm-3 control-label">生产厂商：</label>
                                 <div class="col-sm-5">
                                     <input type="text" class="form-control" id="vendor" name="vendor" placeholder="生产厂商">                                
                                 </div>
@@ -97,11 +97,6 @@
                         notEmpty: {message: '名称不能为空'}
                     }
                 },
-                "englishName": {
-                    validators: {
-                        notEmpty: {message: '英文名称不能为空'}
-                    }
-                },
                 "model": {
                     validators: {
                         notEmpty: {message: '型号不能为空'}
@@ -120,11 +115,6 @@
                 "quantity": {
                     validators: {
                         notEmpty: {message: '数量不能为空'}
-                    }
-                },
-                "vendor": {
-                    validators: {
-                        notEmpty: {message: '生产厂商不能为空'}
                     }
                 }
             }

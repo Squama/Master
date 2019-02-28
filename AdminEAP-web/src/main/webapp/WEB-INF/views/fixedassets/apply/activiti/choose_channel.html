@@ -44,7 +44,7 @@
                 ajaxPost(basePath + '/fixedassets/apply/choosechannel', params, function (data) {
                     if (data.success) {
                     	modals.hideWin(winId);
-                    	channelTable.table.page('first').draw(false);
+                    	assetsTxTable.table.page('first').draw(false);
                     } else {
                         modals.error(data.message);
                     }
