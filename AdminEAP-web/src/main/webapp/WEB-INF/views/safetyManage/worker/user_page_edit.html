@@ -304,10 +304,6 @@
     function setAvatar(avatar_id, avatar_url, isAdd) {
         $("#avatarImg").attr("src", basePath + "/worker/showImage?imageID=" + avatar_id);
         //如果是新增 绑定用户
-        if (isAdd) {
-            $("#avatarId").val(avatar_id);
-        } else {
-            $("#avatarId").val(null);
-        }
+        $("#avatarId").val(avatar_id);
     }
 </script>
