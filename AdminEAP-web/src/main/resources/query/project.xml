@@ -59,5 +59,20 @@
         <column key="subName" header="子项名称" classType="String" />
         <column key="id" header="操作" width="80" fnRender="fnRenderSub"/>
     </query>
-
+    <query id="bidfile_List" key="id" tableName="投标文件" className="com.radish.master.entity.project.BidFile" widthType="px" pageSize="200">
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="proname" header="项目" classType="String" width="150"/>
+        <column key="create_time" header="上传日期" classType="java.util.Date" width="150" allowSort="true" operator="between"  dateFormat="yyyy-mm-dd"/>
+        <column key="create_name" header="上传人" classType="String" width="150"/>
+        <column key="id" header="附件" width="100" fnRender="fnFj"/>
+    </query>
+	<query id="notice_List" key="id" tableName="公告" className="com.radish.master.entity.project.Notice" widthType="px" pageSize="200">
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="name" header="公告名" classType="String" width="150"/>
+        <column key="create_time" header="创建日期" classType="java.util.Date" width="150" allowSort="true" operator="between"  dateFormat="yyyy-mm-dd"/>
+        <column key="create_name" header="创建人" classType="String" width="150"/>
+        <column key="id" header="附件" width="100" fnRender="fnFj"/>
+    </query>
 </queryContext>
