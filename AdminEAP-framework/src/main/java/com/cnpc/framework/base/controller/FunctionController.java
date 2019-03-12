@@ -74,9 +74,9 @@ public class FunctionController {
 
     @RequestMapping(value = "/thirdtreeData", method = RequestMethod.POST)
     @ResponseBody
-    public List<TreeNode> getThirdTreeData() {
+    public List<TreeNode> getThirdTreeData(String roleId) {
 
-        return functionService.getThirdLevelTreeData();
+        return functionService.getThirdLevelTreeData(roleId);
     }
     
     @RequestMapping(value = "/get/{id}", method = RequestMethod.POST)
@@ -96,8 +96,10 @@ public class FunctionController {
     @ResponseBody
     public Result save(Function function) {
         function.setUpdateDateTime(new Date());
-        function.setRightID(function.getLevelCode());
-        function.setRightType(function.getFunctype());
+        if(StrUtil.isEmpty(function.getRightID())){
+        	function.setRightID(function.getLevelCode());
+        	function.setRightType(function.getFunctype());
+        }
         functionService.saveOrUpdate(function);
         return new Result(true);
     }

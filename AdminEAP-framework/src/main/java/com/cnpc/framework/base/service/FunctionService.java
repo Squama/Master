@@ -10,7 +10,7 @@ public interface FunctionService extends BaseService {
 
     List<TreeNode> getTreeData();
     
-    List<TreeNode> getThirdLevelTreeData();
+    List<TreeNode> getThirdLevelTreeData(String roleID);
 
     List<Function> getAll();
 

@@ -119,7 +119,7 @@
 
     function initTree(selectNodeId) {
         var treeData = null;
-        ajaxPost(basePath + "/function/thirdtreeData", null, function (data) {
+        ajaxPost(basePath + "/function/thirdtreeData", {roleId: roleId}, function (data) {
             treeData = data;
         });
         $("#tree").treeview({

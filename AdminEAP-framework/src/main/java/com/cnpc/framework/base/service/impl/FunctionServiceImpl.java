@@ -19,6 +19,7 @@ import com.cnpc.framework.base.entity.FunctionFilter;
 import com.cnpc.framework.base.entity.RoleFunction;
 import com.cnpc.framework.base.entity.User;
 import com.cnpc.framework.base.pojo.TreeNode;
+import com.cnpc.framework.base.pojo.TreeState;
 import com.cnpc.framework.base.service.FunctionService;
 import com.cnpc.framework.constant.RedisConstant;
 import com.cnpc.framework.utils.TreeUtil;
@@ -51,11 +52,21 @@ public class FunctionServiceImpl extends BaseServiceImpl implements FunctionServ
     }
     
     @Override
-    public List<TreeNode> getThirdLevelTreeData() {
+    public List<TreeNode> getThirdLevelTreeData(String roleId) {
 
         // 获取数据
         String hql = "from Function order by rightID asc";
         List<Function> funcs = this.find(hql);
+        
+        String sql="select distinct functionId from tbl_role_function where roleId=:roleId";
+        Map<String,Object> params=new HashMap<>();
+        params.put("roleId",roleId);
+        List<Map<String,Object>> authFuncs=this.findMapBySql(sql,params);
+        List<String> funcList = new ArrayList<String>();
+        for (Map<String, Object> func : authFuncs) {
+            String funcId=func.get("functionId").toString();
+            funcList.add(funcId);
+        }
         Map<String, TreeNode> nodelist = new LinkedHashMap<String, TreeNode>();
         for (Function func : funcs) {
             TreeNode node = new TreeNode();
@@ -65,6 +76,16 @@ public class FunctionServiceImpl extends BaseServiceImpl implements FunctionServ
             node.setRightType(func.getRightType());
             node.setLevelCode(func.getRightID());
             node.setIcon(func.getIcon());
+            
+            TreeState state = new TreeState();
+            if(funcList.contains(func.getId())){
+            	state.setChecked(true);
+            }else{
+            	state.setChecked(false);
+            }
+            
+            node.setState(state);
+            
             nodelist.put(node.getId(), node);
         }
         // 构造树形结构

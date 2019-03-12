@@ -4,98 +4,108 @@ import java.util.List;
 
 public class TreeNode {
 
-    private String text;
+	private String text;
 
-    private List<String> tags;
+	private List<String> tags;
 
-    private String id;
+	private String id;
 
-    private String parentId;
+	private String parentId;
 
-    private String rightType;
+	private String rightType;
 
-    private String levelCode;
+	private String levelCode;
 
-    private List<TreeNode> nodes;
+	private List<TreeNode> nodes;
 
-    private String icon;
+	private String icon;
 
-    public String getParentId() {
+	private TreeState state;
 
-        return parentId;
-    }
+	public String getParentId() {
 
-    public String getIcon() {
+		return parentId;
+	}
 
-        return icon;
-    }
+	public String getIcon() {
 
-    public void setIcon(String icon) {
+		return icon;
+	}
 
-        this.icon = icon;
-    }
+	public void setIcon(String icon) {
 
-    public String getLevelCode() {
+		this.icon = icon;
+	}
 
-        return levelCode;
-    }
+	public String getLevelCode() {
 
-    public void setLevelCode(String levelCode) {
+		return levelCode;
+	}
 
-        this.levelCode = levelCode;
-    }
+	public void setLevelCode(String levelCode) {
 
-    public void setParentId(String parentId) {
+		this.levelCode = levelCode;
+	}
 
-        this.parentId = parentId;
-    }
+	public void setParentId(String parentId) {
 
-    public String getText() {
+		this.parentId = parentId;
+	}
 
-        return text;
-    }
+	public String getText() {
 
-    public void setText(String text) {
+		return text;
+	}
 
-        this.text = text;
-    }
+	public void setText(String text) {
 
-    public List<String> getTags() {
+		this.text = text;
+	}
 
-        return tags;
-    }
+	public List<String> getTags() {
 
-    public void setTags(List<String> tags) {
+		return tags;
+	}
 
-        this.tags = tags;
-    }
+	public void setTags(List<String> tags) {
 
-    public String getId() {
+		this.tags = tags;
+	}
 
-        return id;
-    }
+	public String getId() {
 
-    public void setId(String id) {
+		return id;
+	}
 
-        this.id = id;
-    }
+	public void setId(String id) {
 
-    public List<TreeNode> getNodes() {
+		this.id = id;
+	}
 
-        return nodes;
-    }
+	public List<TreeNode> getNodes() {
 
-    public void setNodes(List<TreeNode> nodes) {
+		return nodes;
+	}
 
-        this.nodes = nodes;
-    }
+	public void setNodes(List<TreeNode> nodes) {
 
-    public String getRightType() {
-        return rightType;
-    }
+		this.nodes = nodes;
+	}
 
-    public void setRightType(String rightType) {
-        this.rightType = rightType;
-    }
+	public String getRightType() {
+		return rightType;
+	}
+
+	public void setRightType(String rightType) {
+		this.rightType = rightType;
+	}
+
+	public TreeState getState() {
+		return state;
+	}
+
+	public void setState(TreeState state) {
+		this.state = state;
+	}
 
 }
