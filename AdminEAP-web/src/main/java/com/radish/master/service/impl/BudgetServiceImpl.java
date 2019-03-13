@@ -122,7 +122,7 @@ public class BudgetServiceImpl extends BaseServiceImpl implements BudgetService 
                 throw new CodeException("文件不是excel格式");
             }
             
-            Sheet sheet = workbook.getSheet("Sheet1");
+            Sheet sheet = workbook.getSheetAt(0);
             
             int rows = sheet.getLastRowNum();
             

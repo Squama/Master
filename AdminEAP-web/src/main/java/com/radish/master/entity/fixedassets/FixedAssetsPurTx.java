@@ -63,6 +63,14 @@ public class FixedAssetsPurTx extends BaseEntity {
     @Column(name = "quantity")
     private String quantity;
 
+    @Header(name = "已入库数量")
+    @Column(name = "quantity_stk")
+    private String quantityStk;
+    
+    @Header(name = "最近入库数量")
+    @Column(name = "quantity_recent")
+    private String quantityRecent;
+
     @Header(name = "生产厂商")
     @Column(name = "vendor")
     private String vendor;
@@ -184,6 +192,14 @@ public class FixedAssetsPurTx extends BaseEntity {
 
     public void setFaType(String faType) {
         this.faType = faType;
+    }
+
+    public String getQuantityStk() {
+        return quantityStk;
+    }
+
+    public void setQuantityStk(String quantityStk) {
+        this.quantityStk = quantityStk;
     }
 
 }

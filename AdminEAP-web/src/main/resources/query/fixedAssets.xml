@@ -28,6 +28,22 @@
         <column key="id" header="操作" width="80" fnRender="fnRenderOperate"/>
     </query>
     
+    <query id="fixedassets_apply_tx_stk_list" key="id" tableName="请购表明细" className="com.radish.master.entity.fixedassets.FixedAssetsPurTx" widthType="px" pageSize="20">
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="name" header="名称" allowSort="true" width="150"/>
+        <column key="englishName" header="英文名称" width="150"/>
+        <column key="model" header="型号" width="150"/>
+        <column key="norm" header="规格" width="150"/>
+        <column key="unit" header="单位" width="150"/>
+        <column key="quantity" header="数量" width="150"/>
+        <column key="quantityStk" header="已入库数量" width="150"/>
+        <column key="quantityRecent" header="本次入库数量" width="150"/>
+        <column key="vendor" header="生产厂商" width="150"/>
+        <column key="price" header="单价" width="150"/>
+        <column key="channelName" header="供应商" width="150"/>
+    </query>
+    
     <query id="fixedassets_stock_list" key="id" tableName="库存查看表" className="com.radish.master.entity.fixedassets.FixedAssetsStk" widthType="px" pageSize="20">
         <column key="rowIndex" header="序号" width="80"/>
         <column key="id" hidden="true" header="id" width="80"/>

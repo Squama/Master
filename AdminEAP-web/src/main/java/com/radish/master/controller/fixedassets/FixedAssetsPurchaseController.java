@@ -125,6 +125,69 @@ public class FixedAssetsPurchaseController {
         return "fixedassets/purchase/tool_list";
     }
     
+    @RequestMapping(value = "/tool/acceptance", method = RequestMethod.POST)
+    @ResponseBody
+    public Result toolAcceptance(String purID, HttpServletRequest request) throws Exception {
+        
+        FixedAssetsPur pur = commonService.get(FixedAssetsPur.class, purID);
+        
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("purID", purID);
+        List<FixedAssetsPurTx> list = commonService.find("from FixedAssetsPurTx where purID = :purID", params);
+        
+        if(list.isEmpty()){
+            return new Result(false, "采购单不合规，请联系系统管理员"); 
+        }
+        
+        for(FixedAssetsPurTx purTx : list){
+            FixedAssetsStk stk;
+            if(StrUtil.isEmpty(purTx.getStkID())){
+                stk = new FixedAssetsStk();
+                stk.setName(purTx.getName());
+                stk.setEnglishName(purTx.getEnglishName());
+                stk.setModel(purTx.getModel());
+                stk.setBelongedStock("总库");
+                stk.setKeepedDeptID(pur.getDeptID());
+                stk.setKeepedDeptName(pur.getDeptName());
+                stk.setNorm(purTx.getNorm());
+                stk.setUnit(purTx.getUnit());
+                stk.setPrice(purTx.getPrice());
+                stk.setQuantity(purTx.getQuantity());
+                stk.setQuantityAvl(purTx.getQuantity());
+                stk.setVendor(purTx.getVendor());
+                stk.setFaType("20");
+            }else{
+                stk = commonService.get(purTx.getStkID());
+                BigDecimal oldQuantity = new BigDecimal(stk.getQuantity());
+                BigDecimal oldQuantityAvl = new BigDecimal(stk.getQuantityAvl());
+                BigDecimal increment = new BigDecimal(purTx.getQuantity());
+                
+                stk.setQuantity(oldQuantity.add(increment).setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
+                stk.setQuantityAvl(oldQuantityAvl.add(increment).setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
+            }
+            
+            commonService.save(stk);
+            
+            FixedAssetsStkTx stkTx = new FixedAssetsStkTx();
+            stkTx.setFixedAssetsID(stk.getId());
+            stkTx.setOperation("10");//入库
+            stkTx.setAmount(purTx.getQuantity());
+            stkTx.setBalance(stk.getQuantityAvl());
+            stkTx.setPrice(purTx.getPrice());
+            stkTx.setRemark("器具、工具一键入库");
+            stkTx.setOperator(SecurityUtil.getUser().getName());
+            stkTx.setOperateTime(new Date());
+            stkTx.setSourceTxID(purTx.getId());
+            
+            commonService.save(stkTx);
+        }
+        
+        pur.setStatus("60");
+        commonService.save(pur);
+        
+        return new Result(true, "一键入库成功");
+    }
+    
     /** 器具、工具end */
     
     /** 办公用品start */
@@ -132,6 +195,69 @@ public class FixedAssetsPurchaseController {
     public String officeList(HttpServletRequest request){
         request.setAttribute("deptOptions", JSONArray.toJSONString(commonService.getDeptCombobox()));
         return "fixedassets/purchase/office_list";
+    }
+    
+    @RequestMapping(value = "/office/acceptance", method = RequestMethod.POST)
+    @ResponseBody
+    public Result officeAcceptance(String purID, HttpServletRequest request) throws Exception {
+        
+        FixedAssetsPur pur = commonService.get(FixedAssetsPur.class, purID);
+        
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("purID", purID);
+        List<FixedAssetsPurTx> list = commonService.find("from FixedAssetsPurTx where purID = :purID", params);
+        
+        if(list.isEmpty()){
+            return new Result(false, "采购单不合规，请联系系统管理员"); 
+        }
+        
+        for(FixedAssetsPurTx purTx : list){
+            FixedAssetsStk stk;
+            if(StrUtil.isEmpty(purTx.getStkID())){
+                stk = new FixedAssetsStk();
+                stk.setName(purTx.getName());
+                stk.setEnglishName(purTx.getEnglishName());
+                stk.setModel(purTx.getModel());
+                stk.setBelongedStock("总库");
+                stk.setKeepedDeptID(pur.getDeptID());
+                stk.setKeepedDeptName(pur.getDeptName());
+                stk.setNorm(purTx.getNorm());
+                stk.setUnit(purTx.getUnit());
+                stk.setPrice(purTx.getPrice());
+                stk.setQuantity(purTx.getQuantity());
+                stk.setQuantityAvl(purTx.getQuantity());
+                stk.setVendor(purTx.getVendor());
+                stk.setFaType("30");
+            }else{
+                stk = commonService.get(purTx.getStkID());
+                BigDecimal oldQuantity = new BigDecimal(stk.getQuantity());
+                BigDecimal oldQuantityAvl = new BigDecimal(stk.getQuantityAvl());
+                BigDecimal increment = new BigDecimal(purTx.getQuantity());
+                
+                stk.setQuantity(oldQuantity.add(increment).setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
+                stk.setQuantityAvl(oldQuantityAvl.add(increment).setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
+            }
+            
+            commonService.save(stk);
+            
+            FixedAssetsStkTx stkTx = new FixedAssetsStkTx();
+            stkTx.setFixedAssetsID(stk.getId());
+            stkTx.setOperation("10");//入库
+            stkTx.setAmount(purTx.getQuantity());
+            stkTx.setBalance(stk.getQuantityAvl());
+            stkTx.setPrice(purTx.getPrice());
+            stkTx.setRemark("办公用品一键入库");
+            stkTx.setOperator(SecurityUtil.getUser().getName());
+            stkTx.setOperateTime(new Date());
+            stkTx.setSourceTxID(purTx.getId());
+            
+            commonService.save(stkTx);
+        }
+        
+        pur.setStatus("60");
+        commonService.save(pur);
+        
+        return new Result(true, "一键入库成功");
     }
     
     /** 办公用品end */

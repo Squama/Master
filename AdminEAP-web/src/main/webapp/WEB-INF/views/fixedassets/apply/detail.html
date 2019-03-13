@@ -178,7 +178,7 @@
     
     function fnRenderOperate(value){
     	var oper = "";
-	    if(status == '13'){
+	    if(status == '13' || status == '24'){
 	        oper += "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='assetsEditObject.chooseChannel(\"" + value + "\")'>选择供应商</a>";
 	    }
 	    return oper;
