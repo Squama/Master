@@ -66,7 +66,7 @@ public class FixedAssetsPurTx extends BaseEntity {
     @Header(name = "已入库数量")
     @Column(name = "quantity_stk")
     private String quantityStk;
-    
+
     @Header(name = "最近入库数量")
     @Column(name = "quantity_recent")
     private String quantityRecent;
@@ -200,6 +200,14 @@ public class FixedAssetsPurTx extends BaseEntity {
 
     public void setQuantityStk(String quantityStk) {
         this.quantityStk = quantityStk;
+    }
+
+    public String getQuantityRecent() {
+        return quantityRecent;
+    }
+
+    public void setQuantityRecent(String quantityRecent) {
+        this.quantityRecent = quantityRecent;
     }
 
 }

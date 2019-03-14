@@ -17,7 +17,7 @@
                 <!-- /.box-header -->
                 <div class="dataTables_filter" id="searchDiv">
                     <input type="search"  name = "faType" id="faType" value="30" style="display:none">
-                    <input type="search"  name = "status" id="status" value="40" style="display:none">
+                    <input type="search"  name = "status" id="status" value="40,50,60" style="display:none" operator="in">
                     <select id="deptID" class="form-control select2" name="deptID" style="width:300px;" operator="eq">
                         <option selected="selected" value="">选择一个部门</option>
                     </select> 
@@ -45,16 +45,27 @@
     }
     
     var fixedassetsObj = {
-            startFlow: function (packID) {
-                modals.confirm("是否要提交审批？",function(){
-                    ajaxPost(basePath + '/fixedassets/apply/office/start', {id:packID}, function (data) {
+    		acceptance: function (packID) {
+                modals.confirm("即将全部入库，请确认",function(){
+                    ajaxPost(basePath + '/fixedassets/purchase/office/acceptance', {purID:packID}, function (data) {
                         if (data.success) {
                             assetsTable.reloadData();
-                            modals.correct("流程已启动，请及时处理");
+                            modals.correct("已完成");
                         } else {
                             modals.error(data.message);
                         }
                     });
+                });
+            },
+            acceptancePart: function (packID) {
+                modals.openWin({
+                    winId:assetsWinId,
+                    title:'部分入库',
+                    width:'1200px',
+                    url:basePath+"/fixedassets/purchase/office/partaccept?id="+packID,
+                    hideFunc:function(){
+                        assetsTable.reloadData();
+                    }
                 });
             },
             overview:function(packID){
@@ -82,8 +93,11 @@
     
     function fnRenderOperate(value, type, rowObj){
         var oper = "";
-        if(rowObj.status == '新建'){
-            oper += "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='fixedassetsObj.startFlow(\"" + value + "\")'>提交审批</a>";
+        if(rowObj.status == '已生成采购单'){
+            oper += "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='fixedassetsObj.acceptance(\"" + value + "\")'>一键入库</a>";
+        }
+        if(rowObj.status == '已生成采购单' || rowObj.status == '部分入库'){
+            oper += "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='fixedassetsObj.acceptancePart(\"" + value + "\")'>部分入库</a>";
         }
         oper += "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='fixedassetsObj.overview(\"" + value + "\")'>详情</a>";
         return oper;

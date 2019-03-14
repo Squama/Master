@@ -1,0 +1,78 @@
+<script type="text/javascript">
+ $.fn.modal.Constructor.prototype.enforceFocus = function () {};
+</script>
+<script src="${basePath}/resources/cinder/editor/dataTables.editor.min.js"></script>
+<link rel="stylesheet" href="${basePath}/resources/cinder/editor/dataTables.editor.css">
+<link rel="stylesheet" href="${basePath}/resources/cinder/editor/editor.dataTables.min.css">
+<style>
+.fixed-button-area{position:fixed;z-index:1;left:45%;}
+.DTE_Field_InputControl{color:black;}
+</style>
+ <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><li class="fa fa-remove"></li></button>
+    <h5 class="modal-title">部分入库</h5>
+</div>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box box-success" id="assets_tx">
+                <div class="box-header with-border">
+                    <span>
+                        <i class="fa fa-files-o">部分入库</i>
+                    </span>
+                </div>
+                <div class="dataTables_filter" id="searchDivPDet" style="text-align:center;height:1px;">
+                   <input type="search" name="purID" id="purID" class="form-control" operator="eq" style="display:none;">
+                   <div class="btn-group">
+                       <button type="button" class="btn btn-primary" data-btn-type="search" id="refresh" style="display:none;">查询</button>
+                   </div>
+                </div>
+                <div class="box-body">
+                    <!-- 内容 -->
+                    <table id="assets_tx_part_table" class="table table-bordered table-striped table-hover">
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    $.fn.modal.Constructor.prototype.enforceFocus =function(){};
+    var assetsTxTable, winId = "assetsDetWin";
+    
+    var purID="${purID?default(0)}";
+    $('#purID',$('#searchDivPDet')).val(purID);
+    
+    var assetsEditObject = {
+            initGuidanceEditor:function(){
+                guidanceEditor = new $.fn.dataTable.Editor( {
+                    ajax: basePath+"/fixedassets/purchase/rowedit",
+                    table: "#assets_tx_part_table",
+                    idSrc:  'id',
+                    fields: [ 
+                        {label:"quantityRecent:", name:"quantityRecent",type:"text"}
+                    ]
+                } );
+                
+                $('#assets_tx_part_table').on( 'click', 'tbody td:not(:first-child)', function (e) {
+                    guidanceEditor.inline( this, {
+                        onBlur: 'submit'
+                    });
+                } );
+            }
+    }
+    
+    $(function (){
+        assetsTxTable = new CommonTable("assets_tx_part_table", "fixedassets_apply_tx_stk_list", "searchDivPDet", {
+            "ordering" : false,
+            "lengthChange": false,
+            "displayLength": 20,
+            "scrollY": "200px",
+            "scrollCollapse": true
+        });
+        
+        assetsEditObject.initGuidanceEditor();
+    });
+    
+</script>
