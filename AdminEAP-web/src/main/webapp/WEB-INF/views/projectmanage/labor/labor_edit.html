@@ -87,9 +87,33 @@
                                 </div>
                             </div>
                             <div class="form-group">
+                                <label class="col-sm-3 control-label">人工费单价（元）<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control labourcalculate" id="labourSin" name="labourSin" placeholder="人工费单价" value="0">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">人工费数量<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control labourcalculate" id="labourQuantity" name="labourQuantity" placeholder="人工费数量" value="0">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">人工费单位<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                	<select id="labourUnit" class="form-control select2" name="labourUnit" style="width:100%;">
+			                               <option selected="selected" value="">选择一个人工费单位</option>
+			                               <option value="m">m</option>
+			                               <option value="m²">m²</option>
+			                               <option value="m³">m³</option>
+			                               <option value="吨">吨</option>
+			                        </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
                                 <label class="col-sm-3 control-label">人工费（元）<span style="color:red">*</span></label>
                                 <div class="col-sm-6">
-                                    <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control calculate" id="labourPrice" name="labourPrice" placeholder="人工费" value="0">
+                                    <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control calculate" id="labourPrice" name="labourPrice" placeholder="人工费" value="0" readonly="readonly">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -200,6 +224,21 @@
                 "mechPrice": {
                     validators: {
                         notEmpty: {message: '机械费不能为空'}
+                    }
+                },
+                "labourSin": {
+                    validators: {
+                        notEmpty: {message: '人工费单价不能为空'}
+                    }
+                },
+                "labourQuantity": {
+                    validators: {
+                        notEmpty: {message: '人工费数量不能为空'}
+                    }
+                },
+                "labourUnit": {
+                    validators: {
+                        notEmpty: {message: '人工费单位不能为空'}
                     }
                 },
                 "labourPrice": {
@@ -322,6 +361,20 @@
                 form.initFormData(data);
             })
         }
+        
+        $(".labourcalculate").on("focusout", function(){
+            var sin = parseFloat($('#labourSin').val());
+            var quantity = parseFloat($('#labourQuantity').val());
+            if(sin == ''){
+            	sin = 0;
+            }
+            if(quantity == ''){
+            	quantity = 0;
+            }
+            var sub = accMultiplication(sin, quantity);
+            $('#labourPrice').val(sub);
+            $('#labourPrice').focusout();
+        });
         
         $(".calculate").on("focusout", function(){
             var mech = parseFloat($('#mechPrice').val());

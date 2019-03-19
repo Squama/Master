@@ -75,6 +75,18 @@ public class Labor extends BaseEntity {
     @Column(name = "mech_price")
     private String mechPrice;
 
+    @Header(name = "人工费单价")
+    @Column(name = "labour_sin")
+    private String labourSin;
+    
+    @Header(name = "人工费数量")
+    @Column(name = "labour_quantity")
+    private String labourQuantity;
+    
+    @Header(name = "人工费单位")
+    @Column(name = "labour_unit")
+    private String labourUnit;
+    
     @Header(name = "人工费")
     @Column(name = "labour_price")
     private String labourPrice;
@@ -350,5 +362,29 @@ public class Labor extends BaseEntity {
     public void setIssue(String issue) {
         this.issue = issue;
     }
+
+	public String getLabourSin() {
+		return labourSin;
+	}
+
+	public void setLabourSin(String labourSin) {
+		this.labourSin = labourSin;
+	}
+
+	public String getLabourQuantity() {
+		return labourQuantity;
+	}
+
+	public void setLabourQuantity(String labourQuantity) {
+		this.labourQuantity = labourQuantity;
+	}
+
+	public String getLabourUnit() {
+		return labourUnit;
+	}
+
+	public void setLabourUnit(String labourUnit) {
+		this.labourUnit = labourUnit;
+	}
 
 }
