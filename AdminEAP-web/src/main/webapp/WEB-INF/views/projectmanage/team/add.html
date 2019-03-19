@@ -172,7 +172,6 @@
         
         if(leaderOptions != 0){
         	loptions = JSON.parse(leaderOptions);
-        	console.log(loptions);
             for (var i = 0, len = loptions.length; i < len; i++) {
                 var option = loptions[i];
                 $('#teamLeaderID').append("<option value=\"" + option.value + "\">" + option.data + "</option>");

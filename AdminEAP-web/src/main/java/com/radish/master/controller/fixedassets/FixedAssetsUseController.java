@@ -85,6 +85,24 @@ public class FixedAssetsUseController {
         return "fixedassets/use/detail";
     }
     
+    @RequestMapping(value="/doaudit/{id}",method = RequestMethod.GET)
+    public String doAudit(@PathVariable("id") String id, HttpServletRequest request){
+        request.setAttribute("id", id);
+        
+        request.setAttribute("stkOptions", JSONArray.toJSONString(commonService.getAssetsCombobox()));
+        
+        return "fixedassets/use/do_audit";
+    }
+    
+    @RequestMapping(value="/doreturn/{id}",method = RequestMethod.GET)
+    public String doReturn(@PathVariable("id") String id, HttpServletRequest request){
+        request.setAttribute("id", id);
+        
+        request.setAttribute("stkOptions", JSONArray.toJSONString(commonService.getAssetsCombobox()));
+        
+        return "fixedassets/use/do_return";
+    }
+    
     @RequestMapping(method = RequestMethod.POST, value="/save")
     @ResponseBody
     public Result save(FixedAssetsUse fau, HttpServletRequest request){
@@ -131,12 +149,13 @@ public class FixedAssetsUseController {
     
     @RequestMapping(value = "/audit", method = RequestMethod.POST)
     @ResponseBody
-    public Result singleEstimate(String id, HttpServletRequest request) throws Exception {
-        FixedAssetsUse use = commonService.get(FixedAssetsUse.class, id);
+    public Result singleEstimate(FixedAssetsUse useForm, HttpServletRequest request) throws Exception {
+        
+        FixedAssetsUse use = commonService.get(FixedAssetsUse.class, useForm.getId());
         
         FixedAssetsStk stk = commonService.get(FixedAssetsStk.class, use.getStkID());
         
-        if(Long.valueOf(use.getQuantity()) > Long.valueOf(stk.getQuantityAvl())){
+        if(Double.valueOf(use.getQuantity()) > Double.valueOf(stk.getQuantityAvl())){
             return new Result(false, "库存不足！");  
         }
         
@@ -149,7 +168,7 @@ public class FixedAssetsUseController {
         
         FixedAssetsStkTx stkTx = new FixedAssetsStkTx();
         stkTx.setFixedAssetsID(stk.getId());
-        stkTx.setOperation("20");//入库
+        stkTx.setOperation("20");//领用
         stkTx.setAmount(use.getQuantity());
         stkTx.setBalance(stk.getQuantityAvl());
         stkTx.setPrice(stk.getPrice());
@@ -159,6 +178,12 @@ public class FixedAssetsUseController {
         stkTx.setSourceTxID(use.getId());
         
         use.setStatus("20");
+        if("20".equals(useForm.getNeedReturn())){
+            use.setStatus("30");
+            use.setQuantityReturned("0");
+            use.setQuantityReturning("0");
+            stkTx.setNeedReturn("20");
+        }
         
         commonService.save(stk);
         commonService.save(stkTx);
@@ -166,4 +191,60 @@ public class FixedAssetsUseController {
         
         return new Result(true, "审核完成");
     }
+    
+    @RequestMapping(value = "/returnsubmit", method = RequestMethod.POST)
+    @ResponseBody
+    public Result returnSubmit(FixedAssetsUse useForm, HttpServletRequest request) throws Exception {
+        
+        FixedAssetsUse use = commonService.get(FixedAssetsUse.class, useForm.getId());
+        
+        use.setQuantityReturning(useForm.getQuantityReturning());
+        use.setStatus("40");
+        
+        commonService.update(use);
+        
+        return new Result(true, "已提交");
+    }
+    
+    @RequestMapping(value = "/auditreturn", method = RequestMethod.POST)
+    @ResponseBody
+    public Result auditReturn(String id, HttpServletRequest request) throws Exception {
+        
+        FixedAssetsUse use = commonService.get(FixedAssetsUse.class, id);
+        
+        FixedAssetsStk stk = commonService.get(FixedAssetsStk.class, use.getStkID());
+        
+        BigDecimal oldQuantity = new BigDecimal(stk.getQuantity());
+        BigDecimal oldQuantityAvl = new BigDecimal(stk.getQuantityAvl());
+        BigDecimal returnedQuantity = new BigDecimal(use.getQuantityReturned());
+        BigDecimal increment = new BigDecimal(use.getQuantityReturning());
+        
+        stk.setQuantity(oldQuantity.add(increment).setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
+        stk.setQuantityAvl(oldQuantityAvl.add(increment).setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
+        use.setQuantityReturned(returnedQuantity.add(increment).setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
+        
+        FixedAssetsStkTx stkTx = new FixedAssetsStkTx();
+        stkTx.setFixedAssetsID(stk.getId());
+        stkTx.setOperation("30");//领用
+        stkTx.setAmount(use.getQuantityReturning());
+        stkTx.setBalance(stk.getQuantityAvl());
+        stkTx.setPrice(stk.getPrice());
+        stkTx.setRemark("归还审核通过");
+        stkTx.setOperator(SecurityUtil.getUser().getName());
+        stkTx.setOperateTime(new Date());
+        stkTx.setSourceTxID(use.getId());
+        
+        use.setStatus("50");
+        
+        if(returnedQuantity.add(increment).compareTo(new BigDecimal(use.getQuantity())) == -1){
+            use.setStatus("35");
+        }
+        
+        commonService.save(stk);
+        commonService.save(stkTx);
+        commonService.save(use);
+        
+        return new Result(true, "审核完成");
+    }
+    
 }

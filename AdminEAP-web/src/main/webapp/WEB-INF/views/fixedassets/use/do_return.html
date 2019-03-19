@@ -1,0 +1,142 @@
+<script src="${basePath}/resources/common/js/calculate.js"></script>
+<script type="text/javascript">
+ $.fn.modal.Constructor.prototype.enforceFocus = function () {};
+ </script>
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><li class="fa fa-remove"></li></button>
+    <h5 class="modal-title">资产归还</h5>
+</div>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <form id="assets-stk-form" name="assets-stk-form" class="form-horizontal">
+                <input type="hidden" name="id">
+                <div class="box box-info">
+                    <div class="box-header with-border">
+                    </div>
+                    <div class="box-body">
+                        <!-- 内容 -->
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">选择资产<span style="color:red">*</span></label>
+                                <div class="col-sm-5">
+                                    <select id="assetsStkID" class="form-control select2" name="stkID" style="width:100%;" disabled="disabled">
+                                        <option selected="selected" value="">选择一个已有资产</option>
+                                    </select>
+                                </div>
+                            </div> 
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">数量：<span style="color:red">*</span></label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" id="quantity" name="quantity" placeholder="数量" onkeyup="value=value.replace(/[^\d.]/g,'')" readonly="readonly">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">型号：<span style="color:red">*</span></label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" id="model" name="model" readonly="readonly">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">规格：<span style="color:red">*</span></label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" id="norm" name="norm" readonly="readonly">                                
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">生产厂商：<span style="color:red">*</span></label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" id="vendor" name="vendor" readonly="readonly">                                
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">已归还数量：<span style="color:red">*</span></label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" id="quantityReturned" name="quantityReturned" placeholder="已归还数量" onkeyup="value=value.replace(/[^\d.]/g,'')" readonly="readonly">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">本次归还数量：<span style="color:red">*</span></label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" id="quantityReturning" name="quantityReturning" placeholder="本次归还数量" onkeyup="value=value.replace(/[^\d.]/g,'')">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer text-center" id="assetsstksave">
+                        <button type="submit" class="btn btn-primary" data-btn-type="next">提交</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<script>
+    $.fn.modal.Constructor.prototype.enforceFocus =function(){};
+    var assetsstkform = $("#assets-stk-form").form({baseEntity: false}), initData={};
+    
+    var id="${id?default(0)}";
+    
+    var stkOptions = '${stkOptions?default(0)}',options=0;
+    if(stkOptions != 0){
+        faOptions = JSON.parse(stkOptions);
+    }
+    $(function (){
+        if(faOptions != 0){
+            for (var i = 0, len = faOptions.length; i < len; i++) {
+                var option = faOptions[i];
+                $('#assetsStkID').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+            }
+            
+            $('#assetsStkID').select2();
+        }
+        
+        $("#assets-stk-form").bootstrapValidator({
+            message: '请输入有效值',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            submitHandler: function () {
+                var formData = assetsstkform.getFormSimpleData();
+                console.log(formData);
+                ajaxPost(basePath + '/fixedassets/use/returnsubmit', formData, function (data) {
+                    if (data.success) {
+                        modals.hideWin(assetsWinId);
+                    } else {
+                        modals.error(data.message);
+                    }
+                });
+            },
+            fields: {
+                "quantityReturning": {
+                    validators: {
+                        notEmpty: {message: '本次归还数量不能为空'},
+                        callback : {
+                            message: '归还数量超限',
+                            callback : function(value, validator) {
+                                var sub = accAddition(value, $('#quantityReturned').val());
+                                if(parseFloat(sub) > parseFloat($('#quantity').val())){
+                                    return false;
+                                }
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        
+        //编辑回填
+        if(id != 0){
+            ajaxPost(basePath+"/fixedassets/use/getuse",{id:id},function(data){
+                assetsstkform.initFormData(data);
+            })
+        }
+        
+        //初始化控件
+        assetsstkform.initComponent();
+    });
+</script>

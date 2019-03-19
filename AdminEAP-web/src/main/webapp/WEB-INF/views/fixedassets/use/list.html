@@ -41,16 +41,15 @@
     var assetsWinId="assetsWin";
     
     var fixedassetsObj = {
-    		acceptance: function (packID) {
-                modals.confirm("即将申请归还，请确认",function(){
-                    ajaxPost(basePath + '/fixedassets/use/return', {purID:packID}, function (data) {
-                        if (data.success) {
-                            assetsTable.reloadData();
-                            modals.correct("已提交申请");
-                        } else {
-                            modals.error(data.message);
-                        }
-                    });
+    		doreturn:function(packID){
+                modals.openWin({
+                    winId:assetsWinId,
+                    title:'归还',
+                    width:'1200px',
+                    url:basePath+"/fixedassets/use/doreturn/"+packID,
+                    hideFunc:function(){
+                        assetsTable.reloadData();
+                    }
                 });
             },
             overview:function(packID){
@@ -103,8 +102,8 @@
     
     function fnRenderOperate(value, type, rowObj){
         var oper = "";
-        if(rowObj.status == '审核通过（需归还）'){
-            oper += "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='fixedassetsObj.return(\"" + value + "\")'>归还</a>";
+        if(rowObj.status == '审核通过（需归还）' || rowObj.status == '已部分归还'){
+            oper += "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='fixedassetsObj.doreturn(\"" + value + "\")'>归还</a>";
         }
         oper += "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='fixedassetsObj.overview(\"" + value + "\")'>详情</a>";
         return oper;

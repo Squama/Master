@@ -39,8 +39,29 @@
     
     var fixedassetsObj = {
     		audit: function (packID) {
-                modals.confirm("即将审核通过，请确认",function(){
+                /* modals.confirm("即将审核通过，请确认",function(){
                     ajaxPost(basePath + '/fixedassets/use/audit', {id:packID}, function (data) {
+                        if (data.success) {
+                            assetsTable.reloadData();
+                            modals.correct("已完成");
+                        } else {
+                            modals.error(data.message);
+                        }
+                    });
+                }); */
+                modals.openWin({
+                    winId:assetsWinId,
+                    title:'审核',
+                    width:'1200px',
+                    url:basePath+"/fixedassets/use/doaudit/"+packID,
+                    hideFunc:function(){
+                        assetsTable.reloadData();
+                    }
+                });
+            },
+            auditreturn:function(packID){
+            	modals.confirm("即将审核通过，请确认",function(){
+                    ajaxPost(basePath + '/fixedassets/use/auditreturn', {id:packID}, function (data) {
                         if (data.success) {
                             assetsTable.reloadData();
                             modals.correct("已完成");
@@ -101,7 +122,10 @@
     function fnRenderOperate(value, type, rowObj){
         var oper = "";
         if(rowObj.status == '新建'){
-            oper += "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='fixedassetsObj.audit(\"" + value + "\")'>审核通过</a>";
+            oper += "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='fixedassetsObj.audit(\"" + value + "\")'>领用审核</a>";
+        }
+        if(rowObj.status == '归还申请'){
+            oper += "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='fixedassetsObj.auditreturn(\"" + value + "\")'>归还审核</a>";
         }
         oper += "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='fixedassetsObj.overview(\"" + value + "\")'>详情</a>";
         return oper;

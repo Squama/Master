@@ -81,6 +81,14 @@ public class FixedAssetsUse extends BaseEntity {
     @Column(name = "quantity")
     private String quantity;
 
+    @Header(name = "已归还数量")
+    @Column(name = "quantity_returned")
+    private String quantityReturned;
+
+    @Header(name = "本次归还数量")
+    @Column(name = "quantity_returning")
+    private String quantityReturning;
+
     @Header(name = "生产厂商")
     @Column(name = "vendor")
     private String vendor;
@@ -250,6 +258,22 @@ public class FixedAssetsUse extends BaseEntity {
 
     public void setReturnTime(Date returnTime) {
         this.returnTime = returnTime;
+    }
+
+    public String getQuantityReturned() {
+        return quantityReturned;
+    }
+
+    public void setQuantityReturned(String quantityReturned) {
+        this.quantityReturned = quantityReturned;
+    }
+
+    public String getQuantityReturning() {
+        return quantityReturning;
+    }
+
+    public void setQuantityReturning(String quantityReturning) {
+        this.quantityReturning = quantityReturning;
     }
 
 }
