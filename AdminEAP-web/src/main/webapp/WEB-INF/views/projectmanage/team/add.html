@@ -193,9 +193,11 @@
         }
         
         $("#teamName",$('#team-add-form')).on("focusout", function(){
-            ajaxPost(basePath + "/budgetimport/genno/"+$(this).val(), null, function (data) {
-                $('#teamCode').val(data.message);
-            });
+        	if("" != $(this).val()){
+        		ajaxPost(basePath + "/budgetimport/genno/"+$(this).val(), null, function (data) {
+                    $('#teamCode').val(data.message);
+                });
+        	}
         });
     });
     
