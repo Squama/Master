@@ -139,6 +139,7 @@
         }
         if(rowObj.status=="待财务支付"){//支付确认按钮
         	oper += "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='teamSalaryObject.dotrue(\"" + value + "\")'>确认支付</a>";
+        	oper += "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='teamSalaryObject.print(\"" + value + "\")'>打印支付单</a>";
         }
         if(rowObj.status=="支付完成"){//打印支付单按钮
         	oper += "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='teamSalaryObject.print(\"" + value + "\")'>打印支付单</a>";
