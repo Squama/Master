@@ -135,5 +135,12 @@ public class ProjectFileController {
         request.setAttribute(ITEMNAME, "工程进度文件");
         return RESPONSEURL;
     }
+    @RequestMapping(value="/bid",method = RequestMethod.GET)
+    public String bid(HttpServletRequest request){
+        request.setAttribute(ITEMCOLUMN, "bid_file");
+        request.setAttribute(ITEMCODE,"bidFile");
+        request.setAttribute(ITEMNAME, "投标文件");
+        return RESPONSEURL;
+    }
     
 }

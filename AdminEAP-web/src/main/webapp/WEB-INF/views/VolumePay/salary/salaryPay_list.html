@@ -1,12 +1,12 @@
 <section class="content-header">
     <h1>
-        工资单打印
+        工资支付
         <small>列表</small>
     </h1>
     <ol class="breadcrumb">
         <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
         <li><a href="#">项目管理</a></li>
-        <li class="active">工资单打印</li>
+        <li class="active">工资支付</li>
     </ol>
 </section>
 
@@ -26,13 +26,23 @@
                         <option value="30">点工班组</option>
                         <option value="40">机关人员</option>
                     </select>
-                    <input type="search" class="form-control" name="status" value="60" style="display: none">
+                    <select id="status" class="form-control select2" name="status" style="width:200px;" operator="eq">
+                        <option selected="selected" value="">选择状态</option>
+                        <option value="10">新建</option>
+                        <option value="20">负责人审批</option>
+                        <option value="30">办公室主任审批</option>
+                        <option value="40">总经理审批</option>
+                        <option value="50">财务审批</option>
+                        <option value="60">已完成(未支付)</option>
+                        <option value="70">审核不通过</option>
+                        <option value="80">支付审核</option>
+                        <option value="90">待财务支付</option>
+                        <option value="100">支付完成</option>
+                        <option value="110">支付审核驳回</option>
+                    </select>
                     <div class="btn-group">
                         <button type="button" class="btn btn-primary" data-btn-type="search">查询</button>
                         <button type="button" class="btn btn-default" data-btn-type="reset">重置</button>
-                    </div>
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-default" data-btn-type="print">打印工资单</button>
                     </div>
                 </div>
                 <div class="box-body">
@@ -55,7 +65,7 @@
     var teamSalaryObject = {
             startFlow: function (mechID) {
                 modals.confirm("是否要提交审批？",function(){
-                    ajaxPost(basePath + '/project/team/salary/start', {id:mechID}, function (data) {
+                    ajaxPost(basePath + '/salarypay/start', {id:mechID}, function (data) {
                         if (data.success) {
                         	teamSalaryTable.reloadData();
                             modals.correct("流程已启动，请及时处理");
@@ -72,6 +82,24 @@
                     width:'1400px',
                     url:basePath+"/project/team/salary/detail/"+rowID
                    });
+            },
+            dotrue: function (rowID) {
+            	modals.confirm("是否确认支付？",function(){
+                    ajaxPost(basePath + '/salarypay/dotrue', {id:rowID}, function (data) {
+                    	if (data.success) {
+                    		teamSalaryTable.reloadData();
+                            modals.correct("支付成功");
+                        }
+                    });
+                });
+            },
+            print: function (rowID) {
+            	modals.openWin({
+                    winId:winId,
+                    title:'选择支付方式',
+                    width:'600px',
+                    url:basePath+"/salarypay/chooseZffs?id="+rowID
+                   });
             }
     }
     
@@ -79,7 +107,7 @@
     	teamSalaryTable = new CommonTable("team_salary_table", "salary_list", "searchDiv", null);
         
         //绑定按钮事件
-        $("button[data-btn-type]").click(function () {
+        /* $("button[data-btn-type]").click(function () {
             var action = $(this).data("btn-type");
             var rowId = teamSalaryTable.getSelectedRowId();
             switch (action) {
@@ -92,7 +120,7 @@
                	 	window.open(url);
 	                break;
             }
-        });
+        }); */
         
         if(options != 0){
             for (var i = 0, len = options.length; i < len; i++) {
@@ -106,6 +134,15 @@
     
     function fnRenderSalary(value, type, rowObj) {
         var oper = "";
+        if(rowObj.status=="已完成(未支付)"||rowObj.status=="支付审核驳回"){//提交审核按钮
+        	oper += "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='teamSalaryObject.startFlow(\"" + value + "\")'>提交支付审核</a>";
+        }
+        if(rowObj.status=="待财务支付"){//支付确认按钮
+        	oper += "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='teamSalaryObject.dotrue(\"" + value + "\")'>确认支付</a>";
+        }
+        if(rowObj.status=="支付完成"){//打印支付单按钮
+        	oper += "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='teamSalaryObject.print(\"" + value + "\")'>打印支付单</a>";
+        }
         oper += "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='teamSalaryObject.overview(\"" + value + "\")'>总览</a>";
         return oper;
     }
