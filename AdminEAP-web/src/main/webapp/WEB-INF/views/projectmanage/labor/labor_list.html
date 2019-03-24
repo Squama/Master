@@ -27,6 +27,7 @@
                     <div class="btn-group">
                         <button type="button" class="btn btn-default" data-btn-type="add">新增</button>
                         <button type="button" class="btn btn-default" data-btn-type="edit">编辑</button>
+                        <button type="button" class="btn btn-default" data-btn-type="delete">删除</button>
                     </div>
                 </div>
                 <div class="box-body">
@@ -92,6 +93,26 @@
                 case "add":
                     loadPage(basePath+"/labor/add");
                     break;
+                case "delete":
+	                if(!rowId){
+	                    modals.info('请选择要删除的行');
+	                    return false;
+	                }
+	                var data = laborTable.getSelectedRowData();
+                    if(data.status != '新建'){
+                    	modals.info('非新建状态合同不可删除!');
+                    	return false;
+                    }
+	                modals.confirm("是否要删除该行数据？",function(){
+	                    ajaxPost(basePath+"/labor/delete/"+rowId,null,function(data){
+	                        if(data.success){
+	                        	laborTable.reloadRowData();
+	                        }else{
+	                            modals.error("删除失败！");
+	                        }
+	                    });
+	                })
+	                break;
             }
         });
         

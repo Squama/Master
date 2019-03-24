@@ -32,7 +32,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.fastjson.JSONArray;
-import com.cnpc.framework.annotation.VerifyCSRFToken;
 import com.cnpc.framework.base.pojo.FileResult;
 import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.utils.CodeException;
@@ -411,6 +410,18 @@ public class LaborController {
 		return new Result(true, map);
 	}
 
+	@RequestMapping(value = "/delete/{id}", method = RequestMethod.POST)
+    @ResponseBody
+    public Result delete(@PathVariable("id") String id) {
+        try {
+            Labor labor = projectService.get(Labor.class, id);
+            projectService.delete(labor);
+        } catch (Exception e) {
+            return new Result(false);
+        }
+        return new Result(true);
+    }
+	
 	@RequestMapping(value = "/savesub")
 	@ResponseBody
 	public Result saveSub(LaborSub laborSub, HttpServletRequest request) {
