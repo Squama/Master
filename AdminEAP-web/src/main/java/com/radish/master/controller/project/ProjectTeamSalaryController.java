@@ -240,18 +240,15 @@ public class ProjectTeamSalaryController {
         paramsVolume.put("salaryID", id);
         List<SalaryVolume> volumeList = teamSalaryService.find(hqlVolume, paramsVolume);
         
-        if (detailList.isEmpty()) {
-            try {
-                Salary salary = teamSalaryService.get(Salary.class, id);
-                teamSalaryService.delete(salary);
-                teamSalaryService.batchDelete(volumeList);
-            } catch (Exception e) {
-                return new Result(false);
-            }
-            return new Result(true);
-        } else {
+        try {
+            Salary salary = teamSalaryService.get(Salary.class, id);
+            teamSalaryService.delete(salary);
+            teamSalaryService.batchDelete(volumeList);
+            teamSalaryService.batchDelete(detailList);
+        } catch (Exception e) {
             return new Result(false);
         }
+        return new Result(true);
     }
 
     @RefreshCSRFToken
