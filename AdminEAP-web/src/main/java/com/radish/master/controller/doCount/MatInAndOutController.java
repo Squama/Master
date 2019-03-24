@@ -164,8 +164,9 @@ public class MatInAndOutController {
 			baseService.save(qc);
 			for(InAndOutDetJc jc :jcs){
 				jc.setPid(qc.getId());
-				baseService.save(jc);
+				
 			}
+			baseService.batchSave(jcs);
 		}
 		m.put("success", "true");
 		m.put("id", tj.getId());

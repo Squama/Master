@@ -211,13 +211,12 @@
     } */
     function load(){
     	var url="";
-    	debugger
     	if(lx!=0){
         	url = basePath+'/volumepay/lookZfxx?zfid='+zfid
         	ajaxPost(url, {}, function(data) {
                 formdata = data.data;
                 form.initFormData(formdata); 
-                $("#kzf").val(parseFloat(formdata.payMoney)+parseFloat(kzf));                
+                $("#kzf").val(formatFloat(parseFloat(formdata.payMoney)+parseFloat(kzf),2));                
             }); 
     	}else{
     		$("#payType").val("10");
@@ -232,6 +231,10 @@
     function resetForm(){
         form.clearForm();
         $("#contract-form").data('bootstrapValidator').resetForm();
+    }
+    function formatFloat(f, digit) {
+        var m = Math.pow(10, digit);
+        return Math.round(f * m, 10) / m;
     }
 	
 </script>

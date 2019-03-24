@@ -1,0 +1,240 @@
+
+<link rel="stylesheet" href="${basePath}/resources/common/libs/fileinput/css/fileinput.min.css">
+<script src="${basePath}/resources/common/libs/fileinput/js/fileinput.js"></script>
+<script src="${basePath}/resources/common/libs/fileinput/js/locales/zh.js"></script>
+<!--BaseFile组件-->
+<script src="${basePath}/resources/common/js/base-file.js"></script>
+ <style >
+     	#tb table{
+     		font-family: verdana,arial,sans-serif;
+	     	font-size:11px;
+	     	color:#333333;
+	      	border-width: 1px;
+	      	border-color: #666666;
+	      	border-collapse: collapse;
+	      	word-wrap:break-word; 
+	      	word-break:break-all;
+     	}
+      	#tb th{
+     		 border-width: 1px;
+		     padding: 8px;
+		     border-style: solid;
+		     border-color: #666666;
+		     background-color: 	#FFEFDB;
+		     text-align: center;
+		     font-size: 15px
+		     
+     	}
+     	#tb td{
+	     	 border-width: 1px;
+		     padding: 8px;
+		     border-style: solid;
+		     border-color: #666666;
+		     background-color: #ffffff;
+		     text-align: center
+     	}
+     	#title td{
+     		 border-width: 0px;
+		     padding: 8px;
+		     border-color: #666666;
+		     background-color: #E0FFFF;
+		     text-align: center;
+		     font-size: 18px;
+		     font-weight: 500
+		     
+     	}
+     	
+	</style>
+
+<section class="content-header">
+    <h1>
+        <span>统计管理</span>
+        <small>成本统计</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
+        <li><a href="#">统计管理</a></li>
+        <li class="active">成本统计</li>
+    </ol>
+</section>
+
+    
+
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <span>
+                        <i class="fa fa-edit">生成统计数据</i>
+                    </span>
+                </div>
+                <form id="import_form" name="attendance_form" class="form-horizontal">
+                	<input type="text" id="Id" style="display: none" >
+                    <div class="box-body">
+                        <div class="col-md-12">
+                        	
+
+		                    <div class="form-group">
+		                    	<label for="projectId" class="col-sm-5 control-label">项目名称</label>
+		                   		<div class="col-sm-2">
+			                   		<select id="projectId" class="form-control select2 "  name="xmid" style="width:100%" >
+			                   			<option selected="selected" value="">选择一个项目</option>
+			                   		</select>
+		                   		</div>
+		                    </div>
+                        </div>
+                    </div>
+                    <div class="box-footer text-center">
+                        <button type="submit" class="btn btn-default" data-btn-type="add" id ="add">生成</button>
+                        <button type="button" class="btn btn-default" data-btn-type="print" id ="print">打印</button>
+                    </div>
+                </form>
+            </div>
+            <div class="box">
+                <div class="box-body">
+                    <table style="width: 100%;text-align: center" id="tb">
+                    	
+                    	<thead>
+	                    	<tr id="title">
+	                    		<td colspan="18" style="text-align: center;font-size: 25px;font-weight: 600">成本统计总表</td>
+	                    	</tr>
+                    		<tr >
+                    			<th rowspan="2" style="width: 10%"></th>
+                    			<th rowspan="2" style="width: 20%"></th>
+                    			<th rowspan="2" style="width: 20%">测算金额</th>
+                    			<th rowspan="2" style="width: 20%">消耗金额</th>
+                    			<th rowspan="2" style="width: 10%">测算与消耗对比</th>
+                    			<th colspan="3" style="width: 10%">合同金额</th>
+                    		</tr>
+                    	</thead>
+                    	<tbody  id="tbs">
+                    	
+                    	</tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+var pros = '${projectOptions?default(0)}',pro=0;
+if(pros != 0){
+	pro = JSON.parse(pros);
+}
+
+    var importform;
+    $(function () {
+    	
+    	
+        //初始化表单 
+        importform = $("#import_form").form({baseEntity:false});
+        //数据校验
+        $("#import_form").bootstrapValidator({
+            message: '请输入有效值',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            submitHandler: function () {
+            	 modals.confirm('确认生成明细？', function() {
+                     //Save Data，对应'submit-提交'
+                     var params = importform.getFormSimpleData();
+                     	ajaxPost(basePath+'/costall/docount', params, function(data) {
+                     		$("#Id").val("");
+                            if(data.success){
+                                 $("#Id").val(data.id);
+                            	 loadInfo(data.id);
+                              }else{	
+                            	  modals.info("统计失败");
+                              }
+                         }); 
+               
+                      
+                 });
+            },
+            fields: {
+                "xmid": {
+                    validators: {
+                        notEmpty: {message: '请选择项目'}
+                    }
+                }
+                
+            }
+        });
+        //初始化控件
+        importform.initComponent();
+        if(pro != 0){
+            for (var i = 0, len = pro.length; i < len; i++) {
+                var u = pro[i];
+                $('#projectId').append("<option value='" + u.value + "'>" + u.data + "</option>");
+            }
+            $("#projectId").select2();
+        }
+        $("#print").on("click",function(){
+			var id = $("#Id").val();
+			if(id){
+				var url = basePath+"/ureport/preview?_u=file:costall.ureport.xml&_t=1,5&xmid="+id;
+		   	 	window.open(url);
+			}else{
+				modals.info("请先生成数据");
+			}
+        })
+    });
+    function loadInfo(id){
+    	$("#tbs").empty();
+    	ajaxPost(basePath+'/costall/getList', {xmid:id}, function(data) {
+           var mxjcs = data;
+           if(mxjcs.length==0){
+        	   modals.info("数据条数0，请重新选择条件");
+        	   return;
+           }
+           var tb= "";
+		  for(var i=0;i<mxjcs.length;i++){
+			  var ys="";
+			  if(mxjcs[i].col1=="子项"){
+				 ys = "#7FFFD4";
+			  }else if(mxjcs[i].col1=="一"){
+				  ys = "#7EC0EE";
+				}
+			  tb +="<tr >";
+			
+			
+			tb +="<td style='background-color: "+ys+"'>"+mxjcs[i].col1+"</td>";
+			tb +="<td style='background-color: "+ys+"'>"+mxjcs[i].col2+"</td>";
+			tb +="<td style='background-color: "+ys+"'>"+mxjcs[i].col3+"</td>";
+			tb +="<td style='background-color: "+ys+"'>"+mxjcs[i].col4+"</td>";
+			tb +="<td style='background-color: "+ys+"'>"+mxjcs[i].col5+"</td>";
+			tb +="<td style='background-color: "+ys+"'>"+mxjcs[i].col6+"</td>";
+			tb +="</tr>";
+		  }
+		  $("#tbs").append(tb);
+           
+          
+        }); 
+    }
+    function jsonYearMonthDay(milliseconds) {
+		if(milliseconds==null || milliseconds=="undefined"){
+			return "";
+		}
+		var datetime = new Date();
+		datetime.setTime(milliseconds);
+		var year = datetime.getFullYear();
+		var month = datetime.getMonth() + 1 < 10 ? "0"
+				+ (datetime.getMonth() + 1) : datetime.getMonth() + 1;
+		var date = datetime.getDate() < 10 ? "0" + datetime.getDate()
+				: datetime.getDate();
+		return year + "." + month + "." + date;
+
+	}
+
+	function qcnull(value){
+		if(!value){
+			return "";
+		}else{
+			return value;
+		}
+	}
+    
+</script>
