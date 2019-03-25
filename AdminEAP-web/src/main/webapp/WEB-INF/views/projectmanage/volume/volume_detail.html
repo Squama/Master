@@ -132,6 +132,9 @@ legend{padding:.5em;border:0;width:auto}
                                   </div>
                             </div>
                         </div>
+                        <div class="col-sm-6" style="text-align: center;margin-left:25%">
+                            <button type="button" class="btn btn-success" id="lookFkd">班组罚款单</button>
+                       </div>
                     </div>
                 </form>
             </div>
@@ -225,6 +228,9 @@ legend{padding:.5em;border:0;width:auto}
                 }
             })
         }
+        $("#lookFkd").on("click",function(){
+			lookFkd();
+        })
     });
     
     function handlePX(type, state, sugg){
@@ -239,6 +245,16 @@ legend{padding:.5em;border:0;width:auto}
     		$('#'+type).html("审批不通过");
     		$('#'+type+'sugg').html(sugg);
     	}
+    }
+    function lookFkd(){
+    	modals.openWin({
+            winId:"lookfkd",
+            title:'班组罚款详情',
+            width:'1000px',
+            url:basePath+"/projectvolume/lookfkd?id="+id,
+            hideFunc:function(){
+            }          
+           });
     }
     
 </script>
