@@ -404,6 +404,8 @@ public class AqCheckController {
 			String proid = fk.getProid();
 			Project p = baseService.get(Project.class, proid);
 			fk.setProname(p.getProjectName());
+			fk.setWgtype("20");
+			fk.setIsqr("0");
 			baseService.save(fk);
 			r.setCode(fk.getId());
 			AqCheck dq = baseService.get(AqCheck.class, fk.getCheckDqId());
@@ -419,6 +421,7 @@ public class AqCheckController {
 			f.setWgdd(fk.getWgdd());
 			f.setFkje(fk.getFkje());
 			f.setWgCont(fk.getWgCont());
+			f.setWgtype("20");
 			baseService.update(f);
 			r.setCode(id);
 		}

@@ -95,6 +95,18 @@ public class CheckFkd implements Serializable {
     @Column(name = "wgbzid")
     private String wgbzid;
     
+    @Header(name = "违规类型 10 质量 20 安全")
+    @Column(name = "wgtype")
+    private String wgtype;
+    
+    @Header(name = "是否确认")
+    @Column(name = "isqr")
+    private String isqr;
+    
+    @Header(name = "执行对应的工程量")
+    @Column(name = "gclid")
+    private String gclid;
+    
 
 	public String getId() {
 		return id;
@@ -206,6 +218,30 @@ public class CheckFkd implements Serializable {
 
 	public void setWgbzid(String wgbzid) {
 		this.wgbzid = wgbzid;
+	}
+
+	public String getWgtype() {
+		return wgtype;
+	}
+
+	public void setWgtype(String wgtype) {
+		this.wgtype = wgtype;
+	}
+
+	public String getIsqr() {
+		return isqr;
+	}
+
+	public void setIsqr(String isqr) {
+		this.isqr = isqr;
+	}
+
+	public String getGclid() {
+		return gclid;
+	}
+
+	public void setGclid(String gclid) {
+		this.gclid = gclid;
 	}
     
     

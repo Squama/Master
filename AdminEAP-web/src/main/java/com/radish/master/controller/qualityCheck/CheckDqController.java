@@ -315,6 +315,8 @@ public class CheckDqController {
 			String proid = fk.getProid();
 			Project p = baseService.get(Project.class, proid);
 			fk.setProname(p.getProjectName());
+			fk.setWgtype("10");
+			fk.setIsqr("0");
 			baseService.save(fk);
 			r.setCode(fk.getId());
 			CheckDq dq = baseService.get(CheckDq.class, fk.getCheckDqId());
@@ -329,6 +331,7 @@ public class CheckDqController {
 			f.setWgbz(fk.getWgbz());
 			f.setWgdd(fk.getWgdd());
 			f.setFkje(fk.getFkje());
+			f.setWgtype("10");
 			f.setWgCont(fk.getWgCont());
 			baseService.update(f);
 			r.setCode(id);

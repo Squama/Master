@@ -95,7 +95,7 @@
     </form>
 </div>
 <script>
-    var form =null;
+    var formfkd =null;
     
     var pros = '${xm?default(0)}',pro=0;
     if(pros != 0){
@@ -105,7 +105,7 @@
     if(bzs != 0){
     	bz = JSON.parse(bzs);
     }
-    var  id = '${id}';
+    var  idfkd = '${id}';
     var lx = '${lx?default(0)}'
     if(lx=="look"){
 		$("#b_sub").css("display","none")
@@ -115,7 +115,7 @@
     }
     $(function() {
         //初始化控件
-        form=$("#fkd-form").form();
+        formfkd=$("#fkd-form").form();
         //数据校验
         $("#fkd-form").bootstrapValidator({
             message : '请输入有效值',
@@ -127,7 +127,7 @@
             submitHandler : function() {
                 modals.confirm('确认保存？', function() {
                     //Save Data，对应'submit-提交'
-                    var params = form.getFormSimpleData();
+                    var params = formfkd.getFormSimpleData();
                     	ajaxPost(basePath+'/checkdq/saveFkd', params, function(data) {
                             if(data.success){
                                 modals.info("数据保存成功");
@@ -184,8 +184,8 @@
             $("#wgbzid").select2();
         }
         
-        form.initComponent();
-        ajaxPost(basePath+'/checkdq/loadFkd', {id:id}, function(data) {
+        formfkd.initComponent();
+        ajaxPost(basePath+'/checkdq/loadFkd', {id:idfkd}, function(data) {
     		$("#fkd-form").form().initFormData(data.data); 
     		if(!data.data.id){
 				$("#print").css("display","none");
@@ -193,7 +193,7 @@
     		 $('#fileId').val(data.code);         
         });
         $("#print").on("click",function(){
-        	ajaxPost(basePath+'/checkdq/loadFkd', {id:id}, function(data) {
+        	ajaxPost(basePath+'/checkdq/loadFkd', {id:idfkd}, function(data) {
         		var url = basePath+"/ureport/preview?_u=file:fk.ureport.xml&_t=1,5&id="+data.data.id;
         	 	window.open(url);         
             });
@@ -205,7 +205,7 @@
 		$("#wgbz").val($("#wgbzid option:selected").html());
     }
     function resetForm(){
-        form.clearForm();
+    	formfkd.clearForm();
         $("#fkd-form").data('bootstrapValidator').resetForm();
     }
 

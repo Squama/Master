@@ -2,13 +2,16 @@
     <div class="row">
         <div class="col-xs-12">
             <div class="box">
+            	<div class="box-header with-border">
+                        <span>
+                            <i class="fa fa-files-o">班组罚款单(未执行)</i>
+                        </span>
+                    </div>
                 <!-- /.box-header -->
-                <div class="dataTables_filter" id="searchDiv1" style="display: none">
+                <div class="dataTables_filter" id="searchDiv1" >
                     <!--查询条件-->
                     <!--查询条件-->
                     <input style="display:none" name ="wgbzid" id = "bzid"/>
-       				 
-           
                     <div class="btn-group">
                         <!-- <button type="button" class="btn btn-primary" data-btn-type="search">查询</button> -->
                     </div>
@@ -17,6 +20,21 @@
                     <table id="lwContract_table" class="table table-bordered table-striped table-hover">
                     </table>
                 </div>
+              <div class="box-header with-border">
+                     <span>
+                         <i class="fa fa-files-o">班组罚款单(已执行)</i>
+                     </span>
+                 </div>
+               <!-- 入库单详情 -->
+                    <div class="dataTables_filter" id="searchDivSDet" >
+                    	<input style="display:none" name ="wgbzid" id = "bzid2"/>
+                    	<input style="display:none" name ="gclid" id = "gclid"/>
+                    </div>
+                    <div class="box-body">
+                        <!-- 内容 -->
+                        <table id="instock_det_table" class="table table-bordered table-striped table-hover">
+                        </table>
+                    </div>
             </div>
            </div>
          </div>
@@ -25,13 +43,75 @@
 
 <script>
     var dutycheckTable, winId = "projectQueryWin";
-    var id = '${id?default(0)}';
-    console.log(id);
-   	$("#bzid").val(id);
+    var instockDetTable, winId = "instockDetWin";
+    var bzid = '${bzid?default(0)}';
+    var gclid = '${gclid?default(0)}'
+   	$("#bzid").val(bzid);
+	$("#bzid2").val(bzid);
+	$("#gclid").val(gclid);
+	dutycheckTable = new CommonTable("lwContract_table", "lookfkdList", "searchDiv1", {
+        "ordering" : false,
+        "lengthChange": false,
+        "displayLength": 20,
+        "scrollY": "150px",
+        "scrollCollapse": true
+    });
+	instockDetTable = new CommonTable("instock_det_table", "lookfkdList_QR", "searchDivSDet", {
+        "ordering" : false,
+        "lengthChange": false,
+        "displayLength": 20,
+        "scrollY": "150px",
+        "scrollCollapse": true
+    });
     $(function (){
-    	dutycheckTable = new CommonTable("lwContract_table", "lookfkdList", "searchDiv1");
-        
-        });
+    	
+     });
 
-       
+    function fnRenderDelete(value){
+        return "<a href='javascript:void(0)' onclick='deleteDet(\"" + value + "\")'>取消执行</a>";
+    }  
+    function fnRenderAdd(value, type, obj){
+        return "<a href='javascript:void(0)' onclick='addDet(\"" + value + "\")'>确认执行</a>";
+    } 
+    function fnRenderXq(value, type, obj){
+        return "<a href='javascript:void(0)' onclick='lookDet(\"" + value + "\",\""+obj.wgtype+"\")'>详情</a>";
+    } 
+    function deleteDet(fkid){
+    	modals.confirm("是否进行取消执行操作？",function(){
+            ajaxPost(basePath + '/projectvolume/doqxfkd', {fkid:fkid,gclid:gclid}, function (data) {
+                if (data.success) {
+                	dutycheckTable.reloadData();
+                	instockDetTable.reloadData();
+                } else {
+                    modals.error(data.message);
+                }
+            });
+        });
+    }
+    function addDet(fkid){
+    	modals.confirm("是否进行确认执行操作？",function(){
+            ajaxPost(basePath + '/projectvolume/doqrfkd', {fkid:fkid,gclid:gclid}, function (data) {
+                if (data.success) {
+                	dutycheckTable.reloadData();
+                	instockDetTable.reloadData();
+                } else {
+                    modals.error(data.message);
+                }
+            });
+        });
+    }
+    function lookDet(id,wgtype){
+        var url = basePath+"/aqcheck/fkdIndex?id="+id+"&lx=look";
+        if(wgtype=="质量检查"){
+        	url = basePath+"/checkdq/fkdIndex?id="+id+"&lx=look";
+         }
+    	modals.openWin({
+            winId:winId,
+            title:'罚款单详情',
+            width:'800px',
+            url:url,
+            hideFunc:function(){
+            }
+           });
+    }
 </script>

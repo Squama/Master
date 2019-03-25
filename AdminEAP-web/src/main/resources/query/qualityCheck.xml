@@ -91,14 +91,42 @@
         <column key="id" header="管理" width="80" fnRender="fnRenderGl"/>
     </query>
     
-    <query id="lookfkdList" key="id" tableName="罚款单列表" className="com.radish.master.entity.qualityCheck.CheckFkd"
-		pageSize="10"  widthType="px" order="wgtime asc">
+    <query id="lookfkdList" key="id" tableName="罚款单列表" widthType="px">
+		 <sql>
+            <![CDATA[
+              SELECT *
+			  FROM tbl_checkfkd
+			  WHERE 1=1 and (isqr<>'1' or isqr is null)
+            ]]>
+        </sql>
+		
 		<column key="rowIndex" header="序号" width="50" allowSort="false"/>
-		<column key="id" header="id" hidden="true"/>
+		<column key="ID" header="id" hidden="true"/>
 		<column key="wgbz" header="违规班组" operator="like" width="100"  />
-		<column key="wgtime" header="罚款时间" operator="like" width="80" allowSort="true" dateFormat="yyyy-mm-dd" />
-		<column key="wgdd" header="违规地点" operator="like" width="80"  />
+		<column key="wgtime" header="罚款时间" operator="like" width="80" allowSort="true" />
 		<column key="fkje" header="罚款金额" align="left" operator="eq" width="100"  />
+		<column key="wgtype" header="罚款来源" align="center" operator="eq" width="100"  render="10=质量检查,20=安全检查"/>
+		<column key="checkDqId" header="详情" width="80" fnRender="fnRenderXq"/>
+		<column key="ID" header="操作" width="80" fnRender="fnRenderAdd"/>
+	</query>
+	
+	<query id="lookfkdList_QR" key="id" tableName="罚款单列表_已确认执行" widthType="px">
+		 <sql>
+            <![CDATA[
+              SELECT *
+			  FROM tbl_checkfkd
+			  WHERE 1=1 and isqr='1'
+            ]]>
+        </sql>
+		
+		<column key="rowIndex" header="序号" width="50" allowSort="false"/>
+		<column key="ID" header="id" hidden="true"/>
+		<column key="wgbz" header="违规班组" operator="like" width="100"  />
+		<column key="wgtime" header="罚款时间" operator="like" width="80" allowSort="true" />
+		<column key="fkje" header="罚款金额" align="left" operator="eq" width="100"  />
+		<column key="wgtype" header="罚款来源" align="center" operator="eq" width="100"  render="10=质量检查,20=安全检查"/>
+		<column key="checkDqId" header="详情" width="80" fnRender="fnRenderXq"/>
+		<column key="ID" header="操作" width="80" fnRender="fnRenderDelete"/>
 	</query>
 	
 	<query id="gcqzd_list" key="id" tableName="工程签证单列表" className="com.radish.master.entity.qualityCheck.Gcqzd"

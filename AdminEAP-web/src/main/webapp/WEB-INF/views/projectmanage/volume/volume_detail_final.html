@@ -269,7 +269,32 @@
             winId:"lookfkd",
             title:'班组罚款详情',
             width:'1000px',
-            url:basePath+"/projectvolume/lookfkd?id="+id            
+            url:basePath+"/projectvolume/lookfkd?id="+id,
+            hideFunc:function(){
+            	if(id!="0"){
+                    ajaxPost(basePath+"/projectvolume/get",{id:id},function(data){
+                        form.initFormData(data);
+                        $('#laborSubID').val(data.laborSubID).trigger("change");
+                        $('#mechInfo').html(data.applyMech + '元');
+                        $('#labourInfo').html(data.applyLabour + '元');
+                        $('#matInfo').html(data.applyMat + '元');
+                        $('#packInfo').html(data.applyPack + '元');
+                        $('#debitInfo').html(data.applyDebit + '元');
+                        $('#subInfo').html(data.applySub + '元');
+                        
+                        $('#mechBusi').html(data.businessMech + '元');
+                        $('#labourBusi').html(data.businessLabour + '元');
+                        $('#matBusi').html(data.businessMat + '元');
+                        $('#packBusi').html(data.businessPack + '元');
+                        $('#debitBusi').html(data.businessDebit + '元');
+                        $('#subBusi').html(data.businessSub + '元');
+                        
+                        if(data.status=="60"){
+                            $('.final').show();
+                        }
+                    })
+                }
+            }            
            });
     }
     

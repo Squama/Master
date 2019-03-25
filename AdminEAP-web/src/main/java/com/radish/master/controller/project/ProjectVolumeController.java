@@ -29,14 +29,17 @@ import com.cnpc.framework.annotation.RefreshCSRFToken;
 import com.cnpc.framework.base.entity.User;
 import com.cnpc.framework.base.pojo.PageInfo;
 import com.cnpc.framework.base.pojo.Result;
+import com.cnpc.framework.base.service.BaseService;
 import com.cnpc.framework.query.entity.QueryCondition;
 import com.cnpc.framework.utils.SecurityUtil;
 import com.cnpc.framework.utils.StrUtil;
 import com.radish.master.entity.Labor;
 import com.radish.master.entity.ProjectVolume;
 import com.radish.master.entity.project.LaborSub;
+import com.radish.master.entity.qualityCheck.CheckFkd;
 import com.radish.master.service.BudgetService;
 import com.radish.master.service.ProjectService;
+import com.radish.master.system.Arith;
 import com.radish.master.system.SpringUtil;
 
 /**
@@ -407,6 +410,110 @@ public class ProjectVolumeController {
     	}else{
     		request.setAttribute("bzid", "1");
     	}
+    	request.setAttribute("gclid", id);
     	return "projectmanage/volume/lookfkd";
+    }
+    //确认执行罚款单操作   改罚款单执行状态 并且增加工程量罚款金额
+    @RequestMapping("/doqrfkd")
+    @ResponseBody
+    public Result doqrfkd(HttpServletRequest request){
+    	Result r = new Result();
+    	String fkid = request.getParameter("fkid");
+    	String gclid = request.getParameter("gclid");
+    	CheckFkd fk = projectService.get(CheckFkd.class, fkid);
+    	//如果确认类型==1 直接返回
+    	if(fk.getIsqr()!=null&&"1".equals(fk.getIsqr())){
+    		return r;
+    	}
+    	
+    	fk.setIsqr("1");
+    	fk.setGclid(gclid);
+    	projectService.update(fk);
+    	ProjectVolume gcl = projectService.get(ProjectVolume.class, gclid);
+    	Arith ari = new Arith();
+    	if(fk.getFkje()==null||Double.valueOf(fk.getFkje())==0){
+    		return r;
+    	}
+    	Double fkje = Double.valueOf(fk.getFkje());
+    	//拿到经营科扣款和财务扣款  扣款相加
+    	Double jyk = 0.0;
+    	Double cw = 0.0;
+    	if(gcl.getBusinessDebit()!=null){
+    		jyk = Double.valueOf(gcl.getBusinessDebit());
+    	}
+    	if(gcl.getFinalDebit()!=null){
+    		cw =  Double.valueOf(gcl.getFinalDebit());
+    	}
+    	jyk = ari.add(jyk, fkje);
+    	gcl.setBusinessDebit(jyk.toString());
+    	cw = ari.add(cw, fkje);
+    	gcl.setFinalDebit(cw.toString());
+    	//重算经营科小计和财务小计   小计-扣款
+    	Double jyks = 0.0;
+    	Double cws = 0.0;
+    	if(gcl.getBusinessSub()!=null){
+    		jyks = Double.valueOf(gcl.getBusinessSub());
+    	}
+    	if(gcl.getFinalSub()!=null){
+    		cws =  Double.valueOf(gcl.getFinalSub());
+    	}
+    	jyks = ari.sub(jyks, fkje);
+    	gcl.setBusinessSub(jyks.toString());
+    	cws = ari.sub(cws, fkje);
+    	gcl.setFinalSub(cws.toString());
+    	
+    	projectService.update(gcl);
+    	return r;
+    }
+    @RequestMapping("/doqxfkd")
+    @ResponseBody
+    public Result doqxfkd(HttpServletRequest request){
+    	Result r = new Result();
+    	String fkid = request.getParameter("fkid");
+    	String gclid = request.getParameter("gclid");
+    	CheckFkd fk = projectService.get(CheckFkd.class, fkid);
+    	//如果确认类型==1 直接返回
+    	if("0".equals(fk.getIsqr())){
+    		return r;
+    	}
+    	
+    	fk.setIsqr("0");
+    	fk.setGclid("");
+    	projectService.update(fk);
+    	ProjectVolume gcl = projectService.get(ProjectVolume.class, gclid);
+    	Arith ari = new Arith();
+    	if(fk.getFkje()==null||Double.valueOf(fk.getFkje())==0){
+    		return r;
+    	}
+    	Double fkje = Double.valueOf(fk.getFkje());
+    	//拿到经营科扣款和财务扣款  扣款相加
+    	Double jyk = 0.0;
+    	Double cw = 0.0;
+    	if(gcl.getBusinessDebit()!=null){
+    		jyk = Double.valueOf(gcl.getBusinessDebit());
+    	}
+    	if(gcl.getFinalDebit()!=null){
+    		cw =  Double.valueOf(gcl.getFinalDebit());
+    	}
+    	jyk = ari.sub(jyk, fkje);
+    	gcl.setBusinessDebit(jyk.toString());
+    	cw = ari.sub(cw, fkje);
+    	gcl.setFinalDebit(cw.toString());
+    	//重算经营科小计和财务小计   小计-扣款
+    	Double jyks = 0.0;
+    	Double cws = 0.0;
+    	if(gcl.getBusinessSub()!=null){
+    		jyks = Double.valueOf(gcl.getBusinessSub());
+    	}
+    	if(gcl.getFinalSub()!=null){
+    		cws =  Double.valueOf(gcl.getFinalSub());
+    	}
+    	jyks = ari.add(jyks, fkje);
+    	gcl.setBusinessSub(jyks.toString());
+    	cws = ari.add(cws, fkje);
+    	gcl.setFinalSub(cws.toString());
+    	
+    	projectService.update(gcl);
+    	return r;
     }
 }
