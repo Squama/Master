@@ -61,7 +61,7 @@
     <query id="fixedassets_stock_tx_list" key="id" tableName="库存明细表" className="com.radish.master.entity.fixedassets.FixedAssetsStkTx" widthType="px" pageSize="20">
         <column key="rowIndex" header="序号" width="80"/>
         <column key="id" hidden="true" header="id" width="80"/>
-        <column key="operation" header="操作类型" allowSort="true" width="150" render="10=入库,20=领用,30=归还"/>
+        <column key="operation" header="操作类型" allowSort="true" width="150" render="10=入库,20=领用,30=归还,40=维修,50=维修归还"/>
         <column key="amount" header="发生额" width="150"/>
         <column key="balance" header="余额" width="150"/>
         <column key="price" header="入库价格" width="150"/>
