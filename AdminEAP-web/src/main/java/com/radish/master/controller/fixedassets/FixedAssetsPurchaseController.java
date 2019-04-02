@@ -109,7 +109,7 @@ public class FixedAssetsPurchaseController {
         stkTx.setBalance(stk.getQuantityAvl());
         stkTx.setPrice(purTx.getPrice());
         stkTx.setRemark("固定资产验收入库");
-        stkTx.setOperator(SecurityUtil.getUser().getName());
+        stkTx.setOperator(SecurityUtil.getUser().getLoginName());
         stkTx.setOperateTime(new Date());
         stkTx.setSourceTxID(purTx.getId());
         
@@ -180,7 +180,7 @@ public class FixedAssetsPurchaseController {
             stkTx.setBalance(stk.getQuantityAvl());
             stkTx.setPrice(purTx.getPrice());
             stkTx.setRemark("器具、工具一键入库");
-            stkTx.setOperator(SecurityUtil.getUser().getName());
+            stkTx.setOperator(SecurityUtil.getUser().getLoginName());
             stkTx.setOperateTime(new Date());
             stkTx.setSourceTxID(purTx.getId());
             
@@ -259,7 +259,7 @@ public class FixedAssetsPurchaseController {
             stkTx.setBalance(stk.getQuantityAvl());
             stkTx.setPrice(purTx.getPrice());
             stkTx.setRemark("办公用品一键入库");
-            stkTx.setOperator(SecurityUtil.getUser().getName());
+            stkTx.setOperator(SecurityUtil.getUser().getLoginName());
             stkTx.setOperateTime(new Date());
             stkTx.setSourceTxID(purTx.getId());
             
@@ -368,7 +368,7 @@ public class FixedAssetsPurchaseController {
         stkTx.setBalance(stk.getQuantityAvl());
         stkTx.setPrice(purTx.getPrice());
         stkTx.setRemark("部分入库");
-        stkTx.setOperator(SecurityUtil.getUser().getName());
+        stkTx.setOperator(SecurityUtil.getUser().getLoginName());
         stkTx.setOperateTime(new Date());
         stkTx.setSourceTxID(purTx.getId());
         

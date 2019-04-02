@@ -173,7 +173,7 @@ public class FixedAssetsUseController {
         stkTx.setBalance(stk.getQuantityAvl());
         stkTx.setPrice(stk.getPrice());
         stkTx.setRemark("领用审核通过");
-        stkTx.setOperator(SecurityUtil.getUser().getName());
+        stkTx.setOperator(SecurityUtil.getUser().getLoginName());
         stkTx.setOperateTime(new Date());
         stkTx.setSourceTxID(use.getId());
         
@@ -230,7 +230,7 @@ public class FixedAssetsUseController {
         stkTx.setBalance(stk.getQuantityAvl());
         stkTx.setPrice(stk.getPrice());
         stkTx.setRemark("归还审核通过");
-        stkTx.setOperator(SecurityUtil.getUser().getName());
+        stkTx.setOperator(SecurityUtil.getUser().getLoginName());
         stkTx.setOperateTime(new Date());
         stkTx.setSourceTxID(use.getId());
         
