@@ -1,0 +1,91 @@
+<section class="content-header">
+    <h1>
+        固定资产维修部门审核/接收
+        <small>列表</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
+        <li><a href="#">固定资产管理</a></li>
+        <li class="active">固定资产维修部门审核/接收</li>
+    </ol>
+</section>
+
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <!-- /.box-header -->
+                <div class="dataTables_filter" id="searchDiv" >
+                    <input placeholder="请输入维修单编号" name="number" class="form-control" type="search" likeOption="true"operator="like" />
+                    <input id = "deptid" name="qxdeptid" class="form-control" type="search" style="display: none"/> 
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-primary" data-btn-type="search">查询</button>
+                    </div>
+                    <div class="btn-group">
+                    <!-- <button type="button" class="btn btn-default" data-btn-type="look" id ="look">查看</button> -->
+                    </div>
+                </div>
+                <div class="box-body">
+                    <table id="volume_table" class="table table-bordered table-striped table-hover">
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    var form = $("#searchDiv").form({baseEntity: false}), initData={};
+    var volumeTable, winId = "volumeWin";
+    var deptid = '${deptid?default(0)}';
+    $("#deptid").val(deptid);
+    
+    var volumeManageObject = {
+            submit: function (id) {
+            	modals.confirm("是否要提交部门审批？",function(){
+
+            	});
+            }
+    }
+    
+    $(function (){
+    	volumeTable = new CommonTable("volume_table", "fixedmaintain_bmsh", "searchDiv", null);
+    });
+    
+    function fnRenderXQ(value, type, rowObj){
+    	var oper ="";
+    	if(rowObj.status=="部门审核"){
+    		oper +="<a href='javascript:void(0)' onclick='bmsh(\"" + value + "\")'>部门审核</a>";
+    	}else if(rowObj.status=="部门接收检验"){
+    		oper +="<a href='javascript:void(0)'style='color:red' onclick='bmjs(\"" + value + "\")'>接收检验</a>";
+        }
+        return oper;
+    }
+
+
+    function bmsh(value){
+    	modals.openWin({
+            winId:winId,
+            title:'部门审核',
+            width:'1000px',
+            url:basePath+"/fixedmaintain/bmsh?id="+value,
+            hideFunc:function(){
+            	volumeTable.reloadData();
+            }
+            
+           });
+    }
+    function bmjs(value){
+    	modals.openWin({
+            winId:winId,
+            title:'接收检验',
+            width:'1000px',
+            url:basePath+"/fixedmaintain/bmjs?id="+value,
+            hideFunc:function(){
+            	volumeTable.reloadData();
+            }
+            
+           });
+    }
+   
+</script>

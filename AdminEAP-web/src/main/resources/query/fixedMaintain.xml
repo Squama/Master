@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<queryContext xmlns="http://www.example.org/query" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.example.org/query query.xsd">
+    
+    <query id="fixedmaintain_index" key="id" tableName="维修申请" className="com.radish.master.entity.fixedassets.FixedMaintain" widthType="px" pageSize="20">
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="number" header="编号" width="150"/>
+        <column key="qxdept" header="部门" allowSort="true" width="150"/>
+        <column key="sqr" header="申请人" width="150"/>
+        <column key="createdate" header="申请时间" classType="String" width="150" dateFormat="yyyy-mm-dd"/>
+        <column key="status" header="状态" width="80" render="10=新建,20=部门审核,30=部门驳回,40=总经理审批,50=总经理驳回,60=检修,70=部门接收检验,80=完成"/>
+        <column key="id" header="操作" width="80" fnRender="fnRenderXQ"/>
+    </query>
+     <query id="fixedmaintain_kcsy" key="id" tableName="请修库存剩余量列表" widthType="px">
+        <sql>
+            <![CDATA[
+              select 
+			id , name ,unit ,norm, quantity_avl 
+			from tbl_fixedassets_stk where 1=1
+            ]]>
+        </sql>
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="name" header="名称" classType="String" width="150"/>
+        <column key="unit" header="单位" classType="String" width="150" />
+        <column key="norm" header="规格" classType="String" width="150" allowSort="true" />
+        <column key="quantity_avl" header="库存剩余量" width="80" />
+        <column key="id" header="操作" width="80" fnRender="fnRenderKcmx"/>
+    </query>
+    <query id="fixedmaintain_wjsy" key="id" tableName="请修外借剩余量列表" widthType="px">
+        <sql>
+            <![CDATA[
+              select 
+			wj.id id ,wj.operator operator, wj.stk_id stk_id, wj.name name, 
+			(ifnull(wj.quantity,0)-ifnull(wj.quantity_returned,0)) wjsl ,wj.unit unit,wj.norm norm,
+			(select ifnull(sum(mx.quantity),0)-ifnull(sum(ghsl),0) from  tbl_fixedmaintain_tx mx where mx.wjid = wj.id and mx.zcid = wj.stk_id) wxsl 
+			from tbl_fixedassets_use wj where 1=1 and 
+			ifnull(wj.quantity,0)-ifnull(wj.quantity_returned,0) >0
+            ]]>
+        </sql>
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="stk_id" hidden="true" header="id" width="80"/>
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="name" header="名称" width="80"/>
+        <column key="unit" header="单位" classType="String" width="150"/>
+        <column key="norm" header="规格" classType="String" width="150" />
+        <column key="wjsl" header="未还数量" classType="String" width="150" allowSort="true" />
+        <column key="wxsl" header="维修余量" width="80" />
+        <column key="id" header="操作" width="80" fnRender="fnRenderWjmx"/>
+    </query>
+    <query id="fixedmaintain_indexMx" key="id" tableName="维修申请明细" className="com.radish.master.entity.fixedassets.FixedMaintainTx" widthType="px" pageSize="20">
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="name" header="名称" width="150"/>
+        <column key="norm" header="规格" allowSort="true" width="150"/>
+        <column key="quantity" header="数量" width="150"/>
+        <column key="content" header="维修原因" classType="String" width="150" />
+        <column key="id" header="操作" width="80" fnRender="fnRenderScmx"/>
+    </query>
+    <query id="fixedmaintain_bmsh" key="id" tableName="请修部门审核列表" widthType="px">
+        <sql>
+            <![CDATA[
+              select 
+			id,number,qxdept,qxdeptid,sqr,createdate,status,isone
+			from tbl_fixedmaintain where 1=1 and status in('20','70') 
+            ]]>
+        </sql>
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="number" header="编号" width="150"/>
+        <column key="isone" header="申请类型" width="80" render="10=个人申请,20=仓库申请"/>
+        <column key="qxdept" header="部门" allowSort="true" width="150"/>
+        <column key="sqr" header="申请人" width="150"/>
+        <column key="createdate" header="申请时间" classType="String" width="150" />
+        <column key="status" header="状态" width="80" render="10=新建,20=部门审核,30=部门驳回,40=总经理审批,50=总经理驳回,60=检修,70=部门接收检验,80=完成"/>
+        <column key="id" header="操作" width="80" fnRender="fnRenderXQ"/>
+    </query>
+    
+</queryContext>

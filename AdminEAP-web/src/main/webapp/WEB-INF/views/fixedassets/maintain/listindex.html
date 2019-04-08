@@ -1,0 +1,166 @@
+<section class="content-header">
+    <h1>
+        固定资产维修申请
+        <small>列表</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
+        <li><a href="#">固定资产管理</a></li>
+        <li class="active">固定资产维修申请</li>
+    </ol>
+</section>
+
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <!-- /.box-header -->
+                <div class="dataTables_filter" id="searchDiv" >
+                    <input placeholder="请输入维修单编号" name="number" class="form-control" type="search" likeOption="true"operator="like" />
+                    <input id = "userid" name="sqr" class="form-control" type="search" style="display: none"/> 
+                    <input id = "isgr" name="isone" class="form-control" type="search" style="display: none"/> 
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-primary" data-btn-type="search">查询</button>
+                    </div>
+                    <div class="btn-group">
+                    <button type="button" class="btn btn-default" data-btn-type="add" id ="add">新增申请</button>
+                    <button type="button" class="btn btn-default" data-btn-type="edit" id ="edit">修改</button>
+                    <button type="button" class="btn btn-default" data-btn-type="look" id ="look">查看</button>
+                    <button type="button" class="btn btn-default" data-btn-type="delete" id ="delete">删除</button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <table id="volume_table" class="table table-bordered table-striped table-hover">
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    var form = $("#searchDiv").form({baseEntity: false}), initData={};
+    var volumeTable, winId = "volumeWin";
+    var qxr = '${qxr?default(0)}';
+    $("#userid").val(qxr);
+    var isone = '${isone?default(0)}';
+    $("#isgr").val(isone);
+    
+    var volumeManageObject = {
+            submit: function (id) {
+            	modals.confirm("是否要提交部门审批？",function(){
+                    ajaxPost(basePath + '/fixedmaintain/submitBm', {sqid:id}, function (data) {
+                        if (data.success) {
+                        	volumeTable.reloadData();
+                            modals.correct("请提醒部门领导尽快审核");
+                        } else {
+                            modals.error(data.message);
+                        }
+                    });
+                });
+            }
+    }
+    
+    $(function (){
+    	volumeTable = new CommonTable("volume_table", "fixedmaintain_index", "searchDiv", null);
+        
+        //绑定按钮事件
+        $("button[data-btn-type]").click(function () {
+            var action = $(this).data("btn-type");
+            var rowId = volumeTable.getSelectedRowId();
+            switch (action) {
+            case "add":
+            	modals.openWin({
+                    winId:winId,
+                    title:'创建',
+                    width:'1000px',
+                    url:basePath+"/fixedmaintain/add?isone="+isone,
+                    hideFunc:function(){
+                    	volumeTable.reloadData();
+                    },
+                    
+                   });
+                break;
+            case "edit":
+            	if(!rowId){
+                    modals.info('请选择要修改的维修数据');
+                    return false;
+                }
+            	if(volumeTable.getSelectedRowData().status!='新建'&&volumeTable.getSelectedRowData().status!='部门驳回'
+            		&&volumeTable.getSelectedRowData().status!='总经理驳回'){
+                	modals.info('只能修改新建、驳回的数据');
+                    return false;
+                }
+            	modals.openWin({
+                    winId:winId,
+                    title:'修改',
+                    width:'1000px',
+                    url:basePath+"/fixedmaintain/add?id="+rowId+"&isone="+isone,
+                    hideFunc:function(){
+                    	volumeTable.reloadData();
+                    },
+                    
+                   });
+                break;
+            case "look":
+            	if(!rowId){
+                    modals.info('请选择要查看的维修数据');
+                    return false;
+                }
+            	modals.openWin({
+                    winId:winId,
+                    title:'创建',
+                    width:'1000px',
+                    url:basePath+"/fixedmaintain/cwlook?lx=look&id="+rowId,
+                    hideFunc:function(){
+                    	volumeTable.reloadData();
+                    }
+                    
+                   });
+                break;
+       		case "delete":
+       			if(!rowId){
+                    modals.info('请选择要删除的行');
+                    return false;
+                }
+            	if(volumeTable.getSelectedRowData().status!='新建'&&volumeTable.getSelectedRowData().status!='部门驳回'
+            		&&volumeTable.getSelectedRowData().status!='总经理驳回'){
+                	modals.info('只能删除新建、驳回的信息');
+                    return false;
+                }
+                modals.confirm("是否要删除该行数据？",function(){
+                    ajaxPost(basePath+"/fixedmaintain/delqx?sqid="+rowId,null,function(data){
+                    	if(data.success){
+                    		volumeTable.reloadData();
+                    	}
+                    	
+              
+                    });
+                })
+            break;
+       		
+            }
+        });
+        
+        
+        
+    });
+    
+    function fnRenderXQ(value, type, rowObj){
+    	var oper ="";
+    	if(rowObj.status=="新建"){
+    		oper +="<a href='javascript:void(0)' onclick='volumeManageObject.submit(\"" + value + "\")'>提交部门审核</a>";
+    	}else if(rowObj.status=="部门驳回"){
+    		oper +="<a href='javascript:void(0)'style='color:red' onclick='lookyy(\"" + rowObj.bmyj.replace(/[\r\n]/g,'') + "\")'>驳回原因</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='volumeManageObject.submit(\"" + value + "\")'>提交部门审核</a>";
+        }else if(rowObj.status=="总经理驳回"){
+    		oper +="<a href='javascript:void(0)'style='color:red' onclick='lookyy(\"" + rowObj.bossyj.replace(/[\r\n]/g,'') + "\")'>驳回原因</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='volumeManageObject.submit(\"" + value + "\")'>提交部门审核</a>";
+        }
+        return oper;
+    }
+
+
+    function lookyy(value){
+    	modals.info(value);
+    }
+   
+</script>

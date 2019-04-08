@@ -1,0 +1,168 @@
+<link rel="stylesheet" href="${basePath}/resources/common/libs/fileinput/css/fileinput.min.css">
+<style>
+
+#projectaddstep2 .krajee-default.file-preview-frame .kv-file-content {
+    height: auto;
+}
+
+#projectaddstep2 .krajee-default .file-footer-caption {
+    width: 100px;
+}
+
+</style>
+<script src="${basePath}/resources/common/libs/fileinput/js/fileinput.js"></script>
+<script src="${basePath}/resources/common/libs/fileinput/js/locales/zh.js"></script>
+<!--BaseFile组件-->
+<script src="${basePath}/resources/common/js/base-file.js"></script>
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><li class="fa fa-remove"></li></button>
+    <h5 class="modal-title"></h5>
+</div>
+<div class="modal-body" style="max-height:700px;overflow-y:auto;">
+	<span id="msg" style="color: red"></span>
+    <form id="contract-form" name="contract-form" class="form-horizontal">
+     <input type="hidden" name="id" id= "id">
+       <div class="box-body">
+            <div class="col-md-6">
+                <div class="form-group">
+					<label  for="projectId" class="col-sm-3 control-label">申请人</label>
+					<div class=" col-sm-8">
+						<input  id="sqrid" name="sqrid"   style="display: none">
+						<input class="form-control " id="sqr" name="sqr"   placeholder="申请人姓名" readonly="readonly" >
+					</div>
+				</div>
+                 <div class="form-group">
+                     <label class="col-sm-3 control-label">维修类型</label>
+                     <div class="col-sm-8">
+                         <select  class="form-control" name="wxtype" id="wxtype">
+                         	<option value="10" selected="selected">自修</option>
+                         	<option value="20">外修</option>
+                         </select>
+                     </div>
+                 </div>
+            </div>
+            <div class="col-md-6">
+            	<div class="form-group">
+					<label  for="number" class="col-sm-3 control-label">编号</label>
+					<div class=" col-sm-8">
+						<input class="form-control " id="number" name="number"   placeholder="编号" readonly="readonly" >
+				
+					</div>
+				</div>
+            </div>   
+        </div>
+        <!-- /.box-footer -->
+        <div class="form-group">
+               <label for="bmyj" class="col-sm-2 control-label">审核意见</label>
+
+               <div class="col-sm-9">
+                   <textarea class="form-control" id="bmyj" name="bmyj" placeholder="审核意见" rows="6" ></textarea>
+               </div>
+         </div>
+            
+        <div class="" style="text-align: center;">
+            <!--以下两种方式提交验证,根据所需选择-->
+            <button type="button" class="btn btn-primary" data-btn-type="save" id="save">通过</button>
+            <button type="button" class="btn btn-warning" data-btn-type="save" id="donot">驳回</button>
+        </div>
+    </form>
+    <form id="purchase-det-form" name="purchase-det-form" class="form-horizontal">
+                <div class="box box-success dn" id="instock_det">
+                     
+                    <div class="box-header with-border">
+                        <span>
+                            <i class="fa fa-files-o">请修详情</i>
+                        </span>
+                    </div>
+                    <!-- 请修详情 -->
+                    <div class="dataTables_filter" id="searchDivSDet" style="text-align:center;height:1px;">
+                       <input type="search" id="sqid" name="pid" class="form-control" operator="eq" style="display:none;">
+                       <div class="btn-group">
+<!--                            <button type="button" class="btn btn-primary" data-btn-type="search" id="refresh" style="display:none;">查询</button>
+ -->                  </div>
+                    </div>
+                    <div class="box-body">
+                        <!-- 内容 -->
+                        <table id="kcqxtable" class="table table-bordered table-striped table-hover">
+                        </table>
+                    </div>
+                   
+                </div>
+            </form>
+            
+</div>
+<script>
+    var wxform =null;
+    var id="${id?default(0)}";
+
+    var qxmxTable, winIds = "purchaseDetWin";
+    $(function() {
+        //初始化控件
+        wxform=$("#contract-form").form();
+        $("#save").on("click",function(){
+       		var params = wxform.getFormSimpleData();
+       		if($("#bmyj").val()){
+       			modals.confirm("确认审核通过？",function(){
+	       			ajaxPost(basePath+'/fixedmaintain/bmsubmit?lx=10', params, function(data) {
+	                    if(data.success){
+	                    	modals.hideWin(winId);
+	                    	volumeTable.reloadData();
+	                        modals.info("审核成功");
+	                        
+	                    }                
+	                }); 
+       			})
+           	}else{
+           		modals.info('请填写审核意见');
+            }
+        })
+        $("#donot").on("click",function(){
+        	var params = wxform.getFormSimpleData();
+        	if($("#bmyj").val()){
+        		modals.confirm("确认驳回？",function(){
+	        		ajaxPost(basePath+'/fixedmaintain/bmsubmit?lx=20', params, function(data) {
+	                    if(data.success){
+	                    	modals.hideWin(winId);
+	                    	volumeTable.reloadData();
+	                        modals.info("审核成功");
+	                        
+	                    }                
+	                });
+        		})
+           	}else{
+           		modals.info('请填写审核意见');
+            }
+        })
+        wxform.initComponent();
+
+        
+        if(id!=0){
+        	load();
+			$("#sqid").val(id);
+        }
+        qxmxTable = new CommonTable("kcqxtable", "fixedmaintain_indexMx", "searchDivSDet", {
+            "ordering" : false,
+            "lengthChange": false,
+            "displayLength": 20,
+            "scrollY": "150px",
+            "scrollCollapse": true
+        });
+    });
+    function load(){
+    	var url=basePath+'/fixedmaintain/loadqx?id='+id;
+    	ajaxPost(url, {}, function(data) {
+            formdata = data.data;
+            wxform.initFormData(formdata); 
+            $('#instock_det').show();
+            $("#bmyj").val("");
+        }); 
+    }
+    function resetForm(){
+        wxform.clearForm();
+        $("#contract-form").data('bootstrapValidator').resetForm();
+    }
+	function fnRenderScmx(value, type, rowObj){
+		return "";
+	}
+
+</script>

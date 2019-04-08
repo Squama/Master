@@ -1,0 +1,234 @@
+<link rel="stylesheet" href="${basePath}/resources/common/libs/fileinput/css/fileinput.min.css">
+<style>
+
+#projectaddstep2 .krajee-default.file-preview-frame .kv-file-content {
+    height: auto;
+}
+
+#projectaddstep2 .krajee-default .file-footer-caption {
+    width: 100px;
+}
+
+</style>
+<script src="${basePath}/resources/common/libs/fileinput/js/fileinput.js"></script>
+<script src="${basePath}/resources/common/libs/fileinput/js/locales/zh.js"></script>
+<!--BaseFile组件-->
+<script src="${basePath}/resources/common/js/base-file.js"></script>
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><li class="fa fa-remove"></li></button>
+    <h5 class="modal-title"></h5>
+</div>
+<div class="modal-body" style="max-height:700px;overflow-y:auto;">
+	<span id="msg" style="color: red"></span>
+    <form id="contract-form" name="contract-form" class="form-horizontal">
+     <input type="hidden" name="id" id= "id">
+       <div class="box-body">
+            <div class="col-md-6">
+                <div class="form-group">
+					<label  for="projectId" class="col-sm-3 control-label">申请人</label>
+					<div class=" col-sm-8">
+						<input  id="sqrid" name="sqrid"   style="display: none">
+						<input class="form-control " id="sqr" name="sqr"   placeholder="申请人姓名" readonly="readonly" >
+					</div>
+				</div>
+                 <div class="form-group">
+                     <label class="col-sm-3 control-label">维修类型</label>
+                     <div class="col-sm-8">
+                         <select  class="form-control" name="wxtype" id="wxtype">
+                         	<option value="10" selected="selected">自修</option>
+                         	<option value="20">外修</option>
+                         </select>
+                     </div>
+                 </div>
+            </div>
+            <div class="col-md-6">
+            	<div class="form-group">
+					<label  for="number" class="col-sm-3 control-label">编号</label>
+					<div class=" col-sm-8">
+						<input class="form-control " id="number" name="number"   placeholder="编号" readonly="readonly" >
+				
+					</div>
+				</div>
+            </div>   
+        </div>
+        <div class="" style="text-align: center;">
+            <!--以下两种方式提交验证,根据所需选择-->
+            <button type="submit" class="btn btn-primary" data-btn-type="save" id="save">保存</button>
+        </div>
+        <!-- /.box-footer -->
+    </form>
+    <form id="purchase-det-form" name="purchase-det-form" class="form-horizontal">
+                <div class="box box-success dn" id="instock_det">
+                    <div class="box-header with-border">
+                        <span>
+                            <i class="fa fa-files-o">固定资产库存信息</i>
+                        </span>
+                    </div>
+                    <!-- 固定资产库存信息详情 -->
+                    <div class="dataTables_filter" id="searchDivPDet" >
+                    <input   name="name" class="form-control" placeholder="请输入资产名称" likeOption="true"operator="like">
+                       <div class="btn-group">
+                          <button type="button" class="btn btn-primary" data-btn-type="search" id="refresh" >查询</button> 
+                      	  
+                       </div>
+                    </div>
+                    <div class="box-body">
+                        <!-- 内容 -->
+                        <table id="kctable" class="table table-bordered table-striped table-hover">
+                        </table>
+                    </div>
+                     
+                    <div class="box-header with-border">
+                        <span>
+                            <i class="fa fa-files-o">请修详情</i>
+                        </span>
+                    </div>
+                    <!-- 请修详情 -->
+                    <div class="dataTables_filter" id="searchDivSDet" style="text-align:center;height:1px;">
+                       <input type="search" id="sqid" name="pid" class="form-control" operator="eq" style="display:none;">
+                       <div class="btn-group">
+<!--                            <button type="button" class="btn btn-primary" data-btn-type="search" id="refresh" style="display:none;">查询</button>
+ -->                  </div>
+                    </div>
+                    <div class="box-body">
+                        <!-- 内容 -->
+                        <table id="kcqxtable" class="table table-bordered table-striped table-hover">
+                        </table>
+                    </div>
+                   
+                </div>
+            </form>
+</div>
+<script>
+    var wxform =null;
+    var id="${id?default(0)}";
+    var number="${bh?default(0)}";
+    var jkr = "${xm?default(0)}";
+    var ryid = "${ryid?default(0)}";
+    var isgr = "${isone?default(0)}";
+    if(jkr!=0){
+    	$("#sqr").val(jkr);
+    }
+    if(ryid!=0){
+		$("#sqrid").val(ryid);
+    }
+    var msg = "${msg?default(0)}";
+    if(msg!=0){
+		$("#save").css("display","none");
+		$("#msg").html(msg);
+    }
+
+    var kcTable, winIds = "purchaseDetWin";
+    var qxmxTable;
+    $(function() {
+        //初始化控件
+        wxform=$("#contract-form").form();
+        //数据校验
+        $("#contract-form").bootstrapValidator({
+            message : '请输入有效值',
+            feedbackIcons : {
+                valid : 'glyphicon glyphicon-ok',
+                invalid : 'glyphicon glyphicon-remove',
+                validating : 'glyphicon glyphicon-refresh'
+            },
+            submitHandler : function() {
+                modals.confirm('确认填写信息无误？', function() {
+                    //Save Data，对应'submit-提交'
+                    var params = wxform.getFormSimpleData();
+                   	ajaxPost(basePath+'/fixedmaintain/saveqx?isone='+isgr, params, function(data) {
+                           if(data.success){
+                               modals.info("保存成功");
+                               $("#sqid").val(data.code);
+                               $("#id").val(data.code);
+	                   			id = data.code;
+	                   			$('#instock_det').show();
+	                   			kcTable.reloadRowData();
+	                   			qxmxTable.reloadRowData();
+                           }                
+                       }); 
+              
+                     
+                });
+            },
+            fields : {
+            	wxtype : {
+                    validators : {
+                        notEmpty : {
+                            message : '请选择维修类型'
+                        }
+                    }
+                }
+                
+            }
+        });
+        wxform.initComponent();
+
+        
+        if(number!=0){
+			$("#number").val(number);
+        }
+        if(id!=0){
+        	load();
+			$("#sqid").val(id);
+        }
+        kcTable = new CommonTable("kctable", "fixedmaintain_kcsy", "searchDivPDet", {
+            "ordering" : false,
+            "lengthChange": false,
+            "displayLength": 20,
+            "scrollY": "150px",
+            "scrollCollapse": true
+        });
+        qxmxTable = new CommonTable("kcqxtable", "fixedmaintain_indexMx", "searchDivSDet", {
+            "ordering" : false,
+            "lengthChange": false,
+            "displayLength": 20,
+            "scrollY": "150px",
+            "scrollCollapse": true
+        });
+    });
+    function load(){
+    	var url=basePath+'/fixedmaintain/loadqx?id='+id;
+    	ajaxPost(url, {}, function(data) {
+            formdata = data.data;
+            wxform.initFormData(formdata); 
+            $('#instock_det').show();
+        }); 
+    }
+    function resetForm(){
+        wxform.clearForm();
+        $("#contract-form").data('bootstrapValidator').resetForm();
+    }
+	function fnRenderScmx(value, type, rowObj){
+		return "<a href='javascript:void(0)' onclick='deleteMx(\"" + value + "\",\""+rowObj.pid+"\")'>取消申请</a>";
+	}
+	function fnRenderKcmx(value, type, rowObj){
+		if(rowObj.quantity_avl>0){
+			return "<a href='javascript:void(0)' onclick='addkcqx(\"" + value + "\",\""+rowObj.quantity_avl+"\",\""+rowObj.name+"\")'>添加到请修列表</a>";
+		}
+		return "/";
+		
+	}
+
+	function deleteMx(value,pid){
+		ajaxPost(basePath+'/fixedmaintain/delMx', {sqid:pid,mxid:value}, function(data) {
+            if(data.success){
+                modals.info("取消申请成功");
+        		kcTable.reloadRowData();
+        		qxmxTable.reloadRowData();
+            }                
+        }); 
+	}
+	//库存id  剩余数量
+	function addkcqx(kcid,sl,names){
+		modals.openWin({
+            winId:"addkc",
+            title:'['+names+']'+'添加申请',
+            width:'800px',
+            url:basePath+"/fixedmaintain/addMx?zcid="+kcid+"&isone="+isgr+"&sqid="+id+"&sl="+sl,
+            hideFunc:function(){
+            	kcTable.reloadRowData();
+        		qxmxTable.reloadRowData();
+            }
+           });
+	}
+</script>

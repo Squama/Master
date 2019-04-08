@@ -79,7 +79,7 @@ public class FixedMaintain implements Serializable {
     private String cxje;
     
     @DateTimeFormat(pattern="yyyy-MM-dd")
-    @Header(name = "交修时间")
+    @Header(name = "预计交货时间")
     @Column(name = "cxjhdate")
     private Date cxjhdate;
     
@@ -127,6 +127,11 @@ public class FixedMaintain implements Serializable {
     @Header(name = "状态 10=新建20=部门审核30=部门驳回40=总经理审批50=总经理驳回60=检修70=部门接收检验80=完成")
     @Column(name = "status")
     private String status;
+    
+    //个人不用操作库存明细，库管需要维护明细
+    @Header(name = "是否个人 10个人20库管")
+    @Column(name = "isone")
+    private String isone;
 
 	public String getId() {
 		return id;
@@ -318,6 +323,14 @@ public class FixedMaintain implements Serializable {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public String getIsone() {
+		return isone;
+	}
+
+	public void setIsone(String isone) {
+		this.isone = isone;
 	}
     
     

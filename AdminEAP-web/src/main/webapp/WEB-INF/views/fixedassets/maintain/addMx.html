@@ -1,0 +1,120 @@
+<link rel="stylesheet" href="${basePath}/resources/common/libs/fileinput/css/fileinput.min.css">
+<style>
+
+#projectaddstep2 .krajee-default.file-preview-frame .kv-file-content {
+    height: auto;
+}
+
+#projectaddstep2 .krajee-default .file-footer-caption {
+    width: 100px;
+}
+
+</style>
+<script src="${basePath}/resources/common/libs/fileinput/js/fileinput.js"></script>
+<script src="${basePath}/resources/common/libs/fileinput/js/locales/zh.js"></script>
+<!--BaseFile组件-->
+<script src="${basePath}/resources/common/js/base-file.js"></script>
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><li class="fa fa-remove"></li></button>
+    <h5 class="modal-title"></h5>
+</div>
+<div class="modal-body" style="max-height:500px;overflow-y:auto;">
+    <form id="mxform" name="contract-form" class="form-horizontal">
+       <div class="box-body">
+            <div class="col-md-6">
+                <div class="form-group">
+					<label  for="projectId" class="col-sm-3 control-label">可申请数量</label>
+					<div class=" col-sm-8">
+						<input  id="sqrid" name="sqrid"   style="display: none">
+						<input class="form-control " id="sl" name="sl"   placeholder="可申请数量" readonly="readonly" >
+					</div>
+				</div>
+            </div>
+            <div class="col-md-6">
+            	<div class="form-group">
+					<label  for="quantity" class="col-sm-3 control-label">申请维修数量</label>
+					<div class=" col-sm-8">
+						<input class="form-control " id="quantity" name="quantity"   placeholder="申请维修数量"  >
+				
+					</div>
+				</div>
+            </div>   
+        </div>
+        <div class="form-group">
+                <label for="content" class="col-sm-2 control-label">维修原因</label>
+
+                <div class="col-sm-9">
+                    <textarea class="form-control" id="content" name="content" placeholder="维修原因" rows="5"></textarea>
+                </div>
+            </div>
+        <div class="" style="text-align: center;">
+            <!--以下两种方式提交验证,根据所需选择-->
+            <button type="submit" class="btn btn-primary" data-btn-type="save" id="save">保存</button>
+        </div>
+        <!-- /.box-footer -->
+    </form>
+</div>
+<script>
+    var mxform =null;
+	var zcid3="${zcid?default(0)}";
+	var isone3="${isone?default(0)}";
+	var sqid3="${sqid?default(0)}";
+	var sl3="${sl?default(0)}";
+	var wjid3="${wjid?default(0)}";
+	$("#sl").val(sl3);
+    $(function() {
+        //初始化控件
+        mxform=$("#mxform").form();
+        //数据校验
+        $("#mxform").bootstrapValidator({
+            message : '请输入有效值',
+            feedbackIcons : {
+                valid : 'glyphicon glyphicon-ok',
+                invalid : 'glyphicon glyphicon-remove',
+                validating : 'glyphicon glyphicon-refresh'
+            },
+            submitHandler : function() {
+                modals.confirm('确认填写信息无误？', function() {
+                    //Save Data，对应'submit-提交'
+                    var params = mxform.getFormSimpleData();
+
+                    var sqsl = $("#quantity").val();
+                    debugger
+                    //数量控制
+                    if(parseFloat(sqsl)>parseFloat(sl3)){
+                    	modals.info("申请数量不得大于可申请数量！！");
+						return;
+                     }
+                    var url3 = basePath+'/fixedmaintain/saveMx?sqid='+sqid3+"&isone="+isone3+"&zcid="+zcid3;
+                    if(isone3=="10"){
+                    	url3 = basePath+'/fixedmaintain/saveMx?sqid='+sqid3+"&isone="+isone3+"&wjid="+wjid3;
+					 }
+                   	ajaxPost(url3, params, function(data) {
+                           if(data.success){
+                        	   modals.hideWin("addkc");
+                           }                
+                       }); 
+              
+                     
+                });
+            },
+            fields : {
+            	quantity : {
+                    validators : {
+                        notEmpty : {
+                            message : '请输入申请维修数量'
+                        }
+                    }
+                }
+                
+            }
+        });
+        mxform.initComponent();
+
+        
+    });
+    function resetForm(){
+    	mxform.clearForm();
+        $("#mxform").data('bootstrapValidator').resetForm();
+    }
+</script>

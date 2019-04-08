@@ -41,6 +41,10 @@ public class FixedMaintainTx implements Serializable {
     @Column(name = "zcid")
     private String zcid;
     
+    @Header(name = "外借信息id")
+    @Column(name = "wjid")
+    private String wjid;
+    
     @Header(name = "资产名称")
     @Column(name = "name")
     private String name;
@@ -69,6 +73,10 @@ public class FixedMaintainTx implements Serializable {
     @Header(name = "承修金额")
     @Column(name = "cxje")
     private String cxje;
+    
+    @Header(name = "归还数量")
+    @Column(name = "ghsl")
+    private String ghsl;
 
 	public String getId() {
 		return id;
@@ -148,6 +156,22 @@ public class FixedMaintainTx implements Serializable {
 
 	public void setCxje(String cxje) {
 		this.cxje = cxje;
+	}
+
+	public String getGhsl() {
+		return ghsl;
+	}
+
+	public void setGhsl(String ghsl) {
+		this.ghsl = ghsl;
+	}
+
+	public String getWjid() {
+		return wjid;
+	}
+
+	public void setWjid(String wjid) {
+		this.wjid = wjid;
 	}
     
     
