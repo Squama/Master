@@ -128,6 +128,7 @@
 		        <div class="" style="text-align: center;">
 		            <!--以下两种方式提交验证,根据所需选择-->
 		            <button type="submit" class="btn btn-primary" data-btn-type="save" id="save">保存</button>
+		            <button type="button" class="btn btn-success" data-btn-type="print" id="print">打印</button>
 		        </div>
 		    </form>
 </div>
@@ -199,6 +200,10 @@
         $("#cxje").keyup(function(){
         	getDxMoney();
         });
+        $("#print").on("click",function(){
+        	var url = basePath+"/ureport/preview?_u=file:maintain.ureport.xml&_t=1,5&id="+id;
+    	 	window.open(url);
+        })
     });
     function load(){
     	var url=basePath+'/fixedmaintain/loadqx?id='+id;

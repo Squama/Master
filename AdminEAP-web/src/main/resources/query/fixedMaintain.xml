@@ -5,9 +5,9 @@
         <column key="rowIndex" header="序号" width="80"/>
         <column key="id" hidden="true" header="id" width="80"/>
         <column key="number" header="编号" width="150"/>
-        <column key="qxdept" header="部门" allowSort="true" width="150"/>
+        <column key="qxdept" header="部门"  width="150"/>
         <column key="sqr" header="申请人" width="150"/>
-        <column key="createdate" header="申请时间" classType="String" width="150" dateFormat="yyyy-mm-dd"/>
+        <column key="createdate" header="申请时间" allowSort="true" classType="String" width="150" dateFormat="yyyy-mm-dd"/>
         <column key="status" header="状态" width="80" render="10=新建,20=部门审核,30=部门驳回,40=总经理审批,50=总经理驳回,60=检修,70=部门接收检验,80=完成"/>
         <column key="id" header="操作" width="80" fnRender="fnRenderXQ"/>
     </query>
@@ -71,7 +71,7 @@
         <column key="isone" header="申请类型" width="80" render="10=个人申请,20=仓库申请"/>
         <column key="qxdept" header="部门" allowSort="true" width="150"/>
         <column key="sqr" header="申请人" width="150"/>
-        <column key="createdate" header="申请时间" classType="String" width="150" />
+        <column key="createdate" header="申请时间" allowSort="true" classType="String" width="150" />
         <column key="status" header="状态" width="80" render="10=新建,20=部门审核,30=部门驳回,40=总经理审批,50=总经理驳回,60=检修,70=部门接收检验,80=完成"/>
         <column key="id" header="操作" width="80" fnRender="fnRenderXQ"/>
     </query>

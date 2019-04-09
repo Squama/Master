@@ -417,7 +417,7 @@ public class FixedMaintainController {
 			q.setStatus("30");
 		}
 		q.setBmyj(sq.getBmyj());
-		q.setBmshr(user.getName());
+		q.setBmshr(user.getLoginName());
 		baseService.update(q);
 		Result r = new Result();
 		return r;
@@ -441,6 +441,7 @@ public class FixedMaintainController {
 		q.setCxcs(qx.getCxcs());
 		q.setCxfk(qx.getCxfk());
 		q.setJxr(u.getLoginName());
+		q.setCwshr(u.getLoginName());
 		baseService.update(q);
 		return r;
 	}

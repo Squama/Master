@@ -154,7 +154,7 @@
 		        <!-- /.box-footer -->
 		        <div class="" style="text-align: center;">
 		            <!--以下两种方式提交验证,根据所需选择-->
-		            <button type="submit" class="btn btn-primary" data-btn-type="save" id="save">保存</button>
+		            <button type="submit" class="btn btn-primary" data-btn-type="save" id="save">验收</button>
 		        </div>
 		    </form>
 </div>
@@ -179,7 +179,7 @@
                 validating : 'glyphicon glyphicon-refresh'
             },
             submitHandler : function() {
-                modals.confirm('确认送检信息无误？', function() {
+                modals.confirm('确认验收信息无误？', function() {
                     //Save Data，对应'submit-提交'
                     var params = ysform.getFormSimpleData();
                    	ajaxPost(basePath+'/fixedmaintain/saveysxx?', params, function(data) {
