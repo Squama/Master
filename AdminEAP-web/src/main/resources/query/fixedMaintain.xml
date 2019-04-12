@@ -33,7 +33,7 @@
               select 
 			wj.id id ,wj.operator operator, wj.stk_id stk_id, wj.name name, 
 			(ifnull(wj.quantity,0)-ifnull(wj.quantity_returned,0)) wjsl ,wj.unit unit,wj.norm norm,
-			(select ifnull(sum(mx.quantity),0)-ifnull(sum(ghsl),0) from  tbl_fixedmaintain_tx mx where mx.wjid = wj.id and mx.zcid = wj.stk_id) wxsl 
+			(select ifnull(sum(mx.quantity),0)-ifnull(sum(ghsl),0) from  tbl_fixedmaintain_tx mx ,tbl_fixedmaintain wx where wx.id=mx.pid and mx.wjid = wj.id and mx.zcid = wj.stk_id and wx.status<>'80') wxsl 
 			from tbl_fixedassets_use wj where 1=1 and 
 			ifnull(wj.quantity,0)-ifnull(wj.quantity_returned,0) >0
             ]]>
