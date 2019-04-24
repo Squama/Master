@@ -46,7 +46,7 @@
         <input type="hidden" name="fileId" id="fileId">
 					<div class="form-group" align="center" id="wjscid">
 						<div class="btn btn-default btn-file" id="uploadFile">
-							<i class="fa fa-paperclip"></i> 上传投标文件(Max. 10MB)
+							<i class="fa fa-paperclip"></i> 上传投标文件
 						</div>
 					</div>
 					<div class="form-group" id="file_container">
@@ -134,8 +134,8 @@
     }
 
     var fileinputDefaults = {
-            maxFileSize: 102400,
-            maxFileCount:3,
+            maxFileSize: 0,
+            maxFileCount:0,
             previewSettings: {
                 image: {width: "160px", height: "60px"},
                 text: {width: "213px", height: "160px"},

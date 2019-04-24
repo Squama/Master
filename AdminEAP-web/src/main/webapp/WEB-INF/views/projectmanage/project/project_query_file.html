@@ -27,8 +27,8 @@
     	$("#attachment").file({
             title: "请上传附件",
             fileinput: {
-                maxFileSize: 10240,
-                maxFileCount: 3
+                maxFileSize: 0,
+                maxFileCount: 0
             },
             fileIdContainer: "[name='fileIds']",
             getFileResultUrl: basePath+"/project/getFiles",
