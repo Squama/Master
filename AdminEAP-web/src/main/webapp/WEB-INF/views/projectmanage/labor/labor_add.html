@@ -170,7 +170,7 @@
             submitHandler: function () {
                 var action = $(this).attr('$submitButton').attr('data-btn-type');
                 var formData = form.getFormSimpleData();
-                ajaxPost(basePath + '/labor/save', formData, function (data) {
+                ajaxPost(basePath + '/labor/save?htlx=20', formData, function (data) {
                     if (data.success) {
                         switch (action) {
                             case "next":

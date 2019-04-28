@@ -77,12 +77,12 @@
                         <div class="col-md-6" style="margin-left:25%">
                               <div class="callout callout-success" id="applyInfo" style="margin-top:8px;margin-bottom:8px;">
                                 <h4>上报金额：</h4>
-                                <p>机械费：<span id="mechInfo">尚未审批</span>；人工费：<span id="labourInfo">尚未审批</span>；材料费：<span id="matInfo">尚未审批</span>；包工包料：<span id="packInfo">尚未审批</span>；扣款：<span id="debitInfo">尚未审批</span></p>
+                                <p>机械费：<span id="mechInfo">尚未审批</span>；人工费：<span id="labourInfo">尚未审批</span>；材料费：<span id="matInfo">尚未审批</span>；机械扣款：<span id="debitjxInfo">尚未审批</span>；人工扣款：<span id="debitInfo">尚未审批</span>；材料扣款：<span id="debitclInfo">尚未审批</span></p>
                                 <h5>上报小计：<span id="subInfo">尚未审批</span></h5>
                               </div>
                               <div class="callout callout-success" id="businessInfo" style="margin-top:8px;margin-bottom:8px;">
                                 <h4>经营科审核金额：</h4>
-                                <p>机械费：<span id="mechBusi">尚未审批</span>；人工费：<span id="labourBusi">尚未审批</span>；材料费：<span id="matBusi">尚未审批</span>；包工包料：<span id="packBusi">尚未审批</span>；扣款：<span id="debitBusi">尚未审批</span></p>
+                                <p>机械费：<span id="mechBusi">尚未审批</span>；人工费：<span id="labourBusi">尚未审批</span>；材料费：<span id="matBusi">尚未审批</span>；机械扣款：<span id="debitjxBusi">尚未审批</span>；人工扣款：<span id="debitBusi">尚未审批</span>；材料扣款：<span id="debitclBusi">尚未审批</span></p>
                                 <h5>上报小计：<span id="subBusi">尚未审批</span></h5>
                               </div>
                               <div class="callout callout-success" id="finalInfo" style="margin-top:8px;margin-bottom:8px;">
@@ -208,22 +208,27 @@
                 $('#mechInfo').html(data.applyMech + '元');
                 $('#labourInfo').html(data.applyLabour + '元');
                 $('#matInfo').html(data.applyMat + '元');
-                $('#packInfo').html(data.applyPack + '元');
                 $('#debitInfo').html(data.applyDebit + '元');
+                $('#debitclInfo').html(data.applyDebitcl + '元');
+                $('#debitjxInfo').html(data.applyDebitjx + '元');
                 $('#subInfo').html(data.applySub + '元');
+
                 
             	$('#mechBusi').html(data.businessMech + '元');
                 $('#labourBusi').html(data.businessLabour + '元');
                 $('#matBusi').html(data.businessMat + '元');
-                $('#packBusi').html(data.businessPack + '元');
+                
                 $('#debitBusi').html(data.businessDebit + '元');
+                $('#debitjxBusi').html(data.businessDebitjx + '元');
+                $('#debitclBusi').html(data.businessDebitcl + '元');
                 $('#subBusi').html(data.businessSub + '元');
                 
             	$('#mechFinal').html(data.finalMech + '元');
                 $('#labourFinal').html(data.finalLabour + '元');
                 $('#matFinal').html(data.finalMat + '元');
-                $('#packFinal').html(data.finalPack + '元');
                 $('#debitFinal').html(data.finalDebit + '元');
+                $('#debitjxFinal').html(data.finalDebitjx + '元');
+                $('#debitclFinal').html(data.finalDebitcl + '元');
                 $('#subFinal').html(data.finalSub + '元');
                 
                 $('.final').show();

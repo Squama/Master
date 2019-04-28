@@ -1,17 +1,15 @@
 <script src="${basePath}/resources/common/js/calculate.js"></script>
 <section class="content-header">
     <h1>
-        <span>机械合同</span>
+        <span>包清工合同</span>
         <small>新增</small>
     </h1>
     <ol class="breadcrumb">
         <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
         <li><a href="#">劳务管理</a></li>
-        <li class="active">机械合同</li>
+        <li class="active">包清工合同</li>
     </ol>
 </section>
-
-    
 
 <section class="content">
     <div class="row">
@@ -22,13 +20,13 @@
                         <div class="step">
                             <span class="tip">1</span>
                         </div>
-                        <div class="stepinfo">修改合同基本信息</div>
+                        <div class="stepinfo">添加合同基本信息</div>
                     </div>
                     <div>
                         <div class="step stepundone">
                             <span class="tip">2</span>
                         </div>
-                        <div class="stepinfo undoneinfo">上传机械合同</div>
+                        <div class="stepinfo undoneinfo">上传包清工合同</div>
                     </div>
                     <div>
                         <div class="step stepundone">
@@ -38,7 +36,6 @@
                     </div>
                 </div>
                 <form id="labor_form" name="project_form" class="form-horizontal">
-                    <input type="hidden" name="id" id="id">
                     <input type="hidden" name="projectName" id="projectName">
                     <input type="hidden" name="constructionTeam" id="constructionTeam">
                     <input type="hidden" name="constructionManager" id="constructionManager">
@@ -47,12 +44,12 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">选择项目<span style="color:red">*</span></label>
                                 <div class="col-sm-6">
-                                    <select id="projectID" class="form-control select2" name="projectID">
-                                            <option selected="selected" value="">选择一个项目</option>
-                                    </select>
+	                                <select id="projectID" class="form-control select2" name="projectID">
+	                                        <option selected="selected" value="">选择一个项目</option>
+	                                </select>
                                 </div>
                             </div>
-                           <div class="form-group">
+                            <div class="form-group">
                                 <label class="col-sm-3 control-label">施工班组<span style="color:red">*</span></label>
                                 <div class="col-sm-6">
                                     <select id="constructionTeamID" class="form-control select2" name="constructionTeamID">
@@ -83,7 +80,7 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">机械费（元）<span style="color:red">*</span></label>
                                 <div class="col-sm-6">
-                                    <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control" id="mechPrice" name="mechPrice" placeholder="机械费" value="0">
+                                    <input type="text"  readonly="readonly" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control" id="mechPrice" name="mechPrice" placeholder="机械费" value="0">
                                 </div>
                             </div>
                             <!-- <div class="form-group">
@@ -95,13 +92,13 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">人工费单位<span style="color:red">*</span></label>
                                 <div class="col-sm-6">
-                                	<select id="labourUnit" class="form-control select2" name="labourUnit" style="width:100%;">
-			                               <option selected="selected" value="">选择一个人工费单位</option>
-			                               <option value="m">m</option>
-			                               <option value="m²">m²</option>
-			                               <option value="m³">m³</option>
-			                               <option value="吨">吨</option>
-			                        </select>
+                                    <select id="labourUnit" class="form-control select2" name="labourUnit" style="width:100%;">
+                                           <option selected="selected" value="">选择一个人工费单位</option>
+                                           <option value="m">m</option>
+                                           <option value="m²">m²</option>
+                                           <option value="m³">m³</option>
+                                           <option value="吨">吨</option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -125,7 +122,7 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">人工费单价（描述）<span style="color:red"></span></label>
                                 <div class="col-sm-6">
-                                    <textarea class="form-control" readonly="readonly" id="labourSin" name="labourSin" rows="3" cols="100"></textarea>
+                                    <textarea class="form-control" id="labourSin" name="labourSin" rows="3" cols="100"></textarea>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -138,7 +135,7 @@
                     </div>
                     <div class="box-footer text-center">
                         <button type="button" class="btn btn-default" data-btn-type="prev">返回</button>
-                        <button type="submit" class="btn btn-primary ml10" data-btn-type="next">编辑合同其它</button>
+                        <button type="submit" class="btn btn-primary ml10" data-btn-type="next">上传包清工合同</button>
                         <button type="submit" class="btn btn-success ml10" data-btn-type="save">保存并返回</button>
                     </div>
                 </form>
@@ -148,17 +145,10 @@
 </section>
 <script>
     var form;
-    var id = "${id?default(0)}";
     var projectOptions = '${projectOptions?default(0)}',options=0;
     if(projectOptions != 0){
         options = JSON.parse(projectOptions);
     }
-    
-    var teamOptions = '${teamOptions?default(0)}',tOptions=0;
-    if(teamOptions != 0){
-        tOptions = JSON.parse(teamOptions);
-    }
-    
     var laborCtrl = {
         initButtonEvent: function () {
             $("button[data-btn-type='prev']").click(function () {
@@ -180,18 +170,18 @@
             submitHandler: function () {
                 var action = $(this).attr('$submitButton').attr('data-btn-type');
                 var formData = form.getFormSimpleData();
-                ajaxPost(basePath + '/labor/save?htlx=30', formData, function (data) {
+                ajaxPost(basePath + '/labor/save?htlx=10', formData, function (data) {
                     if (data.success) {
                         switch (action) {
                             case "next":
-                                loadPage(basePath+"/labor/edituploadfile?htlx=30", undefined, data.data);
+                                loadPage(basePath+"/labor/uploadfile?htlx=10", undefined, data.data);
                                 break;
                             case "save":
                                 loadPage(basePath+"/labor/list");
                                 break;
                         }
                     } else {
-                    	modals.error("保存失败！请检查班组是否重复");
+                        modals.error("保存失败！请检查班组是否重复");
                     }
                 });
             },
@@ -221,17 +211,17 @@
                         notEmpty: {message: '施工负责人不能为空'}
                     }
                 },
-                "mechPrice": {
+                /* "mechPrice": {
                     validators: {
                         notEmpty: {message: '机械费不能为空'}
                     }
-                },
-                /* "labourSin": {
+                }, */
+                "labourSin": {
                     validators: {
                         notEmpty: {message: '人工费单价不能为空'}
                     }
                 },
-               "labourQuantity": {
+                /* "labourQuantity": {
                     validators: {
                         notEmpty: {message: '人工费数量不能为空'}
                     }
@@ -246,7 +236,7 @@
                         notEmpty: {message: '人工费不能为空'}
                     }
                 }, */
-               /*  "matPrice": {
+                /* "matPrice": {
                     validators: {
                         notEmpty: {message: '材料费不能为空'}
                     }
@@ -255,7 +245,7 @@
                     validators: {
                         notEmpty: {message: '包工包料不能为空'}
                     }
-                }, */
+                } ,*/
                 "contractPrice": {
                     validators: {
                         notEmpty: {message: '合计不能为空'}
@@ -281,10 +271,10 @@
                 
                 var name = "";
                 if ($("#projectID").prop('selectedIndex') > 0) {
-                    name = $("#projectID").find("option:selected").text();
+                	name = $("#projectID").find("option:selected").text();
                 }
                 $('#projectName').val(name);
-                
+                //加载班组
                 ajaxPost(basePath+"/labor/getteamop",{projectID:value},function(data){
                     var teamOptions = data.message;
                     tOptions = JSON.parse(teamOptions);
@@ -297,9 +287,8 @@
                     
                     $('#constructionTeamID').select2();
                     
-                    $("#constructionTeamID").unbind("change.constructionTeam")
-                    $("#constructionTeamID").bind("change.constructionTeam", function () {
-                        var value = $(this).val();
+                    $('#constructionTeamID').bind("change", function(){
+                    	var value = $(this).val();
                         if (value === "") {
                             return false;
                         }
@@ -340,33 +329,6 @@
             });
         }
         
-        if(tOptions != 0){
-            for (var i = 0, len = tOptions.length; i < len; i++) {
-                var option = tOptions[i];
-                $('#constructionTeamID').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
-            }
-            $("#constructionTeamID").select2();
-            $("#constructionTeamID").bind("change.constructionTeam", function () {
-                var value = $(this).val();
-                if (value === "") {
-                    return false;
-                }
-                
-                var name = "";
-                if ($("#constructionTeamID").prop('selectedIndex') > 0) {
-                    name = $("#constructionTeamID").find("option:selected").text();
-                }
-                $('#constructionTeam').val(name);
-            });
-        }
-        
-        //编辑回填
-        if(id!="0"){
-            ajaxPost(basePath+"/labor/get",{id:id},function(data){
-                form.initFormData(data);
-            })
-        }
-        
         $(".labourcalculate").on("focusout", function(){
             var sin = parseFloat($('#labourSin').val());
             var quantity = parseFloat($('#labourQuantity').val());
@@ -383,14 +345,14 @@
         
         $(".calculate").on("focusout", function(){
             var mech = parseFloat($('#mechPrice').val());
-            var labour = parseFloat($('#labourPrice').val());
+           /*  var labour = parseFloat($('#labourPrice').val());
             var mat = parseFloat($('#matPrice').val());
-            var pack = parseFloat($('#packagePrice').val());
+            var pack = parseFloat($('#packagePrice').val()); */
             
-            var sub = accAddition(accAddition(accAddition(mech, labour), mat), pack);
+            //var sub = accAddition(accAddition(accAddition(mech, labour), mat), pack);
+            var sub = mech;
             $('#contractPrice').val(sub);
         });
-        
     });
-
+    
 </script>

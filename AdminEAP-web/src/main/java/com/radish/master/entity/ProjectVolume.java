@@ -177,6 +177,35 @@ public class ProjectVolume extends BaseEntity {
     @Column(name = "measure_team")
     private String measureTeam;
     
+    
+    @Header(name = "上报类型 10=包清工,20=包工包料,30=机械")
+    @Column(name = "sblx")
+    private String sblx;
+    
+    @Header(name = "申报材料扣款")
+    @Column(name = "apply_debitcl")
+    private String applyDebitcl;
+    
+    @Header(name = "申报机械扣款")
+    @Column(name = "apply_debitjx")
+    private String applyDebitjx;
+    
+    @Header(name = "经营科材料扣款")
+    @Column(name = "business_debitcl")
+    private String businessDebitcl;
+    
+    @Header(name = "经营科材料扣款")
+    @Column(name = "business_debitjx")
+    private String businessDebitjx;
+    
+    @Header(name = "财务审材料扣款")
+    @Column(name = "final_debitcl")
+    private String finalDebitcl;
+    
+    @Header(name = "财务审机械扣款")
+    @Column(name = "final_debitjx")
+    private String finalDebitjx;
+    
     public String getProjectID() {
         return projectID;
     }
@@ -455,6 +484,62 @@ public class ProjectVolume extends BaseEntity {
 
 	public void setMeasureTeam(String measureTeam) {
 		this.measureTeam = measureTeam;
+	}
+
+	public String getSblx() {
+		return sblx;
+	}
+
+	public void setSblx(String sblx) {
+		this.sblx = sblx;
+	}
+
+	public String getApplyDebitcl() {
+		return applyDebitcl;
+	}
+
+	public void setApplyDebitcl(String applyDebitcl) {
+		this.applyDebitcl = applyDebitcl;
+	}
+
+	public String getApplyDebitjx() {
+		return applyDebitjx;
+	}
+
+	public void setApplyDebitjx(String applyDebitjx) {
+		this.applyDebitjx = applyDebitjx;
+	}
+
+	public String getBusinessDebitcl() {
+		return businessDebitcl;
+	}
+
+	public void setBusinessDebitcl(String businessDebitcl) {
+		this.businessDebitcl = businessDebitcl;
+	}
+
+	public String getBusinessDebitjx() {
+		return businessDebitjx;
+	}
+
+	public void setBusinessDebitjx(String businessDebitjx) {
+		this.businessDebitjx = businessDebitjx;
+	}
+
+	public String getFinalDebitcl() {
+		return finalDebitcl;
+	}
+
+	public void setFinalDebitcl(String finalDebitcl) {
+		this.finalDebitcl = finalDebitcl;
+	}
+
+	public String getFinalDebitjx() {
+		return finalDebitjx;
+	}
+
+	public void setFinalDebitjx(String finalDebitjx) {
+		this.finalDebitjx = finalDebitjx;
 	}
 
 }

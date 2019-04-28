@@ -1,0 +1,152 @@
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <span>
+                        <i class="fa fa-files-o">包清工合同明细</i>
+                    </span>
+                </div>
+                <form id="labor-detail-form" name="labor-detail-form" class="form-horizontal">
+                    <div class="box-body">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">所属项目<span style="color:red">*</span></label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="projectName" name="projectName" readonly="readonly">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">承包人<span style="color:red">*</span></label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="contractor" name="contractor" placeholder="承包人" readonly="readonly">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">施工负责人<span style="color:red">*</span></label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="constructionManager" name="constructionManager" readonly="readonly">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">机械费（单位：元）<span style="color:red">*</span></label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control calculate" id="mechPrice" name="mechPrice" placeholder="机械费" readonly="readonly">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">人工费（单位：元）<span style="color:red">*</span></label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control calculate" id="labourPrice" name="labourPrice" placeholder="人工费" readonly="readonly">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">甲方</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="gander" name="gander" readonly="readonly">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">承包方式</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="contractMode" name="contractMode" readonly="readonly">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">合同名称<span style="color:red">*</span></label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="contractName" name="contractName" readonly="readonly">
+                                </div>
+                            </div>
+                            <!-- <div class="form-group">
+                                <label class="col-sm-3 control-label">施工班组<span style="color:red">*</span></label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="constructionTeam" name="constructionTeam" readonly="readonly">
+                                </div>
+                            </div> -->
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">合同总价<span style="color:red">*</span></label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="contractPrice" name="contractPrice" readonly="readonly">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">材料费（单位：元）<span style="color:red">*</span></label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control calculate" id="matPrice" name="matPrice" placeholder="材料费" readonly="readonly">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">包工包料（单位：元）<span style="color:red">*</span></label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control calculate" id="packagePrice" name="packagePrice" placeholder="包工包料" readonly="readonly">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">乙方</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="goose" name="goose" readonly="readonly">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">付款方式</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="paymentMode" name="paymentMode" readonly="readonly">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">质保金约定（单位：元）</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="guaranteeMoney" name="guaranteeMoney" readonly="readonly">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                        	<div class="form-group">
+                                <label class="col-sm-3 control-label">内容</label>
+                                <div class="col-sm-6">
+                                    <textarea class="form-control" id="serviceContent" name="serviceContent" rows="3" cols="100" readonly="readonly"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">质量目标</label>
+                                <div class="col-sm-6">
+                                    <textarea class="form-control" id="qualityTarget" name="qualityTarget" rows="3" cols="100" readonly="readonly"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">纠纷处理</label>
+                                <div class="col-sm-6">
+                                    <textarea class="form-control" id="issue" name="issue" rows="3" cols="100" readonly="readonly"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+    var form,laborSubTable;
+    var id = "${id}";
+    $('#laborID',$('#searchDiv')).val(id);
+    $(function () {
+        //初始化表单 
+        form = $("#labor-detail-form").form({baseEntity:false});
+        //初始化控件
+        form.initComponent();
+        
+        //编辑回填
+        if(id!="0"){
+            ajaxPost(basePath+"/labor/get",{id:id},function(data){
+                form.initFormData(data);
+            })
+        }
+        
+    });
+   
+
+</script>

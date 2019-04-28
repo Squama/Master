@@ -77,7 +77,7 @@
                         <div id="pingxing" class="col-md-6" style="margin-left:25%">
                               <div class="callout callout-success" id="applyInfo" style="margin-top:8px;margin-bottom:8px;">
                                 <h4>上报金额：</h4>
-                                <p>机械费：<span id="mechInfo">尚未审批</span>；人工费：<span id="labourInfo">尚未审批</span>；材料费：<span id="matInfo">尚未审批</span>；机械扣款：<span id="debitjxInfo">尚未审批</span>；人工扣款：<span id="debitInfo">尚未审批</span>；材料扣款：<span id="debitclInfo">尚未审批</span></p>
+                                <p>机械费：<span id="mechInfo">尚未审批</span>；机械扣款：<span id="debitjxInfo">尚未审批</span>；</p>
                                 <h5>上报小计：<span id="subInfo">尚未审批</span></h5>
                               </div>
                         </div>
@@ -85,7 +85,7 @@
                         	<div class="form-group">
                                 <label class="col-sm-5 control-label">审核人工费（元）<span style="color:red">*</span></label>
                                 <div class="col-sm-6">
-                                    <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control calculate" id="businessLabour" name="businessLabour" placeholder="审核人工费" value="0">
+                                    <input readonly="readonly" type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control calculate" id="businessLabour" name="businessLabour" placeholder="审核人工费" value="0">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -97,34 +97,34 @@
                             <div class="form-group">
                                 <label class="col-sm-5 control-label">审核材料费（元）<span style="color:red">*</span></label>
                                 <div class="col-sm-6">
-                                    <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control calculate" id="businessMat" name="businessMat" placeholder="审核材料费" value="0">
+                                    <input readonly="readonly" type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control calculate" id="businessMat" name="businessMat" placeholder="审核材料费" value="0">
                                 </div>
                             </div>
+                            
                         </div>
                         <div class="col-md-6">
-                            
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">审核人工扣款（元）<span style="color:red">*</span></label>
                                 <div class="col-sm-6">
-                                    <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control calculate" id="businessDebit" name="businessDebit" placeholder="审核应扣款" value="0">
+                                    <input readonly="readonly"   type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control calculate" id="businessDebit" name="businessDebit" placeholder="审核应扣款" value="0">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">审核机械扣款（元）<span style="color:red">*</span></label>
                                 <div class="col-sm-6">
-                                    <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control calculate" id="businessDebitjx" name="businessDebitjx" placeholder="审核应扣款" value="0">
+                                    <input  type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control calculate" id="businessDebitjx" name="businessDebitjx" placeholder="审核应扣款" value="0">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">审核材料扣款（元）<span style="color:red">*</span></label>
                                 <div class="col-sm-6">
-                                    <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control calculate" id="businessDebitcl" name="businessDebitcl" placeholder="审核应扣款" value="0">
+                                    <input readonly="readonly"   type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control calculate" id="businessDebitcl" name="businessDebitcl" placeholder="审核应扣款" value="0">
                                 </div>
                             </div>
                             <div class="form-group" style="display: none">
                                 <label class="col-sm-3 control-label">审核包工包料（元）<span style="color:red">*</span></label>
                                 <div class="col-sm-6">
-                                    <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control calculate" id="businessPack" name="businessPack" placeholder="审核包工包料" value="0">
+                                    <input readonly="readonly" type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control calculate" id="businessPack" name="businessPack" placeholder="审核包工包料" value="0">
                                 </div>
                             </div>
                         </div>
@@ -177,7 +177,7 @@
                 }
                 $('#projectName').val(name);
                 
-                ajaxPost(basePath+"/projectvolume/getlabor",{projectID:value},function(data){
+                ajaxPost(basePath+"/projectvolume/getlabor?sblx=30",{projectID:value},function(data){
                     var laborOptions = data.message;
                     lOptions = JSON.parse(laborOptions);
                     $('#laborID').empty();
@@ -225,7 +225,6 @@
                 $('#mechInfo').html(data.applyMech + '元');
                 $('#labourInfo').html(data.applyLabour + '元');
                 $('#matInfo').html(data.applyMat + '元');
-                
                 $('#debitInfo').html(data.applyDebit + '元');
                 $('#debitclInfo').html(data.applyDebitcl + '元');
                 $('#debitjxInfo').html(data.applyDebitjx + '元');

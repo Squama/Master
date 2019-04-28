@@ -158,12 +158,12 @@
                 var formData = form.getFormSimpleData();
                 switch (action) {
 	                case "prev":
-	                    loadPage(basePath+"/labor/list?htlx=20");
+	                    loadPage(basePath+"/labor/list");
 	                    break;
 	                case "save":
-	                	ajaxPost(basePath + '/labor/save?htlx=20', formData, function (data) {
+	                	ajaxPost(basePath + '/labor/save?htlx=30', formData, function (data) {
 	                        if (data.success) {
-                                loadPage(basePath+"/labor/list?htlx=20");
+                                loadPage(basePath+"/labor/list");
 	                        } else {
 	                            modals.error("保存失败！");
 	                        }

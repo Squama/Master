@@ -19,13 +19,13 @@
 <script src="${basePath}/resources/common/js/calculate.js"></script>
 <section class="content-header">
     <h1>
-        <span>机械合同</span>
+        <span>包清工合同</span>
         <small>新增</small>
     </h1>
     <ol class="breadcrumb">
         <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
         <li><a href="#">劳务管理</a></li>
-        <li class="active">机械合同</li>
+        <li class="active">包清工合同</li>
     </ol>
 </section>
 
@@ -46,7 +46,7 @@
                         <div class="step">
                             <span class="tip">2</span>
                         </div>
-                        <div class="stepinfo">上传机械合同</div>
+                        <div class="stepinfo">上传包清工合同</div>
                     </div>
                     <div>
                         <div class="step stepundone">
@@ -115,12 +115,12 @@
                             </div>
                             <!-- 甲方、乙方、劳务内容、承包方式、质量目标、付款方式、 质保金约定、纠纷处理-->
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">机械合同<span style="color:red">*</span></label>
+                                <label class="col-sm-3 control-label">包清工合同<span style="color:red">*</span></label>
                                 <div class="col-sm-6">
                                     <input type="hidden" name="contractFile" id="contractFile">
                                     <div class="form-group">
                                         <div class="btn btn-default btn-file" id="contractfileupload">
-                                            <i class="fa fa-paperclip"></i> 上传机械合同(最大. 100MB)
+                                            <i class="fa fa-paperclip"></i> 上传包清工合同(最大. 100MB)
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -161,7 +161,7 @@
                         loadPage(basePath+"/labor/list");
                         break;
                     case "save":
-                        ajaxPost(basePath + '/labor/save?htlx=30', formData, function (data) {
+                        ajaxPost(basePath + '/labor/save?htlx=10', formData, function (data) {
                             if (data.success) {
                                 loadPage(basePath+"/labor/list");
                             } else {

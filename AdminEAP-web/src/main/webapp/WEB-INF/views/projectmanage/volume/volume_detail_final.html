@@ -77,16 +77,22 @@
                         <div class="col-md-6" style="margin-left:25%">
                               <div class="callout callout-success" id="applyInfo" style="margin-top:8px;margin-bottom:8px;">
                                 <h4>上报金额：</h4>
-                                <p>机械费：<span id="mechInfo">尚未审批</span>；人工费：<span id="labourInfo">尚未审批</span>；材料费：<span id="matInfo">尚未审批</span>；包工包料：<span id="packInfo">尚未审批</span>；扣款：<span id="debitInfo">尚未审批</span></p>
+                                <p>机械费：<span id="mechInfo">尚未审批</span>；人工费：<span id="labourInfo">尚未审批</span>；材料费：<span id="matInfo">尚未审批</span>；机械扣款：<span id="debitjxInfo">尚未审批</span>；人工扣款：<span id="debitInfo">尚未审批</span>；材料扣款：<span id="debitclInfo">尚未审批</span></p>
                                 <h5>上报小计：<span id="subInfo">尚未审批</span></h5>
                               </div>
                               <div class="callout callout-success" id="businessInfo" style="margin-top:8px;margin-bottom:8px;">
                                 <h4>经营科审核金额：</h4>
-                                <p>机械费：<span id="mechBusi">尚未审批</span>；人工费：<span id="labourBusi">尚未审批</span>；材料费：<span id="matBusi">尚未审批</span>；包工包料：<span id="packBusi">尚未审批</span>；扣款：<span id="debitBusi">尚未审批</span></p>
+                                <p>机械费：<span id="mechBusi">尚未审批</span>；人工费：<span id="labourBusi">尚未审批</span>；材料费：<span id="matBusi">尚未审批</span>；机械扣款：<span id="debitjxBusi">尚未审批</span>；人工扣款：<span id="debitBusi">尚未审批</span>；材料扣款：<span id="debitclBusi">尚未审批</span></p>
                                 <h5>上报小计：<span id="subBusi">尚未审批</span></h5>
                               </div>
                         </div>
                         <div class="col-md-6 final dn">
+                        	<div class="form-group">
+                                <label class="col-sm-5 control-label">审核人工费（元）<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control calculate" id="finalLabour" name="finalLabour" placeholder="审核人工费" value="0">
+                                </div>
+                            </div>
                             <div class="form-group">
                                 <label class="col-sm-5 control-label">审核机械费（元）<span style="color:red">*</span></label>
                                 <div class="col-sm-6">
@@ -99,21 +105,28 @@
                                     <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control calculate" id="finalMat" name="finalMat" placeholder="审核材料费" value="0">
                                 </div>
                             </div>
+                            
+                        </div>
+                        <div class="col-md-6 final dn">
                             <div class="form-group">
-                                <label class="col-sm-5 control-label">审核扣款（元）<span style="color:red">*</span></label>
+                                <label class="col-sm-5 control-label">审核人工扣款（元）<span style="color:red">*</span></label>
                                 <div class="col-sm-6">
                                     <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control calculate" id="finalDebit" name="finalDebit" placeholder="审核应扣款" value="0">
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-md-6 final dn">
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">审核人工费（元）<span style="color:red">*</span></label>
+                                <label class="col-sm-5 control-label">审核机械扣款（元）<span style="color:red">*</span></label>
                                 <div class="col-sm-6">
-                                    <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control calculate" id="finalLabour" name="finalLabour" placeholder="审核人工费" value="0">
+                                    <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control calculate" id="finalDebitjx" name="finalDebitjx" placeholder="审核应扣款" value="0">
                                 </div>
                             </div>
                             <div class="form-group">
+                                <label class="col-sm-5 control-label">审核材料扣款（元）<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control calculate" id="finalDebitcl" name="finalDebitcl" placeholder="审核应扣款" value="0">
+                                </div>
+                            </div>
+                            <div class="form-group" style="display: none">
                                 <label class="col-sm-3 control-label">审核包工包料（元）<span style="color:red">*</span></label>
                                 <div class="col-sm-6">
                                     <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control calculate" id="finalPack" name="finalPack" placeholder="审核包工包料" value="0">
@@ -218,15 +231,19 @@
                 $('#mechInfo').html(data.applyMech + '元');
                 $('#labourInfo').html(data.applyLabour + '元');
                 $('#matInfo').html(data.applyMat + '元');
-                $('#packInfo').html(data.applyPack + '元');
                 $('#debitInfo').html(data.applyDebit + '元');
+                $('#debitclInfo').html(data.applyDebitcl + '元');
+                $('#debitjxInfo').html(data.applyDebitjx + '元');
                 $('#subInfo').html(data.applySub + '元');
+
                 
-                $('#mechBusi').html(data.businessMech + '元');
+            	$('#mechBusi').html(data.businessMech + '元');
                 $('#labourBusi').html(data.businessLabour + '元');
                 $('#matBusi').html(data.businessMat + '元');
-                $('#packBusi').html(data.businessPack + '元');
+                
                 $('#debitBusi').html(data.businessDebit + '元');
+                $('#debitjxBusi').html(data.businessDebitjx + '元');
+                $('#debitclBusi').html(data.businessDebitcl + '元');
                 $('#subBusi').html(data.businessSub + '元');
                 
                 if(data.status=="60"){
@@ -241,8 +258,11 @@
             var mat = parseFloat($('#finalMat').val());
             var pack = parseFloat($('#finalPack').val());
             var debit = parseFloat($('#finalDebit').val());
+            var debitjx = parseFloat($('#finalDebitjx').val());
+            var debitcl = parseFloat($('#finalDebitcl').val());
+            var debits = accAddition(accAddition(debit,debitcl),debitjx);
             
-            var sub = accSubtraction(accAddition(accAddition(accAddition(mech, labour), mat), pack), debit);
+            var sub = accSubtraction(accAddition(accAddition(accAddition(mech, labour), mat), pack), debits);
             $('#finalSub').val(sub);
             
             var formData = {};
@@ -252,6 +272,8 @@
             formData.finalMat = mat + '';
             formData.finalPack = pack + "";
             formData.finalDebit = debit + '';
+            formData.finalDebitjx = debitjx + '';
+            formData.finalDebitcl = debitcl + '';
             formData.finalSub = sub + '';
             ajaxPost(basePath + '/projectvolume/savefinal', formData, function (data) {
                 if (data.success) {
@@ -278,15 +300,19 @@
                         $('#mechInfo').html(data.applyMech + '元');
                         $('#labourInfo').html(data.applyLabour + '元');
                         $('#matInfo').html(data.applyMat + '元');
-                        $('#packInfo').html(data.applyPack + '元');
                         $('#debitInfo').html(data.applyDebit + '元');
+                        $('#debitclInfo').html(data.applyDebitcl + '元');
+                        $('#debitjxInfo').html(data.applyDebitjx + '元');
                         $('#subInfo').html(data.applySub + '元');
+
                         
-                        $('#mechBusi').html(data.businessMech + '元');
+                    	$('#mechBusi').html(data.businessMech + '元');
                         $('#labourBusi').html(data.businessLabour + '元');
                         $('#matBusi').html(data.businessMat + '元');
-                        $('#packBusi').html(data.businessPack + '元');
+                        
                         $('#debitBusi').html(data.businessDebit + '元');
+                        $('#debitjxBusi').html(data.businessDebitjx + '元');
+                        $('#debitclBusi').html(data.businessDebitcl + '元');
                         $('#subBusi').html(data.businessSub + '元');
                         
                         if(data.status=="60"){

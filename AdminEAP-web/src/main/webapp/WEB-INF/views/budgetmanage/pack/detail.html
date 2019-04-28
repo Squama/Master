@@ -87,10 +87,10 @@
             tmp = '0';
         }else{
         	var consume;
-            if(rowObj.final_pack == '' || rowObj.final_pack == null || fnRenderBase64(rowObj.final_pack) == '0'){
+            if(rowObj.final_sub == '' || rowObj.final_sub == null || fnRenderBase64(rowObj.final_sub) == '0'){
                 consume = '0';
             }else{
-                consume = fnRenderBase64(rowObj.final_pack);
+                consume = fnRenderBase64(rowObj.final_sub);
             }
             data = accDivision(consume, fnRenderBase64(rowObj.total));
             tmp = ((100*data).toFixed(2)).toString();

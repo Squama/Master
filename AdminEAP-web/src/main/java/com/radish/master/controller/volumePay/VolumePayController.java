@@ -107,8 +107,14 @@ public class VolumePayController {
 		double zje = 0.0;
 		if("20".equals(type)){
 			zje = Double.valueOf(pv.getFinalMech());
+			if(pv.getFinalDebitjx()!=null){
+				zje = air.sub(zje, Double.valueOf(pv.getFinalDebitjx()));
+			}
 		}else if("30".equals(type)){
 			zje = Double.valueOf(pv.getFinalMat());
+			if(pv.getFinalDebitcl()!=null){
+				zje = air.sub(zje, Double.valueOf(pv.getFinalDebitcl()));
+			}
 		}else if("40".equals(type)){
 			if(pv.getFinalPack()==null){
 				zje=0.0;
@@ -208,8 +214,14 @@ public class VolumePayController {
 			double zje = 0.0;
 			if("20".equals(zf.getPayType())){
 				zje = Double.valueOf(pv.getFinalMech());
+				if(pv.getFinalDebitjx()!=null){
+					zje = air.sub(zje, Double.valueOf(pv.getFinalDebitjx()));
+				}
 			}else if("30".equals(zf.getPayType())){
 				zje = Double.valueOf(pv.getFinalMat());
+				if(pv.getFinalDebitcl()!=null){
+					zje = air.sub(zje, Double.valueOf(pv.getFinalDebitcl()));
+				}
 			}else if("40".equals(zf.getPayType())){
 				if(pv.getFinalPack()==null){
 					zje=0.0;

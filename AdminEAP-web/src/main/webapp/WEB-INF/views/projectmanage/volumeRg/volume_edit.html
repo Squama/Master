@@ -1,0 +1,390 @@
+<script src="${basePath}/resources/common/js/calculate.js"></script>
+<section class="content-header">
+    <h1>
+        <span>工程量上报(包清工)</span>
+        <small>新增</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
+        <li><a href="#">项目管理</a></li>
+        <li class="active">新增工程量上报(包清工)</li>
+    </ol>
+</section>
+
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box box-info">
+                <form id="volume_form" name="volume_form" class="form-horizontal">
+                    <input type="hidden" name="projectName" id="projectName">
+                    <input type="hidden" name="id">
+                    <div class="box-body">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-sm-5 control-label">选择项目<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <select id="projectID" class="form-control select2" name="projectID">
+                                        <option selected="selected" value="">选择一个项目</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-5 control-label">选择合同<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <select id="laborID" class="form-control select2" name="laborID">
+                                        <option selected="selected" value="">选择一个合同</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-5 control-label">施工班组<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" id="constructionTeam" name="constructionTeam" placeholder="施工班组" readonly="readonly">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-5 control-label">施工起始时间<span style="color:red">*</span></label>
+                                <div class="input-group col-sm-6">
+                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                    <input type="text" class="form-control" data-flag="datepicker" data-format="yyyy-mm-dd" name="startTime" id="startTime"
+                                        placeholder="起始时间" autocomplete="off">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">选择项目子项<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <select id="projectSubID" class="form-control select2" name="projectSubID">
+                                        <option selected="selected" value="">选择一个项目子项</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">合同总价（元）</label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" id="contractPrice" name="contractPrice" placeholder="合同总价" readonly="readonly">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">施工负责人<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" id="constructionManager" name="constructionManager" placeholder="施工负责人" readonly="readonly">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">施工结束时间<span style="color:red">*</span></label>
+                                <div class="input-group col-sm-6">
+                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                    <input type="text" class="form-control" data-flag="datepicker" data-format="yyyy-mm-dd" name="endTime" id="endTime"
+                                        placeholder="结束时间" autocomplete="off">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+	                        <div class="form-group">
+	                            <label class="col-sm-3 control-label">人工费单价（描述）</label>
+	                            <div class="col-sm-7">
+	                                <textarea class="form-control" id="labourSin" name="labourSin" rows="3" cols="10" readonly="readonly"></textarea>
+	                            </div>
+	                        </div>
+                        </div>
+                        <div class="col-md-6">
+                        	<div class="form-group">
+                                <label class="col-sm-5 control-label">人工费（元）<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control calculate" id="applyLabour" name="applyLabour" placeholder="本次上报人工费" value="0">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-5 control-label">机械费（元）<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" readonly="readonly" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control calculate" id="applyMech" name="applyMech" placeholder="本次上报机械费" value="0">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-5 control-label">材料费（元）<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" readonly="readonly" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control calculate" id=applyMat name="applyMat" placeholder="本次上报材料费" value="0">
+                                </div>
+                            </div>
+                            <!-- <div class="form-group">
+                                <label class="col-sm-5 control-label">选择包工包料<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <select id="packageDetailID" class="form-control select2" name="packageDetailID">
+                                        <option selected="selected" value="">选择一个包工包料</option>
+                                    </select>
+                                </div>
+                            </div> -->
+                        </div>
+                        <div class="col-md-6">
+                            
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">人工扣款（元）<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control calculate" id="applyDebit" name="applyDebit" placeholder="本次上报应扣款" value="0">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">机械扣款（元）<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input readonly="readonly" type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control calculate" id="applyDebitjx" name="applyDebitjx" placeholder="本次上报应扣款" value="0">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">材料扣款（元）<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input readonly="readonly" type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control calculate" id="applyDebitcl" name="applyDebitcl" placeholder="本次上报应扣款" value="0">
+                                </div>
+                            </div>
+                            <div class="form-group" style="display: none">
+                                <label class="col-sm-3 control-label">包工包料（元）<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control calculate" id="applyPack" name="applyPack" placeholder="本次上报包工包料金额" value="0">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">本次上报总计（元）<span style="color:red">*</span></label>
+                                <div class="col-sm-7">
+                                    <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control" id="applySub" name="applySub" placeholder="本次上报总计" readonly="readonly" value="0">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="col-sm-2 control-label">工程量<span style="color:red">*</span></label>
+                            <div class="col-sm-8">
+                                <textarea class="form-control" id="volume" name="volume" rows="8" cols="100"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer text-center">
+                        <button type="button" class="btn btn-default" data-btn-type="prev">返回</button>
+                        <button type="submit" class="btn btn-success ml10" data-btn-type="save" id="savebtn">保存并返回</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+    var form;
+    var id = "${id?default(0)}";
+    var projectOptions = '${projectOptions?default(0)}',options=0;
+    if(projectOptions != 0){
+        options = JSON.parse(projectOptions);
+    }
+    var volumeCtrl = {
+        initButtonEvent: function () {
+            $("button[data-btn-type='prev']").click(function () {
+                loadPage(basePath+"/projectvolume/list");
+            });
+        }
+    }
+    $(function () {
+        //初始化表单 
+        form = $("#volume_form").form({baseEntity:false});
+        //数据校验
+        $("#volume_form").bootstrapValidator({
+            message: '请输入有效值',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            submitHandler: function () {
+                var action = $(this).attr('$submitButton').attr('data-btn-type');
+                var formData = form.getFormSimpleData();
+                ajaxPost(basePath + '/projectvolume/save?sblx=10', formData, function (data) {
+                    if (data.success) {
+                        switch (action) {
+                            case "save":
+                                loadPage(basePath+"/projectvolume/list");
+                                break;
+                        }
+                    } else {
+                        modals.error(data.message);
+                    }
+                });
+            },
+            fields: {
+                "projectID": {
+                    validators: {
+                        notEmpty: {message: '项目不能为空'}
+                    }
+                },
+                "laborID": {
+                    validators: {
+                        notEmpty: {message: '合同不能为空'}
+                    }
+                },
+                "startTime": {
+                    validators: {
+                        notEmpty: {message: '起始时间不能为空'}
+                    }
+                },
+                "endTime": {
+                    validators: {
+                        notEmpty: {message: '结束时间不能为空'}
+                    }
+                },
+                "volume": {
+                    validators: {
+                        notEmpty: {message: '工程量不能为空'}
+                    }
+                }/*,
+                 "applyMech": {
+                    validators: {
+                        notEmpty: {message: '机械费不能为空'}
+                    }
+                },
+                "applyLabour": {
+                    validators: {
+                        notEmpty: {message: '人工费不能为空'}
+                    }
+                },
+                "applyMat": {
+                    validators: {
+                        notEmpty: {message: '材料费不能为空'}
+                    }
+                },
+                "packageDetailID": {
+                    validators: {
+                        notEmpty: {message: '包工包料名称不能为空'}
+                    }
+                },
+                "applyPack": {
+                    validators: {
+                        notEmpty: {message: '包工包料不能为空'}
+                    }
+                }, 
+                "applyDebit": {
+                    validators: {
+                        notEmpty: {message: '工程量不能为空'}
+                    }
+                }*/
+            }
+        });
+        //初始化控件
+        form.initComponent();
+        volumeCtrl.initButtonEvent();
+        
+        if(options != 0){
+            for (var i = 0, len = options.length; i < len; i++) {
+                var option = options[i];
+                $('#projectID').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+            }
+            $("#projectID").select2();
+            $("#projectID").bind("change", function () {
+                var value = $(this).val();
+                if (value === "") {
+                    return false;
+                }
+                
+                var name = "";
+                if ($("#projectID").prop('selectedIndex') > 0) {
+                    name = $("#projectID").find("option:selected").text();
+                }
+                $('#projectName').val(name);
+                
+                ajaxPost(basePath+"/projectvolume/getlabor?sblx=10",{projectID:value},function(data){
+                    var laborOptions = data.message;
+                    lOptions = JSON.parse(laborOptions);
+                    $('#laborID').empty();
+                    $('#laborID').append('<option selected="selected" value="">选择一个合同</option>');
+                    for (var i = 0, len = lOptions.length; i < len; i++) {
+                        var lOption = lOptions[i];
+                        $('#laborID').append("<option value=\"" + lOption.value + "\">" + lOption.data + "</option>");
+                    }
+                    $('#laborID').select2();
+                    $('#laborID').unbind("change.Labor");
+                    $('#laborID').bind("change.Labor", function(){
+                        laborid = $(this).val();
+                        if (laborid === "") {
+                            return false;
+                        }
+                        ajaxPost(basePath+"/projectvolume/getlaborinfo",{laborID:laborid},function(data){
+                        	ajaxPost(basePath+"/projectvolume/checkconstworker", {userID:data.constructionManagerID,userName:data.constructionManager}, function (data, status) {
+                                if (!data.success) {
+                                    modals.error(data.message);
+                                    $('#savebtn').attr("disabled","disabled");
+                                }else{
+                                    $('#savebtn').removeAttr("disabled");
+                                }
+                            });
+                        	$('#labourSin').val(data.labourSin);
+                        	/* $('#labourUnit').val(data.labourUnit); */
+                        	$('#constructionTeam').val(data.constructionTeam);
+                        	$('#constructionManager').val(data.constructionManager);
+                        	$('#contractPrice').val(data.contractPrice);
+                        });
+                        //加载包工包料
+                        ajaxPost(basePath+"/projectvolume/getpack",{projectID:value,laborID:laborid},function(data){
+                            var packDetailOptions = data.message;
+                            pOptions = JSON.parse(packDetailOptions);
+                            $('#packageDetailID').empty();
+                            $('#packageDetailID').append('<option selected="selected" value="">选择一个包工包料</option>');
+                            for (var i = 0, len = pOptions.length; i < len; i++) {
+                                var option = pOptions[i];
+                                $('#packageDetailID').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+                            }
+                            $('#packageDetailID').select2();
+                        });
+                        //子项加载结束
+                    });
+                });
+                //加载子项
+                ajaxPost(basePath+"/projectvolume/getprojectsub",{projectID:value},function(data){
+                    var laborSubOptions = data.message;
+                    sOptions = JSON.parse(laborSubOptions);
+                    $('#projectSubID').empty();
+                    $('#projectSubID').append('<option selected="selected" value="">选择一个项目子项</option>');
+                    for (var i = 0, len = sOptions.length; i < len; i++) {
+                        var option = sOptions[i];
+                        $('#projectSubID').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+                    }
+                    $('#projectSubID').select2();
+                });
+                //子项加载结束
+            });
+        }
+        
+        //编辑回填
+        if(id!="0"){
+            ajaxPost(basePath+"/projectvolume/get",{id:id},function(data){
+                form.initFormData(data);
+                $('#laborID').val(data.laborID).trigger("change");
+            })
+        }
+        
+        $(".labourcalculate").on("focusout", function(){
+            var sin = parseFloat($('#labourSin').val());
+            var quantity = parseFloat($('#labourQuantity').val());
+            if(sin == ''){
+            	sin = 0;
+            }
+            if(quantity == ''){
+            	quantity = 0;
+            }
+            var sub = accMultiplication(sin, quantity);
+            $('#applyLabour').val(sub);
+            $('#applyLabour').focusout();
+        });
+        
+        $(".calculate").on("focusout", function(){
+        	 var mech = parseFloat($('#applyMech').val());
+             var labour = parseFloat($('#applyLabour').val());
+             var mat = parseFloat($('#applyMat').val());
+             var pack = parseFloat($('#applyPack').val());
+             var debit = parseFloat($('#applyDebit').val());
+             var debitcl = parseFloat($('#applyDebitcl').val());
+             var debitjx = parseFloat($('#applyDebitjx').val());
+             
+             var debits = accAddition(accAddition(debit,debitcl),debitjx);
+             var sub = accSubtraction(accAddition(accAddition(accAddition(mech, labour), mat), pack), debits);
+             $('#applySub').val(sub);
+        });
+    });
+    
+</script>

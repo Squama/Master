@@ -1,12 +1,12 @@
 <section class="content-header">
     <h1>
-        劳务合同
+        包清工合同
         <small>列表</small>
     </h1>
     <ol class="breadcrumb">
         <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
         <li><a href="#">劳务管理</a></li>
-        <li class="active">劳务合同</li>
+        <li class="active">包清工合同</li>
     </ol>
 </section>
 
@@ -20,20 +20,12 @@
                     	<option selected="selected" value="">选择一个项目</option>
                     </select>
                    <input type="search" placeholder="请输入责任人" title="责任人" name="l.construction_manager" class="form-control" id="charge_name" operator="like" likeOption="true">
-                    <select  class="form-control select2" name="l.htlx" style="width:200px;" operator="eq">
-                    	<option selected="selected" value="">选择一个类型</option>
-                    	<option value="10">包清工</option>
-                    	<option value="20">包工包料</option>
-                    	<option value="30">机械</option>
-                    </select>
                     <div class="btn-group">
                         <button type="button" class="btn btn-primary" data-btn-type="search">查询</button>
                         <button type="button" class="btn btn-default" data-btn-type="reset">重置</button>
                     </div>
                     <div class="btn-group">
-                        <button type="button" class="btn btn-default" data-btn-type="add"
-                        data-toggle="modal" data-target="#myModal"
-                        >新增</button>
+                        <button type="button" class="btn btn-default" data-btn-type="add">新增</button>
                         <button type="button" class="btn btn-default" data-btn-type="edit">编辑</button>
                         <button type="button" class="btn btn-default" data-btn-type="delete">删除</button>
                     </div>
@@ -45,29 +37,6 @@
             </div>
         </div>
     </div>
-    <!-- 模态框（Modal） -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" 
-						aria-hidden="true">×
-				</button>
-				<h4 class="modal-title" id="myModalLabel">
-					选择合同类型
-				</h4>
-			</div>
-			<div class="modal-body" style="text-align: center">
-				<select id='sblx' class='form-control select2'style='width:70%;' >
-					<option selected='selected' value='10'>包清工</option>
-					<option value='20'>包工包料</option>
-					<option value='30'>机械</option>
-				</select><br>
-				<button type='button' class='btn btn-success' data-btn-type='dotrue'>确定添加</button>
-			</div>
-		</div>
-	</div>
-</div>
 </section>
 
 <script>
@@ -102,7 +71,7 @@
     }
     
     $(function (){
-    	laborTable = new CommonTable("labor_table", "labor_list", "searchDiv", null);
+    	laborTable = new CommonTable("labor_table", "labor_list_Rg", "searchDiv", null);
         
         //绑定按钮事件
         $("button[data-btn-type]").click(function () {
@@ -119,24 +88,10 @@
                         modals.info('审核中或审核完成的条目不可编辑!');
                         return false;
                     }
-                    loadPage(basePath+"/labor/edit/" +rowId+"?htlx="+data.htlx);
+                    loadPage(basePath+"/labor/edit/" +rowId+"?htlx=10");
                     break;
                 case "add":
-                    //loadPage(basePath+"/labor/add");
-                    break;
-                case "dotrue":
-                    var sblx = $("#sblx option:selected").val();
-                    if(sblx){
-                    	$("#myModal").modal('hide');
-
-                    	setTimeout(function(){
-                    		loadPage(basePath+"/labor/add?htlx="+sblx);
-                        },500);
-                        
-                    }else{
-                    	modals.info('请选择上报类型');	
-                    }
-                    
+                    loadPage(basePath+"/labor/add?htlx=10");
                     break;
                 case "delete":
 	                if(!rowId){

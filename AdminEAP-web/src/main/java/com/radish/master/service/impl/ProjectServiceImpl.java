@@ -210,8 +210,15 @@ public class ProjectServiceImpl extends BaseServiceImpl implements ProjectServic
         projectVolume.setStatus("20");
 
         this.update(projectVolume);
-
-        String name = "项目：" + projectVolume.getProjectName() + "合同：" + labor.getContractName() + "工程量上报";
+        String name = "项目：" + projectVolume.getProjectName() + "合同：" + labor.getContractName() + "工程量上报(包工包料)";
+        if(projectVolume.getSblx()!=null){
+        	if("10".equals(projectVolume.getSblx())){
+        		name = "项目：" + projectVolume.getProjectName() + "合同：" + labor.getContractName() + "工程量上报(包清工)";
+        	}else if("30".equals(projectVolume.getSblx())){
+        		name = "项目：" + projectVolume.getProjectName() + "合同：" + labor.getContractName() + "工程量上报(机械)";
+        	}
+        }
+        
 
         // businessKey
         String businessKey = projectVolume.getId();
@@ -414,13 +421,14 @@ public class ProjectServiceImpl extends BaseServiceImpl implements ProjectServic
     }
 
     @Override
-    public List<ProjectVolume> checkTimePeriod(String projectID, String laborID, String projectSubID, String startTimeStr, String endTimeStr, String volumeID) {
+    public List<ProjectVolume> checkTimePeriod(String projectID, String laborID, String projectSubID, String startTimeStr, String endTimeStr, String volumeID,String sblx) {
         StringBuilder buffer = new StringBuilder();
 
         buffer.append("SELECT * FROM tbl_project_volume ");
         buffer.append("WHERE UNIX_TIMESTAMP(start_time) <= UNIX_TIMESTAMP(:endTime) ");
         buffer.append("AND UNIX_TIMESTAMP(end_time) >= UNIX_TIMESTAMP(:startTime) ");
         buffer.append("AND project_id=:projectID AND labor_id=:laborID AND project_sub_id=:projectSubID ");
+        buffer.append("AND sblx=:sblx  ");
 
         Map<String, Object> params = new HashMap<String, Object>();
 
@@ -429,7 +437,7 @@ public class ProjectServiceImpl extends BaseServiceImpl implements ProjectServic
         params.put("projectID", projectID);
         params.put("laborID", laborID);
         params.put("projectSubID", projectSubID);
-
+        params.put("sblx", sblx);
         if (!StrUtil.isEmpty(volumeID)) {
             buffer.append(" AND id <> :id");
             params.put("id", volumeID);

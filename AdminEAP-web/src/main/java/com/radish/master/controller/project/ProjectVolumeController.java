@@ -14,6 +14,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.hibernate.type.StringType;
+import org.hibernate.type.Type;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,6 +39,7 @@ import com.radish.master.entity.Labor;
 import com.radish.master.entity.ProjectVolume;
 import com.radish.master.entity.project.LaborSub;
 import com.radish.master.entity.qualityCheck.CheckFkd;
+import com.radish.master.pojo.Options;
 import com.radish.master.service.BudgetService;
 import com.radish.master.service.ProjectService;
 import com.radish.master.system.Arith;
@@ -84,7 +87,14 @@ public class ProjectVolumeController {
     @RequestMapping(value="/add",method = RequestMethod.GET)
     public String add(HttpServletRequest request){
         request.setAttribute("projectOptions", JSONArray.toJSONString(budgetService.getProjectCombobox()));
-        
+        String sblx = request.getParameter("sblx");
+        if(sblx!=null){
+        	if("10".equals(sblx)){
+        		return "projectmanage/volumeRg/volume_edit";
+        	}else if("30".equals(sblx)){
+        		return "projectmanage/volumeJx/volume_edit";
+        	}
+        }
         return "projectmanage/volume/volume_edit";
     }
     
@@ -92,6 +102,16 @@ public class ProjectVolumeController {
     public String edit(@PathVariable("id") String id,HttpServletRequest request,HttpServletResponse response) {
         request.setAttribute("id", id);
         request.setAttribute("projectOptions", JSONArray.toJSONString(budgetService.getProjectCombobox()));
+        
+        String sblx = request.getParameter("sblx");
+        if(sblx!=null){
+        	if("10".equals(sblx)){
+        		return "projectmanage/volumeRg/volume_edit";
+        	}else if("30".equals(sblx)){
+        		return "projectmanage/volumeJx/volume_edit";
+        	}
+        }
+        
         return "projectmanage/volume/volume_edit";
     }
     
@@ -99,6 +119,15 @@ public class ProjectVolumeController {
     public String detail(@PathVariable("id") String id,HttpServletRequest request,HttpServletResponse response) {
         request.setAttribute("id", id);
         request.setAttribute("projectOptions", JSONArray.toJSONString(budgetService.getProjectCombobox()));
+        ProjectVolume sb = projectService.get(ProjectVolume.class, id);
+        String sblx = sb.getSblx();
+        if(sblx!=null){
+        	if("10".equals(sblx)){
+        		return "projectmanage/volumeRg/volume_detail";
+        	}else if("30".equals(sblx)){
+        		return "projectmanage/volumeJx/volume_detail";
+        	}
+        }
         return "projectmanage/volume/volume_detail";
     }
     
@@ -106,6 +135,15 @@ public class ProjectVolumeController {
     public String detailBusiness(@PathVariable("id") String id,HttpServletRequest request,HttpServletResponse response) {
         request.setAttribute("id", id);
         request.setAttribute("projectOptions", JSONArray.toJSONString(budgetService.getProjectCombobox()));
+        ProjectVolume sb = projectService.get(ProjectVolume.class, id);
+        String sblx = sb.getSblx();
+        if(sblx!=null){
+        	if("10".equals(sblx)){
+        		return "projectmanage/volumeRg/volume_detail_business";
+        	}else if("30".equals(sblx)){
+        		return "projectmanage/volumeJx/volume_detail_business";
+        	}
+        }
         return "projectmanage/volume/volume_detail_business";
     }
     
@@ -113,6 +151,15 @@ public class ProjectVolumeController {
     public String detailFinal(@PathVariable("id") String id,HttpServletRequest request,HttpServletResponse response) {
         request.setAttribute("id", id);
         request.setAttribute("projectOptions", JSONArray.toJSONString(budgetService.getProjectCombobox()));
+        ProjectVolume sb = projectService.get(ProjectVolume.class, id);
+        String sblx = sb.getSblx();
+        if(sblx!=null){
+        	if("10".equals(sblx)){
+        		return "projectmanage/volumeRg/volume_detail_final";
+        	}else if("30".equals(sblx)){
+        		return "projectmanage/volumeJx/volume_detail_final";
+        	}
+        }
         return "projectmanage/volume/volume_detail_final";
     }
     
@@ -120,6 +167,15 @@ public class ProjectVolumeController {
     public String detailOuter(@PathVariable("id") String id,HttpServletRequest request,HttpServletResponse response) {
         request.setAttribute("id", id);
         request.setAttribute("projectOptions", JSONArray.toJSONString(budgetService.getProjectCombobox()));
+        ProjectVolume sb = projectService.get(ProjectVolume.class, id);
+        String sblx = sb.getSblx();
+        if(sblx!=null){
+        	if("10".equals(sblx)){
+        		return "projectmanage/volumeRg/detail_outer";
+        	}else if("30".equals(sblx)){
+        		return "projectmanage/volumeJx/detail_outer";
+        	}
+        }
         return "projectmanage/volume/detail_outer";
     }
     
@@ -149,8 +205,25 @@ public class ProjectVolumeController {
     
     @RequestMapping(value="/getlabor")
     @ResponseBody
-    public Result getLabor(String projectID){
-        return new Result(true, JSONArray.toJSONString(projectService.getLaborComboboxByProject(projectID)));
+    public Result getLabor(String projectID,String sblx){
+    	String sql = "select id value, contract_name data from tbl_labor where project_id=? AND Status='30'";
+    	//机械上报取机械合同
+    	if(sblx!=null){
+    		if("30".equals(sblx)){
+    			sql += " AND htlx = '30' ";
+    		}else if("10".equals(sblx)){
+    			sql += " AND htlx = '10' ";
+    		}
+    		
+    	}else{
+    		sql +=" AND htlx='20'  ";
+    	}
+    	List<Options> hts = projectService.findMapBySql(
+    			sql,
+    			new Object[] { projectID },
+                new Type[] { StringType.INSTANCE }, Options.class);
+    	
+        return new Result(true, JSONArray.toJSONString(hts));
     }
     
     @RequestMapping(value="/getlaborsub")
@@ -267,7 +340,7 @@ public class ProjectVolumeController {
         String endTime = String.valueOf(calendar.getTimeInMillis());*/
         
         
-        List<ProjectVolume> list = projectService.checkTimePeriod(projectVolume.getProjectID(), projectVolume.getLaborID(), projectVolume.getProjectSubID(), startTime, endTime, projectVolume.getId());
+        List<ProjectVolume> list = projectService.checkTimePeriod(projectVolume.getProjectID(), projectVolume.getLaborID(), projectVolume.getProjectSubID(), startTime, endTime, projectVolume.getId(),projectVolume.getSblx());
         if(!list.isEmpty()){
             return new Result(false, "上报时间段不可重叠");
         }
@@ -276,18 +349,38 @@ public class ProjectVolumeController {
             projectVolume.setCreateDateTime(new Date());
             projectVolume.setCreateTime(new Date());
             projectVolume.setStatus("10");
-            projectVolume.setBusinessMech(projectVolume.getApplyMech());
+            /*projectVolume.setBusinessMech(projectVolume.getApplyMech());
             projectVolume.setBusinessLabour(projectVolume.getApplyLabour());
             projectVolume.setBusinessMat(projectVolume.getApplyMat());
             projectVolume.setBusinessDebit(projectVolume.getApplyDebit());
+            projectVolume.setBusinessDebitjx(projectVolume.getApplyDebitjx());
+            projectVolume.setBusinessDebitcl(projectVolume.getApplyDebitcl());
             projectVolume.setBusinessPack(projectVolume.getApplyPack());
             projectVolume.setBusinessSub(projectVolume.getApplySub());
             projectVolume.setFinalMech(projectVolume.getApplyMech());
             projectVolume.setFinalLabour(projectVolume.getApplyLabour());
             projectVolume.setFinalMat(projectVolume.getApplyMat());
             projectVolume.setFinalDebit(projectVolume.getApplyDebit());
+            projectVolume.setFinalDebitjx(projectVolume.getApplyDebitjx());
+            projectVolume.setFinalDebitcl(projectVolume.getApplyDebitcl());
             projectVolume.setFinalPack(projectVolume.getApplyPack());
-            projectVolume.setFinalSub(projectVolume.getApplySub());
+            projectVolume.setFinalSub(projectVolume.getApplySub());*/
+            projectVolume.setBusinessMech("0");
+            projectVolume.setBusinessLabour("0");
+            projectVolume.setBusinessMat("0");
+            projectVolume.setBusinessDebit("0");
+            projectVolume.setBusinessDebitjx("0");
+            projectVolume.setBusinessDebitcl("0");
+            projectVolume.setBusinessPack("0");
+            projectVolume.setBusinessSub("0");
+            projectVolume.setFinalMech("0");
+            projectVolume.setFinalLabour("0");
+            projectVolume.setFinalMat("0");
+            projectVolume.setFinalDebit("0");
+            projectVolume.setFinalDebitjx("0");
+            projectVolume.setFinalDebitcl("0");
+            projectVolume.setFinalPack("0");
+            projectVolume.setFinalSub("0");
             projectService.save(projectVolume);
         }else{
             ProjectVolume oldProjectVolume = projectService.get(ProjectVolume.class, projectVolume.getId());
@@ -339,6 +432,10 @@ public class ProjectVolumeController {
         oldProjectVolume.setBusinessLabour(projectVolume.getBusinessLabour());
         oldProjectVolume.setBusinessMat(projectVolume.getBusinessMat());
         oldProjectVolume.setBusinessDebit(projectVolume.getBusinessDebit());
+        
+        oldProjectVolume.setBusinessDebitjx(projectVolume.getBusinessDebitjx());
+        oldProjectVolume.setBusinessDebitcl(projectVolume.getBusinessDebitcl());
+        
         oldProjectVolume.setBusinessPack(projectVolume.getBusinessPack());
         oldProjectVolume.setBusinessSub(projectVolume.getBusinessSub());
         oldProjectVolume.setUpdateDateTime(new Date());
@@ -364,6 +461,10 @@ public class ProjectVolumeController {
         oldProjectVolume.setFinalLabour(projectVolume.getFinalLabour());
         oldProjectVolume.setFinalMat(projectVolume.getFinalMat());
         oldProjectVolume.setFinalDebit(projectVolume.getFinalDebit());
+        
+        oldProjectVolume.setFinalDebitjx(projectVolume.getFinalDebitjx());
+        oldProjectVolume.setFinalDebitcl(projectVolume.getFinalDebitcl());
+        
         oldProjectVolume.setFinalPack(projectVolume.getFinalPack());
         oldProjectVolume.setFinalSub(projectVolume.getFinalSub());
         oldProjectVolume.setUpdateDateTime(new Date());
@@ -435,32 +536,64 @@ public class ProjectVolumeController {
     		return r;
     	}
     	Double fkje = Double.valueOf(fk.getFkje());
-    	//拿到经营科扣款和财务扣款  扣款相加
-    	Double jyk = 0.0;
-    	Double cw = 0.0;
-    	if(gcl.getBusinessDebit()!=null){
-    		jyk = Double.valueOf(gcl.getBusinessDebit());
+    	//机械上报扣在机械扣款 其他扣在人工扣款
+    	String sblx = gcl.getSblx();
+    	if(sblx!=null&&"30".equals(sblx)){
+    		//拿到经营科扣款和财务扣款  扣款相加
+        	Double jyk = 0.0;
+        	Double cw = 0.0;
+        	if(gcl.getBusinessDebitjx()!=null){
+        		jyk = Double.valueOf(gcl.getBusinessDebitjx());
+        	}
+        	if(gcl.getFinalDebitjx()!=null){
+        		cw =  Double.valueOf(gcl.getFinalDebitjx());
+        	}
+        	jyk = ari.add(jyk, fkje);
+        	gcl.setBusinessDebitjx(jyk.toString());
+        	cw = ari.add(cw, fkje);
+        	gcl.setFinalDebitjx(cw.toString());
+        	//重算经营科小计和财务小计   小计-扣款
+        	Double jyks = 0.0;
+        	Double cws = 0.0;
+        	if(gcl.getBusinessSub()!=null){
+        		jyks = Double.valueOf(gcl.getBusinessSub());
+        	}
+        	if(gcl.getFinalSub()!=null){
+        		cws =  Double.valueOf(gcl.getFinalSub());
+        	}
+        	jyks = ari.sub(jyks, fkje);
+        	gcl.setBusinessSub(jyks.toString());
+        	cws = ari.sub(cws, fkje);
+        	gcl.setFinalSub(cws.toString());
+    	}else{
+    		//拿到经营科扣款和财务扣款  扣款相加
+        	Double jyk = 0.0;
+        	Double cw = 0.0;
+        	if(gcl.getBusinessDebit()!=null){
+        		jyk = Double.valueOf(gcl.getBusinessDebit());
+        	}
+        	if(gcl.getFinalDebit()!=null){
+        		cw =  Double.valueOf(gcl.getFinalDebit());
+        	}
+        	jyk = ari.add(jyk, fkje);
+        	gcl.setBusinessDebit(jyk.toString());
+        	cw = ari.add(cw, fkje);
+        	gcl.setFinalDebit(cw.toString());
+        	//重算经营科小计和财务小计   小计-扣款
+        	Double jyks = 0.0;
+        	Double cws = 0.0;
+        	if(gcl.getBusinessSub()!=null){
+        		jyks = Double.valueOf(gcl.getBusinessSub());
+        	}
+        	if(gcl.getFinalSub()!=null){
+        		cws =  Double.valueOf(gcl.getFinalSub());
+        	}
+        	jyks = ari.sub(jyks, fkje);
+        	gcl.setBusinessSub(jyks.toString());
+        	cws = ari.sub(cws, fkje);
+        	gcl.setFinalSub(cws.toString());
     	}
-    	if(gcl.getFinalDebit()!=null){
-    		cw =  Double.valueOf(gcl.getFinalDebit());
-    	}
-    	jyk = ari.add(jyk, fkje);
-    	gcl.setBusinessDebit(jyk.toString());
-    	cw = ari.add(cw, fkje);
-    	gcl.setFinalDebit(cw.toString());
-    	//重算经营科小计和财务小计   小计-扣款
-    	Double jyks = 0.0;
-    	Double cws = 0.0;
-    	if(gcl.getBusinessSub()!=null){
-    		jyks = Double.valueOf(gcl.getBusinessSub());
-    	}
-    	if(gcl.getFinalSub()!=null){
-    		cws =  Double.valueOf(gcl.getFinalSub());
-    	}
-    	jyks = ari.sub(jyks, fkje);
-    	gcl.setBusinessSub(jyks.toString());
-    	cws = ari.sub(cws, fkje);
-    	gcl.setFinalSub(cws.toString());
+    	
     	
     	projectService.update(gcl);
     	return r;
@@ -486,32 +619,65 @@ public class ProjectVolumeController {
     		return r;
     	}
     	Double fkje = Double.valueOf(fk.getFkje());
-    	//拿到经营科扣款和财务扣款  扣款相加
-    	Double jyk = 0.0;
-    	Double cw = 0.0;
-    	if(gcl.getBusinessDebit()!=null){
-    		jyk = Double.valueOf(gcl.getBusinessDebit());
+    	//机械上报扣在机械扣款 其他扣在人工扣款
+    	String sblx = gcl.getSblx();
+    	if(sblx!=null&&"30".equals(sblx)){
+    		//拿到经营科扣款和财务扣款  扣款相加
+        	Double jyk = 0.0;
+        	Double cw = 0.0;
+        	if(gcl.getBusinessDebitjx()!=null){
+        		jyk = Double.valueOf(gcl.getBusinessDebitjx());
+        	}
+        	if(gcl.getFinalDebitjx()!=null){
+        		cw =  Double.valueOf(gcl.getFinalDebitjx());
+        	}
+        	jyk = ari.sub(jyk, fkje);
+        	gcl.setBusinessDebitjx(jyk.toString());
+        	cw = ari.sub(cw, fkje);
+        	gcl.setFinalDebitjx(cw.toString());
+        	//重算经营科小计和财务小计   小计-扣款
+        	Double jyks = 0.0;
+        	Double cws = 0.0;
+        	if(gcl.getBusinessSub()!=null){
+        		jyks = Double.valueOf(gcl.getBusinessSub());
+        	}
+        	if(gcl.getFinalSub()!=null){
+        		cws =  Double.valueOf(gcl.getFinalSub());
+        	}
+        	jyks = ari.add(jyks, fkje);
+        	gcl.setBusinessSub(jyks.toString());
+        	cws = ari.add(cws, fkje);
+        	gcl.setFinalSub(cws.toString());
+    	}else{
+    		//拿到经营科扣款和财务扣款  扣款相加
+        	Double jyk = 0.0;
+        	Double cw = 0.0;
+        	if(gcl.getBusinessDebit()!=null){
+        		jyk = Double.valueOf(gcl.getBusinessDebit());
+        	}
+        	if(gcl.getFinalDebit()!=null){
+        		cw =  Double.valueOf(gcl.getFinalDebit());
+        	}
+        	jyk = ari.sub(jyk, fkje);
+        	gcl.setBusinessDebit(jyk.toString());
+        	cw = ari.sub(cw, fkje);
+        	gcl.setFinalDebit(cw.toString());
+        	//重算经营科小计和财务小计   小计-扣款
+        	Double jyks = 0.0;
+        	Double cws = 0.0;
+        	if(gcl.getBusinessSub()!=null){
+        		jyks = Double.valueOf(gcl.getBusinessSub());
+        	}
+        	if(gcl.getFinalSub()!=null){
+        		cws =  Double.valueOf(gcl.getFinalSub());
+        	}
+        	jyks = ari.add(jyks, fkje);
+        	gcl.setBusinessSub(jyks.toString());
+        	cws = ari.add(cws, fkje);
+        	gcl.setFinalSub(cws.toString());
     	}
-    	if(gcl.getFinalDebit()!=null){
-    		cw =  Double.valueOf(gcl.getFinalDebit());
-    	}
-    	jyk = ari.sub(jyk, fkje);
-    	gcl.setBusinessDebit(jyk.toString());
-    	cw = ari.sub(cw, fkje);
-    	gcl.setFinalDebit(cw.toString());
-    	//重算经营科小计和财务小计   小计-扣款
-    	Double jyks = 0.0;
-    	Double cws = 0.0;
-    	if(gcl.getBusinessSub()!=null){
-    		jyks = Double.valueOf(gcl.getBusinessSub());
-    	}
-    	if(gcl.getFinalSub()!=null){
-    		cws =  Double.valueOf(gcl.getFinalSub());
-    	}
-    	jyks = ari.add(jyks, fkje);
-    	gcl.setBusinessSub(jyks.toString());
-    	cws = ari.add(cws, fkje);
-    	gcl.setFinalSub(cws.toString());
+    	
+    	
     	
     	projectService.update(gcl);
     	return r;

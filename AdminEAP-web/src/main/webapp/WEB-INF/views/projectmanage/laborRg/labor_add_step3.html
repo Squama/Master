@@ -19,13 +19,13 @@
 <script src="${basePath}/resources/common/js/calculate.js"></script>
 <section class="content-header">
     <h1>
-        <span>机械合同</span>
+        <span>包清工合同</span>
         <small>新增</small>
     </h1>
     <ol class="breadcrumb">
         <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
         <li><a href="#">劳务管理</a></li>
-        <li class="active">机械合同</li>
+        <li class="active">包清工合同</li>
     </ol>
 </section>
 
@@ -46,7 +46,7 @@
                         <div class="step">
                             <span class="tip">2</span>
                         </div>
-                        <div class="stepinfo">上传机械合同</div>
+                        <div class="stepinfo">上传包清工合同</div>
                     </div>
                     <div>
                         <div class="step stepundone">
@@ -55,14 +55,14 @@
                         <div class="stepinfo undoneinfo">完成</div>
                     </div>
                 </div>
-                <form id="labor_form" name="project_form" class="form-horizontal">
-                    <input type="hidden" name="id" id="id">
+                <form id="labor_form" name="labor_form" class="form-horizontal">
+                    <input type="hidden" name="id" id="id" value="${id}">
                     <div class="box-body">
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">合同总价（单位：元）<span style="color:red">*</span></label>
                                 <div class="col-sm-6">
-                                    <input type="text" class="form-control" id="contractPrice" name="contractPrice" readonly="readonly">
+                                    <input type="text" class="form-control" id="contractPrice" name="contractPrice" readonly="readonly" value="${contractPrice}">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -115,12 +115,12 @@
                             </div>
                             <!-- 甲方、乙方、劳务内容、承包方式、质量目标、付款方式、 质保金约定、纠纷处理-->
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">机械合同<span style="color:red">*</span></label>
+                                <label class="col-sm-3 control-label">包清工合同<span style="color:red">*</span></label>
                                 <div class="col-sm-6">
-                                    <input type="hidden" name="contractFile" id="contractFile">
+                                    <input type="hidden" name="contractfilefield" id="contractfilefield">
                                     <div class="form-group">
                                         <div class="btn btn-default btn-file" id="contractfileupload">
-                                            <i class="fa fa-paperclip"></i> 上传机械合同(最大. 100MB)
+                                            <i class="fa fa-paperclip"></i> 上传包清工合同(最大. 100MB)
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -154,22 +154,22 @@
                 validating: 'glyphicon glyphicon-refresh'
             },
             submitHandler: function () {
-            	var action = $(this).attr('$submitButton').attr('data-btn-type');
+                var action = $(this).attr('$submitButton').attr('data-btn-type');
                 var formData = form.getFormSimpleData();
                 switch (action) {
-                    case "prev":
-                        loadPage(basePath+"/labor/list");
-                        break;
-                    case "save":
-                        ajaxPost(basePath + '/labor/save?htlx=30', formData, function (data) {
-                            if (data.success) {
+	                case "prev":
+	                    loadPage(basePath+"/labor/list");
+	                    break;
+	                case "save":
+	                	ajaxPost(basePath + '/labor/save?htlx=10', formData, function (data) {
+	                        if (data.success) {
                                 loadPage(basePath+"/labor/list");
-                            } else {
-                                modals.error("保存失败！");
-                            }
-                        });
-                        break;
-                }
+	                        } else {
+	                            modals.error("保存失败！");
+	                        }
+	                    });
+	                    break;
+	            }
             },
             fields: {
                 "contractPrice": {
@@ -181,12 +181,6 @@
         });
         //初始化控件
         form.initComponent();
-        //编辑回填
-        if(id!="0"){
-            ajaxPost(basePath+"/labor/getStep2",{id:id},function(data){
-                form.initFormData(data);
-            })
-        }
     });
     
     var fileinputDefaults = {
@@ -228,7 +222,7 @@
     $("#contractfileupload").file($.extend({}, defaults, {
         title:"请上传劳务合同",
         fileinput:$.extend({}, fileinputDefaults, {
-        	uploadExtraData: {"id":id,"fileField":"contractFile"}
+            uploadExtraData: {"id":id,"fileField":"contractFile"}
         }),
         showContainer:'#contractfileattachment',
         fileIdContainer:"[name='contractFile']",

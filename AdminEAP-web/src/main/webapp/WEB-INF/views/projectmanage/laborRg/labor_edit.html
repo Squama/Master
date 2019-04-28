@@ -1,13 +1,13 @@
 <script src="${basePath}/resources/common/js/calculate.js"></script>
 <section class="content-header">
     <h1>
-        <span>机械合同</span>
+        <span>包清工合同</span>
         <small>新增</small>
     </h1>
     <ol class="breadcrumb">
         <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
         <li><a href="#">劳务管理</a></li>
-        <li class="active">机械合同</li>
+        <li class="active">包清工合同</li>
     </ol>
 </section>
 
@@ -28,7 +28,7 @@
                         <div class="step stepundone">
                             <span class="tip">2</span>
                         </div>
-                        <div class="stepinfo undoneinfo">上传机械合同</div>
+                        <div class="stepinfo undoneinfo">上传包清工合同</div>
                     </div>
                     <div>
                         <div class="step stepundone">
@@ -83,7 +83,7 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">机械费（元）<span style="color:red">*</span></label>
                                 <div class="col-sm-6">
-                                    <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control" id="mechPrice" name="mechPrice" placeholder="机械费" value="0">
+                                    <input readonly="readonly" type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control" id="mechPrice" name="mechPrice" placeholder="机械费" value="0">
                                 </div>
                             </div>
                             <!-- <div class="form-group">
@@ -125,7 +125,7 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">人工费单价（描述）<span style="color:red"></span></label>
                                 <div class="col-sm-6">
-                                    <textarea class="form-control" readonly="readonly" id="labourSin" name="labourSin" rows="3" cols="100"></textarea>
+                                    <textarea class="form-control"  id="labourSin" name="labourSin" rows="3" cols="100"></textarea>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -180,11 +180,11 @@
             submitHandler: function () {
                 var action = $(this).attr('$submitButton').attr('data-btn-type');
                 var formData = form.getFormSimpleData();
-                ajaxPost(basePath + '/labor/save?htlx=30', formData, function (data) {
+                ajaxPost(basePath + '/labor/save?htlx=10', formData, function (data) {
                     if (data.success) {
                         switch (action) {
                             case "next":
-                                loadPage(basePath+"/labor/edituploadfile?htlx=30", undefined, data.data);
+                                loadPage(basePath+"/labor/edituploadfile?htlx=10", undefined, data.data);
                                 break;
                             case "save":
                                 loadPage(basePath+"/labor/list");
@@ -221,17 +221,17 @@
                         notEmpty: {message: '施工负责人不能为空'}
                     }
                 },
-                "mechPrice": {
+               /*  "mechPrice": {
                     validators: {
                         notEmpty: {message: '机械费不能为空'}
                     }
-                },
-                /* "labourSin": {
+                }, */
+                "labourSin": {
                     validators: {
                         notEmpty: {message: '人工费单价不能为空'}
                     }
                 },
-               "labourQuantity": {
+                /* "labourQuantity": {
                     validators: {
                         notEmpty: {message: '人工费数量不能为空'}
                     }

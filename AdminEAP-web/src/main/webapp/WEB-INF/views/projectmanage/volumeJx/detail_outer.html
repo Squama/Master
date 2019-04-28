@@ -10,7 +10,7 @@
                             <div class="form-group">
                                 <label class="col-sm-5 control-label">所属项目<span style="color:red">*</span></label>
                                 <div class="col-sm-6">
-                                    <select id="projectID" class="form-control select2" name="projectID" disabled="disabled">
+                                    <select id="projectIDDetail" class="form-control select2" name="projectID" disabled="disabled">
                                         <option selected="selected" value="">选择一个项目</option>
                                     </select>
                                 </div>
@@ -74,85 +74,66 @@
                                 <textarea class="form-control" id="volume" name="volume" rows="8" cols="100" disabled="disabled"></textarea>
                             </div>
                         </div>
-                        <div id="pingxing" class="col-md-6" style="margin-left:25%">
+                        <div class="col-md-6" style="margin-left:25%">
                               <div class="callout callout-success" id="applyInfo" style="margin-top:8px;margin-bottom:8px;">
                                 <h4>上报金额：</h4>
-                                <p>机械费：<span id="mechInfo">尚未审批</span>；人工费：<span id="labourInfo">尚未审批</span>；材料费：<span id="matInfo">尚未审批</span>；机械扣款：<span id="debitjxInfo">尚未审批</span>；人工扣款：<span id="debitInfo">尚未审批</span>；材料扣款：<span id="debitclInfo">尚未审批</span></p>
+                                <p>机械费：<span id="mechInfo">尚未审批</span>；人工费：<span id="labourInfo">尚未审批</span>；材料费：<span id="matInfo">尚未审批</span>；包工包料：<span id="packInfo">尚未审批</span>；扣款：<span id="debitInfo">尚未审批</span></p>
                                 <h5>上报小计：<span id="subInfo">尚未审批</span></h5>
                               </div>
+                              <div class="callout callout-success" id="businessInfo" style="margin-top:8px;margin-bottom:8px;">
+                                <h4>经营科审核金额：</h4>
+                                <p>机械费：<span id="mechBusi">尚未审批</span>；人工费：<span id="labourBusi">尚未审批</span>；材料费：<span id="matBusi">尚未审批</span>；包工包料：<span id="packBusi">尚未审批</span>；扣款：<span id="debitBusi">尚未审批</span></p>
+                                <h5>上报小计：<span id="subBusi">尚未审批</span></h5>
+                              </div>
+                              <div class="callout callout-success" id="finalInfo" style="margin-top:8px;margin-bottom:8px;">
+                                <h4>财务审核金额：</h4>
+                                <p>机械费：<span id="mechFinal">尚未审批</span>；人工费：<span id="labourFinal">尚未审批</span>；材料费：<span id="matFinal">尚未审批</span>；包工包料：<span id="packFinal">尚未审批</span>；扣款：<span id="debitFinal">尚未审批</span></p>
+                                <h5>上报小计：<span id="subFinal">尚未审批</span></h5>
+                              </div>
                         </div>
-                        <div class="col-md-6">
-                        	<div class="form-group">
-                                <label class="col-sm-5 control-label">审核人工费（元）<span style="color:red">*</span></label>
-                                <div class="col-sm-6">
-                                    <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control calculate" id="businessLabour" name="businessLabour" placeholder="审核人工费" value="0">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-5 control-label">审核机械费（元）<span style="color:red">*</span></label>
-                                <div class="col-sm-6">
-                                    <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control calculate" id="businessMech" name="businessMech" placeholder="审核机械费" value="0">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-5 control-label">审核材料费（元）<span style="color:red">*</span></label>
-                                <div class="col-sm-6">
-                                    <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control calculate" id="businessMat" name="businessMat" placeholder="审核材料费" value="0">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">审核人工扣款（元）<span style="color:red">*</span></label>
-                                <div class="col-sm-6">
-                                    <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control calculate" id="businessDebit" name="businessDebit" placeholder="审核应扣款" value="0">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">审核机械扣款（元）<span style="color:red">*</span></label>
-                                <div class="col-sm-6">
-                                    <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control calculate" id="businessDebitjx" name="businessDebitjx" placeholder="审核应扣款" value="0">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">审核材料扣款（元）<span style="color:red">*</span></label>
-                                <div class="col-sm-6">
-                                    <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control calculate" id="businessDebitcl" name="businessDebitcl" placeholder="审核应扣款" value="0">
-                                </div>
-                            </div>
-                            <div class="form-group" style="display: none">
-                                <label class="col-sm-3 control-label">审核包工包料（元）<span style="color:red">*</span></label>
-                                <div class="col-sm-6">
-                                    <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control calculate" id="businessPack" name="businessPack" placeholder="审核包工包料" value="0">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">审核后总计（元）<span style="color:red">*</span></label>
-                                <div class="col-sm-7">
-                                    <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control" id="businessSub" name="businessSub" placeholder="审核后总计" value="0" readonly="readonly">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-6" style="text-align: center;margin-left:25%">
+                       <div class="col-sm-6" style="text-align: center;margin-left:25%">
                             <button type="button" class="btn btn-success" id="lookFkd">班组罚款单</button>
                        </div>
                     </div>
                 </form>
             </div>
+            
+            <div class="box box-success">
+                 <div class="box-header with-border">
+                     <span>
+                         <i class="fa fa-files-o">审批意见</i>
+                     </span>
+                 </div>
+                 <div class="dataTables_filter" id="searchDiv" style="text-align:center;height:1px;">
+                    <input type="search" name="businessKey" id="businessKey" class="form-control" operator="eq" style="display:none;">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-primary" data-btn-type="search" id="refresh" style="display:none;">查询</button>
+                    </div>
+                 </div>
+                 <div class="box-body">
+                     <!-- 内容 -->
+                     <table id="activiti_table" class="table table-bordered table-striped table-hover">
+                     </table>
+                 </div>
+             </div>
+            
         </div>
     </div>
 </section>
 <script>
-    var form;
+    var form, activitiTable;
     var id = "${id?default(0)}";
-    var projectOptions = '${projectOptions?default(0)}',options=0;
-    if(projectOptions != 0){
-        options = JSON.parse(projectOptions);
-    }
     $(function () {
+    	$('#businessKey').val(id);
+    	
+    	activitiTable = new CommonTable("activiti_table", "activiti_volume_list", "searchDiv", {
+            "ordering" : false,
+            "lengthChange": false,
+            "displayLength": 20,
+            "scrollY": "200px",
+            "scrollCollapse": true
+        });
+    	
         //初始化表单 
         form = $("#volume_form").form({baseEntity:false});
         //数据校验
@@ -162,22 +143,22 @@
         if(options != 0){
             for (var i = 0, len = options.length; i < len; i++) {
                 var option = options[i];
-                $('#projectID').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+                $('#projectIDDetail').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
             }
-            $("#projectID").select2();
-            $("#projectID").bind("change", function () {
+            $("#projectIDDetail").select2();
+            $("#projectIDDetail").bind("change", function () {
                 var value = $(this).val();
                 if (value === "") {
                     return false;
                 }
                 
                 var name = "";
-                if ($("#projectID").prop('selectedIndex') > 0) {
-                    name = $("#projectID").find("option:selected").text();
+                if ($("#projectIDDetail").prop('selectedIndex') > 0) {
+                    name = $("#projectIDDetail").find("option:selected").text();
                 }
                 $('#projectName').val(name);
                 
-                ajaxPost(basePath+"/projectvolume/getlabor",{projectID:value},function(data){
+                ajaxPost(basePath+"/projectvolume/getlabor?sblx=30",{projectID:value},function(data){
                     var laborOptions = data.message;
                     lOptions = JSON.parse(laborOptions);
                     $('#laborID').empty();
@@ -219,80 +200,47 @@
         
         //编辑回填
         if(id!="0"){
+        	
             ajaxPost(basePath+"/projectvolume/get",{id:id},function(data){
                 form.initFormData(data);
+                
                 $('#laborSubID').val(data.laborSubID).trigger("change");
                 $('#mechInfo').html(data.applyMech + '元');
                 $('#labourInfo').html(data.applyLabour + '元');
                 $('#matInfo').html(data.applyMat + '元');
-                
+                $('#packInfo').html(data.applyPack + '元');
                 $('#debitInfo').html(data.applyDebit + '元');
-                $('#debitclInfo').html(data.applyDebitcl + '元');
-                $('#debitjxInfo').html(data.applyDebitjx + '元');
                 $('#subInfo').html(data.applySub + '元');
+                
+            	$('#mechBusi').html(data.businessMech + '元');
+                $('#labourBusi').html(data.businessLabour + '元');
+                $('#matBusi').html(data.businessMat + '元');
+                $('#packBusi').html(data.businessPack + '元');
+                $('#debitBusi').html(data.businessDebit + '元');
+                $('#subBusi').html(data.businessSub + '元');
+                
+            	$('#mechFinal').html(data.finalMech + '元');
+                $('#labourFinal').html(data.finalLabour + '元');
+                $('#matFinal').html(data.finalMat + '元');
+                $('#packFinal').html(data.finalPack + '元');
+                $('#debitFinal').html(data.finalDebit + '元');
+                $('#subFinal').html(data.finalSub + '元');
+                
+                $('.final').show();
             })
         }
         
-        $(".calculate").on("focusout", function(){
-            var mech = parseFloat($('#businessMech').val());
-            var labour = parseFloat($('#businessLabour').val());
-            var mat = parseFloat($('#businessMat').val());
-            var pack = parseFloat($('#businessPack').val());
-            var debit = parseFloat($('#businessDebit').val());
-            var debitcl = parseFloat($('#businessDebitcl').val());
-            var debitjx = parseFloat($('#businessDebitjx').val());
-            var debits = accAddition(accAddition(debit,debitcl),debitjx);
-            
-            var sub = accSubtraction(accAddition(accAddition(accAddition(mech, labour), mat), pack), debits);
-            $('#businessSub').val(sub);
-            
-            var formData = {};
-            formData.id = id;
-            formData.businessMech = mech + "";
-            formData.businessLabour = labour + "";
-            formData.businessMat = mat + "";
-            formData.businessPack = pack + "";
-            formData.businessDebit = debit + "";
-            formData.businessDebitjx = debitjx +"" ;
-            formData.businessDebitcl = debitcl +"" ;
-            formData.businessSub = sub + "";
-            ajaxPost(basePath + '/projectvolume/savebusiness', formData, function (data) {
-                if (data.success) {
-                } else {
-                    modals.error("金额更新失败，请联系系统管理员");
-                }
-            });
-        });
         $("#lookFkd").on("click",function(){
-			lookFkd();
+            lookFkd();
         })
     });
     function lookFkd(){
-    	modals.openWin({
+        modals.openWin({
             winId:"lookfkd",
             title:'班组罚款详情',
             width:'1000px',
-            url:basePath+"/projectvolume/lookfkd?id="+id,
-            hideFunc:function(){
-            	if(id!="0"){
-                    ajaxPost(basePath+"/projectvolume/get",{id:id},function(data){
-                        form.initFormData(data);
-                        $('#laborSubID').val(data.laborSubID).trigger("change");
-                        $('#mechInfo').html(data.applyMech + '元');
-                        $('#labourInfo').html(data.applyLabour + '元');
-                        $('#matInfo').html(data.applyMat + '元');
-                        
-                        $('#debitInfo').html(data.applyDebit + '元');
-                        $('#debitclInfo').html(data.applyDebitcl + '元');
-                        $('#debitjxInfo').html(data.applyDebitjx + '元');
-                        $('#subInfo').html(data.applySub + '元');
-                        
-                        if(data.status=="60"){
-                            $('.final').show();
-                        }
-                    })
-                }
-            }          
+            url:basePath+"/projectvolume/lookfkd?id="+id            
            });
     }
+    
 </script>

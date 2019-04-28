@@ -147,7 +147,7 @@ public class ProjectVolumeTaskGeneralListener implements TaskListener {
                 BigDecimal thisLabour = new BigDecimal(pv.getFinalLabour());
                 BigDecimal thisMat = new BigDecimal(pv.getFinalMat());
                 BigDecimal thisMech = new BigDecimal(pv.getFinalMech());
-                BigDecimal thisPack = new BigDecimal(pv.getFinalPack());
+                BigDecimal thisPack = new BigDecimal(pv.getFinalSub());
 
                 labor.setLabourConsume(oldLabour.add(thisLabour).setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
                 labor.setMatConsume(oldMat.add(thisMat).setScale(2, BigDecimal.ROUND_DOWN).toPlainString());

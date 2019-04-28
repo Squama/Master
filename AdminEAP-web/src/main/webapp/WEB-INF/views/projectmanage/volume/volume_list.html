@@ -19,12 +19,20 @@
                     <select id="projectID" class="form-control select2" name="pv.project_id" style="width:200px;" operator="eq">
                     	<option selected="selected" value="">选择一个项目</option>
                     </select>
+                    <select  class="form-control select2" name="pv.sblx" style="width:200px;" operator="eq">
+                    	<option selected="selected" value="">选择一个类型</option>
+                    	<option value="10">包清工</option>
+                    	<option value="20">包工包料</option>
+                    	<option value="30">机械</option>
+                    </select>
                     <div class="btn-group">
                         <button type="button" class="btn btn-primary" data-btn-type="search">查询</button>
                         <button type="button" class="btn btn-default" data-btn-type="reset">重置</button>
                     </div>
                     <div class="btn-group">
-                        <button type="button" class="btn btn-default" data-btn-type="add">新增</button>
+                        <button type="button" class="btn btn-default" data-btn-type="add"
+                        data-toggle="modal" data-target="#myModal"
+                        >新增</button>
                         <button type="button" class="btn btn-default" data-btn-type="edit">编辑</button>
                     </div>
                 </div>
@@ -35,6 +43,30 @@
             </div>
         </div>
     </div>
+    <!-- 模态框（Modal） -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" 
+						aria-hidden="true">×
+				</button>
+				<h4 class="modal-title" id="myModalLabel">
+					选择上报类型
+				</h4>
+			</div>
+			<div class="modal-body" style="text-align: center">
+				<select id='sblx' class='form-control select2'style='width:70%;' >
+					<option selected='selected' value='10'>包清工</option>
+					<option value='20'>包工包料</option>
+					<option value='30'>机械</option>
+				</select>
+				<br>
+				<button type='button' class='btn btn-success' data-btn-type='dotrue'>确定上报</button>
+			</div>
+		</div>
+	</div>
+</div>
 </section>
 
 <script>
@@ -44,7 +76,6 @@
     if(projectOptions != 0){
     	options = JSON.parse(projectOptions);
     }
-    
     var volumeManageObject = {
             toAudit: function (volumeID) {
             	modals.confirm("是否要提交审批？",function(){
@@ -78,10 +109,24 @@
                         modals.info('审核中或审核完成的条目不可编辑!');
                         return false;
                     }
-                    loadPage(basePath+"/projectvolume/edit/" +rowId);
+                    loadPage(basePath+"/projectvolume/edit/" +rowId+"?sblx="+data.sblx);
                     break;
                 case "add":
-                    loadPage(basePath+"/projectvolume/add");
+                    //loadPage(basePath+"/projectvolume/add");
+                    break;
+                case "dotrue":
+                    var sblx = $("#sblx option:selected").val();
+                    if(sblx){
+                    	$("#myModal").modal('hide');
+
+                    	setTimeout(function(){
+                    		loadPage(basePath+"/projectvolume/add?sblx="+sblx);
+                        },500);
+                        
+                    }else{
+                    	modals.info('请选择上报类型');	
+                    }
+                    
                     break;
             }
         });
