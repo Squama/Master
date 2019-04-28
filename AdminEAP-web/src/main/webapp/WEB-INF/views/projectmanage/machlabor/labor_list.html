@@ -1,12 +1,12 @@
 <section class="content-header">
     <h1>
-        劳务合同
+        机械合同
         <small>列表</small>
     </h1>
     <ol class="breadcrumb">
         <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
         <li><a href="#">劳务管理</a></li>
-        <li class="active">劳务合同</li>
+        <li class="active">机械合同</li>
     </ol>
 </section>
 
@@ -71,7 +71,7 @@
     }
     
     $(function (){
-    	laborTable = new CommonTable("labor_table", "labor_list", "searchDiv", null);
+    	laborTable = new CommonTable("labor_table", "labor_list_mach", "searchDiv", null);
         
         //绑定按钮事件
         $("button[data-btn-type]").click(function () {
@@ -88,10 +88,10 @@
                         modals.info('审核中或审核完成的条目不可编辑!');
                         return false;
                     }
-                    loadPage(basePath+"/labor/edit/" +rowId);
+                    loadPage(basePath+"/labor/edit/" +rowId+"?htlx=20");
                     break;
                 case "add":
-                    loadPage(basePath+"/labor/add");
+                    loadPage(basePath+"/labor/add?htlx=20");
                     break;
                 case "delete":
 	                if(!rowId){

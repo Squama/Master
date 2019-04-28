@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <queryContext xmlns="http://www.example.org/query" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.example.org/query query.xsd">
     
-    <query id="labor_list" key="id" tableName="劳务合同列表" className="com.radish.master.entity.Labor" widthType="px">
+    <query id="labor_list" key="id" tableName="劳务合同列表" widthType="px">
+        <sql>
+            <![CDATA[
+              SELECT l.id id ,l.project_name projectName ,l.contract_name contractName,l.contract_price contractPrice,
+              l.contractor contractor ,l.construction_manager constructionManager,l.status status ,l.htlx htlx ,
+              l.project_id projectID ,l.construction_team constructionTeam 
+			  FROM tbl_labor l
+			  WHERE  1=1 and (l.htlx<>'20' or l.htlx is null) 
+            ]]>
+        </sql>
         <column key="id" hidden="true" header="id" width="80"/>
         <column key="rowIndex" header="序号" width="80"/>
         <column key="projectName" header="项目名称" classType="String" allowSort="true" width="150"/>
@@ -14,11 +23,61 @@
         <column key="id" header="操作" width="80" fnRender="fnRenderLabor"/>
     </query>
     
-    <query id="labor_download_list" key="id" tableName="劳务合同列表" className="com.radish.master.entity.Labor" widthType="px">
+    <query id="labor_list_mach" key="id" tableName="机械合同列表"  widthType="px">
+        <sql>
+            <![CDATA[
+              SELECT l.id id ,l.project_name projectName ,l.contract_name contractName,l.contract_price contractPrice,
+              l.contractor contractor ,l.construction_manager constructionManager,l.status status ,l.htlx htlx ,
+              l.project_id projectID 
+			  FROM tbl_labor l
+			  WHERE  1=1 and l.htlx='20'
+            ]]>
+        </sql>
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="projectName" header="项目名称" classType="String" allowSort="true" width="150"/>
+        <column key="contractName" header="合同名称" classType="String" width="150"/>
+        <column key="contractPrice" header="合同总价（元）" classType="String" allowSort="true" width="150"/>
+        <column key="contractor" header="承包人" classType="String" allowSort="true" width="150"/>
+        <column key="constructionManager" header="施工负责人" classType="String" allowSort="true" width="150"/>
+        <column key="status" header="状态" allowSort="true" width="150" render="10=新建,20=审核中,30=审核通过,40=审核不通过"/>
+        <column key="id" header="操作" width="80" fnRender="fnRenderLabor"/>
+    </query>
+    
+    <query id="labor_download_list" key="id" tableName="劳务合同列表"  widthType="px">
+        <sql>
+            <![CDATA[
+              SELECT l.id id ,l.project_name projectName ,l.contract_name contractName,l.contract_price contractPrice,
+              l.contractor contractor ,l.construction_manager constructionManager,l.status status ,l.htlx htlx ,
+              l.project_id projectID ,l.construction_team constructionTeam 
+			  FROM tbl_labor l
+			  WHERE  1=1 and (l.htlx<>'20' or l.htlx is null) 
+            ]]>
+        </sql>
         <column key="id" hidden="true" header="id" width="80"/>
         <column key="rowIndex" header="序号" width="80"/>
         <column key="projectName" header="项目名称" classType="String" allowSort="true" width="150"/>
         <column key="constructionTeam" header="施工班组" classType="String" allowSort="true" width="150"/>
+        <column key="contractName" header="合同名称" classType="String" width="150"/>
+        <column key="contractPrice" header="合同总价（元）" classType="String" allowSort="true" width="150"/>
+        <column key="contractor" header="承包人" classType="String" allowSort="true" width="150"/>
+        <column key="constructionManager" header="施工负责人" classType="String" allowSort="true" width="150"/>
+        <column key="status" header="状态" allowSort="true" width="150" render="10=新建,20=审核中,30=审核通过,40=审核不通过"/>
+        <column key="id" header="操作" width="80" fnRender="fnRenderDetail"/>
+    </query>
+    <query id="labor_download_list_mach" key="id" tableName="机械合同列表"  widthType="px">
+    	<sql>
+            <![CDATA[
+              SELECT l.id id ,l.project_name projectName ,l.contract_name contractName,l.contract_price contractPrice,
+              l.contractor contractor ,l.construction_manager constructionManager,l.status status ,l.htlx htlx ,
+              l.project_id projectID 
+			  FROM tbl_labor l
+			  WHERE  1=1 and l.htlx='20'
+            ]]>
+        </sql>
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="projectName" header="项目名称" classType="String" allowSort="true" width="150"/>
         <column key="contractName" header="合同名称" classType="String" width="150"/>
         <column key="contractPrice" header="合同总价（元）" classType="String" allowSort="true" width="150"/>
         <column key="contractor" header="承包人" classType="String" allowSort="true" width="150"/>

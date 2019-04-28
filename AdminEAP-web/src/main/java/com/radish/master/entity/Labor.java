@@ -146,6 +146,10 @@ public class Labor extends BaseEntity {
     @Header(name = "纠纷处理")
     @Column(name = "issue")
     private String issue;
+    
+    @Header(name = "合同类型")
+    @Column(name = "htlx")
+    private String htlx;
 
     public String getProjectID() {
         return projectID;
@@ -385,6 +389,14 @@ public class Labor extends BaseEntity {
 
 	public void setLabourUnit(String labourUnit) {
 		this.labourUnit = labourUnit;
+	}
+
+	public String getHtlx() {
+		return htlx;
+	}
+
+	public void setHtlx(String htlx) {
+		this.htlx = htlx;
 	}
 
 }

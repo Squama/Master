@@ -1,12 +1,12 @@
 <section class="content-header">
     <h1>
-        劳务合同下载
+        机械合同下载
         <small>列表</small>
     </h1>
     <ol class="breadcrumb">
         <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
         <li><a href="#">劳务管理</a></li>
-        <li class="active">劳务合同下载</li>
+        <li class="active">机械合同下载</li>
     </ol>
 </section>
 
@@ -16,7 +16,7 @@
             <div class="box">
                 <!-- /.box-header -->
                 <div class="dataTables_filter" id="searchDiv" style="display: none">
-                  <select id="projectID" class="form-control select2" name="l.project_id" style="width:200px;" operator="eq">
+                    <select id="projectID" class="form-control select2" name="l.project_id" style="width:200px;" operator="eq">
                     	<option selected="selected" value="">选择一个项目</option>
                     </select>
                    <input type="search" placeholder="请输入责任人" title="责任人" name="l.construction_manager" class="form-control" id="charge_name" operator="like" likeOption="true">
@@ -44,7 +44,7 @@
     }
     
     $(function (){
-        laborDownloadTable = new CommonTable("labor_download_table", "labor_download_list", "searchDiv");
+        laborDownloadTable = new CommonTable("labor_download_table", "labor_download_list_mach", "searchDiv");
         
         if(options != 0){
             for (var i = 0, len = options.length; i < len; i++) {

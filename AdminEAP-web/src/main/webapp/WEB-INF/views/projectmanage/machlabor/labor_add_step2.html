@@ -1,0 +1,253 @@
+<script src="${basePath}/resources/common/js/calculate.js"></script>
+<section class="content-header">
+    <h1>
+        <span>机械合同</span>
+        <small>新增</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
+        <li><a href="#">项目管理</a></li>
+        <li class="active">新增机械合同</li>
+    </ol>
+</section>
+
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box box-info">
+                <div id="stepbar" class="add stepbar" style="margin-left: 25%;">
+                    <div>
+                        <div class="step">
+                            <span class="tip">1</span>
+                        </div>
+                        <div class="stepinfo">添加合同基本信息</div>
+                    </div>
+                    <div>
+                        <div class="step">
+                            <span class="tip">2</span>
+                        </div>
+                        <div class="stepinfo">录入合同分项</div>
+                    </div>
+                    <div>
+                        <div class="step stepundone">
+                            <span class="tip">3</span>
+                        </div>
+                        <div class="stepinfo undoneinfo">上传机械合同</div>
+                    </div>
+                    <div>
+                        <div class="step stepundone">
+                            <span class="tip">4</span>
+                        </div>
+                        <div class="stepinfo undoneinfo">完成</div>
+                    </div>
+                </div>
+                <form id="labor-sub-form" name="labor-sub-form" class="form-horizontal">
+                    <input type="hidden" name="laborID" id="laborID" value="${laborID}">
+                    <input type="hidden" name="contractName" id="contractName" value="${contractName}">
+                    <input type="hidden" name="constructionWorkerName" id="constructionWorkerName">
+                    <div class="box-body">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">分项名称<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" id="subName" name="subName">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">分项施工员<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <select id="constructionWorkerID" class="form-control select2" name="constructionWorkerID">
+                                        <option selected="selected" value="">选择一个施工员</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">分项机械费（元）<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control calculate" id="mechPrice" name="mechPrice" placeholder="分项机械费" value="0">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">分项人工费（元）<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control calculate" id="labourPrice" name="labourPrice" placeholder="分项人工费" value="0">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">分项材料费（元）<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control calculate" id="matPrice" name="matPrice" placeholder="分项材料费" value="0">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">包工包料（元）<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control calculate" id="packagePrice" name="packagePrice" placeholder="包工包料" value="0">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">分项合计（元）<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control calculate" id="subPrice" name="subPrice" placeholder="分项合计" value="0" readonly="readonly">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer text-center">
+                        <button type="submit" class="btn btn-success ml10" data-btn-type="save">添加分项</button>
+                        <button type="button" class="btn btn-primary ml10" data-btn-type="next">上传机械合同</button>
+                        <button type="button" class="btn btn-default" data-btn-type="prev">返回列表</button>
+                    </div>
+                </form>
+            </div>
+            <div class="box box-success">
+                <div class="box-header with-border">
+                    <span>
+                        <i class="fa fa-files-o">已有分项列表</i>
+                    </span>
+                </div>
+                <div class="dataTables_filter" id="searchDiv" style="display:none;">
+                   <input type="search" name="laborID" id="laborID" class="form-control" operator="eq" style="display:none;">
+                </div>
+                <div class="box-body">
+                    <!-- 内容 -->
+                    <table id="labor_sub_table" class="table table-bordered table-striped table-hover">
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+    var form;
+    var laborID = "${laborID}";
+    $('#laborID',$('#searchDiv')).val(laborID);
+    var userOptions = '${userOptions?default(0)}',options=0;
+    if(userOptions != 0){
+        options = JSON.parse(userOptions);
+    }
+    var laborSubTable, winId = "laborSubWin";
+    var laborSubCtrl = {
+        initButtonEvent: function () {
+            $("button[data-btn-type='prev']").click(function () {
+                loadPage(basePath+"/labor/list");
+            });
+            
+            $("button[data-btn-type='next']").click(function () {
+            	if($('[role="row"]','#labor_sub_table').length == 1){
+            		modals.error("必须至少添加一个分项！");
+            		return false;
+            	}
+                loadPage(basePath+"/labor/uploadfile", undefined, {"id":laborID});
+            });
+        },
+        deleteDetail: function (rowId) {
+            modals.confirm("是否要删除该行数据？",function(){
+                ajaxPost(basePath+"/labor/deletesub/"+rowId,null,function(data){
+                    if(data.success){
+                    	laborSubTable.reloadData();
+                    }else{
+                        modals.error("删除失败！");
+                    }
+                });
+            })
+        }
+    }
+    $(function () {
+    	laborSubTable = new CommonTable("labor_sub_table", "labor_sub_list", "searchDiv", null);
+        //初始化表单 
+        form = $("#labor-sub-form").form({baseEntity:false});
+        //数据校验
+        $("#labor-sub-form").bootstrapValidator({
+            message: '请输入有效值',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            submitHandler: function () {
+                var action = $(this).attr('$submitButton').attr('data-btn-type');
+                var formData = form.getFormSimpleData();
+                ajaxPost(basePath + '/labor/savesub', formData, function (data) {
+                    if (data.success) {
+                    	laborSubTable.reloadData();
+                    } else {
+                        modals.error("添加失败，请检查分项名称是否重复！");
+                    }
+                });
+            },
+            fields: {
+                "subName": {
+                    validators: {
+                        notEmpty: {message: '分项名称不能为空'}
+                    }
+                },
+                "constructionWorkerID": {
+                    validators: {
+                        notEmpty: {message: '分项施工员不能为空'}
+                    }
+                },
+                "mechPrice": {
+                    validators: {
+                        notEmpty: {message: '分项机械费不能为空'}
+                    }
+                },
+                "labourPrice": {
+                    validators: {
+                        notEmpty: {message: '分项人工费不能为空'}
+                    }
+                },
+                "matPrice": {
+                    validators: {
+                        notEmpty: {message: '分项材料费不能为空'}
+                    }
+                },
+                "packagePrice": {
+                    validators: {
+                        notEmpty: {message: '包工包料不能为空'}
+                    }
+                }
+            }
+        });
+        //初始化控件
+        form.initComponent();
+        laborSubCtrl.initButtonEvent();
+        
+        if(options != 0){
+            for (var i = 0, len = options.length; i < len; i++) {
+                var option = options[i];
+                $('#constructionWorkerID').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+            }
+            $("#constructionWorkerID").select2();
+            $("#constructionWorkerID").bind("change", function () {
+                var value = $(this).val();
+                if (value === "") {
+                    return false;
+                }
+                
+                var name = "";
+                if ($("#constructionWorkerID").prop('selectedIndex') > 0) {
+                    name = $("#constructionWorkerID").find("option:selected").text();
+                }
+                $('#constructionWorkerName').val(name);
+            });
+        }
+        
+        $(".calculate").on("focusout", function(){
+            var mech = parseFloat($('#mechPrice').val());
+            var labour = parseFloat($('#labourPrice').val());
+            var mat = parseFloat($('#matPrice').val());
+            var pack = parseFloat($('#packagePrice').val());
+            
+            var sub = accAddition(accAddition(accAddition(mech, labour), mat), pack);
+            $('#subPrice').val(sub);
+        });
+        
+    });
+    
+    function fnRenderSub(value, type, rowObj){
+        var oper = "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='laborSubCtrl.deleteDetail(\"" + value + "\")'>删除</a>";
+        return oper;
+    }
+
+</script>

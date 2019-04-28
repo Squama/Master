@@ -97,12 +97,20 @@ public class LaborController {
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public String list(HttpServletRequest request) {
 		request.setAttribute("projectOptions", JSONArray.toJSONString(budgetService.getProjectCombobox()));
+		String htlx = request.getParameter("htlx");
+		if(htlx!=null){//机械合同
+			return "projectmanage/machlabor/labor_list";
+		}
 		return "projectmanage/labor/labor_list";
 	}
 
 	@RequestMapping(value = "/download/list", method = RequestMethod.GET)
 	public String downloadList(HttpServletRequest request) {
 		request.setAttribute("projectOptions", JSONArray.toJSONString(budgetService.getProjectCombobox()));
+		String htlx = request.getParameter("htlx");
+		if(htlx!=null){//机械合同
+			return "projectmanage/machlabor/labor_download_list";
+		}
 		return "projectmanage/labor/labor_download_list";
 	}
 
@@ -324,6 +332,11 @@ public class LaborController {
 	@RequestMapping(value = "/add", method = RequestMethod.GET)
 	public String add(HttpServletRequest request) {
 		request.setAttribute("projectOptions", JSONArray.toJSONString(budgetService.getProjectCombobox()));
+		String htlx = request.getParameter("htlx");
+		if(htlx!=null){//机械合同
+			return "projectmanage/machlabor/labor_add";
+		}
+
 		return "projectmanage/labor/labor_add";
 	}
 
@@ -344,12 +357,21 @@ public class LaborController {
 		request.setAttribute("id", id);
 		request.setAttribute("projectOptions", JSONArray.toJSONString(budgetService.getProjectCombobox()));
 		request.setAttribute("teamOptions", JSONArray.toJSONString(projectService.getTeamComboboxByProject(id)));
+		String htlx = request.getParameter("htlx");
+		if(htlx!=null){//机械合同
+			return "projectmanage/machlabor/labor_edit";
+		}
 		return "projectmanage/labor/labor_edit";
 	}
 
 	@RequestMapping(value = "/detail/{id}", method = RequestMethod.GET)
 	public String detail(@PathVariable("id") String id, HttpServletRequest request) {
 		request.setAttribute("id", id);
+		Labor ht = projectService.get(Labor.class,id);
+		String htlx = ht.getHtlx();
+		if(htlx!=null){//机械合同
+			return "projectmanage/machlabor/labor_detail";
+		}
 		return "projectmanage/labor/labor_detail";
 	}
 
@@ -358,6 +380,10 @@ public class LaborController {
 		request.setAttribute("laborID", labor.getId());
 		request.setAttribute("contractName", labor.getContractName());
 		request.setAttribute("userOptions", JSONArray.toJSONString(commonService.getUserCombobox()));
+		String htlx = request.getParameter("htlx");
+		if(htlx!=null){//机械合同
+			return "projectmanage/machlabor/labor_add_step2";
+		}
 		return "projectmanage/labor/labor_add_step2";
 	}
 
@@ -366,6 +392,10 @@ public class LaborController {
 		request.setAttribute("laborID", labor.getId());
 		request.setAttribute("contractName", labor.getContractName());
 		request.setAttribute("userOptions", JSONArray.toJSONString(commonService.getUserCombobox()));
+		String htlx = request.getParameter("htlx");
+		if(htlx!=null){//机械合同
+			return "projectmanage/machlabor/labor_add_step2";
+		}
 		return "projectmanage/labor/labor_add_step2";
 	}
 
@@ -374,12 +404,20 @@ public class LaborController {
 		request.setAttribute("id", labor.getId());
 		labor = projectService.get(Labor.class, labor.getId());
 		request.setAttribute("contractPrice", labor.getContractPrice());
+		String htlx = request.getParameter("htlx");
+		if(htlx!=null){//机械合同
+			return "projectmanage/machlabor/labor_add_step3";
+		}
 		return "projectmanage/labor/labor_add_step3";
 	}
 
 	@RequestMapping(value = "/edituploadfile", method = RequestMethod.POST)
 	public String editstep3(Labor labor, HttpServletRequest request) {
 		request.setAttribute("id", labor.getId());
+		String htlx = request.getParameter("htlx");
+		if(htlx!=null){//机械合同
+			return "projectmanage/machlabor/labor_edit_step3";
+		}
 		return "projectmanage/labor/labor_edit_step3";
 	}
 

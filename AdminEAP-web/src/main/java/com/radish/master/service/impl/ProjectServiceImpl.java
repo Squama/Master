@@ -296,8 +296,11 @@ public class ProjectServiceImpl extends BaseServiceImpl implements ProjectServic
         labor.setStatus("20");
 
         this.update(labor);
-
         String name = "项目：" + labor.getProjectName() + "合同：" + labor.getContractName() + "【审核】";
+        if(labor.getHtlx()!=null&&"20".equals(labor.getHtlx())){
+        	name = "项目：" + labor.getProjectName() + "(机械)合同：" + labor.getContractName() + "【审核】";
+        }
+        
 
         // businessKey
         String businessKey = labor.getId();

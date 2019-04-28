@@ -1,0 +1,358 @@
+<script src="${basePath}/resources/common/js/calculate.js"></script>
+<section class="content-header">
+    <h1>
+        <span>机械合同</span>
+        <small>新增</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
+        <li><a href="#">劳务管理</a></li>
+        <li class="active">机械合同</li>
+    </ol>
+</section>
+
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box box-info">
+                <div id="stepbar" class="add stepbar">
+                    <div>
+                        <div class="step">
+                            <span class="tip">1</span>
+                        </div>
+                        <div class="stepinfo">添加合同基本信息</div>
+                    </div>
+                    <div>
+                        <div class="step stepundone">
+                            <span class="tip">2</span>
+                        </div>
+                        <div class="stepinfo undoneinfo">上传机械合同</div>
+                    </div>
+                    <div>
+                        <div class="step stepundone">
+                            <span class="tip">3</span>
+                        </div>
+                        <div class="stepinfo undoneinfo">完成</div>
+                    </div>
+                </div>
+                <form id="labor_form" name="project_form" class="form-horizontal">
+                    <input type="hidden" name="projectName" id="projectName">
+                    <input type="hidden" name="constructionTeam" id="constructionTeam">
+                    <input type="hidden" name="constructionManager" id="constructionManager">
+                    <div class="box-body">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">选择项目<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+	                                <select id="projectID" class="form-control select2" name="projectID">
+	                                        <option selected="selected" value="">选择一个项目</option>
+	                                </select>
+                                </div>
+                            </div>
+                            <!-- <div class="form-group">
+                                <label class="col-sm-3 control-label">施工班组<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <select id="constructionTeamID" class="form-control select2" name="constructionTeamID">
+                                            <option selected="selected" value="">选择一个班组</option>
+                                    </select>
+                                </div>
+                            </div> -->
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">合同名称<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" id="contractName" name="contractName" placeholder="合同名称">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">承包人<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" id="contractor" name="contractor" placeholder="承包人">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">施工负责人<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <select id="constructionManagerID" class="form-control select2" name="constructionManagerID">
+                                            <option selected="selected" value="">从项目管理人员中选择一个负责人</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">机械费（元）<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control" id="mechPrice" name="mechPrice" placeholder="机械费" value="0">
+                                </div>
+                            </div>
+                            <!-- <div class="form-group">
+                                <label class="col-sm-3 control-label">人工费数量<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control labourcalculate" id="labourQuantity" name="labourQuantity" placeholder="人工费数量" value="0">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">人工费单位<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <select id="labourUnit" class="form-control select2" name="labourUnit" style="width:100%;">
+                                           <option selected="selected" value="">选择一个人工费单位</option>
+                                           <option value="m">m</option>
+                                           <option value="m²">m²</option>
+                                           <option value="m³">m³</option>
+                                           <option value="吨">吨</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">人工费（元）<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control calculate" id="labourPrice" name="labourPrice" placeholder="人工费" value="0" readonly="readonly">
+                                </div>
+                            </div> -->
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">材料费（元）<span style="color:red"></span></label>
+                                <div class="col-sm-6">
+                                    <input readonly="readonly" type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control" id="matPrice" name="matPrice" placeholder="材料费" value="0">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">包工包料（元）<span style="color:red"></span></label>
+                                <div class="col-sm-6">
+                                    <input readonly="readonly"  type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control" id="packagePrice" name="packagePrice" placeholder="包工包料" value="0">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">人工费单价（描述）<span style="color:red"></span></label>
+                                <div class="col-sm-6">
+                                    <textarea class="form-control" readonly="readonly" id="labourSin" name="labourSin" rows="3" cols="100"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">合计（元）（预估值）<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" id="contractPrice" name="contractPrice" placeholder="合计" value="0">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer text-center">
+                        <button type="button" class="btn btn-default" data-btn-type="prev">返回</button>
+                        <button type="submit" class="btn btn-primary ml10" data-btn-type="next">上传机械合同</button>
+                        <button type="submit" class="btn btn-success ml10" data-btn-type="save">保存并返回</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+    var form;
+    var projectOptions = '${projectOptions?default(0)}',options=0;
+    if(projectOptions != 0){
+        options = JSON.parse(projectOptions);
+    }
+    var laborCtrl = {
+        initButtonEvent: function () {
+            $("button[data-btn-type='prev']").click(function () {
+                loadPage(basePath+"/labor/list?htlx=20");
+            });
+        }
+    }
+    $(function () {
+        //初始化表单 
+        form = $("#labor_form").form({baseEntity:false});
+        //数据校验
+        $("#labor_form").bootstrapValidator({
+            message: '请输入有效值',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            submitHandler: function () {
+                var action = $(this).attr('$submitButton').attr('data-btn-type');
+                var formData = form.getFormSimpleData();
+                ajaxPost(basePath + '/labor/save?htlx=20', formData, function (data) {
+                    if (data.success) {
+                        switch (action) {
+                            case "next":
+                                loadPage(basePath+"/labor/uploadfile?htlx=20", undefined, data.data);
+                                break;
+                            case "save":
+                                loadPage(basePath+"/labor/list?htlx=20");
+                                break;
+                        }
+                    } else {
+                        modals.error("保存失败！请检查班组是否重复");
+                    }
+                });
+            },
+            fields: {
+                "projectID": {
+                    validators: {
+                        notEmpty: {message: '项目不能为空'}
+                    }
+                },
+                "contractName": {
+                    validators: {
+                        notEmpty: {message: '合同名称不能为空'}
+                    }
+                },
+                "contractor": {
+                    validators: {
+                        notEmpty: {message: '承包人不能为空'}
+                    }
+                },
+                /* "constructionTeamID": {
+                    validators: {
+                        notEmpty: {message: '施工班组不能为空'}
+                    }
+                }, */
+                "constructionManagerID": {
+                    validators: {
+                        notEmpty: {message: '施工负责人不能为空'}
+                    }
+                },
+                "mechPrice": {
+                    validators: {
+                        notEmpty: {message: '机械费不能为空'}
+                    }
+                },
+               /*  "labourSin": {
+                    validators: {
+                        notEmpty: {message: '人工费单价不能为空'}
+                    }
+                }, */
+                /* "labourQuantity": {
+                    validators: {
+                        notEmpty: {message: '人工费数量不能为空'}
+                    }
+                },
+                "labourUnit": {
+                    validators: {
+                        notEmpty: {message: '人工费单位不能为空'}
+                    }
+                },
+                "labourPrice": {
+                    validators: {
+                        notEmpty: {message: '人工费不能为空'}
+                    }
+                }, */
+                /* "matPrice": {
+                    validators: {
+                        notEmpty: {message: '材料费不能为空'}
+                    }
+                },
+                "packagePrice": {
+                    validators: {
+                        notEmpty: {message: '包工包料不能为空'}
+                    }
+                } ,*/
+                "contractPrice": {
+                    validators: {
+                        notEmpty: {message: '合计不能为空'}
+                    }
+                }
+            }
+        });
+        //初始化控件
+        form.initComponent();
+        laborCtrl.initButtonEvent();
+        
+        if(options != 0){
+            for (var i = 0, len = options.length; i < len; i++) {
+                var option = options[i];
+                $('#projectID').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+            }
+            $("#projectID").select2();
+            $("#projectID").bind("change", function () {
+                var value = $(this).val();
+                if (value === "") {
+                    return false;
+                }
+                
+                var name = "";
+                if ($("#projectID").prop('selectedIndex') > 0) {
+                	name = $("#projectID").find("option:selected").text();
+                }
+                $('#projectName').val(name);
+                //加载班组
+                ajaxPost(basePath+"/labor/getteamop",{projectID:value},function(data){
+                    var teamOptions = data.message;
+                    tOptions = JSON.parse(teamOptions);
+                    $('#constructionTeamID').empty();
+                    $('#constructionTeamID').append('<option selected="selected" value="">选择一个班组</option>');
+                    for (var i = 0, len = tOptions.length; i < len; i++) {
+                        var tOption = tOptions[i];
+                        $('#constructionTeamID').append("<option value=\"" + tOption.value + "\">" + tOption.data + "</option>");
+                    }
+                    
+                    $('#constructionTeamID').select2();
+                    
+                    $('#constructionTeamID').bind("change", function(){
+                    	var value = $(this).val();
+                        if (value === "") {
+                            return false;
+                        }
+                        
+                        var name = "";
+                        if ($("#constructionTeamID").prop('selectedIndex') > 0) {
+                            name = $("#constructionTeamID").find("option:selected").text();
+                        }
+                        $('#constructionTeam').val(name);
+                    });
+                });
+                //加载项目管理人员，供选择施工负责人
+                ajaxPost(basePath+"/labor/getmanagerop",{projectID:value},function(data){
+                    var managerOptions = data.message;
+                    mOptions = JSON.parse(managerOptions);
+                    $('#constructionManagerID').empty();
+                    $('#constructionManagerID').append('<option selected="selected" value="">从项目管理人员中选择一个负责人</option>');
+                    for (var i = 0, len = mOptions.length; i < len; i++) {
+                        var mOption = mOptions[i];
+                        $('#constructionManagerID').append("<option value=\"" + mOption.value + "\">" + mOption.data + "</option>");
+                    }
+                    
+                    $('#constructionManagerID').select2();
+                    
+                    $('#constructionManagerID').bind("change", function(){
+                        var value = $(this).val();
+                        if (value === "") {
+                            return false;
+                        }
+                        
+                        var name = "";
+                        if ($("#constructionManagerID").prop('selectedIndex') > 0) {
+                            name = $("#constructionManagerID").find("option:selected").text();
+                        }
+                        $('#constructionManager').val(name);
+                    });
+                });
+            });
+        }
+        
+        $(".labourcalculate").on("focusout", function(){
+            var sin = parseFloat($('#labourSin').val());
+            var quantity = parseFloat($('#labourQuantity').val());
+            if(sin == ''){
+            	sin = 0;
+            }
+            if(quantity == ''){
+            	quantity = 0;
+            }
+            var sub = accMultiplication(sin, quantity);
+            $('#labourPrice').val(sub);
+            $('#labourPrice').focusout();
+        });
+        
+        $(".calculate").on("focusout", function(){
+            var mech = parseFloat($('#mechPrice').val());
+           /*  var labour = parseFloat($('#labourPrice').val());
+            var mat = parseFloat($('#matPrice').val());
+            var pack = parseFloat($('#packagePrice').val()); */
+            
+            //var sub = accAddition(accAddition(accAddition(mech, labour), mat), pack);
+            var sub = mech;
+            $('#contractPrice').val(sub);
+        });
+    });
+    
+</script>
