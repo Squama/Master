@@ -216,7 +216,7 @@ public class ProjectVolumeController {
     		}
     		
     	}else{
-    		sql +=" AND htlx='20'  ";
+    		sql +=" AND (htlx='20' or htlx is null)  ";
     	}
     	List<Options> hts = projectService.findMapBySql(
     			sql,
