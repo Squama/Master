@@ -119,8 +119,10 @@
     var gclid="${gclid?default(0)}";
     var lx="${lx?default(0)}";
     var type="${type}";
-    var zje="${zje}";
-    var kzf = "${kzf}";
+    var zje="${zje?default(0)}";
+    var kzf = "${kzf?default(0)}";
+    zje = zje.replace(",","");
+    kzf = kzf.replace(",","");
     $(function() {
         //初始化控件
         form=$("#contract-form").form();
@@ -138,6 +140,8 @@
                     var params = form.getFormSimpleData();
                     var zf = $("#payMoney").val();
                 	var kzf = $("#kzf").val();
+                	zf = zf.replace(",","");
+                	kzf = kzf.replace(",","");
                 	if(parseFloat(zf)>parseFloat(kzf)){
                 		modals.info("支付金额不能大于可支付金额");
                 		$("#payMoney").val("");

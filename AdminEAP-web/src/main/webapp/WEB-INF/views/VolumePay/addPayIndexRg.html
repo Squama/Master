@@ -119,6 +119,8 @@
     var lx="${lx?default(0)}";
     var zje="${zje}";
     var kzf = "${kzf}";
+    zje = zje.replace(",","");
+    kzf = kzf.replace(",","");
     var gzid="${gzid?default(0)}";
     $(function() {
         //初始化控件
@@ -137,6 +139,9 @@
                     var params = form.getFormSimpleData();
                     var zf = $("#payMoney").val();
                 	var kzf = $("#kzf").val();
+
+                	zf = zf.replace(",","");
+                	kzf = kzf.replace(",","");
                 	if(parseFloat(zf)>parseFloat(kzf)){
                 		modals.info("支付金额不能大于可支付金额");
                 		$("#payMoney").val("");
