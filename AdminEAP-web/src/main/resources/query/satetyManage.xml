@@ -149,6 +149,13 @@
         <column key="isfk" header="罚款详情" width="80" fnRender="fnRenderFk"/>
         <column key="id" header="管理" width="80" fnRender="fnRenderGl"/>
     </query>
+    <query id="aqsjjyList" key="id" tableName="安全三级教育内容列表" className="com.radish.master.entity.safty.Aqjynr" widthType="px" pageSize="200">
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="descs" header="名称" operator="like" width="100" allowSort="true" />
+        <column key="create_name" header="最后修改人" operator="like" width="100" allowSort="true" />
+    	<column key="create_time" header="创建日期" classType="java.util.Date" width="150" allowSort="true" operator="between"  dateFormat="yyyy-mm-dd"/>
+    </query>
      <query id="aqjyList" key="id" tableName="安全教育" className="com.radish.master.entity.safty.Aqjy" widthType="px" pageSize="200">
         <column key="id" hidden="true" header="id" width="80"/>
         <column key="rowIndex" header="序号" width="80"/>

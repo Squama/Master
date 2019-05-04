@@ -69,9 +69,14 @@ public class AqjynrController {
 	
 	@RequestMapping("/jynr")
 	public String jobduty(HttpServletRequest request){
+		return prefix +"list";
+	}
+	@RequestMapping("/addnr")
+	public String addnr(HttpServletRequest request){
+		String id = request.getParameter("id");
+		request.setAttribute("id",id);
 		return prefix +"jynr";
 	}
-	
 	@RequestMapping("/alllist")
 	public String alllist(HttpServletRequest request){
 		List<Worker> p = baseService.findMapBySql("select id  ,name  from tbl_worker ", new Object[]{}, new Type[]{StringType.INSTANCE}, Worker.class);
@@ -82,6 +87,8 @@ public class AqjynrController {
 	public String add(HttpServletRequest request){
 		List<Worker> p = baseService.findMapBySql("select id  ,name  from tbl_worker ", new Object[]{}, new Type[]{StringType.INSTANCE}, Worker.class);
 		request.setAttribute("rys", JSONArray.toJSONString(p));
+		List<Aqjynr> jys = baseService.findMapBySql("select id  ,descs  from tbl_aqsjjy ", new Object[]{}, new Type[]{StringType.INSTANCE}, Aqjynr.class);
+		request.setAttribute("jys", JSONArray.toJSONString(jys));
 		String id = request.getParameter("id");
 		request.setAttribute("id",id);
 		String lx = request.getParameter("lx");
@@ -114,16 +121,17 @@ public class AqjynrController {
 	@ResponseBody
 	public Result savenr(HttpServletRequest request,Aqjynr nr){
 		Result r = new Result();
-		List<Aqjynr> nrs = baseService.find(" from Aqjynr where 1=1 ");
+		String id = request.getParameter("id");
 		User u = SecurityUtil.getUser();
-		if(nrs.size()>0){//修改
-			Aqjynr n = nrs.get(0);
+		if(id!=null){//修改
+			Aqjynr n = baseService.get(Aqjynr.class, id);
 			n.setCreate_time(new Date());
 			n.setCreate_name_ID(u.getId());
     		n.setCreate_name(u.getName());
     		n.setBzname(nr.getBzname());
     		n.setXmname(nr.getXmname());
     		n.setGsname(nr.getGsname());
+    		n.setDescs(nr.getDescs());
     		baseService.update(n);
 		}else{//保存
 			nr.setCreate_time(new Date());
@@ -136,13 +144,9 @@ public class AqjynrController {
 	}
 	@RequestMapping("/load")
 	@ResponseBody
-	public Aqjynr load(String id){
-		List<Aqjynr> nrs = baseService.find(" from Aqjynr where 1=1 ");
-		if(nrs.size()>0){
-			return nrs.get(0);
-		}else{
-			return new Aqjynr();
-		}
+	public Aqjynr load(HttpServletRequest request,String id){
+		Aqjynr n = baseService.get(Aqjynr.class, id);
+		return n;
 	}
 	
 	@RequestMapping("/getWorker")

@@ -86,6 +86,14 @@
                               placeholder="进场时间" autocomplete="off" disabled="disabled">
                    </div>
                </div>
+               <div class="form-group">
+                    <label  for="jyid" class="col-sm-3 control-label">三级教育</label>
+					<div class=" col-sm-8">
+						<select id="jyid" class="form-control select2 "  name="jyid" style="width:100%" onchange="setvalue()">
+                   			<option selected="selected" value="">选择一个三级教育</option>
+                   		</select>
+					</div>
+                </div>
             </div>
             </div>
             <div class="form-group">
@@ -123,6 +131,10 @@
     var rys = '${rys?default(0)}',ry=0;
     if(rys != 0){
     	ry = JSON.parse(rys);
+    }
+    var jys = '${jys?default(0)}',jy=0;
+    if(jys != 0){
+    	jy = JSON.parse(jys);
     }
     var lx = '${lx?default(0)}';
     var id = '${id?default(0)}';
@@ -162,6 +174,13 @@
                             message : '请选择人员'
                         }
                     }
+                },
+                jyid : {
+                    validators : {
+                        notEmpty : {
+                            message : '请选择三级教育'
+                        }
+                    }
                 }
             }
         });
@@ -172,19 +191,37 @@
             }
             $("#workerid").select2();
         }
+        if(jy != 0){
+            for (var i = 0, len = jy.length; i < len; i++) {
+                var u = jy[i];
+                $('#jyid').append("<option value='" + u.id + "'>" + u.descs + "</option>");
+            }
+            $("#jyid").select2();
+        }
         form.initComponent();
         load();
+        $("#jyid").on("change",function(){
+			getJynr();
+        })
     });
+    function getJynr(){
+		var jyxz = $("#jyid option:selected").val();
+		if(jyxz){
+			ajaxPost(basePath+'/sjjynr/load', {id:jyxz}, function(data) {
+				$("#bzjy").val(data.bzname);
+				$("#xmjy").val(data.xmname);
+				$("#gsjy").val(data.gsname);         
+            }); 
+		}else{
+			$("#bzjy").val("");
+			$("#xmjy").val("");
+			$("#gsjy").val("");
+		}
+    }
     function load(){
 		if(id!=0){//查看
 			ajaxPost(basePath+'/sjjynr/loadJy', {id:id}, function(data) {
 				$("#contract-form").form().initFormData(data);          
-            }); 
-		}else{//初始化
-			ajaxPost(basePath+'/sjjynr/load', {}, function(data) {
-				$("#bzjy").val(data.bzname);
-				$("#xmjy").val(data.xmname);
-				$("#gsjy").val(data.gsname);
             }); 
 		}
     }

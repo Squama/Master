@@ -55,7 +55,7 @@ public class Aqjynr implements Serializable {
     
     @Column(name = "descs")
     private String descs;
-
+    
 	public String getId() {
 		return id;
 	}
