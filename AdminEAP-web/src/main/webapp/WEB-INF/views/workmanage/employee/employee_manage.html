@@ -107,6 +107,10 @@
                         modals.info('请选择要删除的行');
                         return false;
                     }
+                    if(rowId=='402880e456223e8f015625231d8e0003'){
+                    	modals.info('没有该用户的删除权限');
+                        return false;
+                    }
                     modals.confirm("确认该员工已离职？",function(){
                         ajaxPost(basePath+"/employeeQuery/deleteLz/"+rowId,null,function(data){
                             if(data.success){
