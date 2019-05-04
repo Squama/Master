@@ -18,7 +18,7 @@
                     <!-- /.box-header -->
                     <div class="dataTables_filter" id="searchDiv">
                     <form name="queryFrm" id="queryFrm" method="post">
-                        <select id="deptId" class="form-control select2" name="deptId" style="width:200px;" operator="eq">
+                        <select id="deptIdym" class="form-control select2" name="deptId" style="width:200px;" operator="eq">
                              <option selected="selected" value="">选择一个部门</option>
                         </select>
                         <select id="auditStatus" class="form-control select2" name="auditStatus" style="width:200px;" operator="eq">
@@ -145,9 +145,9 @@
             if(dOptions != 0){
                 for (var i = 0, len = dOptions.length; i < len; i++) {
                     var option = dOptions[i];
-                    $('#deptId').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+                    $('#deptIdym').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
                 }
-                $("#deptId").select2();
+                $("#deptIdym").select2();
             }
             $("#auditStatus").select2();
             

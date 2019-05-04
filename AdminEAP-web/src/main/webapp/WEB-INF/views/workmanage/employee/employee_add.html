@@ -339,6 +339,36 @@ $(function() {
                         message: '请输入基本工资'
                     }
                 }
+            },
+            mobile:{
+            	validators: {
+                    notEmpty: {
+                        message: '手机号不能为空'
+                    },
+                    regexp: {
+                        regexp: /^1\d{10}$/,
+                        message: '手机号格式错误'
+                    }
+                }
+            },
+            identificationNumber: {
+                validators: {
+                    notEmpty: {
+                        message: '身份证号码不能为空'
+                    },
+                    callback: {
+                        message: '身份证号码格式错误',
+                        callback: function (value, validator) {
+                            if (!value) {
+                                return true
+                            } else if (isCardNo(value)) {
+                                return true;
+                            } else {
+                                return false;
+                            }
+                        }
+                    }
+                }
             }
         }
     });
@@ -383,7 +413,14 @@ $(function() {
     }
 	
 });
-
+function isCardNo(card) {
+    let reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
+    if (reg.test(card) === false) {
+        return false
+    } else {
+        return true
+    }
+}
 
 function resetForm() {
     form.clearForm();
