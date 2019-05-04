@@ -115,6 +115,7 @@ public class ProReceiptController {
 			j.setMoney(jk.getMoney());
 			j.setProId(jk.getProId());
 			j.setType(jk.getType());
+			j.setSjtype(jk.getSjtype());
 			baseService.update(j);
 		}
 		Result r = new Result();

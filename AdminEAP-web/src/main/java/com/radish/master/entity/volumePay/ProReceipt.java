@@ -70,6 +70,10 @@ public class ProReceipt implements Serializable {
     @Header(name = "是否记账")
     @Column(name = "isrz")
     private String isrz;
+    
+    @Header(name = "收据类型")
+    @Column(name = "sjtype")
+    private String sjtype;
 
 	public String getId() {
 		return id;
@@ -157,6 +161,14 @@ public class ProReceipt implements Serializable {
 
 	public void setIsrz(String isrz) {
 		this.isrz = isrz;
+	}
+
+	public String getSjtype() {
+		return sjtype;
+	}
+
+	public void setSjtype(String sjtype) {
+		this.sjtype = sjtype;
 	}
     
     
