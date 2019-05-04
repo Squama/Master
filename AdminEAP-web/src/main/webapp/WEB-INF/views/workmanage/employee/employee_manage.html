@@ -39,7 +39,7 @@
                         <div class="btn-group">
                             <button type="button" class="btn btn-default" data-btn-type="add">新增</button>
                             <button type="button" class="btn btn-default" data-btn-type="edit" >编辑</button>
-                            <!-- <button type="button" class="btn btn-default" data-btn-type="delete">删除</button> -->
+                            <button type="button" class="btn btn-default" data-btn-type="delete">离职</button>
                             <button type="button" class="btn btn-default" data-btn-type="export">导出</button>
                         </div>
                     </form>
@@ -107,8 +107,8 @@
                         modals.info('请选择要删除的行');
                         return false;
                     }
-                    modals.confirm("是否要删除该员工？",function(){
-                        ajaxPost(basePath+"/employeeQuery/delete/"+rowId,null,function(data){
+                    modals.confirm("确认该员工已离职？",function(){
+                        ajaxPost(basePath+"/employeeQuery/deleteLz/"+rowId,null,function(data){
                             if(data.success){
                                 //modals.correct("已删除该数据");
                                 userTable.reloadRowData();

@@ -1,6 +1,7 @@
 package com.radish.master.controller;
 
 import java.io.OutputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -12,6 +13,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.beanutils.PropertyUtils;
 import org.hibernate.annotations.common.util.StringHelper;
 import org.hibernate.type.StringType;
 import org.hibernate.type.Type;
@@ -479,6 +481,39 @@ public class EmployeeQueryController {
     	}
     	return r;
     };
-    
+    /**
+	 * 离职按钮
+	 * @author wzh
+	 * @创建时间 2019年5月4日 上午11:08:10
+	 * @return
+     * @throws NoSuchMethodException 
+     * @throws InvocationTargetException 
+     * @throws IllegalAccessException 
+	 */
+    @RequestMapping(value = "/deleteLz/{id}", method = RequestMethod.POST)
+    @ResponseBody
+    public Result deleteLz(@PathVariable("id") String id) throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+
+        User employee = this.get(id);
+        employee.setAuditStatus("50");
+        employee.setUpdateDateTime(new Date());
+        userService.update(employee);
+        UserLeave lzn = new UserLeave();
+		PropertyUtils.copyProperties(lzn, employee);
+		lzn.setUserId(employee.getId());
+		
+		List<UserLeave> lz = baseService.findBySql("select * from tbl_userLeave  where userId='" + lzn.getUserId() + "'", UserLeave.class);
+		if(lz.size()<=0){
+			lzn.setLeaveReason("办公室删除");
+			lzn.setLeaveTime(new Date());
+			lzn.setLeaveStatus("40");
+			baseService.save(lzn);
+		}
+		 List<UserRole> r = baseService.findBySql("select * from tbl_user_role  where userID='" + lzn.getUserId() + "'", UserRole.class);
+         for (UserRole u : r) {
+        	 baseService.delete(u);
+         }
+        return new Result();
+    }
 
 }
