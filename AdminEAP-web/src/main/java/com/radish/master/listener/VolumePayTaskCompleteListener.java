@@ -53,16 +53,21 @@ public class VolumePayTaskCompleteListener implements TaskListener {
              double zje = 0.0;
              String gclid = zf.getVolumeId();
              if("10".equals(zf.getPayType())){//人工
-            	List<SalaryDetail> gzmxs = baseService.findBySql(" select * from tbl_salary_detail where salary_id ='"+gclid+"'", SalaryDetail.class);
+            	
+            	 String gzid = "";
+            	List<SalaryVolume> gxs = baseService.findBySql("select * from tbl_salary_volume where volume_id='"+gclid+"'", SalaryVolume.class);
+     			for(SalaryVolume gx:gxs){
+     				ProjectVolume gcl = baseService.get(ProjectVolume.class, gx.getVolumeID());
+     				zzs.add(gcl);
+     				gzid = gx.getSalaryID();
+     			}
+     			//工资id
+     			
+     			List<SalaryDetail> gzmxs = baseService.findBySql(" select * from tbl_salary_detail where salary_id ='"+gzid+"'", SalaryDetail.class);
          		
          		for(SalaryDetail gzmx:gzmxs){
          			zje =ari.add(zje, Double.valueOf(gzmx.getActual()));
          		}
-            	List<SalaryVolume> gxs = baseService.findBySql("select * from tbl_salary_volume where salary_id='"+gclid+"'", SalaryVolume.class);
-     			for(SalaryVolume gx:gxs){
-     				ProjectVolume gcl = baseService.get(ProjectVolume.class, gx.getVolumeID());
-     				zzs.add(gcl);
-     			}
      		}else{//机械和材料
      			ProjectVolume gcl = baseService.get(ProjectVolume.class, gclid);
      			if("20".equals(zf.getPayType())){//机械

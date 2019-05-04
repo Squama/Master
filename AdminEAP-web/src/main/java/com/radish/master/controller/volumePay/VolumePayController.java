@@ -24,10 +24,13 @@ import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.base.service.BaseService;
 import com.cnpc.framework.utils.SecurityUtil;
 import com.radish.master.entity.Labor;
+import com.radish.master.entity.ProAccount;
+import com.radish.master.entity.ProAccountDet;
 import com.radish.master.entity.ProjectVolume;
 import com.radish.master.entity.project.Salary;
 import com.radish.master.entity.project.SalaryDetail;
 import com.radish.master.entity.project.SalaryVolume;
+import com.radish.master.entity.volumePay.Reimburse;
 import com.radish.master.entity.volumePay.VolumePay;
 import com.radish.master.service.BudgetService;
 import com.radish.master.system.Arith;
@@ -68,7 +71,7 @@ public class VolumePayController {
 					for(SalaryDetail gzmx:gzmxs){
 						zje =air.add(zje, Double.valueOf(gzmx.getActual()));
 					}
-					String sql = " select * from tbl_volumePay where volumeId='"+gz.getId()+"' and payType='10' and status<>'40'";
+					String sql = " select * from tbl_volumePay where volumeId='"+gclid+"' and payType='10' and status<>'40'";
 					List<VolumePay> zfs = baseService.findBySql(sql, VolumePay.class);
 					double kzf = zje;
 					for(VolumePay zf:zfs){
@@ -154,7 +157,8 @@ public class VolumePayController {
 		for(SalaryDetail gzmx:gzmxs){
 			zje =air.add(zje, Double.valueOf(gzmx.getActual()));
 		}
-		String sql = " select * from tbl_volumePay where volumeId='"+gzid+"' and payType='10' and status<>'40'";
+		ProjectVolume pv = baseService.get(ProjectVolume.class, gclid);
+		String sql = " select * from tbl_volumePay where volumeId='"+gclid+"' and payType='10' and status<>'40'";
 		List<VolumePay> zfs = baseService.findBySql(sql, VolumePay.class);
 		double kzf = zje;
 		for(VolumePay zf:zfs){
@@ -162,7 +166,6 @@ public class VolumePayController {
 		}
 		request.setAttribute("zje", zje);
 		request.setAttribute("kzf", kzf);
-		ProjectVolume pv = baseService.get(ProjectVolume.class, gclid);
 		Labor ht = baseService.get(Labor.class, pv.getLaborID());
 		request.setAttribute("bm", pv.getProjectName()+"--"+ht.getConstructionTeam());
 		
@@ -178,8 +181,11 @@ public class VolumePayController {
 			List<User> ul1 = baseService.findMapBySql("select u.name name ,u.id id from tbl_user u where  u.audit_status = 10", new Object[]{}, new Type[]{StringType.INSTANCE}, User.class);
 			request.setAttribute("use", JSONArray.toJSONString(ul1));
 			request.setAttribute("zfid", id);
-			String gzid = zf.getVolumeId();
-			
+			String gzid = "";
+			List<SalaryVolume> gxs = baseService.findBySql("select * from tbl_salary_volume where volume_id='"+zf.getVolumeId()+"'", SalaryVolume.class);
+ 			for(SalaryVolume gx:gxs){
+ 				gzid = gx.getSalaryID();
+ 			}
 			
 			List<SalaryDetail> gzmxs = baseService.findBySql(" select * from tbl_salary_detail where salary_id ='"+gzid+"'", SalaryDetail.class);
 			double zje = 0.0;
@@ -388,4 +394,138 @@ public class VolumePayController {
         // 启动流程
         return runtimePageService.startProcessInstanceByKey("volumePay", name, variables, user.getId(), businessKey);
     }
+	//记账
+	@RequestMapping("/dojz")
+	@ResponseBody
+	public Result dojz(HttpServletRequest request){
+		Arith arith = new Arith();
+		String id = request.getParameter("id");
+		VolumePay bx = baseService.get(VolumePay.class, id);
+		
+		String xmid = "";
+		String content = bx.getDepartment()+"-"+"工程量清单";
+		if("10".equals(bx.getPayType())){
+			content += "人工费";
+		}else if("20".equals(bx.getPayType())){
+			content += "机械费";
+		}else if("30".equals(bx.getPayType())){
+			content += "材料费";
+		}else if("40".equals(bx.getPayType())){
+			content += "包工包料费";
+		}
+		ProjectVolume gcl = baseService.get(ProjectVolume.class, bx.getVolumeId());
+		
+		xmid = gcl.getProjectID();
+		
+		List<ProAccount> xmz = baseService.find(" from ProAccount where projectId='"+xmid+"'");
+		
+		User u = SecurityUtil.getUser();
+		//账目明细
+		ProAccountDet mx = new ProAccountDet();
+		mx.setCreateDate(new Date());
+		mx.setAbstracts(content);
+		mx.setZmtype("2");
+		mx.setOutMoney(bx.getPayMoney());
+		mx.setAccounter(u.getName());
+		mx.setAccounterId(u.getId());
+		//mx.setAuditName(u.getName());
+		//mx.setAuditId(u.getId());
+		mx.setStatus("10");
+		if(xmz.size()<=0){//无账本，先生成账本
+			ProAccount zb = new ProAccount();
+			zb.setProjectId(xmid);
+			if("1".equals(xmid)){
+				zb.setAccountName("公司账本");
+			}
+			
+			baseService.save(zb);
+			zb.setAllMoney(arith.sub(0.0,Double.valueOf(bx.getPayMoney()))+"");
+			mx.setProjectAccountId(zb.getId());
+			baseService.save(mx);
+			baseService.update(zb);
+		}else{
+			ProAccount zb = xmz.get(0);
+			zb.setAllMoney(arith.sub(Double.valueOf(zb.getAllMoney()),Double.valueOf(bx.getPayMoney()))+"");
+			mx.setProjectAccountId(zb.getId());
+			baseService.save(mx);
+			baseService.update(zb);
+		}
+		bx.setIsjz("10");
+		baseService.update(bx);
+		
+		//计算是否完全支付完
+		String sql = " select * from tbl_volumePay where volumeId='"+gcl.getId()+"' and payType='"+bx.getPayType()+"' and status='30'";
+   		List<VolumePay> zfs = baseService.findBySql(sql, VolumePay.class);
+		Double yzje = 0.0;
+		for(VolumePay zf : zfs){
+			yzje = arith.add(yzje, Double.valueOf(zf.getPayMoney()));
+		}
+		String type = bx.getPayType();
+		double zje = 0.0;
+		if("10".equals(type)){
+			String gzid="";
+			List<SalaryVolume> gxs = baseService.findBySql("select * from tbl_salary_volume where volume_id='"+bx.getVolumeId()+"'", SalaryVolume.class);
+ 			for(SalaryVolume gx:gxs){
+ 				gzid = gx.getSalaryID();
+ 			}
+			List<SalaryDetail> gzmxs = baseService.findBySql(" select * from tbl_salary_detail where salary_id ='"+gzid+"'", SalaryDetail.class);
+			for(SalaryDetail gzmx:gzmxs){
+				zje =arith.add(zje, Double.valueOf(gzmx.getActual()));
+			}
+		}else if("20".equals(type)){
+			zje = Double.valueOf(gcl.getFinalMech());
+			if(gcl.getFinalDebitjx()!=null){
+				zje = arith.sub(zje, Double.valueOf(gcl.getFinalDebitjx()));
+			}
+		}else if("30".equals(type)){
+			zje = Double.valueOf(gcl.getFinalMat());
+			if(gcl.getFinalDebitcl()!=null){
+				zje = arith.sub(zje, Double.valueOf(gcl.getFinalDebitcl()));
+			}
+		}else if("40".equals(type)){
+			if(gcl.getFinalPack()==null){
+				zje=0.0;
+			}else{
+				zje = Double.valueOf(gcl.getFinalPack());
+			}
+		}
+		if(zje>0&&zje>yzje){
+   				if("10".equals(bx.getPayType())){
+   					gcl.setLabourStatus("10");
+                }else if("20".equals(bx.getPayType())){//机械
+                	gcl.setMechStatus("10");
+                }else if("30".equals(bx.getPayType())){//材料
+                	gcl.setMatStatus("10");
+                }else if("40".equals(bx.getPayType())){//包工包料
+                	gcl.setPackStatus("10");
+                }
+   				
+   				baseService.update(gcl);
+   		}else if(zje<=yzje){
+   				if("10".equals(bx.getPayType())){
+   					gcl.setLabourStatus("20");
+                }else if("20".equals(bx.getPayType())){//机械
+                	gcl.setMechStatus("20");
+                }else if("30".equals(bx.getPayType())){//材料
+                	gcl.setMatStatus("20");
+                }else if("40".equals(bx.getPayType())){//包工包料
+                	gcl.setPackStatus("20");
+                }
+   				baseService.update(gcl);
+   		}else{
+   				if("10".equals(bx.getPayType())){
+   					gcl.setLabourStatus(null);
+                }else if("20".equals(bx.getPayType())){//机械
+                	gcl.setMechStatus(null);
+                }else if("30".equals(bx.getPayType())){//材料
+                	gcl.setMatStatus(null);
+                }else if("40".equals(bx.getPayType())){//包工包料
+                	gcl.setPackStatus(null);
+                }
+   				baseService.update(gcl);
+   		}
+		
+		Result r = new Result();
+		return r;
+	}
 }

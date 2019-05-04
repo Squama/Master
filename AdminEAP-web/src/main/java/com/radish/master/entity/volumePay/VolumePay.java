@@ -79,6 +79,9 @@ public class VolumePay implements Serializable {
     @Column(name = "rebutReason")
     private String rebutReason;
     
+    @Header(name = "是否记账")
+    @Column(name = "isjz")
+    private String isjz;
 	public String getId() {
 		return id;
 	}
@@ -173,6 +176,14 @@ public class VolumePay implements Serializable {
 
 	public void setRebutReason(String rebutReason) {
 		this.rebutReason = rebutReason;
+	}
+
+	public String getIsjz() {
+		return isjz;
+	}
+
+	public void setIsjz(String isjz) {
+		this.isjz = isjz;
 	}
 
 	

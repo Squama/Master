@@ -151,7 +151,7 @@
                 	if(zfid!=0){
                 		url=basePath + '/volumepay/updatePayInfo?zfid='+zfid;
                 	}else{
-                		url = basePath+'/volumepay/doPay?gclid='+gzid
+                		url = basePath+'/volumepay/doPay?gclid='+gclid
                 	}
                     	ajaxPost(url, params, function(data) {
                             if(data.success){

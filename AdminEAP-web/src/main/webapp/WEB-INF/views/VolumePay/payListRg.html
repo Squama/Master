@@ -63,9 +63,9 @@
     var kzf = "${kzf?default(0)}";
     if(gz!=0){
     	gz=JSON.parse(gz);
-    	$('#salaryID',$('#searchDivDetail')).val(gz.id);
+    	$('#salaryID').val(gz.id);
     }else{
-    	$('#salaryID',$('#searchDivDetail')).val("0");
+    	$('#salaryID').val("0");
     }
     var volumeManageObject = {
         		auid: function (rowID,payType) {
@@ -82,7 +82,16 @@
            		 },
            		auidNo:function (rowID,payType){
            			modals.info("驳回原因： "+rowID);
-           		}
+           		},
+                jz:function(id){
+              	   ajaxPost(basePath+'/volumepay/dojz', {id:id}, function(data) {
+                         if(data.success){
+                         	volumeTable.reloadData();
+                             modals.info("记账成功");
+                             
+                         }                
+                     }); 
+                 }
     }
     
     $(function (){
@@ -93,7 +102,7 @@
     		$("#type").val(type);
     	}
     	if(gz!=0){
-    		$("#volumeId").val(gz.id);
+    		//$("#volumeId").val(gz.id);
     		$("#titleH").html("人工费支付列表---"+"应付金额："+zje+"元,剩余可支付金额:"+kzf+"元");
     	}else{
     		$("#titleH").html("人工费支付列表-----未查到工资单数据");
@@ -223,6 +232,9 @@
     	if(rowObj.status=='审核不通过'){
     		oper +="&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='volumeManageObject.auidNo(\"" + rowObj.rebutReason.replace(/[\r\n]/g,'') + "\")'>查看驳回原因</a>";
     	}
+    	if(rowObj.status=='审核通过'&&!rowObj.isjz){
+    		oper += "&nbsp;&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='volumeManageObject.jz(\"" + value + "\")'>记账</a>";
+        }
         return oper;
     }
     
