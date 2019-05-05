@@ -89,6 +89,7 @@
                <div class="form-group">
                     <label  for="jyid" class="col-sm-3 control-label">三级教育</label>
 					<div class=" col-sm-8">
+						<input id="jyname" name="jyname" style="display: none"/>
 						<select id="jyid" class="form-control select2 "  name="jyid" style="width:100%" onchange="setvalue()">
                    			<option selected="selected" value="">选择一个三级教育</option>
                    		</select>
@@ -140,7 +141,8 @@
     var id = '${id?default(0)}';
     if(id!=0){
     	  $("#b_sub").css("display","none");
-    	  $("#workerid").attr("disabled",true)
+    	  $("#workerid").attr("disabled",true);
+    	  $("#jyid").attr("disabled",true);
       }
     $(function() {
         //初始化控件
@@ -210,12 +212,14 @@
 			ajaxPost(basePath+'/sjjynr/load', {id:jyxz}, function(data) {
 				$("#bzjy").val(data.bzname);
 				$("#xmjy").val(data.xmname);
-				$("#gsjy").val(data.gsname);         
+				$("#gsjy").val(data.gsname);        
+				$("#jyname").val(data.descs); 
             }); 
 		}else{
 			$("#bzjy").val("");
 			$("#xmjy").val("");
 			$("#gsjy").val("");
+			$("#jyname").val(""); 
 		}
     }
     function load(){

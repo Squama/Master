@@ -81,6 +81,8 @@ public class AqjynrController {
 	public String alllist(HttpServletRequest request){
 		List<Worker> p = baseService.findMapBySql("select id  ,name  from tbl_worker ", new Object[]{}, new Type[]{StringType.INSTANCE}, Worker.class);
 		request.setAttribute("rys", JSONArray.toJSONString(p));
+		List<Aqjynr> jys = baseService.findMapBySql("select id  ,descs  from tbl_aqsjjy ", new Object[]{}, new Type[]{StringType.INSTANCE}, Aqjynr.class);
+		request.setAttribute("jynrs", JSONArray.toJSONString(jys));
 		return prefix +"alllist";
 	}
 	@RequestMapping("/add")
@@ -161,13 +163,14 @@ public class AqjynrController {
 	@ResponseBody
 	public Result savenr(HttpServletRequest request){
 		Result r = new Result();
-		List<Aqjynr> nrs = baseService.find(" from Aqjynr where 1=1 ");
+		String jyid = request.getParameter("jyid");
+		/*List<Aqjynr> nrs = baseService.find(" from Aqjynr where 1=1 ");
 		if(nrs.size()<=0){//修改
 			r.setSuccess(false);
 			r.setMessage("请先维护三级教育内容!");
 			return r;
-		}
-		Aqjynr nr = nrs.get(0);
+		}*/
+		Aqjynr nr =baseService.get(Aqjynr.class, jyid);
 		String workid = request.getParameter("workerid");
 		Worker w = baseService.get(Worker.class, workid);
 		User u = SecurityUtil.getUser();
@@ -183,6 +186,8 @@ public class AqjynrController {
 		jy.setBzjy(nr.getBzname());
 		jy.setXmjy(nr.getXmname());
 		jy.setGsjy(nr.getGsname());
+		jy.setJyid(nr.getId());
+		jy.setJyname(nr.getDescs());
 		jy.setStatus("20");
 		jy.setCreate_time(new Date());
 		jy.setCreate_name_ID(u.getId());

@@ -122,6 +122,11 @@ public class Aqjy implements Serializable {
     
     @Column(name = "create_time")
     private Date create_time;
+    
+    @Column(name = "jyid")
+    private String jyid;
+    @Column(name = "jyname")
+    private String jyname;
 
 	public String getId() {
 		return id;
@@ -305,6 +310,22 @@ public class Aqjy implements Serializable {
 
 	public void setCreate_time(Date create_time) {
 		this.create_time = create_time;
+	}
+
+	public String getJyid() {
+		return jyid;
+	}
+
+	public void setJyid(String jyid) {
+		this.jyid = jyid;
+	}
+
+	public String getJyname() {
+		return jyname;
+	}
+
+	public void setJyname(String jyname) {
+		this.jyname = jyname;
 	}
     
     

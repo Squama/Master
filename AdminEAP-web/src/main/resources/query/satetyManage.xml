@@ -131,6 +131,24 @@
         <column key="isfk" header="罚款详情" width="80" fnRender="fnRenderFk"/>
         <column key="id" header="管理" width="80" fnRender="fnRenderGl"/>
     </query>
+     <query id="aqCheckFile_ListBDQ" key="id" tableName="安全不定期记录文件列表" widthType="px">
+        <sql>
+            <![CDATA[
+              SELECT wj.ID id,  wj.create_time create_time, wj.number number, wj.status status,wj.isfk isfk,
+              p.project_name pName ,wj.proid pid ,wj.checktime checktime
+			  FROM tbl_aqcheck wj ,tbl_project p 
+			  WHERE 1=1 and wj.proid = p.id and wj.types='40'
+            ]]>
+        </sql>
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="pName" header="所属项目" classType="String" width="150"/>
+        <column key="number" header="编号" classType="String" width="150"/>
+        <column key="checktime" header="检查日期" classType="String" width="150" allowSort="true" />
+        <column key="status" header="状态" classType="String" width="150" render="10=新建,20=项目回复,30=复查,40=完成"/>
+        <column key="isfk" header="罚款详情" width="80" fnRender="fnRenderFk"/>
+        <column key="id" header="管理" width="80" fnRender="fnRenderGl"/>
+    </query>
     <query id="aqCheckFile_ListZX" key="id" tableName="安全定期记录文件列表" widthType="px">
         <sql>
             <![CDATA[
@@ -159,6 +177,7 @@
      <query id="aqjyList" key="id" tableName="安全教育" className="com.radish.master.entity.safty.Aqjy" widthType="px" pageSize="200">
         <column key="id" hidden="true" header="id" width="80"/>
         <column key="rowIndex" header="序号" width="80"/>
+        <column key="jyname" header="教育种类" width="80"/>
         <column key="name" header="姓名" operator="like" width="100" allowSort="true" />
         <column key="workType" header="工种"  width="100"/>
         <column key="sex" header="性别" operator="eq" width="150" allowSort="true" render="1=男,0=女" />

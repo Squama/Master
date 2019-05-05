@@ -262,8 +262,20 @@
             	marital: { validators: { notEmpty: { message: '请输入婚姻状况' }}},
             	healthStatus: { validators: { notEmpty: { message: '请输入健康状况' }}},
             	medicalHis: { validators: { notEmpty: { message: '请输入有无病史' }}},
-            	identificationNumber: { validators: { notEmpty: { message: '请输入身份证号码' }}},
-            	mobile: { validators: { notEmpty: { message: '请输入电话号码' }}},
+            	identificationNumber: { validators: { notEmpty: { message: '请输入身份证号码' },
+                    callback: {
+                        message: '身份证号码格式错误',
+                        callback: function (value, validator) {
+                            if (!value) {
+                                return true
+                            } else if (isCardNo(value)) {
+                                return true;
+                            } else {
+                                return false;
+                            }
+                        }
+                    }}},
+            	mobile: { validators: { notEmpty: { message: '请输入电话号码' },regexp: {regexp: /^1\d{10}$/, message: '手机号格式错误'}}},
             	address: { validators: { notEmpty: { message: '请输入家庭住址' }}},
             	emergencyContact: { validators: { notEmpty: { message: '请输入紧急联络人姓名' }}},
             	emergencyContactRelation: { validators: { notEmpty: { message: '请输入紧急联络人关系' }}},
@@ -371,4 +383,12 @@
               "fileField":"fileId"
           }
       }));
+    function isCardNo(card) {
+        let reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
+        if (reg.test(card) === false) {
+            return false
+        } else {
+            return true
+        }
+    }
 </script>

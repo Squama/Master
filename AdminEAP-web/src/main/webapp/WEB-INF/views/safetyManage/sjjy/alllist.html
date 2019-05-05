@@ -21,6 +21,9 @@
                     <select id="ryid" class="form-control select2" name="workerid" style="width:200px;" operator="eq">
         				<option selected="selected" value="">选择查询人员</option>
        				 </select>
+       				 <select id="jys" class="form-control select2" name="jyname" style="width:200px;" operator="eq">
+        				<option selected="selected" value="">选择教育类型</option>
+       				 </select>
                     <div class="btn-group">
                         <button type="button" class="btn btn-primary" data-btn-type="search">查询</button>
                         <button type="button" class="btn btn-default" data-btn-type="reset">重置</button>
@@ -48,6 +51,10 @@
     var rys = '${rys?default(0)}',ry=0;
     if(rys != 0){
     	ry = JSON.parse(rys);
+    }
+    var jynrs = '${jynrs?default(0)}',jynr=0;
+    if(jynrs != 0){
+    	jynr = JSON.parse(jynrs);
     }
     $(function (){
     	dutycheckTable = new CommonTable("lwContract_table", "aqjyList", "searchDiv1");
@@ -100,6 +107,13 @@
                 $('#ryid').append("<option value='" + u.id + "'>" + u.name + "</option>");
             }
             $("#ryid").select2();
+        }
+        if(jys != 0){
+            for (var i = 0, len = jynr.length; i < len; i++) {
+                var u = jynr[i];
+                $('#jys').append("<option value='" + u.descs + "'>" + u.descs + "</option>");
+            }
+            $("#jys").select2();
         }
         
     });

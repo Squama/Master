@@ -64,6 +64,7 @@ public class AqCheckController {
 	private String rc ="safetyManage/aqcheckrc/";
 	private String dq ="safetyManage/aqcheckdq/";
 	private String zx ="safetyManage/aqcheckzx/";
+	private String bdq ="safetyManage/aqcheckbdq/";
 	@Resource
 	 private RuntimePageService runtimePageService;
 	@Autowired
@@ -83,6 +84,8 @@ public class AqCheckController {
     		prefix = dq;
     	}else if("30".equals(types)){
     		prefix = zx;
+    	}else if("40".equals(types)){
+    		prefix = bdq;
     	}
         return prefix+"list_index";
     }
@@ -99,6 +102,8 @@ public class AqCheckController {
     		prefix = dq;
     	}else if("30".equals(types)){
     		prefix = zx;
+    	}else if("40".equals(types)){
+    		prefix = bdq;
     	}
         return prefix+"look_list";
     }
@@ -135,6 +140,8 @@ public class AqCheckController {
     		strs ="DQ"+year+str;
     	}else if("30".equals(types)){
     		strs ="ZX"+year+str;
+    	}else if("40".equals(types)){
+    		strs ="BDQ"+year+str;
     	}
 		
 		request.setAttribute("bh",strs);
@@ -148,6 +155,8 @@ public class AqCheckController {
     		prefix = dq;
     	}else if("30".equals(types)){
     		prefix = zx;
+    	}else if("40".equals(types)){
+    		prefix = bdq;
     	}
         return prefix+"addIndex";
     }
@@ -168,6 +177,8 @@ public class AqCheckController {
     		prefix = dq;
     	}else if("30".equals(types)){
     		prefix = zx;
+    	}else if("40".equals(types)){
+    		prefix = bdq;
     	}
         return prefix+"editIndex";
     }
@@ -188,6 +199,8 @@ public class AqCheckController {
     		prefix = dq;
     	}else if("30".equals(types)){
     		prefix = zx;
+    	}else if("40".equals(types)){
+    		prefix = bdq;
     	}
         return prefix+"editlookIndex";
     }
@@ -208,6 +221,8 @@ public class AqCheckController {
     		prefix = dq;
     	}else if("30".equals(types)){
     		prefix = zx;
+    	}else if("40".equals(types)){
+    		prefix = bdq;
     	}
 		return prefix +"auidHfIndex";
 	}
@@ -227,6 +242,8 @@ public class AqCheckController {
     		prefix = dq;
     	}else if("30".equals(types)){
     		prefix = zx;
+    	}else if("40".equals(types)){
+    		prefix = bdq;
     	}
 		return prefix +"auidFcIndex";
 	}
@@ -320,6 +337,8 @@ public class AqCheckController {
     		name =ck.getProname()+"【定期安全检查("+sdf.format(ck.getChecktime())+")】";
     	}else if("30".equals(types)){
     		name =ck.getProname()+"【专项安全检查("+sdf.format(ck.getChecktime())+")】";
+    	}else if("40".equals(types)){
+    		name =ck.getProname()+"【不定期安全检查("+sdf.format(ck.getChecktime())+")】";
     	}
        
 
