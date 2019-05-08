@@ -14,22 +14,24 @@
 <script src="${basePath}/resources/common/libs/fileinput/js/locales/zh.js"></script>
 <!--BaseFile组件-->
 <script src="${basePath}/resources/common/js/base-file.js"></script>
-<div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><li class="fa fa-remove"></li></button>
-    <h5 class="modal-title"></h5>
-</div>
-	<div class="modal-body" style="max-height:700px;overflow-y:auto;">
-
+<section class="content" id="projectaddstep2">
+<section class="content-header">
+	<h1>
+		三级教育内容维护
+	</h1>
+	<ol class="breadcrumb">
+		<li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
+		<li><a href="#">安全教育</a></li>
+		<li class="active">三级教育内容维护</li>
+	</ol>
+</section>
+<section class="content">
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="box">
     <form id="contract-form" name="contract-form" class="form-horizontal">
      <input type="hidden" name="id" id= "id">
         <div class="box-body">
-        <div class="form-group">
-                    <label for="gsname" class="col-sm-2 control-label">教育名称</label>
-
-                    <div class="col-sm-9">
-                    <input type="text" class="form-control" id="descs" name="descs" placeholder="请输入教育名称" >
-                    </div>
-            </div>
          <div class="form-group">
                     <label for="gsname" class="col-sm-2 control-label">公司教育内容</label>
 
@@ -60,9 +62,11 @@
         <!-- /.box-footer -->
     </form>
 </div>
+</div>
+</div>
+</section>
 <script>
     var form =null;
-    var id = '${id?default(0)}';
     $(function() {
         //初始化控件
         form=$("#contract-form").form();
@@ -88,13 +92,6 @@
                 });
             },
             fields : {
-            	descs : {
-                    validators : {
-                        notEmpty : {
-                            message : '请输入教育名称'
-                        }
-                    }
-                },
             	bzname : {
                     validators : {
                         notEmpty : {
@@ -119,14 +116,12 @@
             }
         });
         form.initComponent();
-        if(id){
-        	load();
-        }
+        load();
         
         
     });
     function load(){
-    	ajaxPost(basePath+'/sjjynr/load', {id:id}, function(data) {
+    	ajaxPost(basePath+'/sjjynr/load', {}, function(data) {
     		$("#contract-form").form().initFormData(data);          
         }); 
     }

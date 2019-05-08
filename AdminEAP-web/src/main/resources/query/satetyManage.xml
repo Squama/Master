@@ -177,7 +177,6 @@
      <query id="aqjyList" key="id" tableName="安全教育" className="com.radish.master.entity.safty.Aqjy" widthType="px" pageSize="200">
         <column key="id" hidden="true" header="id" width="80"/>
         <column key="rowIndex" header="序号" width="80"/>
-        <column key="jyname" header="教育种类" width="80"/>
         <column key="name" header="姓名" operator="like" width="100" allowSort="true" />
         <column key="workType" header="工种"  width="100"/>
         <column key="sex" header="性别" operator="eq" width="150" allowSort="true" render="1=男,0=女" />

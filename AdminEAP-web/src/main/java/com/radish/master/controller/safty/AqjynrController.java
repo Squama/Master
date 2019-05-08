@@ -69,28 +69,28 @@ public class AqjynrController {
 	
 	@RequestMapping("/jynr")
 	public String jobduty(HttpServletRequest request){
-		return prefix +"list";
+		return prefix +"jynr";
 	}
-	@RequestMapping("/addnr")
+	/*@RequestMapping("/addnr")
 	public String addnr(HttpServletRequest request){
 		String id = request.getParameter("id");
 		request.setAttribute("id",id);
 		return prefix +"jynr";
-	}
+	}*/
 	@RequestMapping("/alllist")
 	public String alllist(HttpServletRequest request){
 		List<Worker> p = baseService.findMapBySql("select id  ,name  from tbl_worker ", new Object[]{}, new Type[]{StringType.INSTANCE}, Worker.class);
 		request.setAttribute("rys", JSONArray.toJSONString(p));
-		List<Aqjynr> jys = baseService.findMapBySql("select id  ,descs  from tbl_aqsjjy ", new Object[]{}, new Type[]{StringType.INSTANCE}, Aqjynr.class);
-		request.setAttribute("jynrs", JSONArray.toJSONString(jys));
+		/*List<Aqjynr> jys = baseService.findMapBySql("select id  ,descs  from tbl_aqsjjy ", new Object[]{}, new Type[]{StringType.INSTANCE}, Aqjynr.class);
+		request.setAttribute("jynrs", JSONArray.toJSONString(jys));*/
 		return prefix +"alllist";
 	}
 	@RequestMapping("/add")
 	public String add(HttpServletRequest request){
 		List<Worker> p = baseService.findMapBySql("select id  ,name  from tbl_worker ", new Object[]{}, new Type[]{StringType.INSTANCE}, Worker.class);
 		request.setAttribute("rys", JSONArray.toJSONString(p));
-		List<Aqjynr> jys = baseService.findMapBySql("select id  ,descs  from tbl_aqsjjy ", new Object[]{}, new Type[]{StringType.INSTANCE}, Aqjynr.class);
-		request.setAttribute("jys", JSONArray.toJSONString(jys));
+		/*List<Aqjynr> jys = baseService.findMapBySql("select id  ,descs  from tbl_aqsjjy ", new Object[]{}, new Type[]{StringType.INSTANCE}, Aqjynr.class);
+		request.setAttribute("jys", JSONArray.toJSONString(jys));*/
 		String id = request.getParameter("id");
 		request.setAttribute("id",id);
 		String lx = request.getParameter("lx");
@@ -123,10 +123,10 @@ public class AqjynrController {
 	@ResponseBody
 	public Result savenr(HttpServletRequest request,Aqjynr nr){
 		Result r = new Result();
-		String id = request.getParameter("id");
+		List<Aqjynr> nrs = baseService.find(" from Aqjynr where 1=1 ");
 		User u = SecurityUtil.getUser();
-		if(id!=null){//修改
-			Aqjynr n = baseService.get(Aqjynr.class, id);
+		if(nrs.size()>0){//修改
+			Aqjynr n = nrs.get(0);
 			n.setCreate_time(new Date());
 			n.setCreate_name_ID(u.getId());
     		n.setCreate_name(u.getName());
@@ -146,11 +146,14 @@ public class AqjynrController {
 	}
 	@RequestMapping("/load")
 	@ResponseBody
-	public Aqjynr load(HttpServletRequest request,String id){
-		Aqjynr n = baseService.get(Aqjynr.class, id);
-		return n;
+	public Aqjynr load(String id){
+		List<Aqjynr> nrs = baseService.find(" from Aqjynr where 1=1 ");
+		if(nrs.size()>0){
+			return nrs.get(0);
+		}else{
+			return new Aqjynr();
+		}
 	}
-	
 	@RequestMapping("/getWorker")
 	@ResponseBody
 	public Worker getWorker(HttpServletRequest request){
@@ -163,14 +166,14 @@ public class AqjynrController {
 	@ResponseBody
 	public Result savenr(HttpServletRequest request){
 		Result r = new Result();
-		String jyid = request.getParameter("jyid");
-		/*List<Aqjynr> nrs = baseService.find(" from Aqjynr where 1=1 ");
+		//String jyid = request.getParameter("jyid");
+		List<Aqjynr> nrs = baseService.find(" from Aqjynr where 1=1 ");
 		if(nrs.size()<=0){//修改
 			r.setSuccess(false);
 			r.setMessage("请先维护三级教育内容!");
 			return r;
-		}*/
-		Aqjynr nr =baseService.get(Aqjynr.class, jyid);
+		}
+		Aqjynr nr =nrs.get(0);
 		String workid = request.getParameter("workerid");
 		Worker w = baseService.get(Worker.class, workid);
 		User u = SecurityUtil.getUser();
@@ -187,7 +190,7 @@ public class AqjynrController {
 		jy.setXmjy(nr.getXmname());
 		jy.setGsjy(nr.getGsname());
 		jy.setJyid(nr.getId());
-		jy.setJyname(nr.getDescs());
+		//jy.setJyname(nr.getDescs());
 		jy.setStatus("20");
 		jy.setCreate_time(new Date());
 		jy.setCreate_name_ID(u.getId());
