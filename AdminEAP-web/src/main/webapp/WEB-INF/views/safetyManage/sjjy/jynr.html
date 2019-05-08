@@ -85,6 +85,8 @@
                     	ajaxPost(basePath+'/sjjynr/savenr', params, function(data) {
                             if(data.success){
                                 modals.info("保存成功");
+                                modals.hideWin("");
+                            	materielTable.reloadData();
                             }                
                         }); 
               

@@ -1,0 +1,177 @@
+<link rel="stylesheet" href="${basePath}/resources/common/libs/fileinput/css/fileinput.min.css">
+<style>
+
+#projectaddstep2 .krajee-default.file-preview-frame .kv-file-content {
+    height: auto;
+}
+
+#projectaddstep2 .krajee-default .file-footer-caption {
+    width: 100px;
+}
+
+</style>
+<script src="${basePath}/resources/common/libs/fileinput/js/fileinput.js"></script>
+<script src="${basePath}/resources/common/libs/fileinput/js/locales/zh.js"></script>
+<!--BaseFile组件-->
+<script src="${basePath}/resources/common/js/base-file.js"></script>
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><li class="fa fa-remove"></li></button>
+    <h5 class="modal-title"></h5>
+</div>
+<div class="modal-body" style="max-height:100%;overflow-y:auto;">
+
+    <form id="contract-form2" name="contract-form2" class="form-horizontal">
+     <!-- <input type="hidden" name="id" id= "id"> -->
+        <div class="box-body">
+            <div class="col-md-6">
+                
+                <div class="form-group">
+                    <label  for="check_time1" class="col-sm-3 control-label">文件种类</label>
+					<div class=" col-sm-8">
+						<input id="fjtypename" name = "fjtypename" style="display: none">
+						<select id="fjtype" class="form-control select2 "  name="fjtype" style="width:100%" onchange="setmc()">
+                   			<option selected="selected" value="">选择一个种类</option>
+                   		</select>
+					</div>
+                </div>
+            </div>
+            <div class="col-md-6">
+            </div>        
+        </div>
+        <input type="hidden" name="fileId" id="fileId">
+					<div class="form-group" align="center" id="wjscid">
+						<div class="btn btn-default btn-file" id="uploadFile">
+							<i class="fa fa-paperclip"></i> 上传附件(Max. 10MB)
+						</div>
+					</div>
+					<div class="form-group" id="file_container">
+						<input type="file" name="file"  id="attachment">
+					</div>
+        <!-- /.box-body -->
+        <div class="" style="text-align: center;height:50px;width:100%;">
+            <!--以下两种方式提交验证,根据所需选择-->
+            <button type="button" class="btn btn-primary" data-btn-type="save" id="b_sub" onclick="savefj()">保存</button>
+        </div>
+        <!-- /.box-footer -->
+    </form>
+    
+</div>
+<script>
+    var form2 =null;
+    form2=$("#contract-form2").form();
+    var pros = '${wjs?default(0)}',pro=0;
+    if(pros != 0){
+    	pro = JSON.parse(pros);
+    }
+    
+    var  jyid = '${jyid?default(0)}';
+    var  ly = '${ly?default(0)}';
+    var  ck = '${ck?default(0)}';
+    if(ck!=0){
+		$("#b_sub").css("display","none")
+		$("#wjscid").css("display","none")
+    	$("#attachment").css("display","none")
+    }
+    function savefj(){
+		var zl = $("#fjtype option:selected").val();
+		if(!zl){
+			modals.info("请选择分类!");
+			return;
+		}
+		 modals.confirm('确认保存？', function() {
+             //Save Data，对应'submit-提交'
+             var params = form2.getFormSimpleData();
+             	ajaxPost(basePath+'/sjjynr/savefj?jyid='+jyid+'&ly='+ly, params, function(data) {
+                     if(data.success){
+                         modals.info("数据保存成功");
+                         modals.hideWin("purchaseApplyWin");
+                         dutycheckTable.reloadData();
+                     }else{
+                     	modals.info(data.message);
+                     }                
+                 }); 
+       
+              
+         });
+    }
+    $(function() {
+        //初始化控件
+        
+        
+        if(pro != 0){
+            for (var i = 0, len = pro.length; i < len; i++) {
+                var u = pro[i];
+                $('#fjtype').append("<option value='" + u.id + "'>" + u.name + "</option>");
+            }
+            $("#fjtype").select2();
+        }
+        /* if(id!=0){
+            load(id);
+         } */
+         form2.initComponent();
+        
+    });
+    function load(id){
+    	ajaxPost(basePath+'/aqxy/load', {id:id}, function(data) {
+    		$("#contract-form").form().initFormData(data.data);   
+    		$("#fileId").val(data.code);       
+        }); 
+    }
+    function resetForm(){
+    	form2.clearForm();
+        $("#contract-form2").data('bootstrapValidator').resetForm();
+    }
+
+    var fileinputDefaults = {
+            maxFileSize: 102400,
+            maxFileCount:3,
+            previewSettings: {
+                image: {width: "160px", height: "60px"},
+                text: {width: "213px", height: "160px"},
+                object: {width: "160px", height: "auto"},
+                pdf: {width: "160px", height: "160px"},
+                other: {width: "160px", height: "160px"}
+            },
+            previewZoomSettings: {
+                image: {width: "auto", height: "auto", 'max-width': "100%", 'max-height': "100%"},
+                text: {width: "100%", height: "100%", 'min-height': "480px"},
+                object: {width: "auto", height: "100%", 'min-height': "480px"},
+                pdf: {width: "100%", height: "100%", 'min-height': "480px"},
+                other: {width: "auto", height: "100%", 'min-height': "480px"}
+            },
+            uploadUrl: basePath + "/sjjynr/uploadMultipleFile",
+            deleteUrl: basePath + "/sjjynr/deletefile",
+            allowedPreviewTypes : ['image', 'object']
+      }
+      var defaults = {
+            title: "请上传附件",
+            getFileResultUrl: basePath+"/sjjynr/getFiles",
+            downloadFileUrl: basePath+"/sjjynr/download/",
+            fileinput: fileinputDefaults,
+            showType:'detail',
+            window:true,
+            callback:function(fileId,oldfileIds){
+                this.showFiles({
+                    fileIds:fileId,
+                    type:'preview'
+                });
+            }
+      }
+      
+      $("#uploadFile").file($.extend({}, defaults, {
+          title:"请上传附件",
+          fileinput:$.extend({}, fileinputDefaults, {
+              uploadExtraData: {"fileField":"fileId"}
+          }),
+          showContainer:'#attachment',
+          fileIdContainer:"[name='fileId']",
+          extraPreviewConfig:{
+              "fileField":"fileId"
+          }
+      }));
+
+    function setmc(){
+		var mc = $("#fjtype option:selected").text();
+		$("#fjtypename").val(mc);
+     }
+</script>

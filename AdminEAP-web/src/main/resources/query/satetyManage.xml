@@ -182,5 +182,16 @@
         <column key="sex" header="性别" operator="eq" width="150" allowSort="true" render="1=男,0=女" />
         <column key="status" header="状态"  width="100" render="10=新建,20=班组教育,30=项目教育,40=公司教育,50=完成" />
     	<column key="create_time" header="创建日期" classType="java.util.Date" width="150" allowSort="true" operator="between"  dateFormat="yyyy-mm-dd"/>
+   		<column key="id" header="文件附件管理" width="80" fnRender="fnRenderGl"/>
+    </query>
+    
+    <query id="aqjyfjList" key="id" tableName="安全教育附件列表" className="com.radish.master.entity.safty.Aqjyfj" widthType="px" pageSize="200">
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="ly" header="文件来源" operator="like" width="100" allowSort="true" render="10=管理员新增,20=班组新增,30=项目新增,40=公司新增"  />
+        <column key="fjtypename" header="文件种类"  width="100"/>
+        <column key="create_name" header="创建人"  width="100"/>
+    	<column key="create_time" header="创建日期" classType="java.util.Date" width="150" allowSort="true" operator="between"  dateFormat="yyyy-mm-dd"/>
+   		<column key="id" header="文件附件管理" width="80" fnRender="fnRenderGl"/>
     </query>
 </queryContext>
