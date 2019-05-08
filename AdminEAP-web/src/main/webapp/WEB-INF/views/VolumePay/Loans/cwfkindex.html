@@ -101,12 +101,21 @@
     		oper += "<a href='javascript:void(0)' onclick='volumeManageObject.submit(\"" + value + "\")'>查看付款</a>";
        	}else if(rowObj.status=="已付款"){
        		oper += "<a href='javascript:void(0)' onclick='volumeManageObject.look(\"" + value + "\")'>查看</a>";
+       		oper += "&nbsp;&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='printzfd(\"" + value + "\")'>补打支付单</a>";
        		if(rowObj.isjz=="0"){
        			oper += "&nbsp;&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='volumeManageObject.jz(\"" + value + "\")'>记账</a>";
            	}
         }
     	
         return oper;
+    }
+    function printzfd(id){
+    	modals.openWin({
+            winId:"printzf",
+            title:'支付单支付方式确认',
+            width:'500px',
+            url:basePath+"/loans/zffs?id="+id
+        });
     }
    
 </script>
