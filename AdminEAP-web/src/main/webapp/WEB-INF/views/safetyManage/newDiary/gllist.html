@@ -157,7 +157,8 @@
 						$("#rqdiv").append(divs);
                    }
                 }                
-            }); 
+            });
+            $("#RqForm").data("ryid",$("#ryid option:selected").val()); 
     }
     function getRy(){
 		var xmid = $("#xmid option:selected").val();
@@ -184,7 +185,7 @@
         	modals.info(rq+"当天无日志数据");
         	return ;
         }
-    	var url = basePath+"/safediary/addindex?xmid="+$("#xmid option:selected").val()+"&rq="+rq+"&ryid="+ryid;
+    	var url = basePath+"/safediary/addindex?xmid="+$("#xmid option:selected").val()+"&rq="+rq+"&ryid="+$("#RqForm").data("ryid");
     	if(rzid){
 			url += "&rzid="+rzid+"&lx=look";
         }
