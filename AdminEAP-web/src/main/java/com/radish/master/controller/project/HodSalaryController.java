@@ -131,7 +131,12 @@ public class HodSalaryController {
                 detail.setMobile(user.getMobile());
                 detail.setIdentificationNumber(user.getIdentificationNumber());
                 detail.setWorkType(user.getWorkType());
-                detail.setBasicSalary(user.getBasicSalary());
+                if(user.getBasicSalary()==null){
+                	detail.setBasicSalary("0");
+                }else{
+                	detail.setBasicSalary(user.getBasicSalary());
+                }
+                
 
                 detail.setAttendance("0");
                 detail.setPayable("0");
