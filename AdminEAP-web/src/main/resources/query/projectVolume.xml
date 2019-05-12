@@ -213,5 +213,28 @@
         <column key="suggestion" header="审核意见" classType="String" />
         <column key="operator" header="审批人" classType="String" />
     </query>
+    
+    <query id="volume_list_sh" key="id" tableName="工程量上报列表(审核页面)" widthType="px">
+        <sql>
+            <![CDATA[
+              SELECT pv.id id, pv.project_name projectName, l.contract_name contractName,l.construction_team_id constructionTeamID,
+		      l.construction_team constructionTeam, pv.start_time startTime, pv.end_time endTime,
+			  pv.apply_sub applySub,pv.final_sub finalSub, pv.volume volume, pv.`status` status,
+			  pv.sblx sblx , CASE pv.sblx WHEN 10 THEN '包清工' WHEN 20 THEN '包工包料' WHEN 30 THEN '机械'  ELSE '未定义' END sblxname 
+			  FROM tbl_project_volume pv, tbl_labor l
+			  WHERE pv.labor_id = l.id  AND 1=1  order by startTime desc
+            ]]>
+        </sql>
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="projectName" header="项目名称" classType="String" allowSort="true" width="150"/>
+        <column key="contractName" header="合同名称" classType="String" allowSort="true" width="150"/>
+        <column key="constructionTeam" header="施工班组" classType="String" width="150"/>
+        <column key="startTime" header="起始时间" classType="String" width="150" allowSort="true"  dateFormat="yyyy-mm-dd"/>
+        <column key="endTime" header="结束时间" classType="String" width="150" dateFormat="yyyy-mm-dd"/>
+        <column key="sblxname" header="上报类型" classType="String" width="150"/>
+        <column key="status" header="审核状态" allowSort="true" width="150" render="10=新建,20=综合审核,30=施工负责人,40=经营科审核,50=经理审批,60=财务负责人,70=已完成"/>
+        <column key="id" header="操作" width="80" fnRender="fnRenderVolume"/>
+    </query>
 
 </queryContext>

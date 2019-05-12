@@ -11,7 +11,7 @@
                 <div class="dataTables_filter" id="searchDiv1" >
                     <!--查询条件-->
                     <!--查询条件-->
-                    <input style="display:none" name ="wgbzid" id = "bzid"/>
+                    <input style="display:none" name ="wgbzid" id = "bzfkid"/>
                     <div class="btn-group">
                         <!-- <button type="button" class="btn btn-primary" data-btn-type="search">查询</button> -->
                     </div>
@@ -28,7 +28,7 @@
                <!-- 入库单详情 -->
                     <div class="dataTables_filter" id="searchDivSDet" >
                     	<input style="display:none" name ="wgbzid" id = "bzid2"/>
-                    	<input style="display:none" name ="gclid" id = "gclid"/>
+                    	<input style="display:none" name ="gclid" id = "gclfkid"/>
                     </div>
                     <div class="box-body">
                         <!-- 内容 -->
@@ -44,11 +44,11 @@
 <script>
     var dutycheckTable, winId = "projectQueryWin";
     var instockDetTable, winId = "instockDetWin";
-    var bzid = '${bzid?default(0)}';
-    var gclid = '${gclid?default(0)}'
-   	$("#bzid").val(bzid);
+    var bzfkid = '${bzid?default(0)}';
+    var gclfkid = '${gclid?default(0)}'
+   	$("#bzfkid").val(bzid);
 	$("#bzid2").val(bzid);
-	$("#gclid").val(gclid);
+	$("#gclfkid").val(gclid);
 	dutycheckTable = new CommonTable("lwContract_table", "lookfkdList", "searchDiv1", {
         "ordering" : false,
         "lengthChange": false,
@@ -78,7 +78,7 @@
     } 
     function deleteDet(fkid){
     	modals.confirm("是否进行取消执行操作？",function(){
-            ajaxPost(basePath + '/projectvolume/doqxfkd', {fkid:fkid,gclid:gclid}, function (data) {
+            ajaxPost(basePath + '/projectvolume/doqxfkd', {fkid:fkfkid,gclid:gclfkid}, function (data) {
                 if (data.success) {
                 	dutycheckTable.reloadData();
                 	instockDetTable.reloadData();
@@ -90,7 +90,7 @@
     }
     function addDet(fkid){
     	modals.confirm("是否进行确认执行操作？",function(){
-            ajaxPost(basePath + '/projectvolume/doqrfkd', {fkid:fkid,gclid:gclid}, function (data) {
+            ajaxPost(basePath + '/projectvolume/doqrfkd', {fkid:fkfkid,gclid:gclfkid}, function (data) {
                 if (data.success) {
                 	dutycheckTable.reloadData();
                 	instockDetTable.reloadData();

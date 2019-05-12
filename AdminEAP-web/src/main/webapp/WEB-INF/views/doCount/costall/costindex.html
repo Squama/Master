@@ -203,8 +203,8 @@ if(pros != 0){
 			
 			tb +="<td style='background-color: "+ys+"'>"+mxjcs[i].col1+"</td>";
 			tb +="<td style='background-color: "+ys+"'>"+mxjcs[i].col2+"</td>";
-			tb +="<td style='background-color: "+ys+"'>"+mxjcs[i].col3+"</td>";
-			tb +="<td style='background-color: "+ys+"'>"+mxjcs[i].col4+"</td>";
+			tb +="<td style='background-color: "+ys+"'>"+toDecimal(mxjcs[i].col3)+"</td>";
+			tb +="<td style='background-color: "+ys+"'>"+toDecimal(mxjcs[i].col4)+"</td>";
 			tb +="<td style='background-color: "+ys+"'>"+mxjcs[i].col5+"</td>";
 			tb +="<td style='background-color: "+ys+"'>"+mxjcs[i].col6+"</td>";
 			tb +="</tr>";
@@ -214,6 +214,17 @@ if(pros != 0){
           
         }); 
     }
+    function toDecimal(x) {  
+        if(!x){
+			return "";
+           } 
+    	  var f = parseFloat(x);    
+    	if (isNaN(f)) {   
+    	  return;    
+    	}          
+    	f = Math.round(x*100)/100;  
+    	return f;        
+    	}  
     function jsonYearMonthDay(milliseconds) {
 		if(milliseconds==null || milliseconds=="undefined"){
 			return "";

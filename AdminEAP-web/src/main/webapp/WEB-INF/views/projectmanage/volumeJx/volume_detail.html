@@ -155,6 +155,36 @@ legend{padding:.5em;border:0;width:auto}
         </div>
     </div>
 </section>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+            	<div class="box-header with-border">
+                        <span>
+                            <i class="fa fa-files-o">班组工程量(所属班组全部)</i>
+                        </span>
+                    </div>
+                <!-- /.box-header -->
+                <div class="dataTables_filter" id="searchDiv" >
+                    <select  class="form-control select2" name="pv.sblx" style="width:200px;" operator="eq">
+                    	<option selected="selected" value="">选择一个类型</option>
+                    	<option value="10">包清工</option>
+                    	<option value="20">包工包料</option>
+                    	<option value="30">机械</option>
+                    </select>
+                    <input id = "bzid" name="l.construction_team_id" style="display: none" operator="eq">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-primary" data-btn-type="search">查询</button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <table id="volume_table" class="table table-bordered table-striped table-hover">
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 <script>
     var form;
     var id = "${id?default(0)}";
@@ -162,7 +192,21 @@ legend{padding:.5em;border:0;width:auto}
     if(projectOptions != 0){
         options = JSON.parse(projectOptions);
     }
+    var bzid = "${bzid?default(0)}";
+    $("#bzid").val(bzid);
+    var volumeTable, winId = "volumeWin";
+    var volumeManageObject = {
+            toAudit: function (volumeID) {
+                modals.openWin({
+	                 winId:winId,
+	                 title:'工程量上报详情',
+	                 width:'1200px',
+	                 url:basePath+"/projectvolume/detailouter/"+volumeID            
+                });
+            }
+    }
     $(function () {
+    	volumeTable = new CommonTable("volume_table", "volume_list_sh", "searchDiv", null);
         //初始化表单 
         form = $("#volume_form").form({baseEntity:false});
         //数据校验
@@ -270,5 +314,8 @@ legend{padding:.5em;border:0;width:auto}
             }          
            });
     }
-    
+    function fnRenderVolume(value, type, rowObj){
+        var oper = "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='volumeManageObject.toAudit(\"" + rowObj.id + "\")'>查看详情</a>";
+        return oper;
+    }
 </script>

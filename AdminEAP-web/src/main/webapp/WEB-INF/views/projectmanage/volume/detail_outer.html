@@ -3,14 +3,14 @@
     <div class="row">
         <div class="col-xs-12">
             <div class="box box-info">
-                <form id="volume_form" name="project_form" class="form-horizontal">
+                <form id="volume_formck" name="volume_formck" class="form-horizontal">
                     <input type="hidden" name="projectName" id="projectName">
                     <div class="box-body">
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="col-sm-5 control-label">所属项目<span style="color:red">*</span></label>
                                 <div class="col-sm-6">
-                                    <select id="projectIDDetail" class="form-control select2" name="projectID" disabled="disabled">
+                                    <select id="projectIDDetailck" class="form-control select2" name="projectID" disabled="disabled">
                                         <option selected="selected" value="">选择一个项目</option>
                                     </select>
                                 </div>
@@ -18,7 +18,7 @@
                             <div class="form-group">
                                 <label class="col-sm-5 control-label">选择合同<span style="color:red">*</span></label>
                                 <div class="col-sm-6">
-                                    <select id="laborID" class="form-control select2" name="laborID" disabled="disabled">
+                                    <select id="laborIDck" class="form-control select2" name="laborID" disabled="disabled">
                                         <option selected="selected" value="">选择一个合同</option>
                                     </select>
                                 </div>
@@ -26,7 +26,7 @@
                             <div class="form-group">
                                 <label class="col-sm-5 control-label">施工班组<span style="color:red">*</span></label>
                                 <div class="col-sm-6">
-                                    <input type="text" class="form-control" id="constructionTeam" name="constructionTeam" placeholder="施工班组" readonly="readonly">
+                                    <input type="text" class="form-control" id="constructionTeamck" name="constructionTeam" placeholder="施工班组" readonly="readonly">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -42,7 +42,7 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">所属项目子项<span style="color:red">*</span></label>
                                 <div class="col-sm-6">
-                                    <select id="projectSubID" class="form-control select2" name="projectSubID" disabled="disabled">
+                                    <select id="projectSubIDck" class="form-control select2" name="projectSubID" disabled="disabled">
                                         <option selected="selected" value="">选择一个项目子项</option>
                                     </select>
                                 </div>
@@ -50,13 +50,13 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">合同总价（元）</label>
                                 <div class="col-sm-6">
-                                    <input type="text" class="form-control" id="contractPrice" name="contractPrice" placeholder="合同总价" readonly="readonly">
+                                    <input type="text" class="form-control" id="contractPriceck" name="contractPrice" placeholder="合同总价" readonly="readonly">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">施工负责人<span style="color:red">*</span></label>
                                 <div class="col-sm-6">
-                                    <input type="text" class="form-control" id="constructionManager" name="constructionManager" readonly="readonly">
+                                    <input type="text" class="form-control" id="constructionManagerck" name="constructionManager" readonly="readonly">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -71,29 +71,29 @@
                         <div class="col-md-12">
                             <label class="col-sm-2 control-label">工程量<span style="color:red">*</span></label>
                             <div class="col-sm-8">
-                                <textarea class="form-control" id="volume" name="volume" rows="8" cols="100" disabled="disabled"></textarea>
+                                <textarea class="form-control" id="volumeck" name="volume" rows="8" cols="100" disabled="disabled"></textarea>
                             </div>
                         </div>
                         <div class="col-md-6" style="margin-left:25%">
-                              <div class="callout callout-success" id="applyInfo" style="margin-top:8px;margin-bottom:8px;">
+                              <div class="callout callout-success" id="applyInfock" style="margin-top:8px;margin-bottom:8px;">
                                 <h4>上报金额：</h4>
-                                <p>机械费：<span id="mechInfo">尚未审批</span>；人工费：<span id="labourInfo">尚未审批</span>；材料费：<span id="matInfo">尚未审批</span>；机械扣款：<span id="debitjxInfo">尚未审批</span>；人工扣款：<span id="debitInfo">尚未审批</span>；材料扣款：<span id="debitclInfo">尚未审批</span></p>
-                                <h5>上报小计：<span id="subInfo">尚未审批</span></h5>
+                                <p>机械费：<span id="mechInfock">尚未审批</span>；人工费：<span id="labourInfock">尚未审批</span>；材料费：<span id="matInfock">尚未审批</span>；机械扣款：<span id="debitjxInfock">尚未审批</span>；人工扣款：<span id="debitInfock">尚未审批</span>；材料扣款：<span id="debitclInfock">尚未审批</span></p>
+                                <h5>上报小计：<span id="subInfock">尚未审批</span></h5>
                               </div>
-                              <div class="callout callout-success" id="businessInfo" style="margin-top:8px;margin-bottom:8px;">
+                              <div class="callout callout-success" id="businessInfock" style="margin-top:8px;margin-bottom:8px;">
                                 <h4>经营科审核金额：</h4>
-                                <p>机械费：<span id="mechBusi">尚未审批</span>；人工费：<span id="labourBusi">尚未审批</span>；材料费：<span id="matBusi">尚未审批</span>；机械扣款：<span id="debitjxBusi">尚未审批</span>；人工扣款：<span id="debitBusi">尚未审批</span>；材料扣款：<span id="debitclBusi">尚未审批</span></p>
-                                <h5>上报小计：<span id="subBusi">尚未审批</span></h5>
+                                <p>机械费：<span id="mechBusick">尚未审批</span>；人工费：<span id="labourBusick">尚未审批</span>；材料费：<span id="matBusick">尚未审批</span>；机械扣款：<span id="debitjxBusick">尚未审批</span>；人工扣款：<span id="debitBusick">尚未审批</span>；材料扣款：<span id="debitclBusick">尚未审批</span></p>
+                                <h5>上报小计：<span id="subBusick">尚未审批</span></h5>
                               </div>
-                              <div class="callout callout-success" id="finalInfo" style="margin-top:8px;margin-bottom:8px;">
+                              <div class="callout callout-success" id="finalInfock" style="margin-top:8px;margin-bottom:8px;">
                                 <h4>财务审核金额：</h4>
-                                <p>机械费：<span id="mechFinal">尚未审批</span>；人工费：<span id="labourFinal">尚未审批</span>；材料费：<span id="matFinal">尚未审批</span>；包工包料：<span id="packFinal">尚未审批</span>；扣款：<span id="debitFinal">尚未审批</span></p>
-                                <h5>上报小计：<span id="subFinal">尚未审批</span></h5>
+                                <p>机械费：<span id="mechFinalck">尚未审批</span>；人工费：<span id="labourFinalck">尚未审批</span>；材料费：<span id="matFinalck">尚未审批</span>；机械扣款：<span id="debitjxFinalck">尚未审批</span>；人工扣款：<span id="debitFinalck">尚未审批</span>；材料扣款：<span id="debitclFinalck">尚未审批</span></p>
+                                <h5>上报小计：<span id="subFinalck">尚未审批</span></h5>
                               </div>
                         </div>
-                       <div class="col-sm-6" style="text-align: center;margin-left:25%">
+                       <!-- <div class="col-sm-6" style="text-align: center;margin-left:25%">
                             <button type="button" class="btn btn-success" id="lookFkd">班组罚款单</button>
-                       </div>
+                       </div> -->
                     </div>
                 </form>
             </div>
@@ -104,7 +104,7 @@
                          <i class="fa fa-files-o">审批意见</i>
                      </span>
                  </div>
-                 <div class="dataTables_filter" id="searchDiv" style="text-align:center;height:1px;">
+                 <div class="dataTables_filter" id="searchDivsp" style="text-align:center;height:1px;">
                     <input type="search" name="businessKey" id="businessKey" class="form-control" operator="eq" style="display:none;">
                     <div class="btn-group">
                         <button type="button" class="btn btn-primary" data-btn-type="search" id="refresh" style="display:none;">查询</button>
@@ -121,12 +121,26 @@
     </div>
 </section>
 <script>
-    var form, activitiTable;
-    var id = "${id?default(0)}";
+    var ckform, activitiTable;
+    var gclid = "${id?default(0)}";
+    var sbxs = "${sbxs?default(0)}";
+    if(sbxs=="2"){
+		$("#applyInfock").css("display","")
+		$("#businessInfock").css("display","")
+		$("#finalInfock").css("display","none")
+    }else if(sbxs=="3"){
+    	$("#applyInfock").css("display","")
+		$("#businessInfock").css("display","")
+		$("#finalInfock").css("display","")
+    }else{
+    	$("#applyInfock").css("display","")
+		$("#businessInfock").css("display","none")
+		$("#finalInfock").css("display","none")
+    }
     $(function () {
-    	$('#businessKey').val(id);
+    	$('#businessKey').val(gclid);
     	
-    	activitiTable = new CommonTable("activiti_table", "activiti_volume_list", "searchDiv", {
+    	activitiTable = new CommonTable("activiti_table", "activiti_volume_list", "searchDivsp", {
             "ordering" : false,
             "lengthChange": false,
             "displayLength": 20,
@@ -135,49 +149,49 @@
         });
     	
         //初始化表单 
-        form = $("#volume_form").form({baseEntity:false});
+        ckform = $("#volume_formck").form({baseEntity:false});
         //数据校验
         //初始化控件
-        form.initComponent();
+        ckform.initComponent();
         
         if(options != 0){
             for (var i = 0, len = options.length; i < len; i++) {
                 var option = options[i];
-                $('#projectIDDetail').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+                $('#projectIDDetailck').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
             }
-            $("#projectIDDetail").select2();
-            $("#projectIDDetail").bind("change", function () {
+            $("#projectIDDetailck").select2();
+            $("#projectIDDetailck").bind("change", function () {
                 var value = $(this).val();
                 if (value === "") {
                     return false;
                 }
                 
                 var name = "";
-                if ($("#projectIDDetail").prop('selectedIndex') > 0) {
-                    name = $("#projectIDDetail").find("option:selected").text();
+                if ($("#projectIDDetailck").prop('selectedIndex') > 0) {
+                    name = $("#projectIDDetailck").find("option:selected").text();
                 }
                 $('#projectName').val(name);
                 
                 ajaxPost(basePath+"/projectvolume/getlabor",{projectID:value},function(data){
                     var laborOptions = data.message;
                     lOptions = JSON.parse(laborOptions);
-                    $('#laborID').empty();
-                    $('#laborID').append('<option selected="selected" value="">选择一个合同</option>');
+                    $('#laborIDck').empty();
+                    $('#laborIDck').append('<option selected="selected" value="">选择一个合同</option>');
                     for (var i = 0, len = lOptions.length; i < len; i++) {
                         var lOption = lOptions[i];
-                        $('#laborID').append("<option value=\"" + lOption.value + "\">" + lOption.data + "</option>");
+                        $('#laborIDck').append("<option value=\"" + lOption.value + "\">" + lOption.data + "</option>");
                     }
-                    $('#laborID').select2();
-                    $('#laborID').unbind("change.Labor");
-                    $('#laborID').bind("change.Labor", function(){
+                    $('#laborIDck').select2();
+                    $('#laborIDck').unbind("change.Labor");
+                    $('#laborIDck').bind("change.Labor", function(){
                         laborid = $(this).val();
                         if (laborid === "") {
                             return false;
                         }
                         ajaxPost(basePath+"/projectvolume/getlaborinfo",{laborID:laborid},function(data){
-                            $('#constructionTeam').val(data.constructionTeam);
-                            $('#constructionManager').val(data.constructionManager);
-                            $('#contractPrice').val(data.contractPrice);
+                            $('#constructionTeamck').val(data.constructionTeam);
+                            $('#constructionManagerck').val(data.constructionManager);
+                            $('#contractPriceck').val(data.contractPrice);
                         });
                         
                     });
@@ -186,66 +200,66 @@
                 ajaxPost(basePath+"/projectvolume/getprojectsub",{projectID:value},function(data){
                     var laborSubOptions = data.message;
                     sOptions = JSON.parse(laborSubOptions);
-                    $('#projectSubID').empty();
-                    $('#projectSubID').append('<option selected="selected" value="">选择一个项目子项</option>');
+                    $('#projectSubIDck').empty();
+                    $('#projectSubIDck').append('<option selected="selected" value="">选择一个项目子项</option>');
                     for (var i = 0, len = sOptions.length; i < len; i++) {
                         var option = sOptions[i];
-                        $('#projectSubID').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+                        $('#projectSubIDck').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
                     }
-                    $('#projectSubID').select2();
+                    $('#projectSubIDck').select2();
                 });
                 //子项加载结束
             });
         }
         
         //编辑回填
-        if(id!="0"){
+        if(gclid!="0"){
         	
-            ajaxPost(basePath+"/projectvolume/get",{id:id},function(data){
-                form.initFormData(data);
+            ajaxPost(basePath+"/projectvolume/get",{id:gclid},function(data){
+            	ckform.initFormData(data);
                 
-                $('#laborSubID').val(data.laborSubID).trigger("change");
-                $('#mechInfo').html(data.applyMech + '元');
-                $('#labourInfo').html(data.applyLabour + '元');
-                $('#matInfo').html(data.applyMat + '元');
-                $('#debitInfo').html(data.applyDebit + '元');
-                $('#debitclInfo').html(data.applyDebitcl + '元');
-                $('#debitjxInfo').html(data.applyDebitjx + '元');
-                $('#subInfo').html(data.applySub + '元');
+                $('#laborSubIDck').val(data.laborSubID).trigger("change");
+                $('#mechInfock').html(data.applyMech + '元');
+                $('#labourInfock').html(data.applyLabour + '元');
+                $('#matInfock').html(data.applyMat + '元');
+                $('#debitInfock').html(data.applyDebit + '元');
+                $('#debitclInfock').html(data.applyDebitcl + '元');
+                $('#debitjxInfock').html(data.applyDebitjx + '元');
+                $('#subInfock').html(data.applySub + '元');
 
                 
-            	$('#mechBusi').html(data.businessMech + '元');
-                $('#labourBusi').html(data.businessLabour + '元');
-                $('#matBusi').html(data.businessMat + '元');
+            	$('#mechBusick').html(data.businessMech + '元');
+                $('#labourBusick').html(data.businessLabour + '元');
+                $('#matBusick').html(data.businessMat + '元');
                 
-                $('#debitBusi').html(data.businessDebit + '元');
-                $('#debitjxBusi').html(data.businessDebitjx + '元');
-                $('#debitclBusi').html(data.businessDebitcl + '元');
-                $('#subBusi').html(data.businessSub + '元');
+                $('#debitBusick').html(data.businessDebit + '元');
+                $('#debitjxBusick').html(data.businessDebitjx + '元');
+                $('#debitclBusick').html(data.businessDebitcl + '元');
+                $('#subBusick').html(data.businessSub + '元');
                 
-            	$('#mechFinal').html(data.finalMech + '元');
-                $('#labourFinal').html(data.finalLabour + '元');
-                $('#matFinal').html(data.finalMat + '元');
-                $('#debitFinal').html(data.finalDebit + '元');
-                $('#debitjxFinal').html(data.finalDebitjx + '元');
-                $('#debitclFinal').html(data.finalDebitcl + '元');
-                $('#subFinal').html(data.finalSub + '元');
+            	$('#mechFinalck').html(data.finalMech + '元');
+                $('#labourFinalck').html(data.finalLabour + '元');
+                $('#matFinalck').html(data.finalMat + '元');
+                $('#debitFinalck').html(data.finalDebit + '元');
+                $('#debitjxFinalck').html(data.finalDebitjx + '元');
+                $('#debitclFinalck').html(data.finalDebitcl + '元');
+                $('#subFinalck').html(data.finalSub + '元');
                 
-                $('.final').show();
+               // $('.final').show();
             })
         }
         
-        $("#lookFkd").on("click",function(){
+        /* $("#lookFkd").on("click",function(){
             lookFkd();
-        })
+        }) */
     });
-    function lookFkd(){
+   /*  function lookFkd(){
         modals.openWin({
             winId:"lookfkd",
             title:'班组罚款详情',
             width:'1000px',
             url:basePath+"/projectvolume/lookfkd?id="+id            
            });
-    }
+    } */
     
 </script>

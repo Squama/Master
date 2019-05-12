@@ -120,6 +120,8 @@ public class ProjectVolumeController {
         request.setAttribute("id", id);
         request.setAttribute("projectOptions", JSONArray.toJSONString(budgetService.getProjectCombobox()));
         ProjectVolume sb = projectService.get(ProjectVolume.class, id);
+        Labor ht = projectService.get(Labor.class, sb.getLaborID());
+        request.setAttribute("bzid", ht.getConstructionTeamID());
         String sblx = sb.getSblx();
         if(sblx!=null){
         	if("10".equals(sblx)){
@@ -136,6 +138,8 @@ public class ProjectVolumeController {
         request.setAttribute("id", id);
         request.setAttribute("projectOptions", JSONArray.toJSONString(budgetService.getProjectCombobox()));
         ProjectVolume sb = projectService.get(ProjectVolume.class, id);
+        Labor ht = projectService.get(Labor.class, sb.getLaborID());
+        request.setAttribute("bzid", ht.getConstructionTeamID());
         String sblx = sb.getSblx();
         if(sblx!=null){
         	if("10".equals(sblx)){
@@ -152,6 +156,8 @@ public class ProjectVolumeController {
         request.setAttribute("id", id);
         request.setAttribute("projectOptions", JSONArray.toJSONString(budgetService.getProjectCombobox()));
         ProjectVolume sb = projectService.get(ProjectVolume.class, id);
+        Labor ht = projectService.get(Labor.class, sb.getLaborID());
+        request.setAttribute("bzid", ht.getConstructionTeamID());
         String sblx = sb.getSblx();
         if(sblx!=null){
         	if("10".equals(sblx)){
@@ -168,6 +174,14 @@ public class ProjectVolumeController {
         request.setAttribute("id", id);
         request.setAttribute("projectOptions", JSONArray.toJSONString(budgetService.getProjectCombobox()));
         ProjectVolume sb = projectService.get(ProjectVolume.class, id);
+        String zt = sb.getStatus();
+        if("50".equals(zt)||"60".equals(zt)){//显示上报、经营科金额框
+        	request.setAttribute("sbxs", "2");
+        }else if("70".equals(zt)){//显示全部金额框
+        	request.setAttribute("sbxs", "3");
+        }else{//只显示上报金额框
+        	request.setAttribute("sbxs", "1");
+        }
         String sblx = sb.getSblx();
         if(sblx!=null){
         	if("10".equals(sblx)){
