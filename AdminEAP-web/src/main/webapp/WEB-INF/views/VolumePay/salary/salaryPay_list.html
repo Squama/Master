@@ -21,10 +21,11 @@
                     </select>
                     <select id="type" class="form-control select2" name="type" style="width:200px;" operator="eq">
                         <option selected="selected" value="">选择一个类型</option>
-                        <option value="10">专业作业班组</option>
+                        <!-- <option value="10">专业作业班组</option> -->
                         <option value="20">管理人员</option>
-                        <option value="30">点工班组</option>
+                        <!-- <option value="30">点工班组</option> -->
                         <option value="40">机关人员</option>
+                        <option value="50">门卫机修</option>
                     </select>
                     <select id="status" class="form-control select2" name="status" style="width:200px;" operator="eq">
                         <option selected="selected" value="">选择状态</option>
@@ -104,7 +105,7 @@
     }
     
     $(function (){
-    	teamSalaryTable = new CommonTable("team_salary_table", "salary_list", "searchDiv", null);
+    	teamSalaryTable = new CommonTable("team_salary_table", "salary_list_pay", "searchDiv", null);
         
         //绑定按钮事件
         /* $("button[data-btn-type]").click(function () {

@@ -137,7 +137,7 @@ public class TeamSalaryServiceImpl extends BaseServiceImpl implements TeamSalary
         buffer.append("SELECT * FROM tbl_user WHERE id NOT IN( ");
         buffer.append("SELECT DISTINCT U.id FROM tbl_user U,tbl_user_team UT, tbl_project_team PT   ");
         buffer.append("WHERE U.id=UT.user_id AND UT.project_id = PT.project_id  AND UT.team_id=PT.id AND PT.status='30' ) ");
-
+        buffer.append(" and id not in(select id from v_mwjx ) ");
         return this.findBySql(buffer.toString(), User.class);
     }
     
@@ -312,6 +312,49 @@ public class TeamSalaryServiceImpl extends BaseServiceImpl implements TeamSalary
         // 启动流程
         return runtimePageService.startProcessInstanceByKey(processDefinitionKey, name, variables, user.getId(), businessKey);
     }
+    
+    @Override
+    public Result startHodSalaryFlow(Salary salary, String processDefinitionKey) {
+        User user = SecurityUtil.getUser();
+
+        salary.setStatus("20");
+
+        this.update(salary);
+
+        String name = "【门卫机修人员工资单审核】";
+
+        // businessKey
+        String businessKey = salary.getId();
+
+        // 配置流程变量
+        Map<String, Object> variables = new HashMap<>();
+        variables.put(Constants.VAR_APPLYUSER_NAME, user.getName());
+        variables.put(Constants.VAR_BUSINESS_KEY, businessKey);
+        variables.put("taskName", name);
+
+        String suggestionHql = "from ActivitiSuggestion where businessKey=:businessKey AND taskNode=:taskNode";
+        Map<String, Object> suggestionParams = new HashMap<>();
+        suggestionParams.put("businessKey", businessKey);
+        suggestionParams.put("taskNode", "caozuoyuan");
+        ActivitiSuggestion as = this.get(suggestionHql, suggestionParams);
+
+        if (as == null) {
+            as = new ActivitiSuggestion();
+            as.setCreateDateTime(new Date());
+            as.setUpdateDateTime(new Date());
+            as.setBusinessKey(businessKey);
+            as.setTaskNode("caozuoyuan");
+            as.setApprove("true");
+        }
+
+        as.setSuggestion("");
+        as.setOperator(SecurityUtil.getUser().getName());
+        as.setUpdateDateTime(new Date());
+        this.save(as);
+
+        // 启动流程
+        return runtimePageService.startProcessInstanceByKey(processDefinitionKey, name, variables, user.getId(), businessKey);
+    }
 
     @Override
     public List<Salary> checkTimePeriod(String projectID, String startTimeStr, String endTimeStr, String salaryID) {
@@ -335,6 +378,30 @@ public class TeamSalaryServiceImpl extends BaseServiceImpl implements TeamSalary
 
         return this.findBySql(buffer.toString(), params, Salary.class);
     }
+    
+    @Override
+    public List<Salary> checkHodTimePeriod(String projectID, String startTimeStr, String endTimeStr, String salaryID) {
+        StringBuilder buffer = new StringBuilder();
+
+        buffer.append("SELECT * FROM tbl_salary ");
+        buffer.append("WHERE UNIX_TIMESTAMP(start_time) <= UNIX_TIMESTAMP(:endTime) ");
+        buffer.append("AND UNIX_TIMESTAMP(end_time) >= UNIX_TIMESTAMP(:startTime) ");
+        buffer.append("AND project_id=:projectID AND type='50' ");
+
+        Map<String, Object> params = new HashMap<String, Object>();
+
+        params.put("endTime", endTimeStr);
+        params.put("startTime", startTimeStr);
+        params.put("projectID", projectID);
+
+        if (!StrUtil.isEmpty(salaryID)) {
+            buffer.append(" AND id <> :id");
+            params.put("id", salaryID);
+        }
+
+        return this.findBySql(buffer.toString(), params, Salary.class);
+    }
+    
     
     @Override
     public List<Salary> checkOrganTimePeriod(String startTimeStr, String endTimeStr, String salaryID) {
