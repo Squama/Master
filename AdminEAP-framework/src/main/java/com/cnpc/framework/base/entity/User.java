@@ -17,396 +17,399 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(value = { "hibernateLazyInitializer", "handler", "fieldHandler" })
 public class User extends BaseEntity {
 
-    private static final long serialVersionUID = 6093546087036436583L;
-
-    @Header(name = "姓名")
-    @Column(name = "name")
-    private String name;
-
-    @Header(name = "性别")
-    @Column(name = "sex")
-    private String sex;
-
-    @Header(name = "出生年月")
-    @Column(name = "birthday")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date birthday;
-
-    @Header(name = "登录名")
-    @Column(name = "login_name")
-    private String loginName;
-
-    @Header(name = "密码")
-    @Column(name = "password")
-    private String password;
-
-    @Header(name = "邮箱")
-    @Column(name = "email", length = 50)
-    private String email;
-
-    @Header(name = "座机")
-    @Column(name = "telphone")
-    private String telphone;
-
-    @Header(name = "手机")
-    @Column(name = "mobile")
-    private String mobile;
-
-    @Header(name = "QQ")
-    @Column(name = "qq")
-    private String qq;
-
-    @Header(name = "微信")
-    @Column(name = "wechat")
-    private String wechat;
-
-    @Header(name = "是否开启账号")
-    @Column(name = "open_account", length = 5)
-    private String openAccount;
-
-    @Header(name = "超级管理员")
-    @Column(name = "isSuperAdmin")
-    private String isSuperAdmin;
-
-    @Header(name = "部门ID")
-    @Column(name = "dept_id")
-    private String deptId;
-
-    @Header(name = "职位ID")
-    @Column(name = "job_id")
-    private String jobId;
-
-    @Header(name = "审核状态")
-    @Column(name = "audit_status")
-    private String auditStatus;
-
-    @Header(name = "身份证号")
-    @Column(name = "identification_number")
-    private String identificationNumber;
-
-    @Header(name = "民族")
-    @Column(name = "ethnic")
-    private String ethnic;
-
-    @Header(name = "学历")
-    @Column(name = "education")
-    private String education;
-
-    @Header(name = "家庭住址")
-    @Column(name = "address")
-    private String address;
-
-    @Header(name = "紧急联系人电话")
-    @Column(name = "emergency_contact_phone")
-    private String emergencyContactPhone;
-
-    @Header(name = "紧急联系人")
-    @Column(name = "emergency_contact")
-    private String emergencyContact;
-
-    @Header(name = "工种")
-    @Column(name = "work_type")
-    private String workType;
-
-    @Header(name = "基础工资")
-    @Column(name = "basic_salary")
-    private String basicSalary;
-    
-    @Header(name = "部门名称")
-    @Column(name = "deptName")
-    private String deptName;
-    
-    @Header(name = "工号")
-    @Column(name = "jobNumber")
-    private String jobNumber;
-    
-    @Header(name = "年龄")
-    @Column(name = "age")
-    private String age;
-    
-    @Header(name = "政治面貌")
-    @Column(name = "political")
-    private String political;
-    
-    @Header(name = "职称")
-    @Column(name = "someTitle")
-    private String someTitle;
-    
-    @Header(name = "毕业学院")
-    @Column(name = "school")
-    private String school;
-    
-    @Header(name = "专业")
-    @Column(name = "professional")
-    private String professional;
-    
-    @Header(name = "血型")
-    @Column(name = "bloodType")
-    private String bloodType;
-    
-    @Header(name = "银行账户")
-    @Column(name = "bankCount")
-    private String bankCount;
-    
-    @Header(name = "各类文件Id")
-    @Column(name = "fileId")
-    private String fileId;
-    
-    @Header(name = "入职时间")
-    @Column(name = "hireDate")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date hireDate;
-    
-    @Header(name = "转正状态")
-    @Column(name = "zzStatus")
-    private String zzStatus;
-    
-    @Header(name = "转正部门成绩")
-    @Column(name = "zzDeptDesc")
-    private String zzDeptDesc;
-    
-    
-    @Header(name = "转正建议")
-    @Column(name = "zzView")
-    private String zzView;
-    
-    @Header(name = "转正驳回原因")
-    @Column(name = "zzFaildDesc")
-    private String zzFaildDesc;
-    
-    @Header(name = "职责描述")
-    @Column(name = "dutyContent")
-    private String dutyContent;
-
-    @Transient
-    private String avatarId;
-
-    @Transient
-    private int isSelected;
-
-    public String getDeptId() {
-        return deptId;
-    }
-
-    public void setDeptId(String deptId) {
-        this.deptId = deptId;
-    }
-
-    public int getIsSelected() {
-        return isSelected;
-    }
-
-    public void setIsSelected(int isSelected) {
-        this.isSelected = isSelected;
-    }
-
-    public String getAvatarId() {
-        return avatarId;
-    }
+	private static final long serialVersionUID = 6093546087036436583L;
+
+	@Header(name = "姓名")
+	@Column(name = "name")
+	private String name;
+
+	@Header(name = "性别")
+	@Column(name = "sex")
+	private String sex;
+
+	@Header(name = "出生年月")
+	@Column(name = "birthday")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date birthday;
+
+	@Header(name = "登录名")
+	@Column(name = "login_name")
+	private String loginName;
+
+	@Header(name = "密码")
+	@Column(name = "password")
+	private String password;
+
+	@Header(name = "邮箱")
+	@Column(name = "email", length = 50)
+	private String email;
+
+	@Header(name = "座机")
+	@Column(name = "telphone")
+	private String telphone;
+
+	@Header(name = "手机")
+	@Column(name = "mobile")
+	private String mobile;
+
+	@Header(name = "QQ")
+	@Column(name = "qq")
+	private String qq;
+
+	@Header(name = "微信")
+	@Column(name = "wechat")
+	private String wechat;
+
+	@Header(name = "是否开启账号")
+	@Column(name = "open_account", length = 5)
+	private String openAccount;
+
+	@Header(name = "超级管理员")
+	@Column(name = "isSuperAdmin")
+	private String isSuperAdmin;
+
+	@Header(name = "部门ID")
+	@Column(name = "dept_id")
+	private String deptId;
+
+	@Header(name = "职位ID")
+	@Column(name = "job_id")
+	private String jobId;
+
+	@Header(name = "审核状态")
+	@Column(name = "audit_status")
+	private String auditStatus;
+
+	@Header(name = "身份证号")
+	@Column(name = "identification_number")
+	private String identificationNumber;
+
+	@Header(name = "民族")
+	@Column(name = "ethnic")
+	private String ethnic;
 
-    public void setAvatarId(String avatarId) {
-        this.avatarId = avatarId;
-    }
+	@Header(name = "学历")
+	@Column(name = "education")
+	private String education;
 
-    public String getName() {
+	@Header(name = "家庭住址")
+	@Column(name = "address")
+	private String address;
 
-        return name;
-    }
+	@Header(name = "紧急联系人电话")
+	@Column(name = "emergency_contact_phone")
+	private String emergencyContactPhone;
 
-    public void setName(String name) {
+	@Header(name = "紧急联系人")
+	@Column(name = "emergency_contact")
+	private String emergencyContact;
 
-        this.name = name;
-    }
+	@Header(name = "工种")
+	@Column(name = "work_type")
+	private String workType;
 
-    public String getSex() {
+	@Header(name = "基础工资")
+	@Column(name = "basic_salary")
+	private String basicSalary;
 
-        return sex;
-    }
+	@Header(name = "附加扣除项")
+	@Column(name = "deduction")
+	private String deduction;
 
-    public void setSex(String sex) {
+	@Header(name = "部门名称")
+	@Column(name = "deptName")
+	private String deptName;
 
-        this.sex = sex;
-    }
+	@Header(name = "工号")
+	@Column(name = "jobNumber")
+	private String jobNumber;
 
-    public Date getBirthday() {
+	@Header(name = "年龄")
+	@Column(name = "age")
+	private String age;
 
-        return birthday;
-    }
+	@Header(name = "政治面貌")
+	@Column(name = "political")
+	private String political;
 
-    public void setBirthday(Date birthday) {
+	@Header(name = "职称")
+	@Column(name = "someTitle")
+	private String someTitle;
 
-        this.birthday = birthday;
-    }
+	@Header(name = "毕业学院")
+	@Column(name = "school")
+	private String school;
 
-    public String getLoginName() {
+	@Header(name = "专业")
+	@Column(name = "professional")
+	private String professional;
 
-        return loginName;
-    }
+	@Header(name = "血型")
+	@Column(name = "bloodType")
+	private String bloodType;
 
-    public void setLoginName(String loginName) {
+	@Header(name = "银行账户")
+	@Column(name = "bankCount")
+	private String bankCount;
 
-        this.loginName = loginName;
-    }
+	@Header(name = "各类文件Id")
+	@Column(name = "fileId")
+	private String fileId;
 
-    public String getPassword() {
+	@Header(name = "入职时间")
+	@Column(name = "hireDate")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date hireDate;
 
-        return password;
-    }
+	@Header(name = "转正状态")
+	@Column(name = "zzStatus")
+	private String zzStatus;
 
-    public void setPassword(String password) {
+	@Header(name = "转正部门成绩")
+	@Column(name = "zzDeptDesc")
+	private String zzDeptDesc;
 
-        this.password = password;
-    }
+	@Header(name = "转正建议")
+	@Column(name = "zzView")
+	private String zzView;
 
-    public String getEmail() {
+	@Header(name = "转正驳回原因")
+	@Column(name = "zzFaildDesc")
+	private String zzFaildDesc;
 
-        return email;
-    }
+	@Header(name = "职责描述")
+	@Column(name = "dutyContent")
+	private String dutyContent;
 
-    public void setEmail(String email) {
+	@Transient
+	private String avatarId;
 
-        this.email = email;
-    }
+	@Transient
+	private int isSelected;
 
-    public String getTelphone() {
+	public String getDeptId() {
+		return deptId;
+	}
 
-        return telphone;
-    }
+	public void setDeptId(String deptId) {
+		this.deptId = deptId;
+	}
 
-    public void setTelphone(String telphone) {
+	public int getIsSelected() {
+		return isSelected;
+	}
 
-        this.telphone = telphone;
-    }
+	public void setIsSelected(int isSelected) {
+		this.isSelected = isSelected;
+	}
 
-    public String getMobile() {
+	public String getAvatarId() {
+		return avatarId;
+	}
 
-        return mobile;
-    }
+	public void setAvatarId(String avatarId) {
+		this.avatarId = avatarId;
+	}
 
-    public void setMobile(String mobile) {
+	public String getName() {
 
-        this.mobile = mobile;
-    }
+		return name;
+	}
 
-    public String getQq() {
+	public void setName(String name) {
 
-        return qq;
-    }
+		this.name = name;
+	}
 
-    public void setQq(String qq) {
+	public String getSex() {
 
-        this.qq = qq;
-    }
+		return sex;
+	}
 
-    public String getWechat() {
+	public void setSex(String sex) {
 
-        return wechat;
-    }
+		this.sex = sex;
+	}
 
-    public void setWechat(String wechat) {
+	public Date getBirthday() {
 
-        this.wechat = wechat;
-    }
+		return birthday;
+	}
 
-    public String getOpenAccount() {
+	public void setBirthday(Date birthday) {
 
-        return openAccount;
-    }
+		this.birthday = birthday;
+	}
 
-    public void setOpenAccount(String openAccount) {
+	public String getLoginName() {
 
-        this.openAccount = openAccount;
-    }
+		return loginName;
+	}
 
-    public String getIsSuperAdmin() {
+	public void setLoginName(String loginName) {
 
-        return isSuperAdmin;
-    }
+		this.loginName = loginName;
+	}
 
-    public void setIsSuperAdmin(String isSuperAdmin) {
+	public String getPassword() {
 
-        this.isSuperAdmin = isSuperAdmin;
-    }
+		return password;
+	}
 
-    public String getAuditStatus() {
-        return auditStatus;
-    }
+	public void setPassword(String password) {
 
-    public void setAuditStatus(String auditStatus) {
-        this.auditStatus = auditStatus;
-    }
+		this.password = password;
+	}
 
-    public String getJobId() {
-        return jobId;
-    }
+	public String getEmail() {
 
-    public void setJobId(String jobId) {
-        this.jobId = jobId;
-    }
+		return email;
+	}
 
-    public String getIdentificationNumber() {
-        return identificationNumber;
-    }
+	public void setEmail(String email) {
 
-    public void setIdentificationNumber(String identificationNumber) {
-        this.identificationNumber = identificationNumber;
-    }
+		this.email = email;
+	}
 
-    public String getEthnic() {
-        return ethnic;
-    }
+	public String getTelphone() {
 
-    public void setEthnic(String ethnic) {
-        this.ethnic = ethnic;
-    }
+		return telphone;
+	}
 
-    public String getEducation() {
-        return education;
-    }
+	public void setTelphone(String telphone) {
 
-    public void setEducation(String education) {
-        this.education = education;
-    }
+		this.telphone = telphone;
+	}
 
-    public String getAddress() {
-        return address;
-    }
+	public String getMobile() {
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
+		return mobile;
+	}
 
-    public String getEmergencyContactPhone() {
-        return emergencyContactPhone;
-    }
+	public void setMobile(String mobile) {
 
-    public void setEmergencyContactPhone(String emergencyContactPhone) {
-        this.emergencyContactPhone = emergencyContactPhone;
-    }
+		this.mobile = mobile;
+	}
 
-    public String getEmergencyContact() {
-        return emergencyContact;
-    }
+	public String getQq() {
 
-    public void setEmergencyContact(String emergencyContact) {
-        this.emergencyContact = emergencyContact;
-    }
+		return qq;
+	}
 
-    public String getWorkType() {
-        return workType;
-    }
+	public void setQq(String qq) {
 
-    public void setWorkType(String workType) {
-        this.workType = workType;
-    }
+		this.qq = qq;
+	}
 
-    public String getBasicSalary() {
-        return basicSalary;
-    }
+	public String getWechat() {
 
-    public void setBasicSalary(String basicSalary) {
-        this.basicSalary = basicSalary;
-    }
+		return wechat;
+	}
+
+	public void setWechat(String wechat) {
+
+		this.wechat = wechat;
+	}
+
+	public String getOpenAccount() {
+
+		return openAccount;
+	}
+
+	public void setOpenAccount(String openAccount) {
+
+		this.openAccount = openAccount;
+	}
+
+	public String getIsSuperAdmin() {
+
+		return isSuperAdmin;
+	}
+
+	public void setIsSuperAdmin(String isSuperAdmin) {
+
+		this.isSuperAdmin = isSuperAdmin;
+	}
+
+	public String getAuditStatus() {
+		return auditStatus;
+	}
+
+	public void setAuditStatus(String auditStatus) {
+		this.auditStatus = auditStatus;
+	}
+
+	public String getJobId() {
+		return jobId;
+	}
+
+	public void setJobId(String jobId) {
+		this.jobId = jobId;
+	}
+
+	public String getIdentificationNumber() {
+		return identificationNumber;
+	}
+
+	public void setIdentificationNumber(String identificationNumber) {
+		this.identificationNumber = identificationNumber;
+	}
+
+	public String getEthnic() {
+		return ethnic;
+	}
+
+	public void setEthnic(String ethnic) {
+		this.ethnic = ethnic;
+	}
+
+	public String getEducation() {
+		return education;
+	}
+
+	public void setEducation(String education) {
+		this.education = education;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getEmergencyContactPhone() {
+		return emergencyContactPhone;
+	}
+
+	public void setEmergencyContactPhone(String emergencyContactPhone) {
+		this.emergencyContactPhone = emergencyContactPhone;
+	}
+
+	public String getEmergencyContact() {
+		return emergencyContact;
+	}
+
+	public void setEmergencyContact(String emergencyContact) {
+		this.emergencyContact = emergencyContact;
+	}
+
+	public String getWorkType() {
+		return workType;
+	}
+
+	public void setWorkType(String workType) {
+		this.workType = workType;
+	}
+
+	public String getBasicSalary() {
+		return basicSalary;
+	}
+
+	public void setBasicSalary(String basicSalary) {
+		this.basicSalary = basicSalary;
+	}
 
 	public String getDeptName() {
 		return deptName;
@@ -535,6 +538,13 @@ public class User extends BaseEntity {
 	public void setDutyContent(String dutyContent) {
 		this.dutyContent = dutyContent;
 	}
-	
-	
+
+	public String getDeduction() {
+		return deduction;
+	}
+
+	public void setDeduction(String deduction) {
+		this.deduction = deduction;
+	}
+
 }
