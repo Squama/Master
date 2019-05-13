@@ -164,7 +164,8 @@
               SELECT pv.id id, pv.project_name projectName, l.contract_name contractName,
 		      l.construction_team constructionTeam, pv.start_time startTime, pv.end_time endTime,
 			  pv.apply_sub applySub,pv.final_sub finalSub, pv.volume volume, pv.`status` status,
-			  pv.sblx sblx , CASE pv.sblx WHEN 10 THEN '包清工' WHEN 20 THEN '包工包料' WHEN 30 THEN '机械'  ELSE '未定义' END sblxname 
+			  pv.sblx sblx , CASE pv.sblx WHEN 10 THEN '包清工' WHEN 20 THEN '包工包料' WHEN 30 THEN '机械'  ELSE '未定义' END sblxname ,
+			  l.construction_team_id constructionTeamID 
 			  FROM tbl_project_volume pv, tbl_labor l
 			  WHERE pv.labor_id = l.id AND 1=1 order by startTime desc
             ]]>

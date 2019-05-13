@@ -38,6 +38,7 @@ import com.cnpc.framework.utils.StrUtil;
 import com.radish.master.entity.Labor;
 import com.radish.master.entity.ProjectVolume;
 import com.radish.master.entity.project.LaborSub;
+import com.radish.master.entity.project.ProjectTeam;
 import com.radish.master.entity.qualityCheck.CheckFkd;
 import com.radish.master.pojo.Options;
 import com.radish.master.service.BudgetService;
@@ -81,6 +82,8 @@ public class ProjectVolumeController {
     @RequestMapping(value="/detaillist",method = RequestMethod.GET)
     public String detailList(HttpServletRequest request){
         request.setAttribute("projectOptions", JSONArray.toJSONString(budgetService.getProjectCombobox()));
+        List<ProjectTeam> htbzs = projectService.find(" from ProjectTeam where 1=1 ");
+        request.setAttribute("htbzs", JSONArray.toJSONString(htbzs));
         return "projectmanage/volume/detail_list";
     }
     
