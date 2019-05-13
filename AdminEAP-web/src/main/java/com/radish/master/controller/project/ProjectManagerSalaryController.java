@@ -161,7 +161,7 @@ public class ProjectManagerSalaryController {
                 detail.setAttendance("0");
                 detail.setLoan("0");
                 
-                if("0".equals(detail.getBasicSalary())){
+                if("0".equals(detail.getBasicSalary()) || socialSecurity == null){
                     detail.setYanglao("0");
                     detail.setYanglaoCorp("0");
                     detail.setMedical("0");
