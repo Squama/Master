@@ -50,7 +50,7 @@ public class Salary extends BaseEntity {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date endTime;
 
-    // 10-专业作业班组班组 20-管理人员30-点工班组40-机关人员
+    // 10-专业作业班组班组 20-管理人员30-点工班组40-机关人员 50-门卫机修工资表
     @Header(name = "工资单类型")
     @Column(name = "type")
     private String type;

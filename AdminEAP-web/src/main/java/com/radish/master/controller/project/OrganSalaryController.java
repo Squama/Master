@@ -25,6 +25,7 @@ import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.utils.StrUtil;
 import com.radish.master.entity.project.Salary;
 import com.radish.master.entity.project.SalaryDetail;
+import com.radish.master.entity.project.SocialSecurity;
 import com.radish.master.service.CommonService;
 import com.radish.master.service.project.TeamSalaryService;
 import com.radish.master.system.SpringUtil;
@@ -104,6 +105,10 @@ public class OrganSalaryController {
             } catch (Exception e) {
                 return new Result(false);
             }
+            
+            String year = startTime.substring(0, 4);
+            SocialSecurity socialSecurity = teamSalaryService.getSocialSecurity(year);
+            
             // 直接录入全部明细
             List<User> managerList = teamSalaryService.getOrganMember();
             List<SalaryDetail> detailList = new ArrayList<SalaryDetail>();
@@ -118,15 +123,39 @@ public class OrganSalaryController {
                 detail.setMobile(user.getMobile());
                 detail.setIdentificationNumber(user.getIdentificationNumber());
                 detail.setWorkType(user.getWorkType());
-                detail.setBasicSalary(user.getBasicSalary());
-
+                if(StrUtil.isEmpty(user.getBasicSalary())){
+                    detail.setBasicSalary("0");
+                }else{
+                    detail.setBasicSalary(user.getBasicSalary());
+                }
+                if(StrUtil.isEmpty(user.getDeduction())){
+                    detail.setDeduction("0");
+                }else{
+                    detail.setDeduction(user.getDeduction());
+                }
+                detail.setSsYear(year);
+                
                 detail.setAttendance("0");
-                detail.setPayable("0");
                 detail.setLoan("0");
-                detail.setMedical("0");
-                detail.setSocial("0");
-                detail.setTax("0");
-                detail.setActual("0");
+                
+                if("0".equals(detail.getBasicSalary())){
+                    detail.setYanglao("0");
+                    detail.setYanglaoCorp("0");
+                    detail.setMedical("0");
+                    detail.setMedicalCorp("0");
+                    detail.setShiye("0");
+                    detail.setShiyeCorp("0");
+                    detail.setGongshangCorp("0");
+                    detail.setShengyuCorp("0");
+                    detail.setPrf("0");
+                    detail.setPrfCorp("0");
+                    detail.setSocial("0");
+                    detail.setTax("0");
+                    detail.setPayable("0");
+                    detail.setActual("0");
+                }else{
+                    teamSalaryService.handleSocialSalaryDetail(socialSecurity, detail, salary.getStartTime());
+                }
                 detail.setRemark("");
 
                 detailList.add(detail);

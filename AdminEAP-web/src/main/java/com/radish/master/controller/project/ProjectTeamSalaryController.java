@@ -3,9 +3,11 @@
  */
 package com.radish.master.controller.project;
 
+import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,11 +27,13 @@ import com.alibaba.fastjson.JSONArray;
 import com.cnpc.framework.annotation.RefreshCSRFToken;
 import com.cnpc.framework.base.entity.User;
 import com.cnpc.framework.base.pojo.Result;
+import com.cnpc.framework.utils.PropertiesUtil;
 import com.cnpc.framework.utils.StrUtil;
 import com.radish.master.entity.project.Salary;
 import com.radish.master.entity.project.SalaryDetail;
 import com.radish.master.entity.project.SalaryVolume;
 import com.radish.master.entity.project.Worker;
+import com.radish.master.pojo.RowEdit;
 import com.radish.master.pojo.SalaryChooseVO;
 import com.radish.master.service.CommonService;
 import com.radish.master.service.project.TeamSalaryService;
@@ -176,6 +180,100 @@ public class ProjectTeamSalaryController {
         return new Result(true, map);
     }
 
+    @RequestMapping(value = "/rowedit", method = RequestMethod.POST)
+    @ResponseBody
+    public String singleEstimate(String action, HttpServletRequest request) throws Exception {
+        String id = "";
+        String field = "";
+        String value = "";
+        
+        RowEdit re = new RowEdit();
+        List<Object> list = new ArrayList<Object>();
+        
+        Enumeration<String> key = request.getParameterNames();
+        while (key.hasMoreElements()) {
+            String paramName = (String) key.nextElement();
+            if ("action".equals(paramName)) {
+                continue;
+            }
+            String[] paramValues = request.getParameterValues(paramName);
+            if (paramValues.length == 1) {
+                String paramValue = paramValues[0];
+                if (paramValue.length() != 0) {
+                    int idIndexStart = paramName.indexOf("[");
+                    int idIndexEnd = paramName.indexOf("]");
+                    int fieldIndexStart = paramName.lastIndexOf("[");
+                    int fieldIndexEnd = paramName.lastIndexOf("]");
+                    id = paramName.substring(idIndexStart + 1, idIndexEnd);
+                    field = paramName.substring(fieldIndexStart + 1, fieldIndexEnd);
+                    value = paramValue;
+                }
+            }
+        }
+
+        if (!teamSalaryService.isNumber(value)) {
+            list.add(new SalaryDetail());
+            re.setData(list);
+            return JSONArray.toJSONString(re);
+        }
+
+        SalaryDetail detail = teamSalaryService.get(SalaryDetail.class, id);
+
+        Method set = detail.getClass().getMethod("set" + teamSalaryService.captureName(field), String.class);
+        set.invoke(detail, value);
+        
+        BigDecimal payable = new BigDecimal(detail.getPayable());
+        
+        if("payable".equals(field)){
+            String taxRateArea = PropertiesUtil.getValue("tax.member");
+            BigDecimal taxRate = new BigDecimal("0");
+            BigDecimal taxDeductionNum = new BigDecimal("0");
+            
+            BigDecimal taxRank = new BigDecimal(detail.getPayable()).multiply(new BigDecimal("0.8"));
+            
+            String[] traArrays = taxRateArea.split(",");
+            for (int i = 0; i < traArrays.length; i++) {
+                //解析每个税率,查找税率区间
+                String[] traArray = traArrays[i].split("_");
+                if(Double.valueOf(traArray[0]) < taxRank.doubleValue() && taxRank.doubleValue() <= Double.valueOf(traArray[1])){
+                    taxRate = new BigDecimal(traArray[2]).multiply(new BigDecimal("0.01"));
+                    taxDeductionNum = new BigDecimal(traArray[3]);
+                    break;
+                }
+            }
+            
+            String tax = taxRank.multiply(taxRate).subtract(taxDeductionNum).setScale(2, BigDecimal.ROUND_DOWN).toPlainString();
+            detail.setTax(tax);
+        }
+        
+        BigDecimal loan = new BigDecimal(detail.getLoan());
+        
+        detail.setActual(payable.subtract(loan).subtract(new BigDecimal(detail.getTax())).setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
+
+        teamSalaryService.save(detail);
+        
+        
+        if(!"attendance".equals(field)){
+            String hqlSalary = "from SalaryDetail where salaryID=:salaryID";
+            Map<String, Object> paramsSalary = new HashMap<>();
+            paramsSalary.put("salaryID", detail.getSalaryID());
+            List<SalaryDetail> detailList = teamSalaryService.find(hqlSalary, paramsSalary);
+            BigDecimal a = new BigDecimal("0");
+            for (SalaryDetail sd : detailList) {
+                BigDecimal actual = new BigDecimal(sd.getActual());
+
+                a = a.add(actual);
+            }
+            Salary salary = teamSalaryService.get(Salary.class, detail.getSalaryID());
+            salary.setApplySum(a.setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
+            teamSalaryService.save(salary);
+        }
+        
+        list.add(detail);
+        re.setData(list);
+        return JSONArray.toJSONString(re);
+    }
+    
     @RequestMapping(value = "/choose", method = RequestMethod.POST)
     @ResponseBody
     public Result choose(String volumeList) {

@@ -3,13 +3,16 @@
  */
 package com.radish.master.service.project;
 
+import java.util.Date;
 import java.util.List;
 
 import com.cnpc.framework.base.entity.User;
 import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.base.service.BaseService;
 import com.radish.master.entity.project.Salary;
+import com.radish.master.entity.project.SalaryDetail;
 import com.radish.master.entity.project.SalaryVolume;
+import com.radish.master.entity.project.SocialSecurity;
 import com.radish.master.entity.project.Worker;
 import com.radish.master.pojo.Options;
 import com.radish.master.pojo.SalarySubInfo;
@@ -59,4 +62,9 @@ public interface TeamSalaryService extends BaseService {
     boolean isNumber(String str);
     
     String captureName(String name);
+    
+    SocialSecurity getSocialSecurity(String year);
+    
+    void handleSocialSalaryDetail(SocialSecurity socialSecurity, SalaryDetail detail, Date startDate);
+    
 }

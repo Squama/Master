@@ -31,10 +31,12 @@ import com.cnpc.framework.utils.StrUtil;
 import com.radish.master.entity.project.ProjectTeam;
 import com.radish.master.entity.project.Salary;
 import com.radish.master.entity.project.SalaryDetail;
+import com.radish.master.entity.project.SocialSecurity;
 import com.radish.master.pojo.RowEdit;
 import com.radish.master.service.CommonService;
 import com.radish.master.service.project.TeamSalaryService;
 import com.radish.master.system.SpringUtil;
+import com.radish.master.system.TimeUtil;
 
 /**
  * 类说明
@@ -127,6 +129,9 @@ public class ProjectManagerSalaryController {
             } catch (Exception e) {
                 return new Result(false);
             }
+            String year = startTime.substring(0, 4);
+            SocialSecurity socialSecurity = teamSalaryService.getSocialSecurity(year);
+            
             // 直接录入全部明细
             List<User> managerList = teamSalaryService.getManageMemberByProject(salary.getProjectID());
             List<SalaryDetail> detailList = new ArrayList<SalaryDetail>();
@@ -141,15 +146,41 @@ public class ProjectManagerSalaryController {
                 detail.setMobile(user.getMobile());
                 detail.setIdentificationNumber(user.getIdentificationNumber());
                 detail.setWorkType(user.getWorkType());
-                detail.setBasicSalary(user.getBasicSalary());
-
+                if(StrUtil.isEmpty(user.getBasicSalary())){
+                    detail.setBasicSalary("0");
+                }else{
+                    detail.setBasicSalary(user.getBasicSalary());
+                }
+                if(StrUtil.isEmpty(user.getDeduction())){
+                    detail.setDeduction("0");
+                }else{
+                    detail.setDeduction(user.getDeduction());
+                }
+                detail.setSsYear(year);
+                
                 detail.setAttendance("0");
-                detail.setPayable("0");
                 detail.setLoan("0");
-                detail.setMedical("0");
-                detail.setSocial("0");
-                detail.setTax("0");
-                detail.setActual("0");
+                
+                if("0".equals(detail.getBasicSalary())){
+                    detail.setYanglao("0");
+                    detail.setYanglaoCorp("0");
+                    detail.setMedical("0");
+                    detail.setMedicalCorp("0");
+                    detail.setShiye("0");
+                    detail.setShiyeCorp("0");
+                    detail.setGongshangCorp("0");
+                    detail.setShengyuCorp("0");
+                    detail.setPrf("0");
+                    detail.setPrfCorp("0");
+                    detail.setSocial("0");
+                    detail.setTax("0");
+                    detail.setPayable("0");
+                    detail.setActual("0");
+                }else{
+                    teamSalaryService.handleSocialSalaryDetail(socialSecurity, detail, salary.getStartTime());
+                    
+                }
+
                 detail.setRemark("");
 
                 detailList.add(detail);
@@ -158,6 +189,9 @@ public class ProjectManagerSalaryController {
             teamSalaryService.batchSave(detailList);
         } else {
             Salary oldSalary = teamSalaryService.get(Salary.class, salary.getId());
+            if(!startTime.substring(0, 4).equals(TimeUtil.getFormattedDate(oldSalary.getStartTime()).substring(0, 4))){
+                return new Result(false, "不能跨社保年份");
+            }
             SpringUtil.copyPropertiesIgnoreNull(salary, oldSalary);
             oldSalary.setUpdateDateTime(new Date());
             teamSalaryService.save(oldSalary);
@@ -238,6 +272,11 @@ public class ProjectManagerSalaryController {
 
         Method set = detail.getClass().getMethod("set" + teamSalaryService.captureName(field), String.class);
         set.invoke(detail, value);
+        
+        BigDecimal loan = new BigDecimal(detail.getLoan());
+        BigDecimal payable = new BigDecimal(detail.getPayable());
+        
+        detail.setActual(payable.subtract(loan).setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
 
         teamSalaryService.save(detail);
         

@@ -1,0 +1,80 @@
+<section class="content-header">
+    <h1>
+        社保费率 <small>列表</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="${basePath}"><i class="fa fa-dashboard"></i>首页</a></li>
+        <li><a href="#">办公管理管理</a></li>
+        <li class="active">社保费率信息维护</li>
+    </ol>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <!-- /.box-header -->
+                <div class="dataTables_filter" id="searchDiv">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-primary" data-btn-type="search">查询</button>
+                        <button type="button" class="btn btn-default" data-btn-type="reset">重置</button>
+                    </div>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default" data-btn-type="add">新增</button>
+                        <button type="button" class="btn btn-default" data-btn-type="edit">编辑</button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <table id="social_table" class="table table-bordered table-striped table-hover">
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<script>
+    var socialTable;
+    var winId = "socialWin";
+
+    $(function () {
+        socialTable = new CommonTable("social_table", "socialsecurity_list", "searchDiv");
+
+        $('button[data-btn-type]').click(function () {
+            var action = $(this).attr('data-btn-type');
+            var rowId = socialTable.getSelectedRowId();
+            switch (action) {
+                case 'add':
+                    modals.openWin({
+                        winId: winId,
+                        width: '1200px',
+                        url: basePath + "/social/add",
+                        hideFunc: function () {
+                            socialTable.reloadData();
+                        }
+                    });
+                    break;
+                case 'edit':
+                    if (!rowId) {
+                        modals.info('请选择要编辑的行');
+                        return false;
+                    }
+                    modals.openWin({
+                        winId: winId,
+                        width: '1200px',
+                        url: basePath + "/social/edit?id=" + rowId,
+                        hideFunc: function () {
+                            socialTable.reloadData();
+                        }
+                    });
+                    break;
+            }
+
+        });
+
+        //form_init();
+    })
+
+</script>

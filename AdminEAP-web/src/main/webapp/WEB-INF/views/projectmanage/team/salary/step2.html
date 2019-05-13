@@ -110,17 +110,13 @@
         },
         initSalaryEditor:function(){
             salaryEditor = new $.fn.dataTable.Editor( {
-                ajax: basePath+"/project/manager/salary/rowedit",
+                ajax: basePath+"/project/team/salary/rowedit",
                 table: "#salary_detail_table",
                 idSrc:  'id',
                 fields: [ 
                     {label:"attendance:", name:"attendance",type:"text"},
-                    {label:"payable:", name:"payable",type:"text"},
                     {label:"loan:", name:"loan",type:"text"},
-                    {label:"medical:", name:"medical",type:"text"},
-                    {label:"social:", name:"social",type:"text"},
-                    {label:"tax:", name:"tax",type:"text"},
-                    {label:"actual:", name:"actual",type:"text"}
+                    {label:"payable:", name:"payable",type:"text"}
                 ]
             } );
             

@@ -1,0 +1,200 @@
+<script type="text/javascript">
+ $.fn.modal.Constructor.prototype.enforceFocus = function () {};
+ </script>
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><li class="fa fa-remove"></li></button>
+    <h5 class="modal-title">社保费率维护</h5>
+</div>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <form id="measure-form" name="measure-form" class="form-horizontal">
+                <input type="hidden" name="id">
+                <div class="box box-info">
+                    <div class="box-header with-border">
+                    </div>
+                    <div class="box-body">
+                        <!-- 内容 -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-sm-5 control-label">社保年份：<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" id="year" name="year" onkeyup="value=value.replace(/[^\d.]/g,'')" placeholder="社保年份">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-5 control-label">社保基数：<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" id="radix" name="radix" onkeyup="value=value.replace(/[^\d.]/g,'')" placeholder="社保基数">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-5 control-label">养老费率（个人）：<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" id="yanglao" name="yanglao" onkeyup="value=value.replace(/[^\d.]/g,'')" placeholder="养老费率（个人）">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-5 control-label">医疗费率（个人）：<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" id="yiliao" name="yiliao" onkeyup="value=value.replace(/[^\d.]/g,'')" placeholder="医疗费率（个人）">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-5 control-label">失业费率（个人）：<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" id="shiye" name="shiye" onkeyup="value=value.replace(/[^\d.]/g,'')" placeholder="失业费率（个人）">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-5 control-label">工伤费率：<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" id="gongshang" name="gongshang" onkeyup="value=value.replace(/[^\d.]/g,'')" placeholder="工伤费率">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-sm-5 control-label">上年平均工资：<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" id="avg" name="avg" onkeyup="value=value.replace(/[^\d.]/g,'')" placeholder="上年平均工资">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-5 control-label">公积金费率：<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" id="gongjijin" name="gongjijin" onkeyup="value=value.replace(/[^\d.]/g,'')" placeholder="公积金费率">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-5 control-label">养老费率（企业）：<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" id="yanglaoCorp" name="yanglaoCorp" onkeyup="value=value.replace(/[^\d.]/g,'')" placeholder="养老费率（企业）">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-5 control-label">医疗费率（企业）：<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" id="yiliaoCorp" name="yiliaoCorp" onkeyup="value=value.replace(/[^\d.]/g,'')" placeholder="医疗费率（企业）">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-5 control-label">失业费率（企业）：<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" id="shiyeCorp" name="shiyeCorp" onkeyup="value=value.replace(/[^\d.]/g,'')" placeholder="失业费率（企业）">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-5 control-label">生育费率：<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" id="shengyu" name="shengyu" onkeyup="value=value.replace(/[^\d.]/g,'')" placeholder="生育费率">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer text-center">
+                        <button type="submit" class="btn btn-primary" data-btn-type="next">保存</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<script>
+    $.fn.modal.Constructor.prototype.enforceFocus =function(){};
+    var measureform = $("#measure-form").form({baseEntity: false}), initData={};
+    var measureID="${id?default(0)}";
+    $(function (){
+        $("#measure-form").bootstrapValidator({
+            message: '请输入有效值',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            submitHandler: function () {
+                var formData = measureform.getFormSimpleData();
+                ajaxPost(basePath + '/social/save', formData, function (data) {
+                    if (data.success) {
+                        modals.hideWin(winId);
+                    } else {
+                        modals.error(data.message);
+                    }
+                });
+            },
+            fields: {
+                "year": {
+                    validators: {
+                        notEmpty: {message: '社保年份不能为空'}
+                    }
+                },
+                "radix": {
+                    validators: {
+                        notEmpty: {message: '社保基数不能为空'}
+                    }
+                },
+                "avg": {
+                    validators: {
+                        notEmpty: {message: '上一年度平均工不能为空'}
+                    }
+                },
+                "yanglao": {
+                    validators: {
+                        notEmpty: {message: '养老费率（个人）不能为空'}
+                    }
+                },
+                "yiliao": {
+                    validators: {
+                        notEmpty: {message: '医疗费率（个人）不能为空'}
+                    }
+                },
+                "shiye": {
+                    validators: {
+                        notEmpty: {message: '失业费率（个人）不能为空'}
+                    }
+                },
+                "yanglaoCorp": {
+                    validators: {
+                        notEmpty: {message: '养老费率（企业）不能为空'}
+                    }
+                },
+                "yiliaoCorp": {
+                    validators: {
+                        notEmpty: {message: '医疗费率（企业）不能为空'}
+                    }
+                },
+                "shiyeCorp": {
+                    validators: {
+                        notEmpty: {message: '失业费率（企业）不能为空'}
+                    }
+                },
+                "gongshang": {
+                    validators: {
+                        notEmpty: {message: '工伤费率不能为空'}
+                    }
+                },
+                "shengyu": {
+                    validators: {
+                        notEmpty: {message: '生育费率不能为空'}
+                    }
+                },
+                "gongjijin": {
+                    validators: {
+                        notEmpty: {message: '公积金费率不能为空'}
+                    }
+                }
+            }
+        });
+        
+        //编辑回填
+        if(measureID != 0){
+            ajaxPost(basePath+"/social/get",{id:measureID},function(data){
+                measureform.initFormData(data);
+            })
+        } 
+        
+        //初始化控件
+        measureform.initComponent();
+    });
+</script>
