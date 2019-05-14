@@ -17,7 +17,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.hibernate.type.Type;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,12 +24,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONArray;
-import com.cnpc.framework.base.entity.User;
 import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.utils.StrUtil;
 import com.radish.master.entity.project.Salary;
 import com.radish.master.entity.project.SalaryDetail;
-import com.radish.master.pojo.MatInAndOut;
+import com.radish.master.entity.project.WorkerHod;
 import com.radish.master.pojo.RowEdit;
 import com.radish.master.service.CommonService;
 import com.radish.master.service.project.TeamSalaryService;
@@ -117,10 +115,10 @@ public class HodSalaryController {
             // 直接录入全部明细
             StringBuilder buffer = new StringBuilder();
 
-            buffer.append("SELECT u.* FROM tbl_user u  where exists(select st.* from v_mwjx st where st.id = u.id) ");
-            List<User> managerList = teamSalaryService.findBySql(buffer.toString(), User.class);
+            buffer.append("SELECT u.* FROM tbl_workerhod u ");
+            List<WorkerHod> managerList = teamSalaryService.findBySql(buffer.toString(), WorkerHod.class);
             List<SalaryDetail> detailList = new ArrayList<SalaryDetail>();
-            for (User user : managerList) {
+            for (WorkerHod user : managerList) {
                 SalaryDetail detail = new SalaryDetail();
                 detail.setCreateDateTime(new Date());
                 detail.setUpdateDateTime(new Date());
@@ -131,13 +129,7 @@ public class HodSalaryController {
                 detail.setMobile(user.getMobile());
                 detail.setIdentificationNumber(user.getIdentificationNumber());
                 detail.setWorkType(user.getWorkType());
-                if(user.getBasicSalary()==null){
-                	detail.setBasicSalary("0");
-                }else{
-                	detail.setBasicSalary(user.getBasicSalary());
-                }
-                
-
+                detail.setBasicSalary("0");
                 detail.setAttendance("0");
                 detail.setPayable("0");
                 detail.setLoan("0");
