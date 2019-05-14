@@ -143,7 +143,7 @@ public class TeamSalaryServiceImpl extends BaseServiceImpl implements TeamSalary
         buffer.append("SELECT * FROM tbl_user WHERE id NOT IN( ");
         buffer.append("SELECT DISTINCT U.id FROM tbl_user U,tbl_user_team UT, tbl_project_team PT   ");
         buffer.append("WHERE U.id=UT.user_id AND UT.project_id = PT.project_id  AND UT.team_id=PT.id AND PT.status='30' ) ");
-        buffer.append(" and id not in(select id from v_mwjx ) ");
+       // buffer.append(" and id not in(select id from v_mwjx ) ");
         return this.findBySql(buffer.toString(), User.class);
     }
     

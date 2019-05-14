@@ -77,6 +77,20 @@
         <column key="mobile" header="电话号码" width="200" align="center"/>
         <column key="identificationNumber" header="身份证" width="200" align="center"/>
     </query>
+    <query id="workerhod_list" key="id" tableName="门卫机修花名册" className="com.radish.master.entity.project.WorkerHod" pageSize="20"  widthType="px">
+        <column key="rowIndex" header="序号" width="50" allowSort="false"/>
+        <column key="id" header="id" hidden="true"/>
+        <column key="version" header="version" hidden="true"/>
+        <column key="name" header="姓名" operator="like" width="100" allowSort="true" />
+        <column key="workType" header="工种" align="left" width="100"/>
+        <column key="ethnic" header="民族" align="left" width="100"/>
+        <column key="sex" header="性别" operator="eq" width="150" allowSort="true" render="1=男,0=女" />
+        <column key="birthday" header="出生日期" width="80" allowSort="true" dateFormat="yyyy-mm-dd" />
+        <column key="political" header="政治面貌" width="80" allowSort="true" />
+        <column key="workingYear" header="岗位年限" align="right" operator="eq" width="100"  />
+        <column key="mobile" header="电话号码" width="200" align="center"/>
+        <column key="identificationNumber" header="身份证" width="200" align="center"/>
+    </query>
     <query id="aqxy_List" key="id" tableName="安全协议" className="com.radish.master.entity.safty.Aqxy" widthType="px" pageSize="200">
         <column key="id" hidden="true" header="id" width="80"/>
         <column key="rowIndex" header="序号" width="80"/>
