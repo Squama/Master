@@ -108,10 +108,12 @@
         <column key="basicSalary" header="基本工资" width="150"/>
         <column key="attendance" header="出勤天数" width="150"/>
         <column key="payable" header="应付工资" width="80"/>
-        <column key="loan" header="借款扣除" width="80"/>
-        <column key="medical" header="医保扣除" width="80"/>
-        <column key="social" header="社保扣除" width="80"/>
+        <column key="yanglao" header="养老保险" width="80"/>
+        <column key="medical" header="医疗保险" width="80"/>
+        <column key="shiye" header="失业险" width="80"/>
+        <column key="prf" header="公积金" width="80"/>
         <column key="tax" header="个税扣除" width="80"/>
+        <column key="loan" header="借款扣除" width="80"/>
         <column key="actual" header="实发工资" width="80"/>
         <column key="remark" header="备注" width="80"/>
         <column key="mobile" header="联系电话" width="80"/>
@@ -144,10 +146,12 @@
         <column key="basicSalary" header="基本工资" width="150"/>
         <column key="attendance" header="出勤天数" width="150"/>
         <column key="payable" header="应付工资" width="80"/>
-        <column key="loan" header="借款扣除" width="80"/>
-        <column key="medical" header="医保扣除" width="80"/>
-        <column key="social" header="社保扣除" width="80"/>
+        <column key="yanglao" header="养老保险" width="80"/>
+        <column key="medical" header="医疗保险" width="80"/>
+        <column key="shiye" header="失业险" width="80"/>
+        <column key="prf" header="公积金" width="80"/>
         <column key="tax" header="个税扣除" width="80"/>
+        <column key="loan" header="借款扣除" width="80"/>
         <column key="actual" header="实发工资" width="80"/>
         <column key="mobile" header="联系电话" width="80"/>
     </query>

@@ -540,11 +540,11 @@ public class TeamSalaryServiceImpl extends BaseServiceImpl implements TeamSalary
         detail.setPrfCorp(gongjijinC.setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
         
         //原社保字段 =失业+养老
-        detail.setSocial(shiyeC.add(yanglaoC).setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
+        detail.setSocial(shiyeP.add(yanglaoP).setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
         
         BigDecimal salarySoFar = new BigDecimal(detail.getBasicSalary());
         
-        salarySoFar = salarySoFar.subtract(yanglaoP).subtract(yiliaoP).subtract(shiyeP);
+        salarySoFar = salarySoFar.subtract(yanglaoP).subtract(yiliaoP).subtract(shiyeP).subtract(gongjijinP);
         
         //获取总工资和已交税款
         BigDecimal sumSalary = new BigDecimal("0");
