@@ -177,9 +177,8 @@
         <sql>
             <![CDATA[
               SELECT pv.id, l.contract_name, ps.sub_name, pv.start_time, pv.end_time, pv.final_labour
-              FROM tbl_project_volume pv, tbl_labor l, tbl_project_sub ps
-              WHERE pv.labor_id = l.id AND pv.project_sub_id = ps.id AND pv.id IN 
-              (SELECT volume_id FROM tbl_salary_volume) AND pv.status = '70'
+              FROM tbl_project_volume pv, tbl_labor l, tbl_project_sub ps, (SELECT volume_id,salary_id FROM tbl_salary_volume) sv
+              WHERE pv.labor_id = l.id AND pv.project_sub_id = ps.id AND pv.id=sv.volume_id AND pv.status = '70'
               AND 1=1
             ]]>
         </sql>
@@ -210,8 +209,9 @@
     <query id="measure_choosen_list" key="id" tableName="已配置措施单" widthType="px" pageSize="200">
         <sql>
             <![CDATA[
-              SELECT mv.id, mv.team_name, '总价措施项目费' AS type,mv.start_time, mv.end_time, mv.final_sub FROM tbl_measure_volume mv
-              WHERE  mv.id IN (SELECT volume_id FROM tbl_salary_volume) AND mv.status = '70' AND mv.measure_type='issue' AND 1=1
+              SELECT mv.id, mv.team_name, '总价措施项目费' AS type,mv.start_time, mv.end_time, mv.final_sub FROM tbl_measure_volume mv, 
+              (SELECT volume_id, salary_id FROM tbl_salary_volume) sv
+              WHERE  mv.id = sv.volume_id AND mv.status = '70' AND mv.measure_type='issue' AND 1=1
             ]]>
         </sql>
         <column key="rowIndex" header="序号" width="80"/>

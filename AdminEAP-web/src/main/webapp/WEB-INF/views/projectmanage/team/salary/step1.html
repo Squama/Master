@@ -90,7 +90,8 @@
 			                       </button>
 			                    </div>
 			                    <div class="dataTables_filter" id="searchDiv_selected" style="display:none;">
-			                        <input name="l.construction_team_id" id="rightTeamID"  type="search" class="form-control" operator="eq" style="display:none;" />                     
+			                        <input name="l.construction_team_id" id="rightTeamID"  type="search" class="form-control" operator="eq" style="display:none;" /> 
+			                        <input name="sv.salary_id" id="rightSalaryID"  type="search" class="form-control" operator="eq" style="display:none;" />                    
 			                    </div>
 			                    <div class="box-body">
 			                        <table id="volume_choosen_table" class="table table-bordered table-striped table-hover">
@@ -113,6 +114,7 @@
 <script>
     var form;
     var id = "${id?default(0)}",step2Data={};
+    $('#rightSalaryID').val(id);
     var unselectedTable,selectedTable;
     var projectOptions = '${projectOptions?default(0)}',options=0;
     if(projectOptions != 0){
