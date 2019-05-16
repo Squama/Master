@@ -69,6 +69,10 @@ public class Salary extends BaseEntity {
     @Header(name = "状态")
     @Column(name = "status")
     private String status;
+    
+    @Header(name = "是否记账")
+    @Column(name = "isjz")
+    private String isjz;
 
     public String getProjectID() {
         return projectID;
@@ -149,5 +153,13 @@ public class Salary extends BaseEntity {
     public void setStatus(String status) {
         this.status = status;
     }
+
+	public String getIsjz() {
+		return isjz;
+	}
+
+	public void setIsjz(String isjz) {
+		this.isjz = isjz;
+	}
 
 }
