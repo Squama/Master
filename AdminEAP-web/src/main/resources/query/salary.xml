@@ -54,8 +54,8 @@
         <sql>
             <![CDATA[
               SELECT 
-              id , type,start_time startTime,end_time endTime,apply_sum applySum,status 
-              from tbl_salary where type in('20','40','50') and 1=1 
+              id , type,start_time startTime,end_time endTime,apply_sum applySum,status ,isjz 
+              from tbl_salary where  1=1 
             ]]>
         </sql>
         <column key="rowIndex" header="序号" width="80"/>

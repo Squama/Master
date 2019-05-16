@@ -21,9 +21,9 @@
                     </select>
                     <select id="type" class="form-control select2" name="type" style="width:200px;" operator="eq">
                         <option selected="selected" value="">选择一个类型</option>
-                        <!-- <option value="10">专业作业班组</option> -->
+                        <option value="10">专业作业班组</option>
                         <option value="20">管理人员</option>
-                        <!-- <option value="30">点工班组</option> -->
+                        <option value="30">点工班组</option>
                         <option value="40">机关人员</option>
                         <option value="50">门卫机修</option>
                     </select>
@@ -101,6 +101,16 @@
                     width:'600px',
                     url:basePath+"/salarypay/chooseZffs?id="+rowID
                    });
+            },
+            jz:function(rowID){
+            	modals.confirm("是否确认记账？",function(){
+                    ajaxPost(basePath + '/salarypay/dojz', {id:rowID}, function (data) {
+                    	if (data.success) {
+                    		teamSalaryTable.reloadData();
+                            modals.correct("记账成功");
+                        }
+                    });
+                });
             }
     }
     
@@ -143,8 +153,12 @@
         	oper += "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='teamSalaryObject.print(\"" + value + "\")'>打印支付单</a>";
         }
         if(rowObj.status=="支付完成"){//打印支付单按钮
+        	if(!rowObj.isjz){
+				oper += "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='teamSalaryObject.jz(\"" + value + "\")'>记账</a>";
+			}
         	oper += "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='teamSalaryObject.print(\"" + value + "\")'>打印支付单</a>";
-        }
+			
+       }
         oper += "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='teamSalaryObject.overview(\"" + value + "\")'>总览</a>";
         return oper;
     }

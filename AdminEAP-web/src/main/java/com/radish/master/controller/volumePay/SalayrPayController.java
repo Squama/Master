@@ -1,5 +1,6 @@
 package com.radish.master.controller.volumePay;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,12 +21,16 @@ import com.cnpc.framework.base.entity.User;
 import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.base.service.BaseService;
 import com.cnpc.framework.utils.SecurityUtil;
+import com.radish.master.entity.ProAccount;
+import com.radish.master.entity.ProAccountDet;
 import com.radish.master.entity.ProjectVolume;
 import com.radish.master.entity.project.Salary;
 import com.radish.master.entity.project.SalaryVolume;
+import com.radish.master.entity.volumePay.Loans;
 import com.radish.master.entity.volumePay.VolumePay;
 import com.radish.master.service.BudgetService;
 import com.radish.master.service.CommonService;
+import com.radish.master.system.Arith;
 
 @Controller
 @RequestMapping("/salarypay")
@@ -106,4 +111,70 @@ public class SalayrPayController {
 		baseService.update(zf);
 		return r;
 	}
+	//记账
+			@RequestMapping("/dojz")
+			@ResponseBody
+			public Result dojz(HttpServletRequest request){
+				Arith arith = new Arith();
+				String id = request.getParameter("id");
+				Salary j = baseService.get(Salary.class, id);
+				
+				String xmid = "";
+				String content = "";
+				if("40".equals(j.getType())){//公司账本 机关人员工资
+					xmid = "1";
+					content="机关人员工资支付";
+				}else{//项目账本 其他类型人员工资
+					xmid = j.getProjectID();
+					if("10".equals(j.getType())){
+						content="专业作业班组工资支付";
+					}else if("20".equals(j.getType())){
+						content="管理人员工资支付";
+					}else if("30".equals(j.getType())){
+						content="点工班组工资支付";
+					}else if("50".equals(j.getType())){
+						content="门卫机修工资支付";
+					}
+				}
+				
+				List<ProAccount> xmz = baseService.find(" from ProAccount where projectId='"+xmid+"'");
+				
+				User u = SecurityUtil.getUser();
+				//账目明细
+				ProAccountDet mx = new ProAccountDet();
+				mx.setCreateDate(new Date());
+				mx.setAbstracts(content);
+				mx.setZmtype("2");
+				mx.setOutMoney(j.getApplySum());
+				mx.setAccounter(u.getName());
+				mx.setAccounterId(u.getId());
+				//mx.setAuditName(u.getName());
+				//mx.setAuditId(u.getId());
+				mx.setStatus("10");
+				if(xmz.size()<=0){//无账本，先生成账本
+					ProAccount zb = new ProAccount();
+					zb.setProjectId(xmid);
+					if("1".equals(xmid)){
+						zb.setAccountName("公司账本");
+					}else{
+						zb.setAccountName(j.getProjectName());
+					}
+					
+					baseService.save(zb);
+					zb.setAllMoney(arith.sub(0.0,Double.valueOf(j.getApplySum()))+"");
+					mx.setProjectAccountId(zb.getId());
+					baseService.save(mx);
+					baseService.update(zb);
+				}else{
+					ProAccount zb = xmz.get(0);
+					zb.setAllMoney(arith.sub(Double.valueOf(zb.getAllMoney()),Double.valueOf(j.getApplySum()) )+"");
+					mx.setProjectAccountId(zb.getId());
+					baseService.save(mx);
+					baseService.update(zb);
+				}
+				j.setIsjz("10");
+				baseService.update(j);
+				Result r = new Result();
+				return r;
+			}
 }

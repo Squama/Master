@@ -436,6 +436,8 @@ public class VolumePayController {
 			zb.setProjectId(xmid);
 			if("1".equals(xmid)){
 				zb.setAccountName("公司账本");
+			}else{
+				zb.setAccountName(gcl.getProjectName());
 			}
 			
 			baseService.save(zb);

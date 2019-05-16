@@ -26,6 +26,7 @@ import com.cnpc.framework.base.service.BaseService;
 import com.cnpc.framework.utils.SecurityUtil;
 import com.radish.master.entity.ProAccount;
 import com.radish.master.entity.ProAccountDet;
+import com.radish.master.entity.Project;
 import com.radish.master.entity.review.MaxNumber;
 import com.radish.master.entity.volumePay.Loans;
 import com.radish.master.service.BudgetService;
@@ -294,6 +295,9 @@ public class LoansController {
 				zb.setProjectId(xmid);
 				if("1".equals(xmid)){
 					zb.setAccountName("公司账本");
+				}else{
+					Project p = baseService.get(Project.class, j.getProid());
+					zb.setAccountName(p.getProjectName());
 				}
 				
 				baseService.save(zb);
