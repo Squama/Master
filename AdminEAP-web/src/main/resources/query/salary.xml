@@ -73,7 +73,7 @@
             select 
 			gz.id id,gz.type type,gz.start_time startTime,gz.end_time endTime,gz.project_name projectName,gz.team_name teamName,gz.status status,
 			gz.sjisjz sjisjz,gz.sjstatus sjstatus,gz.project_id projectID,
-			(select sum(gzmx.tax) from tbl_salary_detail gzmx where gz.id = gzmx.salary_id) sj ,
+			(select sum(cast(gzmx.tax  as  decimal(18,2))) from tbl_salary_detail gzmx where gz.id = gzmx.salary_id) sj ,
 			CASE gz.sjstatus WHEN 20 THEN '税金支付审批' WHEN 30 THEN '支付审核不通过' WHEN 40 THEN '审核通过(待支付)' WHEN 50 THEN '税金已支付' ELSE '未支付' END sjstatusname  
 			from tbl_salary gz  
 			where exists (select mx.* from tbl_salary_detail mx where gz.id = mx.salary_id and mx.tax is not null and mx.tax>0)
