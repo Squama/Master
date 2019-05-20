@@ -54,7 +54,7 @@
         <sql>
             <![CDATA[
               SELECT 
-              id , type,start_time startTime,end_time endTime,apply_sum applySum,status ,isjz 
+              id , type,start_time startTime,end_time endTime,apply_sum applySum,status ,isjz ,project_id 
               from tbl_salary where  1=1 
             ]]>
         </sql>
@@ -65,6 +65,28 @@
         <column key="endTime" header="结束时间" allowSort="true" dateFormat="yyyy-mm-dd" width="80"/>
         <column key="applySum" header="申请总额" width="150"/>
         <column key="status" header="状态" allowSort="true" width="150" render="10=新建,20=负责人审批,30=办公室主任审批,40=总经理审批,50=财务审批,60=已完成(未支付),70=审核不通过,80=支付审核,90=待财务支付,100=支付完成,110=支付审核驳回"/>
+        <column key="id" header="操作" width="80" fnRender="fnRenderSalary"/>
+    </query>
+    <query id="salary_list_sj" key="id" tableName="工资单税金查询"  widthType="px" pageSize="50">
+        <sql>
+            <![CDATA[
+            select 
+			gz.id id,gz.type type,gz.start_time startTime,gz.end_time endTime,gz.project_name projectName,gz.team_name teamName,gz.status status,
+			gz.sjisjz sjisjz,gz.sjstatus sjstatus,gz.project_id projectID,
+			(select sum(gzmx.tax) from tbl_salary_detail gzmx where gz.id = gzmx.salary_id) sj ,
+			CASE gz.sjstatus WHEN 20 THEN '税金支付审批' WHEN 30 THEN '支付审核不通过' WHEN 40 THEN '审核通过(待支付)' WHEN 50 THEN '税金已支付' ELSE '未支付' END sjstatusname  
+			from tbl_salary gz  
+			where exists (select mx.* from tbl_salary_detail mx where gz.id = mx.salary_id and mx.tax is not null and mx.tax>0)
+			and gz.status in('60','80','90','100','110') and 1=1
+            ]]>
+        </sql>
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="type" header="类型" allowSort="true" width="150" render="10=专业作业班组,20=管理人员,30=点工班组,40=机关人员,50=门卫机修"/>
+        <column key="startTime" header="开始时间" allowSort="true" dateFormat="yyyy-mm-dd" width="80"/>
+        <column key="endTime" header="结束时间" allowSort="true" dateFormat="yyyy-mm-dd" width="80"/>
+        <column key="sj" header="税金总额" width="150"/>
+        <column key="sjstatusname" header="状态" allowSort="true" width="150" />
         <column key="id" header="操作" width="80" fnRender="fnRenderSalary"/>
     </query>
     <query id="team_salary_detail" key="id" tableName="班组工资明细" className="com.radish.master.entity.project.SalaryDetail" widthType="px" pageSize="2000">

@@ -5,7 +5,7 @@
             <div class="box box-info">
                 <div class="box-header with-border">
                     <span>
-                        <i class="fa fa-files-o">班组工资单</i>
+                        <i class="fa fa-files-o">工资单</i>
                     </span>
                 </div>
                 <form id="salary-detail-form" name="salary-detail-form" class="form-horizontal">
@@ -17,6 +17,13 @@
                                     <input type="text" class="form-control" id="projectName" name="projectName" readonly="readonly">
                                 </div>
                             </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">开始时间<span style="color:red">*</span></label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" data-flag="datepicker" data-format="yyyy-mm-dd" name="startTime" id="startTime"
+                                        placeholder="起始时间" autocomplete="off" disabled="disabled">
+                                </div>
+                            </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
@@ -25,20 +32,11 @@
                                     <input type="text" class="form-control" id="teamName" name="teamName" readonly="readonly">
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-md-6">
                             <div class="form-group">
-                                <label class="col-sm-4 control-label">可付总额</label>
+                                <label class="col-sm-4 control-label">结束时间<span style="color:red">*</span></label>
                                 <div class="col-sm-8">
-                                    <input type="text" class="form-control" id="total" name="total" readonly="readonly">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="col-sm-4 control-label">申请总额</label>
-                                <div class="col-sm-8">
-                                    <input type="text" class="form-control" id="applySum" name="applySum" readonly="readonly">
+                                    <input type="text" class="form-control" data-flag="datepicker" data-format="yyyy-mm-dd" name="endTime" id="endTime"
+                                        placeholder="结束时间" autocomplete="off" disabled="disabled">
                                 </div>
                             </div>
                         </div>
@@ -59,7 +57,8 @@
                     <table id="salary_detail_table" class="table table-bordered table-striped table-hover">
                         <tfoot>
                             <tr>
-                                <th colspan="11" style="text-align:right">合计:</th>
+                                <th colspan="10" style="text-align:right">合计:</th>
+                                <th class="text-left">0</th>
                                 <th class="text-left">0</th>
                             </tr>
                         </tfoot>
@@ -87,6 +86,18 @@
      
                 // Total over this page
                 unitTotal = api
+                    .column( 10, { page: 'current'} )
+                    .data()
+                    .reduce( function (a, b) {
+                        return accAddition(intVal(a), intVal(b));
+                    }, 0 );
+                // Update footer
+                $( api.column( 10 ).footer() ).html(
+                    '￥'+unitTotal
+                );
+
+             // Total over this page
+                unitTotal1 = api
                     .column( 11, { page: 'current'} )
                     .data()
                     .reduce( function (a, b) {
@@ -94,7 +105,7 @@
                     }, 0 );
                 // Update footer
                 $( api.column( 11 ).footer() ).html(
-                    '￥'+unitTotal
+                    '￥'+unitTotal1
                 );
             }
     	});
