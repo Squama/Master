@@ -33,6 +33,7 @@ import com.cnpc.framework.query.entity.QueryCondition;
 import com.cnpc.framework.utils.SecurityUtil;
 import com.cnpc.framework.utils.StrUtil;
 import com.radish.master.entity.MeasureVolume;
+import com.radish.master.entity.ProjectVolume;
 import com.radish.master.service.BudgetService;
 import com.radish.master.service.ProjectService;
 import com.radish.master.system.SpringUtil;
@@ -108,6 +109,13 @@ public class MeasureVolumeController {
         request.setAttribute("id", id);
         request.setAttribute("projectOptions", JSONArray.toJSONString(budgetService.getProjectCombobox()));
         return "projectmanage/volume/measure/volume_detail_final";
+    }
+    
+    @RequestMapping(value="/detailouter/{id}",method = RequestMethod.GET)
+    public String detailOuter(@PathVariable("id") String id,HttpServletRequest request,HttpServletResponse response) {
+        request.setAttribute("id", id);
+        request.setAttribute("projectOptions", JSONArray.toJSONString(budgetService.getProjectCombobox()));
+        return "projectmanage/volume/measure/detail_outer";
     }
     
     @RequestMapping(value="/check",method = RequestMethod.POST)

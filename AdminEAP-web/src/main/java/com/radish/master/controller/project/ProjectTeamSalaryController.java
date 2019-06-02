@@ -29,6 +29,8 @@ import com.cnpc.framework.base.entity.User;
 import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.utils.PropertiesUtil;
 import com.cnpc.framework.utils.StrUtil;
+import com.radish.master.entity.MeasureVolume;
+import com.radish.master.entity.ProjectVolume;
 import com.radish.master.entity.project.Salary;
 import com.radish.master.entity.project.SalaryDetail;
 import com.radish.master.entity.project.SalaryVolume;
@@ -74,6 +76,48 @@ public class ProjectTeamSalaryController {
     @ResponseBody
     public Salary getSalaryInfo(String id) {
         return teamSalaryService.get(Salary.class, id);
+    }
+    @RequestMapping(method = RequestMethod.POST, value = "/getGcls")
+    @ResponseBody
+    public Result getGcls(String id) {
+    	Result r = new Result();
+    	List<SalaryVolume> gxs = teamSalaryService.find(" from SalaryVolume where salary_id='"+id+"'");
+    	if(gxs.size()>0){
+    		int i=1;
+    		Salary s = teamSalaryService.get(Salary.class, id);
+    		List<Map<String,String>> sjs = new ArrayList<Map<String,String>>();
+        	if("10".equals(s.getType())){//班组工资
+        		for(SalaryVolume gx : gxs){
+        			Map<String,String> m = new HashMap<String, String>();
+        			ProjectVolume gcl = teamSalaryService.get(ProjectVolume.class, gx.getVolumeID());
+        			m.put("id", gcl.getId());
+        			m.put("name", "工程量"+i);
+        			m.put("lx", "10");
+        			i++;
+        			sjs.add(m);
+        		}
+        		r.setSuccess(true);
+        		r.setData(sjs);
+        	}else if("30".equals(s.getType())){//点工班组
+        		for(SalaryVolume gx : gxs){
+	        		Map<String,String> m = new HashMap<String, String>();
+	    			MeasureVolume gcl = teamSalaryService.get(MeasureVolume.class, gx.getVolumeID());
+	    			m.put("id", gcl.getId());
+	    			m.put("name", "工程量"+i);
+	    			m.put("lx", "30");
+	    			i++;
+	    			sjs.add(m);
+        		}
+        		r.setSuccess(true);
+        		r.setData(sjs);
+        	}else{
+        		r.setSuccess(false);
+        	}
+    	}else{
+    		r.setSuccess(false);
+    	}
+    	
+        return r;
     }
 
     @RequestMapping(value = "/getteam")

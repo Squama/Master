@@ -313,5 +313,17 @@
 		selectedTable=new CommonTable("volume_choosen_table","measure_choosen_list","searchDiv_selected",selected_config);
         
     });
+    function fnRenderXq(value, type, rowObj){
+    	var s = "<a href='javascript:void(0)' onclick='lookxq(\"" + value + "\")'>详情</a>";
+        return s;
+    }
+    function lookxq(id){
+    	 modals.openWin({
+             winId:winId,
+             title:'上报详情',
+             width:'1200px',
+             url:basePath+"/measurevolume/detailouter/"+id            
+        });
+     }
 
 </script>

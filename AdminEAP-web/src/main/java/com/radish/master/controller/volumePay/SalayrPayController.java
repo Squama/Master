@@ -24,6 +24,7 @@ import com.cnpc.framework.utils.SecurityUtil;
 import com.radish.master.entity.ProAccount;
 import com.radish.master.entity.ProAccountDet;
 import com.radish.master.entity.ProjectVolume;
+import com.radish.master.entity.project.ProjectTeam;
 import com.radish.master.entity.project.Salary;
 import com.radish.master.entity.project.SalaryVolume;
 import com.radish.master.entity.volumePay.Loans;
@@ -52,6 +53,8 @@ public class SalayrPayController {
 	public String payinde(HttpServletRequest request){
 		request.setAttribute("uid", SecurityUtil.getUserId());
 		request.setAttribute("projectOptions", JSONArray.toJSONString(commonService.getProjectCombobox()));
+		List<ProjectTeam> htbzs = baseService.find(" from ProjectTeam where 1=1 ");
+		request.setAttribute("bz", JSONArray.toJSONString(htbzs));
 		return prefix+"salaryPay_list";
 	}
 	@RequestMapping("/auidtMx/{id}")

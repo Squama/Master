@@ -137,6 +137,10 @@
 		$("#businessInfock").css("display","none")
 		$("#finalInfock").css("display","none")
     }
+    var ckprojectOptions = '${projectOptions?default(0)}',ckoptions=0;
+    if(ckprojectOptions != 0){
+    	ckoptions = JSON.parse(ckprojectOptions);
+    }
     $(function () {
     	$('#businessKey').val(gclid);
     	
@@ -154,9 +158,9 @@
         //初始化控件
         ckform.initComponent();
         
-        if(options != 0){
-            for (var i = 0, len = options.length; i < len; i++) {
-                var option = options[i];
+        if(ckoptions != 0){
+            for (var i = 0, len = ckoptions.length; i < len; i++) {
+                var option = ckoptions[i];
                 $('#projectIDDetailck').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
             }
             $("#projectIDDetailck").select2();

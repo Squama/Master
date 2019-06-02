@@ -10,30 +10,24 @@
                             <div class="form-group">
                                 <label class="col-sm-5 control-label">所属项目<span style="color:red">*</span></label>
                                 <div class="col-sm-6">
-                                    <select id="projectIDDetailck" class="form-control select2" name="projectID" disabled="disabled">
+                                    <select id="projectIDck" class="form-control select2" name="projectID" disabled="disabled">
                                         <option selected="selected" value="">选择一个项目</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-5 control-label">选择合同<span style="color:red">*</span></label>
+                                <label class="col-sm-5 control-label">点工班组<span style="color:red">*</span></label>
                                 <div class="col-sm-6">
-                                    <select id="laborIDck" class="form-control select2" name="laborID" disabled="disabled">
-                                        <option selected="selected" value="">选择一个合同</option>
+                                    <select id="teamIDck" class="form-control select2" name="teamID" disabled="disabled">
+                                        <option selected="selected" value="">选择一个点工班组</option>
                                     </select>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-5 control-label">施工班组<span style="color:red">*</span></label>
-                                <div class="col-sm-6">
-                                    <input type="text" class="form-control" id="constructionTeamck" name="constructionTeam" placeholder="施工班组" readonly="readonly">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-5 control-label">施工起始时间<span style="color:red">*</span></label>
                                 <div class="input-group col-sm-6">
                                     <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                                    <input type="text" class="form-control" data-flag="datepicker" data-format="yyyy-mm-dd" name="startTime" id="startTime"
+                                    <input type="text" class="form-control" data-flag="datepicker" data-format="yyyy-mm-dd" name="startTime" id="startTimeck"
                                         placeholder="起始时间" disabled="disabled">
                                 </div>
                             </div>
@@ -48,46 +42,38 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">合同总价（元）</label>
+                                <label class="col-sm-3 control-label">措施费类别<span style="color:red">*</span></label>
                                 <div class="col-sm-6">
-                                    <input type="text" class="form-control" id="contractPriceck" name="contractPrice" placeholder="合同总价" readonly="readonly">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">施工负责人<span style="color:red">*</span></label>
-                                <div class="col-sm-6">
-                                    <input type="text" class="form-control" id="constructionManagerck" name="constructionManager" readonly="readonly">
+                                    <select id="measureTypeck" class="form-control select2" name="measureType" disabled="disabled">
+                                        <option selected="selected" value="">选择一个措施费</option>
+                                        <option value="construct">安全文明施工费</option>
+                                        <option value="issue">总价措施项目费</option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">施工结束时间<span style="color:red">*</span></label>
                                 <div class="input-group col-sm-6">
                                     <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                                    <input type="text" class="form-control" data-flag="datepicker" data-format="yyyy-mm-dd" name="endTime" id="endTime"
+                                    <input type="text" class="form-control" data-flag="datepicker" data-format="yyyy-mm-dd" name="endTime" id="endTimeck"
                                         placeholder="结束时间" disabled="disabled">
                                 </div>
-                            </div>
-                        </div>
-                        <div class="col-md-12">
-                            <label class="col-sm-2 control-label">工程量<span style="color:red">*</span></label>
-                            <div class="col-sm-8">
-                                <textarea class="form-control" id="volumeck" name="volume" rows="8" cols="100" disabled="disabled"></textarea>
                             </div>
                         </div>
                         <div class="col-md-6" style="margin-left:25%">
                               <div class="callout callout-success" id="applyInfock" style="margin-top:8px;margin-bottom:8px;">
                                 <h4>上报金额：</h4>
-                                <p>人工费：<span id="labourInfock">尚未审批</span>；人工扣款：<span id="debitInfock">尚未审批</span>；</p>
+                                <p>机械费：<span id="mechInfock">尚未审批</span>；人工费：<span id="labourInfock">尚未审批</span>；材料费：<span id="matInfock">尚未审批</span>；扣款：<span id="debitInfock">尚未审批</span>；</p>
                                 <h5>上报小计：<span id="subInfock">尚未审批</span></h5>
                               </div>
                               <div class="callout callout-success" id="businessInfock" style="margin-top:8px;margin-bottom:8px;">
                                 <h4>经营科审核金额：</h4>
-                                <p>人工费：<span id="labourBusick">尚未审批</span>；人工扣款：<span id="debitBusick">尚未审批</span>；</p>
+                                <p>机械费：<span id="mechBusick">尚未审批</span>；人工费：<span id="labourBusick">尚未审批</span>；材料费：<span id="matBusick">尚未审批</span>；扣款：<span id="debitBusick">尚未审批</span>；</p>
                                 <h5>上报小计：<span id="subBusick">尚未审批</span></h5>
                               </div>
                               <div class="callout callout-success" id="finalInfock" style="margin-top:8px;margin-bottom:8px;">
                                 <h4>财务审核金额：</h4>
-                                <p>人工费：<span id="labourFinalck">尚未审批</span>；人工扣款：<span id="debitFinalck">尚未审批</span>；</p>
+                                <p>机械费：<span id="mechFinalck">尚未审批</span>；人工费：<span id="labourFinalck">尚未审批</span>；材料费：<span id="matFinalck">尚未审批</span>；扣款：<span id="debitFinalck">尚未审批</span>；</p>
                                 <h5>上报小计：<span id="subFinalck">尚未审批</span></h5>
                               </div>
                         </div>
@@ -159,49 +145,66 @@
         ckform.initComponent();
         
         if(ckoptions != 0){
-            for (var i = 0, len = ckoptions.length; i < len; i++) {
+        	for (var i = 0, len = ckoptions.length; i < len; i++) {
                 var option = ckoptions[i];
-                $('#projectIDDetailck').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+                $('#projectIDck').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
             }
-            $("#projectIDDetailck").select2();
-            $("#projectIDDetailck").bind("change", function () {
+            $("#projectIDck").select2();
+            $("#projectIDck").bind("change", function () {
                 var value = $(this).val();
                 if (value === "") {
                     return false;
                 }
                 
                 var name = "";
-                if ($("#projectIDDetailck").prop('selectedIndex') > 0) {
-                    name = $("#projectIDDetailck").find("option:selected").text();
+                if ($("#projectIDck").prop('selectedIndex') > 0) {
+                    name = $("#projectIDck").find("option:selected").text();
                 }
-                $('#projectName').val(name);
+                $('#projectNameck').val(name);
                 
-                ajaxPost(basePath+"/projectvolume/getlabor?sblx=10",{projectID:value},function(data){
-                    var laborOptions = data.message;
-                    lOptions = JSON.parse(laborOptions);
-                    $('#laborIDck').empty();
-                    $('#laborIDck').append('<option selected="selected" value="">选择一个合同</option>');
-                    for (var i = 0, len = lOptions.length; i < len; i++) {
-                        var lOption = lOptions[i];
-                        $('#laborIDck').append("<option value=\"" + lOption.value + "\">" + lOption.data + "</option>");
+                //加载点工班组
+                ajaxPost(basePath+"/measurevolume/getpoint",{projectID:value},function(data){
+                    var packDetailOptions = data.message;
+                    pOptions = JSON.parse(packDetailOptions);
+                    $('#teamIDck').empty();
+                    $('#teamIDck').append('<option selected="selected" value="">选择一个点工班组</option>');
+                    for (var i = 0, len = pOptions.length; i < len; i++) {
+                        var option = pOptions[i];
+                        $('#teamIDck').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
                     }
-                    $('#laborIDck').select2();
-                    $('#laborIDck').unbind("change.Labor");
-                    $('#laborIDck').bind("change.Labor", function(){
-                        laborid = $(this).val();
-                        if (laborid === "") {
+                    $('#teamIDck').select2();
+                    
+                    $("#teamIDck").bind("change", function () {
+                        var teamID = $(this).val();
+                        if (teamID === "") {
                             return false;
                         }
-                        ajaxPost(basePath+"/projectvolume/getlaborinfo",{laborID:laborid},function(data){
-                            $('#constructionTeamck').val(data.constructionTeam);
-                            $('#constructionManagerck').val(data.constructionManager);
-                            $('#contractPriceck').val(data.contractPrice);
-                        });
                         
+                        var name = "";
+                        if ($("#teamIDck").prop('selectedIndex') > 0) {
+                            name = $("#teamIDck").find("option:selected").text();
+                        }
+                        $('#teamNameck').val(name);
+                        
+                        //加载包工包料
+                        ajaxPost(basePath+"/measurevolume/getpack",{projectID:value,teamID:teamID},function(data){
+                            var packDetailOptions = data.message;
+                            pOptions = JSON.parse(packDetailOptions);
+                            $('#packageDetailIDck').empty();
+                            $('#packageDetailIDck').append('<option selected="selected" value="">选择一个包工包料</option>');
+                            for (var i = 0, len = pOptions.length; i < len; i++) {
+                                var option = pOptions[i];
+                                $('#packageDetailIDck').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+                            }
+                            $('#packageDetailIDck').select2();
+                        });
+                        //包工包料加载结束
                     });
+                    
                 });
+                //点工班组加载结束
                 //加载子项
-                ajaxPost(basePath+"/projectvolume/getprojectsub",{projectID:value},function(data){
+                ajaxPost(basePath+"/measurevolume/getprojectsub",{projectID:value},function(data){
                     var laborSubOptions = data.message;
                     sOptions = JSON.parse(laborSubOptions);
                     $('#projectSubIDck').empty();
@@ -219,7 +222,7 @@
         //编辑回填
         if(gclid!="0"){
         	
-            ajaxPost(basePath+"/projectvolume/get",{id:gclid},function(data){
+            ajaxPost(basePath+"/measurevolume/get",{id:gclid},function(data){
             	ckform.initFormData(data);
                 
                 $('#laborSubIDck').val(data.laborSubID).trigger("change");
@@ -227,17 +230,14 @@
                 $('#labourInfock').html(data.applyLabour + '元');
                 $('#matInfock').html(data.applyMat + '元');
                 $('#debitInfock').html(data.applyDebit + '元');
-                $('#debitclInfock').html(data.applyDebitcl + '元');
-                $('#debitjxInfock').html(data.applyDebitjx + '元');
                 $('#subInfock').html(data.applySub + '元');
 
                 
             	$('#mechBusick').html(data.businessMech + '元');
                 $('#labourBusick').html(data.businessLabour + '元');
                 $('#matBusick').html(data.businessMat + '元');
+                
                 $('#debitBusick').html(data.businessDebit + '元');
-                $('#debitjxBusick').html(data.businessDebitjx + '元');
-                $('#debitclBusick').html(data.businessDebitcl + '元');
                 $('#subBusick').html(data.businessSub + '元');
                 
             	$('#mechFinalck').html(data.finalMech + '元');
@@ -246,15 +246,15 @@
                 $('#debitFinalck').html(data.finalDebit + '元');
                 $('#subFinalck').html(data.finalSub + '元');
                 
-                //$('.final').show();
+               // $('.final').show();
             })
         }
         
-       /*  $("#lookFkd").on("click",function(){
+        /* $("#lookFkd").on("click",function(){
             lookFkd();
         }) */
     });
-    /* function lookFkd(){
+   /*  function lookFkd(){
         modals.openWin({
             winId:"lookfkd",
             title:'班组罚款详情',

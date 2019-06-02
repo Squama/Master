@@ -49,6 +49,7 @@
                 <div class="box-header with-border">
                     <span>
                         <i class="fa fa-files-o">工资单明细</i>
+                        <span id="gcls"></span>
                     </span>
                 </div>
                 <div class="dataTables_filter" id="searchDivDetail" style="display:none;">
@@ -108,9 +109,38 @@
             ajaxPost(basePath+"/project/team/salary/get",{id:id},function(data){
                 form.initFormData(data);
             })
+            ajaxPost(basePath+"/project/team/salary/getGcls",{id:id},function(data){
+                if(data.success==true){
+					if(data.data.length>0){
+						var sj = data.data
+						var gcs = "";
+						for(var i = 0;i<sj.length;i++){
+							gcs += "&nbsp;<a onclick=lookxq(\"" + sj[i].id + "\",\""+sj[i].lx+"\")>"+sj[i].name+"</a>"
+						}
+					}
+					$("#gcls").html(gcs);
+                 }
+            })
         }
         
+        
     });
-   
+    function lookxq(id,lx){
+		if(lx=="10"){
+			 modals.openWin({
+	             winId:"gcl",
+	             title:'工程量上报详情',
+	             width:'1200px',
+	             url:basePath+"/projectvolume/detailouter/"+id            
+	        });
+		}else if(lx=="30"){
+			 modals.openWin({
+	             winId:"gcl",
+	             title:'上报详情',
+	             width:'1200px',
+	             url:basePath+"/measurevolume/detailouter/"+id            
+	        });
+		}
+    }
 
 </script>

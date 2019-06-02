@@ -19,6 +19,9 @@
                     <select id="projectID" class="form-control select2" name="project_id" style="width:200px;" operator="eq">
                         <option selected="selected" value="">选择一个项目</option>
                     </select>
+                    <select id="bzid" class="form-control select2" name="team_id" style="width:200px;" operator="eq">
+                        <option selected="selected" value="">选择一个班组</option>
+                    </select>
                     <select id="type" class="form-control select2" name="type" style="width:200px;" operator="eq">
                         <option selected="selected" value="">选择一个类型</option>
                         <option value="10">专业作业班组</option>
@@ -61,6 +64,10 @@
     var projectOptions = '${projectOptions?default(0)}',options=0;
     if(projectOptions != 0){
         options = JSON.parse(projectOptions);
+    }
+    var teams = '${bz?default(0)}',team=0;
+    if(teams != 0){
+    	team = JSON.parse(teams);
     }
     var uid = '${uid?default(0)}';
     var teamSalaryObject = {
@@ -140,7 +147,13 @@
             }
             $("#projectID").select2();
         }
-        
+        if(team != 0){
+            for (var i = 0, len = team.length; i < len; i++) {
+                var option = team[i];
+                $('#bzid').append("<option value=\"" + option.id + "\">" + option.teamName + "</option>");
+            }
+            $("#bzid").select2();
+        }
     });
     
     function fnRenderSalary(value, type, rowObj) {
