@@ -187,7 +187,7 @@
               FROM tbl_project_volume pv, tbl_labor l, tbl_project_sub ps
               WHERE pv.labor_id = l.id AND pv.project_sub_id = ps.id AND pv.id NOT IN 
               (SELECT volume_id FROM tbl_salary_volume) AND pv.status = '70'
-              AND 1=1
+              AND 1=1 and not exists(select zf.* from tbl_volumepay zf where zf.volumeId=pv.id and zf.payType='10' )
             ]]>
         </sql>
         <column key="rowIndex" header="序号" width="80"/>

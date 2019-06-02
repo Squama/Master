@@ -64,7 +64,7 @@ public class VolumePayController {
 			List<SalaryVolume> gxs = baseService.findBySql("select * from tbl_salary_volume where volume_id='"+gclid+"'", SalaryVolume.class);
 			if(gxs.size()>0){
 				Salary gz = baseService.get(Salary.class, gxs.get(0).getSalaryID());
-				if("60".equals(gz.getStatus())){
+				if(Integer.valueOf(gz.getStatus())>=60&&Integer.valueOf(gz.getStatus())!=70){
 					request.setAttribute("gz", JSONArray.toJSONString(gz));
 					List<SalaryDetail> gzmxs = baseService.findBySql(" select * from tbl_salary_detail where salary_id ='"+gz.getId()+"'", SalaryDetail.class);
 					double zje = 0.0;
@@ -73,14 +73,37 @@ public class VolumePayController {
 					}
 					String sql = " select * from tbl_volumePay where volumeId='"+gclid+"' and payType='10' and status<>'40'";
 					List<VolumePay> zfs = baseService.findBySql(sql, VolumePay.class);
-					double kzf = zje;
+					/*double kzf = zje;
 					for(VolumePay zf:zfs){
 						kzf = air.sub(kzf, Double.valueOf(zf.getPayMoney()));
+					}*/
+					double kzf = 0.0;
+					for(VolumePay zf:zfs){
+						kzf = air.add(kzf, Double.valueOf(zf.getPayMoney()));
 					}
 					request.setAttribute("zje", zje);
 					request.setAttribute("kzf", kzf);
 				}
 				
+			}else{
+				String sql = " select * from tbl_volumePay where volumeId='"+gclid+"' and payType='10' and status<>'40'";
+				List<VolumePay> zfs = baseService.findBySql(sql, VolumePay.class);
+				ProjectVolume pv = baseService.get(ProjectVolume.class, gclid);
+				double zje = 0.0;
+				zje = Double.valueOf(pv.getFinalLabour());
+				if(pv.getFinalDebit()!=null){
+					zje = air.sub(zje, Double.valueOf(pv.getFinalDebit()));
+				}
+				/*double kzf = zje;
+				for(VolumePay zf:zfs){
+					kzf = air.sub(kzf, Double.valueOf(zf.getPayMoney()));
+				}*/
+				double kzf = 0.0;
+				for(VolumePay zf:zfs){
+					kzf = air.add(kzf, Double.valueOf(zf.getPayMoney()));
+				}
+				request.setAttribute("zje", zje);
+				request.setAttribute("kzf", kzf);
 			}
 			return prefix+"payListRg";
 		}
@@ -152,12 +175,20 @@ public class VolumePayController {
 		request.setAttribute("zfid", zfid);
 		request.setAttribute("lx", lx);
 		
-		List<SalaryDetail> gzmxs = baseService.findBySql(" select * from tbl_salary_detail where salary_id ='"+gzid+"'", SalaryDetail.class);
+		/*List<SalaryDetail> gzmxs = baseService.findBySql(" select * from tbl_salary_detail where salary_id ='"+gzid+"'", SalaryDetail.class);
 		double zje = 0.0;
 		for(SalaryDetail gzmx:gzmxs){
 			zje =air.add(zje, Double.valueOf(gzmx.getActual()));
-		}
+		}*/
+		//算出总金额和可支付金额
 		ProjectVolume pv = baseService.get(ProjectVolume.class, gclid);
+		double zje = 0.0;
+		zje = Double.valueOf(pv.getFinalLabour());
+		if(pv.getFinalDebit()!=null){
+			zje = air.sub(zje, Double.valueOf(pv.getFinalDebit()));
+		}
+		
+		
 		String sql = " select * from tbl_volumePay where volumeId='"+gclid+"' and payType='10' and status<>'40'";
 		List<VolumePay> zfs = baseService.findBySql(sql, VolumePay.class);
 		double kzf = zje;
@@ -187,11 +218,18 @@ public class VolumePayController {
  				gzid = gx.getSalaryID();
  			}
 			
-			List<SalaryDetail> gzmxs = baseService.findBySql(" select * from tbl_salary_detail where salary_id ='"+gzid+"'", SalaryDetail.class);
-			double zje = 0.0;
-			for(SalaryDetail gzmx:gzmxs){
-				zje =air.add(zje, Double.valueOf(gzmx.getActual()));
-			}
+ 			/*List<SalaryDetail> gzmxs = baseService.findBySql(" select * from tbl_salary_detail where salary_id ='"+gzid+"'", SalaryDetail.class);
+ 			double zje = 0.0;
+ 			for(SalaryDetail gzmx:gzmxs){
+ 				zje =air.add(zje, Double.valueOf(gzmx.getActual()));
+ 			}*/
+ 			//算出总金额和可支付金额
+ 			ProjectVolume pv = baseService.get(ProjectVolume.class, zf.getVolumeId());
+ 			double zje = 0.0;
+ 			zje = Double.valueOf(pv.getFinalLabour());
+ 			if(pv.getFinalDebit()!=null){
+ 				zje = air.sub(zje, Double.valueOf(pv.getFinalDebit()));
+ 			}
 			String sql = " select * from tbl_volumePay where volumeId='"+gzid+"' and payType='10' and status<>'40'";
 			List<VolumePay> zfs = baseService.findBySql(sql, VolumePay.class);
 			double kzf = zje;
@@ -528,6 +566,67 @@ public class VolumePayController {
    		}
 		
 		Result r = new Result();
+		return r;
+	}
+	/**
+	 * 判断是否存在工资
+	 * @author wzh
+	 * @创建时间 2019年6月2日 上午11:41:16
+	 * @return
+	 */
+	@RequestMapping("/getGzInfo")
+	@ResponseBody
+	public Result getGzInfo(HttpServletRequest request){
+		String id = request.getParameter("id");
+		Result r = new Result();
+		List<SalaryVolume> gxs = baseService.findBySql("select * from tbl_salary_volume where volume_id='"+id+"'", SalaryVolume.class);
+		if(gxs.size()>0){
+			Salary gz = baseService.get(Salary.class, gxs.get(0).getSalaryID());
+			if(gz!=null){
+				r.setData(gz);
+				r.setSuccess(false);
+			}else{
+				r.setSuccess(true);
+			}
+		}else{
+			r.setSuccess(true);
+		}
+		return r;
+	}
+	/**
+	 * 删除工资数据
+	 * @author wzh
+	 * @创建时间 2019年6月2日 下午12:16:26
+	 * @return
+	 */
+	@RequestMapping("/delSalaryByGcl")
+	@ResponseBody
+	public Result delSalaryByGcl(HttpServletRequest request){
+		String id = request.getParameter("id");
+		Result r = new Result();
+		List<SalaryVolume> gxs = baseService.findBySql("select * from tbl_salary_volume where volume_id='"+id+"'", SalaryVolume.class);
+		if(gxs.size()>0){
+			Salary gz = baseService.get(Salary.class, gxs.get(0).getSalaryID());
+			if(gz!=null){
+				List<SalaryVolume> gx = baseService.findBySql("select * from tbl_salary_volume where salary_id='"+gxs.get(0).getSalaryID()+"'", SalaryVolume.class);
+				for(SalaryVolume g :gx){//拿到所有工程量
+					ProjectVolume gcl = baseService.get(ProjectVolume.class, g.getVolumeID());
+					gcl.setLabourStatus(null);
+					baseService.update(gcl);
+					String sql = " select * from tbl_volumePay where volumeId='"+g.getVolumeID()+"' and payType='10' ";
+					List<VolumePay> zfs = baseService.findBySql(sql, VolumePay.class);
+					for(VolumePay zf :zfs){
+						baseService.delete(zf);
+					}
+					baseService.delete(g);
+				}
+				List<SalaryDetail> mxs = baseService.find(" from SalaryDetail where salary_id='"+gz.getId()+"'");
+				for(SalaryDetail mx :mxs){//删除工资明细
+					baseService.delete(mx);
+				}
+				baseService.delete(gz);
+			}
+		}
 		return r;
 	}
 }

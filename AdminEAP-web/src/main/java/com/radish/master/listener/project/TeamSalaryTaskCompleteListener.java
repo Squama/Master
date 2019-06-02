@@ -3,8 +3,10 @@
  */
 package com.radish.master.listener.project;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.activiti.engine.delegate.DelegateTask;
@@ -13,8 +15,12 @@ import org.activiti.engine.delegate.TaskListener;
 import com.cnpc.framework.activiti.pojo.Constants;
 import com.cnpc.framework.base.service.BaseService;
 import com.cnpc.framework.utils.SecurityUtil;
+import com.radish.master.entity.ProjectVolume;
 import com.radish.master.entity.common.ActivitiSuggestion;
 import com.radish.master.entity.project.Salary;
+import com.radish.master.entity.project.SalaryVolume;
+import com.radish.master.entity.volumePay.VolumePay;
+import com.radish.master.system.Arith;
 import com.radish.master.system.SpringUtil;
 
 /**
@@ -65,6 +71,36 @@ public class TeamSalaryTaskCompleteListener implements TaskListener{
                 	salary.setStatus("50");
                 } else if ("account".equals(delegateTask.getTaskDefinitionKey())) {
                 	salary.setStatus("60");
+                	//分配工资额度到对应工程量的人工支付里面
+                	Arith ari = new Arith();
+                	if(salary.getTotal()!=null&&!"无".equals(salary.getTotal())){//存在总额
+                		if(Double.valueOf(salary.getTotal())>0.0&&Double.valueOf(salary.getApplySum())>0.0){//总额\申请总额大于0
+                			//得出总额和申请总额的百分比*各个工程量人工。
+                			BigDecimal b1 = new BigDecimal(Double.valueOf(salary.getTotal()));
+                	        //BigDecimal b2 = new BigDecimal(Double.valueOf(salary.getApplySum()));
+                	        
+                	        List<SalaryVolume> gxs = baseService.findBySql("select * from tbl_salary_volume where salary_id='"+businessKey+"'", SalaryVolume.class);
+                	        for(SalaryVolume gx :gxs){//拿到所有工程量
+            					ProjectVolume gcl = baseService.get(ProjectVolume.class, gx.getVolumeID());
+            					BigDecimal b2 = new BigDecimal(Double.valueOf(gcl.getFinalLabour()));
+            					Double bfb = b2.divide(b1, 2,BigDecimal.ROUND_HALF_UP).doubleValue();
+            					Double rgje = ari.mul(bfb, Double.valueOf(salary.getApplySum()));
+            					VolumePay zf = new VolumePay();
+            					zf.setIsjz("1");
+            					zf.setVolumeId(gcl.getId());
+            					zf.setPayType("10");
+            					zf.setPayWay("10");
+            					zf.setPayMoney(rgje.toString());
+            					zf.setDepartment(gcl.getProjectName()+"（工资单付款数据）");
+            					zf.setContent("工资单审核完成自动分配金额,工资id:"+businessKey);
+            					zf.setCreateDate(new Date());
+            					zf.setStatus("30");
+            					baseService.save(zf);
+            					gcl.setLabourStatus("20");
+            					baseService.update(gcl);
+            				}
+                		}
+                	}
                 }
             }
 

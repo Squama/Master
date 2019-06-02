@@ -104,9 +104,9 @@
     	}
     	if(gz!=0){
     		//$("#volumeId").val(gz.id);
-    		$("#titleH").html("人工费支付列表---"+"应付金额："+zje+"元,剩余可支付金额:"+kzf+"元");
+    		$("#titleH").html("人工费支付列表(工资单数据)---"+"应付金额："+zje+"元,已支付金额:"+kzf+"元");
     	}else{
-    		$("#titleH").html("人工费支付列表-----未查到工资单数据");
+    		$("#titleH").html("人工费支付列表(无工资单数据)-----"+"应付金额："+zje+"元,已支付金额:"+kzf+"元");
     	}
     	
     	volumeTable = new CommonTable("volume_table", "volumePay_list", "searchDiv", {
@@ -128,27 +128,64 @@
             var rowId = volumeTable.getSelectedRowId();
             switch (action) {
             case 'add':
-            	if(gz==0&&action!='out'){
-                	modals.info('请生成工资单后再进行支付操作');
-                	return ;
-                }
-            	var url =basePath+"/volumepay/addPayInfoRg?gclid="+gclid+"&&gzid="+gz.id;
-            	if(type==10){
-            		zflx="人工";
-            	}else if(type==20){
-            		zflx="机械";
-            	}else if(type==30){
-            		zflx="材料";
-            	}
-            	modals.openWin({
-                    winId:winId,
-                    title:zflx+'支付',
-                    width:'900px',
-                    url:url,
-                    hideFunc:function(){
-                   	 volumeTable.reloadData();
-                    }
-                   });                       
+            	ajaxPost(basePath + '/volumepay/getGzInfo', {id:gclid}, function (data) {
+                    if(data.success==true){
+                    	var url =basePath+"/volumepay/addPayInfoRg?gclid="+gclid;
+                    	modals.openWin({
+                            winId:winId,
+                            title:'人工支付',
+                            width:'900px',
+                            url:url,
+                            hideFunc:function(){
+                           	 volumeTable.reloadData();
+                            }
+                           }); 
+                       }else{
+                           var gz = data.data;
+						   var zfzt = pdzt(gz.status);
+						   var sfsc=0;//是否删除
+						   var talk="";
+						   if(zfzt==1){
+							   sfsc=1;
+							   talk="存在还未审核的工资单，需删除后才可重新支付，是否删除？";
+							}else if(zfzt==2){
+								sfsc=0;
+								talk="存在审核中的工资单，需完成审核流程后进行此操作！";
+							}else if(zfzt==3){
+								sfsc=1;
+								talk="存在审核完成且未支付的工资单，需删除后才可重新支付，是否删除？";
+							}else if(zfzt==4){
+								sfsc=0;
+								talk="存在支付中的工资单，需完成工资支付流程后进行此操作！";
+							}else if(zfzt==5){
+								sfsc=0;
+								talk="存在已支付审核完成的工资单，不可进行此操作！";
+							}
+							if(sfsc==1){
+								modals.confirm(talk,function(){
+									 ajaxPost(basePath + '/volumepay/delSalaryByGcl', {id:gclid}, function (data) {
+					                        if (data.success) {
+					                        	var url =basePath+"/volumepay/addPayInfoRg?gclid="+gclid+"&&gzid="+gz.id;
+					                        	modals.openWin({
+					                                winId:winId,
+					                                title:'人工支付',
+					                                width:'900px',
+					                                url:url,
+					                                hideFunc:function(){
+					                                	loadPage(basePath+"/volumepay/payList?gclid="+gclid+"&type=10");
+					                                }
+					                               }); 
+					                        }
+					                    });
+								})
+							}else{
+								modals.info(talk);
+				                 return false;
+							}
+
+                       }
+                });
+            	                      
              break;
          case 'edit':
              if(!rowId){
@@ -246,5 +283,19 @@
         }
         return oper;
     }
-    
+    function pdzt(value){
+		if(value=="10"||value=="70"){
+			return 1;//新建
+		}else if(value=="20"||value=="30"||value=="40"||value=="50"){
+			return 2;//申请审核
+		}else if(value=="60"||value=="110"){
+			return 3;//申请审核完成
+		}else if(value=="80"){
+			return 4;//支付审核
+		}else if(value=="100"||value=="90"){
+			return 5;//支付完成
+		}else{
+			return 1;
+		}
+     }
 </script>
