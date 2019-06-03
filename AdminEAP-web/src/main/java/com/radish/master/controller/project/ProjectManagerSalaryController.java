@@ -261,24 +261,25 @@ public class ProjectManagerSalaryController {
                 }
             }
         }
-
-        if (!teamSalaryService.isNumber(value)) {
-            list.add(new SalaryDetail());
-            re.setData(list);
-            return JSONArray.toJSONString(re);
+        if(!"remark".equals(field)&&!"workType".equals(field)){
+        	if (!teamSalaryService.isNumber(value)) {
+                list.add(new SalaryDetail());
+                re.setData(list);
+                return JSONArray.toJSONString(re);
+            }
         }
-
         SalaryDetail detail = teamSalaryService.get(SalaryDetail.class, id);
 
         Method set = detail.getClass().getMethod("set" + teamSalaryService.captureName(field), String.class);
         set.invoke(detail, value);
         
-        BigDecimal loan = new BigDecimal(detail.getLoan());
-        BigDecimal payable = new BigDecimal(detail.getPayable());
+        if(!"actual".equals(field)){
+        	BigDecimal loan = new BigDecimal(detail.getLoan());
+            BigDecimal payable = new BigDecimal(detail.getPayable());
+            detail.setActual(payable.subtract(loan).setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
+            teamSalaryService.save(detail);
+        }
         
-        detail.setActual(payable.subtract(loan).setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
-
-        teamSalaryService.save(detail);
         
         
         if("actual".equals(field)){
