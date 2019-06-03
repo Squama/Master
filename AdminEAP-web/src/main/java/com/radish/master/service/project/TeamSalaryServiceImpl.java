@@ -587,5 +587,44 @@ public class TeamSalaryServiceImpl extends BaseServiceImpl implements TeamSalary
         detail.setActual(detail.getPayable());
         
     }
+
+    @Override
+    public Salary getBiggestSalary(String projectID, String type) {
+        StringBuilder buffer = new StringBuilder();
+
+        buffer.append("SELECT * FROM tbl_salary ");
+        buffer.append("WHERE project_id=:projectID AND type=:type ORDER BY start_time desc");
+
+        Map<String, Object> params = new HashMap<String, Object>();
+
+        params.put("type", type);
+        params.put("projectID", projectID);
+
+        List<Salary> list = this.findBySql(buffer.toString(), params, Salary.class);
+        if(list.isEmpty()){
+            return null;
+        }
+        
+        return list.get(0);
+    }
+
+    @Override
+    public Salary getBiggestSalary(String type) {
+        StringBuilder buffer = new StringBuilder();
+
+        buffer.append("SELECT * FROM tbl_salary ");
+        buffer.append("WHERE type=:type ORDER BY start_time desc");
+
+        Map<String, Object> params = new HashMap<String, Object>();
+
+        params.put("type", type);
+
+        List<Salary> list = this.findBySql(buffer.toString(), params, Salary.class);
+        if(list.isEmpty()){
+            return null;
+        }
+        
+        return list.get(0);
+    }
     
 }

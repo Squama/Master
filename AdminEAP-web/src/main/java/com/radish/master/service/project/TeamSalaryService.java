@@ -67,4 +67,8 @@ public interface TeamSalaryService extends BaseService {
     
     void handleSocialSalaryDetail(SocialSecurity socialSecurity, SalaryDetail detail, Date startDate);
     
+    Salary getBiggestSalary(String projectID, String type);
+    
+    Salary getBiggestSalary(String type);
+    
 }

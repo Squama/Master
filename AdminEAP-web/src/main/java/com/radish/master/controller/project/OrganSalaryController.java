@@ -93,6 +93,12 @@ public class OrganSalaryController {
         if (!list.isEmpty()) {
             return new Result(false, "工资时间段不可重叠");
         }
+        
+        Salary limitSalary = teamSalaryService.getBiggestSalary("40");
+        if(limitSalary.getStartTime().getTime() > salary.getStartTime().getTime()){
+            return new Result(false, "工资起始时间不可小于"+myFormat.format(limitSalary.getStartTime()));
+        }
+        
         if (StrUtil.isEmpty(salary.getId())) {
             salary.setCreateDateTime(new Date());
             salary.setUpdateDateTime(new Date());
