@@ -555,7 +555,7 @@ public class TeamSalaryServiceImpl extends BaseServiceImpl implements TeamSalary
         params.put("ssYear", socialSecurity.getYear());
         List<SalaryDetail> list =  this.find("from SalaryDetail where userID =:userID AND ssYear =:ssYear", params);
         for(SalaryDetail his : list){
-            sumSalary = sumSalary.add(new BigDecimal(his.getPayable()).subtract(new BigDecimal(his.getTax())));
+            sumSalary = sumSalary.add(new BigDecimal(his.getPayable()).add(new BigDecimal(his.getTax())));
             sumTax = sumTax.add(new BigDecimal(his.getTax()));
         }
         
