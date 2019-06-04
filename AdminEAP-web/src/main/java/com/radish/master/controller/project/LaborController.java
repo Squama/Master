@@ -396,6 +396,21 @@ public class LaborController {
 		}
 		return "projectmanage/labor/labor_detail";
 	}
+	
+	@RequestMapping(value = "/outterdetail/{id}", method = RequestMethod.GET)
+    public String outterdetail(@PathVariable("id") String id, HttpServletRequest request) {
+        request.setAttribute("id", id);
+        Labor ht = projectService.get(Labor.class,id);
+        String htlx = ht.getHtlx();
+        if(htlx!=null){//机械合同
+            if("10".equals(htlx)){
+                return "projectmanage/laborRg/labor_detail";
+            }else if("30".equals(htlx)){
+                return "projectmanage/machlabor/labor_detail";
+            }
+        }
+        return "projectmanage/labor/labor_detail_outer";
+    }
 
 	@RequestMapping(value = "/sub", method = RequestMethod.POST)
 	public String step2(Labor labor, HttpServletRequest request) {
