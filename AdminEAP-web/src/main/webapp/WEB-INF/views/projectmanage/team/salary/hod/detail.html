@@ -79,13 +79,13 @@
      
                 // Total over this page
                 unitTotal = api
-                    .column( 12, { page: 'current'} )
+                    .column( 14, { page: 'current'} )
                     .data()
                     .reduce( function (a, b) {
                         return accAddition(intVal(a), intVal(b));
                     }, 0 );
                 // Update footer
-                $( api.column( 12 ).footer() ).html(
+                $( api.column( 14 ).footer() ).html(
                     '￥'+unitTotal
                 );
             }
