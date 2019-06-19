@@ -1,6 +1,13 @@
 <script type="text/javascript">
  $.fn.modal.Constructor.prototype.enforceFocus = function () {};
  </script>
+ <script src="${basePath}/resources/cinder/editor/dataTables.editor.min.js"></script>
+<script src="${basePath}/resources/common/js/calculate.js"></script>
+<link rel="stylesheet" href="${basePath}/resources/cinder/editor/dataTables.editor.css">
+<link rel="stylesheet" href="${basePath}/resources/cinder/editor/editor.dataTables.min.css">
+<style>
+.DTE_Field_InputControl{color:black;}
+</style>
 <section class="content">
     <div class="row">
         <div class="col-xs-12">
@@ -61,7 +68,7 @@
                        <select id="matNumber" class="form-control select2" name="matNumber" style="width:150px;">
                            <option selected="selected" value="">选择一个物料</option>
                        </select>
-                       <input type="text" placeholder="规格" title="规格" name="matStandard" class="form-control" id="matStandard" style="width:120px;" readonly="readonly">
+                       <input type="text" placeholder="规格" title="规格" name="matStandard" class="form-control" id="matStandard" style="width:120px;" >
                        <input type="text" placeholder="单位" title="单位" name="unit" class="form-control" id="unit" style="width:60px;" readonly="readonly">
                        <input type="text" placeholder="数量" title="数量" name="quantity" class="form-control" id="quantity" style="width:60px;">
                        <div class="btn-group">
@@ -109,6 +116,22 @@
                         modals.error(data.message);
                     }
                 });
+            },
+            initSalaryEditor:function(){
+                salaryEditor = new $.fn.dataTable.Editor( {
+                    ajax: basePath+"/purchase/apply/rowedit",
+                    table: "#purchase_det_table",
+                    idSrc:  'id',
+                    fields: [ 
+                        {label:"matStandard:", name:"matStandard",type:"text"}
+                    ]
+                } );
+                
+                $('#purchase_det_table').on( 'click', 'tbody td:not(:first-child)', function (e) {
+                    salaryEditor.inline( this, {
+                        onBlur: 'submit'
+                    });
+                } );
             }
     }
     
@@ -281,6 +304,7 @@
         //初始化控件
         purchaseform.initComponent();
         purchasedetform.initComponent();
+        purchaseDetObject.initSalaryEditor();
         
     });
     

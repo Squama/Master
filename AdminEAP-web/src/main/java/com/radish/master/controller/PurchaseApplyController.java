@@ -32,6 +32,8 @@ import com.radish.master.entity.Budget;
 import com.radish.master.entity.Project;
 import com.radish.master.entity.Purchase;
 import com.radish.master.entity.PurchaseDet;
+import com.radish.master.entity.project.Salary;
+import com.radish.master.entity.project.SalaryDetail;
 import com.radish.master.pojo.Options;
 import com.radish.master.pojo.RowEdit;
 import com.radish.master.service.PurchaseService;

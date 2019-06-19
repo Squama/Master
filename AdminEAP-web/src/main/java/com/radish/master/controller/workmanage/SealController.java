@@ -85,6 +85,9 @@ public class SealController {
 		//List bm = baseService.findMapBySql("select id value, name data,pname pdata from v_depts", new Object[]{}, new Type[]{StringType.INSTANCE}, OptionsDept.class);
 		//request.setAttribute("bms", JSONArray.toJSONString(bm));
 		List<Seal> cls = baseService.find(" from Seal where 1=1");//有效印章
+		for(Seal cl:cls){
+			cl.setDescs("");
+		}
 		request.setAttribute("cls", JSONArray.toJSONString(cls));
 		return prefix +"bmAuidt";
 	}
@@ -92,6 +95,9 @@ public class SealController {
 	public String bgsauidt(@PathVariable("id") String id,HttpServletRequest request){
 		request.setAttribute("id", id);
 		List<Seal> cls = baseService.find(" from Seal where 1=1");//有效印章
+		for(Seal cl:cls){
+			cl.setDescs("");
+		}
 		request.setAttribute("cls", JSONArray.toJSONString(cls));
 		return prefix+"auidtLookBgs";
 		
@@ -112,6 +118,9 @@ public class SealController {
 			//List bm = baseService.findMapBySql("select id value, name data,pname pdata from v_depts", new Object[]{}, new Type[]{StringType.INSTANCE}, OptionsDept.class);
 			//request.setAttribute("bms", JSONArray.toJSONString(bm));
 			List<Seal> cls = baseService.find(" from Seal where isvalid='1'");//有效印章
+			for(Seal cl:cls){
+				cl.setDescs("");
+			}
 			request.setAttribute("cls", JSONArray.toJSONString(cls));
 			return prefix +"useaddIndex";
 		}

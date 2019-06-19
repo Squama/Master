@@ -130,6 +130,9 @@ public class CarController {
 		//List bm = baseService.findMapBySql("select id value, name data,pname pdata from v_depts", new Object[]{}, new Type[]{StringType.INSTANCE}, OptionsDept.class);
 		//request.setAttribute("bms", JSONArray.toJSONString(bm));
 		List<Car> cls = baseService.find(" from Car where isvalid='1'");//有效车辆
+		for(Car cl:cls){
+			cl.setDescs("");
+		}
 		request.setAttribute("cls", JSONArray.toJSONString(cls));
 		return prefix +"useaddIndex";
 	}
@@ -146,6 +149,9 @@ public class CarController {
 		//List bm = baseService.findMapBySql("select id value, name data,pname pdata from v_depts", new Object[]{}, new Type[]{StringType.INSTANCE}, OptionsDept.class);
 		//request.setAttribute("bms", JSONArray.toJSONString(bm));
 		List<Car> cls = baseService.find(" from Car where isvalid='1'");//有效车辆
+		for(Car cl:cls){
+			cl.setDescs("");
+		}
 		request.setAttribute("cls", JSONArray.toJSONString(cls));
 		return prefix +"useAuidt";
 	}
