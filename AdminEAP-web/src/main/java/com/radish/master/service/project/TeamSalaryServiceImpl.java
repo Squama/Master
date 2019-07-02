@@ -90,6 +90,7 @@ public class TeamSalaryServiceImpl extends BaseServiceImpl implements TeamSalary
         buffer.append("WHERE U.id=UT.user_id AND UT.project_id = PT.project_id  ");
         buffer.append("AND UT.team_id=PT.id AND PT.status='30'  ");
         buffer.append("AND UT.project_id=:projectID ");
+        buffer.append("Group BY U.ID ");
 
         Map<String, Object> params = new HashMap<String, Object>();
 

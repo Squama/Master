@@ -58,10 +58,8 @@
                     <table id="salary_detail_table" class="table table-bordered table-striped table-hover">
                         <tfoot>
                             <tr>
-                                <th colspan="12" style="text-align:right">合计:</th>
+                                <th colspan="14" style="text-align:right">合计:</th>
                                 <th class="text-left">0</th>
-                                <th class="text-left"></th>
-                                <th class="text-left"></th>
                                 <th class="text-left"></th>
                             </tr>
                         </tfoot>
@@ -117,7 +115,18 @@
                 idSrc:  'id',
                 fields: [ 
                 	{label:"attendance:", name:"attendance",type:"text"},
-                	{label:"loan:", name:"loan",type:"text"}
+                	{label:"loan:", name:"loan",type:"text"},
+                	{label:"basicSalary:", name:"basicSalary",type:"text"},
+                	{label:"payable:", name:"payable",type:"text"},
+                	{label:"yanglao:", name:"yanglao",type:"text"},
+                	{label:"medical:", name:"medical",type:"text"},
+                	{label:"shiye:", name:"shiye",type:"text"},
+                	{label:"prf:", name:"prf",type:"text"},
+                	{label:"tax:", name:"tax",type:"text"},
+                	{label:"actual:", name:"actual",type:"text"},
+                	{label:"mobile:", name:"mobile",type:"text"},
+                	{label:"workType:", name:"workType",type:"text"},
+                	{label:"remark:", name:"remark",type:"text"}
                 ]
             } );
             
@@ -145,13 +154,13 @@
      
                 // Total over this page
                 unitTotal = api
-                    .column( 12, { page: 'current'} )
+                    .column( 14, { page: 'current'} )
                     .data()
                     .reduce( function (a, b) {
                         return accAddition(intVal(a), intVal(b));
                     }, 0 );
                 // Update footer
-                $( api.column( 12 ).footer() ).html(
+                $( api.column( 14 ).footer() ).html(
                     '￥'+unitTotal
                 );
             }

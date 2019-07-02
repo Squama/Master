@@ -119,7 +119,7 @@ public class ProjectManagerSalaryController {
         }
         
         Salary limitSalary = teamSalaryService.getBiggestSalary(salary.getProjectID(), "20");
-        if(limitSalary.getStartTime().getTime() > salary.getStartTime().getTime()){
+        if(null!=limitSalary&&limitSalary.getStartTime().getTime() > salary.getStartTime().getTime()){
             return new Result(false, "工资起始时间不可小于"+myFormat.format(limitSalary.getStartTime()));
         }
         
@@ -192,7 +192,10 @@ public class ProjectManagerSalaryController {
                 detailList.add(detail);
 
             }
-            teamSalaryService.batchSave(detailList);
+            for(SalaryDetail detail :detailList){
+            	teamSalaryService.saveOrUpdate(detail);
+            }
+            //teamSalaryService.batchSave(detailList);
         } else {
             Salary oldSalary = teamSalaryService.get(Salary.class, salary.getId());
             if(!startTime.substring(0, 4).equals(TimeUtil.getFormattedDate(oldSalary.getStartTime()).substring(0, 4))){
