@@ -83,13 +83,23 @@
                     });
                 });
             },
-            overview: function (rowID) {
-            	modals.openWin({
-                    winId:winId,
-                    title:'工资表总览',
-                    width:'1400px',
-                    url:basePath+"/project/team/salary/detail/"+rowID
-                   });
+            overview: function (rowID,type) {
+                var url=basePath+"/project/team/salary/detail/"+rowID;//班组
+                if(type=="20"){//管理
+                	url=basePath+"/project/manager/salary/detailouter/"+rowID;
+                }else if(type=="30"){//点工
+                	url=basePath+"/project/point/salary/detail/"+rowID;
+                }else if(type=="40"){//机关
+                	url=basePath+"/project/organ/salary/detailouter/"+rowID;
+                }else if(type=="50"){//门卫
+                	url=basePath+"/project/hod/salary/detailouter/"+rowID;
+                }
+               modals.openWin({
+                   winId:winId,
+                   title:'工资表总览',
+                   width:'1400px',
+                   url:url
+                  }); 
             },
             dotrue: function (rowID) {
             	modals.confirm("是否确认支付？",function(){
@@ -172,7 +182,7 @@
         	oper += "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='teamSalaryObject.print(\"" + value + "\")'>打印支付单</a>";
 			
        }
-        oper += "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='teamSalaryObject.overview(\"" + value + "\")'>总览</a>";
+        oper += "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='teamSalaryObject.overview(\"" + value + "\",\""+rowObj.typee+"\")'>总览</a>";
         return oper;
     }
     
