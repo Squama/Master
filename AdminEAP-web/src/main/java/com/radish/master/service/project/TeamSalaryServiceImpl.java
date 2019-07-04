@@ -584,8 +584,8 @@ public class TeamSalaryServiceImpl extends BaseServiceImpl implements TeamSalary
         String tax = taxRank.multiply(taxRate).subtract(taxDeductionNum).subtract(sumTax).setScale(2, BigDecimal.ROUND_DOWN).toPlainString();
         
         detail.setTax(tax);
-        detail.setPayable(salarySoFar.subtract(new BigDecimal(tax)).setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
-        detail.setActual(detail.getPayable());
+        detail.setPayable(detail.getBasicSalary());
+        detail.setActual(salarySoFar.subtract(new BigDecimal(tax)).setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
         
     }
 
