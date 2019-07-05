@@ -67,6 +67,28 @@
     	"width" : "2200px"
     });
     
+    var budgetEstimateObject = {
+            initEstimateModal:function(){
+                $("#budget_tx_table").on("dblclick", "tr", function(e){
+                	var id = $(this).attr('id'); 
+                	var check = $(this).attr('data-group');
+                	if(check == 'package'){
+                		modals.error("包工包料没有明细");
+                		return false;
+                	}
+                    modals.openWin({
+                        winId: "estimateWin",
+                        width: "1200px",
+                        url: basePath + "/budget/estimate/singleestimatequery?id=" + id,
+                        title: "测算",
+                        hideFunc:function(){
+                            budgetTxTable.reloadData();
+                        }
+                    });
+                });
+            }
+    }
+    
     $(function() { 
     	<!-- 初始化导入的预算表 -->
         budgetImportTable = new CommonTable("budget_import_table", "budget_estimate_left_list", "searchDivImport", {
@@ -243,6 +265,9 @@
                  );
              }
         });
+        
+        budgetEstimateObject.initEstimateModal();
+        
     })
     
     function fnRenderCheckbox(value, type, rowObj){

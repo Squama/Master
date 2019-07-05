@@ -91,6 +91,7 @@ public class ProjectPointSalaryController {
             salary.setType("30");
             salary.setTotal("0");
             salary.setApplySum("0");
+            salary.setCostSum("0");
             try {
                 teamSalaryService.save(salary);
             } catch (Exception e) {

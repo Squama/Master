@@ -1,0 +1,206 @@
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><li class="fa fa-remove"></li></button>
+    <h5 class="modal-title">成本测算</h5>
+</div>
+
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+	        <div class="box box-info">
+	             <div class="box-body">
+	                 <div class="col-md-12">
+	                     <div class="form-group">
+	                         <label class="col-sm-2 control-label" style="text-align:right;line-height:40px;">项目名称<span style="color:red">*</span></label>
+	                         <div class="col-sm-4">
+	                             <input type="text" class="form-control" id="projectName" name="projectName" >
+	                         </div>
+	                         <label class="col-sm-2 control-label" style="text-align:right;line-height:40px;">预算名称<span style="color:red">*</span></label>
+	                         <div class="col-sm-4">
+	                             <input type="text" class="form-control" id="budgetName" name="budgetName" >
+	                         </div>
+	                     </div> 
+	                 </div>
+	             </div>
+	         </div>
+            <div class="nav-tabs-custom">
+                <ul class="nav nav-tabs">
+                    <li><a href="#tab-content-labour" data-toggle="tab" id="nav-tab-labour"><font size="4">人</font></a></li>
+                    <li class="active"><a href="#tab-content-mat" data-toggle="tab" id="nav-tab-mat"><font size="4">材</font></a></li>
+                    <li><a href="#tab-content-mech" data-toggle="tab" id="nav-tab-mech"><font size="4">机</font></a></li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane" id="tab-content-labour">
+                        <form id="budget-labour-form" name="budget-labour-form" class="form-horizontal">
+                            <input type="hidden" name="budgetTxID">
+                            <input type="hidden" name="projectID">
+                            <input type="hidden" name="budgetNo">
+                            <div class="box box-success" id="budget_labour">
+                                <div class="dataTables_filter" id="searchDivLabourEstimate" style="text-align:center;height:1px;">
+                                   <input type="search" name="bl.budget_tx_id" id="budgetLabourID" class="form-control" operator="eq" style="display:none;">
+                                   <div class="btn-group">
+                                       <button type="button" class="btn btn-primary" data-btn-type="search" id="refresh" style="display:none;">查询</button>
+                                   </div>
+                                </div>
+                                <div class="box-body">
+                                    <!-- 内容 -->
+                                    <table id="budget_labour_estimate_table" class="table table-bordered table-striped table-hover">
+                                    </table>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="tab-pane active" id="tab-content-mat">
+	                    <form id="budget-tx-info-form" name="budget-tx-info-form" class="form-horizontal">
+			                <input type="hidden" name="budgetTxID" id="matBudgetTxID">
+			                <input type="hidden" name="projectID" id="matProjectID">
+			                <input type="hidden" name="budgetNo" id="matBudgetNo">
+			                <div class="box box-success" id="budget_tx">
+			                    <div class="dataTables_filter" id="searchDivTxEstimate" style="text-align:center;height:1px;">
+			                       <input type="search" name="be.budget_tx_id" id="budgetTxID" class="form-control" operator="eq" style="display:none;">
+			                       <div class="btn-group">
+			                           <button type="button" class="btn btn-primary" data-btn-type="search" id="refresh" style="display:none;">查询</button>
+			                       </div>
+			                    </div>
+			                    <div class="box-body">
+			                        <!-- 内容 -->
+			                        <table id="budget_tx_estimate_table" class="table table-bordered table-striped table-hover">
+			                        </table>
+			                    </div>
+			                </div>
+			            </form>
+                    </div>
+                    <div class="tab-pane" id="tab-content-mech">
+                        <form id="budget-mech-form" name="budget-mech-form" class="form-horizontal">
+                            <input type="hidden" name="budgetTxID">
+                            <input type="hidden" name="projectID">
+                            <input type="hidden" name="budgetNo">
+                            <div class="box box-success" id="budget_mech">
+                                <div class="dataTables_filter" id="searchDivMechEstimate" style="text-align:center;height:1px;">
+                                   <input type="search" name="bm.budget_tx_id" id="budgetMechID" class="form-control" operator="eq" style="display:none;">
+                                   <div class="btn-group">
+                                       <button type="button" class="btn btn-primary" data-btn-type="search" id="refresh" style="display:none;">查询</button>
+                                   </div>
+                                </div>
+                                <div class="box-body">
+                                    <!-- 内容 -->
+                                    <table id="budget_mech_estimate_table" class="table table-bordered table-striped table-hover">
+                                    </table>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                    
+            </div>
+            
+        </div>
+    </div>
+</section>
+
+<script>
+    var budgettxinfoform = $("#budget-tx-info-form").form({baseEntity: false}),
+    budgetlabourform = $("#budget-labour-form").form({baseEntity: false}),
+    budgetmechform = $("#budget-mech-form").form({baseEntity: false}),
+    estimateimportform = $("#budget-mech-form").form({baseEntity: false}),
+    initData={},
+    budgetTxEstimateTable,budgetLabourEstimateTable,budgetMechEstimateTable,options;
+    
+    var budgetTxID="${budgetTxID?default('0')}";
+    $('#budgetTxID',$('#searchDivTxEstimate')).val(budgetTxID);
+    $('#budgetLabourID',$('#searchDivLabourEstimate')).val(budgetTxID);
+    $('#budgetMechID',$('#searchDivMechEstimate')).val(budgetTxID);
+    
+    
+    $(function (){
+    	budgetTxEstimateTable = new CommonTable("budget_tx_estimate_table", "budget_tx_estimate_list", "searchDivTxEstimate", {
+            "ordering" : false,
+            "lengthChange": false,
+            "displayLength": 20,
+            "scrollY": "200px",
+            "scrollCollapse": true
+        });
+        
+        budgetLabourEstimateTable = new CommonTable("budget_labour_estimate_table", "budget_labour_estimate_list", "searchDivLabourEstimate", {
+            "ordering" : false,
+            "lengthChange": false,
+            "displayLength": 20,
+            "scrollY": "200px",
+            "scrollCollapse": true
+        });
+        
+        budgetMechEstimateTable = new CommonTable("budget_mech_estimate_table", "budget_mech_estimate_list", "searchDivMechEstimate", {
+            "ordering" : false,
+            "lengthChange": false,
+            "displayLength": 20,
+            "scrollY": "200px",
+            "scrollCollapse": true
+        });
+        
+        $("#estimate_import_form").bootstrapValidator({
+            message: '请输入有效值',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            submitHandler: function () {
+                //nothing
+            }
+        });
+        
+        //编辑回填
+        if(budgetTxID!="0"){
+            ajaxPost(basePath+"/budget/estimate/getbytxid",{budgetTxID:budgetTxID},function(data){
+            	data.data.budgetTx.budgetTxID=data.data.budgetTx.id;
+            	budgettxinfoform.initFormData(data.data.budgetTx);
+            	budgetlabourform.initFormData(data.data.budgetTx);
+            	budgetmechform.initFormData(data.data.budgetTx);
+                $('#projectName').val(data.data.projectName).attr("disabled","disabled");
+                $('#budgetName').val(data.data.budgetName).attr("disabled","disabled");
+            })
+        } 
+        
+        //初始化控件
+        budgettxinfoform.initComponent();
+        budgetlabourform.initComponent();
+        budgetmechform.initComponent();
+        estimateimportform.initComponent();
+        
+        
+        $("#nav-tab-labour").on("shown.bs.tab",function(){
+        	budgetLabourEstimateTable.reloadData();
+        });
+        
+        $("#nav-tab-mat").on("shown.bs.tab",function(){
+        	budgetTxEstimateTable.reloadData();
+        });
+        
+        $("#nav-tab-mech").on("shown.bs.tab",function(){
+        	budgetMechEstimateTable.reloadData();
+        });
+    });
+    
+    function getFormData(){
+        return estimateimportform.getFormSimpleData();
+    }
+    
+    function disableFileInput(){
+        $("#file").fileinput('disable')
+    }
+    
+    function fnRenderDelete(value){
+    	var opt = "";
+        return opt;
+    }
+    
+    function fnRenderDeleteLabour(value){
+        var opt =  "";
+        return opt;
+    }
+    
+    function fnRenderDeleteMech(value){
+        var opt =  "";
+        return opt;
+    }
+    
+</script>

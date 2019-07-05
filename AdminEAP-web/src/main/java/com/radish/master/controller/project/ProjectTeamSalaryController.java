@@ -170,6 +170,7 @@ public class ProjectTeamSalaryController {
             salary.setType("10");
             salary.setTotal("0");
             salary.setApplySum("0");
+            salary.setCostSum("0");
             try {
                 teamSalaryService.save(salary);
             } catch (Exception e) {
@@ -303,13 +304,17 @@ public class ProjectTeamSalaryController {
             paramsSalary.put("salaryID", detail.getSalaryID());
             List<SalaryDetail> detailList = teamSalaryService.find(hqlSalary, paramsSalary);
             BigDecimal a = new BigDecimal("0");
+            BigDecimal b = new BigDecimal("0");
             for (SalaryDetail sd : detailList) {
                 BigDecimal actual = new BigDecimal(sd.getActual());
-
+                BigDecimal cost = new BigDecimal(sd.getPayable());
+                
                 a = a.add(actual);
+                b = b.add(cost);
             }
             Salary salary = teamSalaryService.get(Salary.class, detail.getSalaryID());
             salary.setApplySum(a.setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
+            salary.setCostSum(b.setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
             teamSalaryService.save(salary);
         }
         

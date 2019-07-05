@@ -102,7 +102,7 @@ public class HodSalaryTaskCompleteListener implements TaskListener{
                         
                         BigDecimal consume = new BigDecimal(measure.getConstruct());
                         BigDecimal result = new BigDecimal("0");
-                        BigDecimal sumSalary = new BigDecimal(salary.getApplySum());
+                        BigDecimal sumSalary = new BigDecimal(salary.getCostSum());
                         
                         result = consume.divide(sum, 2, BigDecimal.ROUND_HALF_DOWN);
                         

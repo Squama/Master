@@ -22,145 +22,149 @@ import com.cnpc.framework.base.entity.BaseEntity;
 @Table(name = "tbl_salary")
 public class Salary extends BaseEntity {
 
-    private static final long serialVersionUID = -3672976343399467185L;
+	private static final long serialVersionUID = -3672976343399467185L;
 
-    @Header(name = "所属项目编码")
-    @Column(name = "project_id")
-    private String projectID;
+	@Header(name = "所属项目编码")
+	@Column(name = "project_id")
+	private String projectID;
 
-    @Header(name = "所属项目名称")
-    @Column(name = "project_name")
-    private String projectName;
+	@Header(name = "所属项目名称")
+	@Column(name = "project_name")
+	private String projectName;
 
-    @Header(name = "班组ID")
-    @Column(name = "team_id")
-    private String teamID;
+	@Header(name = "班组ID")
+	@Column(name = "team_id")
+	private String teamID;
 
-    @Header(name = "班组名称")
-    @Column(name = "team_name")
-    private String teamName;
+	@Header(name = "班组名称")
+	@Column(name = "team_name")
+	private String teamName;
 
-    @Header(name = "开始时间")
-    @Column(name = "start_time")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date startTime;
+	@Header(name = "开始时间")
+	@Column(name = "start_time")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date startTime;
 
-    @Header(name = "结束时间")
-    @Column(name = "end_time")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date endTime;
+	@Header(name = "结束时间")
+	@Column(name = "end_time")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date endTime;
 
-    // 10-专业作业班组班组 20-管理人员30-点工班组40-机关人员 50-门卫机修工资表
-    @Header(name = "工资单类型")
-    @Column(name = "type")
-    private String type;
+	// 10-专业作业班组班组 20-管理人员30-点工班组40-机关人员 50-门卫机修工资表
+	@Header(name = "工资单类型")
+	@Column(name = "type")
+	private String type;
 
-    @Header(name = "总额")
-    @Column(name = "total")
-    private String total;
+	@Header(name = "总额")
+	@Column(name = "total")
+	private String total;
 
-    @Header(name = "申报总额")
-    @Column(name = "apply_sum")
-    private String applySum;
+	@Header(name = "申报总额")
+	@Column(name = "apply_sum")
+	private String applySum;
 
-    /*
-     * 10-new 20-负责人审批 30-办公室主任审批 40-总经理审批 50-财务审批 60-已完成 70-审核不通过
-     */
-    @Header(name = "状态")
-    @Column(name = "status")
-    private String status;
-    
-    @Header(name = "是否记账")
-    @Column(name = "isjz")
-    private String isjz;
-    
-    @Header(name = "税金支付状态")
-    @Column(name = "sjstatus")
-    private String sjstatus;
-    
-    @Header(name = "税金是否记账")
-    @Column(name = "sjisjz")
-    private String sjisjz;
+	@Header(name = "成本总额")
+	@Column(name = "cost_sum")
+	private String costSum;
 
-    public String getProjectID() {
-        return projectID;
-    }
+	/*
+	 * 10-new 20-负责人审批 30-办公室主任审批 40-总经理审批 50-财务审批 60-已完成 70-审核不通过
+	 */
+	@Header(name = "状态")
+	@Column(name = "status")
+	private String status;
 
-    public void setProjectID(String projectID) {
-        this.projectID = projectID;
-    }
+	@Header(name = "是否记账")
+	@Column(name = "isjz")
+	private String isjz;
 
-    public String getProjectName() {
-        return projectName;
-    }
+	@Header(name = "税金支付状态")
+	@Column(name = "sjstatus")
+	private String sjstatus;
 
-    public void setProjectName(String projectName) {
-        this.projectName = projectName;
-    }
+	@Header(name = "税金是否记账")
+	@Column(name = "sjisjz")
+	private String sjisjz;
 
-    public String getTeamID() {
-        return teamID;
-    }
+	public String getProjectID() {
+		return projectID;
+	}
 
-    public void setTeamID(String teamID) {
-        this.teamID = teamID;
-    }
+	public void setProjectID(String projectID) {
+		this.projectID = projectID;
+	}
 
-    public String getTeamName() {
-        return teamName;
-    }
+	public String getProjectName() {
+		return projectName;
+	}
 
-    public void setTeamName(String teamName) {
-        this.teamName = teamName;
-    }
+	public void setProjectName(String projectName) {
+		this.projectName = projectName;
+	}
 
-    public Date getStartTime() {
-        return startTime;
-    }
+	public String getTeamID() {
+		return teamID;
+	}
 
-    public void setStartTime(Date startTime) {
-        this.startTime = startTime;
-    }
+	public void setTeamID(String teamID) {
+		this.teamID = teamID;
+	}
 
-    public Date getEndTime() {
-        return endTime;
-    }
+	public String getTeamName() {
+		return teamName;
+	}
 
-    public void setEndTime(Date endTime) {
-        this.endTime = endTime;
-    }
+	public void setTeamName(String teamName) {
+		this.teamName = teamName;
+	}
 
-    public String getType() {
-        return type;
-    }
+	public Date getStartTime() {
+		return startTime;
+	}
 
-    public void setType(String type) {
-        this.type = type;
-    }
+	public void setStartTime(Date startTime) {
+		this.startTime = startTime;
+	}
 
-    public String getTotal() {
-        return total;
-    }
+	public Date getEndTime() {
+		return endTime;
+	}
 
-    public void setTotal(String total) {
-        this.total = total;
-    }
+	public void setEndTime(Date endTime) {
+		this.endTime = endTime;
+	}
 
-    public String getApplySum() {
-        return applySum;
-    }
+	public String getType() {
+		return type;
+	}
 
-    public void setApplySum(String applySum) {
-        this.applySum = applySum;
-    }
+	public void setType(String type) {
+		this.type = type;
+	}
 
-    public String getStatus() {
-        return status;
-    }
+	public String getTotal() {
+		return total;
+	}
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
+	public void setTotal(String total) {
+		this.total = total;
+	}
+
+	public String getApplySum() {
+		return applySum;
+	}
+
+	public void setApplySum(String applySum) {
+		this.applySum = applySum;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
 
 	public String getIsjz() {
 		return isjz;
@@ -184,6 +188,14 @@ public class Salary extends BaseEntity {
 
 	public void setSjisjz(String sjisjz) {
 		this.sjisjz = sjisjz;
+	}
+
+	public String getCostSum() {
+		return costSum;
+	}
+
+	public void setCostSum(String costSum) {
+		this.costSum = costSum;
 	}
 
 }

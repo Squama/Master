@@ -456,6 +456,13 @@ public class BudgetEstimateController {
         return "budgetmanage/budgetestimate/single_estimate";
     }
     
+    @RequestMapping(value="/singleestimatequery",method = RequestMethod.GET)
+    public String singleEstimateQuery(HttpServletRequest request, String id){
+        request.setAttribute("budgetTxID", id);
+        
+        return "budgetmanage/budgetestimate/single_estimate_query";
+    }
+    
     @RequestMapping(method = RequestMethod.POST, value = "/getbytxid")
     @ResponseBody
     private Result getBudgetByNo(String budgetTxID) {

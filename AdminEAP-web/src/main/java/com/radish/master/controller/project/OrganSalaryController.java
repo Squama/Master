@@ -105,6 +105,7 @@ public class OrganSalaryController {
             salary.setStatus("10");
             salary.setType("40");
             salary.setApplySum("0");
+            salary.setCostSum("0");
             salary.setTotal("无");
             try {
                 teamSalaryService.save(salary);
