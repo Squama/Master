@@ -206,6 +206,20 @@ public class ProjectTeamSalaryController {
 
             }
             teamSalaryService.batchSave(detailList);
+            
+            	String hqlSalary = "from SalaryDetail where salaryID=:salaryID";
+                Map<String, Object> paramsSalary = new HashMap<>();
+                paramsSalary.put("salaryID", salary.getId());
+                List<SalaryDetail> detailLists = teamSalaryService.find(hqlSalary, paramsSalary);
+                BigDecimal a = new BigDecimal("0");
+                for (SalaryDetail sd : detailLists) {
+                    BigDecimal actual = new BigDecimal(sd.getActual());
+
+                    a = a.add(actual);
+                }
+                salary.setApplySum(a.setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
+                teamSalaryService.update(salary);
+            
         } else {
             Salary oldSalary = teamSalaryService.get(Salary.class, salary.getId());
             oldSalary.setProjectID(salary.getProjectID());

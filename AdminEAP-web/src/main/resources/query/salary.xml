@@ -57,7 +57,7 @@
         <sql>
             <![CDATA[
               SELECT 
-              id , type,start_time startTime,end_time endTime,apply_sum applySum,status ,isjz ,project_id,
+              id , type,type typee,start_time startTime,end_time endTime,apply_sum applySum,status ,isjz ,project_id,
               project_name ,team_name,team_id   
               from tbl_salary where  1=1 
             ]]>
@@ -164,6 +164,23 @@
         <column key="remark" header="备注" width="80"/>
         <column key="mobile" header="联系电话" width="80"/>
         <column key="id" header="操作" width="80" fnRender="fnRenderSalaryDetail"/>
+    </query>
+    <query id="hod_salary_detail_overview" key="id" tableName="门卫机修人工资明细" className="com.radish.master.entity.project.SalaryDetail" widthType="px" pageSize="2000">
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="workType" header="工种" allowSort="true" width="150"/>
+        <column key="name" header="姓名" width="150"/>
+        <column key="identificationNumber" header="身份证号" width="150"/>
+        <column key="basicSalary" header="基本工资" width="150"/>
+        <column key="attendance" header="出勤天数" width="150"/>
+        <column key="payable" header="应付工资" width="80"/>
+        <column key="loan" header="借款扣除" width="80"/>
+        <column key="medical" header="医保扣除" width="80"/>
+        <column key="social" header="社保扣除" width="80"/>
+        <column key="tax" header="个税扣除" width="80"/>
+        <column key="actual" header="实发工资" width="80"/>
+        <column key="remark" header="备注" width="80"/>
+        <column key="mobile" header="联系电话" width="80"/>
     </query>
     <query id="manager_salary_detail_overview" key="id" tableName="管理人工资明细" className="com.radish.master.entity.project.SalaryDetail" widthType="px" pageSize="2000">
         <column key="rowIndex" header="序号" width="80"/>

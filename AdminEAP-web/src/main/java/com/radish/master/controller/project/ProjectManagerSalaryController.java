@@ -119,7 +119,7 @@ public class ProjectManagerSalaryController {
         }
         
         Salary limitSalary = teamSalaryService.getBiggestSalary(salary.getProjectID(), "20");
-        if(limitSalary.getStartTime().getTime() > salary.getStartTime().getTime()){
+        if(null!=limitSalary&&limitSalary.getStartTime().getTime() > salary.getStartTime().getTime()){
             return new Result(false, "工资起始时间不可小于"+myFormat.format(limitSalary.getStartTime()));
         }
         
@@ -193,7 +193,22 @@ public class ProjectManagerSalaryController {
                 detailList.add(detail);
 
             }
-            teamSalaryService.batchSave(detailList);
+            for(SalaryDetail detail :detailList){
+            	teamSalaryService.saveOrUpdate(detail);
+            }
+            //teamSalaryService.batchSave(detailList);
+            	String hqlSalary = "from SalaryDetail where salaryID=:salaryID";
+                Map<String, Object> paramsSalary = new HashMap<>();
+                paramsSalary.put("salaryID",salary.getId());
+                List<SalaryDetail> detailLists = teamSalaryService.find(hqlSalary, paramsSalary);
+                BigDecimal a = new BigDecimal("0");
+                for (SalaryDetail sd : detailLists) {
+                    BigDecimal actual = new BigDecimal(sd.getActual());
+
+                    a = a.add(actual);
+                }
+                salary.setApplySum(a.setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
+                teamSalaryService.update(salary);
         } else {
             Salary oldSalary = teamSalaryService.get(Salary.class, salary.getId());
             if(!startTime.substring(0, 4).equals(TimeUtil.getFormattedDate(oldSalary.getStartTime()).substring(0, 4))){

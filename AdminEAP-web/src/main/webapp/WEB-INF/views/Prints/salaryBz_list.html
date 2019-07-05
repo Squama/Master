@@ -66,12 +66,22 @@
                     });
                 });
             },
-            overview: function (rowID) {
+            overview: function (rowID,type) {
+            	 var url=basePath+"/project/team/salary/detail/"+rowID;//班组
+                 if(type=="管理人员"){//管理
+                 	url=basePath+"/project/manager/salary/detailouter/"+rowID;
+                 }else if(type=="点工班组"){//点工
+                 	url=basePath+"/project/point/salary/detail/"+rowID;
+                 }else if(type=="机关人员"){//机关
+                 	url=basePath+"/project/organ/salary/detailouter/"+rowID;
+                 }else if(type=="门卫机修"){//门卫
+                 	url=basePath+"/project/hod/salary/detailouter/"+rowID;
+                 }
             	modals.openWin({
                     winId:winId,
                     title:'工资表总览',
                     width:'1400px',
-                    url:basePath+"/project/team/salary/detail/"+rowID
+                    url:url
                    });
             }
     }
@@ -107,7 +117,7 @@
     
     function fnRenderSalary(value, type, rowObj) {
         var oper = "";
-        oper += "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='teamSalaryObject.overview(\"" + value + "\")'>总览</a>";
+        oper += "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='teamSalaryObject.overview(\"" + value + "\",\""+rowObj.type+"\")'>总览</a>";
         return oper;
     }
     

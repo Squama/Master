@@ -90,6 +90,7 @@ public class TeamSalaryServiceImpl extends BaseServiceImpl implements TeamSalary
         buffer.append("WHERE U.id=UT.user_id AND UT.project_id = PT.project_id  ");
         buffer.append("AND UT.team_id=PT.id AND PT.status='30'  ");
         buffer.append("AND UT.project_id=:projectID ");
+        buffer.append("Group BY U.ID ");
 
         Map<String, Object> params = new HashMap<String, Object>();
 
@@ -143,7 +144,7 @@ public class TeamSalaryServiceImpl extends BaseServiceImpl implements TeamSalary
         buffer.append("SELECT * FROM tbl_user WHERE id NOT IN( ");
         buffer.append("SELECT DISTINCT U.id FROM tbl_user U,tbl_user_team UT, tbl_project_team PT   ");
         buffer.append("WHERE U.id=UT.user_id AND UT.project_id = PT.project_id  AND UT.team_id=PT.id AND PT.status='30' ) ");
-       // buffer.append(" and id not in(select id from v_mwjx ) ");
+        buffer.append(" and audit_status <>'50' ");
         return this.findBySql(buffer.toString(), User.class);
     }
     
@@ -583,8 +584,8 @@ public class TeamSalaryServiceImpl extends BaseServiceImpl implements TeamSalary
         String tax = taxRank.multiply(taxRate).subtract(taxDeductionNum).subtract(sumTax).setScale(2, BigDecimal.ROUND_DOWN).toPlainString();
         
         detail.setTax(tax);
-        detail.setPayable(salarySoFar.subtract(new BigDecimal(tax)).setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
-        detail.setActual(detail.getPayable());
+        detail.setPayable(detail.getBasicSalary());
+        detail.setActual(salarySoFar.subtract(new BigDecimal(tax)).setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
         
     }
 

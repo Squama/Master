@@ -60,6 +60,17 @@ public class SalayrPayController {
 	@RequestMapping("/auidtMx/{id}")
 	public String auidtMx(HttpServletRequest request,@PathVariable("id") String id){
 		request.setAttribute("id", id);
+		Salary zf = baseService.get(Salary.class, id);
+		if(null!=zf){
+			if(zf.getType()!=null){
+				request.setAttribute("type",zf.getType());
+				if("20".equals(zf.getType())||"40".equals(zf.getType())){
+					return prefix+"auidtMxGl";
+				}else if("50".equals(zf.getType())){
+					return prefix+"auidtMxMw";
+				}
+			}
+		}
 		return prefix+"auidtMx";
 	}
 	@RequestMapping("/chooseZffs")
