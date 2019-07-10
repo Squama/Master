@@ -180,6 +180,10 @@ public class User extends BaseEntity {
 	@Header(name = "职责描述")
 	@Column(name = "dutyContent")
 	private String dutyContent;
+	
+	@Header(name = "所属分部")
+	@Column(name = "deptent")
+	private String deptent;
 
 	@Transient
 	private String avatarId;
@@ -545,6 +549,14 @@ public class User extends BaseEntity {
 
 	public void setDeduction(String deduction) {
 		this.deduction = deduction;
+	}
+
+	public String getDeptent() {
+		return deptent;
+	}
+
+	public void setDeptent(String deptent) {
+		this.deptent = deptent;
 	}
 
 }
