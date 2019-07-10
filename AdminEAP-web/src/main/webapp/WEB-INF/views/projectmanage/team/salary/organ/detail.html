@@ -18,6 +18,12 @@
                                         placeholder="起始时间" disabled="disabled">
                                 </div>
                             </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">公司分部<span style="color:red">*</span></label>
+                                <div class="col-sm-8">
+                                    <select id="deptentmx" name="deptent"  class="form-control"></select>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
@@ -60,6 +66,14 @@
     var id = "${id}";
     $('#salaryID',$('#searchDivDetail')).val(id);
     $(function () {
+    	ajaxPost(basePath+"/deptent/all",{},function(data){
+            console.log(data);
+            var op = "";
+			for(var i=0;i<data.length;i++){
+				op+="<option value='"+data[i].id+"'>"+data[i].name+"</option>"
+			}
+            $("#deptentmx").append(op);
+        })
     	salaryDetailTable = new CommonTable("salary_detail_table", "manager_salary_detail_overview", "searchDivDetail", {
             "footerCallback": function ( row, data, start, end, display ) {
                 var api = this.api(), data;

@@ -54,6 +54,12 @@
                                         placeholder="结束时间" autocomplete="off">
                                 </div>
                             </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">公司分部<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <select id="deptent" name="deptent"  class="form-control"></select>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="box-footer text-center">
@@ -81,6 +87,16 @@
         }
     }
     $(function () {
+        //填充公司分部
+        ajaxPost(basePath+"/deptent/all",{},function(data){
+                console.log(data);
+                var op = "";
+				for(var i=0;i<data.length;i++){
+					op+="<option value='"+data[i].id+"'>"+data[i].name+"</option>"
+				}
+                $("#deptent").append(op);
+            })
+        
         //初始化表单 
         form = $("#team-salary-form").form({baseEntity:false});
         //数据校验
@@ -119,6 +135,11 @@
                     validators: {
                         notEmpty: {message: '结束时间不能为空'}
                     }
+                },
+                "deptent": {
+                    validators: {
+                        notEmpty: {message: '公司分部不能为空'}
+                    }
                 }
             }
         });
@@ -131,6 +152,7 @@
             ajaxPost(basePath+"/project/manager/salary/get",{id:id},function(data){
                 form.initFormData(data);
             })
+            $("#deptent").attr("disabled",true)
         }
         
     });

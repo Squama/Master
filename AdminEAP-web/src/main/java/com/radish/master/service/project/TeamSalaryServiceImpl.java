@@ -138,13 +138,14 @@ public class TeamSalaryServiceImpl extends BaseServiceImpl implements TeamSalary
     }
 
     @Override
-    public List<User> getOrganMember(){
+    public List<User> getOrganMember(String deptent){
         StringBuilder buffer = new StringBuilder();
 
         buffer.append("SELECT * FROM tbl_user WHERE id NOT IN( ");
         buffer.append("SELECT DISTINCT U.id FROM tbl_user U,tbl_user_team UT, tbl_project_team PT   ");
         buffer.append("WHERE U.id=UT.user_id AND UT.project_id = PT.project_id  AND UT.team_id=PT.id AND PT.status='30' ) ");
         buffer.append(" and audit_status <>'50' ");
+        buffer.append(" and deptent ='"+deptent+"' ");
         return this.findBySql(buffer.toString(), User.class);
     }
     
@@ -411,13 +412,14 @@ public class TeamSalaryServiceImpl extends BaseServiceImpl implements TeamSalary
     
     
     @Override
-    public List<Salary> checkOrganTimePeriod(String startTimeStr, String endTimeStr, String salaryID) {
+    public List<Salary> checkOrganTimePeriod(String startTimeStr, String endTimeStr, String salaryID,String deptent) {
         StringBuilder buffer = new StringBuilder();
 
         buffer.append("SELECT * FROM tbl_salary ");
         buffer.append("WHERE UNIX_TIMESTAMP(start_time) <= UNIX_TIMESTAMP(:endTime) ");
         buffer.append("AND UNIX_TIMESTAMP(end_time) >= UNIX_TIMESTAMP(:startTime) ");
         buffer.append("AND type='40' ");
+        buffer.append("AND deptent='"+deptent+"' ");
 
         Map<String, Object> params = new HashMap<String, Object>();
 
@@ -619,6 +621,25 @@ public class TeamSalaryServiceImpl extends BaseServiceImpl implements TeamSalary
         Map<String, Object> params = new HashMap<String, Object>();
 
         params.put("type", type);
+
+        List<Salary> list = this.findBySql(buffer.toString(), params, Salary.class);
+        if(list.isEmpty()){
+            return null;
+        }
+        
+        return list.get(0);
+    }
+    @Override
+    public Salary getBiggestSalaryJg(String type,String deptent) {
+        StringBuilder buffer = new StringBuilder();
+
+        buffer.append("SELECT * FROM tbl_salary ");
+        buffer.append("WHERE type=:type and deptent=:deptent ORDER BY start_time desc");
+
+        Map<String, Object> params = new HashMap<String, Object>();
+
+        params.put("type", type);
+        params.put("deptent", deptent);
 
         List<Salary> list = this.findBySql(buffer.toString(), params, Salary.class);
         if(list.isEmpty()){

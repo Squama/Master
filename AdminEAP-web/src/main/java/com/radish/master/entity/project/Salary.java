@@ -85,6 +85,20 @@ public class Salary extends BaseEntity {
 	@Header(name = "税金是否记账")
 	@Column(name = "sjisjz")
 	private String sjisjz;
+	
+	/**
+	 * 机关人员工资表需区分公司分部----分部值（DICT表的ENTS）
+	 * @author wzh
+	 * @创建时间 2019年7月10日 上午10:34:28
+	 * @return
+	 */
+	@Header(name = "直属分部")
+	@Column(name = "deptent")
+	private String deptent;
+	
+	@Header(name = "直属分部名称")
+	@Column(name = "deptentname")
+	private String deptentname;
 
 	public String getProjectID() {
 		return projectID;
@@ -196,6 +210,22 @@ public class Salary extends BaseEntity {
 
 	public void setCostSum(String costSum) {
 		this.costSum = costSum;
+	}
+
+	public String getDeptent() {
+		return deptent;
+	}
+
+	public void setDeptent(String deptent) {
+		this.deptent = deptent;
+	}
+
+	public String getDeptentname() {
+		return deptentname;
+	}
+
+	public void setDeptentname(String deptentname) {
+		this.deptentname = deptentname;
 	}
 
 }

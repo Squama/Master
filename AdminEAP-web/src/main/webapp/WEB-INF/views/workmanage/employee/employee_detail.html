@@ -106,6 +106,12 @@
                                     <input type="text" class="form-control" id="bankCount" name="bankCount" placeholder="银行账户">
                                 </div>
                             </div>
+                            <div class="form-group">
+			                     <label for="deptent" class="col-sm-3 control-label">所属分部</label>
+			                     <div class="col-sm-8">
+			                         <select id="deptent" name="deptent"  class="form-control"></select>
+			                     </div>
+			                 </div>
             </div>
             <div class="col-md-6">
                 <div class="form-group">
@@ -203,6 +209,13 @@
                                     <input type="text" class="form-control" id="someTitle" name="someTitle" placeholder="职称">
                                 </div>
                             </div>
+                            <div class="form-group">
+			                    <label for="deduction" class="col-sm-4 control-label">个税抵扣项（元）</label>
+			                    <div class="col-sm-7">
+			                        <input type="text" class="form-control" id="deduction" name="deduction"
+			                            onkeyup="value=value.replace(/[^\d.]/g,'')" placeholder="个税抵扣项（元）">
+			                    </div>
+			                </div>
             </div>
         </div>
         			<div class="form-group">
@@ -231,6 +244,15 @@
     }
     
     $(function() {
+    	//填充公司分部
+        ajaxPost(basePath+"/deptent/all",{},function(data){
+                console.log(data);
+                var op = "";
+				for(var i=0;i<data.length;i++){
+					op+="<option value='"+data[i].id+"'>"+data[i].name+"</option>"
+				}
+                $("#deptent").append(op);
+            })
         //初始化控件
         form=$("#user-form").form({baseEntity:false});
         form.initComponent();

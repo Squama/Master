@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.cnpc.framework.base.entity.Dict;
 import com.cnpc.framework.base.entity.User;
 import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.utils.StrUtil;
@@ -82,6 +83,7 @@ public class OrganSalaryController {
     @RequestMapping(value = "/savesalary")
     @ResponseBody
     public Result saveSalary(Salary salary, HttpServletRequest request) {
+    	String deptent = request.getParameter("deptent");
         SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd");
         if (salary.getStartTime().compareTo(salary.getEndTime()) != -1) {
             return new Result(false, "开始时间必须小于结束时间");
@@ -90,17 +92,22 @@ public class OrganSalaryController {
         String startTime = myFormat.format(salary.getStartTime()) + " 00:00:00";
         String endTime = myFormat.format(salary.getEndTime()) + " 23:59:59";
 
-        List<Salary> list = teamSalaryService.checkOrganTimePeriod(startTime, endTime, salary.getId());
+        List<Salary> list = teamSalaryService.checkOrganTimePeriod(startTime, endTime, salary.getId(),deptent);
         if (!list.isEmpty()) {
             return new Result(false, "工资时间段不可重叠");
         }
         
-        Salary limitSalary = teamSalaryService.getBiggestSalary("40");
-        if(limitSalary.getStartTime().getTime() > salary.getStartTime().getTime()){
+        Salary limitSalary = teamSalaryService.getBiggestSalaryJg("40",deptent);
+        if(limitSalary!=null&&limitSalary.getStartTime().getTime() > salary.getStartTime().getTime()){
             return new Result(false, "工资起始时间不可小于"+myFormat.format(limitSalary.getStartTime()));
         }
         
         if (StrUtil.isEmpty(salary.getId())) {
+        	//---------------存入工资发放分部
+        	Dict d = commonService.get(Dict.class, deptent);
+        	salary.setDeptent(deptent);
+        	salary.setDeptentname(d.getName());
+        	//---------------
             salary.setCreateDateTime(new Date());
             salary.setUpdateDateTime(new Date());
             salary.setStatus("10");
@@ -118,7 +125,7 @@ public class OrganSalaryController {
             SocialSecurity socialSecurity = teamSalaryService.getSocialSecurity(year);
             
             // 直接录入全部明细
-            List<User> managerList = teamSalaryService.getOrganMember();
+            List<User> managerList = teamSalaryService.getOrganMember(deptent);
             List<SalaryDetail> detailList = new ArrayList<SalaryDetail>();
             for (User user : managerList) {
                 SalaryDetail detail = new SalaryDetail();

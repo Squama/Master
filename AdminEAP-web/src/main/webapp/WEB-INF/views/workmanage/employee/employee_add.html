@@ -119,6 +119,12 @@
                                     <input type="text" class="form-control" id="bankCount" name="bankCount" placeholder="银行账户">
                                 </div>
                             </div>
+                            <div class="form-group">
+                                <label for="deptent" class="col-sm-3 control-label">所属分部</label>
+                                <div class="col-sm-8">
+                                    <select id="deptent" name="deptent"  class="form-control"></select>
+                                </div>
+                            </div>
 						</div>
 						<div class="col-md-6">
 							<div class="form-group">
@@ -263,6 +269,15 @@ if(ethOptions != 0){
 }
 
 $(function() {
+	//填充公司分部
+    ajaxPost(basePath+"/deptent/all",{},function(data){
+            console.log(data);
+            var op = "";
+			for(var i=0;i<data.length;i++){
+				op+="<option value='"+data[i].id+"'>"+data[i].name+"</option>"
+			}
+            $("#deptent").append(op);
+        })
     //初始化控件
     form = $("#user-form").form({baseEntity:false});
     //数据校验
@@ -373,6 +388,13 @@ $(function() {
                                 return false;
                             }
                         }
+                    }
+                }
+            },
+            deptent: {
+                validators: {
+                    notEmpty: {
+                        message: '请选择所属分部'
                     }
                 }
             }

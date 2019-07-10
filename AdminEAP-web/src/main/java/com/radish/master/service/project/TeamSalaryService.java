@@ -31,7 +31,7 @@ public interface TeamSalaryService extends BaseService {
     
     List<Worker> getPointMemberByProject(String projectID, String teamID);
     
-    List<User> getOrganMember();
+    List<User> getOrganMember(String deptent);
 
     List<Options> getUserComboboxByTeam(String teamID);
     
@@ -53,7 +53,7 @@ public interface TeamSalaryService extends BaseService {
     
     List<Salary> checkHodTimePeriod(String projectID, String startTimeStr, String endTimeStr, String salaryID);
     
-    List<Salary> checkOrganTimePeriod(String startTimeStr, String endTimeStr, String salaryID);
+    List<Salary> checkOrganTimePeriod(String startTimeStr, String endTimeStr, String salaryID,String deptent);
 
     SalaryVolume getBySalaryAndVolume(String salaryID, String volumeID);
 
@@ -70,5 +70,7 @@ public interface TeamSalaryService extends BaseService {
     Salary getBiggestSalary(String projectID, String type);
     
     Salary getBiggestSalary(String type);
+    
+    Salary getBiggestSalaryJg(String type,String deptent);
     
 }
