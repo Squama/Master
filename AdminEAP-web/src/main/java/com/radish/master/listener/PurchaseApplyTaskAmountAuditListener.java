@@ -3,11 +3,6 @@
  */
 package com.radish.master.listener;
 
-import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.activiti.engine.delegate.DelegateTask;
 import org.activiti.engine.delegate.TaskListener;
 
@@ -15,7 +10,6 @@ import com.cnpc.framework.activiti.pojo.Constants;
 import com.cnpc.framework.base.service.BaseService;
 import com.radish.master.entity.Dispatch;
 import com.radish.master.entity.Purchase;
-import com.radish.master.entity.PurchaseDet;
 import com.radish.master.service.PurchaseService;
 import com.radish.master.system.SpringUtil;
 

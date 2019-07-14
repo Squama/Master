@@ -32,8 +32,6 @@ import com.radish.master.entity.Budget;
 import com.radish.master.entity.Project;
 import com.radish.master.entity.Purchase;
 import com.radish.master.entity.PurchaseDet;
-import com.radish.master.entity.project.Salary;
-import com.radish.master.entity.project.SalaryDetail;
 import com.radish.master.pojo.Options;
 import com.radish.master.pojo.RowEdit;
 import com.radish.master.service.PurchaseService;
@@ -203,7 +201,7 @@ public class PurchaseApplyController {
                         new Object[] { budgetNo, regionCode, matNumber }, new Type[] { StringType.INSTANCE, StringType.INSTANCE , StringType.INSTANCE  }, Options.class);
         
         //已消耗
-        List<Options> consumeSum = purchaseService.findMapBySql("SELECT CAST(sum(pd.quantity) AS char) value, '' data FROM tbl_purchase p, tbl_purchase_det pd WHERE p.id = pd.purchase_id AND p.budget_no=? AND pd.region_id=? AND pd.mat_number=?",
+        List<Options> consumeSum = purchaseService.findMapBySql("SELECT CAST(sum(pd.quantity) AS char) value, '' data FROM tbl_purchase p, tbl_purchase_det pd WHERE p.id = pd.purchase_id AND P.status NOT IN ('10', '20', '30') AND p.budget_no=? AND pd.region_id=? AND pd.mat_number=?",
                 new Object[] { budgetNo, regionCode, matNumber }, new Type[] { StringType.INSTANCE, StringType.INSTANCE , StringType.INSTANCE  }, Options.class);
         
         String result = "";

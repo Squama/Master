@@ -345,7 +345,7 @@ public class PurchaseServiceImpl extends BaseServiceImpl implements PurchaseServ
         sb.append("LEFT JOIN");
         sb.append("(SELECT P.budget_no, PD.region_id, PD.mat_number, PD.mat_name, PD.mat_standard, SUM(PD.quantity) cost ");
         sb.append("FROM tbl_purchase P, tbl_purchase_det PD ");
-        sb.append("WHERE PD.purchase_id = P.id AND P.id != ? ");
+        sb.append("WHERE PD.purchase_id = P.id AND P.status NOT IN ('10', '20', '30') AND P.id != ? ");
         sb.append("GROUP BY P.budget_no, PD.mat_number, PD.mat_name, PD.mat_standard, PD.region_id) COST ");
         sb.append("ON COST.budget_no = ORI.budget_no AND COST.region_id = ORI.region_code AND COST.mat_number = ORI.mat_number ");
         sb.append("ORDER BY PUR.region_id ");
@@ -390,7 +390,7 @@ public class PurchaseServiceImpl extends BaseServiceImpl implements PurchaseServ
         sb.append("LEFT JOIN");
         sb.append("(SELECT PD.id,P.budget_no, PD.region_id, SUM(PD.quantity*PD.price) cost  ");
         sb.append("FROM tbl_purchase P, tbl_purchase_det PD ");
-        sb.append("WHERE PD.purchase_id = P.id AND P.id != ? ");
+        sb.append("WHERE PD.purchase_id = P.id AND P.status NOT IN ('10', '20', '30') AND P.id != ? ");
         sb.append("GROUP BY P.budget_no, PD.region_id) COST ");
         sb.append("ON COST.budget_no = ORI.budget_no AND COST.region_id = ORI.region_code ");
         sb.append("ORDER BY PUR.region_id ");
@@ -432,7 +432,7 @@ public class PurchaseServiceImpl extends BaseServiceImpl implements PurchaseServ
         sb.append("LEFT JOIN");
         sb.append("(SELECT P.budget_no, PD.region_id, PD.mat_number, PD.mat_name, PD.mat_standard, SUM(PD.quantity) cost ");
         sb.append("FROM tbl_purchase P, tbl_purchase_det PD ");
-        sb.append("WHERE PD.purchase_id = P.id AND P.id != :purchaseID2 ");
+        sb.append("WHERE PD.purchase_id = P.id AND P.status NOT IN ('10', '20', '30') AND P.id != :purchaseID2 ");
         sb.append("GROUP BY P.budget_no, PD.mat_number, PD.mat_name, PD.mat_standard, PD.region_id) COST ");
         sb.append("ON COST.budget_no = ORI.budget_no AND COST.region_id = ORI.region_code AND COST.mat_number = ORI.mat_number ");
         sb.append("ORDER BY PUR.region_id ");
@@ -459,7 +459,7 @@ public class PurchaseServiceImpl extends BaseServiceImpl implements PurchaseServ
         sb.append("LEFT JOIN");
         sb.append("(SELECT PD.id,P.budget_no, PD.region_id, SUM(PD.quantity*PD.price) cost  ");
         sb.append("FROM tbl_purchase P, tbl_purchase_det PD ");
-        sb.append("WHERE PD.purchase_id = P.id AND P.id != :purchaseID2 ");
+        sb.append("WHERE PD.purchase_id = P.id AND P.status NOT IN ('10', '20', '30') AND P.id != :purchaseID2 ");
         sb.append("GROUP BY P.budget_no, PD.region_id) COST ");
         sb.append("ON COST.budget_no = ORI.budget_no AND COST.region_id = ORI.region_code ");
         sb.append("ORDER BY PUR.region_id ");
