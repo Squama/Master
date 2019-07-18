@@ -57,7 +57,15 @@
                         }
                     });
                 });
-            }
+            },
+            tolook:function(volumeID){
+            	modals.openWin({
+	                 winId:winId,
+	                 title:'上报详情',
+	                 width:'1200px',
+	                 url:basePath+"/measurevolume/detailouter/"+volumeID            
+               });
+             }
     }
     
     $(function (){
@@ -101,6 +109,7 @@
         if(rowObj.status == '新建'){
             oper += "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='volumeManageObject.toAudit(\"" + rowObj.id + "\")'>提交审核</a>";
         }
+        oper += "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='volumeManageObject.tolook(\"" + rowObj.id + "\")'>查看</a>";
         return oper;
     }
 </script>
