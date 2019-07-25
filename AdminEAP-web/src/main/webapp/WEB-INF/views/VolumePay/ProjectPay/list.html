@@ -101,10 +101,10 @@
                     modals.info('请选择要打印的行');
                     return false;
                 }
-       			if(volumeTable.getSelectedRowData().status=='新建'||volumeTable.getSelectedRowData().status=='领导审批'){
+       			/* if(volumeTable.getSelectedRowData().status=='新建'||volumeTable.getSelectedRowData().status=='领导审批'){
                 	modals.info('该状态不可打印');
                     return false;
-                }
+                } */
        			var url = basePath+"/ureport/preview?_u=file:projectpay.ureport.xml&_t=1,5&id="+rowId;
         	 	window.open(url);
            	break;
