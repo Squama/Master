@@ -133,7 +133,7 @@ public class ProjectPayController {
 		if(fk.getStartdate()!=null){
 			sql += " and indate > '"+sdf.format(fk.getStartdate())+"' and indate <= '"+sdf.format(fk.getEnddate())+"' ";
 		}else{
-			sql += " and indate  > '1990-01-01 00:00:00' and indate <= '"+sdf.format(fk.getEnddate())+"' ";
+			sql += " and indate  > '1990-01-01' and indate <= '"+sdf.format(fk.getEnddate())+"' ";
 		}
 		List<InstockChannel> sjrks = baseService.find(sql);
 		
