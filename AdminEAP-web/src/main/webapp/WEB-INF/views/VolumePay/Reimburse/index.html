@@ -82,11 +82,12 @@
                 break;
             case "edit":
             	if(!rowId){
-                    modals.info('请选择要修改的借款数据');
+                    modals.info('请选择要修改的报销数据');
                     return false;
                 }
             	if(volumeTable.getSelectedRowData().status!='新建'&&volumeTable.getSelectedRowData().status!='部门驳回'
-            		&&volumeTable.getSelectedRowData().status!='领导驳回'&&volumeTable.getSelectedRowData().status!='财务驳回'){
+            		&&volumeTable.getSelectedRowData().status!='领导驳回'&&volumeTable.getSelectedRowData().status!='财务驳回'
+            			&&volumeTable.getSelectedRowData().status!='财务负责人驳回'){
                 	modals.info('只能修改新建、驳回的数据');
                     return false;
                 }
@@ -103,7 +104,7 @@
                 break;
             case "look":
             	if(!rowId){
-                    modals.info('请选择要查看的借款数据');
+                    modals.info('请选择要查看的报销数据');
                     return false;
                 }
             	modals.openWin({
@@ -123,7 +124,8 @@
                     return false;
                 }
             	if(volumeTable.getSelectedRowData().status!='新建'&&volumeTable.getSelectedRowData().status!='部门驳回'
-            		&&volumeTable.getSelectedRowData().status!='领导驳回'&&volumeTable.getSelectedRowData().status!='财务驳回'){
+            		&&volumeTable.getSelectedRowData().status!='领导驳回'&&volumeTable.getSelectedRowData().status!='财务驳回'
+            			&&volumeTable.getSelectedRowData().status!='财务负责人驳回'){
                 	modals.info('只能删除新建、驳回的信息');
                     return false;
                 }
