@@ -385,7 +385,8 @@
             showPreview : false
         }).on("fileuploaded", function(event, data, previewId, index){
         	if(!data.response.success){
-        		alert("导入失败" + data.response.message);
+        		console.log(data);
+        		alert("导入失败， " + data.response.message);
         	}
         	$('#nav-tab-labour').click();
             setTimeout('disableFileInput()',500);

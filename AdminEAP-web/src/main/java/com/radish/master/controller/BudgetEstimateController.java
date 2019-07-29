@@ -155,7 +155,7 @@ public class BudgetEstimateController {
             }else if(fileName.endsWith(XLSX)){
                 workbook = new XSSFWorkbook(file.getInputStream());
             }else{
-                throw new CodeException("文件不是excel格式");
+                throw new CodeException("1101","文件不是excel格式");
             }
             
             Sheet sheet = workbook.getSheetAt(0);
@@ -163,7 +163,7 @@ public class BudgetEstimateController {
             int rows = sheet.getLastRowNum();
             
             if(rows == 0){
-                throw new CodeException("表格中无数据");
+                throw new CodeException("1101","表格中无数据");
             }  
             
             List<BudgetEstimate> matList = new ArrayList<BudgetEstimate>();
@@ -177,7 +177,7 @@ public class BudgetEstimateController {
                 
                 if(row != null){
                     if( i == 1 && !"一".equals(getCellValue(row.getCell(0)))){
-                        throw new CodeException("表格中人工费第一行数据格式不正确");
+                        throw new CodeException("1101","表格中人工费第一行数据格式不正确");
                     }
                     
                     if( i == 1 && "一".equals(getCellValue(row.getCell(0)))){
@@ -210,12 +210,15 @@ public class BudgetEstimateController {
             }
             
             //材料
+            
+            Map<String, String> matDistinctMap = new HashMap<String, String>();
+            
             for(int i = startLine; i<=rows; i++){
                 Row row = sheet.getRow(i);
                 
                 if(row != null){
                     if( i == startLine && !"二".equals(getCellValue(row.getCell(0)))){
-                        throw new CodeException("表格中材料费第一行数据格式不正确");
+                        throw new CodeException("1101","表格中材料费第一行数据格式不正确");
                     }
                     
                     if( i == startLine && "二".equals(getCellValue(row.getCell(0)))){
@@ -254,6 +257,11 @@ public class BudgetEstimateController {
                     String budgetPrice = getCellValue(row.getCell(5));
                     bi.setBudgetPrice(budgetPrice);
                     
+                    if(matDistinctMap.containsKey(bi.getMatNumber())){
+                        throw new CodeException("1101","表格中材料费有重复物料，请检查【物料名称："+bi.getMatName()+"，物料规格："+bi.getMatStandard()+"】");
+                    }else{
+                        matDistinctMap.put(bi.getMatNumber(), bi.getMatName());
+                    }
                     
                     matList.add(bi);
                 }
@@ -265,7 +273,7 @@ public class BudgetEstimateController {
                 
                 if(row != null){
                     if( i == startLine && !"四".equals(getCellValue(row.getCell(0)))){
-                        throw new CodeException("表格中机械费第一行数据格式不正确");
+                        throw new CodeException("1101","表格中机械费第一行数据格式不正确");
                     }
                     
                     if( i == startLine && "四".equals(getCellValue(row.getCell(0)))){

@@ -84,8 +84,10 @@ public class PurchaseServiceImpl extends BaseServiceImpl implements PurchaseServ
 
     @Override
     public List<Options> getRegionComboboxByBudgetNo(String budgetNo) {
-        return this.findMapBySql("select tx.region_code value, tx.region_name data from tbl_budget_tx tx,tbl_budget_estimate e where tx.id=e.budget_tx_id AND tx.budget_no=? and tx.region_code is not null",
-                new Object[] { budgetNo }, new Type[] { StringType.INSTANCE }, Options.class);
+        return this.findMapBySql("select tx.region_code value, tx.region_name data from tbl_budget_tx tx "+
+                                 "where tx.budget_no = ? and tx.region_code is not null " +
+                                 "AND tx.id in(select budget_tx_id FROM tbl_budget_estimate where budget_no = ?)",
+                new Object[] { budgetNo, budgetNo }, new Type[] { StringType.INSTANCE, StringType.INSTANCE }, Options.class);
     }
 
     @Override
