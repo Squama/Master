@@ -34,6 +34,7 @@
                         data-toggle="modal" data-target="#myModal"
                         >新增</button>
                         <button type="button" class="btn btn-default" data-btn-type="edit">编辑</button>
+                        <button type="button" class="btn btn-default" data-btn-type="del">删除</button>
                     </div>
                 </div>
                 <div class="box-body">
@@ -127,6 +128,25 @@
                     	modals.info('请选择上报类型');	
                     }
                     
+                    break;
+                case "del":
+                	if(!rowId){
+                        modals.info('请选择要删除的行');
+                        return false;
+                    }
+                    var data = volumeTable.getSelectedRowData();
+                    if(data.status != '新建'){
+                        modals.info('审核中或审核完成的条目不可删除!');
+                        return false;
+                    }
+                    ajaxPost(basePath + '/projectvolume/delete', {id:rowId}, function (data) {
+                        if (data.success) {
+                        	volumeTable.reloadData();
+                            modals.correct("删除成功");
+                        } else {
+                            modals.error(data.message);
+                        }
+                    });
                     break;
             }
         });

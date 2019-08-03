@@ -221,6 +221,15 @@ public class MeasureVolumeController {
         return new Result(true, map);
     }
     
+    @RequestMapping(method = RequestMethod.POST, value="/delete")
+    @ResponseBody
+    public Result delete(MeasureVolume projectVolume, HttpServletRequest request){
+    	String id = request.getParameter("id");
+    	MeasureVolume pv = projectService.get(MeasureVolume.class, id);
+    	projectService.delete(pv);
+    	return new Result();
+    }
+    
     @RequestMapping(method = RequestMethod.POST, value="/save")
     @ResponseBody
     public Result save(MeasureVolume measureVolume, HttpServletRequest request){

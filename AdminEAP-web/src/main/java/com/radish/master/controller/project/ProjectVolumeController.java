@@ -335,6 +335,15 @@ public class ProjectVolumeController {
         return projectService.get(LaborSub.class, laborSubID);
     }
     
+    @RequestMapping(method = RequestMethod.POST, value="/delete")
+    @ResponseBody
+    public Result delete(ProjectVolume projectVolume, HttpServletRequest request){
+    	String id = request.getParameter("id");
+    	ProjectVolume pv = projectService.get(ProjectVolume.class, id);
+    	projectService.delete(pv);
+    	return new Result();
+    }
+    
     @RequestMapping(method = RequestMethod.POST, value="/save")
     @ResponseBody
     public Result save(ProjectVolume projectVolume, HttpServletRequest request){
