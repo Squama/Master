@@ -371,6 +371,22 @@ public class ProjectManagerSalaryController {
         } catch (Exception e) {
             return new Result(false);
         }
+        //重新计算总值
+        Salary salary = teamSalaryService.get(Salary.class, detail.getSalaryID());
+        String hqlSalary = "from SalaryDetail where salaryID=:salaryID";
+        Map<String, Object> paramsSalary = new HashMap<>();
+        paramsSalary.put("salaryID",detail.getSalaryID());
+        List<SalaryDetail> detailLists = teamSalaryService.find(hqlSalary, paramsSalary);
+        BigDecimal a = new BigDecimal("0");
+        for (SalaryDetail sd : detailLists) {
+            BigDecimal actual = new BigDecimal(sd.getActual());
+
+            a = a.add(actual);
+        }
+        salary.setApplySum(a.setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
+        teamSalaryService.update(salary);
+        
+        
         return new Result(true);
     }
 
