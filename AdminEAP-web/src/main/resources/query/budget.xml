@@ -17,7 +17,7 @@
         <column key="quotaGroup" hidden="true" header="分组" width="80"/>
     </query>
     <!-- 成本测算 -->
-    <query id="budget_estimate_list" key="budgetNo" tableName="待成本测算列表" className="com.radish.master.entity.Budget" widthType="px">
+    <query id="budget_estimate_list" key="budgetNo" tableName="待成本测算列表" className="com.radish.master.entity.Budget" widthType="px" >
         <column key="rowIndex" header="序号" width="80"/>
         <column key="projectName" header="所属项目" classType="String" allowSort="true" width="150"/>
         <column key="projectSubName" header="项目子项" classType="String"/>

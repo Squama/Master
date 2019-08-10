@@ -62,3 +62,9 @@
 #kvFileinputModal .file-preview-other{
     line-height: 1!important;
 }
+
+.box-body-mobile .col-sm-12{min-width:1000px;}
+.box-body-mobile .row{overflow:auto;}
+
+.box-body-mobile .dataTables_wrapper{overflow:auto;}
+.box-body-mobile .table{min-width:1000px;}

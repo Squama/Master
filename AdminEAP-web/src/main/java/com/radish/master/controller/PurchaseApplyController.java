@@ -29,6 +29,7 @@ import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.utils.SecurityUtil;
 import com.cnpc.framework.utils.StrUtil;
 import com.radish.master.entity.Budget;
+import com.radish.master.entity.BudgetEstimate;
 import com.radish.master.entity.Project;
 import com.radish.master.entity.Purchase;
 import com.radish.master.entity.PurchaseDet;
@@ -106,7 +107,7 @@ public class PurchaseApplyController {
 
         return "purchase/apply/apply_edit";
     }
-    
+
     @RequestMapping(value = "/detail", method = RequestMethod.GET)
     public String detail(String id, HttpServletRequest request) {
         request.setAttribute("purchaseID", id);
@@ -191,30 +192,31 @@ public class PurchaseApplyController {
         purchaseDet.setCreateDateTime(new Date());
         purchaseDet.setSurplusQuantity(purchaseDet.getQuantity());
         purchaseDet.setGuidancePrice("0");
-        
+
         Purchase pur = purchaseService.get(Purchase.class, purchaseDet.getPurchaseID());
         String budgetNo = pur.getBudgetNo();
         String regionCode = purchaseDet.getRegionID();
         String matNumber = purchaseDet.getMatNumber();
-        //预算
-        List<Options> budgetSum = purchaseService.findMapBySql("SELECT CAST(sum(e.quantity) AS char) value, '' data FROM tbl_budget_tx tx,tbl_budget_estimate e where tx.id=e.budget_tx_id and tx.budget_no = ? and tx.region_code= ? AND e.mat_number=?",
-                        new Object[] { budgetNo, regionCode, matNumber }, new Type[] { StringType.INSTANCE, StringType.INSTANCE , StringType.INSTANCE  }, Options.class);
-        
-        //已消耗
-        List<Options> consumeSum = purchaseService.findMapBySql("SELECT CAST(sum(pd.quantity) AS char) value, '' data FROM tbl_purchase p, tbl_purchase_det pd WHERE p.id = pd.purchase_id AND P.status NOT IN ('10', '20', '30') AND p.budget_no=? AND pd.region_id=? AND pd.mat_number=?",
-                new Object[] { budgetNo, regionCode, matNumber }, new Type[] { StringType.INSTANCE, StringType.INSTANCE , StringType.INSTANCE  }, Options.class);
-        
+        // 预算
+        List<Options> budgetSum = purchaseService.findMapBySql(
+                "SELECT CAST(sum(e.quantity) AS char) value, '' data FROM tbl_budget_tx tx,tbl_budget_estimate e where tx.id=e.budget_tx_id and tx.budget_no = ? and tx.region_code= ? AND e.mat_number=?",
+                new Object[] { budgetNo, regionCode, matNumber }, new Type[] { StringType.INSTANCE, StringType.INSTANCE, StringType.INSTANCE }, Options.class);
+
+        // 已消耗
+        List<Options> consumeSum = purchaseService.findMapBySql(
+                "SELECT CAST(sum(pd.quantity) AS char) value, '' data FROM tbl_purchase p, tbl_purchase_det pd WHERE p.id = pd.purchase_id AND P.status NOT IN ('10', '20', '30') AND p.budget_no=? AND pd.region_id=? AND pd.mat_number=?",
+                new Object[] { budgetNo, regionCode, matNumber }, new Type[] { StringType.INSTANCE, StringType.INSTANCE, StringType.INSTANCE }, Options.class);
+
         String result = "";
-        
-        if(!consumeSum.isEmpty()){
-        	BigDecimal budgetMat = new BigDecimal(budgetSum.get(0).getValue() == null? "0" : budgetSum.get(0).getValue());
-            BigDecimal consumeMat = new BigDecimal(consumeSum.get(0).getValue() == null? "0" : consumeSum.get(0).getValue());
+
+        if (!consumeSum.isEmpty()) {
+            BigDecimal budgetMat = new BigDecimal(budgetSum.get(0).getValue() == null ? "0" : budgetSum.get(0).getValue());
+            BigDecimal consumeMat = new BigDecimal(consumeSum.get(0).getValue() == null ? "0" : consumeSum.get(0).getValue());
             result = budgetMat.subtract(consumeMat).setScale(2, BigDecimal.ROUND_DOWN).toPlainString();
-        }else{
-        	result = budgetSum.get(0).getValue();
+        } else {
+            result = budgetSum.get(0).getValue();
         }
-        
-        
+
         purchaseDet.setRemain(result);
         purchaseService.save(purchaseDet);
         return new Result(true, "success");
@@ -308,7 +310,7 @@ public class PurchaseApplyController {
         re.setData(list);
         return JSONArray.toJSONString(re);
     }
-    
+
     @RequestMapping(value = "/choose/{id}", method = RequestMethod.GET)
     public String channelChoose(@PathVariable("id") String id, HttpServletRequest request) {
         request.setAttribute("purchaseDetID", id);
@@ -375,6 +377,35 @@ public class PurchaseApplyController {
     @ResponseBody
     public Result getRegionMat(String budgetNo, String regionID) {
         return new Result(true, JSONArray.toJSONString(purchaseService.getMatComboboxByRegion(budgetNo, regionID)));
+    }
+
+    @RequestMapping(value = "/handledistinctestimatedetail")
+    public Result handledistinctestimatedetail(String id, HttpServletRequest request) {
+
+        List<BudgetEstimate> list = purchaseService.getDistinctList();
+
+        String budgetTxID = "";
+        BudgetEstimate beTmp = null;
+
+        for (BudgetEstimate be : list) {
+            BudgetEstimate budgetEstimate = purchaseService.get(BudgetEstimate.class, be.getId());
+
+            if (!be.getBudgetTxID().equals(budgetTxID)) {
+                budgetTxID = be.getBudgetTxID();
+                beTmp = budgetEstimate;
+                continue;
+            }
+
+            BigDecimal q1 = new BigDecimal(be.getQuantity());
+            BigDecimal q2 = new BigDecimal(budgetEstimate.getQuantity());
+
+            beTmp.setQuantity(q1.add(q2).setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
+
+            purchaseService.update(beTmp);
+            purchaseService.delete(budgetEstimate);
+        }
+
+        return new Result(true, "处理成功");
     }
 
 }

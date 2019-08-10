@@ -26,6 +26,7 @@ import com.cnpc.framework.base.service.impl.BaseServiceImpl;
 import com.cnpc.framework.query.entity.QueryCondition;
 import com.cnpc.framework.utils.SecurityUtil;
 import com.radish.master.entity.Budget;
+import com.radish.master.entity.BudgetEstimate;
 import com.radish.master.entity.Dispatch;
 import com.radish.master.entity.DispatchDetail;
 import com.radish.master.entity.Materiel;
@@ -84,9 +85,9 @@ public class PurchaseServiceImpl extends BaseServiceImpl implements PurchaseServ
 
     @Override
     public List<Options> getRegionComboboxByBudgetNo(String budgetNo) {
-        return this.findMapBySql("select tx.region_code value, tx.region_name data from tbl_budget_tx tx "+
-                                 "where tx.budget_no = ? and tx.region_code is not null " +
-                                 "AND tx.id in(select budget_tx_id FROM tbl_budget_estimate where budget_no = ?)",
+        return this.findMapBySql(
+                "select tx.region_code value, tx.region_name data from tbl_budget_tx tx " + "where tx.budget_no = ? and tx.region_code is not null "
+                        + "AND tx.id in(select budget_tx_id FROM tbl_budget_estimate where budget_no = ?)",
                 new Object[] { budgetNo, budgetNo }, new Type[] { StringType.INSTANCE, StringType.INSTANCE }, Options.class);
     }
 
@@ -140,7 +141,7 @@ public class PurchaseServiceImpl extends BaseServiceImpl implements PurchaseServ
         this.update(purchase);
 
         // 给流程起个名字
-        String name = user.getName() + "申请预算【"+budget.getBudgetName()+"】用料，所属项目：" + project.getProjectName();
+        String name = user.getName() + "申请预算【" + budget.getBudgetName() + "】用料，所属项目：" + project.getProjectName();
 
         // businessKey
         String businessKey = purchase.getId();
@@ -470,5 +471,29 @@ public class PurchaseServiceImpl extends BaseServiceImpl implements PurchaseServ
         params.put("purchaseID", purchaseID);
         params.put("purchaseID2", purchaseID);
         return this.findBySql(sb.toString(), params, PurchaseApplyAudit.class);
+    }
+
+    @Override
+    public List<BudgetEstimate> getDistinctList() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append(" SELECT ");
+        sb.append(" b.*");
+        sb.append(" FROM ");
+        sb.append("  tbl_budget_estimate b ");
+        sb.append(" RIGHT JOIN ");
+        sb.append(" ( ");
+        sb.append(" SELECT be.mat_number,be.budget_tx_id,count(1) countNum ");
+        sb.append(" from tbl_budget_estimate be ");
+        sb.append(" WHERE be.budget_tx_id IN (SELECT id from tbl_budget_tx) ");
+        sb.append(" GROUP BY be.mat_number,be.budget_tx_id ");
+        sb.append(" HAVING count(1) > 1 ");
+        sb.append(" ) a ");
+        sb.append(" ON b.budget_tx_id = a.budget_tx_id ");
+        sb.append(" AND b.mat_number = a.mat_number ");
+        sb.append(" ORDER BY b.mat_number,b.budget_tx_id ");
+        Map<String, Object> params = new HashMap<>();
+        
+        return this.findBySql(sb.toString(), params, BudgetEstimate.class);
     }
 }

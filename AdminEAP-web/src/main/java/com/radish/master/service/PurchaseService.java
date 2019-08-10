@@ -10,6 +10,7 @@ import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.base.service.BaseService;
 import com.cnpc.framework.query.entity.QueryCondition;
 import com.radish.master.entity.Budget;
+import com.radish.master.entity.BudgetEstimate;
 import com.radish.master.entity.Dispatch;
 import com.radish.master.entity.DispatchDetail;
 import com.radish.master.entity.Purchase;
@@ -73,4 +74,6 @@ public interface PurchaseService extends BaseService{
     public List<PurchaseApplyAudit> getAmountList(String purchaseID);
     
     public List<PurchaseApplyAudit> getQuantityList(String purchaseID);
+    
+    public List<BudgetEstimate> getDistinctList();
 }
