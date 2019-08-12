@@ -396,7 +396,7 @@ public class PurchaseApplyController {
                 continue;
             }
 
-            BigDecimal q1 = new BigDecimal(be.getQuantity());
+            BigDecimal q1 = new BigDecimal(beTmp.getQuantity());
             BigDecimal q2 = new BigDecimal(budgetEstimate.getQuantity());
 
             beTmp.setQuantity(q1.add(q2).setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
