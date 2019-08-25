@@ -91,6 +91,15 @@
                     onBlur: 'submit'
                 });
             } );
+        },
+        showChannel: function(that, value){
+            var rowId = $(that).parent().parent().attr('id');
+            modals.openWin({
+                winId: "purchaseDetChannelWin",
+                width: "700px",
+                url: basePath + "/purchase/apply/chooseshow/"+rowId,
+                title: "查看渠道"
+            });
         }
     }
     
@@ -118,6 +127,11 @@
     
     function fnRenderTeam(value, type, rowObj){
         return "<a href='javascript:void(0)' onclick='workflowCtrl.showTeamConsume(this,\"" + rowObj.id + "\")'>"+value+"</a>";
+    }
+    
+	function fnRenderChannel(value, type, rowObj) {
+    	return "<a href='javascript:void(0)' onclick='workflowCtrl.showChannel(this,\"" + rowObj.id + "\")'>查看供应商</a>";
+        
     }
     
 </script>

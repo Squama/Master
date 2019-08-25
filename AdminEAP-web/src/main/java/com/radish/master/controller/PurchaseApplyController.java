@@ -321,6 +321,17 @@ public class PurchaseApplyController {
 
         return "purchase/activiti/choose_channel";
     }
+    
+    @RequestMapping(value = "/chooseshow/{id}", method = RequestMethod.GET)
+    public String channelChooseShow(@PathVariable("id") String id, HttpServletRequest request) {
+        request.setAttribute("purchaseDetID", id);
+        PurchaseDet det = purchaseService.get(PurchaseDet.class, id);
+        request.setAttribute("matID", det.getMatNumber());
+        request.setAttribute("count", det.getQuantity());
+        request.setAttribute("dispatchStatus", det.getDispatchStatus());
+
+        return "purchase/activiti/choose_channel_show";
+    }
 
     @VerifyCSRFToken
     @RequestMapping(method = RequestMethod.POST, value = "/savechannel")

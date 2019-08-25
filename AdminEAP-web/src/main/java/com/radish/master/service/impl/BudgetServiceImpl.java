@@ -493,7 +493,8 @@ public class BudgetServiceImpl extends BaseServiceImpl implements BudgetService 
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("name", name);
         params.put("standard", standard);
-        Materiel mat = this.get("from Materiel where mat_name=:name AND mat_standard=:standard", params);
+        params.put("unit", unit);
+        Materiel mat = this.get("from Materiel where mat_name=:name AND mat_standard=:standard AND unit=:unit", params);
         if(mat == null){
             mat = new Materiel();
             mat.setCreate_time(new Date());

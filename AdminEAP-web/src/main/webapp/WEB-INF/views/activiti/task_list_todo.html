@@ -118,10 +118,16 @@
 
     //方法入口
     $(function () {
-        tasktodoTable = new CommonTable("tasktodo_table", "task_todo_list", "searchDiv", null);
+        tasktodoTable = new CommonTable("tasktodo_table", "task_todo_list", "searchDiv", {
+        	"drawCallback": function ( settings ) {
+                $('thead').children().children().last().css('min-width','15rem');
+            }
+        });
         //绑定按钮事件
         taskTodoObj.initButtonEvent();
 
+        
+        
     })
 
     function fnRenderSuspensionState(value) {

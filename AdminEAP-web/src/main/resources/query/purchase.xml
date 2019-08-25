@@ -78,6 +78,7 @@
         <column key="teamName" header="班组名称" fnRender="fnRenderTeam"/>
         <column key="demandTime" header="需求时间" classType="java.util.Date" dateFormat="yyyy-mm-dd" width="150"/>
         <column key="guidancePrice" header="市场指导价" classType="String" width="150"/>
+        <column key="channelID" header="查看渠道商" width="80" fnRender="fnRenderChannel"/>
         <column key="remark" header="财务审核备注" width="100"/>
         <column key="stockType" hidden="true" header="type" width="80"/>
         <column key="dispatchStatus" hidden="true" header="dispatch" width="80"/>
