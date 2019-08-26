@@ -106,14 +106,10 @@
            simpleSearch="false" service="taskPageService" method="getTaskToDoList"
            className="com.cnpc.framework.activiti.pojo.TaskVo">
         <column key="rowIndex" header="序号" width="70"/>
-        <column key="id" header="任务ID" operator="eq" width="100"/>
         <column key="name" header="任务名称" allowSort="false" width="100"/>
-        <column key="taskDefinitionKey" header="任务定义key" allowSort="false" width="100"/>
        <!-- <column key="businessKey" header="业务key" allowSort="false" width="100"/>-->
        <!-- <column key="category" header="业务类别" allowSort="false" width="100"/>-->
-        <column key="processInstanceId" header="流程实例ID" hidden="false" allowSort="false" width="100"/>
         <column key="processInstanceName" header="流程名称" align="left"  allowSort="false" width="100"/>
-        <column key="processDefinitionId" header="流程定义ID" allowSort="false" width="100"/>
         <column key="assigneeName" header="审批人" width="100"/>
         <column key="startUserId" header="流程发起人ID" hidden="true" width="100"/>
         <column key="startUserName" header="发起人" width="100"/>

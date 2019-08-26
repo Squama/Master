@@ -131,7 +131,7 @@
              }
         });
         
-        $("#budget_estimate_detail_table").on("dblclick", "tr", function(e){
+        $("#budget_estimate_detail_table").on("click", "tr", function(e){
             var id = $(this).attr('id'); 
             var check = $(this).attr('data-group');
             if(check == 'package'){
