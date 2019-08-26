@@ -126,13 +126,10 @@
            simpleSearch="false" service="taskPageService" method="getTaskDoneList"
            className="com.cnpc.framework.activiti.pojo.TaskDoneVo">
         <column key="rowIndex" header="序号" width="70"/>
-        <column key="id" header="实例ID" operator="eq" width="100"/>
         <column key="name" header="流程名称" align="left" allowSort="false" width="100"/>
-        <column key="businessKey" header="业务key" allowSort="false" width="100"/>
         <!--<column key="category" header="业务类别" allowSort="false" width="100"/>-->
         <column key="startUserId" header="流程发起人ID" hidden="true" width="100"/>
         <column key="startUserName" header="发起人" width="100"/>
-        <column key="processDefinitionId" header="流程定义ID" width="100"/>
         <column key="processDefinitionName" header="流程定义名称" width="100"/>
         <column key="startTime" header="启动时间" dateFormat="yyyy-mm-dd hh:ii"/>
         <column key="endTime" header="结束时间" dateFormat="yyyy-mm-dd hh:ii"/>
