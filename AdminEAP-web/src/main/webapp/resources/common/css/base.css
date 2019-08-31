@@ -66,5 +66,5 @@
 .box-body-mobile .col-sm-12{min-width:1000px;}
 .box-body-mobile .row{overflow:auto;margin-left:0px;margin-right:0px;}
 
-.box-body-mobile .dataTables_wrapper{overflow:auto;}
+.box-body-mobile .dataTables_wrapper{overflow:auto;width:95%;}
 .box-body-mobile .table{min-width:1000px;}

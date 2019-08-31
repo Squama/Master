@@ -36,6 +36,7 @@
 	        <column key="id" header="id" classType="String" allowSort="true" width="150" hidden="true"/>
 		    <column key="projectName" header="所属项目" classType="String" width="150"/>
 		    <column key="number" header="编号" classType="String" width="150"/>
+		    <column key="htName" header="合同名称" classType="String" width="150"/>
 		    <column key="reviewName" header="参与合同谈判人" classType="String" width="150"/>
 	        <column key="uname" header="起草人" classType="String" width="150" operator="like" />
 			<column key="builder" header="建设单位" classType="String" width="150" operator="like" />

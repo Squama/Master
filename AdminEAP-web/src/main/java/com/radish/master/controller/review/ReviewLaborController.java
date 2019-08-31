@@ -49,17 +49,10 @@ import com.cnpc.framework.utils.PropertiesUtil;
 import com.cnpc.framework.utils.SecurityUtil;
 import com.cnpc.framework.utils.StrUtil;
 import com.radish.master.entity.Project;
-import com.radish.master.entity.ProjectVolume;
 import com.radish.master.entity.common.ActivitiReview;
-import com.radish.master.entity.project.SalaryVolume;
-import com.radish.master.entity.qualityCheck.CheckDqFile;
-import com.radish.master.entity.qualityCheck.CheckFile;
 import com.radish.master.entity.review.MaxNumber;
 import com.radish.master.entity.review.ReviewFile;
 import com.radish.master.entity.review.ReviewLabor;
-import com.radish.master.entity.review.ReviewMat;
-import com.radish.master.entity.safty.SafeFile;
-import com.radish.master.entity.volumePay.VolumePay;
 import com.radish.master.system.FileHelper;
 
 @Controller
@@ -175,6 +168,7 @@ public class ReviewLaborController {
 			p.setSwyq(ps.getSwyq());
 			p.setGetToJf(ps.getGetToJf());
 			p.setHtNumber(ps.getHtNumber());
+			p.setHtName(ps.getHtName());
 			baseService.update(p);
 			r.setSuccess(true);
 		}else{//保存
@@ -276,7 +270,7 @@ public class ReviewLaborController {
 		baseService.update(sp);
 		
 		User user = SecurityUtil.getUser();
-        String name ="施工合同【评审】";
+        String name ="施工合同【"+sp.getHtName()+"】【评审】";
 
         // businessKey
         String businessKey = sp.getId();
