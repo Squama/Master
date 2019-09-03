@@ -100,7 +100,12 @@
 	                    return false;
 	                }
 	                var url = basePath+"/ureport/preview?_u=file:salaryBz.ureport.xml&_t=1,5&id="+rowId+"&uid="+uid;
+					/* var types = teamSalaryTable.getSelectedRowData().type;
+					if(types!="专业作业班组"&&types!="点工班组"){
+						url = basePath+"/ureport/preview?_u=file:salaryGs.ureport.xml&_t=1,5&id="+rowId+"&uid="+uid;
+					} */
                	 	window.open(url);
+               	 	//modals.correct(url);
 	                break;
             }
         });

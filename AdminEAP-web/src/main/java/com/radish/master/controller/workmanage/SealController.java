@@ -136,6 +136,7 @@ public class SealController {
 	public Result save(Seal cl,HttpServletRequest request){
 		Result r = new Result();
 		String id = request.getParameter("id");
+		String fileId = request.getParameter("fileId");
 		User u = SecurityUtil.getUser();
 		if(id==null){//保存
 			cl.setIsvalid("1");
@@ -149,6 +150,21 @@ public class SealController {
 		}
 		r.setCode(id);
 		
+		if(fileId!=null&&fileId.length()>0){
+			if(fileId.indexOf(",")<0){//单张
+				BgwjFile wj = baseService.get(BgwjFile.class, fileId);
+				wj.setFormId(id);
+				baseService.update(wj);
+			}else{//多文件
+				String[] ids = fileId.split(",");
+				for(int i =0;i<ids.length;i++){
+					BgwjFile wj = baseService.get(BgwjFile.class, ids[i]);
+					wj.setFormId(id);
+					baseService.update(wj);
+				}
+			}
+		}
+		
 		return r;
 	}
 	@RequestMapping("/load")
@@ -156,8 +172,18 @@ public class SealController {
 	public Result load(HttpServletRequest request){
 		Result r = new Result();
 		String id = request.getParameter("id");
+		List<BgwjFile> wjs = baseService.findMapBySql("select id  from tbl_officefile where form_ID='"+id+"'", new Object[]{}, new Type[]{StringType.INSTANCE}, BgwjFile.class);
+        String wjid = "";
+		for(int i =0;i<wjs.size();i++){
+        	if(i==wjs.size()-1){
+        		wjid += wjs.get(i).getId();
+        	}else {
+        		wjid += wjs.get(i).getId()+",";
+        	}
+        }
 		Seal c = baseService.get(Seal.class, id);
 		r.setData(c);
+		r.setCode(wjid);
 		return r;
 		
 	}

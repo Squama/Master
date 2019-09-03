@@ -202,6 +202,7 @@
         <column key="rowIndex" header="序号" width="80"/>
         <column key="name" header="印章名称" classType="String" width="150"/>
         <column key="descs" header="备注" classType="String" width="150" />
+        <column key="id" header="管理" width="100" fnRender="fnFj"/>
     </query>
     <query id="sealList_use" key="id" tableName="印章申请列表" className="com.radish.master.entity.workmanage.Sealuse" widthType="px" pageSize="200">
         <column key="id" hidden="true" header="id" width="80"/>
