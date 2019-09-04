@@ -108,7 +108,7 @@
                         return false;
                     }
                     var data = teamSalaryTable.getSelectedRowData();
-                    if(data.status != '新建' && data.status != '审核不通过'){
+                    if(data.status != '新建' && data.status != '审核不通过'&& data.status != '支付审核驳回'){
                     	modals.info('审核中或审核完成的条目不可编辑!');
                     	return false;
                     }
@@ -124,7 +124,7 @@
     
     function fnRenderSalary(value, type, rowObj) {
         var oper = "";
-        if(rowObj.status == '新建' || rowObj.status == '审核不通过'){
+        if(rowObj.status == '新建' || rowObj.status == '审核不通过'|| rowObj.status == '支付审核驳回'){
         	oper += "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='teamSalaryObject.startFlow(\"" + value + "\")'>提交审批</a>";
         }
         oper += "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='teamSalaryObject.overview(\"" + value + "\")'>总览</a>";
