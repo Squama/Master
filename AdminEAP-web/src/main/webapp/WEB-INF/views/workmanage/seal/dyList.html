@@ -103,6 +103,7 @@
 	                    		<td colspan="18" style="text-align: center;font-size: 25px;font-weight: 600">印章申请记录</td>
 	                    	</tr>
                     		<tr >
+                    			<th  style="width: 10%">详情</th>
                     			<th  style="width: 10%">日期</th>
                     			<th  style="width: 20%">公司及项目部名称</th>
                     			<th  style="width: 20%">用印名称</th>
@@ -204,8 +205,8 @@
            var tr ="";
            for(var i=0;i<tj.length;i++){
                	var mx = tj[i];
-               	console.log(mx);
                	tr+="<tr>";
+               	tr+="<td><a onclick='lookMx(\""+mx.id+"\")'>详情</a></td>"
                	tr+="<td>"+qcnull(mx.sqtime)+"</td>";
                	tr+="<td>"+qcnull(mx.gsmc)+"</td>";
                	tr+="<td>"+qcnull(mx.name)+"</td>";
@@ -242,6 +243,14 @@
 		}else{
 			return value;
 		}
+	}
+	function lookMx(id){
+		modals.openWin({
+            winId:winId,
+            title:'查看',
+            width:'70%',
+            url:basePath+"/seals/useadd?id="+id+"&ck=look"
+           });
 	}
     
 </script>

@@ -9,6 +9,7 @@
                     <input id="clid" name="carid" value="30" style="display: none"/>
                     <div class="btn-group">
                         <button type="button" class="btn btn-primary" data-btn-type="search">查询</button>
+                        <button type="button" class="btn btn-default" data-btn-type="lookmx" id="lookmx">查看</button>
                     </div>
                 </div>
                 <div class="box-body box-body-mobile">
@@ -27,5 +28,19 @@
     $("#clid").val(carid);
     $(function (){
     	volumeTable = new CommonTable("volume_table", "carList_useMx", "searchDiv2", null);
-    });   
+    	$("#lookmx").on("click",function(){
+    		var rowIds= volumeTable.getSelectedRowId();
+    		if(!rowIds){
+                modals.info('请选择要查看的行');
+                return false;
+            }
+            modals.openWin({
+                winId:winId,
+                title:'查看',
+                width:'70%',
+                url:basePath+"/cars/useadd?id="+rowIds+"&ck=look"
+               });
+        })
+    }); 
+      
 </script>
