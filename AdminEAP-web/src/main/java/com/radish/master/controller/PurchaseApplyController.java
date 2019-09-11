@@ -192,6 +192,7 @@ public class PurchaseApplyController {
         purchaseDet.setCreateDateTime(new Date());
         purchaseDet.setSurplusQuantity(purchaseDet.getQuantity());
         purchaseDet.setGuidancePrice("0");
+        purchaseDet.setPrice("0");
 
         Purchase pur = purchaseService.get(Purchase.class, purchaseDet.getPurchaseID());
         String budgetNo = pur.getBudgetNo();

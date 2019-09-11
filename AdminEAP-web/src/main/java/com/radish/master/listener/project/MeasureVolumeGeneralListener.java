@@ -89,6 +89,8 @@ public class MeasureVolumeGeneralListener implements TaskListener{
                     delegateTask.setVariable(SHIGONG, FALSE);
                 } else if ("anquan".equals(taskDefinitionKey)) {
                     delegateTask.setVariable(ANQUAN, FALSE);
+                } else if ("boss".equals(taskDefinitionKey)) {
+                    pv.setStatus("10");
                 }
                 as.setApprove("false");
             } else if (TRUE.equalsIgnoreCase(delegateTask.getVariable("approved").toString())) {
@@ -110,7 +112,7 @@ public class MeasureVolumeGeneralListener implements TaskListener{
                 pv.setStatus("40");
             } else if ("yusuan".equals(taskDefinitionKey)) {
                 pv.setStatus("50");
-            } else if ("boss".equals(taskDefinitionKey)) {
+            } else if ("boss".equals(taskDefinitionKey) && TRUE.equalsIgnoreCase(delegateTask.getVariable("approved").toString())) {
                 pv.setStatus("60");
             } else if ("account".equals(taskDefinitionKey)) {
                 pv.setStatus("70");

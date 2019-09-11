@@ -382,7 +382,7 @@ public class PurchaseServiceImpl extends BaseServiceImpl implements PurchaseServ
     public List<PurchaseApplyAudit> getAmountListMap(String purchaseID) {
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT PUR.id, PUR.budget_no, ORI.region_name, ORI.budget, COST.cost, PUR.apply FROM ");
-        sb.append("(SELECT PD.id,P.budget_no, PD.region_id, P.apply_amount apply ");
+        sb.append("(SELECT PD.id,P.budget_no, PD.region_id, SUM(PD.quantity*PD.price) apply ");
         sb.append("FROM tbl_purchase P, tbl_purchase_det PD ");
         sb.append("WHERE PD.purchase_id = P.id AND P.id = ? ");
         sb.append("GROUP BY P.budget_no, PD.region_id) PUR ");
