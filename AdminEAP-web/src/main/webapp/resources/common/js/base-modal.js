@@ -297,6 +297,8 @@
          if(isNaN(config.width)&&config.width.indexOf("px")>0)
         	 $(dialog).css('width',config.width); 
              //dialog.style='width:'+config.width+';';
+         else if(config.width.indexOf("%")>0)
+        	 $(dialog).css('width',config.width); 
          else
         	 $(dialog).css('width',config.width+"px");
         	 //dialog.style='width:'+config.width+'px;'; 
