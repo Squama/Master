@@ -295,14 +295,24 @@ public class ProjectManagerSalaryController {
         Method set = detail.getClass().getMethod("set" + teamSalaryService.captureName(field), String.class);
         set.invoke(detail, value);
         
-        if(!"actual".equals(field)){
-        	BigDecimal loan = new BigDecimal(detail.getLoan());
-            BigDecimal payable = new BigDecimal(detail.getPayable());
-            detail.setActual(payable.subtract(loan).setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
-            teamSalaryService.save(detail);
+        if("payable".equals(field)){
+        	Salary salary = teamSalaryService.get(Salary.class, detail.getSalaryID());
+        	if("20".equals(salary.getType()) || "40".equals(salary.getType()) || "50".equals(salary.getType())){
+        		SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd");
+        		String startTime = myFormat.format(salary.getStartTime()) + " 00:00:00";
+        		String year = startTime.substring(0, 4);
+        		SocialSecurity socialSecurity = teamSalaryService.getSocialSecurity(year);
+        		teamSalaryService.handleSocialSalaryDetailPayable(socialSecurity, detail, salary.getStartTime());
+        		teamSalaryService.save(detail);
+        	}
         }
         
-        
+        if(!"actual".equals(field)){
+        	BigDecimal loan = new BigDecimal(detail.getLoan());
+            BigDecimal actual = new BigDecimal(detail.getActual());
+            detail.setActual(actual.subtract(loan).setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
+            teamSalaryService.save(detail);
+        }
         
         if("actual".equals(field)){
             String hqlSalary = "from SalaryDetail where salaryID=:salaryID";

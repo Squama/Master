@@ -744,6 +744,28 @@ public class BudgetEstimateController {
     @RequestMapping(method = RequestMethod.GET, value="/auditlist/{budgetNo}")
     private String toAudit(@PathVariable("budgetNo") String budgetNo, HttpServletRequest request) {
         request.setAttribute("budgetNo", budgetNo);
+        
+        List<BudgetImport> list = budgetService.getBudgetImportList(budgetNo);
+        
+        BigDecimal sumUnit = new BigDecimal("0");
+        BigDecimal sumLabour = new BigDecimal("0");
+        BigDecimal sumMat = new BigDecimal("0");
+        BigDecimal sumMech = new BigDecimal("0");
+        
+        for(BudgetImport bi : list){
+        	if(!"1".equals(bi.getIsGroup())){
+        		sumUnit = sumUnit.add(new BigDecimal(StrUtil.isEmpty(bi.getUnitPrice())?"0":bi.getUnitPrice()));
+        		sumLabour = sumLabour.add(new BigDecimal(StrUtil.isEmpty(bi.getArtificiality())?"0":bi.getArtificiality()));
+        		sumMat = sumMat.add(new BigDecimal(StrUtil.isEmpty(bi.getMateriels())?"0":bi.getMateriels()));
+        		sumMech = sumMech.add(new BigDecimal(StrUtil.isEmpty(bi.getMech())?"0":bi.getMech()));
+        	}
+        }
+        
+        request.setAttribute("sumUnit", sumUnit.toPlainString());
+        request.setAttribute("sumLabour", sumLabour.toPlainString());
+        request.setAttribute("sumMat", sumMat.toPlainString());
+        request.setAttribute("sumMech", sumMech.toPlainString());
+        
         return "budgetmanage/budgetactiviti/audit_list";
     }
     

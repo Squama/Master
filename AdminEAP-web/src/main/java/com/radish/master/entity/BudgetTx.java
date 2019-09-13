@@ -25,198 +25,246 @@ import com.cnpc.framework.base.entity.BaseEntity;
 @Table(name = "tbl_budget_tx")
 public class BudgetTx extends BaseEntity {
 
-    private static final long serialVersionUID = -2958304921341682100L;
+	private static final long serialVersionUID = -2958304921341682100L;
 
-    @Header(name = "部位编号")
-    @Column(name = "region_code")
-    private String regionCode;
+	@Header(name = "部位编号")
+	@Column(name = "region_code")
+	private String regionCode;
 
-    @Header(name = "部位名称")
-    @Column(name = "region_name")
-    private String regionName;
+	@Header(name = "部位名称")
+	@Column(name = "region_name")
+	private String regionName;
 
-    @Header(name = "单位")
-    @Column(name = "units")
-    private String units;
+	@Header(name = "单位")
+	@Column(name = "units")
+	private String units;
 
-    @Header(name = "工程量")
-    @Column(name = "quantities")
-    private String quantities;
+	@Header(name = "工程量")
+	@Column(name = "quantities")
+	private String quantities;
 
-    @Header(name = "单价")
-    @Column(name = "price")
-    private String price;
+	@Header(name = "单价")
+	@Column(name = "price")
+	private String price;
 
-    @Header(name = "合价")
-    @Column(name = "unit_price")
-    private String unitPrice;
+	@Header(name = "合价")
+	@Column(name = "unit_price")
+	private String unitPrice;
 
-    @Header(name = "合价（人工）")
-    @Column(name = "artificiality")
-    private String artificiality;
+	@Header(name = "合价（人工）")
+	@Column(name = "artificiality")
+	private String artificiality;
 
-    @Header(name = "合价（材料）")
-    @Column(name = "materiels")
-    private String materiels;
+	@Header(name = "合价（材料）")
+	@Column(name = "materiels")
+	private String materiels;
 
-    @Header(name = "合价（机械）")
-    @Column(name = "mech")
-    private String mech;
+	@Header(name = "合价（机械）")
+	@Column(name = "mech")
+	private String mech;
 
-    @Header(name = "主材合价")
-    @Column(name = "materiels_unit_price")
-    private String materielsUnitPrice;
+	@Header(name = "主材合价")
+	@Column(name = "materiels_unit_price")
+	private String materielsUnitPrice;
 
-    @Header(name = "分组")
-    @Column(name = "quota_group")
-    private String quotaGroup;
+	@Header(name = "人工单价")
+	@Column(name = "labour_single")
+	private String labourSingle;
 
-    @Header(name = "项目")
-    @Column(name = "project_id")
-    private String projectID;
+	@Header(name = "材料单价")
+	@Column(name = "mat_single")
+	private String matSingle;
 
-    @Header(name = "预算")
-    @Column(name = "budget_no")
-    private String budgetNo;
+	@Header(name = "机械单价")
+	@Column(name = "mech_single")
+	private String mechSingle;
 
-    @Header(name = "拆分合并标志")
-    @Column(name = "order_no")
-    private String orderNo;
+	@Header(name = "主材单价")
+	@Column(name = "main_single")
+	private String mainSingle;
 
-    @Header(name = "行高标志")
-    @Column(name = "col")
-    private String col;
+	@Header(name = "分组")
+	@Column(name = "quota_group")
+	private String quotaGroup;
 
-    @Header(name = "是否为分组")
-    @Column(name = "is_group")
-    private String isGroup;
+	@Header(name = "项目")
+	@Column(name = "project_id")
+	private String projectID;
 
-    public String getRegionCode() {
-        return regionCode;
-    }
+	@Header(name = "预算")
+	@Column(name = "budget_no")
+	private String budgetNo;
 
-    public void setRegionCode(String regionCode) {
-        this.regionCode = regionCode;
-    }
+	@Header(name = "拆分合并标志")
+	@Column(name = "order_no")
+	private String orderNo;
 
-    public String getRegionName() {
-        return regionName;
-    }
+	@Header(name = "行高标志")
+	@Column(name = "col")
+	private String col;
 
-    public void setRegionName(String regionName) {
-        this.regionName = regionName;
-    }
+	@Header(name = "是否为分组")
+	@Column(name = "is_group")
+	private String isGroup;
 
-    public String getUnits() {
-        return units;
-    }
+	public String getRegionCode() {
+		return regionCode;
+	}
 
-    public void setUnits(String units) {
-        this.units = units;
-    }
+	public void setRegionCode(String regionCode) {
+		this.regionCode = regionCode;
+	}
 
-    public String getQuantities() {
-        return quantities;
-    }
+	public String getRegionName() {
+		return regionName;
+	}
 
-    public void setQuantities(String quantities) {
-        this.quantities = quantities;
-    }
+	public void setRegionName(String regionName) {
+		this.regionName = regionName;
+	}
 
-    public String getPrice() {
-        return price;
-    }
+	public String getUnits() {
+		return units;
+	}
 
-    public void setPrice(String price) {
-        this.price = price;
-    }
+	public void setUnits(String units) {
+		this.units = units;
+	}
 
-    public String getUnitPrice() {
-        return unitPrice;
-    }
+	public String getQuantities() {
+		return quantities;
+	}
 
-    public void setUnitPrice(String unitPrice) {
-        this.unitPrice = unitPrice;
-    }
+	public void setQuantities(String quantities) {
+		this.quantities = quantities;
+	}
 
-    public String getArtificiality() {
-        return artificiality;
-    }
+	public String getPrice() {
+		return price;
+	}
 
-    public void setArtificiality(String artificiality) {
-        this.artificiality = artificiality;
-    }
+	public void setPrice(String price) {
+		this.price = price;
+	}
 
-    public String getMateriels() {
-        return materiels;
-    }
+	public String getUnitPrice() {
+		return unitPrice;
+	}
 
-    public void setMateriels(String materiels) {
-        this.materiels = materiels;
-    }
+	public void setUnitPrice(String unitPrice) {
+		this.unitPrice = unitPrice;
+	}
 
-    public String getMech() {
-        return mech;
-    }
+	public String getArtificiality() {
+		return artificiality;
+	}
 
-    public void setMech(String mech) {
-        this.mech = mech;
-    }
+	public void setArtificiality(String artificiality) {
+		this.artificiality = artificiality;
+	}
 
-    public String getMaterielsUnitPrice() {
-        return materielsUnitPrice;
-    }
+	public String getMateriels() {
+		return materiels;
+	}
 
-    public void setMaterielsUnitPrice(String materielsUnitPrice) {
-        this.materielsUnitPrice = materielsUnitPrice;
-    }
+	public void setMateriels(String materiels) {
+		this.materiels = materiels;
+	}
 
-    public String getQuotaGroup() {
-        return quotaGroup;
-    }
+	public String getMech() {
+		return mech;
+	}
 
-    public void setQuotaGroup(String quotaGroup) {
-        this.quotaGroup = quotaGroup;
-    }
+	public void setMech(String mech) {
+		this.mech = mech;
+	}
 
-    public String getProjectID() {
-        return projectID;
-    }
+	public String getMaterielsUnitPrice() {
+		return materielsUnitPrice;
+	}
 
-    public void setProjectID(String projectID) {
-        this.projectID = projectID;
-    }
+	public void setMaterielsUnitPrice(String materielsUnitPrice) {
+		this.materielsUnitPrice = materielsUnitPrice;
+	}
 
-    public String getBudgetNo() {
-        return budgetNo;
-    }
+	public String getQuotaGroup() {
+		return quotaGroup;
+	}
 
-    public void setBudgetNo(String budgetNo) {
-        this.budgetNo = budgetNo;
-    }
+	public void setQuotaGroup(String quotaGroup) {
+		this.quotaGroup = quotaGroup;
+	}
 
-    public String getOrderNo() {
-        return orderNo;
-    }
+	public String getProjectID() {
+		return projectID;
+	}
 
-    public void setOrderNo(String orderNo) {
-        this.orderNo = orderNo;
-    }
+	public void setProjectID(String projectID) {
+		this.projectID = projectID;
+	}
 
-    public String getCol() {
-        return col;
-    }
+	public String getBudgetNo() {
+		return budgetNo;
+	}
 
-    public void setCol(String col) {
-        this.col = col;
-    }
+	public void setBudgetNo(String budgetNo) {
+		this.budgetNo = budgetNo;
+	}
 
-    public String getIsGroup() {
-        return isGroup;
-    }
+	public String getOrderNo() {
+		return orderNo;
+	}
 
-    public void setIsGroup(String isGroup) {
-        this.isGroup = isGroup;
-    }
+	public void setOrderNo(String orderNo) {
+		this.orderNo = orderNo;
+	}
+
+	public String getCol() {
+		return col;
+	}
+
+	public void setCol(String col) {
+		this.col = col;
+	}
+
+	public String getIsGroup() {
+		return isGroup;
+	}
+
+	public void setIsGroup(String isGroup) {
+		this.isGroup = isGroup;
+	}
+
+	public String getLabourSingle() {
+		return labourSingle;
+	}
+
+	public void setLabourSingle(String labourSingle) {
+		this.labourSingle = labourSingle;
+	}
+
+	public String getMatSingle() {
+		return matSingle;
+	}
+
+	public void setMatSingle(String matSingle) {
+		this.matSingle = matSingle;
+	}
+
+	public String getMechSingle() {
+		return mechSingle;
+	}
+
+	public void setMechSingle(String mechSingle) {
+		this.mechSingle = mechSingle;
+	}
+
+	public String getMainSingle() {
+		return mainSingle;
+	}
+
+	public void setMainSingle(String mainSingle) {
+		this.mainSingle = mainSingle;
+	}
 
 }

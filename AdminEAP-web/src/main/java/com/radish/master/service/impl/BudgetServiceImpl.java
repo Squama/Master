@@ -182,6 +182,18 @@ public class BudgetServiceImpl extends BaseServiceImpl implements BudgetService 
                     
                     bi.setUnitPrice(unitPrice);
                     
+                    String labourSingle = getCellValue(row.getCell(5));
+                    bi.setLabourSingle(labourSingle);
+                    
+                    String matSingle = getCellValue(row.getCell(6));
+                    bi.setMatSingle(matSingle);
+                    
+                    String mechSingle = getCellValue(row.getCell(7));
+                    bi.setMechSingle(mechSingle);
+                    
+                    String mainSingle = getCellValue(row.getCell(8));
+                    bi.setMainSingle(mainSingle);
+                    
                     String artificiality = getCellValue(row.getCell(10));
                     bi.setArtificiality(artificiality);
                     

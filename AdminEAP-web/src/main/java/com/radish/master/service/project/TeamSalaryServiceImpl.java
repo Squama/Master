@@ -592,6 +592,119 @@ public class TeamSalaryServiceImpl extends BaseServiceImpl implements TeamSalary
     }
 
     @Override
+    public void handleSocialSalaryDetailPayable(SocialSecurity socialSecurity, SalaryDetail detail, Date startDate) {
+        Map<Double, Double> map = new HashMap<>();
+        map.put(0.00, Double.valueOf(socialSecurity.getRadix()));
+        map.put(Double.valueOf(socialSecurity.getRadix()),Double.valueOf(socialSecurity.getAvg()));
+        map.put(Double.valueOf(socialSecurity.getAvg()), 99999999.99);
+        BigDecimal thd = new BigDecimal(socialSecurity.getAvg());
+        thd = thd.multiply(new BigDecimal("3"));
+        //三倍平均工资
+        Double thdAvg = thd.doubleValue();
+        String calRadix = "0";
+        
+        Iterator<Map.Entry<Double, Double>> it = map.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry<Double, Double> entry = it.next();
+            if (entry.getKey() <= Double.valueOf(detail.getPayable()) && map.get(entry.getKey()) > Double.valueOf(detail.getPayable())) {
+                if(entry.getKey() == 0.00){
+                    calRadix = socialSecurity.getRadix();
+                }else if(map.get(entry.getKey()) == 99999999.99){
+                    if(Double.valueOf(detail.getBasicSalary()) > thdAvg){
+                        calRadix = thd.setScale(2, BigDecimal.ROUND_DOWN).toPlainString();
+                    }else{
+                        calRadix = detail.getPayable();
+                    }
+                }else{
+                    calRadix = detail.getPayable();
+                }
+            }
+        }
+        
+        BigDecimal basic = new BigDecimal(calRadix);
+        BigDecimal yanglao = new BigDecimal(socialSecurity.getYanglao()).multiply(new BigDecimal("0.01"));
+        BigDecimal yanglaoCorp = new BigDecimal(socialSecurity.getYanglaoCorp()).multiply(new BigDecimal("0.01"));
+        BigDecimal yiliao = new BigDecimal(socialSecurity.getYiliao()).multiply(new BigDecimal("0.01"));
+        BigDecimal yiliaoCorp = new BigDecimal(socialSecurity.getYiliaoCorp()).multiply(new BigDecimal("0.01"));
+        BigDecimal shiye = new BigDecimal(socialSecurity.getShiye()).multiply(new BigDecimal("0.01"));
+        BigDecimal shiyeCorp = new BigDecimal(socialSecurity.getShiyeCorp()).multiply(new BigDecimal("0.01"));
+        BigDecimal gongshang = new BigDecimal(socialSecurity.getGongshang()).multiply(new BigDecimal("0.01"));
+        BigDecimal shengyu = new BigDecimal(socialSecurity.getShengyu()).multiply(new BigDecimal("0.01"));
+        BigDecimal gongjijin = new BigDecimal(socialSecurity.getGongjijin()).multiply(new BigDecimal("0.01"));
+
+        
+        BigDecimal yanglaoP = basic.multiply(yanglao);//养老个人缴纳
+        BigDecimal yanglaoC = basic.multiply(yanglaoCorp);//养老公司缴纳
+        BigDecimal yiliaoP = basic.multiply(yiliao);//医疗个人缴纳
+        BigDecimal yiliaoC = basic.multiply(yiliaoCorp);//医疗公司缴纳
+        BigDecimal shiyeP = basic.multiply(shiye);//失业个人缴纳
+        BigDecimal shiyeC = basic.multiply(shiyeCorp);//失业公司缴纳
+        BigDecimal gongshangC = basic.multiply(gongshang);//工伤公司缴纳
+        BigDecimal shengyuC = basic.multiply(shengyu);//生育公司缴纳
+        BigDecimal gongjijinP = basic.multiply(gongjijin);//公积金个人缴纳
+        BigDecimal gongjijinC = basic.multiply(gongjijin);//公积金公司缴纳
+        
+        detail.setYanglao(yanglaoP.setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
+        detail.setYanglaoCorp(yanglaoC.setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
+        detail.setMedical(yiliaoP.setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
+        detail.setMedicalCorp(yiliaoC.setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
+        detail.setShiye(shiyeP.setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
+        detail.setShiyeCorp(shiyeC.setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
+        detail.setGongshangCorp(gongshangC.setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
+        detail.setShengyuCorp(shengyuC.setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
+        detail.setPrf(gongjijinP.setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
+        detail.setPrfCorp(gongjijinC.setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
+        
+        //原社保字段 =失业+养老
+        detail.setSocial(shiyeP.add(yanglaoP).setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
+        
+        BigDecimal salarySoFar = new BigDecimal(detail.getPayable());
+        
+        salarySoFar = salarySoFar.subtract(yanglaoP).subtract(yiliaoP).subtract(shiyeP).subtract(gongjijinP);
+        
+        //获取总工资和已交税款
+        BigDecimal sumSalary = new BigDecimal("0");
+        BigDecimal sumTax = new BigDecimal("0");
+        
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("userID", detail.getUserID());
+        params.put("ssYear", socialSecurity.getYear());
+        params.put("id", detail.getId());
+        List<SalaryDetail> list =  this.find("from SalaryDetail where userID =:userID AND ssYear =:ssYear AND id <>:id", params);
+        for(SalaryDetail his : list){
+            sumSalary = sumSalary.add(new BigDecimal(his.getPayable()).add(new BigDecimal(his.getTax())));
+            sumTax = sumTax.add(new BigDecimal(his.getTax()));
+        }
+        
+        BigDecimal sumMonth = new BigDecimal(TimeUtil.getFormattedTime2(startDate).substring(4, 6));
+        BigDecimal starter = new BigDecimal(PropertiesUtil.getValue("tax.manager.starter"));
+        BigDecimal deduction = new BigDecimal(detail.getDeduction());
+        
+        String taxRateArea = PropertiesUtil.getValue("tax.manager");
+        BigDecimal taxRate = new BigDecimal("0");
+        BigDecimal taxDeductionNum = new BigDecimal("0");
+        
+        BigDecimal taxRank = sumSalary.subtract(sumMonth.multiply(starter.add(deduction))).add(salarySoFar);
+        
+        String[] traArrays = taxRateArea.split(",");
+        for (int i = 0; i < traArrays.length; i++) {
+            //解析每个税率,查找税率区间
+            String[] traArray = traArrays[i].split("_");
+            if(Double.valueOf(traArray[0]) < taxRank.doubleValue() && taxRank.doubleValue() <= Double.valueOf(traArray[1])){
+                taxRate = new BigDecimal(traArray[2]).multiply(new BigDecimal("0.01"));
+                taxDeductionNum = new BigDecimal(traArray[3]);
+                break;
+            }
+        }
+        
+        String tax = taxRank.multiply(taxRate).subtract(taxDeductionNum).subtract(sumTax).setScale(2, BigDecimal.ROUND_DOWN).toPlainString();
+        
+        detail.setTax(tax);
+        detail.setActual(salarySoFar.subtract(new BigDecimal(tax)).setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
+        
+    }
+    
+    @Override
     public Salary getBiggestSalary(String projectID, String type) {
         StringBuilder buffer = new StringBuilder();
 

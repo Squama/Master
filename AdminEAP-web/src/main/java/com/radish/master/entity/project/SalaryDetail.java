@@ -77,7 +77,7 @@ public class SalaryDetail extends BaseEntity {
     private String tax;
 
     @Header(name = "实发工资")
-    @Column(name = "actual")
+    @Column(name = "actualg")
     private String actual;
 
     @Header(name = "备注")

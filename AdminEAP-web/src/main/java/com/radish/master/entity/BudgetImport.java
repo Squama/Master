@@ -54,6 +54,22 @@ public class BudgetImport {
 	@Column(name = "price")
 	private String price;
 
+	@Header(name = "人工单价")
+	@Column(name = "labour_single")
+	private String labourSingle;
+
+	@Header(name = "材料单价")
+	@Column(name = "mat_single")
+	private String matSingle;
+
+	@Header(name = "机械单价")
+	@Column(name = "mech_single")
+	private String mechSingle;
+
+	@Header(name = "主材单价")
+	@Column(name = "main_single")
+	private String mainSingle;
+
 	@Header(name = "合价")
 	@Column(name = "unit_price")
 	private String unitPrice;
@@ -244,6 +260,38 @@ public class BudgetImport {
 
 	public void setIsPack(String isPack) {
 		this.isPack = isPack;
+	}
+
+	public String getLabourSingle() {
+		return labourSingle;
+	}
+
+	public void setLabourSingle(String labourSingle) {
+		this.labourSingle = labourSingle;
+	}
+
+	public String getMatSingle() {
+		return matSingle;
+	}
+
+	public void setMatSingle(String matSingle) {
+		this.matSingle = matSingle;
+	}
+
+	public String getMechSingle() {
+		return mechSingle;
+	}
+
+	public void setMechSingle(String mechSingle) {
+		this.mechSingle = mechSingle;
+	}
+
+	public String getMainSingle() {
+		return mainSingle;
+	}
+
+	public void setMainSingle(String mainSingle) {
+		this.mainSingle = mainSingle;
 	}
 
 }

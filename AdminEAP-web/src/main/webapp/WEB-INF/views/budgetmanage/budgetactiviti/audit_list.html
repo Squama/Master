@@ -13,10 +13,10 @@
 	                        <tfoot>
 	                            <tr>
 	                                <th colspan="4" style="text-align:right">合计:</th>
-	                                <th class="text-center">0</th>
-	                                <th class="text-center">0</th>
-	                                <th class="text-center">0</th>
-	                                <th class="text-center">0</th>
+	                                <th class="text-center mainunit">0</th>
+	                                <th class="text-center labourunit">0</th>
+	                                <th class="text-center matunit">0</th>
+	                                <th class="text-center mechunit">0</th>
 	                            </tr>
 	                        </tfoot>
                         </table>
@@ -34,11 +34,18 @@
                     <table id="budget_tx_table" class="table table-bordered table-striped table-hover">
                         <tfoot>
                             <tr>
-                                <th colspan="4" style="text-align:right">合计:</th>
+                                <th colspan="4" style="text-align:right">测算合计:</th>
                                 <th class="text-center">0</th>
                                 <th class="text-center">0</th>
                                 <th class="text-center">0</th>
                                 <th class="text-center">0</th>
+                            </tr>
+                            <tr>
+                                <th colspan="4" style="text-align:right">预算合计:</th>
+                                <th class="text-center mainunit">0</th>
+                                <th class="text-center labourunit">0</th>
+                                <th class="text-center matunit">0</th>
+                                <th class="text-center mechunit">0</th>
                             </tr>
                         </tfoot>
                     </table>
@@ -50,7 +57,7 @@
 
 <script>  
     var budgetEstimateAuditTable;
-    var budgetNo="${budgetNo?default(0)}";
+    var budgetNo="${budgetNo?default(0)}",sumUnit="${sumUnit?default(0)}", sumLabour="${sumLabour?default(0)}", sumMat="${sumMat?default(0)}", sumMech="${sumMech?default(0)}";
     
     $('#budgetNo',$('#searchDivImport')).val(budgetNo);
     $('#budgetNo',$('#searchDivTx')).val(budgetNo);
@@ -59,13 +66,18 @@
     var boxInfo = $(boxBody).parent();
     
     boxInfo.css({
-    	"height" : "800px",
+    	"height" : "500px",
     	"overflow" : "auto"
     });
     
     boxBody.css({
     	"width" : "2200px"
     });
+    
+    $('.mainunit').html("￥" + sumUnit);
+    $('.labourunit').html("￥" + sumLabour);
+    $('.matunit').html("￥" + sumMat);
+    $('.mechunit').html("￥" + sumMech);
     
     var budgetEstimateObject = {
             initEstimateModal:function(){
@@ -91,7 +103,7 @@
     
     $(function() { 
     	<!-- 初始化导入的预算表 -->
-        budgetImportTable = new CommonTable("budget_import_table", "budget_estimate_left_list", "searchDivImport", {
+        budgetImportTable = new CommonTable("budget_import_table", "budget_estimate_left_activiti_list", "searchDivImport", {
         	"createdRow": function( row, data, dataIndex ) {
                 if(data.isPack == '1'){
                     $(row).css('background-color','orange');
@@ -185,7 +197,16 @@
         });
         <!-- 初始化成本测算表  -->
         budgetTxTable = new CommonTable("budget_tx_table", "budget_estimate_right_list", "searchDivTx", {
-             "paging" : false,
+        	"createdRow": function( row, data, dataIndex ) {
+                if(data.esCount != null && data.labourCount != null && data.mechCount != null){
+                    $(row).css('background-color','green');
+                    $(row).css('color','#fff');
+                }else if (data.esCount != null || data.labourCount != null || data.mechCount != null){
+                	$(row).css('background-color','yellow');
+                	$(row).css('color','black');
+                }
+             }, 
+        	"paging" : false,
              "drawCallback": function ( settings ) {
                  var api = this.api();
                  var rows = api.rows( {page:'current'} ).nodes();
@@ -252,7 +273,7 @@
                      }, 0 );
                  // Update footer
                  $( api.column( 4 ).footer() ).html(
-                     '￥'+unitTotal
+                     '￥'+accAddition(accAddition(intVal(labourTotal), intVal(matTotal)), intVal(mechTotal))
                  );
                  $( api.column( 5 ).footer() ).html(
                      '￥'+labourTotal

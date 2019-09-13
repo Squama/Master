@@ -41,6 +41,25 @@
         <column key="isPack" header="isPack" hidden="true"/>
     </query>
     
+    <query id="budget_estimate_left_activiti_list" key="id" tableName="预算表" className="com.radish.master.entity.BudgetImport" widthType="px" pageSize="2000" order="quotaGroup asc,orderNo desc">
+        <column key="id" header="选择" width="10" fnRender="fnRenderCheckbox"/>
+        <column key="quotaNo" header="定额编号" width="120"/>
+        <column key="quotaName" header="子目名称" width="150" enableTooltip="true" maxLen="8"/>
+        <column key="quantities" header="工程量" width="100"/>
+        <column key="unitPrice" header="合价" width="150" hidden="true"/>
+        <column key="artificiality" header="合价（人工）" width="150" hidden="true"/>
+        <column key="materiels" header="合价（材料）" width="150" hidden="true"/>
+        <column key="mech" header="合价（机械）" width="150" hidden="true"/>
+        <column key="quotaGroup" hidden="true" header="分组" width="80"/>
+        <column key="orderNo" hidden="true" header="拆分合并标志" width="80"/>
+        <column key="col" hidden="true" header="行高" width="80"/>
+        <column key="isPack" header="isPack" hidden="true"/>
+        <column key="price" header="单价" width="150"/>
+        <column key="labourSingle" header="单价（人工）" width="150"/>
+        <column key="matSingle" header="单价（材料）" width="150"/>
+        <column key="mechSingle" header="单价（机械）" width="150"/>
+    </query>
+    
     <query id="budget_estimate_left_list_pack" key="id" tableName="预算表" className="com.radish.master.entity.BudgetImport" widthType="px" pageSize="2000" order="quotaGroup asc,orderNo desc">
         <column key="id" header="选择" width="10" fnRender="fnRenderCheckbox"/>
         <column key="quotaNo" header="定额编号" width="120"/>
