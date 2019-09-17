@@ -443,7 +443,7 @@ public class ReviewBidController {
                 os = response.getOutputStream();
                 response.setContentType("application/x-msdownload");
                 response.setContentLength((int) filelength);
-                response.addHeader("Content-Disposition", "attachment; filename=\"" + new String(sysfile.getFileName().getBytes("GBK"),// 只有GBK才可以
+                response.addHeader("Content-Disposition", "attachment; filename=\"" + new String(sysfile.getSavedName().getBytes("GBK"),// 只有GBK才可以
                         "iso8859-1") + "\"");
 
                 // 循环取出流中的数据
