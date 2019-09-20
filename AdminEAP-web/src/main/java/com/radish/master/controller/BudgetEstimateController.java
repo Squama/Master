@@ -342,7 +342,9 @@ public class BudgetEstimateController {
             bt.setMateriels(sumMat.toPlainString());
             bt.setArtificiality(sumLabour.toPlainString());
             bt.setMech(sumMech.toPlainString());
-            
+            BigDecimal sumall = new BigDecimal("0");
+            sumall=sumall.add(sumMat).add(sumLabour).add(sumMech);
+            bt.setUnitPrice(sumall.toPlainString());
             budgetService.update(bt);
             
         }catch (CodeException ce) {
@@ -625,7 +627,7 @@ public class BudgetEstimateController {
     @ResponseBody
     private Result deleteBudgetEstimate(String id, HttpServletRequest request) {
         BudgetEstimate budgetEstimate = budgetService.get(BudgetEstimate.class, id);
-        
+        budgetService.delete(budgetEstimate);
         List<BudgetEstimate> list = budgetService.getBudgetEstimateCount(budgetEstimate.getBudgetTxID());
         //汇总合价
         list = budgetService.getBudgetEstimateCount(budgetEstimate.getBudgetTxID());
@@ -644,7 +646,6 @@ public class BudgetEstimateController {
         
         budgetService.update(bt);
         
-        budgetService.delete(budgetEstimate);
         return new Result(true);
     }
     

@@ -26,7 +26,7 @@
 <div class="form-group">
 	<label class="control-label col-xs-3">合同交底</label>
     <div class="col-xs-7">
-        <textarea name="remark" id="remark" placeholder="请填写合同交底" class="form-control"></textarea>
+        <textarea name="remark" id="remark" placeholder="请填写合同交底" class="form-control" rows="5"></textarea>
     </div>
 </div>
 <script>

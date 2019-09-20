@@ -294,11 +294,9 @@
          var dialog = document.createElement('DIV');
          dialog.className = 'modal-dialog';
          dialog.role = 'document';
-         if(isNaN(config.width)&&config.width.indexOf("px")>0)
+         if(isNaN(config.width)&&(config.width.indexOf("px")>0||config.width.indexOf("%")>0))
         	 $(dialog).css('width',config.width); 
              //dialog.style='width:'+config.width+';';
-         else if(config.width.indexOf("%")>0)
-        	 $(dialog).css('width',config.width); 
          else
         	 $(dialog).css('width',config.width+"px");
         	 //dialog.style='width:'+config.width+'px;'; 
