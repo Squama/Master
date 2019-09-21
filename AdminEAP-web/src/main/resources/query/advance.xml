@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<queryContext xmlns="http://www.example.org/query" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.example.org/query query.xsd">
+    
+    
+    <query id="advance_purdet" key="id" tableName="预付款采购明细列表" widthType="px">
+        <sql>
+            <![CDATA[
+              select TP.project_name projectName ,B.budget_name budgetName,cg.operate_time operateTime,
+              pd.region_name regionName,pd.mat_name matName,pd.mat_standard matStandard,pd.id id ,
+              pd.channel_name channelName,pd.quantity quantity ,pd.price price  
+			  FROM tbl_purchase cg, tbl_purchase_det pd  ,tbl_budget B ,tbl_project TP
+			  WHERE cg.status IN ('40','50','60') AND cg.budget_no = B.budget_no  AND cg.project_id = TP.id 
+			  and cg.id=pd.purchase_id and 1=1 
+            ]]>
+        </sql>
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="projectName" header="项目名称" classType="String" allowSort="true" width="150"/>
+        <column key="budgetName" header="所属预算" classType="String" allowSort="true" width="150"/>
+        <column key="operateTime" header="申请时间" classType="String" width="150" allowSort="true" dateFormat="yyyy-mm-dd" />
+        <column key="regionName" header="部位" classType="String" width="150"/>
+        <column key="matName" header="物料名称" classType="String" width="150"/>
+        <column key="matStandard" header="物料规格"  width="150" />
+        <column key="channelName" header="供应商名称" allowSort="true"  width="150"  operator="like"/>
+        <column key="quantity" header="数量"  width="150" />
+        <column key="price" header="单价"  width="150" />
+        <column key="id" header="机械" width="80" fnRender="fnRenderOperate"/>
+    </query>
+    <query id="advance_list" key="id" tableName="预付款信息列表" widthType="px">
+        <sql>
+            <![CDATA[
+              SELECT p.*
+			  FROM tbl_advance p
+			  WHERE  1=1 
+            ]]>
+        </sql>
+        <column key="ID" header="管理" classType="String" width="150" fnRender="fnRenderScMx"/>
+        <column key="status" header="审核状态" classType="String" width="150" render="10=新建,20=财务审核,30=领导审核,40=完成,50=审核驳回"/>
+        <column key="ID" hidden="true" header="ID" width="80" />
+        <column key="channelName" header="供应商名称" classType="String"/>
+        <column key="money" header="预付金额" classType="String" width="150" />
+        <column key="paytime" header="付款时间" classType="String" width="150"/>
+        <column key="sqr" header="申请人" classType="String" width="150"/>
+        <column key="sqtime" header="创建时间" classType="String" width="150" />
+    </query>
+   
+</queryContext>

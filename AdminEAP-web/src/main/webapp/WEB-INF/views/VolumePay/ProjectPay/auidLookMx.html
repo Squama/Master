@@ -16,52 +16,75 @@
                 </div>
                 <form id="import_form" name="attendance_form" class="form-horizontal">
                     <div class="box-body">
-                        <div class="col-md-12">
-                        	
-
+                        <div class="col-md-6">
 		                    <div class="form-group">
-		                    	<label for="projectId" class="col-sm-5 control-label">项目名称</label>
-		                   		<div class="col-sm-2">
+		                    	<label for="projectId" class="col-sm-3 control-label">项目名称</label>
+		                   		<div class="col-sm-8">
 			                   		<select id="projectId" class="form-control select2 "  name="projectId" style="width:100%" disabled="disabled">
 			                   			<option selected="selected" value="">选择一个项目</option>
 			                   		</select>
 		                   		</div>
 		                    </div>
-		                    
                             <div class="form-group">
-                                <label class="col-sm-5 control-label">供应商</label>
-                                <div class="col-sm-2">
-                                    <input type="text" class="form-control" name="gys" id="gys"  placeholder="" disabled="disabled">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-5 control-label">期初余额</label>
-                                <div class="col-sm-2">
+                                <label class="col-sm-3 control-label">期初余额</label>
+                                <div class="col-sm-8">
                                     <input type="text" class="form-control" name="qc" id="qc"  placeholder="" disabled="disabled">
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-5 control-label">付款金额</label>
-                                <div class="col-sm-2">
+                                <label class="col-sm-3 control-label" style="color:red">付款金额</label>
+                                <div class="col-sm-8">
                                     <input type="text" class="form-control" name="je" id="je"  placeholder="" disabled="disabled">
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-5 control-label">期末余额</label>
-                                <div class="col-sm-2">
+                                <label class="col-sm-3 control-label">期末余额</label>
+                                <div class="col-sm-8">
                                     <input type="text" class="form-control" name="qm" id="qm"  placeholder="" disabled="disabled">
                                 </div>
                             </div>
-                            
                             <div class="form-group">
-                                <label class="col-sm-5 control-label">付款方式</label>
-                                <div class="col-sm-2">
+                                <label class="col-sm-3 control-label">付款方式</label>
+                                <div class="col-sm-8">
                                 	<select id="fkfs" class="form-control select2 "  name="fkfs" >
 			                    		<option selected="selected" value="">选择一种方式</option>
 			                    		<option  value="10">现金</option>
 			                    		<option  value="20">转账</option>
 			                    		<option  value="30">电汇</option>
 			                    	</select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                        	 <div class="form-group">
+                                <label class="col-sm-3 control-label">供应商</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" name="gys" id="gys"  placeholder="" disabled="disabled">
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">总预付款</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control"  id="zyfk" name="zyfk" placeholder="" disabled="disabled">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">已抵扣预付款</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control"  id="ydk" name="ydk"  placeholder="" disabled="disabled">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label" >可抵扣金额</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control"  id="kdk" name="kdk"  placeholder="" disabled="disabled">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label" style="color:red">抵扣金额</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" name="dkmoney" id="dkmoney"  placeholder="" >
                                 </div>
                             </div>
                         </div>
@@ -110,6 +133,22 @@ var pid = '${payid?default(0)}'
             },
             submitHandler: function () {
             	var params = importform.getFormSimpleData();
+            	var zf = $("#dkmoney").val();
+            	var kzf = $("#kdk").val();
+            	var je = $("#je").val();
+            	zf = zf.replace(",","");
+            	kzf = kzf.replace(",","");
+            	if(parseFloat(zf)>parseFloat(kzf)){
+            		modals.info("抵扣金额不能大于可抵扣金额");
+            		$("#dkmoney").val("0");
+            		return false;
+            	}
+            	if(parseFloat(zf)>parseFloat(je)){
+            		modals.info("抵扣金额不能大于本期付款金额");
+            		$("#dkmoney").val("0");
+            		return false;
+            	}
+            	
             	ajaxPost(basePath+'/projectpay/saveFkfs?id='+pid, params, function(data) {
                     if(data.success){
                         modals.info("保存成功");
@@ -121,6 +160,13 @@ var pid = '${payid?default(0)}'
                     validators : {
                         notEmpty : {
                             message : '请选择付款方式'
+                        }
+                    }
+                },
+                dkmoney : {
+                    validators : {
+                        notEmpty : {
+                            message : '请输入抵扣金额'
                         }
                     }
                 }
@@ -138,9 +184,21 @@ var pid = '${payid?default(0)}'
         if(pid!=0){
         	ajaxPost(basePath + '/projectpay/getZfMxSh', {id:pid}, function (data) {
         		importform.initFormData(data); 
+        		$("#kdk").val(floatSub(data.zyfk,data.ydk));
             });
         }
     });
+
+  //减 
+    function floatSub(arg1,arg2){ 
+	     var r1,r2,m,n; 
+	     try{r1=arg1.toString().split(".")[1].length}catch(e){r1=0} 
+	     try{r2=arg2.toString().split(".")[1].length}catch(e){r2=0} 
+	     m=Math.pow(10,Math.max(r1,r2)); 
+	     //动态控制精度长度 
+	     n=(r1>=r2)?r1:r2; 
+	     return ((arg1*m-arg2*m)/m).toFixed(n); 
+    } 
     
     
 </script>

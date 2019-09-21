@@ -210,6 +210,7 @@ public class ProjectPayController {
 			mx.setProjectPayId(fk.getId());
 			mx.setStatus("10");
 			mx.setFkfs("10");
+			mx.setDkmoney("0");
 			baseService.save(mx);
 		}
 		r.setSuccess(true);
@@ -336,15 +337,26 @@ public class ProjectPayController {
 		m.put("fkfs", mx.getFkfs());
 		m.put("qm", mx.getQm());
 		m.put("qc", mx.getQc());
+		m.put("dkmoney", mx.getDkmoney());
+		//获得预付金额
+		//List<String> yfje = baseService.find("select sum(yf.money) as yfje from com.radish.master.entity.volumePay.Advance yf where yf.status='40' and yf.channelName='"+mx.getChannelName()+"'");
+		List<Map<String,Object>> yfje = baseService.findMapBySql("select ifnull(sum(yf.money),0) as yfje  from tbl_advance yf where yf.status='40' and yf.channelName='"+mx.getChannelName()+"'");
+		//获得已抵扣总额
+		//List<String> dkje = baseService.find("select sum(yf.dkmoney) as dkje from com.radish.master.entity.volumePay.ProjectPayDet yf where yf.status='30' and yf.channelName='"+mx.getChannelName()+"' ");
+		List<Map<String,Object>> dkje = baseService.findMapBySql("select ifnull(sum(yf.dkmoney),0) as dkje  from tbl_projectPay_det yf where yf.status='30' and yf.channelName='"+mx.getChannelName()+"'");
+		
+		m.put("zyfk", yfje.get(0).get("yfje"));
+		m.put("ydk",dkje.get(0).get("dkje"));
 		return m;
 	}
 	
 	@RequestMapping("/saveFkfs")
 	@ResponseBody
-	public Result saveFkfs(HttpServletRequest request,String fkfs,String id){
+	public Result saveFkfs(HttpServletRequest request,String fkfs,String dkmoney,String id){
 		Result r = new Result();
 		ProjectPayDet mx = baseService.get(ProjectPayDet.class, id);
 		mx.setFkfs(fkfs);
+		mx.setDkmoney(dkmoney);
 		baseService.update(mx);
 		return r;
 	}
@@ -371,13 +383,14 @@ public class ProjectPayController {
 		Project xm = baseService.get(Project.class,zf.getProjectId());
 		List<ProAccount> xmz = baseService.find(" from ProAccount where projectId='"+zf.getProjectId()+"'");
 		
+		Double zfje = arith.sub(Double.valueOf(zfmx.getFk()),Double.valueOf(zfmx.getDkmoney()));
 		User u = SecurityUtil.getUser();
 		//账目明细
 		ProAccountDet mx = new ProAccountDet();
 		mx.setCreateDate(new Date());
 		mx.setAbstracts(zfmx.getChannelName()+"(供应商款项)");
 		mx.setZmtype("2");
-		mx.setOutMoney(zfmx.getFk());
+		mx.setOutMoney(zfje+"");
 		mx.setAccounter(u.getName());
 		mx.setAccounterId(u.getId());
 		//mx.setAuditName(u.getName());
@@ -388,13 +401,13 @@ public class ProjectPayController {
 			zb.setProjectId(zf.getProjectId());
 			zb.setAccountName(xm.getProjectName());
 			baseService.save(zb);
-			zb.setAllMoney(arith.sub(0.0,Double.valueOf(zfmx.getFk()))+"");
+			zb.setAllMoney(arith.sub(0.0,zfje)+"");
 			mx.setProjectAccountId(zb.getId());
 			baseService.save(mx);
 			baseService.update(zb);
 		}else{
 			ProAccount zb = xmz.get(0);
-			zb.setAllMoney(arith.sub(Double.valueOf(zb.getAllMoney()),Double.valueOf(zfmx.getFk()) )+"");
+			zb.setAllMoney(arith.sub(Double.valueOf(zb.getAllMoney()),zfje)+"");
 			mx.setProjectAccountId(zb.getId());
 			baseService.save(mx);
 			baseService.update(zb);
