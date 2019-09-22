@@ -91,8 +91,8 @@
                     var params = yfform.getFormSimpleData();
                    	ajaxPost(basePath+'/advance/saveyfxx?purdetid='+cgid, params, function(data) {
                            if(data.success){
+                        	   modals.hideWin(winIds);
                                modals.info("保存成功");
-                               modals.hideWin("winIds");
                            }                
                        }); 
               

@@ -43,5 +43,27 @@
         <column key="sqr" header="申请人" classType="String" width="150"/>
         <column key="sqtime" header="创建时间" classType="String" width="150" />
     </query>
+    <query id="advance_dk_list" key="id" tableName="预付款抵扣信息列表" widthType="px">
+        <sql>
+            <![CDATA[
+              SELECT zf.startdate startdate,zf.enddate enddate,zf.id zfid, mx.channelName channelName ,mx.qc qc ,mx.bq bq ,mx.fk fk ,mx.qm qm ,mx.content content,mx.id id,mx.status status  ,mx.bhdesc bhdesc 
+			  ,mx.fjsl fjsl,mx.isrz isrz,mx.dkmoney dkmoney ,xm.project_name pName 
+			  FROM tbl_projectPay zf ,tbl_projectPay_det mx ,tbl_project xm 
+			  WHERE 1=1 and zf.id = mx.projectPayId and xm.id = zf.projectId and mx.dkmoney>0
+            ]]>
+        </sql>
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="rowIndex" header="序号" width="80"/>
+        <!-- <column key="id" header="管理" classType="String" width="150"  fnRender="fnRenderZf"/> -->
+        <column key="pName" header="所属项目" classType="String" allowSort="true" width="150"/>
+        <column key="startdate" header="开始时间" classType="String" width="150" dateFormat="yyyy-mm-dd"/>
+        <column key="enddate" header="截止时间" classType="String" allowSort="true" width="150" dateFormat="yyyy-mm-dd"/>
+        <column key="channelName" header="供货商" classType="String" allowSort="true" width="150"/>
+        <column key="qc" header="期初余款" classType="String" width="150"/>
+        <column key="bq" header="本期购入" classType="String" width="150"/>
+        <column key="fk" header="本期付款" classType="String" width="150"/>
+        <column key="dkmoney" header="(其中)抵扣金额" classType="String" width="150"/>
+        <column key="qm" header="期末余款" classType="String" width="150"/>
+    </query>
    
 </queryContext>

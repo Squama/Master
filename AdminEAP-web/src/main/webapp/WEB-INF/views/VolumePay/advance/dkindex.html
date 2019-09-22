@@ -1,0 +1,57 @@
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><li class="fa fa-remove"></li></button>
+    <h5 class="modal-title"></h5>
+</div>
+<div class="modal-body" style="">
+				<div><h3 id="moneyth3"></h3></div>
+                <div class="box" >
+                	<div class="box-header with-border">
+                        <span>
+                            <i class="fa fa-files-o">已抵扣信息信息</i>
+                        </span>
+                    </div>
+                    <div class="dataTables_filter" id="searchDivDk" style="width:100%">
+                       <input type="search" id="gys1" name="mx.channelName" class="form-control" operator="eq" style="display:none;" >
+                       <div class="btn-group">
+                           <button type="button" class="btn btn-primary" data-btn-type="search" id="refresh" style="display:none;">查询</button>
+                       </div>
+                    </div>
+                    <div class="box-body box-body-mobile">
+                        <!-- 内容 -->
+                        <table id="dk_det_table" class="table table-bordered table-striped table-hover">
+                        </table>
+                    </div>
+                     
+                   
+                </div>
+</div>
+<script>
+    var gys="${gys?default(0)}";
+    $("#gys1").val(gys);
+    //预付和抵扣金额
+    var zyfk="${zyfk?default(0)}";
+    var ydk="${ydk?default(0)}";
+    $("#moneyth3").html("供应商："+gys+"--预付金额（审核完成）："+zyfk+"元,已抵扣："+ydk+"元");
+    
+    var dkTable, winIdsDk = "dkwin";
+    $(function() {
+    	dkTable = new CommonTable("dk_det_table", "advance_dk_list", "searchDivDk", null);
+    });
+
+	function fnRenderScMxdk(value,type, rowObj){
+		var ope="<a href='javascript:void(0)' onclick='lookMx(\"" + value + "\")'style='color:green'>详情</a>&nbsp;&nbsp;"
+		return ope;
+	}
+	function lookMx(id){
+		modals.openWin({
+			winIdsDk,
+            title:'详情',
+            width:'800px',
+            url:basePath+"/advance/addyfxx?yfid="+id+"&cgid="+cgid,
+            hideFunc:function(){
+            }
+         });
+	}
+
+
+</script>

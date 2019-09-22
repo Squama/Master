@@ -65,6 +65,7 @@
 function fnRenderOperate(value, type, rowObj){
     var oper = "<a href='javascript:void(0)' onclick='doyf(10,\""+rowObj.id+"\")'>采购预付</a>";
     oper += "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='doyf(20,\""+rowObj.id+"\")' style='color:green'>供应商预付查看</a>";
+    oper += "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='lookDk(\""+rowObj.id+"\")' style='color:red'>供应商已抵扣信息</a>";
     return oper;
 }
 function doyf(type,cgid){
@@ -73,6 +74,18 @@ function doyf(type,cgid){
         title:'供应商预付信息',
         width:'1000px',
         url:basePath+"/advance/addindex?type="+type+"&&cgid="+cgid,
+        hideFunc:function(){
+            
+        },
+        
+       });
+}
+function lookDk(cgid){
+	modals.openWin({
+        winId:winId,
+        title:'供应商抵扣信息',
+        width:'1000px',
+        url:basePath+"/advance/dkindex?cgid="+cgid,
         hideFunc:function(){
             
         },

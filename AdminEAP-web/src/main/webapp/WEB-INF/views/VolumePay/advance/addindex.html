@@ -3,6 +3,7 @@
     <h5 class="modal-title"></h5>
 </div>
 <div class="modal-body" style="">
+				<div><h3 id="moneyth1"></h3></div>
                 <div class="box" >
                 	<div class="box-header with-border">
                         <span>
@@ -33,8 +34,13 @@
     if(type=="20"){
 		$("#gys").val(gys);
 		$("#addMx").css("display","none")
+		//预付和抵扣金额
+	    var zyfk="${zyfk?default(0)}";
+	    var ydk="${ydk?default(0)}";
+	    $("#moneyth1").html("供应商："+gys+"--预付金额（审核完成）："+zyfk+"元,已抵扣："+ydk+"元");
     }else{
 		$("#cgid").val(cgid);
+		 $("#moneyth1").html("");
     }
     
     var purchaseDetTable, winIds = "purchaseDetWin";
