@@ -138,6 +138,10 @@
                 modals.error("包工包料不包含测算明细");
                 return false;
             }
+            if(!id){
+        		modals.error("合计不能查看明细，请点击测算列！");
+        		return false;
+            }
             modals.openWin({
                 winId: "estimateWin",
                 width: "1200px",
