@@ -65,14 +65,22 @@
         <column key="quotaNo" header="定额编号" width="120"/>
         <column key="quotaName" header="子目名称" width="150" enableTooltip="true" maxLen="8"/>
         <column key="quantities" header="工程量" width="100"/>
-        <column key="unitPrice" header="合价" width="150"/>
+        
+        <!-- <column key="unitPrice" header="合价" width="150"/>
         <column key="artificiality" header="合价（人工）" width="150"/>
         <column key="materiels" header="合价（材料）" width="150"/>
-        <column key="mech" header="合价（机械）" width="150"/>
+        <column key="mech" header="合价（机械）" width="150"/> -->
+        
+        <column key="mainSingle" header="主材单价" width="150"/>
+        <column key="labourSingle" header="人工单价" width="150"/>
+        <column key="matSingle" header="材料单价" width="150"/>
+        <column key="mechSingle" header="机械单价" width="150"/>
+        
         <column key="quotaGroup" hidden="true" header="分组" width="80"/>
         <column key="orderNo" hidden="true" header="拆分合并标志" width="80"/>
         <column key="col" hidden="true" header="行高" width="80"/>
         <column key="id" header="包工包料" fnRender="fnRenderTxPack"/>
+        <column key="materielsUnitPrice" header="主材合价" width="150"/>
         <column key="isPack" header="isPack" hidden="true"/>
     </query>
     
@@ -81,6 +89,8 @@
             <![CDATA[
               SELECT bt.id id, bt.region_code regionCode, bt.region_name regionName, bt.quantities quantities,
 			  bt.unit_price unitPrice, bt.artificiality artificiality, bt.materiels materiels, bt.mech mech,
+			  bt.materiels_unit_price materielsUnitPrice,bt.labour_single labourSingle,bt.mat_single matSingle,
+			  bt.mech_single mechSingle,bt.main_single mainSingle,
 			  bt.quota_group quotaGroup, bt.order_no orderNo, bt.col col, be.esCount, bl.labourCount, bm.mechCount
 			  FROM tbl_budget_tx bt
 			  LEFT JOIN 
