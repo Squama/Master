@@ -288,24 +288,24 @@ if(pros != 0){
                	tr+="<td>"+qcnull(jcs[0].fz)+"</td>"
                	tr+="</tr>";
                	if(jcs[0].qcsl){
-               		zqcsl = parseInt(zqcsl)+parseInt(jcs[0].qcsl);
+               		zqcsl = parseFloat(zqcsl)+parseFloat(jcs[0].qcsl);
     			}
                	if(jcs[0].qcje){
-               		zqcje = parseInt(zqcje)+parseInt(getZje(jcs[0].qcsl,jcs[0].qcje));
+               		zqcje = parseFloat(zqcje)+parseFloat(getZje(jcs[0].qcsl,jcs[0].qcje));
     			}
                	if(jcs[0].rksl){
-               		zrksl = parseInt(zrksl)+parseInt(jcs[0].rksl);
-               		zrkje = parseInt(zrkje)+parseInt(getZje(jcs[0].rksl,jcs[0].qcje));
+               		zrksl = parseFloat(zrksl)+parseFloat(jcs[0].rksl);
+               		zrkje = parseFloat(zrkje)+parseFloat(getZje(jcs[0].rksl,jcs[0].qcje));
     			}
                	if(jcs[0].cksl){
-               		zcksl = parseInt(zcksl)+parseInt(jcs[0].cksl);
-               		zckje = parseInt(zckje)+parseInt(getZje(jcs[0].cksl,jcs[0].qcje));
+               		zcksl = parseFloat(zcksl)+parseFloat(jcs[0].cksl);
+               		zckje = parseFloat(zckje)+parseFloat(getZje(jcs[0].cksl,jcs[0].qcje));
     			}
                	if(jcs[0].jcsl){
-               		zjcsl = parseInt(zjcsl)+parseInt(jcs[0].jcsl);
+               		zjcsl = parseFloat(zjcsl)+parseFloat(jcs[0].jcsl);
     			}
-               	if(jcs[0].jcje){
-               		zjcje = parseInt(zjcje)+parseInt(getZje(jcs[0].jcsl,jcs[0].qcje));
+               	if(jcs[0].jcsl){
+               		zjcje = parseFloat(zjcje)+parseFloat(getZje(jcs[0].jcsl,jcs[0].qcje));
     			}
                }else if(jcs.length>1){
             	   	tr+="<tr>";
@@ -328,24 +328,24 @@ if(pros != 0){
                   	tr+="<td>"+qcnull(jcs[0].fz)+"</td>"
                   	tr+="</tr>";
                   	if(jcs[0].qcsl){
-                   		zqcsl = parseInt(zqcsl)+parseInt(jcs[0].qcsl);
+                   		zqcsl = parseFloat(zqcsl)+parseFloat(jcs[0].qcsl);
         			}
                    	if(jcs[0].qcje){
-                   		zqcje = parseInt(zqcje)+parseInt(getZje(jcs[0].qcsl,jcs[0].qcje));
+                   		zqcje = parseFloat(zqcje)+parseFloat(getZje(jcs[0].qcsl,jcs[0].qcje));
         			}
                    	if(jcs[0].rksl){
-                   		zrksl = parseInt(zrksl)+parseInt(jcs[0].rksl);
-                   		zrkje = parseInt(zrkje)+parseInt(getZje(jcs[0].rksl,jcs[0].qcje));
+                   		zrksl = parseFloat(zrksl)+parseFloat(jcs[0].rksl);
+                   		zrkje = parseFloat(zrkje)+parseFloat(getZje(jcs[0].rksl,jcs[0].qcje));
         			}
                    	if(jcs[0].cksl){
-                   		zcksl = parseInt(zcksl)+parseInt(jcs[0].cksl);
-                   		zckje = parseInt(zckje)+parseInt(getZje(jcs[0].cksl,jcs[0].qcje));
+                   		zcksl = parseFloat(zcksl)+parseFloat(jcs[0].cksl);
+                   		zckje = parseFloat(zckje)+parseFloat(getZje(jcs[0].cksl,jcs[0].qcje));
         			}
                    	if(jcs[0].jcsl){
-                   		zjcsl = parseInt(zjcsl)+parseInt(jcs[0].jcsl);
+                   		zjcsl = parseFloat(zjcsl)+parseFloat(jcs[0].jcsl);
         			}
-                   	if(jcs[0].jcje){
-                   		zjcje = parseInt(zjcje)+parseInt(getZje(jcs[0].jcsl,jcs[0].qcje));
+                   	if(jcs[0].jcsl){
+                   		zjcje = parseFloat(zjcje)+parseFloat(getZje(jcs[0].jcsl,jcs[0].qcje));
         			}
                   	for(var j=1;j<jcs.length;j++){
     					tr +="<tr>";
@@ -364,24 +364,24 @@ if(pros != 0){
                        	tr+="<td>"+qcnull(jcs[j].fz)+"</td>"
         				tr +="</tr>";
     					if(jcs[j].qcsl){
-    	               		zqcsl = parseInt(zqcsl)+parseInt(jcs[j].qcsl);
+    	               		zqcsl = parseFloat(zqcsl)+parseFloat(jcs[j].qcsl);
     	    			}
     	               	if(jcs[j].qcje){
-    	               		zqcje = parseInt(zqcje)+parseInt(getZje(jcs[j].qcsl,jcs[j].qcje));
+    	               		zqcje = parseFloat(zqcje)+parseFloat(getZje(jcs[j].qcsl,jcs[j].qcje));
     	    			}
     	               	if(jcs[j].rksl){
-    	               		zrksl = parseInt(zrksl)+parseInt(jcs[j].rksl);
-    	               		zrkje = parseInt(zrkje)+parseInt(getZje(jcs[j].rksl,jcs[j].qcje));
+    	               		zrksl = parseFloat(zrksl)+parseFloat(jcs[j].rksl);
+    	               		zrkje = parseFloat(zrkje)+parseFloat(getZje(jcs[j].rksl,jcs[j].qcje));
     	    			}
     	               	if(jcs[j].cksl){
-    	               		zcksl = parseInt(zcksl)+parseInt(jcs[j].cksl);
-    	               		zckje = parseInt(zckje)+parseInt(getZje(jcs[j].cksl,jcs[j].qcje));
+    	               		zcksl = parseFloat(zcksl)+parseFloat(jcs[j].cksl);
+    	               		zckje = parseFloat(zckje)+parseFloat(getZje(jcs[j].cksl,jcs[j].qcje));
     	    			}
     	               	if(jcs[j].jcsl){
-    	               		zjcsl = parseInt(zjcsl)+parseInt(jcs[j].jcsl);
+    	               		zjcsl = parseFloat(zjcsl)+parseFloat(jcs[j].jcsl);
     	    			}
-    	               	if(jcs[j].jcje){
-    	               		zjcje = parseInt(zjcje)+parseInt(getZje(jcs[j].jcsl,jcs[j].qcje));
+    	               	if(jcs[j].jcsl){
+    	               		zjcje = parseFloat(zjcje)+parseFloat(getZje(jcs[j].jcsl,jcs[j].qcje));
     	    			}
         			}
                }
@@ -391,16 +391,16 @@ if(pros != 0){
            tfs += "<td colspan='2'>合计</td>";
            tfs += "<td ></td>";
            tfs += "<td ></td>";
-           tfs += "<td >"+zqcsl+"</td>";
+           tfs += "<td ></td>";
            tfs += "<td ></td>";
            tfs += "<td >"+zqcje+"</td>";
-           tfs += "<td >"+zrksl+"</td>";
+           tfs += "<td ></td>";
            tfs += "<td ></td>";
            tfs += "<td >"+zrkje+"</td>";
-           tfs += "<td >"+zcksl+"</td>";
+           tfs += "<td ></td>";
            tfs += "<td ></td>";
            tfs += "<td >"+zckje+"</td>";
-           tfs += "<td >"+zjcsl+"</td>";
+           tfs += "<td ></td>";
            tfs += "<td ></td>";
            tfs += "<td >"+zjcje+"</td>";
            tfs += "<td ></td>";
@@ -415,7 +415,7 @@ if(pros != 0){
     }
     function getZje(sl,dj){
 		if(sl&&dj){
-			return sl*dj;
+			return (sl*dj).toFixed(2);;
 		}else{
 			return "";
 		}
