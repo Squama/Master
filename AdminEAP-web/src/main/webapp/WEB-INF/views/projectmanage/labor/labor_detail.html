@@ -1,3 +1,21 @@
+<link rel="stylesheet" href="${basePath}/resources/common/libs/fileinput/css/fileinput.min.css">
+<style>
+
+#projectaddstep2 .krajee-default.file-preview-frame .kv-file-content {
+    height: auto;
+}
+
+#projectaddstep2 .krajee-default .file-footer-caption {
+    width: 100px;
+}
+
+</style>
+
+<script src="${basePath}/resources/common/libs/fileinput/js/fileinput.js"></script>
+<script src="${basePath}/resources/common/libs/fileinput/js/locales/zh.js"></script>
+<!--BaseFile组件-->
+<script src="${basePath}/resources/common/js/base-file.js"></script>
+<script src="${basePath}/resources/common/js/calculate.js"></script>
 <section class="content">
     <div class="row">
         <div class="col-xs-12">
@@ -123,6 +141,20 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="form-group">
+                                <label class="col-sm-3 control-label">劳务合同<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="hidden" name="contractFile" id="contractFile">
+                                    <div class="form-group" id="wjscid">
+                                        <div class="btn btn-default btn-file" id="contractfileupload">
+                                            <i class="fa fa-paperclip"></i> 上传劳务合同(最大. 100MB)
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="file" name="contractfileattachment" id="contractfileattachment">
+                                    </div> 
+                                </div>
+                            </div>
                     </div>
                 </form>
             </div>
@@ -130,23 +162,73 @@
     </div>
 </section>
 <script>
-    var form,laborSubTable;
-    var id = "${id}";
-    $('#laborID',$('#searchDiv')).val(id);
-    $(function () {
-        //初始化表单 
-        form = $("#labor-detail-form").form({baseEntity:false});
-        //初始化控件
-        form.initComponent();
-        
-        //编辑回填
-        if(id!="0"){
-            ajaxPost(basePath+"/labor/get",{id:id},function(data){
-                form.initFormData(data);
-            })
-        }
-        
-    });
+var form,laborSubTable;
+var id = "${id}";
+$("#wjscid").css("display","none")
+$("#contractfileattachment").css("display","none")
+$('#laborID',$('#searchDiv')).val(id);
+$(function () {
+    //初始化表单 
+    form = $("#labor-detail-form").form({baseEntity:false});
+    //初始化控件
+    form.initComponent();
+    
+    //编辑回填
+    if(id!="0"){
+        ajaxPost(basePath+"/labor/getStep2",{id:id},function(data){
+            form.initFormData(data);
+        })
+    }
+    
+});
+
+var fileinputDefaults = {
+      maxFileSize: 102400,
+      maxFileCount:10,
+      previewSettings: {
+          image: {width: "160px", height: "60px"},
+          text: {width: "213px", height: "160px"},
+          object: {width: "160px", height: "auto"},
+          pdf: {width: "160px", height: "160px"},
+          other: {width: "160px", height: "160px"}
+      },
+      previewZoomSettings: {
+          image: {width: "auto", height: "auto", 'max-width': "100%", 'max-height': "100%"},
+          text: {width: "100%", height: "100%", 'min-height': "480px"},
+          object: {width: "auto", height: "100%", 'min-height': "480px"},
+          pdf: {width: "100%", height: "100%", 'min-height': "480px"},
+          other: {width: "auto", height: "100%", 'min-height': "480px"}
+      },
+      uploadUrl: basePath + "/labor/uploadMultipleFile",
+      deleteUrl: basePath + "/project/deletefile",
+      allowedPreviewTypes : ['image', 'object']
+}
+var defaults = {
+      title: "请上传附件",
+      getFileResultUrl: basePath+"/project/getFiles",
+      downloadFileUrl: basePath+"/project/download/",
+      fileinput: fileinputDefaults,
+      showType:'detail',
+      window:true,
+      callback:function(fileIds,oldfileIds){
+          this.showFiles({
+              fileIds:fileIds,
+              type:'preview'
+          });
+      }
+}
+
+$("#contractfileupload").file($.extend({}, defaults, {
+    title:"请上传劳务合同",
+    fileinput:$.extend({}, fileinputDefaults, {
+        uploadExtraData: {"id":id,"fileField":"contractFile"}
+    }),
+    showContainer:'#contractfileattachment',
+    fileIdContainer:"[name='contractFile']",
+    extraPreviewConfig:{
+        "fileField":"contractFile"
+    }
+}));
    
 
 </script>

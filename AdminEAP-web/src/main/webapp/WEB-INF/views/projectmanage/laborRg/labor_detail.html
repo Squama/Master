@@ -1,3 +1,21 @@
+<link rel="stylesheet" href="${basePath}/resources/common/libs/fileinput/css/fileinput.min.css">
+<style>
+
+#projectaddstep2 .krajee-default.file-preview-frame .kv-file-content {
+    height: auto;
+}
+
+#projectaddstep2 .krajee-default .file-footer-caption {
+    width: 100px;
+}
+
+</style>
+
+<script src="${basePath}/resources/common/libs/fileinput/js/fileinput.js"></script>
+<script src="${basePath}/resources/common/libs/fileinput/js/locales/zh.js"></script>
+<!--BaseFile组件-->
+<script src="${basePath}/resources/common/js/base-file.js"></script>
+<script src="${basePath}/resources/common/js/calculate.js"></script>
 <section class="content">
     <div class="row">
         <div class="col-xs-12">
@@ -34,12 +52,12 @@
                                     <input type="text" class="form-control calculate" id="mechPrice" name="mechPrice" placeholder="机械费" readonly="readonly">
                                 </div>
                             </div>
-                            <div class="form-group">
+                            <!-- <div class="form-group">
                                 <label class="col-sm-3 control-label">人工费（单位：元）<span style="color:red">*</span></label>
                                 <div class="col-sm-8">
                                     <input type="text" class="form-control calculate" id="labourPrice" name="labourPrice" placeholder="人工费" readonly="readonly">
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">甲方</label>
                                 <div class="col-sm-8">
@@ -50,6 +68,12 @@
                                 <label class="col-sm-3 control-label">承包方式</label>
                                 <div class="col-sm-8">
                                     <input type="text" class="form-control" id="contractMode" name="contractMode" readonly="readonly">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">质保金约定（单位：元）</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="guaranteeMoney" name="guaranteeMoney" readonly="readonly">
                                 </div>
                             </div>
                         </div>
@@ -96,14 +120,15 @@
                                     <input type="text" class="form-control" id="paymentMode" name="paymentMode" readonly="readonly">
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">质保金约定（单位：元）</label>
-                                <div class="col-sm-8">
-                                    <input type="text" class="form-control" id="guaranteeMoney" name="guaranteeMoney" readonly="readonly">
-                                </div>
-                            </div>
+                            
                         </div>
                         <div class="col-md-12">
+                        	<div class="form-group">
+                                <label class="col-sm-3 control-label">人工费单价（描述）<span style="color:red"></span></label>
+                                <div class="col-sm-6">
+                                    <textarea class="form-control" id="labourSin" name="labourSin" rows="3" cols="100" readonly="readonly"></textarea>
+                                </div>
+                            </div>
                         	<div class="form-group">
                                 <label class="col-sm-3 control-label">内容</label>
                                 <div class="col-sm-6">
@@ -123,7 +148,22 @@
                                 </div>
                             </div>
                         </div>
+                         <div class="form-group">
+                                <label class="col-sm-3 control-label">包清工合同<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="hidden" name="contractFile" id="contractFile">
+                                    <div class="form-group" id="wjscid">
+                                        <div class="btn btn-default btn-file" id="contractfileupload">
+                                            <i class="fa fa-paperclip"></i> 上传包清工合同(最大. 100MB)
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="file" name="contractfileattachment" id="contractfileattachment">
+                                    </div> 
+                                </div>
+                            </div>
                     </div>
+                   
                 </form>
             </div>
         </div>
@@ -132,6 +172,8 @@
 <script>
     var form,laborSubTable;
     var id = "${id}";
+    $("#wjscid").css("display","none")
+	$("#contractfileattachment").css("display","none")
     $('#laborID',$('#searchDiv')).val(id);
     $(function () {
         //初始化表单 
@@ -141,12 +183,59 @@
         
         //编辑回填
         if(id!="0"){
-            ajaxPost(basePath+"/labor/get",{id:id},function(data){
+            ajaxPost(basePath+"/labor/getStep2",{id:id},function(data){
                 form.initFormData(data);
             })
         }
         
     });
-   
+    
+    var fileinputDefaults = {
+          maxFileSize: 102400,
+          maxFileCount:10,
+          previewSettings: {
+              image: {width: "160px", height: "60px"},
+              text: {width: "213px", height: "160px"},
+              object: {width: "160px", height: "auto"},
+              pdf: {width: "160px", height: "160px"},
+              other: {width: "160px", height: "160px"}
+          },
+          previewZoomSettings: {
+              image: {width: "auto", height: "auto", 'max-width': "100%", 'max-height': "100%"},
+              text: {width: "100%", height: "100%", 'min-height': "480px"},
+              object: {width: "auto", height: "100%", 'min-height': "480px"},
+              pdf: {width: "100%", height: "100%", 'min-height': "480px"},
+              other: {width: "auto", height: "100%", 'min-height': "480px"}
+          },
+          uploadUrl: basePath + "/labor/uploadMultipleFile",
+          deleteUrl: basePath + "/project/deletefile",
+          allowedPreviewTypes : ['image', 'object']
+    }
+    var defaults = {
+          title: "请上传附件",
+          getFileResultUrl: basePath+"/project/getFiles",
+          downloadFileUrl: basePath+"/project/download/",
+          fileinput: fileinputDefaults,
+          showType:'detail',
+          window:true,
+          callback:function(fileIds,oldfileIds){
+              this.showFiles({
+                  fileIds:fileIds,
+                  type:'preview'
+              });
+          }
+    }
+    
+    $("#contractfileupload").file($.extend({}, defaults, {
+        title:"请上传劳务合同",
+        fileinput:$.extend({}, fileinputDefaults, {
+            uploadExtraData: {"id":id,"fileField":"contractFile"}
+        }),
+        showContainer:'#contractfileattachment',
+        fileIdContainer:"[name='contractFile']",
+        extraPreviewConfig:{
+            "fileField":"contractFile"
+        }
+    }));
 
 </script>
