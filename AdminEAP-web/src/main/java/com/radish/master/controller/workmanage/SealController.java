@@ -236,6 +236,21 @@ public class SealController {
 			baseService.update(c);
 		}
 		r.setCode(id);
+		String fileId = request.getParameter("fileId");
+		if(fileId!=null&&fileId.length()>0){
+			if(fileId.indexOf(",")<0){//单张
+				BgwjFile wj = baseService.get(BgwjFile.class, fileId);
+				wj.setFormId(id);
+				baseService.update(wj);
+			}else{//多文件
+				String[] ids = fileId.split(",");
+				for(int i =0;i<ids.length;i++){
+					BgwjFile wj = baseService.get(BgwjFile.class, ids[i]);
+					wj.setFormId(id);
+					baseService.update(wj);
+				}
+			}
+		}
 		return r;
 	}
 	@RequestMapping("/loaduse")
@@ -245,6 +260,17 @@ public class SealController {
 		String id = request.getParameter("id");
 		Sealuse c = baseService.get(Sealuse.class, id);
 		r.setData(c);
+		
+		List<BgwjFile> wjs = baseService.findMapBySql("select id  from tbl_officefile where form_ID='"+id+"'", new Object[]{}, new Type[]{StringType.INSTANCE}, BgwjFile.class);
+        String wjid = "";
+		for(int i =0;i<wjs.size();i++){
+        	if(i==wjs.size()-1){
+        		wjid += wjs.get(i).getId();
+        	}else {
+        		wjid += wjs.get(i).getId()+",";
+        	}
+        }
+		r.setCode(wjid);
 		return r;
 	}
 	@RequestMapping("/usedelete")
