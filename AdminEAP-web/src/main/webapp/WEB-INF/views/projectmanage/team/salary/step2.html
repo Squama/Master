@@ -48,9 +48,14 @@
                 </div>
                 <div class="dataTables_filter" id="searchDiv" style="display:none;">
                    <input type="search" name="salaryID" id="salaryID" class="form-control" operator="eq" style="display:none;">
-                   
-                   <div class="btn-group">
-                       <button type="button" class="btn btn-info" data-btn-type="prev" style="float:right">返回列表</button>
+                   <div class="btn-group" style="width:600px;">
+                       <button type="button" class="btn btn-info ml10" data-btn-type="prev" style="float:right">返回列表</button>
+                       <div class="col-sm-6 mr10" style="float:right;width:180px;">
+                           <select id="pointTeamID" class="form-control select2" style="width:180px;">
+                                   <option selected="selected" value="">选择一个点工班组</option>
+                           </select>
+                       </div>
+                       <label class="col-sm-3 control-label" style="float:right;width:100px;line-height:40px;">更换为点工班组<span style="color:red">*</span></label>
                    </div>
                 </div>
                 <div class="box-body box-body-mobile">
@@ -73,14 +78,15 @@
 </section>
 <script>
     var form;
-    var id = "${id}", total = "${total}";
+    var id = "${id}", total = "${total}", changedTeamID = "${changedTeamID}";
     $('#salaryID').val(id);
     $('#salaryID',$('#searchDiv')).val(id);
     $('#total').val(total);
     $('#aTotal').html(total);
-    var userOptions = '${userOptions?default(0)}',options=0;
-    if(userOptions != 0){
-        options = JSON.parse(userOptions);
+    $('#pointTeamID').val(changedTeamID).trigger("change");
+    var teamOptions = '${pointTeams?default(0)}',options=0;
+    if(teamOptions != 0){
+        options = JSON.parse(teamOptions);
     }
     var salaryDetailTable, winId = "salaryDetailWin";
     var salaryDetailCtrl = {
@@ -156,6 +162,37 @@
                 );
             }
         });
+    	
+    	if(options != 0){
+            for (var i = 0, len = options.length; i < len; i++) {
+                var option = options[i];
+                $('#pointTeamID').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+            }
+            $(".select2").select2();
+            $("#pointTeamID").bind("change", function () {
+                var value = $(this).val();
+                if (value === "") {
+                    return false;
+                }
+                
+                var name = "";
+                if ($("#pointTeamID").prop('selectedIndex') > 0) {
+                    name = $("#pointTeamID").find("option:selected").text();
+                }
+                
+                modals.confirm("是否更换人员，更换后不可撤消？",function(){
+                    ajaxPost(basePath+"/project/team/salary/changebanzu",{salaryID:id,teamID:value,teamName:name},function(data){
+                        if(data.success){
+                            salaryDetailTable.reloadRowData();
+                        }else{
+                            modals.error("删除失败！");
+                        }
+                    });
+                })
+                
+            });
+        }
+    	
         salaryDetailCtrl.initButtonEvent();
         salaryDetailCtrl.initSalaryEditor();
     });

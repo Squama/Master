@@ -207,24 +207,21 @@ public class ProjectTeamSalaryController {
             }
             teamSalaryService.batchSave(detailList);
             
-            	String hqlSalary = "from SalaryDetail where salaryID=:salaryID";
-                Map<String, Object> paramsSalary = new HashMap<>();
-                paramsSalary.put("salaryID", salary.getId());
-                List<SalaryDetail> detailLists = teamSalaryService.find(hqlSalary, paramsSalary);
-                BigDecimal a = new BigDecimal("0");
-                for (SalaryDetail sd : detailLists) {
-                    BigDecimal actual = new BigDecimal(sd.getActual());
+        	String hqlSalary = "from SalaryDetail where salaryID=:salaryID";
+            Map<String, Object> paramsSalary = new HashMap<>();
+            paramsSalary.put("salaryID", salary.getId());
+            List<SalaryDetail> detailLists = teamSalaryService.find(hqlSalary, paramsSalary);
+            BigDecimal a = new BigDecimal("0");
+            for (SalaryDetail sd : detailLists) {
+                BigDecimal actual = new BigDecimal(sd.getActual());
 
-                    a = a.add(actual);
-                }
-                salary.setApplySum(a.setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
-                teamSalaryService.update(salary);
+                a = a.add(actual);
+            }
+            salary.setApplySum(a.setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
+            teamSalaryService.update(salary);
             
         } else {
             Salary oldSalary = teamSalaryService.get(Salary.class, salary.getId());
-            oldSalary.setProjectID(salary.getProjectID());
-            oldSalary.setTeamID(salary.getTeamID());
-            oldSalary.setTeamName(salary.getTeamName());
             oldSalary.setUpdateDateTime(new Date());
             teamSalaryService.save(oldSalary);
 
@@ -417,6 +414,8 @@ public class ProjectTeamSalaryController {
     public String step2(Salary salary, HttpServletRequest request) {
         request.setAttribute("id", salary.getId());
         request.setAttribute("total", salary.getTotal());
+        request.setAttribute("changedTeamID", salary.getTeamID());
+        request.setAttribute("pointTeams", JSONArray.toJSONString(teamSalaryService.getPointTeamComboboxByProject(salary.getProjectID())));
         return "projectmanage/team/salary/step2";
     }
 
@@ -464,6 +463,74 @@ public class ProjectTeamSalaryController {
         SalaryDetail detail = teamSalaryService.get(SalaryDetail.class, id);
         try {
             teamSalaryService.delete(detail);
+        } catch (Exception e) {
+            return new Result(false);
+        }
+        return new Result(true);
+    }
+    
+    @RequestMapping(value = "/changebanzu", method = RequestMethod.POST)
+    @ResponseBody
+    public Result changeBanzu(String salaryID, String teamID, String teamName) {
+
+        String hql = "from SalaryDetail where salaryID=:salaryID";
+        Map<String, Object> params = new HashMap<>();
+        params.put("salaryID", salaryID);
+        List<SalaryDetail> detailListOld = teamSalaryService.find(hql, params);
+        
+        try {
+            teamSalaryService.batchDelete(detailListOld);
+        } catch (Exception e) {
+            return new Result(false);
+        }
+        
+        Salary salary = teamSalaryService.get(Salary.class, salaryID);
+        
+        // 直接录入全部明细
+        List<Worker> managerList = teamSalaryService.getPointMemberByProject(salary.getProjectID(), teamID);
+        List<SalaryDetail> detailList = new ArrayList<SalaryDetail>();
+        for (Worker user : managerList) {
+            SalaryDetail detail = new SalaryDetail();
+            detail.setCreateDateTime(new Date());
+            detail.setUpdateDateTime(new Date());
+
+            detail.setSalaryID(salaryID);
+            detail.setUserID(user.getId());
+            detail.setName(user.getName());
+            detail.setMobile(user.getMobile());
+            detail.setIdentificationNumber(user.getIdentificationNumber());
+            detail.setWorkType(user.getWorkType());
+
+            detail.setAttendance("0");
+            detail.setPayable("0");
+            detail.setLoan("0");
+            detail.setMedical("0");
+            detail.setSocial("0");
+            detail.setTax("0");
+            detail.setActual("0");
+            detail.setRemark("");
+
+            detailList.add(detail);
+
+        }
+        
+        try {
+            teamSalaryService.batchSave(detailList);
+            
+            String hqlSalary = "from SalaryDetail where salaryID=:salaryID";
+            Map<String, Object> paramsSalary = new HashMap<>();
+            paramsSalary.put("salaryID", salary.getId());
+            List<SalaryDetail> detailLists = teamSalaryService.find(hqlSalary, paramsSalary);
+            BigDecimal a = new BigDecimal("0");
+            for (SalaryDetail sd : detailLists) {
+                BigDecimal actual = new BigDecimal(sd.getActual());
+
+                a = a.add(actual);
+            }
+            salary.setApplySum(a.setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
+            salary.setTeamID(teamID);
+            salary.setTeamName(teamName);
+            teamSalaryService.update(salary);
         } catch (Exception e) {
             return new Result(false);
         }
