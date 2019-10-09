@@ -535,14 +535,27 @@ var basePath="${basePath}";//给外部js文件传递路径参数
        });
         //判断是否为办公室人员，如果是，就判断近期有无转正人员
        ajaxPost(basePath+'/employeeQuery/getZzUser', {}, function(data) {
+           var str = "";
            if(data.success){
-               modals.info(data.message);
+        	   str += data.message+"<a onclick='lookZz()' style='color:red'>待转正列表</a><br>";
            }else{
                 console.log(data.message);
            }
+           if(data.code){
+        	   str += data.code+"<a onclick='lookSw()' style='color:red'>个人收文查看</a>";
+           }
+           if(str){
+        	   modals.info(str);
+             }
+          
        }); 
    });
-   
+   function lookSw(){
+	   loadPage("/writings/swlook");
+	}
+	function lookZz(){
+		loadPage("/dzzuser/index");
+	}   
    var dep = '${user.deptId?default(0)}';
    var job = '${user.jobId?default(0)}';
    

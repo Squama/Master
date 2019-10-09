@@ -479,6 +479,12 @@ public class EmployeeQueryController {
     		r.setMessage("无office角色");
     		r.setSuccess(false);
     	}
+    	//判断是否存在未读收文
+    	long count = baseService.countBySql("select count(1) from tbl_writingslook where 1=1 and lookid='"+uid+"' and islook='0'");
+    	if(count>0){
+    		String str = " 您有"+count+"条未读收文，请及时查看!";
+    		r.setCode(str);
+    	}
     	return r;
     };
     /**
