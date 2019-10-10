@@ -573,9 +573,9 @@ public class BudgetEstimateController {
     
     private String getUnitPrice(BudgetTx bt){
         BigDecimal result = new BigDecimal("0");
-        BigDecimal labour = new BigDecimal(bt.getArtificiality());
-        BigDecimal mat = new BigDecimal(bt.getMateriels());
-        BigDecimal mech = new BigDecimal(bt.getMech());
+        BigDecimal labour = new BigDecimal(StrUtil.isEmpty(bt.getArtificiality())?"0":bt.getArtificiality() );
+        BigDecimal mat = new BigDecimal(StrUtil.isEmpty(bt.getMateriels())?"0":bt.getMateriels());
+        BigDecimal mech = new BigDecimal(StrUtil.isEmpty(bt.getMech())?"0":bt.getMech());
         
         return result.add(labour.add(mat.add(mech))).toPlainString();
     }
