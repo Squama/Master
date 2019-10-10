@@ -81,6 +81,19 @@
                         <textarea class="form-control" id="announcements" name="announcements" placeholder="注意事项" rows="7"></textarea>
                     </div>
             </div>
+            <input type="hidden" name="fileId" id="fileId">
+				<div class="form-group" align="center">
+					<div class="btn btn-default btn-file" id="uploadFile">
+						<i class="fa fa-paperclip"></i> 上传采购合同(Max. 20MB)
+					</div>
+				</div>
+				<div class="form-group" id="file_container">
+					<input type="file" name="file"  id="attachment">
+				</div>
+		<div class="" style="text-align: center;">
+            <!--以下两种方式提交验证,根据所需选择-->
+            <button type="submit" class="btn btn-primary" data-btn-type="save" id="save">保存</button>
+        </div>
         
         <!-- /.box-footer -->
     </form>
@@ -94,15 +107,7 @@
     		</tr>
          </table>
     </div>
-    <input type="hidden" name="fileId" id="fileId">
-				<div class="form-group" align="center">
-					<div class="btn btn-default btn-file" id="uploadFile">
-						<i class="fa fa-paperclip"></i> 上传采购合同(Max. 20MB)
-					</div>
-				</div>
-				<div class="form-group" id="file_container">
-					<input type="file" name="file"  id="attachment">
-				</div>
+    
 </div>
 <script>
     var form =null;
@@ -118,10 +123,71 @@
     var spid = '${spid?default(0)}'
     
     $(function() {
-    	$("#uploadFile").css("display","none")
-    	$("#attachment").css("display","none")
+    	//$("#uploadFile").css("display","none")
+    	//$("#attachment").css("display","none")
         //初始化控件
         form=$("#contract-form").form();
+      //数据校验
+        $("#contract-form").bootstrapValidator({
+            message : '请输入有效值',
+            feedbackIcons : {
+                valid : 'glyphicon glyphicon-ok',
+                invalid : 'glyphicon glyphicon-remove',
+                validating : 'glyphicon glyphicon-refresh'
+            },
+            submitHandler : function() {
+                modals.confirm('确认保存？', function() {
+                    //Save Data，对应'submit-提交'
+                    var params = form.getFormSimpleData();
+                    var url = basePath + '/matreview/save';
+                    	ajaxPost(url, params, function(data) {
+                            if(data.success){
+                            	modals.hideWin(winId);
+                            	budgetApplyTable.reloadData();
+                                modals.info("保存成功");
+                                
+                            }                
+                        }); 
+                });
+            },
+            fields : {
+            	projectId : {
+                    validators : {
+                        notEmpty : {
+                            message : '请选择项目'
+                        }
+                    }
+                },
+                creatName : {
+                    validators : {
+                        notEmpty : {
+                            message : '请选择起草人'
+                        }
+                    }
+                },
+                reviewName : {
+                    validators : {
+                        notEmpty : {
+                            message : '请输入评审对象'
+                        }
+                    }
+                },
+                purchase:{
+                	validators : {
+                        notEmpty : {
+                            message : '请输入采购单位'
+                        }
+                    }
+                },
+                supply:{
+                	validators : {
+                        notEmpty : {
+                            message : '请输入供货单位'
+                        }
+                    }
+                }
+            }
+        });
         form.initComponent();
         if(use != 0){
             for (var i = 0, len = use.length; i < len; i++) {

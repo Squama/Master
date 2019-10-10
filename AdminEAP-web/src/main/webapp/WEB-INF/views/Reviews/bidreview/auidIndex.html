@@ -95,8 +95,21 @@
 				</div>
             </div>   
         </div>
+        <input type="hidden" name="fileId" id="fileId">
+				<div class="form-group" align="center">
+					<div class="btn btn-default btn-file" id="uploadFile">
+						<i class="fa fa-paperclip"></i> 上传招标文件(Max. 20MB)
+					</div>
+				</div>
+				<div class="form-group" id="file_container">
+					<input type="file" name="file"  id="attachment">
+				</div>
         
         <!-- /.box-footer -->
+        <div class="" style="text-align: center;">
+            <!--以下两种方式提交验证,根据所需选择-->
+            <button type="submit" class="btn btn-primary" data-btn-type="save" id="save">保存</button>
+        </div>
     </form>
     <div  class="box-body">
     	<table id="sps" class="table table-bordered table-striped table-hover">
@@ -108,15 +121,7 @@
     		</tr>
          </table>
     </div>
-    <input type="hidden" name="fileId" id="fileId">
-				<div class="form-group" align="center">
-					<div class="btn btn-default btn-file" id="uploadFile">
-						<i class="fa fa-paperclip"></i> 上传招标文件(Max. 20MB)
-					</div>
-				</div>
-				<div class="form-group" id="file_container">
-					<input type="file" name="file"  id="attachment">
-				</div>
+    
 </div>
 <script>
     var form =null;
@@ -126,10 +131,78 @@
     	pro = JSON.parse(pros);
     }
     $(function() {
-    	$("#uploadFile").css("display","none")
-    	$("#attachment").css("display","none")
+    	//$("#uploadFile").css("display","none")
+    	//$("#attachment").css("display","none")
         //初始化控件
         form=$("#contract-form").form();
+      //数据校验
+        $("#contract-form").bootstrapValidator({
+            message : '请输入有效值',
+            feedbackIcons : {
+                valid : 'glyphicon glyphicon-ok',
+                invalid : 'glyphicon glyphicon-remove',
+                validating : 'glyphicon glyphicon-refresh'
+            },
+            submitHandler : function() {
+                modals.confirm('确认保存？', function() {
+                    //Save Data，对应'submit-提交'
+                    var params = form.getFormSimpleData();
+                    var url = basePath + '/bidreview/save';
+                    	ajaxPost(url, params, function(data) {
+                            if(data.success){
+                            	modals.hideWin(winId);
+                            	budgetApplyTable.reloadData();
+                                modals.info("保存成功");
+                                
+                            }                
+                        }); 
+                });
+            },
+            fields : {
+            	projectId : {
+                    validators : {
+                        notEmpty : {
+                            message : '请输入招标项目'
+                        }
+                    }
+                },
+                bidNumber : {
+                    validators : {
+                        notEmpty : {
+                            message : '请输入招标文件编号'
+                        }
+                    }
+                },
+                bider : {
+                    validators : {
+                        notEmpty : {
+                            message : '请输入招标单位'
+                        }
+                    }
+                },
+                builder:{
+                	validators : {
+                        notEmpty : {
+                            message : '请输入建设单位'
+                        }
+                    }
+                },
+                buildAddress:{
+                	validators : {
+                        notEmpty : {
+                            message : '请输入工程地址'
+                        }
+                    }
+                },
+                bidWay:{
+                	validators : {
+                        notEmpty : {
+                            message : '请输入招标方式'
+                        }
+                    }
+                }
+            }
+        });
         form.initComponent();
         
         
