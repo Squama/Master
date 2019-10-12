@@ -18,11 +18,12 @@
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><li class="fa fa-remove"></li></button>
     <h5 class="modal-title"></h5>
 </div>
-<div class="modal-body" style="max-height:600px;overflow-y:auto;">
+<div class="modal-body" style="max-height:100%;overflow-y:auto;">
 
     <form id="contract-form" name="contract-form" class="form-horizontal">
      <input type="hidden" name="id" id= "id">
-       <div class="box-body">
+       
+            <div class="box-body">
             <div class="col-md-6">
                 
                 <div class="form-group">
@@ -165,54 +166,44 @@
                         <textarea class="form-control" id="getToJf" name="getToJf" placeholder="发包方分包合同应提供给承包方" rows="2"></textarea>
                     </div>
             </div>
-        
-        <!-- /.box-footer -->
-        <div  class="box-body">
-    	<table id="sps" class="table table-bordered table-striped table-hover">
-    		<tr>
-    			<th>部门</th>
-    			<th>评审风险点</th>
-    			<th>评审意见</th>
-    			<th>评审人</th>
-    		</tr>
-         </table>
-   		</div>
-   		<div class="form-group">
+            
+            <div class="form-group">
                 <label for="conclusion" class="col-sm-2 control-label">评审结论</label>
 
                 <div class="col-sm-9">
-                    <textarea class="form-control" id="conclusion" name="conclusion" placeholder="评审结论" rows="5"></textarea>
+                    <textarea class="form-control" id="conclusion" name="conclusion" placeholder="评审结论" rows="5" ></textarea>
                 </div>
-        </div>
-        <div class="form-group">
-                <label for="risk" class="col-sm-2 control-label">风险点提醒</label>
-
-                <div class="col-sm-9">
-                    <textarea class="form-control" id="risk" name="risk" placeholder="风险点提醒" rows="5"></textarea>
-                </div>
-        </div>
-        <div class="form-group">
-                <label for="manage" class="col-sm-2 control-label">合同谈判之后风险点和关键点的争议、处置</label>
-
-                <div class="col-sm-9">
-                    <textarea class="form-control" id="manage" name="manage" rows="5"></textarea>
-                </div>
-        </div>
-        <div class="form-group">
-                <label for="joinName" class="col-sm-2 control-label">参与人员</label>
-
-                <div class="col-sm-9">
-                    <textarea class="form-control" id="joinName" name="joinName" rows="5"></textarea>
-                </div>
-        </div>
-         <div class="form-group">
-                <label for="remark" class="col-sm-2 control-label">合同交底</label>
-
-                <div class="col-sm-9">
-                    <textarea class="form-control" id="remark" name="remark" rows="5"></textarea>
-                </div>
-        </div>
-        <input type="hidden" name="fileId" id="fileId">
+	        </div>
+	        <div class="form-group">
+	                <label for="risk" class="col-sm-2 control-label">风险点提醒</label>
+	
+	                <div class="col-sm-9">
+	                    <textarea class="form-control" id="risk" name="risk" placeholder="风险点提醒" rows="5"></textarea>
+	                </div>
+	        </div>
+	        <div class="form-group">
+	                <label for="manage" class="col-sm-2 control-label">合同谈判之后风险点和关键点的争议、处置</label>
+	
+	                <div class="col-sm-9">
+	                    <textarea class="form-control" id="manage" name="manage" rows="5"></textarea>
+	                </div>
+	        </div>
+	        <div class="form-group">
+	                <label for="joinName" class="col-sm-2 control-label">参与人员</label>
+	
+	                <div class="col-sm-9">
+	                    <textarea class="form-control" id="joinName" name="joinName" rows="5"></textarea>
+	                </div>
+	        </div>
+	         <div class="form-group">
+	                <label for="remark" class="col-sm-2 control-label">合同交底</label>
+	
+	                <div class="col-sm-9">
+	                    <textarea class="form-control" id="remark" name="remark" rows="5"></textarea>
+	                </div>
+	        </div>
+            
+            <input type="hidden" name="fileId" id="fileId">
 				<div class="form-group" align="center">
 					<div class="btn btn-default btn-file" id="uploadFile">
 						<i class="fa fa-paperclip"></i> 上传施工合同(Max. 20MB)
@@ -221,8 +212,23 @@
 				<div class="form-group" id="file_container">
 					<input type="file" name="file"  id="attachment">
 				</div>
+        <!-- /.box-footer -->
+        <div class="" style="text-align: center;height:50px;width:100%;">
+            <!--以下两种方式提交验证,根据所需选择-->
+            <button type="submit" class="btn btn-primary" data-btn-type="save" id="save">保存</button>
+        </div>
     </form>
-    
+    <div  class="box-body">
+    	<table id="sps" class="table table-bordered table-striped table-hover">
+    		<tr>
+    			<th>部门</th>
+    			<th>评审风险点</th>
+    			<th>评审意见</th>
+    			<th>评审人</th>
+    		</tr>
+         </table>
+    </div>
+     
 </div>
 <script>
     var form =null;
@@ -238,10 +244,78 @@
     var spid = '${spid?default(0)}'
     
     $(function() {
-    	$("#uploadFile").css("display","none")
-    	$("#attachment").css("display","none")
+    	//$("#uploadFile").css("display","none")
+    	//$("#attachment").css("display","none")
         //初始化控件
         form=$("#contract-form").form();
+      //数据校验
+        $("#contract-form").bootstrapValidator({
+            message : '请输入有效值',
+            feedbackIcons : {
+                valid : 'glyphicon glyphicon-ok',
+                invalid : 'glyphicon glyphicon-remove',
+                validating : 'glyphicon glyphicon-refresh'
+            },
+            submitHandler : function() {
+                modals.confirm('确认保存？', function() {
+                    //Save Data，对应'submit-提交'
+                    var params = form.getFormSimpleData();
+                    var url = basePath + '/laborreview/save';
+                    	ajaxPost(url, params, function(data) {
+                            if(data.success){
+                            	modals.hideWin(winId);
+                            	budgetApplyTable.reloadData();
+                                modals.info("保存成功");
+                                
+                            }                
+                        }); 
+                });
+            },
+            fields : {
+            	projectId : {
+                    validators : {
+                        notEmpty : {
+                            message : '请选择项目'
+                        }
+                    }
+                },
+                creatName : {
+                    validators : {
+                        notEmpty : {
+                            message : '请选择起草人'
+                        }
+                    }
+                },
+                reviewName : {
+                    validators : {
+                        notEmpty : {
+                            message : '请输入评审对象'
+                        }
+                    }
+                },
+                contracter:{
+                	validators : {
+                        notEmpty : {
+                            message : '请输入承包单位'
+                        }
+                    }
+                },
+                builder:{
+                	validators : {
+                        notEmpty : {
+                            message : '请输入建设单位'
+                        }
+                    }
+                },
+                htName:{
+                    validators : {
+                        notEmpty : {
+                            message : '请输入合同名称'
+                        }
+                    }
+                }
+            }
+        });
         form.initComponent();
         if(use != 0){
             for (var i = 0, len = use.length; i < len; i++) {
@@ -357,4 +431,5 @@
               "fileField":"fileId"
           }
       }));
+	
 </script>

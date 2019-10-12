@@ -126,6 +126,17 @@ public class ReviewLaborController {
 		request.setAttribute("spid",id);
 		return prefix +"auidIndex";
 	}
+	@RequestMapping("/auidLookboss/{id}")
+	public String auidLookboss(@PathVariable("id") String id,HttpServletRequest request){
+		List<Project> p = baseService.findMapBySql("select p.project_name projectName ,p.id id  from tbl_project p ", new Object[]{}, new Type[]{StringType.INSTANCE}, Project.class);
+		request.setAttribute("projectOptions", JSONArray.toJSONString(p));
+		
+		List<User> ul = baseService.findMapBySql("select u.name name ,u.id id  from tbl_user u where  u.audit_status = 10", new Object[]{}, new Type[]{StringType.INSTANCE}, User.class);
+		request.setAttribute("userOptions", JSONArray.toJSONString(ul));
+		
+		request.setAttribute("spid",id);
+		return prefix +"auidIndexboss";
+	}
 	
 	@RequestMapping("/look")
 	public String look(HttpServletRequest request){
@@ -169,6 +180,11 @@ public class ReviewLaborController {
 			p.setGetToJf(ps.getGetToJf());
 			p.setHtNumber(ps.getHtNumber());
 			p.setHtName(ps.getHtName());
+			if(ps.getConclusion()!=null)p.setConclusion(ps.getConclusion());
+			if(ps.getRisk()!=null)p.setRisk(ps.getRisk());
+			if(ps.getManage()!=null)p.setManage(ps.getManage());
+			if(ps.getJoinName()!=null)p.setJoinName(ps.getJoinName());
+			if(ps.getRemark()!=null)p.setRemark(ps.getRemark());
 			baseService.update(p);
 			r.setSuccess(true);
 		}else{//保存
@@ -265,6 +281,11 @@ public class ReviewLaborController {
 	@RequestMapping("/start")
 	@ResponseBody
 	public Result start(String id) {
+		//查看是否存在审批意见，有就清空
+		List<ActivitiReview> sps = baseService.find(" from ActivitiReview where businessKey='"+id+"'");
+		for(ActivitiReview sp :sps){
+			baseService.delete(sp);
+		}
 		ReviewLabor sp = baseService.get(ReviewLabor.class,id);
 		sp.setStatus("20");
 		baseService.update(sp);

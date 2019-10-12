@@ -50,7 +50,7 @@ public class ReviewLabor {
     @Column(name = "number")
     private String number;
 
-    @Header(name = "10新建/20综合评审/30副经理评审/40总经理评审/50经营科总结/60完成")
+    @Header(name = "10新建/20综合评审/30副经理评审/40总经理评审/50经营科总结/60完成/70驳回")
     @Column(name = "status")
     private String status;
 
@@ -145,6 +145,10 @@ public class ReviewLabor {
     @Header(name = "合同名称")
     @Column(name = "htName")
     private String htName;
+    
+    @Header(name = "驳回原因")
+    @Column(name = "boyy")
+    private String boyy;
 
     public String getId() {
         return id;
@@ -369,5 +373,13 @@ public class ReviewLabor {
     public void setHtName(String htName) {
         this.htName = htName;
     }
+
+	public String getBoyy() {
+		return boyy;
+	}
+
+	public void setBoyy(String boyy) {
+		this.boyy = boyy;
+	}
 
 }

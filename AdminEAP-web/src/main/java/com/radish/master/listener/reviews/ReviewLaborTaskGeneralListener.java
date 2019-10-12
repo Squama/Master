@@ -55,6 +55,7 @@ public class ReviewLaborTaskGeneralListener implements TaskListener {
     private static final String CAIWU = "caiwuApproved";
     
     private static final String FAWU = "fawuApproved";
+    
     @Override
     public void notify(DelegateTask delegateTask) {
         String eventName = delegateTask.getEventName();
@@ -106,16 +107,6 @@ public class ReviewLaborTaskGeneralListener implements TaskListener {
                     && TRUE.equals(delegateTask.getVariable(FAWU).toString())) {
                 pv.setStatus("30");
             }*/
-            
-            if ("fuBoss".equals(taskDefinitionKey)) {
-                pv.setStatus("40");
-            } else if ("boss".equals(taskDefinitionKey)) {
-                pv.setStatus("50");
-            } else if ("jinyingF".equals(taskDefinitionKey)) {
-                pv.setStatus("60");
-            }
-
-            
             as.setSuggestion(suggestion);
             as.setRisk(risk);
             as.setOperator(SecurityUtil.getUser().getName());
@@ -127,14 +118,39 @@ public class ReviewLaborTaskGeneralListener implements TaskListener {
             	String manage = delegateTask.getVariable("manage").toString();
             	String joinName = delegateTask.getVariable("joinName").toString();
             	String remark =delegateTask.getVariable("remark").toString();
+            	
+            	
             	pv.setConclusion(conclusion);
             	pv.setManage(manage);
             	pv.setJoinName(joinName);
             	pv.setRemark(remark);
             	pv.setRisk(risk);
             }
+            
+            if ("fuBoss".equals(taskDefinitionKey)) {
+                if (FALSE.equalsIgnoreCase(delegateTask.getVariable("approved").toString())) {
+            		pv.setStatus("70");
+            		pv.setBoyy(suggestion);
+            	}else if (TRUE.equalsIgnoreCase(delegateTask.getVariable("approved").toString())) {
+            		pv.setStatus("40");
+            	}
+            } else if ("boss".equals(taskDefinitionKey)) {
+                if (FALSE.equalsIgnoreCase(delegateTask.getVariable("approved").toString())) {
+            		pv.setStatus("70");
+            		pv.setBoyy(suggestion);
+            	}else if (TRUE.equalsIgnoreCase(delegateTask.getVariable("approved").toString())) {
+            		pv.setStatus("60");
+            	}
+            } else if ("jinyingF".equals(taskDefinitionKey)) {
+            	if (FALSE.equalsIgnoreCase(delegateTask.getVariable("approved").toString())) {
+            		pv.setStatus("70");
+            		pv.setBoyy(delegateTask.getVariable("conclusion").toString());
+            	}else if (TRUE.equalsIgnoreCase(delegateTask.getVariable("approved").toString())) {
+            		pv.setStatus("30");
+            	}
+                
+            }
             baseService.update(pv);
-           
 
         }
 

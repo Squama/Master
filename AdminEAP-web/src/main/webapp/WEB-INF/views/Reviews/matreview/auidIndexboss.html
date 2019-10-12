@@ -18,7 +18,7 @@
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><li class="fa fa-remove"></li></button>
     <h5 class="modal-title"></h5>
 </div>
-<div class="modal-body" style="max-height:600px;overflow-y:auto;">
+<div class="modal-body" style="max-height:100%;overflow-y:auto;">
 
     <form id="contract-form" name="contract-form" class="form-horizontal">
      <input type="hidden" name="id" id= "id">
@@ -43,20 +43,12 @@
 				
 					</div>
 				</div>
-				<div class="form-group">
-					<label  for="builder" class="col-sm-3 control-label">建设单位</label>
+					<div class="form-group">
+					<label  for="purchase" class="col-sm-3 control-label">采购单位</label>
 					<div class=" col-sm-8">
-						<input class="form-control " id="builder" name="builder"  placeholder="建设单位" >
+						<input class="form-control " id="purchase" name="purchase"  placeholder="采购单位" >
 					</div>
 				</div>
-				<div class="form-group">
-					<label  for="htNumber" class="col-sm-3 control-label">合同编号</label>
-					<div class=" col-sm-8">
-						<input class="form-control " id="htNumber" name="htNumber"  placeholder="合同编号" >
-					</div>
-				</div>
-				
-				
 				
             </div>
             <div class="col-md-6">
@@ -68,116 +60,28 @@
 					</div>
                 </div>
                 <div class="form-group">
-					<label  for="reviewName" class="col-sm-3 control-label">合同谈判人</label>
+					<label  for="reviewName" class="col-sm-3 control-label">评审对象</label>
 					<div class=" col-sm-8">
-						<input class="form-control " id="reviewName" name="reviewName" placeholder="参与合同谈判人">
+						<input class="form-control " id="reviewName" name="reviewName" placeholder="评审对象">
 				
 					</div>
 				</div>
 				<div class="form-group">
-                    <label  for="contracter" class="col-sm-3 control-label">承包单位</label>
+                    <label  for="supply" class="col-sm-3 control-label">供货单位</label>
 					<div class=" col-sm-8">
-						<input class="form-control " id="contracter" name="contracter"   placeholder="承包单位" >
+						<input class="form-control " id="supply" name="supply"   placeholder="供货单位" >
 					</div>
-                </div>
-                <div class="form-group">
-                    <label  for="htName" class="col-sm-3 control-label">合同名称<span style="color:red">*</span></label>
-                    <div class=" col-sm-8">
-                        <input class="form-control " id="htName" name="htName"  placeholder="合同名称" >
-                    </div>
                 </div>
             </div>   
         </div>
         	<div class="form-group">
-                    <label for="dzedyq" class="col-sm-2 control-label">垫资额度要求</label>
+                    <label for="announcements" class="col-sm-2 control-label">注意事项</label>
 
                     <div class="col-sm-9">
-                        <textarea class="form-control" id="dzedyq" name="dzedyq" placeholder="垫资额度要求" rows="2"></textarea>
+                        <textarea class="form-control" id="announcements" name="announcements" placeholder="注意事项" rows="7"></textarea>
                     </div>
             </div>
-       		 <div class="form-group">
-                    <label for="zlyq" class="col-sm-2 control-label">质量目标要求</label>
-
-                    <div class="col-sm-9">
-                        <textarea class="form-control" id="zlyq" name="zlyq" placeholder="质量目标要求" rows="2"></textarea>
-                    </div>
-            </div>
-        	<div class="form-group">
-                    <label for="fhjd" class="col-sm-2 control-label">保修期限、保修金返还时间</label>
-
-                    <div class="col-sm-9">
-                        <textarea class="form-control" id="fhjd" name="fhjd" placeholder="返还时间节点" rows="2"></textarea>
-                    </div>
-            </div>
-        	<div class="form-group">
-                    <label for="jgc" class="col-sm-2 control-label">甲供材</label>
-
-                    <div class="col-sm-9">
-                        <textarea class="form-control" id="jgc" name="jgc" placeholder="甲供材" rows="2"></textarea>
-                    </div>
-            </div>
-        	<div class="form-group">
-                    <label for="payWay" class="col-sm-2 control-label">付款方式</label>
-
-                    <div class="col-sm-9">
-                        <textarea class="form-control" id="payWay" name="payWay" placeholder="付款方式" rows="2"></textarea>
-                    </div>
-            </div>
-        	<div class="form-group">
-                    <label for="payTime" class="col-sm-2 control-label">付款时间节点</label>
-
-                    <div class="col-sm-9">
-                        <textarea class="form-control" id="payTime" name="payTime" placeholder="付款时间节点" rows="2"></textarea>
-                    </div>
-            </div>
-        	<div class="form-group">
-                    <label for="phMoney" class="col-sm-2 control-label">分包项目配合费</label>
-
-                    <div class="col-sm-9">
-                        <textarea class="form-control" id="phMoney" name="phMoney" placeholder="分包项目配合费" rows="2"></textarea>
-                    </div>
-            </div>
-        	<div class="form-group">
-                    <label for="dajd" class="col-sm-2 control-label">定案时间节点</label>
-
-                    <div class="col-sm-9">
-                        <textarea class="form-control" id="dajd" name="dajd" placeholder="定案时间节点" rows="2"></textarea>
-                    </div>
-            </div>
-        	<div class="form-group">
-                    <label for="jjtj" class="col-sm-2 control-label">纠纷解决途径</label>
-
-                    <div class="col-sm-9">
-                        <textarea class="form-control" id="jjtj" name="jjtj" placeholder="纠纷解决途径" rows="2"></textarea>
-                    </div>
-            </div>
-        	<div class="form-group">
-                    <label for="swyq" class="col-sm-2 control-label">税务要求</label>
-
-                    <div class="col-sm-9">
-                        <textarea class="form-control" id="swyq" name="swyq" placeholder="税务要求" rows="2"></textarea>
-                    </div>
-            </div>
-        	<div class="form-group">
-                    <label for="getToJf" class="col-sm-2 control-label">发包方分包合同应提供给承包方</label>
-
-                    <div class="col-sm-9">
-                        <textarea class="form-control" id="getToJf" name="getToJf" placeholder="发包方分包合同应提供给承包方" rows="2"></textarea>
-                    </div>
-            </div>
-        
-        <!-- /.box-footer -->
-        <div  class="box-body">
-    	<table id="sps" class="table table-bordered table-striped table-hover">
-    		<tr>
-    			<th>部门</th>
-    			<th>评审风险点</th>
-    			<th>评审意见</th>
-    			<th>评审人</th>
-    		</tr>
-         </table>
-   		</div>
-   		<div class="form-group">
+            <div class="form-group">
                 <label for="conclusion" class="col-sm-2 control-label">评审结论</label>
 
                 <div class="col-sm-9">
@@ -212,16 +116,32 @@
                     <textarea class="form-control" id="remark" name="remark" rows="5"></textarea>
                 </div>
         </div>
-        <input type="hidden" name="fileId" id="fileId">
+            <input type="hidden" name="fileId" id="fileId">
 				<div class="form-group" align="center">
 					<div class="btn btn-default btn-file" id="uploadFile">
-						<i class="fa fa-paperclip"></i> 上传施工合同(Max. 20MB)
+						<i class="fa fa-paperclip"></i> 上传采购合同(Max. 20MB)
 					</div>
 				</div>
 				<div class="form-group" id="file_container">
 					<input type="file" name="file"  id="attachment">
 				</div>
+		<div class="" style="text-align: center;">
+            <!--以下两种方式提交验证,根据所需选择-->
+            <button type="submit" class="btn btn-primary" data-btn-type="save" id="save">保存</button>
+        </div>
+        
+        <!-- /.box-footer -->
     </form>
+    <div  class="box-body">
+    	<table id="sps" class="table table-bordered table-striped table-hover">
+    		<tr>
+    			<th>部门</th>
+    			<th>评审风险点</th>
+    			<th>评审意见</th>
+    			<th>评审人</th>
+    		</tr>
+         </table>
+    </div>
     
 </div>
 <script>
@@ -238,10 +158,71 @@
     var spid = '${spid?default(0)}'
     
     $(function() {
-    	$("#uploadFile").css("display","none")
-    	$("#attachment").css("display","none")
+    	//$("#uploadFile").css("display","none")
+    	//$("#attachment").css("display","none")
         //初始化控件
         form=$("#contract-form").form();
+      //数据校验
+        $("#contract-form").bootstrapValidator({
+            message : '请输入有效值',
+            feedbackIcons : {
+                valid : 'glyphicon glyphicon-ok',
+                invalid : 'glyphicon glyphicon-remove',
+                validating : 'glyphicon glyphicon-refresh'
+            },
+            submitHandler : function() {
+                modals.confirm('确认保存？', function() {
+                    //Save Data，对应'submit-提交'
+                    var params = form.getFormSimpleData();
+                    var url = basePath + '/matreview/save';
+                    	ajaxPost(url, params, function(data) {
+                            if(data.success){
+                            	modals.hideWin(winId);
+                            	budgetApplyTable.reloadData();
+                                modals.info("保存成功");
+                                
+                            }                
+                        }); 
+                });
+            },
+            fields : {
+            	projectId : {
+                    validators : {
+                        notEmpty : {
+                            message : '请选择项目'
+                        }
+                    }
+                },
+                creatName : {
+                    validators : {
+                        notEmpty : {
+                            message : '请选择起草人'
+                        }
+                    }
+                },
+                reviewName : {
+                    validators : {
+                        notEmpty : {
+                            message : '请输入评审对象'
+                        }
+                    }
+                },
+                purchase:{
+                	validators : {
+                        notEmpty : {
+                            message : '请输入采购单位'
+                        }
+                    }
+                },
+                supply:{
+                	validators : {
+                        notEmpty : {
+                            message : '请输入供货单位'
+                        }
+                    }
+                }
+            }
+        });
         form.initComponent();
         if(use != 0){
             for (var i = 0, len = use.length; i < len; i++) {
@@ -265,13 +246,13 @@
         
     });
     function load(){
-    	 ajaxPost(basePath+"/laborreview/load",{id:spid},function(data){
+    	 ajaxPost(basePath+"/matreview/load",{id:spid},function(data){
          	
     		 $("#contract-form").form().initFormData(data.data); 
-    		 $("#fileId").val(data.code);       
+    		 $("#fileId").val(data.code);     
              
          })
-         ajaxPost(basePath+"/laborreview/loadSpyj",{id:spid},function(data){
+         ajaxPost(basePath+"/matreview/loadSpyj",{id:spid},function(data){
          	var list = data.data;
          	var trs ="";
          	for(var i=0;i<list.length;i++){
@@ -327,14 +308,14 @@
                 pdf: {width: "100%", height: "100%", 'min-height': "480px"},
                 other: {width: "auto", height: "100%", 'min-height': "480px"}
             },
-            uploadUrl: basePath + "/laborreview/uploadMultipleFile",
-            deleteUrl: basePath + "/laborreview/deletefile",
+            uploadUrl: basePath + "/matreview/uploadMultipleFile",
+            deleteUrl: basePath + "/matreview/deletefile",
             allowedPreviewTypes : ['image', 'object']
       }
       var defaults = {
             title: "请上传附件",
-            getFileResultUrl: basePath+"/laborreview/getFiles",
-            downloadFileUrl: basePath+"/laborreview/download/",
+            getFileResultUrl: basePath+"/matreview/getFiles",
+            downloadFileUrl: basePath+"/matreview/download/",
             fileinput: fileinputDefaults,
             showType:'detail',
             window:true,

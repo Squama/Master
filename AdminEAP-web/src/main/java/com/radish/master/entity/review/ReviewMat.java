@@ -102,6 +102,10 @@ public class ReviewMat{
   @Header(name = "备注")
   @Column(name = "remark")
   private String remark;
+  
+  @Header(name = "驳回原因")
+  @Column(name = "boyy")
+  private String boyy;
 
 public String getId() {
 	return id;
@@ -229,6 +233,14 @@ public String getRemark() {
 
 public void setRemark(String remark) {
 	this.remark = remark;
+}
+
+public String getBoyy() {
+	return boyy;
+}
+
+public void setBoyy(String boyy) {
+	this.boyy = boyy;
 }
  
   

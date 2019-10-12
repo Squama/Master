@@ -164,8 +164,11 @@
     })
     function fnRenderSubmit(value, type, rowObj){
     	var s = "";
-    	if(rowObj.status=='新建'){
+    	if(rowObj.status=='新建'||rowObj.status=='驳回'){
     		s = "<a href='javascript:void(0)' onclick='volumeManageObject.submit(\"" + value + "\")'>提交</a>";
+    		if(rowObj.status=='驳回'){
+    			s +="&nbsp;&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)'style='color:red' onclick='lookyy(\"" + rowObj.boyy.replace(/[\r\n]/g,'') + "\")'>驳回原因</a>"
+        	}
     	}
         return s;
     }
@@ -174,6 +177,9 @@
     	var s =  "<a href='javascript:void(0)' onclick='volumeManageObject.fj(\"" + value + "\")'>施工合同</a>";
     	
         return s;
+    }
+    function lookyy(value){
+    	modals.info(value);
     }
     
 </script>

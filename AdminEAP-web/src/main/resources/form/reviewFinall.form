@@ -1,4 +1,15 @@
 <div class="form-group">
+    <label class="control-label col-xs-3">审批结果</label>
+    <div class="col-xs-7">
+        <label class="control-label" id="agreeLabel">
+            <input type="radio" name="approved" data-flag="icheck" checked="checked" class="square-blue" value="true"> 同意
+        </label> &nbsp;
+        <label class="control-label">
+            <input type="radio" name="approved" data-flag="icheck" class="square-blue" value="false"> 拒绝
+        </label>
+    </div>
+</div>
+<div class="form-group">
 	<label class="control-label col-xs-3">评审结论</label>
     <div class="col-xs-7">
         <textarea name="conclusion" id="conclusion" placeholder="请填写评审结论" class="form-control"></textarea>
