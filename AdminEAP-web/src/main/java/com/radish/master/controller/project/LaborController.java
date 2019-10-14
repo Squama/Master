@@ -132,10 +132,9 @@ public class LaborController {
 		criteria.addOrder(Order.asc("createDateTime"));
 		fileList = projectService.findByCriteria(criteria);
 		if (!fileList.isEmpty()) {
-			
+			request.setAttribute("fields", fileList.get(0).getId());
 		}*/
 		request.setAttribute("fields", labor.getContractFile());
-
 		return "projectmanage/labor/query_file";
 	}
 
@@ -599,7 +598,7 @@ public class LaborController {
 			fileID = GUID.getTxNo();
 			labor.setContractFile(fileID);
 		}
-
+		String fjid = "";
 		for (int i = 0; i < files.length; i++) {
 			MultipartFile file = files[i];
 
@@ -631,7 +630,7 @@ public class LaborController {
 
 					projectService.save(item);
 					fileList.add(item);
-
+					fjid += item.getId()+",";
 					logger.info("Server File Location=" + serverFile.getAbsolutePath());
 				} catch (Exception e) {
 					logger.error(file.getOriginalFilename() + "上传发生异常，异常原因：" + e.getMessage());
@@ -653,6 +652,7 @@ public class LaborController {
 			msg.setError("文件上传失败！");
 			msg.setErrorkeys(arr);
 		}
+		labor.setContractFile(fjid);
 		projectService.update(labor);
 		FileResult preview = getPreivewSettings(fileList, id, fileField, request);
 		msg.setInitialPreview(preview.getInitialPreview());
@@ -767,12 +767,12 @@ public class LaborController {
 	@ResponseBody
 	private Labor getLaborStep2(String id) {
 		Labor labor = projectService.get(Labor.class, id);
-		List<ProjectFileItem> fileList = new ArrayList<>();
+		/*List<ProjectFileItem> fileList = new ArrayList<>();
 		DetachedCriteria criteria = DetachedCriteria.forClass(ProjectFileItem.class);
 		criteria.add(Restrictions.eq("batchNo", labor.getContractFile()));
 		criteria.addOrder(Order.asc("createDateTime"));
 		fileList = projectService.findByCriteria(criteria);
-		/*if (fileList.size() > 0) {
+		if (fileList.size() > 0) {
 			labor.setContractFile(fileList.get(0).getId());
 		}*/
 		return labor;
