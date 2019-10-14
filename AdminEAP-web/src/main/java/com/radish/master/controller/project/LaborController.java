@@ -126,14 +126,15 @@ public class LaborController {
 	@RequestMapping(value = "/labordetailfile", method = RequestMethod.GET)
 	public String projectdetailfile(String id, HttpServletRequest request) {
 		Labor labor = projectService.get(Labor.class, id);
-		List<ProjectFileItem> fileList = new ArrayList<ProjectFileItem>();
+		/*List<ProjectFileItem> fileList = new ArrayList<ProjectFileItem>();
 		DetachedCriteria criteria = DetachedCriteria.forClass(ProjectFileItem.class);
 		criteria.add(Restrictions.eq("batchNo", labor.getContractFile()));
 		criteria.addOrder(Order.asc("createDateTime"));
 		fileList = projectService.findByCriteria(criteria);
 		if (!fileList.isEmpty()) {
-			request.setAttribute("fields", fileList.get(0).getId());
-		}
+			
+		}*/
+		request.setAttribute("fields", labor.getContractFile());
 
 		return "projectmanage/labor/query_file";
 	}
@@ -771,9 +772,9 @@ public class LaborController {
 		criteria.add(Restrictions.eq("batchNo", labor.getContractFile()));
 		criteria.addOrder(Order.asc("createDateTime"));
 		fileList = projectService.findByCriteria(criteria);
-		if (fileList.size() > 0) {
+		/*if (fileList.size() > 0) {
 			labor.setContractFile(fileList.get(0).getId());
-		}
+		}*/
 		return labor;
 	}
 

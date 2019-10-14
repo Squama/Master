@@ -144,8 +144,8 @@
 	                    return false;
 	                }
 	                var data = laborTable.getSelectedRowData();
-                    if(data.status != '新建'){
-                    	modals.info('非新建状态合同不可删除!');
+                    if(data.status != '新建'&&data.status != '审核不通过'){
+                    	modals.info('该状态合同不可删除!');
                     	return false;
                     }
 	                modals.confirm("是否要删除该行数据？",function(){
