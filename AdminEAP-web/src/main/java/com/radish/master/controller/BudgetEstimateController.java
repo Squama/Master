@@ -518,6 +518,8 @@ public class BudgetEstimateController {
         
         budgetService.update(bt);
         
+        updateGroupInfo(bt.getQuotaGroup(), bt.getBudgetNo());
+        
         return new Result(true);
     }
     
@@ -543,6 +545,8 @@ public class BudgetEstimateController {
         
         budgetService.update(bt);
         
+        updateGroupInfo(bt.getQuotaGroup(), bt.getBudgetNo());
+        
         return new Result(true);
     }
     
@@ -567,6 +571,8 @@ public class BudgetEstimateController {
         bt.setUnitPrice(getUnitPrice(bt));
         
         budgetService.update(bt);
+        
+        updateGroupInfo(bt.getQuotaGroup(), bt.getBudgetNo());
         
         return new Result(true);
     }
@@ -646,6 +652,8 @@ public class BudgetEstimateController {
         
         budgetService.update(bt);
         
+        updateGroupInfo(bt.getQuotaGroup(), bt.getBudgetNo());
+        
         return new Result(true);
     }
     
@@ -690,6 +698,8 @@ public class BudgetEstimateController {
         
         budgetService.update(bt);
         
+        updateGroupInfo(bt.getQuotaGroup(), bt.getBudgetNo());
+        
         return new Result(true);
     }
     
@@ -715,6 +725,8 @@ public class BudgetEstimateController {
         bt.setUnitPrice(getUnitPrice(bt));
         
         budgetService.update(bt);
+        
+        updateGroupInfo(bt.getQuotaGroup(), bt.getBudgetNo());
         
         return new Result(true);
     }
@@ -919,4 +931,41 @@ public class BudgetEstimateController {
         }
         return value.trim();
     }
+    
+    private void updateGroupInfo(String quotaGroup, String budgetNo){
+        List<BudgetTx> list = budgetService.getBudgetTxListByGroup(budgetNo, quotaGroup);
+        
+        //合价
+        BigDecimal unitPriceSum = new BigDecimal("0");
+        //人工
+        BigDecimal artificialitySum = new BigDecimal("0");
+        //机械
+        BigDecimal mechSum = new BigDecimal("0");
+        //材料
+        BigDecimal materielsSum = new BigDecimal("0");
+        
+        BudgetTx groupBudgetTx = null;
+        
+        for(BudgetTx tx : list){
+            if("1".equals(tx.getIsGroup())){
+                groupBudgetTx = tx;
+                continue;
+            }
+            unitPriceSum = unitPriceSum.add(new BigDecimal(StrUtil.isEmpty(tx.getUnitPrice())?"0":tx.getUnitPrice()));
+            artificialitySum = artificialitySum.add(new BigDecimal(StrUtil.isEmpty(tx.getArtificiality())?"0":tx.getArtificiality()));
+            mechSum = mechSum.add(new BigDecimal(StrUtil.isEmpty(tx.getMech())?"0":tx.getMech()));
+            materielsSum = materielsSum.add(new BigDecimal(StrUtil.isEmpty(tx.getMateriels())?"0":tx.getMateriels()));
+        }
+        
+        if(groupBudgetTx != null){
+            groupBudgetTx.setUnitPrice(unitPriceSum.toPlainString());
+            groupBudgetTx.setArtificiality(artificialitySum.toPlainString());
+            groupBudgetTx.setMech(mechSum.toPlainString());
+            groupBudgetTx.setMateriels(materielsSum.toPlainString());
+            
+            budgetService.update(groupBudgetTx);
+        }
+        
+    }
+    
 }
