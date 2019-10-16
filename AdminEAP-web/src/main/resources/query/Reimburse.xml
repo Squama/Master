@@ -64,7 +64,7 @@
               SELECT bx.id id ,bx.type type ,bx.number number ,bx.bxdate bxdate , 
               bx.status status ,bx.reername reername ,bx.reerid reerid ,bx.money money ,bx.isjz isjz  
 			  FROM tbl_reimburse bx 
-			  WHERE 1=1  and bx.status in('80','90')
+			  WHERE 1=1  and bx.status in('80','90') order by bxdate desc
             ]]>
         </sql>
         <column key="id" hidden="true" header="id" width="80"/>
