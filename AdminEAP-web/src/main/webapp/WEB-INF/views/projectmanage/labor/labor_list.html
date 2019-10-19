@@ -174,10 +174,21 @@
         var oper = "";
         if(rowObj.status == '新建' || rowObj.status == '审核不通过'){
             oper += "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='laborObject.startFlow(\"" + value + "\")'>提交审批</a>";
-        }
+            if(rowObj.status=='审核不通过'){
+            	oper +="&nbsp;&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)'style='color:red' onclick='lookyy(\"" + rowObj.boyy.replace(/[\r\n]/g,'') + "\")'>驳回原因</a>"
+        	}
+         }
         oper += "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='laborObject.detail(\"" + value + "\")'>查看</a>";
         //oper += "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='laborObject.detail(\"" + value + "\")'>查看分项</a>";
         return oper;
+    }
+    function lookyy(value){
+        if(value){
+        	modals.info(value);
+        }else{
+        	modals.info("未说明原因");
+        }
+    	
     }
     
 </script>
