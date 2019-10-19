@@ -42,6 +42,7 @@ import com.cnpc.framework.utils.StrUtil;
 import com.radish.master.controller.ProjectController;
 import com.radish.master.entity.Labor;
 import com.radish.master.entity.ProjectFileItem;
+import com.radish.master.entity.common.ActivitiReview;
 import com.radish.master.entity.project.ConstructionPlan;
 import com.radish.master.entity.project.LaborSub;
 import com.radish.master.service.BudgetService;
@@ -387,6 +388,7 @@ public class LaborController {
 		request.setAttribute("id", id);
 		Labor ht = projectService.get(Labor.class,id);
 		String htlx = ht.getHtlx();
+		request.setAttribute("ck", "0");
 		if(htlx!=null){//机械合同
 			if("10".equals(htlx)){
 				return "projectmanage/laborRg/labor_detail";
@@ -402,6 +404,7 @@ public class LaborController {
         request.setAttribute("id", id);
         Labor ht = projectService.get(Labor.class,id);
         String htlx = ht.getHtlx();
+        request.setAttribute("ck", "1");
         if(htlx!=null){//机械合同
             if("10".equals(htlx)){
                 return "projectmanage/laborRg/labor_detail";
@@ -409,7 +412,7 @@ public class LaborController {
                 return "projectmanage/machlabor/labor_detail";
             }
         }
-        return "projectmanage/labor/labor_detail_outer";
+        return "projectmanage/labor/labor_detail";
     }
 
 	@RequestMapping(value = "/sub", method = RequestMethod.POST)
@@ -594,10 +597,10 @@ public class LaborController {
 		Labor labor = projectService.get(Labor.class, id);
 
 		String fileID = labor.getContractFile();
-		if (StrUtil.isEmpty(fileID)) {
+		/*if (StrUtil.isEmpty(fileID)) {
 			fileID = GUID.getTxNo();
 			labor.setContractFile(fileID);
-		}
+		}*/
 		String fjid = "";
 		for (int i = 0; i < files.length; i++) {
 			MultipartFile file = files[i];
@@ -618,7 +621,7 @@ public class LaborController {
 					// 将文件写入到服务器
 					file.transferTo(serverFile);
 					ProjectFileItem item = new ProjectFileItem();
-					item.setBatchNo(fileID);
+					//item.setBatchNo(fileID);
 					item.setUploadUserID(SecurityUtil.getUserId());
 					item.setFileName(fileName);
 					item.setFilePath(projectFilePath + File.separator + fileName);
@@ -651,9 +654,11 @@ public class LaborController {
 		if (!arr.isEmpty()) {
 			msg.setError("文件上传失败！");
 			msg.setErrorkeys(arr);
+		}else{
+			labor.setContractFile(fjid);
+			projectService.update(labor);
 		}
-		labor.setContractFile(fjid);
-		projectService.update(labor);
+		
 		FileResult preview = getPreivewSettings(fileList, id, fileField, request);
 		msg.setInitialPreview(preview.getInitialPreview());
 		msg.setInitialPreviewConfig(preview.getInitialPreviewConfig());
@@ -782,6 +787,18 @@ public class LaborController {
 	@ResponseBody
 	public Result start(String id) {
 		return projectService.startLaborFlow(projectService.get(Labor.class, id), "projectLabor");
+	}
+	@RequestMapping("/loadSpyj")
+	@ResponseBody
+	public Result loadSpyj(HttpServletRequest request){
+		String id = request.getParameter("id");
+		
+		List<ActivitiReview> sps = projectService.find(" from ActivitiReview where businessKey='"+id+"'");
+		Result r = new Result();
+		
+		r.setSuccess(true);
+		r.setData(sps);
+		return r;
 	}
 
 }

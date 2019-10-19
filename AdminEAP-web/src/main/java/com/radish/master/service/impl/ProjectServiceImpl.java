@@ -299,14 +299,21 @@ public class ProjectServiceImpl extends BaseServiceImpl implements ProjectServic
     @Override
     public Result startLaborFlow(Labor labor, String processDefinitionKey) {
         User user = SecurityUtil.getUser();
-
-        labor.setStatus("20");
+        //劳务合同进入评审
+        labor.setStatus("50");
+        
+        String name = "项目：" + labor.getProjectName() + "（包清工）合同：" + labor.getContractName() + "【评审】";
+        if(labor.getHtlx()!=null){
+        	if("20".equals(labor.getHtlx())){
+        		name = "项目：" + labor.getProjectName() + "(包工包料)合同：" + labor.getContractName() + "【评审】";
+        	}else if("30".equals(labor.getHtlx())){
+        		name = "项目：" + labor.getProjectName() + "(机械)合同：" + labor.getContractName() + "【评审】";
+        	}
+        	
+        }
 
         this.update(labor);
-        String name = "项目：" + labor.getProjectName() + "合同：" + labor.getContractName() + "【审核】";
-        if(labor.getHtlx()!=null&&"20".equals(labor.getHtlx())){
-        	name = "项目：" + labor.getProjectName() + "(机械)合同：" + labor.getContractName() + "【审核】";
-        }
+        
         
 
         // businessKey

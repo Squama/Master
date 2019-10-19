@@ -150,6 +150,10 @@ public class Labor extends BaseEntity {
     @Header(name = "合同类型")
     @Column(name = "htlx")
     private String htlx;
+    
+    @Header(name = "驳回原因")
+    @Column(name = "boyy")
+    private String boyy;
 
     public String getProjectID() {
         return projectID;
@@ -397,6 +401,14 @@ public class Labor extends BaseEntity {
 
 	public void setHtlx(String htlx) {
 		this.htlx = htlx;
+	}
+
+	public String getBoyy() {
+		return boyy;
+	}
+
+	public void setBoyy(String boyy) {
+		this.boyy = boyy;
 	}
 
 }

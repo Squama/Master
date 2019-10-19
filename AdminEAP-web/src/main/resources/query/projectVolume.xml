@@ -21,7 +21,7 @@
         <column key="contractPrice" header="合同总价（元）" classType="String" allowSort="true" width="150"/>
         <column key="contractor" header="承包人" classType="String" allowSort="true" width="150"/>
         <column key="constructionManager" header="施工负责人" classType="String" allowSort="true" width="150"/>
-        <column key="status" header="状态" allowSort="true" width="150" render="10=新建,20=审核中,30=审核通过,40=审核不通过"/>
+        <column key="status" header="状态" allowSort="true" width="150" render="10=新建,20=审核中,30=审核通过,40=审核不通过,50=综合评审,60=项目经理总结,70=总经理评审"/>
         <column key="id" header="操作" width="80" fnRender="fnRenderLabor"/>
     </query>
     
