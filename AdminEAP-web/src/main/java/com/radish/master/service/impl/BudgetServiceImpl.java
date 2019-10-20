@@ -437,22 +437,19 @@ public class BudgetServiceImpl extends BaseServiceImpl implements BudgetService 
 	@Override
 	public List<PurchaseApplyAudit> getAmountListMap(String purchaseID) {
 		StringBuilder sb = new StringBuilder();
-		sb.append("SELECT ORI.id, ORI.budget_no, ORI.region_name, ORI.budget, COST.cost, PUR.apply FROM ");
-		sb.append("(SELECT id, budget_no, region_code, region_name, unit_price AS budget ");
-		sb.append("FROM tbl_budget_tx WHERE budget_no = ? AND region_code is not null) ORI ");
+		sb.append("SELECT ORI.id, ORI.budget_no, ORI.region_name, ORI.mat_number, ORI.mat_name, ORI.mat_standard, ORI.budget, COST.cost, PUR.apply FROM	"); 
+		sb.append("(SELECT BE.id,BT.budget_no,BT.region_code,BT.region_name,BE.mat_number,BE.mat_name,BE.mat_standard,BE.quantity*BE.budget_price budget FROM ");
+		sb.append("tbl_budget_tx BT,tbl_budget_estimate BE WHERE BT.id = BE.budget_tx_id AND BT.budget_no=? AND BT.region_code IS NOT NULL) ORI  ");
 		sb.append("LEFT JOIN");
-		sb.append("(SELECT PD.id,P.budget_no, PD.region_id, SUM(PD.quantity*PD.price) apply ");
-		sb.append("FROM tbl_purchase P, tbl_purchase_det PD ");
-		sb.append("WHERE PD.purchase_id = P.id AND P.budget_no = ? AND P.status IN ('20', '30')");
-		sb.append("GROUP BY P.budget_no, PD.region_id) PUR ");
-		sb.append("ON PUR.budget_no = ORI.budget_no AND PUR.region_id = ORI.region_code  ");
-		sb.append("LEFT JOIN");
-		sb.append("(SELECT PD.id,P.budget_no, PD.region_id, SUM(PD.quantity*PD.price) cost  ");
-		sb.append("FROM tbl_purchase P, tbl_purchase_det PD ");
-		sb.append("WHERE PD.purchase_id = P.id AND P.budget_no = ? AND P.status IN ('40', '50', '60') ");
-		sb.append("GROUP BY P.budget_no, PD.region_id) COST ");
-		sb.append("ON COST.budget_no = ORI.budget_no AND COST.region_id = ORI.region_code ");
-		sb.append("ORDER BY ORI.region_code ");
+		sb.append("(SELECT PD.id,P.budget_no,PD.region_id,PD.mat_number,PD.mat_name,PD.mat_standard,SUM(PD.quantity*PD.price) apply FROM tbl_purchase P, ");
+		sb.append("tbl_purchase_det PD WHERE PD.purchase_id = P.id AND P.budget_no = ? AND P.status IN ( '20', '30', '35' ) ");
+		sb.append("GROUP BY P.budget_no,PD.mat_number,PD.mat_name,PD.mat_standard,PD.region_id) PUR ON PUR.budget_no = ORI.budget_no  ");
+		sb.append("AND PUR.region_id = ORI.region_code  AND PUR.mat_number = ORI.mat_number  ");
+		sb.append("LEFT JOIN ");
+		sb.append("(SELECT P.budget_no,PD.region_id,PD.mat_number,PD.mat_name,PD.mat_standard,SUM(PD.quantity*PD.price) cost FROM tbl_purchase P,tbl_purchase_det PD ");
+		sb.append("WHERE PD.purchase_id = P.id AND P.budget_no = ? AND P.status IN ('40', '50', '60')  ");
+		sb.append("GROUP BY P.budget_no,PD.mat_number,PD.mat_name,PD.mat_standard,PD.region_id) COST ON COST.budget_no = ORI.budget_no   ");
+		sb.append("AND COST.region_id = ORI.region_code  AND COST.mat_number = ORI.mat_number  ORDER BY ORI.region_code ");
 
 		return this.findMapBySql(sb.toString(), new Object[] {purchaseID, purchaseID, purchaseID },
 				new Type[] {StringType.INSTANCE, StringType.INSTANCE, StringType.INSTANCE }, null);
