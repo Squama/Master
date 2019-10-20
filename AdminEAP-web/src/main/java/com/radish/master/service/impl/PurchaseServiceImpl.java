@@ -450,21 +450,22 @@ public class PurchaseServiceImpl extends BaseServiceImpl implements PurchaseServ
     @Override
     public List<PurchaseApplyAudit> getAmountList(String purchaseID) {
         StringBuilder sb = new StringBuilder();
-        sb.append("SELECT PUR.id, PUR.budget_no, ORI.region_name, ORI.budget, COST.cost, PUR.apply, '' mat_name, '' mat_number, '' mat_standard FROM ");
-        sb.append("(SELECT PD.id,P.budget_no, PD.region_id, SUM(PD.quantity*PD.price) apply ");
+        sb.append("SELECT PUR.id, PUR.budget_no, ORI.region_name, PUR.mat_number, PUR.mat_name, PUR.mat_standard, ORI.budget, COST.cost, PUR.apply FROM ");
+        sb.append("(SELECT PD.id,P.budget_no, PD.region_id, PD.mat_number, PD.mat_name, PD.mat_standard, SUM(PD.quantity*PD.price) apply ");
         sb.append("FROM tbl_purchase P, tbl_purchase_det PD ");
         sb.append("WHERE PD.purchase_id = P.id AND P.id = :purchaseID ");
-        sb.append("GROUP BY P.budget_no, PD.region_id) PUR ");
+        sb.append("GROUP BY P.budget_no, PD.mat_number, PD.mat_name, PD.mat_standard, PD.region_id) PUR ");
         sb.append("LEFT JOIN");
-        sb.append("(SELECT budget_no, region_code, region_name, unit_price AS budget ");
-        sb.append("FROM tbl_budget_tx) ORI ");
-        sb.append("ON PUR.budget_no = ORI.budget_no AND PUR.region_id = ORI.region_code  ");
+        sb.append("(SELECT BT.budget_no, BT.region_code, BT.region_name, BE.mat_number, BE.mat_name, BE.mat_standard, BE.quantity*BE.budget_price budget ");
+        sb.append("FROM tbl_budget_tx BT, tbl_budget_estimate BE ");
+        sb.append("WHERE BT.id = BE.budget_tx_id) ORI ");
+        sb.append("ON PUR.budget_no = ORI.budget_no AND PUR.region_id = ORI.region_code AND PUR.mat_number = ORI.mat_number ");
         sb.append("LEFT JOIN");
-        sb.append("(SELECT PD.id,P.budget_no, PD.region_id, SUM(PD.quantity*PD.price) cost  ");
+        sb.append("(SELECT P.budget_no, PD.region_id, PD.mat_number, PD.mat_name, PD.mat_standard, SUM(PD.quantity*PD.price) cost ");
         sb.append("FROM tbl_purchase P, tbl_purchase_det PD ");
         sb.append("WHERE PD.purchase_id = P.id AND P.status NOT IN ('10', '20', '30') AND P.id != :purchaseID2 ");
-        sb.append("GROUP BY P.budget_no, PD.region_id) COST ");
-        sb.append("ON COST.budget_no = ORI.budget_no AND COST.region_id = ORI.region_code ");
+        sb.append("GROUP BY P.budget_no, PD.mat_number, PD.mat_name, PD.mat_standard, PD.region_id) COST ");
+        sb.append("ON COST.budget_no = ORI.budget_no AND COST.region_id = ORI.region_code AND COST.mat_number = ORI.mat_number ");
         sb.append("ORDER BY PUR.region_id ");
 
         Map<String, Object> params = new HashMap<>();
