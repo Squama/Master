@@ -91,6 +91,8 @@
         </sql>
         <column key="rowIndex" header="序号" width="80"/>
         <column key="id" hidden="true" header="id" width="80"/>
+        <column key="projectName" header="项目名称" width="150"/>
+         <column key="teamName" header="班组名称" width="150"/>
         <column key="type" header="类型" allowSort="true" width="150" render="10=专业作业班组,20=管理人员,30=点工班组,40=机关人员,50=门卫机修"/>
         <column key="startTime" header="开始时间" allowSort="true" dateFormat="yyyy-mm-dd" width="80"/>
         <column key="endTime" header="结束时间" allowSort="true" dateFormat="yyyy-mm-dd" width="80"/>
