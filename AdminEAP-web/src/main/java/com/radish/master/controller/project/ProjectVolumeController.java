@@ -708,4 +708,19 @@ public class ProjectVolumeController {
     	projectService.update(gcl);
     	return r;
     }
+    @RequestMapping("/getBzid")
+    @ResponseBody
+    public Result getBzid(HttpServletRequest request){
+    	String id = request.getParameter("id");
+    	Result r = new Result();
+    	ProjectVolume gcl = projectService.get(ProjectVolume.class, id);
+    	Labor ht = projectService.get(Labor.class, gcl.getLaborID());
+    	if(ht!=null){
+    		r.setData(ht.getConstructionTeamID());
+    	}else{
+    		r.setData("");
+    	}
+    	return r;
+    			
+    }
 }
