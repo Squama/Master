@@ -131,7 +131,7 @@ public class BudgetEstimateController {
                 btGroup.setRegionName(biGroup.getQuotaName());
                 btGroup.setIsGroup("1");
                 
-                txList.add(btGroup);
+                budgetService.save(btGroup);
             }
 
         }
