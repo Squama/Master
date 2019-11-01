@@ -39,8 +39,9 @@
 	    var ydk="${ydk?default(0)}";
 	    $("#moneyth1").html("供应商："+gys+"--预付金额（审核完成）："+zyfk+"元,已抵扣："+ydk+"元");
     }else{
-		$("#cgid").val(cgid);
-		 $("#moneyth1").html("");
+		//$("#cgid").val(cgid);
+		$("#gys").val(gys);
+		$("#moneyth1").html("");
     }
     
     var purchaseDetTable, winIds = "purchaseDetWin";
