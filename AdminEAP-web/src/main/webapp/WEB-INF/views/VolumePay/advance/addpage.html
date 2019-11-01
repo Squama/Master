@@ -67,12 +67,13 @@
 <script>
     var yfform =null;
     var yfid="${yfid?default(0)}";
-    var cgid="${cgid?default(0)}";
+    //var cgid="${cgid?default(0)}";
     var channelName="${channelName?default(0)}";
     $("#channelName").val(channelName);
 	if(yfid!=0){
 		$("#saveyf").css("display","none")
 	}
+	var cg="${cg?default(0)}";
     $(function() {
         //初始化控件
         yfform=$("#yfxx-form").form();
@@ -89,7 +90,7 @@
                     //Save Data，对应'submit-提交'
                     
                     var params = yfform.getFormSimpleData();
-                   	ajaxPost(basePath+'/advance/saveyfxx?purdetid='+cgid, params, function(data) {
+                   	ajaxPost(basePath+'/advance/saveyfxx?purdetid='+cg, params, function(data) {
                            if(data.success){
                         	   modals.hideWin(winIds);
                                modals.info("保存成功");

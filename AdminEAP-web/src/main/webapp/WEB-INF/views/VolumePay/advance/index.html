@@ -16,7 +16,6 @@
             <div class="box">
                 <!-- /.box-header -->
                 <div class="dataTables_filter" id="searchDiv">
-                <input placeholder="请输入所属预算" name="B.budget_name" class="form-control" type="search" likeOption="true" operator="like" /> 
                     <input placeholder="请输入供应商名称" name="pd.channel_name" class="form-control" type="search" likeOption="true" operator="like" /> 
                     <div class="btn-group">
                         <button type="button" class="btn btn-primary"   data-btn-type="search">查询</button>
@@ -64,17 +63,17 @@
     })
     
 function fnRenderOperate(value, type, rowObj){
-    var oper = "<a href='javascript:void(0)' onclick='doyf(10,\""+rowObj.id+"\")'>采购预付</a>";
-    oper += "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='doyf(20,\""+rowObj.id+"\")' style='color:green'>供应商预付查看</a>";
-    oper += "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='lookDk(\""+rowObj.id+"\")' style='color:red'>供应商已抵扣信息</a>";
+    var oper = "<a href='javascript:void(0)' onclick='doyf(10,\""+rowObj.channelName+"\",\""+rowObj.id+"\")'>采购预付</a>";
+    oper += "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='doyf(20,\""+rowObj.channelName+"\",\""+rowObj.id+"\")' style='color:green'>供应商预付查看</a>";
+    oper += "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='lookDk(\""+rowObj.channelName+"\")' style='color:red'>供应商已抵扣信息</a>";
     return oper;
 }
-function doyf(type,cgid){
+function doyf(type,cgid,cg){
 	modals.openWin({
         winId:winId,
         title:'供应商预付信息',
         width:'1000px',
-        url:basePath+"/advance/addindex?type="+type+"&&cgid="+cgid,
+        url:basePath+"/advance/addindex?type="+type+"&&cgid="+cgid+"&&cg="+cg,
         hideFunc:function(){
             
         },

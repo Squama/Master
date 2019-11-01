@@ -31,6 +31,7 @@
     var cgid="${cgid?default(0)}";
     var type="${type?default(0)}";
     var gys="${gys?default(0)}";
+    var cg="${cg?default(0)}";//采购条目id
     if(type=="20"){
 		$("#gys").val(gys);
 		$("#addMx").css("display","none")
@@ -52,7 +53,7 @@
                 winId:winIds,
                 title:'创建',
                 width:'800px',
-                url:basePath+"/advance/addyfxx?cgid="+cgid,
+                url:basePath+"/advance/addyfxx?cgid="+cgid+"&&cg="+cg,
                 hideFunc:function(){
                 	purchaseDetTable.reloadData();
                 }

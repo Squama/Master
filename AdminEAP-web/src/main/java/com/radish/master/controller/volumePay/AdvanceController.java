@@ -1,5 +1,6 @@
 package com.radish.master.controller.volumePay;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -57,21 +58,23 @@ public class AdvanceController {
 		return prefix + "index";
 	}
 	@RequestMapping("/addindex")
-	public String addindex(HttpServletRequest request){
+	public String addindex(HttpServletRequest request) throws UnsupportedEncodingException{
 		String type = request.getParameter("type");
-		String cgid = request.getParameter("cgid");
+		String cgid = new String(request.getParameter("cgid").getBytes("iso-8859-1"), "utf-8");  
 		request.setAttribute("type", type);
 		request.setAttribute("cgid", cgid);
+		String cg = request.getParameter("cg");
+		request.setAttribute("cg", cg);
 		
-		PurchaseDet cgmx = baseService.get(PurchaseDet.class, cgid);
-		request.setAttribute("gys", cgmx.getChannelName());
+		//PurchaseDet cgmx = baseService.get(PurchaseDet.class, cgid);
+		request.setAttribute("gys", cgid);
 		
 		//获得预付金额
 		//List<String> yfje = baseService.find("select sum(yf.money) as yfje from com.radish.master.entity.volumePay.Advance yf where yf.status='40' and yf.channelName='"+mx.getChannelName()+"'");
-		List<Map<String,Object>> yfje = baseService.findMapBySql("select ifnull(sum(yf.money),0) as yfje  from tbl_advance yf where yf.status='40' and yf.channelName='"+cgmx.getChannelName()+"'");
+		List<Map<String,Object>> yfje = baseService.findMapBySql("select ifnull(sum(yf.money),0) as yfje  from tbl_advance yf where yf.status='40' and yf.channelName='"+cgid+"'");
 		//获得已抵扣总额
 		//List<String> dkje = baseService.find("select sum(yf.dkmoney) as dkje from com.radish.master.entity.volumePay.ProjectPayDet yf where yf.status='30' and yf.channelName='"+mx.getChannelName()+"' ");
-		List<Map<String,Object>> dkje = baseService.findMapBySql("select ifnull(sum(yf.dkmoney),0) as dkje  from tbl_projectPay_det yf where yf.status='30' and yf.channelName='"+cgmx.getChannelName()+"'");
+		List<Map<String,Object>> dkje = baseService.findMapBySql("select ifnull(sum(yf.dkmoney),0) as dkje  from tbl_projectPay_det yf where yf.status='30' and yf.channelName='"+cgid+"'");
 		
 		request.setAttribute("zyfk",  yfje.get(0).get("yfje"));
 		request.setAttribute("ydk",  dkje.get(0).get("dkje"));
@@ -79,18 +82,18 @@ public class AdvanceController {
 		return prefix + "addindex";
 	}
 	@RequestMapping("/dkindex")
-	public String dkindex(HttpServletRequest request){
-		String cgid = request.getParameter("cgid");
+	public String dkindex(HttpServletRequest request) throws UnsupportedEncodingException{
+		String cgid = new String(request.getParameter("cgid").getBytes("iso-8859-1"), "utf-8"); 
 		request.setAttribute("cgid", cgid);
-		PurchaseDet cgmx = baseService.get(PurchaseDet.class, cgid);
-		request.setAttribute("gys", cgmx.getChannelName());
+		//PurchaseDet cgmx = baseService.get(PurchaseDet.class, cgid);
+		request.setAttribute("gys", cgid);
 		
 		//获得预付金额
 		//List<String> yfje = baseService.find("select sum(yf.money) as yfje from com.radish.master.entity.volumePay.Advance yf where yf.status='40' and yf.channelName='"+mx.getChannelName()+"'");
-		List<Map<String,Object>> yfje = baseService.findMapBySql("select ifnull(sum(yf.money),0) as yfje  from tbl_advance yf where yf.status='40' and yf.channelName='"+cgmx.getChannelName()+"'");
+		List<Map<String,Object>> yfje = baseService.findMapBySql("select ifnull(sum(yf.money),0) as yfje  from tbl_advance yf where yf.status='40' and yf.channelName='"+cgid+"'");
 		//获得已抵扣总额
 		//List<String> dkje = baseService.find("select sum(yf.dkmoney) as dkje from com.radish.master.entity.volumePay.ProjectPayDet yf where yf.status='30' and yf.channelName='"+mx.getChannelName()+"' ");
-		List<Map<String,Object>> dkje = baseService.findMapBySql("select ifnull(sum(yf.dkmoney),0) as dkje  from tbl_projectPay_det yf where yf.status='30' and yf.channelName='"+cgmx.getChannelName()+"'");
+		List<Map<String,Object>> dkje = baseService.findMapBySql("select ifnull(sum(yf.dkmoney),0) as dkje  from tbl_projectPay_det yf where yf.status='30' and yf.channelName='"+cgid+"'");
 		
 		request.setAttribute("zyfk",  yfje.get(0).get("yfje"));
 		request.setAttribute("ydk",  dkje.get(0).get("dkje"));
@@ -99,13 +102,16 @@ public class AdvanceController {
 	}
 	
 	@RequestMapping("/addyfxx")
-	public String  addyfxx(HttpServletRequest request){
+	public String  addyfxx(HttpServletRequest request) throws UnsupportedEncodingException{
 		String yfid = request.getParameter("yfid");
 		request.setAttribute("yfid", yfid);
-		String cgid = request.getParameter("cgid");
+		String cgid = new String(request.getParameter("cgid").getBytes("iso-8859-1"), "utf-8"); 
 		request.setAttribute("cgid", cgid);
-		PurchaseDet cgmx = baseService.get(PurchaseDet.class, cgid);
-		request.setAttribute("channelName", cgmx.getChannelName());
+		//PurchaseDet cgmx = baseService.get(PurchaseDet.class, cgid);
+		request.setAttribute("channelName", cgid);
+		
+		String cg = request.getParameter("cg");
+		request.setAttribute("cg", cg);
 		return prefix + "addpage";
 	}
 	//审批页
@@ -133,9 +139,9 @@ public class AdvanceController {
 		yf.setIsdk("10");
 		yf.setIsjz("10");
 		yf.setStatus("10");
-		PurchaseDet cgmx = baseService.get(PurchaseDet.class, yf.getPurdetid());
+		/*PurchaseDet cgmx = baseService.get(PurchaseDet.class, yf.getPurdetid());
 		yf.setMat(cgmx.getMatName());
-		yf.setMatStandard(cgmx.getMatStandard());
+		yf.setMatStandard(cgmx.getMatStandard());*/
 		baseService.save(yf);
 		return r;
 	}
@@ -168,8 +174,8 @@ public class AdvanceController {
 		String id = request.getParameter("id");
 		Advance yf = baseService.get(Advance.class, id);
 		
-		PurchaseDet cgmx = baseService.get(PurchaseDet.class, yf.getPurdetid());
-		Purchase cg = baseService.get(Purchase.class,cgmx.getPurchaseID());
+		//PurchaseDet cgmx = baseService.get(PurchaseDet.class, yf.getPurdetid());
+		Purchase cg = baseService.get(Purchase.class,yf.getPurdetid());
 		String proid = cg.getProjectID();
 		
 		
