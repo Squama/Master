@@ -237,9 +237,21 @@ public class WorkerController {
     	String fileId = request.getParameter("fileId");
     	String id = worker.getId();
         if (StrUtil.isEmpty(worker.getId())) {
+        	//判断身份证是否存在
+        	List<Worker> wks = commonService.find(" from Worker where identification_number='"+worker.getIdentificationNumber()+"'");
+        	if(wks.size()>0){
+        		return new Result(false,"该身份证已存在！不可重复添加");
+        	}
             commonService.save(worker);
             id = worker.getId();
         } else {
+        	//判断身份证是否存在
+        	List<Worker> wks = commonService.find(
+        			" from Worker where identification_number='"+worker.getIdentificationNumber()+"' "
+        					+ " and id<>'"+worker.getId()+"'");
+        	if(wks.size()>0){
+        		return new Result(false,"该身份证已存在！不可重复添加");
+        	}
             Worker oldWorker=commonService.get(Worker.class, worker.getId());
             SpringUtil.copyPropertiesIgnoreNull(worker, oldWorker);
             oldWorker.setUpdateDateTime(new Date());
