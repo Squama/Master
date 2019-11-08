@@ -6,7 +6,7 @@
             <![CDATA[
               SELECT l.id id ,l.project_name projectName ,l.contract_name contractName,l.contract_price contractPrice,
               l.contractor contractor ,l.construction_manager constructionManager,l.status status ,l.htlx htlx ,
-              l.project_id projectID ,l.construction_team constructionTeam ,
+              l.project_id projectID ,l.construction_team constructionTeam ,l.boyy boyy ,
                CASE l.htlx WHEN 10 THEN '包清工' WHEN 20 THEN '包工包料' WHEN 30 THEN '机械'  ELSE '未定义' END sblxname  
 			  FROM tbl_labor l
 			  WHERE  1=1  

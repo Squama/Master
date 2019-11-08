@@ -80,7 +80,7 @@
                     }
                     ajaxPost(basePath + '/projectvolume/getBzid', {id:rowId}, function (data) {
                     	var pid = volumeTable.getSelectedRowData().project_id;
-                        var url = basePath+"/ureport/preview?_u=file:project_volume.ureport.xml&_t=1,5&id="+rowId+"&pid="+pid+"&bzid="+data.data;
+                        var url = basePath+"/ureport/preview?_u=file:project_volume.ureport.xml&_t=1,5&id="+rowId+"&pid="+pid+"&bzid="+data.data+"&sj="+volumeTable.getSelectedRowData().endTime;
                    	 	window.open(url);
                     });
                     

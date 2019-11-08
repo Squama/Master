@@ -69,7 +69,7 @@ public class AdvanceController {
 		//PurchaseDet cgmx = baseService.get(PurchaseDet.class, cgid);
 		request.setAttribute("gys", cgid);
 		
-		//获得预付金额
+		/*//获得预付金额
 		//List<String> yfje = baseService.find("select sum(yf.money) as yfje from com.radish.master.entity.volumePay.Advance yf where yf.status='40' and yf.channelName='"+mx.getChannelName()+"'");
 		List<Map<String,Object>> yfje = baseService.findMapBySql("select ifnull(sum(yf.money),0) as yfje  from tbl_advance yf where yf.status='40' and yf.channelName='"+cgid+"'");
 		//获得已抵扣总额
@@ -77,7 +77,7 @@ public class AdvanceController {
 		List<Map<String,Object>> dkje = baseService.findMapBySql("select ifnull(sum(yf.dkmoney),0) as dkje  from tbl_projectPay_det yf where yf.status='30' and yf.channelName='"+cgid+"'");
 		
 		request.setAttribute("zyfk",  yfje.get(0).get("yfje"));
-		request.setAttribute("ydk",  dkje.get(0).get("dkje"));
+		request.setAttribute("ydk",  dkje.get(0).get("dkje"));*/
 		
 		return prefix + "addindex";
 	}
@@ -88,7 +88,7 @@ public class AdvanceController {
 		//PurchaseDet cgmx = baseService.get(PurchaseDet.class, cgid);
 		request.setAttribute("gys", cgid);
 		
-		//获得预付金额
+		/*//获得预付金额
 		//List<String> yfje = baseService.find("select sum(yf.money) as yfje from com.radish.master.entity.volumePay.Advance yf where yf.status='40' and yf.channelName='"+mx.getChannelName()+"'");
 		List<Map<String,Object>> yfje = baseService.findMapBySql("select ifnull(sum(yf.money),0) as yfje  from tbl_advance yf where yf.status='40' and yf.channelName='"+cgid+"'");
 		//获得已抵扣总额
@@ -96,10 +96,26 @@ public class AdvanceController {
 		List<Map<String,Object>> dkje = baseService.findMapBySql("select ifnull(sum(yf.dkmoney),0) as dkje  from tbl_projectPay_det yf where yf.status='30' and yf.channelName='"+cgid+"'");
 		
 		request.setAttribute("zyfk",  yfje.get(0).get("yfje"));
-		request.setAttribute("ydk",  dkje.get(0).get("dkje"));
+		request.setAttribute("ydk",  dkje.get(0).get("dkje"));*/
 		
 		return prefix + "dkindex";
 	}
+	@RequestMapping("/loadyfdk")
+	@ResponseBody
+	public Map<String,Object> loadyfdk(HttpServletRequest request){
+		String gys = request.getParameter("gys");
+		//获得预付金额
+		//List<String> yfje = baseService.find("select sum(yf.money) as yfje from com.radish.master.entity.volumePay.Advance yf where yf.status='40' and yf.channelName='"+mx.getChannelName()+"'");
+		List<Map<String,Object>> yfje = baseService.findMapBySql("select ifnull(sum(yf.money),0) as yfje  from tbl_advance yf where yf.status='40' and yf.channelName='"+gys+"'");
+		//获得已抵扣总额
+		//List<String> dkje = baseService.find("select sum(yf.dkmoney) as dkje from com.radish.master.entity.volumePay.ProjectPayDet yf where yf.status='30' and yf.channelName='"+mx.getChannelName()+"' ");
+		List<Map<String,Object>> dkje = baseService.findMapBySql("select ifnull(sum(yf.dkmoney),0) as dkje  from tbl_projectPay_det yf where yf.status='30' and yf.channelName='"+gys+"'");
+		Map<String,Object>	m = new HashMap<String, Object>();
+		m.put("zyfk", yfje.get(0).get("yfje"));
+		m.put("ydk",dkje.get(0).get("dkje"));
+		return m;
+	}
+	
 	
 	@RequestMapping("/addyfxx")
 	public String  addyfxx(HttpServletRequest request) throws UnsupportedEncodingException{

@@ -28,17 +28,25 @@
                 </div>
 </div>
 <script>
-    var cgid="${cgid?default(0)}";
+    var cgid=$("#searchDiv").data("gys");//"${cgid?default(0)}";
     var type="${type?default(0)}";
-    var gys="${gys?default(0)}";
+    var gys=$("#searchDiv").data("gys");
     var cg="${cg?default(0)}";//采购条目id
     if(type=="20"){
 		$("#gys").val(gys);
 		$("#addMx").css("display","none")
 		//预付和抵扣金额
-	    var zyfk="${zyfk?default(0)}";
-	    var ydk="${ydk?default(0)}";
-	    $("#moneyth1").html("供应商："+gys+"--预付金额（审核完成）："+zyfk+"元,已抵扣："+ydk+"元");
+	    ajaxPost(basePath+'/advance/loadyfdk', {"gys":gys}, function(data) {
+	    	var zyfk=0;
+		    var ydk=0;
+            if(data.zyfk){
+            	zyfk = data.zyfk;
+             }
+            if(data.ydk){
+            	ydk = data.ydk;
+             }
+            $("#moneyth1").html("供应商："+gys+"--预付金额（审核完成）："+zyfk+"元,已抵扣："+ydk+"元");
+        });
     }else{
 		//$("#cgid").val(cgid);
 		$("#gys").val(gys);

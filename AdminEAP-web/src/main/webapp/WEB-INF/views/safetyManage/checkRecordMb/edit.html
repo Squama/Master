@@ -21,6 +21,12 @@
 <div class="modal-body" style="max-height:100%;overflow-y:auto;">
 
     <form id="contract-form" name="contract-form" class="form-horizontal">
+    <!-- /.box-body -->
+        <div class="" style="text-align: center;height:50px;width:100%;">
+            <!--以下两种方式提交验证,根据所需选择-->
+            <button type="submit" class="btn btn-primary" data-btn-type="save" id="b_sub">保存</button>
+            <button type="button" class="btn btn-primary" data-btn-type="sc" id="sc" style="display: none">上传模板</button>
+        </div>
      <input type="hidden" name="id" id= "id">
         <div class="box-body">
             
@@ -33,12 +39,7 @@
                 </div>
             </div>        
         </div>
-        <!-- /.box-body -->
-        <div class="" style="text-align: center;height:50px;width:100%;">
-            <!--以下两种方式提交验证,根据所需选择-->
-            <button type="submit" class="btn btn-primary" data-btn-type="save" id="b_sub">保存</button>
-            <button type="button" class="btn btn-primary" data-btn-type="sc" id="sc" style="display: none">上传模板</button>
-        </div>
+        
         <!-- /.box-footer -->
     </form>
 </div>

@@ -26,16 +26,24 @@
                 </div>
 </div>
 <script>
-    var gys="${gys?default(0)}";
+    var gys=$("#searchDiv").data("gys");
     $("#gys1").val(gys);
-    //预付和抵扣金额
-    var zyfk="${zyfk?default(0)}";
-    var ydk="${ydk?default(0)}";
-    $("#moneyth3").html("供应商："+gys+"--预付金额（审核完成）："+zyfk+"元,已抵扣："+ydk+"元");
-    
     var dkTable, winIdsDk = "dkwin";
     $(function() {
     	dkTable = new CommonTable("dk_det_table", "advance_dk_list", "searchDivDk", null);
+
+    	//预付和抵扣金额
+        ajaxPost(basePath+'/advance/loadyfdk', {"gys":gys}, function(data) {
+        	var zyfk=0;
+    	    var ydk=0;
+            if(data.zyfk){
+            	zyfk = data.zyfk;
+             }
+            if(data.ydk){
+            	ydk = data.ydk;
+             }
+            $("#moneyth3").html("供应商："+gys+"--预付金额（审核完成）："+zyfk+"元,已抵扣："+ydk+"元");
+        });
     });
 
 	function fnRenderScMxdk(value,type, rowObj){

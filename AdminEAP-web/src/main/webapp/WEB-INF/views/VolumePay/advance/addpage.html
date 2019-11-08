@@ -68,7 +68,7 @@
     var yfform =null;
     var yfid="${yfid?default(0)}";
     //var cgid="${cgid?default(0)}";
-    var channelName="${channelName?default(0)}";
+    var channelName=$("#searchDiv").data("gys");//"${channelName?default(0)}";
     $("#channelName").val(channelName);
 	if(yfid!=0){
 		$("#saveyf").css("display","none")
