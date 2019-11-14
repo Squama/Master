@@ -78,6 +78,8 @@ public class ProjectVolumeController {
     @RequestMapping(value="/list",method = RequestMethod.GET)
     public String list(HttpServletRequest request){
     	request.setAttribute("projectOptions", JSONArray.toJSONString(budgetService.getProjectCombobox()));
+    	List<ProjectTeam> htbzs = projectService.find(" from ProjectTeam where 1=1 ");
+        request.setAttribute("htbzs", JSONArray.toJSONString(htbzs));
         return "projectmanage/volume/volume_list";
     }
     

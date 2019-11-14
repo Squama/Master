@@ -77,6 +77,7 @@
         <!-- /.box-body -->
         <div class="" style="text-align: center;height:50px;width:100%">
             <!--以下两种方式提交验证,根据所需选择-->
+            <button type="submit" class="btn btn-primary" data-btn-type="save" id="b_sub">保存</button>
         </div>
         <!-- /.box-footer -->
     </form>
@@ -95,6 +96,27 @@
     $(function() {
         //初始化控件
         form=$("#contract-form").form();
+        $("#contract-form").bootstrapValidator({
+            message : '请输入有效值',
+            feedbackIcons : {
+                valid : 'glyphicon glyphicon-ok',
+                invalid : 'glyphicon glyphicon-remove',
+                validating : 'glyphicon glyphicon-refresh'
+            },
+            submitHandler : function() {
+                modals.confirm('确认保存？', function() {
+                    //Save Data，对应'submit-提交'
+                    var params = form.getFormSimpleData();
+                    	ajaxPost(basePath+'/fasp/savePhoto', params, function(data) {
+                            if(data.success){
+                                modals.info("数据保存成功");
+                            }                
+                        }); 
+              
+                     
+                });
+            }
+        });
         
         if(pro != 0){
             for (var i = 0, len = pro.length; i < len; i++) {
@@ -113,8 +135,6 @@
         form.initComponent();
 		if(id!=0){
 	        load();
-	        $("#wjscid").css("display","none")
-			$("#attachment").css("display","none")
 		}
         
     });

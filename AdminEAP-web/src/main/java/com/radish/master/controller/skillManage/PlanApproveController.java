@@ -173,6 +173,29 @@ public class PlanApproveController {
 		
 		return r;
 	}
+	@RequestMapping("/savePhoto")
+	@ResponseBody
+	public Result savePhoto(HttpServletRequest request,PlanApprove sh){
+		Result r = new Result();
+		String id = request.getParameter("id");
+		String fileId = request.getParameter("fileId");
+		if(fileId!=null&&fileId.length()>0){
+			if(fileId.indexOf(",")<0){//单张
+				PlanFile wj = baseService.get(PlanFile.class, fileId);
+				wj.setFormId(id);
+				baseService.update(wj);
+			}else{//多文件
+				String[] ids = fileId.split(",");
+				for(int i =0;i<ids.length;i++){
+					PlanFile wj = baseService.get(PlanFile.class, ids[i]);
+					wj.setFormId(id);
+					baseService.update(wj);
+				}
+			}
+		}
+		
+		return r;
+	}
 	@RequestMapping("/load")
 	@ResponseBody
 	public Result load(HttpServletRequest request){
