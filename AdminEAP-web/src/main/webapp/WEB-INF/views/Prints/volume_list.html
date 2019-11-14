@@ -52,16 +52,12 @@
     
     var volumeManageObject = {
             toAudit: function (volumeID) {
-            	modals.confirm("是否要提交审批？",function(){
-                    ajaxPost(basePath + '/projectvolume/start', {id:volumeID}, function (data) {
-                        if (data.success) {
-                        	volumeTable.reloadData();
-                            modals.correct("流程已启动，请等待处理");
-                        } else {
-                            modals.error(data.message);
-                        }
-                    });
-                });
+            	modals.openWin({
+	                 winId:winId,
+	                 title:'工程量上报详情',
+	                 width:'1200px',
+	                 url:basePath+"/projectvolume/detailouter/"+volumeID            
+               });
             }
     }
     
@@ -100,10 +96,7 @@
     });
     
     function fnRenderVolume(value, type, rowObj){
-        var oper = "";
-        if(rowObj.status == '新建'){
-            oper += "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='volumeManageObject.toAudit(\"" + rowObj.id + "\")'>提交审核</a>";
-        }
+        var oper = "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='volumeManageObject.toAudit(\"" + rowObj.id + "\")'>查看详情</a>";
         return oper;
     }
 </script>

@@ -39,7 +39,9 @@ import com.radish.master.entity.Labor;
 import com.radish.master.entity.ProjectVolume;
 import com.radish.master.entity.project.LaborSub;
 import com.radish.master.entity.project.ProjectTeam;
+import com.radish.master.entity.project.Worker;
 import com.radish.master.entity.qualityCheck.CheckFkd;
+import com.radish.master.pojo.AllVolume;
 import com.radish.master.pojo.Options;
 import com.radish.master.service.BudgetService;
 import com.radish.master.service.ProjectService;
@@ -722,5 +724,28 @@ public class ProjectVolumeController {
     	}
     	return r;
     			
+    }
+    @RequestMapping("/getLjsj")//获取累计工程量
+    @ResponseBody
+    public List<AllVolume> getLjsj(HttpServletRequest request,String id){
+    	ProjectVolume gcl = projectService.get(ProjectVolume.class, id);
+    	Labor ht = projectService.get(Labor.class, gcl.getLaborID());
+    	
+    	StringBuilder buffer = new StringBuilder();
+        buffer.append("select ifnull(sum(gcl.final_mech),0) final_mech,");
+        buffer.append("ifnull(sum(gcl.final_labour),0) final_labour ,");
+        buffer.append("ifnull(sum(gcl.final_mat),0) final_mat,");
+        buffer.append("ifnull(sum(gcl.final_debit),0) final_debit ,");
+        buffer.append("ifnull(sum(gcl.final_sub),0) final_sub ");
+        buffer.append("from tbl_project_volume gcl  ,tbl_labor ht "	);
+        buffer.append(" where gcl.labor_id = ht.id  and gcl.status=\'70\' ");
+        buffer.append("and gcl.project_id='"+gcl.getProjectID()+"' ");
+        if(ht!=null){
+        	buffer.append("and ht.construction_team_id='"+ht.getConstructionTeamID()+"' ");
+        }        
+        buffer.append("and DATE_FORMAT(gcl.end_time,\'%Y-%m-%d\')<=DATE_FORMAT('"+gcl.getEndTime()+"',\'%Y-%m-%d\' )");
+
+        List<AllVolume> gcls = projectService.findMapBySql(buffer.toString(), new Object[]{}, new Type[]{StringType.INSTANCE}, AllVolume.class);
+        return gcls;
     }
 }

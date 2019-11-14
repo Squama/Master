@@ -45,15 +45,18 @@ import com.cnpc.framework.base.controller.UploaderController;
 import com.cnpc.framework.base.entity.UserAvatar;
 import com.cnpc.framework.base.pojo.AvatarResult;
 import com.cnpc.framework.base.pojo.FileResult;
+import com.cnpc.framework.base.pojo.PageInfo;
 import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.base.service.BaseService;
 import com.cnpc.framework.base.service.UploaderService;
+import com.cnpc.framework.query.entity.QueryCondition;
 import com.cnpc.framework.utils.DateUtil;
 import com.cnpc.framework.utils.FileUtil;
 import com.cnpc.framework.utils.PropertiesUtil;
 import com.cnpc.framework.utils.SecurityUtil;
 import com.cnpc.framework.utils.StrUtil;
 import com.radish.master.entity.HtFile;
+import com.radish.master.entity.PurchaseApplyAudit;
 import com.radish.master.entity.WorkContract;
 import com.radish.master.entity.project.Worker;
 import com.radish.master.entity.safty.CheckFileAQ;
@@ -544,5 +547,4 @@ public class WorkerController {
         fileResult.setFileIds(StrUtil.join(fileArr));
         return fileResult;
     }
-    
 }

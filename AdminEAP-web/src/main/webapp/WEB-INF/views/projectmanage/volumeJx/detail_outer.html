@@ -75,6 +75,12 @@
                             </div>
                         </div>
                         <div class="col-md-6" style="margin-left:25%">
+                        		<div class="callout callout-success" id="applyInfock" style="margin-top:8px;margin-bottom:8px;">
+                                <h4>累计金额：</h4>
+                                <p>机械费：<span id="allmech">0</span>；人工费：<span id="alllabour">0</span>；材料费：<span id="allmat">0</span>；扣款：<span id="alldebit">0</span>；</p>
+                                <h5>上报小计：<span id="allsub">0</span></h5>
+                              </div>
+                        
                               <div class="callout callout-success" id="applyInfock" style="margin-top:8px;margin-bottom:8px;">
                                 <h4>上报金额：</h4>
                                 <p>机械费：<span id="mechInfock">尚未审批</span>；机械扣款：<span id="debitjxInfock">尚未审批</span>；</p>
@@ -249,6 +255,15 @@
                 $('#subFinalck').html(data.finalSub + '元');
                 
                 //$('.final').show();
+            })
+             ajaxPost(basePath+"/projectvolume/getLjsj",{id:gclid},function(data){
+                if(data.length>0){
+                	$('#allmech').html(data[0].final_mech + '元');
+                    $('#alllabour').html(data[0].final_labour + '元');
+                    $('#allmat').html(data[0].final_mat + '元');
+                    $('#allsub').html(data[0].final_sub + '元');
+                    $('#alldebit').html(data[0].final_debit + '元');
+                }
             })
         }
         
