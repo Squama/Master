@@ -1,5 +1,6 @@
 package com.radish.master.controller.skillManage;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -50,9 +51,11 @@ import com.radish.master.entity.Project;
 import com.radish.master.entity.qualityCheck.CheckDq;
 import com.radish.master.entity.qualityCheck.CheckDqFile;
 import com.radish.master.entity.qualityCheck.CheckFkd;
+import com.radish.master.entity.safty.AqCheckDqFile;
 import com.radish.master.entity.skillManage.PlanApprove;
 import com.radish.master.entity.skillManage.PlanFile;
 import com.radish.master.service.BudgetService;
+import com.radish.master.system.FileHelper;
 
 @Controller
 @RequestMapping("/fasp")
@@ -394,14 +397,15 @@ public class PlanApproveController {
         List<String> previews=new ArrayList<>();
         List<FileResult.PreviewConfig> previewConfigs=new ArrayList<>();
         //缓存当前的文件
-        String dirPath = request.getRealPath("/");
+        //String dirPath = request.getRealPath("/");
         String[] fileArr=new String[fileList.size()];
         int index=0;
         for (PlanFile sysFile : fileList) {
             //上传后预览 TODO 该预览样式暂时不支持theme:explorer的样式，后续可以再次扩展
             //如果其他文件可预览txt、xml、html、pdf等 可在此配置
+        	String dirPath = request.getContextPath() + "/fasp/showImage?imageID=" + sysFile.getId();
             if(FileUtil.isImage(uploaderPath+File.separator+sysFile.getSavedName())) {
-                previews.add("<img src='." + sysFile.getFilePath().replace(File.separator, "/") + "' class='file-preview-image kv-preview-data' " +
+                previews.add("<img src='" + dirPath+ "' class='file-preview-image kv-preview-data' " +
                         "style='width:auto;height:160px' alt='" + sysFile.getFileName() + " title='" + sysFile.getFileName() + "''>");
             }else{
                 previews.add("<div class='kv-preview-data file-preview-other-frame'><div class='file-preview-other'>" +
@@ -515,15 +519,16 @@ public class PlanApproveController {
         List<String> previews=new ArrayList<>();
         List<FileResult.PreviewConfig> previewConfigs=new ArrayList<>();
         //缓存当前的文件
-        String dirPath = request.getRealPath("/");
+        //String dirPath = request.getRealPath("/");
         String[] fileArr=new String[fileList.size()];
         int index=0;
         for (PlanFile sysFile : fileList) {
             //上传后预览 TODO 该预览样式暂时不支持theme:explorer的样式，后续可以再次扩展
             //如果其他文件可预览txt、xml、html、pdf等 可在此配置
+        	String dirPath = request.getContextPath() + "/fasp/showImage?imageID=" + sysFile.getId();
             if(FileUtil.isImage(uploaderPath+File.separator+sysFile.getSavedName())) {
-                previews.add("<img src='." + sysFile.getFilePath().replace(File.separator, "/") + "' class='file-preview-image kv-preview-data' " +
-                        "style='width:auto;height:80px' alt='" + sysFile.getFileName() + " title='" + sysFile.getFileName() + "''>");
+                previews.add("<img src='" + dirPath+ "' class='file-preview-image kv-preview-data' " +
+                        "style='width:auto;height:160px' alt='" + sysFile.getFileName() + " title='" + sysFile.getFileName() + "''>");
             }else{
                 previews.add("<div class='kv-preview-data file-preview-other-frame'><div class='file-preview-other'>" +
                         "<span class='file-other-icon'>"+getFileIcon(sysFile.getFileName())+"</span></div></div>");
@@ -543,5 +548,110 @@ public class PlanApproveController {
         fileResult.setInitialPreviewConfig(previewConfigs);
         fileResult.setFileIds(StrUtil.join(fileArr));
         return fileResult;
+    }
+    @RequestMapping(value = "/uploadMultipleFile2", method = RequestMethod.POST)
+    @ResponseBody
+    public FileResult uploadMultipleFile2(@RequestParam(value = "file", required = false) MultipartFile[] files,
+                                         HttpServletRequest request, HttpServletResponse response,String id) throws IOException {
+        FileResult msg = new FileResult();
+
+        ArrayList<Integer> arr = new ArrayList<>();
+        //缓存当前的文件
+        List<PlanFile> fileList=new ArrayList<>();
+        String dirPath = request.getRealPath("/");
+        for (int i = 0; i < files.length; i++) {
+            MultipartFile file = files[i];
+
+            if (!file.isEmpty()) {
+                InputStream in = null;
+                OutputStream out = null;
+                try {
+                    File dir = new File(uploaderPath);
+                    if (!dir.exists())
+                        dir.mkdirs();
+                    //这样也可以上传同名文件了
+                    String filePrefixFormat="yyyyMMddHHmmssS";
+                    String savedName=DateUtil.format(new Date(),filePrefixFormat)+"_"+file.getOriginalFilename();
+                    String filePath=dir.getAbsolutePath() + File.separator + savedName;
+                    File serverFile = new File(filePath);
+                    //将文件写入到服务器
+                    //FileUtil.copyInputStreamToFile(file.getInputStream(),serverFile);
+                    file.transferTo(serverFile);
+                    PlanFile sysFile=new PlanFile();
+                    sysFile.setFileName(file.getOriginalFilename());
+                    sysFile.setSavedName(savedName);
+                    sysFile.setCreateDateTime(new Date());
+                    sysFile.setUpdateDateTime(new Date());
+                    sysFile.setCreateUserId(SecurityUtil.getUserId());
+                    sysFile.setDeleted(0);
+                    sysFile.setFileSize(file.getSize());
+                    sysFile.setFilePath(uploaderPath+File.separator+savedName);
+                    sysFile.setFormId(id);
+                    baseService.save(sysFile);
+                    fileList.add(sysFile);
+                    /*preview.add("<div class=\"file-preview-other\">\n" +
+                            "<span class=\"file-other-icon\"><i class=\"fa fa-file-o text-default\"></i></span>\n" +
+                            "</div>");*/
+
+                    logger.info("Server File Location=" + serverFile.getAbsolutePath());
+                } catch (Exception e) {
+                    logger.error(   file.getOriginalFilename()+"上传发生异常，异常原因："+e.getMessage());
+                    arr.add(i);
+                } finally {
+                    if (out != null) {
+                        out.close();
+                    }
+                    if (in != null) {
+                        in.close();
+                    }
+                }
+            } else {
+                arr.add(i);
+            }
+        }
+
+        if(arr.size() > 0) {
+            msg.setError("文件上传失败！");
+            msg.setErrorkeys(arr);
+        }
+        FileResult preview=getPreivewSettings(fileList,request);
+        msg.setInitialPreview(preview.getInitialPreview());
+        msg.setInitialPreviewConfig(preview.getInitialPreviewConfig());
+        msg.setFileIds(preview.getFileIds());
+        return msg;
+    }
+    @RequestMapping(value="/showImage",method = RequestMethod.GET)
+    public String showImage(String imageID, HttpServletResponse response) throws IOException{
+        
+    	PlanFile item = baseService.get(PlanFile.class, imageID);
+
+        byte[] fileBytes = getImage(item.getFilePath(), item.getFileName());
+        
+                
+        if(fileBytes != null){
+            BufferedOutputStream bos = null;
+            try {
+                bos = new BufferedOutputStream(response.getOutputStream());
+                bos.write(fileBytes);
+            } catch (IOException e) {
+                throw e;
+            } finally {
+                if (bos != null)
+                    bos.close();
+            }
+        }
+        
+        return null;
+    }
+    public byte[] getImage(String path, String name) {
+        try {
+
+            // 调接口写读文件
+            return FileHelper.showImageFile(name, path);
+        } catch (Exception e) {
+            logger.error("", e);
+        }
+
+        return new byte[0];
     }
 }
