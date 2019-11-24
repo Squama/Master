@@ -85,4 +85,30 @@
 	        <column key="id" header="招标资格附件" width="80" fnRender="fnRenderFj"/>
 	        <column key="id" header="操作" width="80" fnRender="fnRenderSubmit"/>
 	</query>
+	<query id="allht_lists" key="id" tableName="全部类型合同列表" widthType="px">
+			<sql>
+		        <![CDATA[
+		          select 
+					ht.*
+					from 
+					(
+					select id,'施工合同' as lx,'40' as htlxc,'40' as htlx, projectId,projectName,number,htName,creatName
+					,CASE status WHEN 10 THEN '新建' WHEN 60 THEN '完成' WHEN 70 THEN '审核不通过' ELSE '审核中' END status from tbl_reviewlabor 
+					union 
+					select id,'采购合同' as lx,'50' as htlxc,'50' as htlx,projectId,projectName,number,reviewName+"采购合同",creatName
+					,CASE status WHEN 10 THEN '新建' WHEN 60 THEN '完成' WHEN 70 THEN '审核不通过' ELSE '审核中' END status from tbl_reviewmat
+					UNION
+					select id,'劳务合同' as lx ,htlx as htlxc, htlx,project_id,project_name,"无",contract_name,construction_manager
+					,CASE status WHEN 10 THEN '新建' WHEN 30 THEN '完成' WHEN 40 THEN '审核不通过' ELSE '审核中' END status from tbl_labor
+					) ht where 1=1
+		        ]]>
+		    </sql>
+		    <column key="rowIndex" header="序号" width="50" allowSort="false"/>
+	        <column key="id" header="id" classType="String" allowSort="true" width="150" hidden="true"/>
+	        <column key="htlxc" header="招标项目名称" classType="String" width="150" render="10=劳务(包清工),20=劳务(包工包料),30=劳务(机械),40=施工合同,50=采购合同"/>
+		    <column key="projectName" header="项目名称" classType="String" width="150"/>
+		    <column key="number" header="编号" classType="String" width="150"/>
+			<column key="htName" header="合同名称" classType="String" width="150" operator="like" />
+	        <column key="status" header="评审状态" classType="String" width="150" />
+	</query>
 </queryContext>
