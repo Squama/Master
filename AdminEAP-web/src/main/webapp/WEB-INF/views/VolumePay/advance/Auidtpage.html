@@ -13,8 +13,20 @@
 						<input class="form-control " id="channelName" name="channelName"   placeholder="供应商" readonly="readonly" >
 					</div>
 				</div>
+				<div class="form-group">
+                    <label  for="money" class="col-sm-3 control-label">采购金额</label>
+					<div class=" col-sm-8">
+						<input class="form-control " id="cgmoney" name="cgmoney"   placeholder="采购金额" disabled="disabled">
+					</div>
+                </div>
                 <div class="form-group">
-                    <label  for="money" class="col-sm-3 control-label">预付金额</label>
+                    <label  for="money" class="col-sm-3 control-label">预付申请金额</label>
+					<div class=" col-sm-8">
+						<input class="form-control " id="sqmoney" name="sqmoney"   placeholder="预付金额" disabled="disabled">
+					</div>
+                </div>
+                <div class="form-group">
+                    <label  for="money" class="col-sm-3 control-label">预付支付金额</label>
 					<div class=" col-sm-8">
 						<input class="form-control " id="money" name="money"   placeholder="预付金额" >
 					</div>
@@ -39,10 +51,22 @@
 				<div class="form-group">
                      <label class="col-sm-3 control-label" for="paytime">付款时间</label>
                      <div class="col-sm-8">
-                         <input type="text" class="form-control date-picker" name="paytime" id="paytime" data-flag="datepicker" data-format="yyyy-mm-dd"  placeholder="" >
+                         <input type="text" class="form-control date-picker" name="paytime" id="paytime" data-flag="datepicker" data-format="yyyy-mm-dd"  placeholder="" disabled="disabled" >
                      </div>
                  </div>
                  <div class="form-group">
+                    <label  for="dxmoney" class="col-sm-3 control-label">金额大写</label>
+					<div class=" col-sm-8">
+						<input class="form-control " id="cgdxmoney" name="cgdxmoney"   placeholder="金额大写" disabled="disabled" >
+					</div>
+                </div>
+                 <div class="form-group">
+                    <label  for="dxmoney" class="col-sm-3 control-label">金额大写</label>
+					<div class=" col-sm-8">
+						<input class="form-control " id="sqdxmoney" name="sqdxmoney"   placeholder="金额大写" disabled="disabled" >
+					</div>
+                </div>
+                <div class="form-group">
                     <label  for="dxmoney" class="col-sm-3 control-label">金额大写</label>
 					<div class=" col-sm-8">
 						<input class="form-control " id="dxmoney" name="dxmoney"   placeholder="金额大写" disabled="disabled" >
@@ -54,12 +78,12 @@
                     <label for="sqyy" class="col-sm-2 control-label">申请原因</label>
 
                     <div class="col-sm-9">
-                        <textarea class="form-control" id="sqyy" name="sqyy" placeholder="申请原因" rows="6"></textarea>
+                        <textarea class="form-control" id="sqyy" name="sqyy" placeholder="申请原因" rows="6" disabled="disabled"></textarea>
                     </div>
             </div>
         <div class="" style="text-align: center;">
             <!--以下两种方式提交验证,根据所需选择-->
-            <button type="submit" class="btn btn-primary" data-btn-type="save" id="saveyf">保存</button>
+            <button type="submit" class="btn btn-primary" data-btn-type="save" id="saveyf">保存支付金额</button>
         </div>
         <!-- /.box-footer -->
     </form>
@@ -67,13 +91,7 @@
 <script>
     var yfform =null;
     var yfid="${yfid?default(0)}";
-    //var cgid="${cgid?default(0)}";
-    var channelName=$("#searchDiv").data("gys");//"${channelName?default(0)}";
     $("#channelName").val(channelName);
-	if(yfid!=0){
-		$("#saveyf").css("display","none")
-	}
-	var cg="${cg?default(0)}";
     $(function() {
         //初始化控件
         yfform=$("#yfxx-form").form();
@@ -87,17 +105,15 @@
             },
             submitHandler : function() {
                 modals.confirm('确认填写信息无误？', function() {
-                    //Save Data，对应'submit-提交'
-                    var cgprice = $("#searchDiv").data("money");
+                	var cgprice = $("#cgmoney").val();
                     var money = $("#money").val();
                     if(parseFloat(money)>parseFloat(cgprice)){
-                    	modals.info("预付金额大于采购金额，采购金额为"+cgprice+"元");
+                    	modals.info("支付金额大于采购金额");
                     	return;
                     }
-                    
-                    
+                    //Save Data，对应'submit-提交'
                     var params = yfform.getFormSimpleData();
-                   	ajaxPost(basePath+'/advance/saveyfxx?purdetid='+cg+"&cgmoney="+cgprice, params, function(data) {
+                   	ajaxPost(basePath+'/advance/updateyfxx?purdetid='+cg, params, function(data) {
                            if(data.success){
                         	   modals.hideWin(winIds);
                                modals.info("保存成功");
@@ -108,24 +124,10 @@
                 });
             },
             fields : {
-            	sqyy : {
-                    validators : {
-                        notEmpty : {
-                            message : '请输入申请原因'
-                        }
-                    }
-                },
                 money : {
                     validators : {
                         notEmpty : {
                             message : '请输入金额'
-                        }
-                    }
-                },
-                paytime : {
-                    validators : {
-                        notEmpty : {
-                            message : '请选择付款时间'
                         }
                     }
                 }
@@ -136,7 +138,6 @@
 
         if(yfid!=0){
         	load();
-        	$("#saveyf").css("dsiplay","none");
         }
         
         $("#money").keyup(function(){
@@ -150,9 +151,12 @@
     	ajaxPost(url, {}, function(data) {
             formdata = data.data;
             yfform.initFormData(formdata); 
-            var dx =changeNumMoneyToChinese(formdata.money); 
-            $("#dxmoney").val(dx);   
-
+            var dx =changeNumMoneyToChinese(formdata.sqmoney); 
+            var zfdx =changeNumMoneyToChinese(formdata.money); 
+            var cgdx =changeNumMoneyToChinese(formdata.cgmoney); 
+            $("#sqdxmoney").val(dx);   
+            $("#dxmoney").val(zfdx); 
+            $("#cgdxmoney").val(cgdx);  
         }); 
     }
     function resetForm(){

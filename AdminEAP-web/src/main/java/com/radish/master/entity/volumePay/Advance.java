@@ -45,9 +45,17 @@ public class Advance implements Serializable {
     @Column(name = "channelName")
     private String channelName;
 	
+	@Header(name = "采购金额")
+    @Column(name = "cgmoney")
+    private String cgmoney;
+	
 	@Header(name = "金额")
     @Column(name = "money")
     private String money;
+    
+    @Header(name = "申请金额")
+    @Column(name = "sqmoney")
+    private String sqmoney;
     
 	@DateTimeFormat(pattern="yyyy-MM-dd")
     @Header(name = "支付时间")
@@ -208,6 +216,22 @@ public class Advance implements Serializable {
 
 	public void setIsjz(String isjz) {
 		this.isjz = isjz;
+	}
+
+	public String getSqmoney() {
+		return sqmoney;
+	}
+
+	public void setSqmoney(String sqmoney) {
+		this.sqmoney = sqmoney;
+	}
+
+	public String getCgmoney() {
+		return cgmoney;
+	}
+
+	public void setCgmoney(String cgmoney) {
+		this.cgmoney = cgmoney;
 	}
     
     

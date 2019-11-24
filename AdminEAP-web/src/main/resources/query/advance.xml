@@ -13,11 +13,14 @@
 			  and cg.id=pd.purchase_id and 1=1
             ]]> -->
             <![CDATA[
-              select 
-			  cg.id,pd.channel_name channelName,cg.operate_time operateTime ,round(sum(pd.price*pd.quantity),2) price 
-			  FROM tbl_purchase cg, tbl_purchase_det pd  ,tbl_budget B
-			  WHERE cg.status IN ('40','50','60') AND cg.budget_no = B.budget_no
-			  and cg.id=pd.purchase_id and 1=1 GROUP BY pd.channel_name,cg.create_date_time,cg.id
+              select id,channelName, operateTime,price,isrk,isyf 
+              from (select 
+				cg.id,pd.channel_name channelName,cg.operate_time operateTime ,round(sum(pd.price*pd.quantity),2) price,
+				CASE cg.status WHEN 40 THEN 0 ELSE 1 END isrk,
+				(select sign(count(1)-0) from tbl_advance yf where yf.channelName=pd.channel_name and yf.purdetid=cg.id) isyf
+				FROM tbl_purchase cg, tbl_purchase_det pd  ,tbl_budget B
+				WHERE cg.status IN ('40','50','60') AND cg.budget_no = B.budget_no
+				and cg.id=pd.purchase_id  GROUP BY pd.channel_name,cg.create_date_time,cg.id) tb  where 1=1
             ]]>
         </sql>
         <column key="id" hidden="true" header="id" width="80"/>
@@ -39,7 +42,8 @@
         <column key="status" header="审核状态" classType="String" width="150" render="10=新建,20=财务审核,30=领导审核,40=完成,50=审核驳回"/>
         <column key="ID" hidden="true" header="ID" width="80" />
         <column key="channelName" header="供应商名称" classType="String"/>
-        <column key="money" header="预付金额" classType="String" width="150" />
+        <column key="sqmoney" header="预付申请金额" classType="String" width="150" />
+        <column key="money" header="预付支付金额" classType="String" width="150" />
         <column key="paytime" header="付款时间" classType="String" width="150"/>
         <column key="sqr" header="申请人" classType="String" width="150"/>
         <column key="sqtime" header="创建时间" classType="String" width="150" />

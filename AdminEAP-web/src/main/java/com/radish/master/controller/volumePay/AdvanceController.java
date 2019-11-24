@@ -134,7 +134,7 @@ public class AdvanceController {
 	@RequestMapping("/auidtMx/{id}")
 	public String auidtMx(HttpServletRequest request,@PathVariable("id") String id){
 		request.setAttribute("yfid", id);
-		return prefix + "addpage";
+		return prefix + "Auidtpage";
 	}
 	@RequestMapping("/zffs")
 	public String zffs(HttpServletRequest request){
@@ -155,10 +155,20 @@ public class AdvanceController {
 		yf.setIsdk("10");
 		yf.setIsjz("10");
 		yf.setStatus("10");
+		yf.setSqmoney(yf.getMoney());
 		/*PurchaseDet cgmx = baseService.get(PurchaseDet.class, yf.getPurdetid());
 		yf.setMat(cgmx.getMatName());
 		yf.setMatStandard(cgmx.getMatStandard());*/
 		baseService.save(yf);
+		return r;
+	}
+	@RequestMapping("/updateyfxx")
+	@ResponseBody
+	public Result updateyfxx(HttpServletRequest request,Advance yf){
+		Result r = new Result();
+		Advance y = baseService.get(Advance.class, yf.getId());
+		y.setMoney(yf.getMoney());
+		baseService.update(y);
 		return r;
 	}
 	
