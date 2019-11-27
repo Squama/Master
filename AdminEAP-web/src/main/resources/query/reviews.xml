@@ -95,7 +95,7 @@
 					select id,'施工合同' as lx,'40' as htlxc,'40' as htlx, projectId,projectName,number,htName,creatName
 					,CASE status WHEN 10 THEN '新建' WHEN 60 THEN '完成' WHEN 70 THEN '审核不通过' ELSE '审核中' END status from tbl_reviewlabor 
 					union 
-					select id,'采购合同' as lx,'50' as htlxc,'50' as htlx,projectId,projectName,number,reviewName+"采购合同",creatName
+					select id,'采购合同' as lx,'50' as htlxc,'50' as htlx,projectId,projectName,number,CONCAT_WS("--",reviewName,"采购合同") htName,creatName
 					,CASE status WHEN 10 THEN '新建' WHEN 60 THEN '完成' WHEN 70 THEN '审核不通过' ELSE '审核中' END status from tbl_reviewmat
 					UNION
 					select id,'劳务合同' as lx ,htlx as htlxc, htlx,project_id,project_name,"无",contract_name,construction_manager
