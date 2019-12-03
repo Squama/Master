@@ -44,7 +44,56 @@
 			<div class="box">
 
 <form style="width:100%" id="RqForm" name="RqForm" class="form-horizontal">
-<div class="modal-body" style="max-height:100%;overflow-y:auto;">
+	<div class="box">
+			<form style="width:100%" id="RqForm" name="RqForm" class="form-horizontal">
+				<div class="box-body">
+	                	<div class="col-md-6">
+	                		<div class="form-group">
+	                        	<label class="col-sm-5 control-label">项目</label>
+	                        	<div class="col-sm-6">
+		                           	<select id="xmid" class="select2 " name="xmid" style="width:100%" onchange="getRy()">
+						        		<option selected="selected" value="">选择一个项目</option>
+						        	</select>
+	                        	</div>
+	                    	</div>
+		                    <div class="form-group">
+	                        	<label class="col-sm-5 control-label">姓名</label>
+	                        	<div class="col-sm-6">
+		                            <select id="ryid" class="select2 " name="ryid" style="width:100%">
+						        		<option selected="selected" value="">选择一个人员</option>
+						        	</select>
+	                        	</div>
+	                    	</div>
+	                    	
+                    	</div>
+                    	<div class="col-md-6">
+		                    <div class="form-group">
+	                        	<label class="col-sm-3 control-label">年月选择</label>
+	                        	<div class="col-sm-6">
+	                        		<input id="rzdate"name="rzdate" style="width:100%;text-align: left;" class="date-picker" data-flag="datepicker" data-format="yyyy-mm-dd" />
+	                        	</div>
+	                    	</div>
+	                    	<div class="form-group">
+	                        	<label class="col-sm-3 control-label"></label>
+	                        	<div class="col-sm-6">
+		                            <button type="submit" class="btn btn-primary" data-btn-type="save" id="getRq">确定月份</button>
+		                            <span style="display: inline-block;width:60px;background:#ADFF2F;height:50px;line-height: 50px">有日志</span>
+			                     	<span style="display: inline-block;width:60px;background:#FF4040;height:50px;line-height: 50px">无日志</span>
+			                     	<span style="display: inline-block;width:60px;background:#ccc;height:50px;line-height: 50px">日期未到</span>
+	                        	</div>
+	                    	</div>
+                    	</div>
+                    	<div class="col-md-12">
+                    		<div class="col-sm-3">
+	                     	</div>
+	                    	<div class="col-sm-6" id="rqdiv">
+	                     	</div>
+	                     	<div class="col-sm-3">
+	                     	</div>
+                    	</div>
+                	</div>
+
+<!-- <div class="modal-body" style="max-height:100%;overflow-y:auto;">
 	<span>项目：
  		<select id="xmid" class="select2 " name="xmid" style="width:10%" onchange="getRy()">
         		<option selected="selected" value="">选择一个项目</option>
@@ -65,7 +114,7 @@
  	<div style="padding-left: 15%;padding-right: 15%;" id="rqdiv">
  		
  	</div>
- </div>
+ </div> -->
  
 </form>
       
@@ -192,7 +241,7 @@
     	modals.openWin({
             winId:"rz",
             title:'日志',
-            width:'1000px',
+            width:$(document).width()*0.8 + 'px',
             url:url,
             hideFunc:function(){
             }
