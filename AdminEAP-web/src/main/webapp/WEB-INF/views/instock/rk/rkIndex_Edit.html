@@ -39,6 +39,12 @@
                                         <option selected="selected" value="">选择一个人员</option>
                                     </select>
                                 </div>
+                             </div>
+                             <div class="form-group">
+                                <label class="col-sm-3 control-label">合计<span style="color:red"></span></label>
+                                <div class="col-sm-8">
+                                     <input type="text" class="form-control" id="hj"  placeholder="合计" disabled="disabled">
+                                </div>
                             </div>
 		            	</div>
 		            	<div class="col-md-6">
@@ -159,6 +165,9 @@
                 
                 $("#purchaseID").val(data.data.purchaseId);
                 $("#instockID").val(data.data.id);
+                if(data.code){
+					$("#hj").val(data.code);
+                }
                 
             })
         } 

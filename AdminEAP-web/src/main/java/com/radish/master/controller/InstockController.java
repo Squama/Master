@@ -169,9 +169,11 @@ public class InstockController {
 	@ResponseBody
 	public Result getInstock(HttpServletRequest request,String id){
 		Instock i = baseService.get(Instock.class, id);
+		List<String>  hj = baseService.find("select sum(mx.price*mx.rkl) from com.radish.master.entity.InstockDet mx where  mx.instockId='"+id+"'");
 		Result r = new Result();
 		r.setSuccess(true);
 		r.setData(i);
+		r.setCode(hj.get(0));
 		return r;
 	}
 	

@@ -107,7 +107,7 @@
 	<query id="instock_det_list_ck" key="id" tableName="入库单明细(查看)"  widthType="px" pageSize="20">
 	<sql>
 		        <![CDATA[
-		          SELECT mx.*  ,qd.supplier supplier 
+		          SELECT mx.*  ,qd.supplier supplier,(mx.price*mx.rkl) hj  
 		          FROM
                   tbl_instock_det mx ,tbl_channel qd 
                   WHERE 1=1 and qd.id = mx.channelId 
@@ -121,5 +121,6 @@
         <column key="supplier" header="供应商" classType="String" width="150"/>
         <column key="price" header="价格(元)" classType="String" width="150"/>
         <column key="rkl" header="入库量" classType="String" width="150"/>
+        <column key="hj" header="合计" classType="String" width="150"/>
     </query>
 </queryContext>
