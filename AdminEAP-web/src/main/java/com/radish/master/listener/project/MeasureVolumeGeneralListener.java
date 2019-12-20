@@ -82,7 +82,11 @@ public class MeasureVolumeGeneralListener implements TaskListener{
                 as.setApprove("true");
             }
 
-            if (FALSE.equalsIgnoreCase(delegateTask.getVariable("approved").toString())) {
+            if("pshyco".equalsIgnoreCase(delegateTask.getVariable("approved").toString())){
+                as.setApprove("pshyco");
+                delegateTask.setVariable("approved", FALSE);
+                pv.setStatus("99");
+            }else if (FALSE.equalsIgnoreCase(delegateTask.getVariable("approved").toString())) {
                 if ("zhiliang".equals(taskDefinitionKey)) {
                     delegateTask.setVariable(ZHILIANG, FALSE);
                 } else if ("shigong".equals(taskDefinitionKey)) {

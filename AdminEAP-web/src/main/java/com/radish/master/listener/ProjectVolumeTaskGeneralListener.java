@@ -85,7 +85,11 @@ public class ProjectVolumeTaskGeneralListener implements TaskListener {
                 as.setApprove("true");
             }
 
-            if (FALSE.equalsIgnoreCase(delegateTask.getVariable("approved").toString())) {
+            if("pshyco".equalsIgnoreCase(delegateTask.getVariable("approved").toString())){
+                as.setApprove("pshyco");
+                delegateTask.setVariable(BOSS, FALSE);
+                pv.setStatus("99");
+            }else if (FALSE.equalsIgnoreCase(delegateTask.getVariable("approved").toString())) {
                 if ("fuzeren".equals(taskDefinitionKey)) {
                     delegateTask.setVariable(FUZEREN, FALSE);
                 } else if ("boss".equals(taskDefinitionKey)) {
