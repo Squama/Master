@@ -99,6 +99,8 @@ public class Salary extends BaseEntity {
 	@Header(name = "直属分部名称")
 	@Column(name = "deptentname")
 	private String deptentname;
+	
+	private String note;
 
 	public String getProjectID() {
 		return projectID;
@@ -226,6 +228,14 @@ public class Salary extends BaseEntity {
 
 	public void setDeptentname(String deptentname) {
 		this.deptentname = deptentname;
+	}
+
+	public String getNote() {
+		return note;
+	}
+
+	public void setNote(String note) {
+		this.note = note;
 	}
 
 }

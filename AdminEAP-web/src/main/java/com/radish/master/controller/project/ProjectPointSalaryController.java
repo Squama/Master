@@ -215,6 +215,7 @@ public class ProjectPointSalaryController {
             oldSalary.setTeamID(salary.getTeamID());
             oldSalary.setTeamName(salary.getTeamName());
             oldSalary.setUpdateDateTime(new Date());
+            oldSalary.setNote(salary.getNote());
             teamSalaryService.save(oldSalary);
 
             total = oldSalary.getTotal();
