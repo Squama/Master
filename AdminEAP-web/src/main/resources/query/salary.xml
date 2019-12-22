@@ -246,14 +246,14 @@
     <query id="measure_unchoosen_list" key="id" tableName="未配置措施单" widthType="px" pageSize="200">
         <sql>
             <![CDATA[
-              SELECT mv.id, mv.team_name, '总价措施项目费' AS type,mv.start_time, mv.end_time, mv.final_sub FROM tbl_measure_volume mv
+              SELECT mv.id, mv.team_name,mv.measure_type type,mv.start_time, mv.end_time, mv.final_sub FROM tbl_measure_volume mv
               WHERE  mv.id NOT IN (SELECT volume_id FROM tbl_salary_volume) AND mv.status = '70'  AND 1=1
             ]]>
         </sql>
         <column key="rowIndex" header="序号" width="80"/>
         <column key="id" hidden="true" header="id" width="80"/>
         <column key="team_name" header="点工班组" width="150"/>
-        <column key="type" header="措施费类型" width="150"/>
+        <column key="type" header="措施费类型" width="150" render="issue=总价措施项目费,construct=安全文明施工费"/>
         <column key="start_time" header="开始时间" allowSort="true" dateFormat="yyyy-mm-dd" width="80"/>
         <column key="end_time" header="结束时间" allowSort="true" dateFormat="yyyy-mm-dd" width="80"/>
         <column key="final_sub" header="总费用" width="150"/>
@@ -262,7 +262,7 @@
     <query id="measure_choosen_list" key="id" tableName="已配置措施单" widthType="px" pageSize="200">
         <sql>
             <![CDATA[
-              SELECT mv.id, mv.team_name, '总价措施项目费' AS type,mv.start_time, mv.end_time, mv.final_sub FROM tbl_measure_volume mv, 
+              SELECT mv.id, mv.team_name, mv.measure_type type,mv.start_time, mv.end_time, mv.final_sub FROM tbl_measure_volume mv, 
               (SELECT volume_id, salary_id FROM tbl_salary_volume) sv
               WHERE  mv.id = sv.volume_id AND mv.status = '70'  AND 1=1
             ]]>
@@ -270,7 +270,7 @@
         <column key="rowIndex" header="序号" width="80"/>
         <column key="id" hidden="true" header="id" width="80"/>
         <column key="team_name" header="点工班组" width="150"/>
-        <column key="type" header="措施费类型" width="150"/>
+        <column key="type" header="措施费类型" width="150" render="issue=总价措施项目费,construct=安全文明施工费"/>
         <column key="start_time" header="开始时间" allowSort="true" dateFormat="yyyy-mm-dd" width="80"/>
         <column key="end_time" header="结束时间" allowSort="true" dateFormat="yyyy-mm-dd" width="80"/>
         <column key="final_sub" header="总费用" width="150"/>

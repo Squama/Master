@@ -232,9 +232,10 @@
                             case "volume":
                             	$('#id').val(data.data.id);
                             	id=data.data.id;
-                            	initEdit();
+                            	loadPage(basePath+"/project/point/salary/edit/" +id)
+                            	/* initEdit();
                             	unselectedTable.reloadData();
-                                selectedTable.reloadData();
+                                selectedTable.reloadData(); */
                             	break;
                         }
                     } else {
