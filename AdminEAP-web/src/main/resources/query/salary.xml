@@ -247,7 +247,7 @@
         <sql>
             <![CDATA[
               SELECT mv.id, mv.team_name, '总价措施项目费' AS type,mv.start_time, mv.end_time, mv.final_sub FROM tbl_measure_volume mv
-              WHERE  mv.id NOT IN (SELECT volume_id FROM tbl_salary_volume) AND mv.status = '70' AND mv.measure_type='issue' AND 1=1
+              WHERE  mv.id NOT IN (SELECT volume_id FROM tbl_salary_volume) AND mv.status = '70'  AND 1=1
             ]]>
         </sql>
         <column key="rowIndex" header="序号" width="80"/>
@@ -264,7 +264,7 @@
             <![CDATA[
               SELECT mv.id, mv.team_name, '总价措施项目费' AS type,mv.start_time, mv.end_time, mv.final_sub FROM tbl_measure_volume mv, 
               (SELECT volume_id, salary_id FROM tbl_salary_volume) sv
-              WHERE  mv.id = sv.volume_id AND mv.status = '70' AND mv.measure_type='issue' AND 1=1
+              WHERE  mv.id = sv.volume_id AND mv.status = '70'  AND 1=1
             ]]>
         </sql>
         <column key="rowIndex" header="序号" width="80"/>

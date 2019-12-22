@@ -1,5 +1,6 @@
 package com.radish.master.controller.volumePay;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -9,6 +10,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.swing.text.Position.Bias;
 
 import org.hibernate.type.StringType;
 import org.hibernate.type.Type;
@@ -210,7 +212,32 @@ public class ProjectPayController {
 			mx.setProjectPayId(fk.getId());
 			mx.setStatus("10");
 			mx.setFkfs("10");
-			mx.setDkmoney("0");
+			//放入抵扣金额
+			//获得预付金额
+			List<Map<String,Object>> yfje = baseService.findMapBySql("select ifnull(sum(yf.money),0) as yfje  from tbl_advance yf where yf.status='40' and yf.channelName='"+mx.getChannelName()+"'");
+			//获得已抵扣总额
+			List<Map<String,Object>> dkje = baseService.findMapBySql("select ifnull(sum(yf.dkmoney),0) as dkje  from tbl_projectPay_det yf where yf.status='30' and yf.channelName='"+mx.getChannelName()+"'");
+			Double yf = 0.0;
+			Double dk = 0.0;
+			if(yfje!=null&&yfje.size()>0&&yfje.get(0).get("yfje")!=null){
+				yf = Double.valueOf(yfje.get(0).get("yfje").toString());
+			}
+			if(dkje!=null&&dkje.size()>0&&dkje.get(0).get("dkje")!=null){
+				dk = Double.valueOf(dkje.get(0).get("dkje").toString());
+			}
+			Double syje = ari.sub(yf, dk);
+			if(syje>0){//抵扣>本期---本期   抵扣<本期 -----抵扣
+				Double bq = ari.add(Double.valueOf(mx.getQc()), Double.valueOf(mx.getBq()));;
+				if(syje>=bq){
+					mx.setDkmoney(bq.toString());
+					mx.setQm("0");
+				}else{
+					mx.setDkmoney(syje.toString());
+					mx.setQm(ari.sub(bq, syje)+"");
+				}
+			}else{
+				mx.setDkmoney("0");
+			}
 			baseService.save(mx);
 		}
 		r.setSuccess(true);
@@ -287,6 +314,7 @@ public class ProjectPayController {
 		ProjectPayDet zf = baseService.get(ProjectPayDet.class, id);
 		zf.setContent(mx.getContent());
 		Double je = ari.add(Double.valueOf(zf.getQc()), Double.valueOf(zf.getBq()));
+		je = ari.sub(je, Double.valueOf(zf.getDkmoney()));
 		if(ari.sub(je, Double.valueOf(mx.getFk()))<0){
 			r.setSuccess(false);
 			r.setMessage("付款金额过多，请重新输入");
@@ -356,7 +384,7 @@ public class ProjectPayController {
 		Result r = new Result();
 		ProjectPayDet mx = baseService.get(ProjectPayDet.class, id);
 		mx.setFkfs(fkfs);
-		mx.setDkmoney(dkmoney);
+		//mx.setDkmoney(dkmoney);
 		baseService.update(mx);
 		return r;
 	}
@@ -383,7 +411,7 @@ public class ProjectPayController {
 		Project xm = baseService.get(Project.class,zf.getProjectId());
 		List<ProAccount> xmz = baseService.find(" from ProAccount where projectId='"+zf.getProjectId()+"'");
 		
-		Double zfje = arith.sub(Double.valueOf(zfmx.getFk()),Double.valueOf(zfmx.getDkmoney()));
+		Double zfje = Double.valueOf(zfmx.getFk());
 		User u = SecurityUtil.getUser();
 		//账目明细
 		ProAccountDet mx = new ProAccountDet();
@@ -428,7 +456,13 @@ public class ProjectPayController {
 		List<ProjectPayDet> scmxs = baseService.find(" from ProjectPayDet where projectPayId='"+pid+"'");
 		for(ProjectPayDet zf : scmxs){
 			Double je = ari.add(Double.valueOf(zf.getQc()), Double.valueOf(zf.getBq()));
-			zf.setFk(ari.mul(bfb, je)+"");
+			je = ari.sub(je, Double.valueOf(zf.getDkmoney()));
+			if(je>0){
+				zf.setFk(ari.mul(bfb, je)+"");
+			}else{
+				zf.setFk("0");
+			}
+			
 			zf.setQm(ari.sub(je, Double.valueOf(zf.getFk()))+"");
 			baseService.update(zf);
 		}

@@ -1,6 +1,7 @@
 package com.radish.master.system;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public class Arith {
     /**
@@ -12,7 +13,7 @@ public class Arith {
     public static double add(double value1,double value2){
         BigDecimal b1 = new BigDecimal(Double.valueOf(value1));
         BigDecimal b2 = new BigDecimal(Double.valueOf(value2));
-        return b1.add(b2).doubleValue();
+        return (b1.add(b2)).setScale(3,RoundingMode.HALF_UP).doubleValue();
     }
 
     /**
@@ -24,7 +25,7 @@ public class Arith {
     public static double sub(double value1,double value2){
         BigDecimal b1 = new BigDecimal(Double.valueOf(value1));
         BigDecimal b2 = new BigDecimal(Double.valueOf(value2));
-        return b1.subtract(b2).doubleValue();
+        return (b1.subtract(b2)).setScale(3, RoundingMode.HALF_UP).doubleValue();
     }
 
     /**
@@ -36,7 +37,7 @@ public class Arith {
     public static double mul(double value1,double value2){
         BigDecimal b1 = new BigDecimal(Double.valueOf(value1));
         BigDecimal b2 = new BigDecimal(Double.valueOf(value2));
-        return b1.multiply(b2).doubleValue();
+        return (b1.multiply(b2)).setScale(3, RoundingMode.HALF_UP).doubleValue();
     }
 
     /**
