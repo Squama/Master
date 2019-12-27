@@ -63,6 +63,14 @@ public class BudgetEstimate extends BaseEntity {
     @Column(name = "budget_price")
     private String budgetPrice;
 
+    @Header(name = "类型")
+    @Column(name = "type")
+    private String type;
+
+    @Header(name = "变更量")
+    @Column(name = "addition_quantity")
+    private String additionQuantity;
+
     public String getBudgetTxID() {
         return budgetTxID;
     }
@@ -134,4 +142,21 @@ public class BudgetEstimate extends BaseEntity {
     public void setBudgetPrice(String budgetPrice) {
         this.budgetPrice = budgetPrice;
     }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getAdditionQuantity() {
+        return additionQuantity;
+    }
+
+    public void setAdditionQuantity(String additionQuantity) {
+        this.additionQuantity = additionQuantity;
+    }
+
 }

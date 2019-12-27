@@ -23,7 +23,7 @@ import com.cnpc.framework.base.entity.BaseEntity;
  */
 @Entity
 @Table(name = "tbl_budget_labour")
-public class BudgetLabour extends BaseEntity{
+public class BudgetLabour extends BaseEntity {
 
     private static final long serialVersionUID = -3714495444403163102L;
 
@@ -50,6 +50,14 @@ public class BudgetLabour extends BaseEntity{
     @Header(name = "消耗量")
     @Column(name = "labour_quantity")
     private String labourQuantity;
+
+    @Header(name = "类型")
+    @Column(name = "type")
+    private String type;
+
+    @Header(name = "变更量")
+    @Column(name = "addition_quantity")
+    private String additionQuantity;
 
     public String getBudgetTxID() {
         return budgetTxID;
@@ -97,6 +105,22 @@ public class BudgetLabour extends BaseEntity{
 
     public void setLabourQuantity(String labourQuantity) {
         this.labourQuantity = labourQuantity;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getAdditionQuantity() {
+        return additionQuantity;
+    }
+
+    public void setAdditionQuantity(String additionQuantity) {
+        this.additionQuantity = additionQuantity;
     }
 
 }

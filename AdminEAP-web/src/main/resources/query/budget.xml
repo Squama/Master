@@ -22,8 +22,26 @@
         <column key="projectName" header="所属项目" classType="String" allowSort="true" width="150"/>
         <column key="projectSubName" header="项目子项" classType="String"/>
         <column key="budgetName" header="预算名称" classType="String"/>
-        <column key="status" header="预算状态" allowSort="true" width="150" render="10=新建,15=已终止测算,20=测算已提交,30=测算已完成"/>
+        <column key="status" header="预算状态" allowSort="true" width="150" render="10=新建,15=已终止测算,20=测算已提交,30=测算已完成,35=测算变更中"/>
         <column key="budgetNo" header="操作" width="80" fnRender="fnRenderOperate"/>
+    </query>
+    
+    <!-- 变更测算 -->
+    <query id="budget_estimate_addition_list" key="budgetNo" tableName="待成本测算列表" widthType="px" >
+        <sql>
+            <![CDATA[
+              SELECT B.*, P.isBlue isBlue FROM tbl_budget B
+			  LEFT JOIN 
+			  (SELECT COUNT(1) isBlue, budget_no FROM tbl_purchase WHERE `status` IN (10,20,30,35) GROUP BY budget_no) P
+			  ON (B.budget_no = P.budget_no) WHERE 1=1
+            ]]>
+        </sql>
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="project_name" header="所属项目" classType="String" allowSort="true" width="150"/>
+        <column key="project_sub_name" header="项目子项" classType="String"/>
+        <column key="budget_name" header="预算名称" classType="String"/>
+        <column key="status" header="预算状态" allowSort="true" width="150" render="10=新建,15=已终止测算,20=测算已提交,30=可变更,35=测算变更中"/>
+        <column key="budget_no" header="操作" width="80" fnRender="fnRenderOperate"/>
     </query>
     
     <query id="budget_estimate_left_list" key="id" tableName="预算表" className="com.radish.master.entity.BudgetImport" widthType="px" pageSize="2000" order="quotaGroup asc,orderNo desc">
@@ -123,6 +141,55 @@
         <column key="id" header="删除" fnRender="fnRenderTxDelete"/>
     </query>
     
+    <query id="budget_estimate_addition_right_list" key="id" tableName="成本测算表" widthType="px" pageSize="2000" order="bt.quota_group asc,bt.order_no desc">
+        <sql>
+            <![CDATA[
+              SELECT bt.id id, bt.region_code regionCode, bt.region_name regionName, bt.quantities quantities,
+              bt.unit_price unitPrice, bt.artificiality artificiality, bt.materiels materiels, bt.mech mech,
+              bt.materiels_unit_price materielsUnitPrice,bt.labour_single labourSingle,bt.mat_single matSingle,
+              bt.mech_single mechSingle,bt.main_single mainSingle,
+              bt.quota_group quotaGroup, bt.order_no orderNo, bt.col col, be.esCount, bl.labourCount, bm.mechCount,
+              ae.esAdd, al.labourAdd, am.mechAdd
+              FROM tbl_budget_tx bt
+              LEFT JOIN 
+              (SELECT count(1) esCount, budget_tx_id FROM tbl_budget_estimate GROUP BY budget_tx_id) be
+              ON bt.id = be.budget_tx_id
+              LEFT JOIN
+              (SELECT count(1) labourCount, budget_tx_id FROM tbl_budget_labour GROUP BY budget_tx_id) bl
+              ON bt.id = bl.budget_tx_id
+              LEFT JOIN
+              (SELECT count(1) mechCount, budget_tx_id FROM tbl_budget_mech GROUP BY budget_tx_id) bm
+              ON bt.id = bm.budget_tx_id
+              LEFT JOIN 
+              (SELECT count(1) esAdd, budget_tx_id FROM tbl_budget_estimate WHERE type = '2' GROUP BY budget_tx_id) ae
+              ON bt.id = ae.budget_tx_id
+              LEFT JOIN
+              (SELECT count(1) labourAdd, budget_tx_id FROM tbl_budget_labour WHERE type = '2' GROUP BY budget_tx_id) al
+              ON bt.id = al.budget_tx_id
+              LEFT JOIN
+              (SELECT count(1) mechAdd, budget_tx_id FROM tbl_budget_mech WHERE type = '2' GROUP BY budget_tx_id) am
+              ON bt.id = am.budget_tx_id
+              WHERE 1=1
+            ]]>
+        </sql>
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="regionCode" header="定额编号" width="120"/>
+        <column key="regionName" header="子目名称" width="150" enableTooltip="true" maxLen="8"/>
+        <column key="quantities" header="工程量" width="100"/>
+        <column key="unitPrice" header="合价" width="150"/>
+        <column key="artificiality" header="合价（人工）" width="150"/>
+        <column key="materiels" header="合价（材料）" width="150"/>
+        <column key="mech" header="合价（机械）" width="150"/>
+        <column key="quotaGroup" hidden="true" header="分组" width="80"/>
+        <column key="orderNo" hidden="true" header="拆分合并标志" width="80"/>
+        <column key="col" hidden="true" header="行高" width="80"/>
+        <column key="esCount" hidden="true" header="材料测算条数"/>
+        <column key="labourCount" hidden="true" header="人工测算条数"/>
+        <column key="mechCount" hidden="true" header="机械测算条数"/>
+        <column key="id" header="id" hidden="true"/>
+        <column key="id" header="删除" fnRender="fnRenderTxDelete"/>
+    </query>
+    
     <query id="budget_tx_estimate_list" key="id" tableName="成本测算明细" widthType="px">
             <sql>
                 <![CDATA[
@@ -147,6 +214,49 @@
             <column key="budgetPrice" header="预算单价（元）"/>
             <column key="id" header="删除" fnRender="fnRenderDelete"/>
     </query>
+    <query id="budget_tx_addition_list" key="id" tableName="明细变更" widthType="px" order="be.id asc,be.addition_quantity desc">
+            <sql>
+                <![CDATA[
+                  SELECT be.id id,bt.region_name quotaName,p.project_name projectName,
+                  b.budget_name budgetName,be.mat_number matNumber,be.mat_name matName,
+                  be.mat_standard matStandard,be.unit unit,be.quantity quantity, be.addition_quantity additionQuantity, 
+                  be.budget_price budgetPrice, pd.quantity consumeQuantity
+                  FROM tbl_budget_estimate be
+				  INNER JOIN
+				  tbl_project p
+				  ON (p.id = be.project_id)
+				  INNER JOIN
+				  tbl_budget b
+				  ON(b.budget_no = be.budget_no)
+				  INNER JOIN
+				  tbl_budget_tx bt
+				  ON(bt.id = be.budget_tx_id)
+				  LEFT JOIN
+				  (
+					SELECT p.budget_no, pd.mat_number, SUM(pd.quantity) quantity FROM
+                    tbl_purchase p, tbl_purchase_det pd
+                    WHERE p.id = pd.purchase_id AND p.`status` IN ('40', '50', '60')
+                    GROUP BY p.budget_no, pd.mat_number
+				  ) pd
+				  ON (be.budget_no = pd.budget_no AND be.mat_number = pd.mat_number)
+			      WHERE 1=1
+                ]]>
+            </sql>
+            <column key="id" header="id" hidden="true"/>
+            <column key="rowIndex" header="序号"/>
+            <column key="quotaName" header="子目名称"/>
+            <column key="projectName" header="所属项目"/>
+            <column key="budgetName" header="所属预算"/>
+            <column key="matNumber" header="物料编号"/>
+            <column key="matName" header="物料名" />
+            <column key="matStandard" header="规格" />
+            <column key="unit" header="单位"/>
+            <column key="quantity" header="数量"/>
+            <column key="consumeQuantity" header="消耗数量"/>
+            <column key="additionQuantity" header="变更数量"/>
+            <column key="budgetPrice" header="预算单价（元）"/>
+            <column key="id" header="变更" fnRender="fnRenderDelete"/>
+    </query>
     
     <query id="budget_labour_estimate_list" key="id" tableName="人工测算明细" widthType="px">
             <sql>
@@ -170,6 +280,30 @@
             <column key="id" header="删除" fnRender="fnRenderDeleteLabour"/>
     </query>
     
+    <query id="budget_labour_addition_list" key="id" tableName="人工明细变更" widthType="px">
+            <sql>
+                <![CDATA[
+                  SELECT bl.id id,bt.region_name quotaName,p.project_name projectName,
+                  b.budget_name budgetName,bl.labour_name labourName, 
+                  bl.forecast_price forecastPrice, bl.labour_quantity labourQuantity, 
+                  bl.addition_quantity additionQuantity
+                  FROM tbl_project p,tbl_budget b,tbl_budget_tx bt,tbl_budget_labour bl
+                  WHERE p.id = b.project_id AND b.budget_no = bt.budget_no AND bt.id = bl.budget_tx_id
+                  AND 1=1
+                ]]>
+            </sql>
+            <column key="id" header="id" hidden="true"/>
+            <column key="rowIndex" header="序号"/>
+            <column key="quotaName" header="子目名称"/>
+            <column key="projectName" header="所属项目"/>
+            <column key="budgetName" header="所属预算"/>
+            <column key="labourName" header="人工费名称"/>
+            <column key="forecastPrice" header="市场估计价" />
+            <column key="labourQuantity" header="消耗量" />
+            <column key="additionQuantity" header="变更量" />
+            <column key="id" header="变更" fnRender="fnRenderDeleteLabour"/>
+    </query>
+    
     <query id="budget_mech_estimate_list" key="id" tableName="机械测算明细" widthType="px">
             <sql>
                 <![CDATA[
@@ -189,6 +323,29 @@
             <column key="mechPrice" header="台班单价" />
             <column key="mechQuantity" header="台班消耗量" />
             <column key="id" header="删除" fnRender="fnRenderDeleteMech"/>
+    </query>
+    
+    <query id="budget_mech_addition_list" key="id" tableName="机械明细变更" widthType="px">
+            <sql>
+                <![CDATA[
+                  SELECT bm.id id,bt.region_name quotaName,p.project_name projectName,
+                  b.budget_name budgetName,bm.mech_name mechName, bm.mech_price mechPrice, 
+                  bm.mech_quantity mechQuantity, bm.addition_quantity additionQuantity
+                  FROM tbl_project p,tbl_budget b,tbl_budget_tx bt,tbl_budget_mech bm
+                  WHERE p.id = b.project_id AND b.budget_no = bt.budget_no AND bt.id = bm.budget_tx_id
+                  AND 1=1
+                ]]>
+            </sql>
+            <column key="id" header="id" hidden="true"/>
+            <column key="rowIndex" header="序号"/>
+            <column key="quotaName" header="子目名称"/>
+            <column key="projectName" header="所属项目"/>
+            <column key="budgetName" header="所属预算"/>
+            <column key="mechName" header="机械费名称" />
+            <column key="mechPrice" header="台班单价" />
+            <column key="mechQuantity" header="台班消耗量" />
+            <column key="additionQuantity" header="变更量" />
+            <column key="id" header="变更" fnRender="fnRenderDeleteMech"/>
     </query>
     
     <query id="budget_consume_list" key="id" tableName="预算消耗" widthType="px" order="b.project_sub_id desc, b.create_date_time asc">

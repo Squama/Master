@@ -1,0 +1,88 @@
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><li class="fa fa-remove"></li></button>
+    <h5 class="modal-title">变更测算</h5>
+</div>
+
+<div class="modal-body" id="add">
+    <form id="addition-form" name="addition-form" class="form-horizontal">
+        <input type="hidden" name="tabName" value="${tabName}">
+        <input type="hidden" name="id" value="${id}">
+        <input type="hidden" name="quantity" value="${quantity}">
+        <input type="hidden" name="consume" value="${consume}">
+        <div class="box-body">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label for="projectType" class="col-sm-4 control-label">变更方向</label>
+                    <div class="col-sm-7">
+                        <select id="direction" class="form-control select2" name="direction" style="width:100%">
+                            <option selected="selected" value="">选择变更方向</option>
+                            <option value="1">增加(+)</option>
+                            <option value="2">减少(-)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="name" class="col-sm-4 control-label">变更量</label>
+                    <div class="col-sm-7">
+                        <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control" id="addition" name="addition" value="">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.box-body -->
+        <div class="box-footer text-right">
+            <button type="button" class="btn btn-default" data-btn-type="cancel" data-dismiss="modal">取消</button>
+            <button type="submit" class="btn btn-primary" data-btn-type="save">提交</button>
+        </div>
+        <!-- /.box-footer -->
+    </form>
+
+</div>
+<script>
+    //tableId,queryId,conditionContainer
+    var additionForm =null;
+    $(function() {
+        //初始化控件
+        additionForm=$("#addition-form").form({baseEntity: false});
+        //数据校验
+        $("#addition-form").bootstrapValidator({
+            message : '请输入有效值',
+            feedbackIcons : {
+                valid : 'glyphicon glyphicon-ok',
+                invalid : 'glyphicon glyphicon-remove',
+                validating : 'glyphicon glyphicon-refresh'
+            },
+            submitHandler : function() {
+                modals.confirm('确认保存？', function() {
+                    //Save Data，对应'submit-提交'
+                    var params = additionForm.getFormSimpleData();
+                    ajaxPost(basePath+'/budget/estimate/addition/change', params, function(data, status) {
+                        if(data.success){
+                            modals.hideWin(additionWinId); 
+                            budgetLabourEstimateTable.reloadData();
+                            budgetTxEstimateTable.reloadData();
+                            budgetMechEstimateTable.reloadData();
+                        }else{
+                        	modals.error(data.message);
+                        }              
+                    });
+                });
+            },
+            fields : {
+                "direction" : {
+                    validators : {
+                        notEmpty : {message : '请选择变更方向'}
+                    }
+                },
+                "addition":{
+                    validators:{
+                        notEmpty:{message:'请输入变更量'}
+                    }
+                }
+            }
+        });
+        //初始化控件
+        additionForm.initComponent();
+    });
+    
+</script>
