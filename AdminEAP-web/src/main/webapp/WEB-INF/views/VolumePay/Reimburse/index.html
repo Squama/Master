@@ -160,12 +160,23 @@
         }else if(rowObj.status=="财务负责人驳回"){
     		oper +="<a href='javascript:void(0)'style='color:red' onclick='lookyy(\"" + rowObj.shcwfzryj.replace(/[\r\n]/g,'') + "\")'>驳回原因</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='volumeManageObject.submit(\"" + value + "\")'>提交部门审核</a>";
         }
+
+    	oper += "&nbsp;&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' style='color:green' onclick='lookfj(\"" + value + "\")'>附件上传</a>";
         return oper;
     }
 
 
     function lookyy(value){
     	modals.info(value);
+    }
+
+    function lookfj(id){
+    	modals.openWin({
+            winId: "files",
+            width: "900px",
+            url: basePath + "/reimburse/projectdetailfile?id=" + id,
+            title: "查看附件"
+        });
     }
    
 </script>
