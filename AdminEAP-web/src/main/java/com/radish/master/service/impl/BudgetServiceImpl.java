@@ -393,6 +393,39 @@ public class BudgetServiceImpl extends BaseServiceImpl implements BudgetService 
     }
     
     @Override
+    public Result startAdditionFlow(Budget budget, String processDefinitionKey) {
+        
+        if(!"30".equals(budget.getStatus())){
+            return new Result(false,"本次测算变更已提交。");
+        }
+        
+        budget.setStatus("35");
+        budget.setUpdateDateTime(new Date());
+        
+        this.update(budget);
+        
+        Project project = this.get(Project.class, budget.getProjectID());
+        
+        //给流程起个名字
+        User user = SecurityUtil.getUser();
+        String name = user.getName() + "申请预算测算变更：" + budget.getBudgetName() + "，所属项目：" + project.getProjectName();
+        
+        //businessKey
+        String businessKey = budget.getBudgetNo();
+        
+        //配置流程变量
+        Map<String, Object> variables = new HashMap<>();
+        variables.put(Constants.VAR_APPLYUSER_NAME, user.getName());
+        variables.put(Constants.VAR_BUSINESS_KEY, budget.getBudgetNo());
+        variables.put("taskName", name);
+        
+        
+        //启动流程
+        return runtimePageService.startProcessInstanceByKey(processDefinitionKey, name, variables,
+                user.getId(), businessKey);
+    }
+    
+    @Override
 	public List<PurchaseApplyAudit> getQuantityAuditList(QueryCondition condition, PageInfo pageInfo) {
 
 		String id = null;

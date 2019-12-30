@@ -91,6 +91,8 @@
     var materiels = '${materiels?default(0)}';
     var sourceUrl = '${sourceUrl?default(0)}';
     
+    console.log(materiels);
+    
     if(materiels != 0){
         materiels = JSON.parse(materiels);
     }
@@ -121,7 +123,7 @@
                                 ajaxPost(basePath + '/budget/estimate/addition/start', {budgetNo:budgetNo}, function (data) {
                                     if (data.success) {
                                         modals.correct("流程已启动，请及时处理");
-                                        loadPage(basePath+"/budget/estimate/list");
+                                        loadPage(basePath+"/budget/estimate/addition/list");
                                     } else {
                                         modals.error(data.message);
                                     }

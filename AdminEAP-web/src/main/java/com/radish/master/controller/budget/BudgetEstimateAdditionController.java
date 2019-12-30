@@ -10,15 +10,17 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.alibaba.fastjson.JSONArray;
 import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.base.service.BaseService;
 import com.cnpc.framework.utils.StrUtil;
 import com.radish.master.entity.BudgetEstimate;
-import com.radish.master.entity.BudgetTx;
+import com.radish.master.entity.BudgetImport;
 import com.radish.master.entity.project.BudgetLabour;
 import com.radish.master.entity.project.BudgetMech;
 import com.radish.master.service.BudgetService;
@@ -53,6 +55,7 @@ public class BudgetEstimateAdditionController {
         
         request.setAttribute("budgetNo", budgetNo);
         request.setAttribute("sourceUrl", sourceUrl);
+        request.setAttribute("materiels", JSONArray.toJSONString(budgetService.getMatMap()));
         
         return "budgetmanage/budgetaddition/toadd";
     }
@@ -60,6 +63,7 @@ public class BudgetEstimateAdditionController {
     @RequestMapping(value="/singleaddition",method = RequestMethod.GET)
     public String singleEstimate(HttpServletRequest request, String id){
         request.setAttribute("budgetTxID", id);
+        
         
         return "budgetmanage/budgetaddition/single_addition";
     }
@@ -111,6 +115,47 @@ public class BudgetEstimateAdditionController {
         return new Result(true);
     }
     
+    @RequestMapping(value = "/start", method = RequestMethod.POST)
+    @ResponseBody
+    public Result start(String budgetNo) {
+        return budgetService.startAdditionFlow(budgetService.getBudgetByNo(budgetNo),"additionApprove");
+    }
+    
+    @RequestMapping(method = RequestMethod.GET, value="/auditlist/{budgetNo}")
+    private String toAudit(@PathVariable("budgetNo") String budgetNo, HttpServletRequest request) {
+        request.setAttribute("budgetNo", budgetNo);
+        
+        List<BudgetImport> list = budgetService.getBudgetImportList(budgetNo);
+        
+        BigDecimal sumUnit = new BigDecimal("0");
+        BigDecimal sumLabour = new BigDecimal("0");
+        BigDecimal sumMat = new BigDecimal("0");
+        BigDecimal sumMech = new BigDecimal("0");
+        
+        for(BudgetImport bi : list){
+            if(!"1".equals(bi.getIsGroup())){
+                sumUnit = sumUnit.add(new BigDecimal(StrUtil.isEmpty(bi.getUnitPrice())?"0":bi.getUnitPrice()));
+                sumLabour = sumLabour.add(new BigDecimal(StrUtil.isEmpty(bi.getArtificiality())?"0":bi.getArtificiality()));
+                sumMat = sumMat.add(new BigDecimal(StrUtil.isEmpty(bi.getMateriels())?"0":bi.getMateriels()));
+                sumMech = sumMech.add(new BigDecimal(StrUtil.isEmpty(bi.getMech())?"0":bi.getMech()));
+            }
+        }
+        
+        request.setAttribute("sumUnit", sumUnit.toPlainString());
+        request.setAttribute("sumLabour", sumLabour.toPlainString());
+        request.setAttribute("sumMat", sumMat.toPlainString());
+        request.setAttribute("sumMech", sumMech.toPlainString());
+        
+        return "budgetmanage/budgetaddition/audit_list";
+    }
+    
+    @RequestMapping(value="/singleadditionquery",method = RequestMethod.GET)
+    public String singleEstimateQuery(HttpServletRequest request, String id){
+        request.setAttribute("budgetTxID", id);
+        
+        return "budgetmanage/budgetaddition/single_addition_query";
+    }
+    
     @RequestMapping(method = RequestMethod.POST, value = "/save")
     @ResponseBody
     private Result saveBudgetEstimate(BudgetEstimate budgetEstimate, HttpServletRequest request) {
@@ -120,7 +165,9 @@ public class BudgetEstimateAdditionController {
             return new Result(false, "材料测算保存失败！请检查是否超过20条！");
         }
         
+        budgetEstimate.setQuantity("0");
         budgetEstimate.setType("2");
+        budgetEstimate.setAdditionQuantity("+" + budgetEstimate.getAdditionQuantity());
         
         budgetService.save(budgetEstimate);
         
@@ -131,7 +178,10 @@ public class BudgetEstimateAdditionController {
     @ResponseBody
     private Result saveBudgetLabour(BudgetLabour budgetLabour, HttpServletRequest request) {
         
+        budgetLabour.setLabourQuantity("0");
         budgetLabour.setType("2");
+        budgetLabour.setAdditionQuantity("+" + budgetLabour.getAdditionQuantity());
+        
         budgetService.save(budgetLabour);
         return new Result(true);
     }
@@ -140,7 +190,10 @@ public class BudgetEstimateAdditionController {
     @ResponseBody
     private Result saveBudgetMech(BudgetMech budgetMech, HttpServletRequest request) {
         
+        budgetMech.setMechQuantity("0");
         budgetMech.setType("2");
+        budgetMech.setAdditionQuantity("+" + budgetMech.getAdditionQuantity());
+        
         budgetService.save(budgetMech);
         
         return new Result(true);
@@ -174,50 +227,5 @@ public class BudgetEstimateAdditionController {
         
         budgetService.update(be);
         return new Result(true);
-    }
-    
-    private String getUnitPrice(BudgetTx bt){
-        BigDecimal result = new BigDecimal("0");
-        BigDecimal labour = new BigDecimal(StrUtil.isEmpty(bt.getArtificiality())?"0":bt.getArtificiality() );
-        BigDecimal mat = new BigDecimal(StrUtil.isEmpty(bt.getMateriels())?"0":bt.getMateriels());
-        BigDecimal mech = new BigDecimal(StrUtil.isEmpty(bt.getMech())?"0":bt.getMech());
-        
-        return result.add(labour.add(mat.add(mech))).toPlainString();
-    }
-    
-    private void updateGroupInfo(String quotaGroup, String budgetNo){
-        List<BudgetTx> list = budgetService.getBudgetTxListByGroup(budgetNo, quotaGroup);
-        
-        //合价
-        BigDecimal unitPriceSum = new BigDecimal("0");
-        //人工
-        BigDecimal artificialitySum = new BigDecimal("0");
-        //机械
-        BigDecimal mechSum = new BigDecimal("0");
-        //材料
-        BigDecimal materielsSum = new BigDecimal("0");
-        
-        BudgetTx groupBudgetTx = null;
-        
-        for(BudgetTx tx : list){
-            if("1".equals(tx.getIsGroup())){
-                groupBudgetTx = tx;
-                continue;
-            }
-            unitPriceSum = unitPriceSum.add(new BigDecimal(StrUtil.isEmpty(tx.getUnitPrice())?"0":tx.getUnitPrice()));
-            artificialitySum = artificialitySum.add(new BigDecimal(StrUtil.isEmpty(tx.getArtificiality())?"0":tx.getArtificiality()));
-            mechSum = mechSum.add(new BigDecimal(StrUtil.isEmpty(tx.getMech())?"0":tx.getMech()));
-            materielsSum = materielsSum.add(new BigDecimal(StrUtil.isEmpty(tx.getMateriels())?"0":tx.getMateriels()));
-        }
-        
-        if(groupBudgetTx != null){
-            groupBudgetTx.setUnitPrice(unitPriceSum.toPlainString());
-            groupBudgetTx.setArtificiality(artificialitySum.toPlainString());
-            groupBudgetTx.setMech(mechSum.toPlainString());
-            groupBudgetTx.setMateriels(materielsSum.toPlainString());
-            
-            budgetService.update(groupBudgetTx);
-        }
-        
     }
 }
