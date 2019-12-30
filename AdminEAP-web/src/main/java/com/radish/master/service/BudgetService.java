@@ -64,6 +64,7 @@ public interface BudgetService extends BaseService {
     
     public Result startEstimateFlow(Budget budget, String processDefinitionKey);
     
+    public Result startAdditionFlow(Budget budget, String processDefinitionKey);
     
     public List<BudgetTx> getBudgetTxList(String budgetNo);
     
