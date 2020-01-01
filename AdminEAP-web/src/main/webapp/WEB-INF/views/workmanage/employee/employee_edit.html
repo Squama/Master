@@ -5,9 +5,15 @@
     <h5 class="modal-title">员工信息</h5>
 </div>
 
-<div class="modal-body">
+<div class="modal-body"  style="max-height:500px;overflow-y:auto;">
 
     <form id="user-form" name="user-form" class="form-horizontal">
+    <div class="box-footer text-center" >
+            <!--以下两种方式提交验证,根据所需选择-->
+             <button type="submit" class="btn btn-primary" data-btn-type="save">提交</button>
+            <button type="button" class="btn btn-default" data-btn-type="cancel" data-dismiss="modal">取消</button>
+        </div>
+        <!-- /.box-footer -->
         <input type="hidden" name="id">
         <div class="box-body">
             <div class="col-md-6">
@@ -234,12 +240,6 @@
             </div>
         </div>
         <!-- /.box-body -->
-        <div class="box-footer text-right">
-            <!--以下两种方式提交验证,根据所需选择-->
-            <button type="button" class="btn btn-default" data-btn-type="cancel" data-dismiss="modal">取消</button>
-            <button type="submit" class="btn btn-primary" data-btn-type="save">提交</button>
-        </div>
-        <!-- /.box-footer -->
     </form>
 
 </div>
