@@ -292,7 +292,8 @@ public class MeasureVolumeController {
         oldMeasureVolume.setBusinessPack(measureVolume.getBusinessPack());
         oldMeasureVolume.setBusinessSub(measureVolume.getBusinessSub());
         oldMeasureVolume.setUpdateDateTime(new Date());
-        
+        oldMeasureVolume.setJygx(measureVolume.getJygx());
+        oldMeasureVolume.setJygxb(measureVolume.getJygxb());
         try{
             projectService.update(oldMeasureVolume); 
         }catch (Exception e) {

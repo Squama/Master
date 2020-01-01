@@ -206,6 +206,18 @@ public class ProjectVolume extends BaseEntity {
     @Column(name = "final_debitjx")
     private String finalDebitjx;
     
+    @Header(name = "上报功效")
+    @Column(name = "sbgx")
+    private String sbgx;
+    
+    @Header(name = "经营功效")
+    @Column(name = "jygx")
+    private String jygx;
+    
+    @Header(name = "经营功效比")
+    @Column(name = "jygxb")
+    private String jygxb;
+    
     public String getProjectID() {
         return projectID;
     }
@@ -540,6 +552,30 @@ public class ProjectVolume extends BaseEntity {
 
 	public void setFinalDebitjx(String finalDebitjx) {
 		this.finalDebitjx = finalDebitjx;
+	}
+
+	public String getSbgx() {
+		return sbgx;
+	}
+
+	public void setSbgx(String sbgx) {
+		this.sbgx = sbgx;
+	}
+
+	public String getJygx() {
+		return jygx;
+	}
+
+	public void setJygx(String jygx) {
+		this.jygx = jygx;
+	}
+
+	public String getJygxb() {
+		return jygxb;
+	}
+
+	public void setJygxb(String jygxb) {
+		this.jygxb = jygxb;
 	}
 
 }

@@ -156,6 +156,18 @@ public class MeasureVolume extends BaseEntity{
     @Header(name = "总价措施项目费类别")
     @Column(name = "measure_type")
     private String measureType;
+    
+    @Header(name = "上报功效")
+    @Column(name = "sbgx")
+    private String sbgx;
+    
+    @Header(name = "经营功效")
+    @Column(name = "jygx")
+    private String jygx;
+    
+    @Header(name = "经营功效比")
+    @Column(name = "jygxb")
+    private String jygxb;
 
     public String getProjectID() {
         return projectID;
@@ -396,5 +408,29 @@ public class MeasureVolume extends BaseEntity{
     public void setMeasureType(String measureType) {
         this.measureType = measureType;
     }
+
+	public String getSbgx() {
+		return sbgx;
+	}
+
+	public void setSbgx(String sbgx) {
+		this.sbgx = sbgx;
+	}
+
+	public String getJygx() {
+		return jygx;
+	}
+
+	public void setJygx(String jygx) {
+		this.jygx = jygx;
+	}
+
+	public String getJygxb() {
+		return jygxb;
+	}
+
+	public void setJygxb(String jygxb) {
+		this.jygxb = jygxb;
+	}
     
 }

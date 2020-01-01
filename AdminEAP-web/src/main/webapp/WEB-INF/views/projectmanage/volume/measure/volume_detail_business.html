@@ -71,6 +71,7 @@
                                 <h4>上报金额：</h4>
                                 <p>机械费：<span id="mechInfo">尚未审批</span>；人工费：<span id="labourInfo">尚未审批</span>；材料费：<span id="matInfo">尚未审批</span>；扣款：<span id="debitInfo">尚未审批</span></p>
                                 <h5>上报小计：<span id="subInfo">尚未审批</span></h5>
+                              	<p>功效：<span id="sbgx"></span></p>
                               </div>
                         </div>
                         <div class="col-md-6">
@@ -86,7 +87,12 @@
                                     <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control calculate" id="businessMat" name="businessMat" placeholder="审核材料费" value="0">
                                 </div>
                             </div>
-                            
+                            <div class="form-group">
+                                <label class="col-sm-5 control-label"><span style="color:red">功效</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control calculate" id="jygx" name="jygx" placeholder="功效" >
+                                </div>
+                            </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
@@ -105,6 +111,12 @@
                                 <label class="col-sm-3 control-label">审核扣款（元）<span style="color:red">*</span></label>
                                 <div class="col-sm-6">
                                     <input type="text" onkeyup="value=value.replace(/[^\d.]/g,'')" class="form-control calculate" id="businessDebit" name="businessDebit" placeholder="审核应扣款" value="0">
+                                </div>
+                            </div>
+                             <div class="form-group">
+                                <label class="col-sm-3 control-label"><span style="color:red">功效比</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control calculate" id="jygxb" name="jygxb" placeholder="功效比" >
                                 </div>
                             </div>
                         </div>
@@ -222,6 +234,9 @@
                 //$('#packInfo').html(data.applyPack + '元');
                 $('#debitInfo').html(data.applyDebit + '元');
                 $('#subInfo').html(data.applySub + '元');
+                if(data.sbgx){
+                	$("#sbgx").html(data.sbgx);
+                }
             })
         }
         
@@ -243,6 +258,8 @@
             formData.businessPack = pack + "";
             formData.businessDebit = debit + "";
             formData.businessSub = sub + "";
+            formData.jygx = $("#jygx").val();
+            formData.jygxb = $("#jygxb").val();
             ajaxPost(basePath + '/measurevolume/savebusiness', formData, function (data) {
                 if (data.success) {
                 } else {

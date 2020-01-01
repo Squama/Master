@@ -469,6 +469,8 @@ public class ProjectVolumeController {
         oldProjectVolume.setBusinessPack(projectVolume.getBusinessPack());
         oldProjectVolume.setBusinessSub(projectVolume.getBusinessSub());
         oldProjectVolume.setUpdateDateTime(new Date());
+        oldProjectVolume.setJygx(projectVolume.getJygx());
+        oldProjectVolume.setJygxb(projectVolume.getJygxb());
         
         try{
             projectService.update(oldProjectVolume); 

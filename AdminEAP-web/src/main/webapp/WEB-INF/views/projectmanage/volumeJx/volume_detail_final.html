@@ -79,11 +79,13 @@
                                 <h4>上报金额：</h4>
                                 <p>机械费：<span id="mechInfo">尚未审批</span>；机械扣款：<span id="debitjxInfo">尚未审批</span>；</p>
                                 <h5>上报小计：<span id="subInfo">尚未审批</span></h5>
+                              	<p>功效：<span id="sbgx"></span></p>
                               </div>
                               <div class="callout callout-success" id="businessInfo" style="margin-top:8px;margin-bottom:8px;">
                                 <h4>经营科审核金额：</h4>
                                 <p>机械费：<span id="mechBusi">尚未审批</span>；机械扣款：<span id="debitjxBusi">尚未审批</span>；</p>
                                 <h5>上报小计：<span id="subBusi">尚未审批</span></h5>
+                              	<p>功效：<span id="jygx"></span>；功效比：<span id="jygxb"></span></p>
                               </div>
                         </div>
                         <div class="col-md-6 final dn">
@@ -150,36 +152,6 @@
                 </form>
             </div>
             
-        </div>
-    </div>
-</section>
-<section class="content">
-    <div class="row">
-        <div class="col-xs-12">
-            <div class="box">
-            	<div class="box-header with-border">
-                        <span>
-                            <i class="fa fa-files-o">班组工程量(所属班组全部)</i>
-                        </span>
-                    </div>
-                <!-- /.box-header -->
-                <div class="dataTables_filter" id="searchDiv" >
-                    <select  class="form-control select2" name="pv.sblx" style="width:200px;" operator="eq">
-                    	<option selected="selected" value="">选择一个类型</option>
-                    	<option value="10">包清工</option>
-                    	<option value="20">包工包料</option>
-                    	<option value="30">机械</option>
-                    </select>
-                    <input id = "bzid" name="l.construction_team_id" style="display: none" operator="eq">
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-primary" data-btn-type="search">查询</button>
-                    </div>
-                </div>
-                <div class="box-body box-body-mobile">
-                    <table id="volume_table" class="table table-bordered table-striped table-hover">
-                    </table>
-                </div>
-            </div>
         </div>
     </div>
 </section>
@@ -321,7 +293,16 @@
                 $('#debitjxBusi').html(data.businessDebitjx + '元');
                 $('#debitclBusi').html(data.businessDebitcl + '元');
                 $('#subBusi').html(data.businessSub + '元');
-                
+
+                if(data.sbgx){
+                	$("#sbgx").html(data.sbgx);
+                }
+                if(data.jygx){
+                	$("#jygx").html(data.jygx);
+                }
+                if(data.jygxb){
+                	$("#jygxb").html(data.jygxb);
+                }
                 if(data.status=="60"){
                     $('.final').show();
                 }

@@ -65,11 +65,13 @@
                                 <h4>上报金额：</h4>
                                 <p>机械费：<span id="mechInfock">尚未审批</span>；人工费：<span id="labourInfock">尚未审批</span>；材料费：<span id="matInfock">尚未审批</span>；扣款：<span id="debitInfock">尚未审批</span>；</p>
                                 <h5>上报小计：<span id="subInfock">尚未审批</span></h5>
+                              	<p>功效：<span id="sbgx"></span></p>
                               </div>
                               <div class="callout callout-success" id="businessInfock" style="margin-top:8px;margin-bottom:8px;">
                                 <h4>经营科审核金额：</h4>
                                 <p>机械费：<span id="mechBusick">尚未审批</span>；人工费：<span id="labourBusick">尚未审批</span>；材料费：<span id="matBusick">尚未审批</span>；扣款：<span id="debitBusick">尚未审批</span>；</p>
                                 <h5>上报小计：<span id="subBusick">尚未审批</span></h5>
+                              	<p>功效：<span id="jygx"></span>；功效比：<span id="jygxb"></span></p>
                               </div>
                               <div class="callout callout-success" id="finalInfock" style="margin-top:8px;margin-bottom:8px;">
                                 <h4>财务审核金额：</h4>
@@ -120,8 +122,8 @@
 		$("#finalInfock").css("display","")
     }else{
     	$("#applyInfock").css("display","")
-		$("#businessInfock").css("display","none")
-		$("#finalInfock").css("display","none")
+		$("#businessInfock").css("display","")
+		$("#finalInfock").css("display","")
     }
     var ckprojectOptions = '${projectOptions?default(0)}',ckoptions=0;
     if(ckprojectOptions != 0){
@@ -245,7 +247,15 @@
                 $('#matFinalck').html(data.finalMat + '元');
                 $('#debitFinalck').html(data.finalDebit + '元');
                 $('#subFinalck').html(data.finalSub + '元');
-                
+                if(data.sbgx){
+                	$("#sbgx").html(data.sbgx);
+                }
+                if(data.jygx){
+                	$("#jygx").html(data.jygx);
+                }
+                if(data.jygxb){
+                	$("#jygxb").html(data.jygxb);
+                }
                // $('.final').show();
             })
         }

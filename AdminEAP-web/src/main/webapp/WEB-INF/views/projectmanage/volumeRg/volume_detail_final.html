@@ -79,11 +79,13 @@
                                 <h4>上报金额：</h4>
                                 <p>人工费：<span id="labourInfo">尚未审批</span>；人工扣款：<span id="debitInfo">尚未审批</span>；</p>
                                 <h5>上报小计：<span id="subInfo">尚未审批</span></h5>
+                                <p>功效：<span id="sbgx"></span></p>
                               </div>
                               <div class="callout callout-success" id="businessInfo" style="margin-top:8px;margin-bottom:8px;">
                                 <h4>经营科审核金额：</h4>
                                 <p>人工费：<span id="labourBusi">尚未审批</span>；人工扣款：<span id="debitBusi">尚未审批</span>；</p>
                                 <h5>上报小计：<span id="subBusi">尚未审批</span></h5>
+                                <p>功效：<span id="jygx"></span>；功效比：<span id="jygxb"></span></p>
                               </div>
                         </div>
                        <div class="col-md-6 final dn">
@@ -289,6 +291,16 @@
                 $('#debitjxBusi').html(data.businessDebitjx + '元');
                 $('#debitclBusi').html(data.businessDebitcl + '元');
                 $('#subBusi').html(data.businessSub + '元');
+
+                if(data.sbgx){
+                	$("#sbgx").html(data.sbgx);
+                }
+                if(data.jygx){
+                	$("#jygx").html(data.jygx);
+                }
+                if(data.jygxb){
+                	$("#jygxb").html(data.jygxb);
+                }
                 
                 if(data.status=="60"){
                     $('.final').show();
