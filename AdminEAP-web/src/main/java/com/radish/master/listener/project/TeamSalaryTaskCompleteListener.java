@@ -15,6 +15,7 @@ import org.activiti.engine.delegate.TaskListener;
 import com.cnpc.framework.activiti.pojo.Constants;
 import com.cnpc.framework.base.service.BaseService;
 import com.cnpc.framework.utils.SecurityUtil;
+import com.radish.master.entity.Labor;
 import com.radish.master.entity.ProjectVolume;
 import com.radish.master.entity.common.ActivitiSuggestion;
 import com.radish.master.entity.project.Salary;
@@ -95,6 +96,12 @@ public class TeamSalaryTaskCompleteListener implements TaskListener{
             					zf.setContent("工资单审核完成自动分配金额,工资id:"+businessKey);
             					zf.setCreateDate(new Date());
             					zf.setStatus("30");
+            					if(gcl.getLaborID()!=null){
+            						Labor ht = baseService.get(Labor.class, gcl.getLaborID());
+            						if(ht!=null){
+            							zf.setSkf(ht.getConstructionTeam());
+            						}
+            					}
             					baseService.save(zf);
             					gcl.setLabourStatus("20");
             					baseService.update(gcl);
