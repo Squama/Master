@@ -30,6 +30,7 @@ import com.radish.master.entity.ProjectVolume;
 import com.radish.master.entity.project.Salary;
 import com.radish.master.entity.project.SalaryDetail;
 import com.radish.master.entity.project.SalaryVolume;
+import com.radish.master.entity.project.Worker;
 import com.radish.master.entity.volumePay.Reimburse;
 import com.radish.master.entity.volumePay.VolumePay;
 import com.radish.master.service.BudgetService;
@@ -112,7 +113,8 @@ public class VolumePayController {
 	@RequestMapping("/addPayInfo")//非人工支付
 	public String addPayInfo(HttpServletRequest request){
 		Arith air = new Arith();
-		List<User> ul1 = baseService.findMapBySql("select u.name name ,u.id id from tbl_user u where  u.audit_status = 10", new Object[]{}, new Type[]{StringType.INSTANCE}, User.class);
+//		List<User> ul1 = baseService.findMapBySql("select u.name name ,u.id id from tbl_user u where  u.audit_status = 10", new Object[]{}, new Type[]{StringType.INSTANCE}, User.class);
+		List<Worker> ul1 = baseService.findMapBySql("select u.name name ,u.id id from tbl_worker u ", new Object[]{}, new Type[]{StringType.INSTANCE}, Worker.class);
 		request.setAttribute("use", JSONArray.toJSONString(ul1));
 		String gclid = request.getParameter("gclid");
 		String type = request.getParameter("type");
@@ -162,7 +164,8 @@ public class VolumePayController {
 	@RequestMapping("/addPayInfoRg")//人工支付
 	public String addPayInfoRg(HttpServletRequest request){
 		Arith air = new Arith();
-		List<User> ul1 = baseService.findMapBySql("select u.name name ,u.id id from tbl_user u where  u.audit_status = 10", new Object[]{}, new Type[]{StringType.INSTANCE}, User.class);
+//		List<User> ul1 = baseService.findMapBySql("select u.name name ,u.id id from tbl_user u where  u.audit_status = 10", new Object[]{}, new Type[]{StringType.INSTANCE}, User.class);
+		List<Worker> ul1 = baseService.findMapBySql("select u.name name ,u.id id from tbl_worker u ", new Object[]{}, new Type[]{StringType.INSTANCE}, Worker.class);
 		request.setAttribute("use", JSONArray.toJSONString(ul1));
 		String gclid = request.getParameter("gclid");
 		request.setAttribute("gclid", gclid);
@@ -209,7 +212,8 @@ public class VolumePayController {
 		Arith air = new Arith(); 
 		VolumePay zf = baseService.get(VolumePay.class, id);
 		if("10".equals(zf.getPayType())){//人工
-			List<User> ul1 = baseService.findMapBySql("select u.name name ,u.id id from tbl_user u where  u.audit_status = 10", new Object[]{}, new Type[]{StringType.INSTANCE}, User.class);
+//			List<User> ul1 = baseService.findMapBySql("select u.name name ,u.id id from tbl_user u where  u.audit_status = 10", new Object[]{}, new Type[]{StringType.INSTANCE}, User.class);
+			List<Worker> ul1 = baseService.findMapBySql("select u.name name ,u.id id from tbl_worker u ", new Object[]{}, new Type[]{StringType.INSTANCE}, Worker.class);
 			request.setAttribute("use", JSONArray.toJSONString(ul1));
 			request.setAttribute("zfid", id);
 			String gzid = "";
@@ -241,7 +245,8 @@ public class VolumePayController {
 			request.setAttribute("lx", "look");
 			return prefix+"addPayIndexRg";
 		}else{
-			List<User> ul1 = baseService.findMapBySql("select u.name name ,u.id id from tbl_user u where  u.audit_status = 10", new Object[]{}, new Type[]{StringType.INSTANCE}, User.class);
+//			List<User> ul1 = baseService.findMapBySql("select u.name name ,u.id id from tbl_user u where  u.audit_status = 10", new Object[]{}, new Type[]{StringType.INSTANCE}, User.class);
+			List<Worker> ul1 = baseService.findMapBySql("select u.name name ,u.id id from tbl_worker u ", new Object[]{}, new Type[]{StringType.INSTANCE}, Worker.class);
 			request.setAttribute("use", JSONArray.toJSONString(ul1));
 			request.setAttribute("gclid", zf.getVolumeId());
 			request.setAttribute("type", zf.getPayType());
@@ -379,6 +384,7 @@ public class VolumePayController {
 		zf.setFzrId(nzf.getFzrId());
 		zf.setPayMoney(nzf.getPayMoney());
 		zf.setPayWay(nzf.getPayWay());
+		zf.setSkf(nzf.getSkf());
 		baseService.update(zf);
 		Result r = new Result();
 		r.setSuccess(true);
