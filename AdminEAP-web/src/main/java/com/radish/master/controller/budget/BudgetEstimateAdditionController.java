@@ -85,9 +85,9 @@ public class BudgetEstimateAdditionController {
     public Result change(String tabName, String id, String direction, String addition, String quantity, String consume, HttpServletRequest request){
         
         if("2".equals(direction)){
-            BigDecimal q = new BigDecimal(quantity);
-            BigDecimal c = new BigDecimal(consume);
-            BigDecimal a = new BigDecimal(addition);
+            BigDecimal q = new BigDecimal(StrUtil.isEmpty(quantity)?"0":quantity);
+            BigDecimal c = new BigDecimal(StrUtil.isEmpty(consume)?"0":consume);
+            BigDecimal a = new BigDecimal(StrUtil.isEmpty(addition)?"0":addition);
             
             if(q.subtract(c).compareTo(a) < 0){
                 return new Result(false, "扣减预算后不能为负数");
