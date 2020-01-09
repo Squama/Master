@@ -136,16 +136,16 @@ public class AttendanceController {
                     String exception = getCellValue(row.getCell(7));
                     bi.setException(exception);
                     
-                    String early = getCellValue(row.getCell(8));
+                    String early = getCellValue(row.getCell(9));
                     bi.setEarly(early);
                     
-                    String late = getCellValue(row.getCell(9));
+                    String late = getCellValue(row.getCell(10));
                     bi.setLate(late);
                     
-                    String completion = getCellValue(row.getCell(10));
+                    String completion = getCellValue(row.getCell(11));
                     bi.setCompletion(completion);
                     
-                    String total = getCellValue(row.getCell(11));
+                    String total = getCellValue(row.getCell(12));
                     bi.setTotal(total);
                     
                     list.add(bi);
