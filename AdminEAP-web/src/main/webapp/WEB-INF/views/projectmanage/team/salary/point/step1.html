@@ -227,9 +227,12 @@
                     if (data.success) {
                         switch (action) {
                             case "next":
-                            	if($('[role="row"]','#volume_choosen_table').length == 1){
-                                    modals.error("必须至少选择一个工程单！");
-                                    return false;
+                                console.log($("#projectID option:selected").text());
+                                if($("#projectID option:selected").text()!="总库项目"){
+                                	if($('[role="row"]','#volume_choosen_table').length == 1){
+                                        modals.error("必须至少选择一个工程单！");
+                                        return false;
+                                    }
                                 }
                                 loadPage(basePath+"/project/point/salary/step2", undefined, data.data);
                                 break;
