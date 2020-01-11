@@ -19,6 +19,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.cnpc.framework.base.entity.Org;
 import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.utils.SecurityUtil;
+import com.cnpc.framework.utils.StrUtil;
 import com.radish.master.entity.fixedassets.FixedAssetsStk;
 import com.radish.master.entity.fixedassets.FixedAssetsStkTx;
 import com.radish.master.entity.fixedassets.FixedAssetsUse;
@@ -133,7 +134,12 @@ public class FixedAssetsUseController {
         fau.setFaType(stk.getFaType());
         
         try {
-            commonService.save(fau);
+            if(StrUtil.isEmpty(fau.getId())){
+                commonService.save(fau);
+            }else{
+                commonService.update(fau);
+            }
+            
         } catch (Exception e) {
             return new Result(false,"保存失败，请联系系统管理员！");
         }
