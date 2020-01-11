@@ -100,7 +100,7 @@ public class StockChecksController {
 		List<StockChecksMatDet> mx =  getQc(tj,tjwl);
 		
 		//根据物料编号、价格、类型 去分组 拿到数量  ..统计时间断内
-		String sql = "select matNumber , sum(rkl) rkl ,price,type   from v_instockInfo where projectId='"+tj.getProjectId()+"' ";
+		String sql = "select matNumber , CAST(sum(rkl) AS CHAR(60))   rkl ,price,type   from v_instockInfo where projectId='"+tj.getProjectId()+"' ";
 		sql+=" and matNumber ='"+tjwl.getMatNumber()+"' ";
 		sql += " and  rq > '"+sdf.format(tj.getStartdate())+"' and rq <= '"+sdf.format(tj.getEnddate())+"'"
 				+ "  GROUP BY matNumber , price,type ";//开始日期之前都计入期初
