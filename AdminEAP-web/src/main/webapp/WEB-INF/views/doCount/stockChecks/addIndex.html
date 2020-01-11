@@ -86,13 +86,13 @@
 		                   		</div>
 		                    </div>
 		                    <div class="form-group">
-                                <label class="col-sm-5 control-label">开始时间</label>
+                                <label class="col-sm-5 control-label" for="startdate">开始时间</label>
                                 <div class="col-sm-2">
                                     <input type="text" class="form-control date-picker" name="startdate" id="startdate" data-flag="datepicker" data-format="yyyy-mm-dd"  placeholder="" >
                                 </div>
                             </div>
                         	<div class="form-group">
-                                <label class="col-sm-5 control-label">截止时间</label>
+                                <label class="col-sm-5 control-label"  for="enddate">截止时间</label>
                                 <div class="col-sm-2">
                                     <input type="text" class="form-control date-picker" name="enddate" id="enddate" data-flag="datepicker" data-format="yyyy-mm-dd"  placeholder="" >
                                 </div>
@@ -393,16 +393,16 @@ if(pros != 0){
            tfs += "<td ></td>";
            tfs += "<td ></td>";
            tfs += "<td ></td>";
-           tfs += "<td >"+zqcje+"</td>";
+           tfs += "<td >"+zqcje.toFixed(2)+"</td>";
            tfs += "<td ></td>";
            tfs += "<td ></td>";
-           tfs += "<td >"+zrkje+"</td>";
+           tfs += "<td >"+zrkje.toFixed(2)+"</td>";
            tfs += "<td ></td>";
            tfs += "<td ></td>";
-           tfs += "<td >"+zckje+"</td>";
+           tfs += "<td >"+zckje.toFixed(2)+"</td>";
            tfs += "<td ></td>";
            tfs += "<td ></td>";
-           tfs += "<td >"+zjcje+"</td>";
+           tfs += "<td >"+zjcje.toFixed(2)+"</td>";
            tfs += "<td ></td>";
            tfs += "</tr>";
            $("#tfs").append(tfs);
