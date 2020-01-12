@@ -1,0 +1,261 @@
+<script type="text/javascript">
+ $.fn.modal.Constructor.prototype.enforceFocus = function () {};
+ </script>
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><li class="fa fa-remove"></li></button>
+    <h5 class="modal-title">固定资产/工具调拨</h5>
+</div>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <form id="assets-stk-form" name="assets-stk-form" class="form-horizontal">
+                <input type="hidden" name="id">
+                <input type="hidden" name="sourceManagerName" id="sourceManagerName">
+                <input type="hidden" name="targetManagerName" id="targetManagerName">
+                <div class="box box-info">
+                    <div class="box-header with-border">
+                    </div>
+                    <div class="box-body">
+                        <!-- 内容 -->
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">选择资产<span style="color:red">*</span></label>
+                                <div class="col-sm-5">
+                                    <select id="assetsStkID" class="form-control select2" name="stkID" style="width:100%;">
+                                        <option selected="selected" value="">选择一个已有资产</option>
+                                    </select>
+                                </div>
+                            </div> 
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">型号：<span style="color:red">*</span></label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" id="model" name="model" readonly="readonly">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">规格：<span style="color:red">*</span></label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" id="norm" name="norm" readonly="readonly">                                
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">生产厂商：<span style="color:red">*</span></label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" id="vendor" name="vendor" readonly="readonly">                                
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">数量：<span style="color:red">*</span></label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" id="quantity" name="quantity" placeholder="数量" onkeyup="value=value.replace(/[^\d.]/g,'')">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">来源库<span style="color:red">*</span></label>
+                                <div class="col-sm-5">
+                                    <select id="sourceStock" class="form-control select2" name="sourceStock" style="width:100%;">
+                                        <option selected="selected" value="">选择来源库</option>
+                                    </select>
+                                </div>
+                            </div> 
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">来源库管理员<span style="color:red">*</span></label>
+                                <div class="col-sm-5">
+                                    <select id="sourceManager" class="form-control select2" name="sourceManager" data-param-name="sourceManagerName" style="width:100%;">
+                                        <option selected="selected" value="">选择管理员</option>
+                                    </select>
+                                </div>
+                            </div> 
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">目标库<span style="color:red">*</span></label>
+                                <div class="col-sm-5">
+                                    <select id="targetStock" class="form-control select2" name="targetStock" style="width:100%;">
+                                        <option selected="selected" value="">选择目标库</option>
+                                    </select>
+                                </div>
+                            </div> 
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">目标库管理员<span style="color:red">*</span></label>
+                                <div class="col-sm-5">
+                                    <select id="targetManager" class="form-control select2" name="targetManager" data-param-name="targetManagerName" style="width:100%;">
+                                        <option selected="selected" value="">选择管理员</option>
+                                    </select>
+                                </div>
+                            </div> 
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">运输车辆：</label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" id="vehicle" name="vehicle" value="青A">                                
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">司机：</label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" id="driver" name="driver" >                                
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">调拨人：<span style="color:red">*</span></label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" id="operaor" name="operator" value="${operatorName}" readonly="readonly">                                
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer text-center" id="assetsstksave">
+                        <button type="submit" class="btn btn-primary" data-btn-type="next">保存</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<script>
+    $.fn.modal.Constructor.prototype.enforceFocus =function(){};
+    var assetsstkform = $("#assets-stk-form").form({baseEntity: false}), initData={};
+    
+    var id="${id?default(0)}";
+    
+    var stkOptions = '${stkOptions?default(0)}',faOptions=0;
+    var deptOptions = '${deptOptions?default(0)}',dpOptions=0;
+    var userOptions = '${userOptions?default(0)}',uOptions=0;
+    if(stkOptions != 0){
+        faOptions = JSON.parse(stkOptions);
+    }
+    if(deptOptions != 0){
+    	dpOptions = JSON.parse(deptOptions);
+    }
+    if(userOptions != 0){
+    	uOptions = JSON.parse(userOptions);
+    }
+    $(function (){
+        if(faOptions != 0){
+            for (var i = 0, len = faOptions.length; i < len; i++) {
+                var option = faOptions[i];
+                $('#assetsStkID').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+            }
+            
+            $('#assetsStkID').select2();
+            
+            $('#assetsStkID').bind("change", function () {
+                var stkID = $(this).val();
+                if (stkID === "") {
+                    return false;
+                }
+                //加载库存详情
+                ajaxPost(basePath+"/fixedassets/apply/getstkdet",{stkID:stkID},function(data){
+                	data.id="";
+                    assetsstkform.initFormData(data);
+                });
+                //加载来源库
+                ajaxPost(basePath+"/fixedassets/allocate/getsourcestk",{stkID:stkID},function(data){
+                	var sourceStkOptions = data.message;
+                    ssOptions = JSON.parse(sourceStkOptions);
+                    $('#sourceStock').empty();
+                    $('#sourceStock').append('<option selected="selected" value="">选择来源库</option>');
+                    for (var i = 0, len = ssOptions.length; i < len; i++) {
+                        var ssOption = ssOptions[i];
+                        $('#sourceStock').append("<option value=\"" + ssOption.value + "\">" + ssOption.data + "</option>");
+                    }
+                    $('#sourceStock').select2();
+                });
+            }); 
+        }
+        if(dpOptions != 0){
+            for (var i = 0, len = dpOptions.length; i < len; i++) {
+                var option = dpOptions[i];
+                $('#targetStock').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+            }
+            $('#targetStock').select2();
+        }
+        if(uOptions != 0){
+            for (var i = 0, len = faOptions.length; i < len; i++) {
+                var option = uOptions[i];
+                $('#sourceManager').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+                $('#targetManager').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+            }
+            
+            $('#sourceManager').select2();
+            $('#targetManager').select2();
+            
+            $('#sourceManager, #targetManager').bind("change", function () {
+            	var value = $(this).val();
+                if (value === "") {
+                    return false;
+                }
+                
+                var name = "";
+                if ($(this).prop('selectedIndex') > 0) {
+                    name = $(this).find("option:selected").text();
+                }
+                $('#'+$(this).attr('data-param-name')).val(name);
+            }); 
+        }
+        
+        $("#assets-stk-form").bootstrapValidator({
+            message: '请输入有效值',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            submitHandler: function () {
+                var formData = assetsstkform.getFormSimpleData();
+                if(formData.sourceStock == formData.targetStock){
+                	modals.error("来源库和目标库不可相同");
+                }
+                ajaxPost(basePath + '/fixedassets/allocate/save', formData, function (data) {
+                    if (data.success) {
+                        modals.hideWin(assetsWinId);
+                        assetsTable.reloadData();
+                    } else {
+                        modals.error(data.message);
+                    }
+                });
+            },
+            fields: {
+                "assetsStkID": {
+                    validators: {
+                        notEmpty: {message: '请选择一个资产'}
+                    }
+                },
+                "num": {
+                    validators: {
+                        notEmpty: {message: '数量不能为空'}
+                    }
+                },
+                "sourceStock": {
+                    validators: {
+                        notEmpty: {message: '来源库不能为空'}
+                    }
+                },
+                "sourceManager": {
+                    validators: {
+                        notEmpty: {message: '来源库管理员不能为空'}
+                    }
+                },
+                "targetStock": {
+                    validators: {
+                        notEmpty: {message: '目标库不能为空'}
+                    }
+                },
+                "targetManager": {
+                    validators: {
+                        notEmpty: {message: '目标库管理员不能为空'}
+                    }
+                }
+            }
+        });
+        
+        //编辑回填
+        if(id != 0){
+            ajaxPost(basePath+"/fixedassets/allocate/getallocate",{id:id},function(data){
+            	assetsstkform.initFormData(data);
+            })
+        }
+        
+        //初始化控件
+        assetsstkform.initComponent();
+    });
+</script>

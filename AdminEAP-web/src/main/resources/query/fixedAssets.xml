@@ -61,7 +61,7 @@
     <query id="fixedassets_stock_tx_list" key="id" tableName="库存明细表" className="com.radish.master.entity.fixedassets.FixedAssetsStkTx" widthType="px" pageSize="20">
         <column key="rowIndex" header="序号" width="80"/>
         <column key="id" hidden="true" header="id" width="80"/>
-        <column key="operation" header="操作类型" allowSort="true" width="150" render="10=入库,20=领用,30=归还,40=维修,50=维修归还"/>
+        <column key="operation" header="操作类型" allowSort="true" width="150" render="10=入库,20=领用,30=归还,40=维修,50=维修归还,60=调拨出库,70=调拨入库"/>
         <column key="amount" header="发生额" width="150"/>
         <column key="balance" header="余额" width="150"/>
         <column key="price" header="入库价格" width="150"/>
@@ -91,6 +91,20 @@
         <column key="id" hidden="true" header="id" width="80"/>
         <column key="channelName" header="供应商" width="150"/>
         <column key="price" header="渠道价格" width="150"/>
+        <column key="id" header="操作" width="80" fnRender="fnRenderOperate"/>
+    </query>
+    
+    <query id="fixedassets_allocate_list" key="id" tableName="领用表" className="com.radish.master.entity.fixedassets.FixedAssetsAllocate" widthType="px" pageSize="20">
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="operator" header="调拨人" width="150"/>
+        <column key="updateDateTime" header="申请时间" classType="String" width="150" dateFormat="yyyy-mm-dd"/>
+        <column key="name" header="名称" allowSort="true" width="150"/>
+        <column key="model" header="型号" width="150"/>
+        <column key="quantity" header="数量" width="150"/>
+        <column key="sourceStock" header="来源库" width="150"/>
+        <column key="targetStock" header="目标库" width="150"/>
+        <column key="status" header="状态" width="80" render="10=新建,20=来源审核,30=目标审核,40=副总审核,50=审核通过 ,60=审核不通过"/>
         <column key="id" header="操作" width="80" fnRender="fnRenderOperate"/>
     </query>
     

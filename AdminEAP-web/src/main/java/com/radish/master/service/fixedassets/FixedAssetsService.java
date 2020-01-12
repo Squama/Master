@@ -3,7 +3,10 @@
  */
 package com.radish.master.service.fixedassets;
 
+import java.util.List;
+
 import com.cnpc.framework.base.service.BaseService;
+import com.radish.master.pojo.Options;
 
 /**
 * 类说明
@@ -19,4 +22,10 @@ import com.cnpc.framework.base.service.BaseService;
 
 public interface FixedAssetsService extends BaseService {
 
+	List<Options> getAllocateAssetsCombobox();
+	
+	List<Options> getDeptNameCombobox();
+	
+	List<Options> getAllocateStkExitsCombobox(String stkID);
+	
 }
