@@ -1,6 +1,6 @@
 <section class="content-header">
     <h1>
-        资产领用 <small>列表</small>
+        固定资产/工具调拨<small>列表</small>
     </h1>
     <ol class="breadcrumb">
         <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
@@ -25,6 +25,8 @@
                     <div class="btn-group">
                         <button type="button" class="btn btn-default" data-btn-type="add">新增</button>
                         <button type="button" class="btn btn-default" data-btn-type="edit" >编辑</button>
+                        <button type="button" class="btn btn-default" data-btn-type="delete" >删除</button>
+                        <button type="button" class="btn btn-success" data-btn-type="print">打印调拨单</button>
                     </div>
                 </div>
                 <div class="box-body box-body-mobile">
@@ -97,6 +99,34 @@
                     url:basePath+"/fixedassets/allocate/edit?id="+rowId
                    });
                break;
+            case 'delete':
+            	if(!rowId){
+                    modals.info('请选择要删除的行');
+                    return false;
+                }
+                var data = assetsTable.getSelectedRowData();
+                if(data.status != '新建'){
+                    modals.info('审核中或审核完成的条目不可删除!');
+                    return false;
+                }
+                modals.confirm("是否确定删除？",function(){
+                	ajaxPost(basePath + '/fixedassets/allocate/delete', {"id":rowId}, function (data) {
+                        if (data.success) {
+                            assetsTable.reloadData();
+                        } else {
+                            modals.error(data.message);
+                        }
+                    });
+                })
+                break;
+            case "print":
+                if(!rowId){
+                    modals.info('请选择要打印的行');
+                    return false;
+                }
+                var url = basePath+"/ureport/preview?_u=file:gdzctb.ureport.xml&_t=1,5&id="+rowId;
+           	 	window.open(url);                
+                break;
             }
 
         });

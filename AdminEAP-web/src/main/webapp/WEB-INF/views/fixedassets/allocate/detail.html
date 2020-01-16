@@ -6,7 +6,7 @@
     <h5 class="modal-title">资产领用</h5>
 </div>
 <section class="content">
-    <div class="row">
+    <div class="row" style="max-height:600px;overflow-y:auto;">
         <div class="col-xs-12">
             <form id="assets-stk-form" name="assets-stk-form" class="form-horizontal">
                 <input type="hidden" name="id">
@@ -16,6 +16,12 @@
                     <div class="box-body">
                         <!-- 内容 -->
                         <div class="col-md-12">
+                        	<div class="form-group">
+                                <label class="col-sm-3 control-label">单号：</label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" id="number" name="number" readonly="readonly">
+                                </div>
+                            </div>
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">资产：<span style="color:red">*</span></label>
                                 <div class="col-sm-5">
@@ -83,11 +89,41 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">调拨人：<span style="color:red">*</span></label>
+                                <label class="col-sm-3 control-label">申请人：<span style="color:red">*</span></label>
                                 <div class="col-sm-5">
                                     <input type="text" class="form-control" id="operaor" name="operator" readonly="readonly">                                
                                 </div>
                             </div>
+                            <div class="form-group">
+			                    <label  for="startDate" class="col-sm-3 control-label">使用开始时间</label>
+								<div class=" col-sm-5">
+									<input class="form-control date-picker" data-flag="datepicker" data-format="yyyy-mm-dd" id="startDate" name="startDate" readonly="readonly">
+								</div>
+			                </div>
+			                <div class="form-group">
+								<label  for="endDate" class="col-sm-3 control-label">使用结束时间</label>
+								<div class=" col-sm-5">
+									<input class="form-control date-picker" data-flag="datepicker" data-format="yyyy-mm-dd" id="endDate" name="endDate" readonly="readonly">
+								</div>
+			                </div>
+			                <div class="form-group">
+			                    <label for="sbzk" class="col-sm-3 control-label">设备状况描述</label>
+			                    <div class="col-sm-5">
+			                        <textarea class="form-control" id="sbzk" name="sbzk" placeholder="设备状况描述" rows="3" readonly="readonly"></textarea>
+			                    </div>
+				            </div>
+				            <div class="form-group">
+			                    <label for="dbyy" class="col-sm-3 control-label">调拨原因</label>
+			                    <div class="col-sm-5">
+			                        <textarea class="form-control" id="dbyy" name="dbyy" placeholder="调拨原因" rows="3" readonly="readonly"></textarea>
+			                    </div>
+				            </div>
+				            <div class="form-group">
+			                    <label for="note" class="col-sm-3 control-label">备注</label>
+			                    <div class="col-sm-5">
+			                        <textarea class="form-control" id="note" name="note" placeholder="备注" rows="3" readonly="readonly"></textarea>
+			                    </div>
+				            </div>
                         </div>
                     </div>
                 </div>

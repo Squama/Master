@@ -26,6 +26,10 @@ public interface FixedAssetsService extends BaseService {
 	
 	List<Options> getDeptNameCombobox();
 	
+	List<Options> getDeptNameComboboxByXm();
+	
 	List<Options> getAllocateStkExitsCombobox(String stkID);
+	
+	List<Options> getAllocateStkExitsComboboxByXm(String stkID);
 	
 }

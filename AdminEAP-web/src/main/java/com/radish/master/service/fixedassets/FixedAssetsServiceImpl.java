@@ -36,12 +36,25 @@ public class FixedAssetsServiceImpl extends BaseServiceImpl implements FixedAsse
     public List<Options> getDeptNameCombobox() {
         return this.findMapBySql("select name value, name data from tbl_org", new Object[] {}, new Type[] {}, Options.class);
     }
+	@Override
+    public List<Options> getDeptNameComboboxByXm() {
+        return this.findMapBySql("select name value, name data from tbl_org where name like '%项目%'", new Object[] {}, new Type[] {}, Options.class);
+    }
 
 	@Override
 	public List<Options> getAllocateStkExitsCombobox(String stkID) {
 		FixedAssetsStk stk = this.get(FixedAssetsStk.class, stkID);
 		
         return this.findMapBySql("select belonged_stock value, belonged_stock data from tbl_fixedassets_stk where fa_type IN ('10', '20') AND name=? AND norm=? AND unit=?", 
+        		new Object[] {stk.getName(), stk.getNorm(), stk.getUnit()}, new Type[] {StringType.INSTANCE, StringType.INSTANCE, StringType.INSTANCE}, Options.class);
+
+	}
+	
+	@Override
+	public List<Options> getAllocateStkExitsComboboxByXm(String stkID) {
+		FixedAssetsStk stk = this.get(FixedAssetsStk.class, stkID);
+		
+        return this.findMapBySql("select belonged_stock value, belonged_stock data from tbl_fixedassets_stk where fa_type IN ('10', '20') AND name=? AND norm=? AND unit=? AND belonged_stock like '%项目%'", 
         		new Object[] {stk.getName(), stk.getNorm(), stk.getUnit()}, new Type[] {StringType.INSTANCE, StringType.INSTANCE, StringType.INSTANCE}, Options.class);
 
 	}

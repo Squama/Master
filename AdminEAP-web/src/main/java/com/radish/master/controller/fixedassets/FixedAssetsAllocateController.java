@@ -54,10 +54,11 @@ public class FixedAssetsAllocateController {
     
     @RequestMapping(value="/add",method = RequestMethod.GET)
     public String assetsAdd(HttpServletRequest request){
-    	
+    	request.setAttribute("number", System.currentTimeMillis()+"");//先用时间戳
         request.setAttribute("operatorName", SecurityUtil.getUser().getName());
         request.setAttribute("stkOptions", JSONArray.toJSONString(fixedAssetsService.getAllocateAssetsCombobox()));
-        request.setAttribute("deptOptions", JSONArray.toJSONString(fixedAssetsService.getDeptNameCombobox()));
+//        request.setAttribute("deptOptions", JSONArray.toJSONString(fixedAssetsService.getDeptNameCombobox()));
+        request.setAttribute("deptOptions", JSONArray.toJSONString(fixedAssetsService.getDeptNameComboboxByXm()));
         request.setAttribute("userOptions", JSONArray.toJSONString(commonService.getUserCombobox()));
         
         return "fixedassets/allocate/edit";
@@ -66,10 +67,10 @@ public class FixedAssetsAllocateController {
     @RequestMapping(value="/edit",method = RequestMethod.GET)
     public String assetsEdit(String id, HttpServletRequest request){
         request.setAttribute("id", id);
-        
         request.setAttribute("operatorName", SecurityUtil.getUser().getName());
         request.setAttribute("stkOptions", JSONArray.toJSONString(fixedAssetsService.getAllocateAssetsCombobox()));
-        request.setAttribute("deptOptions", JSONArray.toJSONString(fixedAssetsService.getDeptNameCombobox()));
+//        request.setAttribute("deptOptions", JSONArray.toJSONString(fixedAssetsService.getDeptNameCombobox()));
+        request.setAttribute("deptOptions", JSONArray.toJSONString(fixedAssetsService.getDeptNameComboboxByXm()));
         request.setAttribute("userOptions", JSONArray.toJSONString(commonService.getUserCombobox()));
         
         return "fixedassets/allocate/edit";
@@ -85,12 +86,19 @@ public class FixedAssetsAllocateController {
     @RequestMapping(method = RequestMethod.POST, value = "/getsourcestk")
     @ResponseBody
     public Result getStkDet(String stkID){
-        return new Result(true, JSONArray.toJSONString(fixedAssetsService.getAllocateStkExitsCombobox(stkID)));
+//    	return new Result(true, JSONArray.toJSONString(fixedAssetsService.getAllocateStkExitsCombobox(stkID)));
+        return new Result(true, JSONArray.toJSONString(fixedAssetsService.getAllocateStkExitsComboboxByXm(stkID)));
     }
     
     @RequestMapping(method = RequestMethod.POST, value="/save")
     @ResponseBody
     public Result save(FixedAssetsAllocate faa, HttpServletRequest request){
+    	//时间判断
+    	if(faa.getStartDate()!=null&&faa.getEndDate()!=null){
+    		if(faa.getStartDate().after(faa.getEndDate())){
+    			return new Result(false,"结束日期不能早于开始日期");
+    		}
+    	}
     	faa.setStatus("10");
         
         FixedAssetsStk stk = commonService.get(FixedAssetsStk.class, faa.getStkID());
@@ -104,7 +112,7 @@ public class FixedAssetsAllocateController {
         faa.setFaType(stk.getFaType());
         
         if(Double.valueOf(faa.getQuantity()) > Double.valueOf(stk.getQuantityAvl())){
-        	return new Result(false,"保存失败，调拨数量大于可用数量！");
+        	return new Result(false,"保存失败，调拨数量大于可用数量！可用数量："+stk.getQuantityAvl());
         }
         
         try {
@@ -162,4 +170,12 @@ public class FixedAssetsAllocateController {
         return runtimePageService.startProcessInstanceByKey("fixedassetsAllocate", name, variables,
                 user.getId(), businessKey);
     }
+    @RequestMapping(method = RequestMethod.POST, value="/delete")
+    @ResponseBody
+    public Result delete(String id){
+    	FixedAssetsAllocate oldFixedAssetsAllocate = commonService.get(FixedAssetsAllocate.class, id);
+    	commonService.delete(oldFixedAssetsAllocate);
+    	 return new Result(true,"删除成功");
+    }
+    
 }

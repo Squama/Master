@@ -6,7 +6,7 @@
     <h5 class="modal-title">固定资产/工具调拨</h5>
 </div>
 <section class="content">
-    <div class="row">
+    <div class="row" style="max-height:500px;overflow-y:auto;">
         <div class="col-xs-12">
             <form id="assets-stk-form" name="assets-stk-form" class="form-horizontal">
                 <input type="hidden" name="id">
@@ -18,6 +18,12 @@
                     <div class="box-body">
                         <!-- 内容 -->
                         <div class="col-md-12">
+                        	<div class="form-group">
+                                <label class="col-sm-3 control-label">单号：</label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" id="number" name="number" readonly="readonly">
+                                </div>
+                            </div>
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">选择资产<span style="color:red">*</span></label>
                                 <div class="col-sm-5">
@@ -95,11 +101,41 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">调拨人：<span style="color:red">*</span></label>
+                                <label class="col-sm-3 control-label">申请人：<span style="color:red">*</span></label>
                                 <div class="col-sm-5">
                                     <input type="text" class="form-control" id="operaor" name="operator" value="${operatorName}" readonly="readonly">                                
                                 </div>
                             </div>
+                            <div class="form-group">
+			                    <label  for="startDate" class="col-sm-3 control-label">使用开始时间</label>
+								<div class=" col-sm-5">
+									<input class="form-control date-picker" data-flag="datepicker" data-format="yyyy-mm-dd" id="startDate" name="startDate">
+								</div>
+			                </div>
+			                <div class="form-group">
+								<label  for="endDate" class="col-sm-3 control-label">使用结束时间</label>
+								<div class=" col-sm-5">
+									<input class="form-control date-picker" data-flag="datepicker" data-format="yyyy-mm-dd" id="endDate" name="endDate">
+								</div>
+			                </div>
+			                <div class="form-group">
+			                    <label for="sbzk" class="col-sm-3 control-label">设备状况描述</label>
+			                    <div class="col-sm-5">
+			                        <textarea class="form-control" id="sbzk" name="sbzk" placeholder="设备状况描述" rows="3"></textarea>
+			                    </div>
+				            </div>
+				            <div class="form-group">
+			                    <label for="dbyy" class="col-sm-3 control-label">调拨原因</label>
+			                    <div class="col-sm-5">
+			                        <textarea class="form-control" id="dbyy" name="dbyy" placeholder="调拨原因" rows="3"></textarea>
+			                    </div>
+				            </div>
+				            <div class="form-group">
+			                    <label for="note" class="col-sm-3 control-label">备注</label>
+			                    <div class="col-sm-5">
+			                        <textarea class="form-control" id="note" name="note" placeholder="备注" rows="3"></textarea>
+			                    </div>
+				            </div>
                         </div>
                     </div>
                     <div class="box-footer text-center" id="assetsstksave">
@@ -120,6 +156,7 @@
     var stkOptions = '${stkOptions?default(0)}',faOptions=0;
     var deptOptions = '${deptOptions?default(0)}',dpOptions=0;
     var userOptions = '${userOptions?default(0)}',uOptions=0;
+    var number = '${number?default(0)}';
     if(stkOptions != 0){
         faOptions = JSON.parse(stkOptions);
     }
@@ -170,7 +207,7 @@
             $('#targetStock').select2();
         }
         if(uOptions != 0){
-            for (var i = 0, len = faOptions.length; i < len; i++) {
+            for (var i = 0, len = uOptions.length; i < len; i++) {
                 var option = uOptions[i];
                 $('#sourceManager').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
                 $('#targetManager').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
@@ -192,6 +229,9 @@
                 $('#'+$(this).attr('data-param-name')).val(name);
             }); 
         }
+        if(number!=0){
+        	$("#number").val(number);
+        }
         
         $("#assets-stk-form").bootstrapValidator({
             message: '请输入有效值',
@@ -204,6 +244,7 @@
                 var formData = assetsstkform.getFormSimpleData();
                 if(formData.sourceStock == formData.targetStock){
                 	modals.error("来源库和目标库不可相同");
+                	return false;
                 }
                 ajaxPost(basePath + '/fixedassets/allocate/save', formData, function (data) {
                     if (data.success) {

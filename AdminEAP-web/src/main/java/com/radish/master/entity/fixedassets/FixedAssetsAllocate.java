@@ -3,9 +3,13 @@
  */
 package com.radish.master.entity.fixedassets;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 import com.cnpc.framework.annotation.Header;
 import com.cnpc.framework.base.entity.BaseEntity;
@@ -106,6 +110,32 @@ public class FixedAssetsAllocate extends BaseEntity {
 	@Column(name = "operator")
 	private String operator;
 
+	@Header(name = "编号")
+	@Column(name = "number")
+	private String number;
+	
+	@Header(name = "设备状况描述")
+	@Column(name = "sbzk")
+	private String sbzk;
+	
+	@Header(name = "调拨原因")
+	@Column(name = "dbyy")
+	private String dbyy;
+	
+	@Header(name = "备注")
+	@Column(name = "note")
+	private String note;
+	
+	@DateTimeFormat(pattern="yyyy-MM-dd")
+    @Header(name = "开始时间")
+    @Column(name = "startDate")
+    private Date startDate;
+	
+	@DateTimeFormat(pattern="yyyy-MM-dd")
+    @Header(name = "结束时间")
+    @Column(name = "endDate")
+    private Date endDate;
+	
 	public String getStkID() {
 		return stkID;
 	}
@@ -264,6 +294,54 @@ public class FixedAssetsAllocate extends BaseEntity {
 
 	public void setOperator(String operator) {
 		this.operator = operator;
+	}
+
+	public String getNumber() {
+		return number;
+	}
+
+	public void setNumber(String number) {
+		this.number = number;
+	}
+
+	public String getSbzk() {
+		return sbzk;
+	}
+
+	public void setSbzk(String sbzk) {
+		this.sbzk = sbzk;
+	}
+
+	public String getDbyy() {
+		return dbyy;
+	}
+
+	public void setDbyy(String dbyy) {
+		this.dbyy = dbyy;
+	}
+
+	public String getNote() {
+		return note;
+	}
+
+	public void setNote(String note) {
+		this.note = note;
+	}
+
+	public Date getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
+
+	public Date getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
 	}
 
 }
