@@ -83,6 +83,27 @@
         <column key="status" header="状态" classType="String" width="150"  render="10=新建,20=待支付,30=完成,40=驳回(待支付),50=审批"/>
         <column key="id" header="管理" classType="String" width="150"  fnRender="fnRenderZf"/>
     </query>
+    <query id="projectPay_DetInstock" key="id" tableName="本期入库明细" widthType="px">
+        <sql>
+            <![CDATA[
+              SELECT 
+              mx.id id ,rk.projectId projectId,rk.number number,rk.indate indate ,mx.matName matName,
+              mx.matStandard matStandard , mx.unit unit ,qd.supplier supplier ,mx.price price ,mx.rkl rkl 
+			  FROM tbl_instock rk , tbl_instock_det mx ,tbl_channel qd
+			  WHERE 1=1 and rk.id = mx.instockId and mx.channelId = qd.id and rk.status = '30'
+            ]]>
+        </sql>
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="number" header="入库单编号" classType="String" allowSort="true" width="150"/>
+        <column key="indate" header="入库时间" classType="String" width="150" dateFormat="yyyy-mm-dd"/>
+        <column key="matName" header="物料名称" classType="String" width="150"/>
+        <column key="matStandard" header="物料规格" classType="String" width="150"/>
+        <column key="unit" header="单位" classType="String" width="150"/>
+        <column key="supplier" header="供应商" classType="String" width="150"/>
+        <column key="rkl" header="入库量" classType="String" width="150"/>
+        <column key="price" header="单价" classType="String" width="150"/>
+    </query>
     <query id="instockPayDet" key="id" tableName="支付入库单明细"  widthType="px" pageSize="20">
     	<sql>
 		        <![CDATA[

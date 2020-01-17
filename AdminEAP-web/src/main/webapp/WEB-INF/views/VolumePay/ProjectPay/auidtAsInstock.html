@@ -1,0 +1,56 @@
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><li class="fa fa-remove"></li></button>
+    <h5 class="modal-title"></h5>
+</div>
+<div class="modal-body" style="max-height:700px;overflow-y:auto;">
+    <form id="purchase-det-form" name="purchase-det-form" class="form-horizontal">
+                <div class="box box-success" id="instock_det">
+                    <div class="box-header with-border">
+                        <span>
+                            <i class="fa fa-files-o">本期入库明细</i>
+                        </span>
+                    </div>
+                    <!-- 本期入库明细-->
+                    <div class="dataTables_filter" id="searchDivPDet" >
+                       <input type="search" id="rkxmid" name="rk.projectId" class="form-control" operator="eq" style="display:none;" >
+                       <input type="search" id="rkgys" name="qd.supplier" class="form-control" operator="eq" style="display:none;" >
+                       <input type="search" id="indate1" name="rk.indate"  class="form-control date-picker" data-flag="datepicker"  operator="between" style="display:none;" >
+                       <input type="search" id="indate2" name="rk.indate"  class="form-control date-picker" data-flag="datepicker"  operator="between" style="display:none;" >
+                    </div>
+                    <div class="box-body box-body-mobile">
+                        <!-- 内容 -->
+                        <table id="purchase_det_table" class="table table-bordered table-striped table-hover">
+                        </table>
+                    </div>
+                     
+                   
+                </div>
+            </form>
+</div>
+<script>
+    var form =null;
+
+    var purchaseDetTable, winIds = "purchaseDetWin";
+    $(function() {
+        var startdate = $("#startdate").val();
+        var enddate = $("#enddate").val();
+        var proid = $("#projectId").val();
+        var channelName = $("#import_form").data("channelName");
+		$("#rkxmid").val(proid);
+		$("#rkgys").val(channelName);
+		if(startdate){
+			$("#indate1").val(startdate);
+		}else{
+			$("#indate1").val("1970-01-01");
+		}
+		$("#indate2").val(enddate);
+        
+        purchaseDetTable = new CommonTable("purchase_det_table", "projectPay_DetInstock", "searchDivPDet", {
+            "ordering" : false,
+            "lengthChange": false,
+            "displayLength": 20,
+            "scrollY": "150px",
+            "scrollCollapse": true
+        });
+    });
+</script>

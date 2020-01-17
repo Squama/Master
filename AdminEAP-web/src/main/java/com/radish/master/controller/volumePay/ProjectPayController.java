@@ -86,6 +86,11 @@ public class ProjectPayController {
 		return prefix+"auidLook";
 		
 	}
+	@RequestMapping("/auidtAsInstock")//审核查看页的入库明细
+	public String auidtAsInstock(){
+		return prefix+"auidtAsInstock";
+		
+	}
 	@RequestMapping("/auidtMx/{id}")//审核查看页
 	public String auidtMx(@PathVariable("id") String id,HttpServletRequest request){
 		request.setAttribute("projectOptions", JSONArray.toJSONString(budgetService.getProjectCombobox()));
@@ -180,7 +185,7 @@ public class ProjectPayController {
 						gx.setPayDetId(mxs.get(i).getId());
 						baseService.save(gx);
 						
-						if(mxs.get(i).getUseFact().indexOf((sjrk.getMatName()+"("+sjrk.getMatStandard()+")材料款"))<0){
+						if(mxs.get(i).getUseFact()==null||mxs.get(i).getUseFact().indexOf((sjrk.getMatName()+"("+sjrk.getMatStandard()+")材料款"))<0){
 							//用途增加
 							mxs.get(i).setUseFact(mxs.get(i).getUseFact()+","+sjrk.getMatName()+"("+sjrk.getMatStandard()+")材料款");
 						
@@ -466,6 +471,28 @@ public class ProjectPayController {
 			zf.setQm(ari.sub(je, Double.valueOf(zf.getFk()))+"");
 			baseService.update(zf);
 		}
+		r.setSuccess(true);
+		return r;
+	}
+	
+	/**
+	 * 根据输入的百分比单一设置
+	 */
+	@RequestMapping("/doJsOneMx")
+	@ResponseBody
+	public Result doJsOneMx(HttpServletRequest request,Double bfb){
+		Result r= new Result();
+		String id = request.getParameter("id");
+		ProjectPayDet zf = baseService.get(ProjectPayDet.class,id);
+		Double je = ari.add(Double.valueOf(zf.getQc()), Double.valueOf(zf.getBq()));
+		je = ari.sub(je, Double.valueOf(zf.getDkmoney()));
+		if(je>0){
+			zf.setFk(ari.mul(bfb, je)+"");
+		}else{
+			zf.setFk("0");
+		}
+		zf.setQm(ari.sub(je, Double.valueOf(zf.getFk()))+"");
+		baseService.update(zf);
 		r.setSuccess(true);
 		return r;
 	}

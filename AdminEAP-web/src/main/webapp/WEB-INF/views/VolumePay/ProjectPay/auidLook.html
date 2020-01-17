@@ -1,4 +1,7 @@
-
+<script src="${basePath}/resources/cinder/editor/dataTables.editor.min.js"></script>
+<script src="${basePath}/resources/common/js/calculate.js"></script>
+<link rel="stylesheet" href="${basePath}/resources/cinder/editor/dataTables.editor.css">
+<link rel="stylesheet" href="${basePath}/resources/cinder/editor/editor.dataTables.min.css">
 <link rel="stylesheet" href="${basePath}/resources/common/libs/fileinput/css/fileinput.min.css">
 <script src="${basePath}/resources/common/libs/fileinput/js/fileinput.js"></script>
 <script src="${basePath}/resources/common/libs/fileinput/js/locales/zh.js"></script>
@@ -55,6 +58,16 @@
                 </div>
                 <div class="box-body box-body-mobile">
                     <table id="attendance_import_table" class="table table-bordered table-striped table-hover">
+                    	<tfoot>
+                            <tr>
+                                <th colspan="3" style="text-align:right">合计:</th>
+                                <th class="text-left"></th>
+                                <th class="text-left"></th>
+                                <th class="text-left"></th>
+                                <th class="text-left"></th>
+                                <th class="text-left"></th>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
             </div>
@@ -73,7 +86,66 @@ if(pid!=0){
 
     var importform,budgetImportTable;
     $(function () {
-    	budgetImportTable = new CommonTable("attendance_import_table", "projectPay_DetSh", "searchDiv");
+    	budgetImportTable = new CommonTable("attendance_import_table", "projectPay_DetSh", "searchDiv"
+    			, {
+            "footerCallback": function ( row, data, start, end, display ) {
+                var api = this.api(), data;
+                // Remove the formatting to get integer data for summation
+                var intVal = function ( i ) {
+                    return typeof i === 'string' ?
+                        i.replace(/[\$,]/g, '')*1 :
+                        typeof i === 'number' ?
+                            i : 0;
+                };
+                // Total over this page
+                qcs = api
+                    .column( 3, { page: 'current'} )
+                    .data()
+                    .reduce( function (a, b) {
+                        return accAddition(intVal(a), intVal(b));
+                    }, 0 );
+                bqs = api
+                	.column( 4, { page: 'current'} )
+	                .data()
+	                .reduce( function (a, b) {
+	                    return accAddition(intVal(a), intVal(b));
+	                }, 0 );
+                dks = api
+	            	.column( 5, { page: 'current'} )
+	                .data()
+	                .reduce( function (a, b) {
+	                    return accAddition(intVal(a), intVal(b));
+	                }, 0 );
+                fks = api
+	            	.column( 6, { page: 'current'} )
+	                .data()
+	                .reduce( function (a, b) {
+	                    return accAddition(intVal(a), intVal(b));
+	                }, 0 );
+                qms = api
+	            	.column( 7, { page: 'current'} )
+	                .data()
+	                .reduce( function (a, b) {
+	                    return accAddition(intVal(a), intVal(b));
+	                }, 0 );
+                // Update footer
+                $( api.column( 3 ).footer() ).html(
+                    '￥'+qcs
+                );
+                $( api.column( 4 ).footer() ).html(
+                        '￥'+bqs
+                    );
+                $( api.column( 5 ).footer() ).html(
+                        '￥'+dks
+                    );
+                $( api.column( 6 ).footer() ).html(
+                        '￥'+fks
+                    );
+                $( api.column( 7 ).footer() ).html(
+                        '￥'+qms
+                    );
+            }
+        });
     	 $('button[data-btn-type]').click(function() {
              var actions = $(this).attr('data-btn-type');
              switch (actions) {
@@ -95,15 +167,27 @@ if(pid!=0){
  		        	 modals.info('最小值为0');
   	              	 return;
  	 		      }
-  	
-  	          	 ajaxPost(basePath+"/projectpay/doJsAllMx",{bfb:fjsl,pid:pid},function(data){
+ 		        var rowId = budgetImportTable.getSelectedRowId();
+  				if(rowId){
+  					ajaxPost(basePath+"/projectpay/doJsOneMx",{bfb:fjsl,id:rowId},function(data){
+   	                   if(data.success){
+   	                  	 $("#sl").val("");
+   	                  	 budgetImportTable.reloadRowData();
+   	                   }else{
+   	                       modals.error("系统繁忙，请稍后重试");
+   	                   }
+   	               }); 
+  	  			}else{
+  	  				modals.error("请选择要生产付款的行");
+  	  	  		}
+  	          	 /* ajaxPost(basePath+"/projectpay/doJsAllMx",{bfb:fjsl,pid:pid},function(data){
   	                   if(data.success){
   	                  	 $("#sl").val("");
   	                  	 budgetImportTable.reloadRowData();
   	                   }else{
   	                       modals.error("系统繁忙，请稍后重试");
   	                   }
-  	               }); 
+  	               }); */ 
                  break;             
              }
 
@@ -139,7 +223,11 @@ if(pid!=0){
         }
     });
     function fnRenderGL(value, type, rowObj){
-    	var oper ="<a href='javascript:void(0)' onclick='payEdit(\"" + value + "\")'>编辑付款信息</a>";
+    	var oper = "";
+    	if(rowObj.bq&&rowObj.bq!=0){
+    		oper += "<a href='javascript:void(0)'style='color:green' onclick='lookBq(\"" + rowObj.channelName + "\")'>查看本期明细</a>&nbsp;&nbsp;&nbsp;";
+        }
+    	oper +="<a href='javascript:void(0)' onclick='payEdit(\"" + value + "\")'>编辑付款信息</a>";
     	
         return oper;
     }
@@ -149,6 +237,15 @@ if(pid!=0){
             title:'编辑付款信息',
             width:'70%',
             url:basePath+"/projectpay/editPay?mxid="+mxid
+           });
+    }
+    function lookBq(channelName){
+		$("#import_form").data("channelName",channelName);
+		modals.openWin({
+            winId:"payInstock",
+            title:'本期入库明细',
+            width:'70%',
+            url:basePath+"/projectpay/auidtAsInstock"
            });
     }
     

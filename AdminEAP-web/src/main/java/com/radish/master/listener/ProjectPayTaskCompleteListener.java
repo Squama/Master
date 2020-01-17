@@ -56,7 +56,7 @@ public class ProjectPayTaskCompleteListener implements TaskListener {
              
              zf.setStatus("30");
             
-             baseService.update(zf);
+             boolean flag = true;
              
              //支付明细状态修改
              List<ProjectPayDet> mxs = baseService.find(" from ProjectPayDet where projectPayId='"+businessKey+"'");
@@ -64,11 +64,15 @@ public class ProjectPayTaskCompleteListener implements TaskListener {
             	 if(mx.getFk()!=null&&Double.valueOf(mx.getFk())==0){//本次不付款，状态改成完成
             		 mx.setStatus("30");
             	 }else{
+            		 flag = false;
             		 mx.setStatus("20");
             	 }
             	 baseService.update(mx);
              }
-             
+             if(flag){
+            	 zf.setStatus("50");
+             }
+             baseService.update(zf);
              
         }
 
