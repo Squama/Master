@@ -115,7 +115,7 @@ public class AttendanceController {
                 if(row != null){
                 	Attendance bi = new Attendance();
                     
-                    String monthA = getCellValue(row.getCell(0)).replaceAll("-", "");
+                    String monthA = getCellValue(row.getCell(0)).replaceAll("/", "");
                     if(!monthA.equals(month)){
                     	throw new CodeException("考勤表格中包含非所选月份数据!");
                     }
