@@ -50,7 +50,7 @@
         <column key="name" header="名称" allowSort="true" width="150"/>
         <column key="englishName" header="英文名称" width="150"/>
         <column key="model" header="型号" width="150"/>
-        <column key="keepedDeptName" header="保管部门" width="150"/>
+        <column key="belongedStock" header="所属库存" width="150"/>
         <column key="price" header="单价" width="150"/>
         <column key="quantity" header="数量" width="150"/>
         <column key="quantityAvl" header="可用数量" width="150"/>
@@ -94,7 +94,7 @@
         <column key="id" header="操作" width="80" fnRender="fnRenderOperate"/>
     </query>
     
-    <query id="fixedassets_allocate_list" key="id" tableName="领用表" className="com.radish.master.entity.fixedassets.FixedAssetsAllocate" widthType="px" pageSize="20">
+    <query id="fixedassets_allocate_list" key="id" tableName="调拨" className="com.radish.master.entity.fixedassets.FixedAssetsAllocate" widthType="px" pageSize="20">
         <column key="rowIndex" header="序号" width="80"/>
         <column key="id" hidden="true" header="id" width="80"/>
         <column key="operator" header="调拨人" width="150"/>
