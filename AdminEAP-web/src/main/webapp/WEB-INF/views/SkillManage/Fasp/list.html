@@ -62,7 +62,19 @@
     }
     var dutycheckTable, winId = "projectQueryWin";
     $(function (){
-    	dutycheckTable = new CommonTable("lwContract_table", "fash_List", "searchDiv1");
+    	dutycheckTable = new CommonTable("lwContract_table", "fash_List", "searchDiv1", {	
+        	"createdRow": function( row, data, dataIndex ) {
+                if(data.status == "完成"){
+                    $(row).css('background-color','#00EE76');
+                    $(row).css('color','#fff');
+                }
+                if(data.status.indexOf("驳回")>0){
+                	$(row).css('background-color','#FF6347');
+                    $(row).css('color','#fff');
+                }
+             }
+       	 	});
+    
         
         
         
