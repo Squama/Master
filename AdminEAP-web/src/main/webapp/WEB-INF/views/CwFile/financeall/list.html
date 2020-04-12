@@ -18,13 +18,13 @@
                 <div class="dataTables_filter" id="searchDiv1" style="display: none">
                     <!--查询条件-->
                     <!--查询条件-->
-                    <input placeholder="请输入名称" name="name" class="form-control" type="search" likeOption="true"operator="like" /> 
+                    <input placeholder="请输入文件名称" name="name" class="form-control" type="search" likeOption="true"operator="like" /> 
                     <select id="type" class="form-control select2" name="filetype" style="width:200px;" operator="eq" >
         				<option selected="selected" value="">选择类型</option>
                    			<option  value="10">通用文件</option>
                    			<option  value="20">财务文件</option>
        				 </select>
-       				 <input id="typename" name="filetype" style="display: none" disabled="disabled"> 
+       				 <!-- <input id="typename" name="filetype" style="display: none" disabled="disabled">  -->
                     <div class="btn-group">
                         <button type="button" class="btn btn-primary" data-btn-type="search">查询</button>
                     </div>
@@ -54,10 +54,10 @@
             $("#add").css("display","none");
             $("#edit").css("display","none");
             $("#delete").css("display","none");
-            $("#type").val("10");
+            /* $("#type").val("10");
             $("#type").attr("disabled",true);
             $("#typename").attr("disabled",false);
-            $("#typename").val("10");
+            $("#typename").val("10"); */
          }
     	dutycheckTable = new CommonTable("lwContract_table", "financeall_List", "searchDiv1");
         

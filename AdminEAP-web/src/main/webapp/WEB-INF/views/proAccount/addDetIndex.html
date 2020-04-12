@@ -53,7 +53,7 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">记账人<span style="color:red">*</span></label>
                                 <div class="col-sm-8">
-                                     <select id="accounterId" class="form-control select2" name="accounterId" style="width:100%">
+                                     <select id="accounterId" class="form-control select2" name="accounterId" style="width:100%"  >
                                         <option selected="selected" value="">选择一个人员</option>
                                     </select>
                                 </div>
@@ -100,6 +100,7 @@
     }
     var zmid = '${zmid?default(0)}'
    	var zmmxid = '${zmmxid?default(0)}'
+   	var userId = '${userId?default(0)}'
     $(function (){
     	if(zmid!=0){
     		$("#accountId").val(zmid);
@@ -117,6 +118,9 @@
             $('#auditId').select2();
             $('#accounterId').select2();
         }
+        if(userId!=0){
+			$("#accounterId").val(userId);
+   	   	 }
         
         $("#instock-form").bootstrapValidator({
             message: '请输入有效值',
@@ -174,7 +178,7 @@
             	}else{
             		$("#money").val(zm.outMoney);
             	}
-               
+            	$("#accounterId").attr("disabled",true);
                 
             })
         } 

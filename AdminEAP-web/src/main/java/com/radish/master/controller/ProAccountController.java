@@ -94,13 +94,13 @@ public class ProAccountController {
 	public String addDetIndex(HttpServletRequest request){
 		String zmid = request.getParameter("zmid");
 		String zmmxid = request.getParameter("zmmxid");
-		
+		User u = SecurityUtil.getUser();
 		List<User> ul = baseService.findMapBySql("select u.name name ,u.id id  from tbl_user u where u.audit_status = 10 ", new Object[]{}, new Type[]{StringType.INSTANCE}, User.class);
 		request.setAttribute("userOptions", JSONArray.toJSONString(ul));
 		
 		request.setAttribute("zmid", zmid);
 		request.setAttribute("zmmxid", zmmxid);
-		
+		request.setAttribute("userId", u.getId());
 		return prefix +"addDetIndex";
 	}
 	/**
@@ -196,7 +196,7 @@ public class ProAccountController {
 			
 			//User sh = baseService.get(User.class, mx.getAuditId());
 			User jz = baseService.get(User.class, mx.getAccounterId());
-			m.setAccounterId(mx.getAccounterId());
+			//m.setAccounterId(mx.getAccounterId());
 			//m.setAuditName(sh.getName());
 			m.setAccounter(jz.getName());
 			m.setZmtype(mx.getZmtype());

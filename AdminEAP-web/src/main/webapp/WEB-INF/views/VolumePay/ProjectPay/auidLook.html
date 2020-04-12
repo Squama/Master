@@ -178,7 +178,17 @@ if(pid!=0){
    	                   }
    	               }); 
   	  			}else{
-  	  				modals.error("请选择要生产付款的行");
+  	  			modals.confirm("确定每列都生成百分比付款金额？如只需单条生成请选择需要计算的那一行！",function(){
+	  	  			ajaxPost(basePath+"/projectpay/doJsAllMx",{bfb:fjsl,pid:pid},function(data){
+		                   if(data.success){
+		                  	 $("#sl").val("");
+		                  	 budgetImportTable.reloadRowData();
+		                   }else{
+		                       modals.error("系统繁忙，请稍后重试");
+		                   }
+		               });
+                });
+  	  				//modals.error("请选择要生产付款的行");
   	  	  		}
   	          	 /* ajaxPost(basePath+"/projectpay/doJsAllMx",{bfb:fjsl,pid:pid},function(data){
   	                   if(data.success){

@@ -154,6 +154,7 @@ public class PlanApproveController {
 			PlanApprove s = baseService.get(PlanApprove.class, id);
 			s.setType(sh.getType());
 			s.setProid(sh.getProid());
+			s.setName(sh.getName());
 			Project p = baseService.get(Project.class, sh.getProid());
 			s.setProname(p.getProjectName());
 			baseService.update(s);

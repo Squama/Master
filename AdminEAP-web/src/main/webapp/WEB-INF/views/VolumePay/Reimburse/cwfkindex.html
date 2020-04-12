@@ -16,7 +16,16 @@
             <div class="box">
                 <!-- /.box-header -->
                 <div class="dataTables_filter" id="searchDiv" >
-                <input placeholder="请输入日期" name="bx.bxdate" class="form-control date-picker" data-flag="datepicker" data-format="yyyy-mm-dd"  type="search" operator="eq" />
+                <input placeholder="金额" name="bx.money" class="form-control" type="search" likeOption="true"operator="like" />
+                	<select class="form-control select2" name="bx.type" style="width:200px;" operator="eq">
+                    	<option selected="selected" value="">选择一个类型</option>
+                    	<option value="10" >公司报销</option>
+                        <option value="20">项目报销</option>
+                    </select>
+                    <select id="projectId" class="form-control select2" name="bx.proid" style="width:200px;" operator="eq">
+                    	<option selected="selected" value="">选择一个项目</option>
+                    </select>
+                	<input placeholder="请输入日期" name="bx.bxdate" class="form-control date-picker" data-flag="datepicker" data-format="yyyy-mm-dd"  type="search" operator="eq" />
                     <input placeholder="请输入报销编号" name="bx.number" class="form-control" type="search" likeOption="true"operator="like" />
                     <input placeholder="请输入申请人姓名" name="bx.reername" class="form-control" type="search" likeOption="true"operator="like" />
                     <div class="btn-group">
@@ -40,6 +49,10 @@
 <script>
     var form = $("#searchDiv").form({baseEntity: false}), initData={};
     var volumeTable, winId = "volumeWin";
+    var projects = '${projects?default(0)}',options=0;
+    if(projects != 0){
+    	options = JSON.parse(projects);
+    }
     
     var volumeManageObject = {
             submit: function (id) {
@@ -97,6 +110,13 @@
                  break;       		
              }
          }); 
+    	 if(options != 0){
+             for (var i = 0, len = options.length; i < len; i++) {
+                 var option = options[i];
+                 $('#projectId').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+             }
+             $("#projectId").select2();
+         }
     });
     
     function fnRenderXQ(value, type, rowObj){

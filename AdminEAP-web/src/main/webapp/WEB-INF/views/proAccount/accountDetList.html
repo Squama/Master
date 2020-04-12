@@ -1,28 +1,19 @@
-<section class="content-header">
-    <h4 id="DetTitle">
-        
-    </h4>
-   	
-</section> 
-
-<!-- Main content -->
 <section class="content">
     <div class="row">
         <div class="col-xs-12">
             <div class="box">
                 <!-- /.box-header -->
                 <div class="dataTables_filter" id="searchDiv">
-                    <!-- <select  placeholder="请选择审核状态" title="审核状态" name="xm.project_name" id="projecctName" class="form-control select2"  operator="eq"  style =" width:20%">
-                     	<option selected="selected" value="">选择一种状态</option>
-                     	<option value="10">新建</option>
-                     	<option value="20">待审核核对</option>
-                     	<option value="20">审核驳回修改</option>
-                     	<option value="40">完成</option>
-                     </select> -->
-                    <input id="projectAccountId" name="projectAccountId" class="form-control" type="search" style="display:none" /> 
+                	摘要：
+                	<input name="abstracts" class="form-control" type="search" likeOption="true"operator="like"/> 
+                     <input id="projectAccountId" name="projectAccountId" class="form-control" type="search" style="display:none" /> 
+                     日期范围：
+       				 <input type="text"  name="mx.createDate"  class="form-control date-picker" data-flag="datepicker" data-format="yyyy-mm-dd" operator="between"/>
+       				 ——
+       				 <input type="text" name="mx.createDate"  class="form-control date-picker" data-flag="datepicker" data-format="yyyy-mm-dd"  operator="between"/>
                     <div class="btn-group">
                         <button type="button" class="btn btn-primary"   data-btn-type="search">查询</button>
-                        <button type="button" class="btn btn-default" data-btn-type="reset">重置</button>
+                        <!-- <button type="button" class="btn btn-default" data-btn-type="reset">重置</button> -->
                     </div>
                     <div class="btn-group">
                         <button type="button" class="btn btn-default" data-btn-type="add">新增账目</button>
@@ -42,6 +33,7 @@
 
 
 <script>  
+var formsearchDiv = $("#searchDiv").form({baseEntity: false}), initData={};
     var budgetApplyTabless;
     var winId="purchaseApplyWin";
     
@@ -93,7 +85,7 @@
                     return false;
                 }
                 var shzt = budgetApplyTables.getSelectedRowData().status;
-                if(shzt!='新建'){
+                if(shzt!='新建'&&shzt!='复核驳回'){
                	 modals.info('该状态不可编辑');
                     return false;
                 }
@@ -114,7 +106,7 @@
                     return false;
                 }
                 var shzt = budgetApplyTables.getSelectedRowData().status;
-                if(shzt!='新建'){
+                if(shzt!='新建'&&shzt!='复核驳回'){
                	 modals.info('该状态不可删除');
                     return false;
                 }

@@ -82,6 +82,9 @@ public class PlanApprove implements Serializable {
     @Column(name = "AuidtDesc")
     private String auidtDesc;
 
+    @Header(name = "名称")
+    @Column(name = "name")
+    private String name;
 
 	public String getId() {
 		return id;
@@ -190,6 +193,16 @@ public class PlanApprove implements Serializable {
 
 	public void setAuidtDesc(String auidtDesc) {
 		this.auidtDesc = auidtDesc;
+	}
+
+
+	public String getName() {
+		return name;
+	}
+
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	

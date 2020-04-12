@@ -105,6 +105,7 @@ public class ReimburseController {
 	//财务付款页
 	@RequestMapping("/cwfkindex")
 	public String cwfkindex(HttpServletRequest request){
+		request.setAttribute("projects", JSONArray.toJSONString(budgetService.getProjectCombobox()));
 		return prefix+"cwfkindex";
 	}
 	@RequestMapping("/cwlook")

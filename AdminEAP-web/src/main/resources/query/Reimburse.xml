@@ -7,6 +7,7 @@
             <![CDATA[
               SELECT bx.id id ,bx.type type ,bx.number number ,bx.bxdate bxdate , 
               bx.status status ,bx.reername reername ,bx.reerid reerid ,bx.money money,bx.bmyj bmyj ,bx.bossyj bossyj,bx.shcwyj shcwyj ,bx.shcwfzryj shcwfzryj 
+			   ,(select pro.project_name from tbl_project pro where pro.id=bx.proid) proname 
 			  FROM tbl_reimburse bx 
 			  WHERE 1=1  order by bxdate desc
             ]]>
@@ -14,6 +15,7 @@
         <column key="id" hidden="true" header="id" width="80"/>
         <column key="rowIndex" header="序号" width="80"/>
         <column key="type" header="类型" classType="String" allowSort="true" width="150" render="10=公司报销,20=项目报销"/>
+        <column key="proname" header="所属项目" classType="String" allowSort="true" width="150"/>
         <column key="number" header="编号" classType="String" allowSort="true" width="150"/>
         <column key="bxdate" header="新增日期" classType="String" width="150"/>
         <column key="money" header="报销总金额" classType="String" width="150"/>
@@ -61,8 +63,9 @@
     <query id="reimburse_cw" key="id" tableName="个人报销列表_财务" widthType="px">
         <sql>
             <![CDATA[
-              SELECT bx.id id ,bx.type type ,bx.number number ,bx.bxdate bxdate , 
+              SELECT bx.id id ,bx.type type ,bx.number number ,bx.bxdate bxdate , bx.proid proid,
               bx.status status ,bx.reername reername ,bx.reerid reerid ,bx.money money ,bx.isjz isjz  
+              ,(select pro.project_name from tbl_project pro where pro.id=bx.proid) proname 
 			  FROM tbl_reimburse bx 
 			  WHERE 1=1  and bx.status in('80','90') order by bxdate desc
             ]]>
@@ -70,6 +73,7 @@
         <column key="id" hidden="true" header="id" width="80"/>
         <column key="rowIndex" header="序号" width="80"/>
         <column key="type" header="类型" classType="String" allowSort="true" width="150" render="10=公司报销,20=项目报销"/>
+        <column key="proname" header="所属项目" classType="String" allowSort="true" width="150"/>
         <column key="reername" header="申请人" classType="String" allowSort="true" width="150"/>
         <column key="number" header="编号" classType="String" allowSort="true" width="150"/>
         <column key="bxdate" header="新增日期" classType="String" width="150"/>
