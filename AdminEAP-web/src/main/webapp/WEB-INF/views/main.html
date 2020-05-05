@@ -541,13 +541,15 @@ var basePath="${basePath}";//给外部js文件传递路径参数
            }else{
                 console.log(data.message);
            }
-           if(data.code){
-        	   str += data.code+"<a onclick='lookSw()' style='color:red'>个人收文查看</a>";
+           if(data.swxx){
+        	   str += data.swxx+"<a onclick='lookSw()' style='color:red'>个人收文查看</a>";
+           }
+           if(data.fasp){
+        	   str += data.fasp+"<a onclick='lookFa()' style='color:red'>指定人员方案审批</a>";
            }
            if(str){
         	   modals.info(str);
-             }
-          
+           }
        }); 
    });
    function lookSw(){
@@ -555,7 +557,10 @@ var basePath="${basePath}";//给外部js文件传递路径参数
 	}
 	function lookZz(){
 		loadPage("/dzzuser/index");
-	}   
+	} 
+	function lookFa(){
+		   loadPage("/fasp/ListOne");
+		}  
    var dep = '${user.deptId?default(0)}';
    var job = '${user.jobId?default(0)}';
    

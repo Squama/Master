@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.alibaba.fastjson.JSONArray;
 import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.utils.StrUtil;
 import com.radish.master.entity.project.SocialSecurity;
@@ -46,13 +47,14 @@ public class SocialSecurityController {
     
     @RequestMapping(value="/add",method = RequestMethod.GET)
     public String add(HttpServletRequest request){
+        request.setAttribute("regionCodes", JSONArray.toJSONString(commonService.getRegionCode()));
         return "workmanage/socialsecurity/edit";
     }
     
     @RequestMapping(value="/edit",method = RequestMethod.GET)
     public String edit(String id, HttpServletRequest request){
+        request.setAttribute("regionCodes", JSONArray.toJSONString(commonService.getRegionCode()));
         request.setAttribute("id", id);
-        
         return "workmanage/socialsecurity/edit";
     }
     

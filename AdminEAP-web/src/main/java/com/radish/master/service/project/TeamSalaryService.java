@@ -63,7 +63,7 @@ public interface TeamSalaryService extends BaseService {
     
     String captureName(String name);
     
-    SocialSecurity getSocialSecurity(String year);
+    List<SocialSecurity> getSocialSecurity(String year);
     
     void handleSocialSalaryDetail(SocialSecurity socialSecurity, SalaryDetail detail, Date startDate);
     

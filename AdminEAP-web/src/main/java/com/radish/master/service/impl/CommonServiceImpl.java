@@ -9,6 +9,7 @@ import org.hibernate.type.StringType;
 import org.hibernate.type.Type;
 import org.springframework.stereotype.Service;
 
+import com.cnpc.framework.base.entity.Dict;
 import com.cnpc.framework.base.service.impl.BaseServiceImpl;
 import com.radish.master.pojo.Options;
 import com.radish.master.service.CommonService;
@@ -100,4 +101,11 @@ public class CommonServiceImpl extends BaseServiceImpl implements CommonService 
         cs[0] -= 32;
         return String.valueOf(cs);
     }
+
+	@Override
+	public List<Dict> getRegionCode() {
+		String hql = "from Dict where code like 'regionCode%' and code<>'regionCode'  order by levelCode asc";
+        List<Dict> dicts = this.find(hql);
+        return dicts;
+	}
 }

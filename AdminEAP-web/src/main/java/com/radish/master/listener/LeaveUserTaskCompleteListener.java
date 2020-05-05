@@ -61,15 +61,15 @@ public class LeaveUserTaskCompleteListener implements TaskListener {
                  } else if ("boss".equals(taskDefinitionKey)) {
                 	 zf.setLeaveStatus("40");
                 	 //删除用户
-                	 //User employee = baseService.get(User.class, zf.getUserId());
                 	 List<UserRole> r = baseService.findBySql("select * from tbl_user_role  where userID='" + zf.getUserId() + "'", UserRole.class);
                      for (UserRole u : r) {
                     	 baseService.delete(u);
                      }
                      //baseService.delete(employee);
                 	 User employee = baseService.get(User.class, zf.getUserId());
-                	 employee.setAuditStatus("50");
-                	 baseService.update(employee);
+//                	 employee.setAuditStatus("50");
+//                	 baseService.update(employee);
+                	 baseService.delete(employee);
                  }
              }else if("false".equalsIgnoreCase(delegateTask.getVariable("approved").toString())){
             	 zf.setLeaveStatus("50");

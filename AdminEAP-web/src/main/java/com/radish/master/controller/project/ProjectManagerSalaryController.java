@@ -109,21 +109,29 @@ public class ProjectManagerSalaryController {
         if (salary.getStartTime().compareTo(salary.getEndTime()) != -1) {
             return new Result(false, "开始时间必须小于结束时间");
         }
-
         String startTime = myFormat.format(salary.getStartTime()) + " 00:00:00";
         String endTime = myFormat.format(salary.getEndTime()) + " 23:59:59";
-
-        List<Salary> list = teamSalaryService.checkTimePeriod(salary.getProjectID(), startTime, endTime, salary.getId());
-        if (!list.isEmpty()) {
-            return new Result(false, "工资时间段不可重叠");
-        }
-        
-        Salary limitSalary = teamSalaryService.getBiggestSalary(salary.getProjectID(), "20");
-        if(null!=limitSalary&&limitSalary.getStartTime().getTime() > salary.getStartTime().getTime()){
-            return new Result(false, "工资起始时间不可小于"+myFormat.format(limitSalary.getStartTime()));
-        }
         
         if (StrUtil.isEmpty(salary.getId())) {
+        	 List<Salary> list = teamSalaryService.checkTimePeriod(salary.getProjectID(), startTime, endTime, salary.getId());
+             if (!list.isEmpty()) {
+                 return new Result(false, "工资时间段不可重叠");
+             }
+             
+             Salary limitSalary = teamSalaryService.getBiggestSalary(salary.getProjectID(), "20");
+             if(null!=limitSalary&&limitSalary.getStartTime().getTime() > salary.getStartTime().getTime()){
+                 return new Result(false, "工资起始时间不可小于"+myFormat.format(limitSalary.getStartTime()));
+             }
+        	
+        	String year = startTime.substring(0, 4);
+            List<SocialSecurity> socialSecuritys = teamSalaryService.getSocialSecurity(year);
+            if(socialSecuritys==null||socialSecuritys.size()==0){
+            	return new Result(false, "请维护"+year+"年度社保费率");
+            }
+            Map<String,SocialSecurity> fls = new HashMap<String, SocialSecurity>();
+            for(SocialSecurity fl :socialSecuritys){
+            	fls.put(fl.getRegionCode(), fl);
+            }
             salary.setCreateDateTime(new Date());
             salary.setUpdateDateTime(new Date());
             salary.setStatus("10");
@@ -136,13 +144,12 @@ public class ProjectManagerSalaryController {
             } catch (Exception e) {
                 return new Result(false);
             }
-            String year = startTime.substring(0, 4);
-            SocialSecurity socialSecurity = teamSalaryService.getSocialSecurity(year);
-            
             // 直接录入全部明细
             List<User> managerList = teamSalaryService.getManageMemberByProject(salary.getProjectID());
             List<SalaryDetail> detailList = new ArrayList<SalaryDetail>();
             for (User user : managerList) {
+            	SocialSecurity socialSecurity = fls.get(user.getRegionCode());
+            	
                 SalaryDetail detail = new SalaryDetail();
                 detail.setCreateDateTime(new Date());
                 detail.setUpdateDateTime(new Date());
@@ -168,7 +175,7 @@ public class ProjectManagerSalaryController {
                 detail.setAttendance("0");
                 detail.setLoan("0");
                 
-                if("0".equals(detail.getBasicSalary()) || socialSecurity == null){
+                if("0".equals(detail.getBasicSalary()) || socialSecurity == null || user.getRegionCode()==null){
                     detail.setYanglao("0");
                     detail.setYanglaoCorp("0");
                     detail.setMedical("0");
@@ -181,7 +188,7 @@ public class ProjectManagerSalaryController {
                     detail.setPrfCorp("0");
                     detail.setSocial("0");
                     detail.setTax("0");
-                    detail.setPayable("0");
+                    //detail.setPayable("0");
                     detail.setActual("0");
                 }else{
                     teamSalaryService.handleSocialSalaryDetail(socialSecurity, detail, salary.getStartTime());
@@ -300,9 +307,33 @@ public class ProjectManagerSalaryController {
         	if("20".equals(salary.getType()) || "40".equals(salary.getType()) || "50".equals(salary.getType())){
         		SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd");
         		String startTime = myFormat.format(salary.getStartTime()) + " 00:00:00";
+        		
         		String year = startTime.substring(0, 4);
-        		SocialSecurity socialSecurity = teamSalaryService.getSocialSecurity(year);
-        		teamSalaryService.handleSocialSalaryDetailPayable(socialSecurity, detail, salary.getStartTime());
+                List<SocialSecurity> socialSecuritys = teamSalaryService.getSocialSecurity(year);
+                Map<String,SocialSecurity> fls = new HashMap<String, SocialSecurity>();
+                for(SocialSecurity fl :socialSecuritys){
+                	fls.put(fl.getRegionCode(), fl);
+                }
+                User user = teamSalaryService.get(User.class, detail.getUserID());
+                SocialSecurity socialSecurity = fls.get(user.getRegionCode());
+        		if("0".equals(detail.getBasicSalary()) || socialSecurity == null || user.getRegionCode()==null){
+                    detail.setYanglao("0");
+                    detail.setYanglaoCorp("0");
+                    detail.setMedical("0");
+                    detail.setMedicalCorp("0");
+                    detail.setShiye("0");
+                    detail.setShiyeCorp("0");
+                    detail.setGongshangCorp("0");
+                    detail.setShengyuCorp("0");
+                    detail.setPrf("0");
+                    detail.setPrfCorp("0");
+                    detail.setSocial("0");
+                    detail.setTax("0");
+                    //detail.setPayable("0");
+                    detail.setActual(detail.getPayable());
+                }else{
+            		teamSalaryService.handleSocialSalaryDetailPayable(socialSecurity, detail, salary.getStartTime());
+                }
         		teamSalaryService.save(detail);
         	}
         }

@@ -5,6 +5,7 @@ package com.radish.master.service;
 
 import java.util.List;
 
+import com.cnpc.framework.base.entity.Dict;
 import com.cnpc.framework.base.service.BaseService;
 import com.radish.master.pojo.Options;
 
@@ -48,4 +49,5 @@ public interface CommonService extends BaseService{
     
     String captureName(String name);
     
+    List<Dict> getRegionCode();
 }

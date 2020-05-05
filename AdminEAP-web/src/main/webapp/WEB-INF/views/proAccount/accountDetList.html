@@ -110,13 +110,15 @@ var formsearchDiv = $("#searchDiv").form({baseEntity: false}), initData={};
                	 modals.info('该状态不可删除');
                     return false;
                 }
-                ajaxPost(basePath + '/proaccount/delAccountDet', {id:rowId}, function (data) {
-                    if (data.success) {
-                    	modals.info('删除成功');
-                    	budgetApplyTables.reloadData();
-                    	reflushTitle();
-                    }
-                });
+                modals.confirm("确定删除？",function(){
+                	ajaxPost(basePath + '/proaccount/delAccountDet', {id:rowId}, function (data) {
+                        if (data.success) {
+                        	modals.info('删除成功');
+                        	budgetApplyTables.reloadData();
+                        	reflushTitle();
+                        }
+                    });
+                })
                break;
             case 'out':
             	loadPage(basePath+"/proaccount/addList");

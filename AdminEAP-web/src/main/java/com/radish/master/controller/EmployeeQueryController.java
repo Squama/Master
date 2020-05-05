@@ -101,6 +101,7 @@ public class EmployeeQueryController {
     public String add(HttpServletRequest request) {
         request.setAttribute("eduOptions", JSONArray.toJSONString(commonService.getEducationCombobox()));
         request.setAttribute("ethOptions", JSONArray.toJSONString(commonService.getEthnicCombobox()));
+        request.setAttribute("regionCodes", JSONArray.toJSONString(commonService.getRegionCode()));
         return "workmanage/employee/employee_add";
     }
 
@@ -110,6 +111,7 @@ public class EmployeeQueryController {
         request.setAttribute("id", id);
         request.setAttribute("eduOptions", JSONArray.toJSONString(commonService.getEducationCombobox()));
         request.setAttribute("ethOptions", JSONArray.toJSONString(commonService.getEthnicCombobox()));
+        request.setAttribute("regionCodes", JSONArray.toJSONString(commonService.getRegionCode()));
         return "workmanage/employee/employee_edit";
     }
 
@@ -123,6 +125,7 @@ public class EmployeeQueryController {
         request.setAttribute("id", id);
         request.setAttribute("eduOptions", JSONArray.toJSONString(commonService.getEducationCombobox()));
         request.setAttribute("ethOptions", JSONArray.toJSONString(commonService.getEthnicCombobox()));
+        request.setAttribute("regionCodes", JSONArray.toJSONString(commonService.getRegionCode()));
         return "workmanage/employee/employee_detail";
     }
 
@@ -170,6 +173,7 @@ public class EmployeeQueryController {
                 oldJobID = oldUser.getJobId();
             }
             SpringUtil.copyPropertiesIgnoreNull(user, oldUser);
+            oldUser.setRegionCode(user.getRegionCode());
             oldUser.setDutyContent(user.getDutyContent());
             oldUser.setUpdateDateTime(new Date());
             userService.update(oldUser);
@@ -447,8 +451,8 @@ public class EmployeeQueryController {
     
     @RequestMapping("/getZzUser")
     @ResponseBody
-    public Result getZzUser(){
-    	Result r = new Result();
+    public Map<String,Object> getZzUser(){
+    	Map<String,Object> r = new HashMap<String, Object>();
     	String uid = SecurityUtil.getUserId();
     	//判断是否为办公室人员
     	List<Role> roles = baseService.findMapBySql("select id  from tbl_role where code='office'", new Object[]{}, new Type[]{StringType.INSTANCE}, Role.class); 
@@ -466,24 +470,31 @@ public class EmployeeQueryController {
     				for(User user:u){
     					str += user.getName()+"("+user.getDeptName()+")/";
     				}
-    				r.setMessage(str);
+    				r.put("message", str);
+    				r.put("success", true);
     			}else{
-    				r.setMessage("暂无需转正人员");
-    				r.setSuccess(false);
+    				r.put("message", "暂无需转正人员");
+    				r.put("success", false);
     			}
     		}else{
-    			r.setMessage("不是办公人员");
-    			r.setSuccess(false);
+    			r.put("message", "不是办公人员");
+				r.put("success", false);
     		}
     	}else{
-    		r.setMessage("无office角色");
-    		r.setSuccess(false);
+    		r.put("message", "无office角色");
+			r.put("success", false);
     	}
     	//判断是否存在未读收文
     	long count = baseService.countBySql("select count(1) from tbl_writingslook lk where 1=1 and lk.lookid='"+uid+"' and lk.islook='0' and exists (select * from tbl_writings sx where sx.id = lk.writingid)");
     	if(count>0){
     		String str = " 您有"+count+"条未读收文，请及时查看!";
-    		r.setCode(str);
+    		r.put("swxx", str);
+    	}
+    	//判断是否存在方案指定人员未审批数据
+    	long countfa = baseService.countBySql("select count(1) from tbl_planApprove lk where 1=1 and lk.oneAuidt='"+uid+"' and lk.status='50' ");
+    	if(countfa>0){
+    		String str = " 您有"+countfa+"条指定人员方案审批未审核！";
+    		r.put("fasp", str);
     	}
     	return r;
     };

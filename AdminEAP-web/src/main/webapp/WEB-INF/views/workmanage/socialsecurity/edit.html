@@ -52,6 +52,14 @@
                                     <input type="text" class="form-control" id="gongshang" name="gongshang" onkeyup="value=value.replace(/[^\d.]/g,'')" placeholder="工伤费率">
                                 </div>
                             </div>
+                            <div class="form-group">
+                                <label for="regionCode" class="col-sm-5 control-label">所属地区：</label>
+                                <div class="col-sm-6">
+                                    <select id="regionCode" name="regionCode"  class="form-control select2">
+                                    	<option selected="selected" value="">选择一个地区</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
@@ -105,6 +113,10 @@
     $.fn.modal.Constructor.prototype.enforceFocus =function(){};
     var measureform = $("#measure-form").form({baseEntity: false}), initData={};
     var measureID="${id?default(0)}";
+    var regionCodes = '${regionCodes?default(0)}',regions=0;
+    if(regionCodes != 0){
+    	regions = JSON.parse(regionCodes);
+    }
     $(function (){
         $("#measure-form").bootstrapValidator({
             message: '请输入有效值',
@@ -183,10 +195,23 @@
                     validators: {
                         notEmpty: {message: '公积金费率不能为空'}
                     }
+                },
+                "regionCode":{
+                	validators: {
+                        notEmpty: {message: '所属地区不能为空'}
+                    }
                 }
             }
         });
-        
+      //初始化控件
+        measureform.initComponent();
+        if(regions != 0){
+            for (var i = 0, len = regions.length; i < len; i++) {
+                var option = regions[i];
+                $('#regionCode').append("<option value=\"" + option.value + "\">" + option.name + "</option>");
+            }
+            $("#regionCode").select2();
+        }
         //编辑回填
         if(measureID != 0){
             ajaxPost(basePath+"/social/get",{id:measureID},function(data){
@@ -194,7 +219,5 @@
             })
         } 
         
-        //初始化控件
-        measureform.initComponent();
     });
 </script>

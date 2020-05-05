@@ -184,6 +184,10 @@ public class User extends BaseEntity {
 	@Header(name = "所属分部")
 	@Column(name = "deptent")
 	private String deptent;
+	
+	 @Header(name = "所属地")
+    @Column(name = "regionCode")
+    private String regionCode;
 
 	@Transient
 	private String avatarId;
@@ -557,6 +561,14 @@ public class User extends BaseEntity {
 
 	public void setDeptent(String deptent) {
 		this.deptent = deptent;
+	}
+
+	public String getRegionCode() {
+		return regionCode;
+	}
+
+	public void setRegionCode(String regionCode) {
+		this.regionCode = regionCode;
 	}
 
 }

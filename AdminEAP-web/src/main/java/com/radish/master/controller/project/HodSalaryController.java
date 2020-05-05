@@ -88,19 +88,19 @@ public class HodSalaryController {
     @RequestMapping(value = "/savesalary")
     @ResponseBody
     public Result saveSalary(Salary salary, HttpServletRequest request) {
-        SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd");
-        if (salary.getStartTime().compareTo(salary.getEndTime()) != -1) {
-            return new Result(false, "开始时间必须小于结束时间");
-        }
-
+       
+    	SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd");
         String startTime = myFormat.format(salary.getStartTime()) + " 00:00:00";
         String endTime = myFormat.format(salary.getEndTime()) + " 23:59:59";
 
-        List<Salary> list = teamSalaryService.checkHodTimePeriod(salary.getProjectID(),startTime, endTime, salary.getId());
-        if (!list.isEmpty()) {
-            return new Result(false, "工资时间段不可重叠");
-        }
         if (StrUtil.isEmpty(salary.getId())) {
+        	 if (salary.getStartTime().compareTo(salary.getEndTime()) != -1) {
+                 return new Result(false, "开始时间必须小于结束时间");
+             }
+             List<Salary> list = teamSalaryService.checkHodTimePeriod(salary.getProjectID(),startTime, endTime, salary.getId());
+             if (!list.isEmpty()) {
+                 return new Result(false, "工资时间段不可重叠");
+             }
             salary.setCreateDateTime(new Date());
             salary.setUpdateDateTime(new Date());
             salary.setStatus("10");

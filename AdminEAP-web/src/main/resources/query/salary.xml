@@ -279,18 +279,26 @@
     
     <!-- 班组工资 end -->
     
-    <query id="socialsecurity_list" key="id" tableName="社保费率维护" className="com.radish.master.entity.project.SocialSecurity" widthType="px" pageSize="20">
+    <query id="socialsecurity_list" key="id" tableName="社保费率维护" widthType="px" pageSize="20">
+   		 <sql>
+            <![CDATA[
+              SELECT fl.* ,(select name from tbl_dict cs where cs.value = fl.regionCode and cs.code like 'regionCode%') regionCodeName
+               FROM tbl_social_security fl  
+              WHERE  1=1
+            ]]>
+        </sql>
         <column key="rowIndex" header="序号" width="80"/>
         <column key="id" hidden="true" header="id" width="80"/>
+        <column key="regionCodeName" header="所属地" allowSort="true" width="150"/>
         <column key="year" header="社保年分" allowSort="true" width="150"/>
         <column key="radix" header="社保基数" />
         <column key="avg" header="上年平均工资（元）" />
         <column key="yanglao" header="养老（%）" />
-        <column key="yanglaoCorp" header="养老（企业%）" />
+        <column key="yanglao_corp" header="养老（企业%）" />
         <column key="yiliao" header="医疗（%）" />
-        <column key="yiliaoCorp" header="医疗（企业%）" />
+        <column key="yiliao_corp" header="医疗（企业%）" />
         <column key="shiye" header="失业（%）" />
-        <column key="shiyeCorp" header="失业（企业%）" />
+        <column key="shiye_corp" header="失业（企业%）" />
         <column key="gongshang" header="工伤（%）" />
         <column key="shengyu" header="生育（%）" />
         <column key="gongjijin" header="公积金（%）" />

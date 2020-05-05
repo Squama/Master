@@ -472,10 +472,10 @@ public class TeamSalaryServiceImpl extends BaseServiceImpl implements TeamSalary
     }
 
     @Override
-    public SocialSecurity getSocialSecurity(String year) {
+    public List<SocialSecurity> getSocialSecurity(String year) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("year", year);
-        return this.get("from SocialSecurity where year=:year", params);
+        return this.find("from SocialSecurity where year=:year", params);
     }
 
     @Override

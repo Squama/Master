@@ -79,6 +79,10 @@ public class SocialSecurity extends BaseEntity {
     @Header(name = "社保年截止时间")
     @Column(name = "end_time")
     private String endTime;
+    
+    @Header(name = "所属地")
+    @Column(name = "regionCode")
+    private String regionCode;
 
     public String getYear() {
         return year;
@@ -199,5 +203,13 @@ public class SocialSecurity extends BaseEntity {
     public void setEndTime(String endTime) {
         this.endTime = endTime;
     }
+
+	public String getRegionCode() {
+		return regionCode;
+	}
+
+	public void setRegionCode(String regionCode) {
+		this.regionCode = regionCode;
+	}
 
 }

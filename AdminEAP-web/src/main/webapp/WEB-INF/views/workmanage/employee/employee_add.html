@@ -223,9 +223,17 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="deduction" class="col-sm-4 control-label">个税抵扣项（元）</label>
+                                <label for="deduction" class="col-sm-3 control-label">个税抵扣项（元）</label>
                                 <div class="col-sm-7">
                                     <input type="text" class="form-control" id="deduction" name="deduction" onkeyup="value=value.replace(/[^\d.]/g,'')" placeholder="个税抵扣项（元）">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="regionCode" class="col-sm-3 control-label">参保地区：</label>
+                                <div class="col-sm-7">
+                                    <select id="regionCode" name="regionCode"  class="form-control select2">
+                                    	<option selected="selected" value="">无参保</option>
+                                    </select>
                                 </div>
                             </div>
 						</div>
@@ -266,6 +274,10 @@ if(eduOptions != 0){
 var ethOptions = '${ethOptions?default(0)}',etOptions=0;
 if(ethOptions != 0){
     etOptions = JSON.parse(ethOptions);
+}
+var regionCodes = '${regionCodes?default(0)}',regions=0;
+if(regionCodes != 0){
+	regions = JSON.parse(regionCodes);
 }
 
 $(function() {
@@ -438,6 +450,13 @@ $(function() {
             $('#ethnic').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
         }
         $("#ethnic").select2();
+    }
+    if(regions != 0){
+        for (var i = 0, len = regions.length; i < len; i++) {
+            var option = regions[i];
+            $('#regionCode').append("<option value=\"" + option.value + "\">" + option.name + "</option>");
+        }
+        $("#regionCode").select2();
     }
 	
 });
