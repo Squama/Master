@@ -106,6 +106,38 @@ public class AqjynrController {
 		request.setAttribute("jynrs", JSONArray.toJSONString(jys));*/
 		return prefix +"alllist";
 	}
+	@RequestMapping("/auidtlist")
+	public String auidtlist(HttpServletRequest request){
+		List<Worker> p = baseService.findMapBySql("select id  ,name  from tbl_worker ", new Object[]{}, new Type[]{StringType.INSTANCE}, Worker.class);
+		request.setAttribute("rys", JSONArray.toJSONString(p));
+		String status = request.getParameter("status");
+		request.setAttribute("status", status);
+		if("20".equals(status)){
+			User u = SecurityUtil.getUser();
+			request.setAttribute("leaderid",u.getFileId() );
+		}
+		return prefix +"auidtlist";
+	}
+	@RequestMapping("/auidtMx")
+	public String auidtMx(HttpServletRequest request){
+		String id = request.getParameter("id");
+		List<Worker> p = baseService.findMapBySql("select id  ,name  from tbl_worker ", new Object[]{}, new Type[]{StringType.INSTANCE}, Worker.class);
+		request.setAttribute("rys", JSONArray.toJSONString(p));
+		request.setAttribute("id",id);
+		
+		String hql = "from Dict WHERE (levelCode LIKE '000028%') and parent_id is not null order by levelCode asc";
+        List<Dict> funcs = baseService.find(hql);
+        request.setAttribute("fls", JSONArray.toJSONString(funcs));
+        String status = request.getParameter("status");
+        request.setAttribute("status",status);
+        if("20".equals(status)){
+        	return prefix +"auidtBz";
+        }else if("30".equals(status)){
+        	return prefix +"auidtXm";
+        }else{
+        	return prefix +"auidtGs";
+        }
+	}
 	@RequestMapping("/add")
 	public String add(HttpServletRequest request){
 		List<Worker> p = baseService.findMapBySql("select id  ,name  from tbl_worker ", new Object[]{}, new Type[]{StringType.INSTANCE}, Worker.class);
@@ -229,6 +261,11 @@ public class AqjynrController {
 		Aqjynr nr =nrs.get(0);
 		String workid = request.getParameter("workerid");
 		Worker w = baseService.get(Worker.class, workid);
+		if(w.getLeaderid()==null){
+			r.setSuccess(false);
+			r.setMessage("请先设置该成员的组长!");
+			return r;
+		}
 		User u = SecurityUtil.getUser();
 		Aqjy jy = new Aqjy();
 		jy.setWorkerid(workid);
@@ -249,7 +286,8 @@ public class AqjynrController {
 		jy.setCreate_name_ID(u.getId());
 		jy.setCreate_name(u.getName());
 		baseService.save(jy);
-		 String name =w.getName()+"(三级安全教育)";
+		return new Result(true,"流程启动成功");
+		 /*String name =w.getName()+"(三级安全教育)";
         // businessKey
         String businessKey = jy.getId();
 
@@ -260,7 +298,7 @@ public class AqjynrController {
         variables.put("taskName", name);
 
         // 启动流程
-        return runtimePageService.startProcessInstanceByKey("aqjy", name, variables, u.getId(), businessKey);
+        return runtimePageService.startProcessInstanceByKey("aqjy", name, variables, u.getId(), businessKey);*/
 	}
 	
 	@RequestMapping("/loadJy")
@@ -644,5 +682,26 @@ public class AqjynrController {
 
         return new byte[0];
     }
-	
+    @RequestMapping("/doauidt")
+	@ResponseBody
+	public Result doauidt(String id,HttpServletRequest request){
+		Result r= new Result();
+		String status = request.getParameter("status");
+		Aqjy jd =  baseService.get(Aqjy.class, id);
+		 if ("20".equals(status)) {
+			 jd.setStatus("30");
+			 jd.setBzjyr(SecurityUtil.getUser().getName());
+			 jd.setBztime(new Date());
+         } else if ("30".equals(status)) {
+        	 jd.setStatus("40");
+        	 jd.setXmjyr(SecurityUtil.getUser().getName());
+        	 jd.setXmtime(new Date());
+         }else if ("40".equals(status)) {
+        	 jd.setStatus("50");
+        	 jd.setGsjyr(SecurityUtil.getUser().getName());
+        	 jd.setGstime(new Date());
+         }
+		baseService.update(jd);
+		return r;
+	}
 }

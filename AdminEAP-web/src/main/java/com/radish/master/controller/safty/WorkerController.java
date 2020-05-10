@@ -42,15 +42,20 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.cnpc.framework.base.controller.UploaderController;
+import com.cnpc.framework.base.entity.Role;
+import com.cnpc.framework.base.entity.User;
 import com.cnpc.framework.base.entity.UserAvatar;
+import com.cnpc.framework.base.entity.UserRole;
 import com.cnpc.framework.base.pojo.AvatarResult;
 import com.cnpc.framework.base.pojo.FileResult;
 import com.cnpc.framework.base.pojo.PageInfo;
 import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.base.service.BaseService;
 import com.cnpc.framework.base.service.UploaderService;
+import com.cnpc.framework.base.service.UserService;
 import com.cnpc.framework.query.entity.QueryCondition;
 import com.cnpc.framework.utils.DateUtil;
+import com.cnpc.framework.utils.EncryptUtil;
 import com.cnpc.framework.utils.FileUtil;
 import com.cnpc.framework.utils.PropertiesUtil;
 import com.cnpc.framework.utils.SecurityUtil;
@@ -58,8 +63,10 @@ import com.cnpc.framework.utils.StrUtil;
 import com.radish.master.entity.HtFile;
 import com.radish.master.entity.PurchaseApplyAudit;
 import com.radish.master.entity.WorkContract;
+import com.radish.master.entity.common.JobRole;
 import com.radish.master.entity.project.Worker;
 import com.radish.master.entity.safty.CheckFileAQ;
+import com.radish.master.entity.skillManage.PlanFile;
 import com.radish.master.service.CommonService;
 import com.radish.master.service.ProjectService;
 import com.radish.master.system.FileHelper;
@@ -81,6 +88,10 @@ import com.radish.master.system.SpringUtil;
 public class WorkerController {
 	@Autowired
 	private BaseService baseService;
+	@Resource
+	private UserService userService;
+
+	private final static String initPassword = "123456";
 	
 	private static Logger logger= LoggerFactory.getLogger(UploaderController.class);
 	private static final String uploaderPath=PropertiesUtil.getValue("workContractPath");
@@ -123,6 +134,11 @@ public class WorkerController {
     private String avatar(String userId, HttpServletRequest request) {
         request.setAttribute("userId", userId);
         return "safetyManage/worker/user_avatar";
+    }
+    @RequestMapping(method = RequestMethod.GET, value = "/select")
+    private String select(String userid, HttpServletRequest request) {
+        request.setAttribute("leaderid", userid);
+        return "safetyManage/worker/zy_select";
     }
     
     @RequestMapping("/avatarUpload")
@@ -245,6 +261,7 @@ public class WorkerController {
         	if(wks.size()>0){
         		return new Result(false,"该身份证已存在！不可重复添加");
         	}
+        	worker.setIsleader("否");
             commonService.save(worker);
             id = worker.getId();
         } else {
@@ -546,5 +563,99 @@ public class WorkerController {
         fileResult.setInitialPreviewConfig(previewConfigs);
         fileResult.setFileIds(StrUtil.join(fileArr));
         return fileResult;
+    }
+    
+    
+    @RequestMapping(method = RequestMethod.POST, value = "/setLeader/{userid}")
+    @ResponseBody
+    private Result setLeader(@PathVariable("userid") String userid) {
+        Worker worker = commonService.get(Worker.class, userid);
+        try {
+            //查询是否存在身份证对应的登录账号
+			List<User> users = baseService.findMapBySql("select id  from tbl_user where login_name='"+worker.getIdentificationNumber()+"'", new Object[]{}, new Type[]{StringType.INSTANCE}, User.class);
+			if(users.size()>0){
+				return new Result(false,"已存在身份证对应登录账号，请联系管理员处理！");
+			}
+        	//新建账号 
+			User u= new User();
+			u.setName(worker.getName());
+			u.setLoginName(worker.getIdentificationNumber());
+			u.setIdentificationNumber(worker.getIdentificationNumber());
+			u.setTelphone(worker.getMobile());
+			u.setMobile(worker.getMobile());
+			u.setFileId(userid);
+			// 设置初始密码
+            u.setPassword(EncryptUtil.getPassword(initPassword, u.getLoginName()));
+            u.setZzStatus("0");
+            String userId = userService.save(u).toString();
+            //关联班组长角色
+            List<Role> RoleList = baseService.find("from Role where name = '班组长'");
+            for(Role jobRole : RoleList){
+            	UserRole ur = new UserRole();
+        		ur.setUser(u);
+        		ur.setRoleId(jobRole.getId());
+        		baseService.save(ur);
+            }
+        	//修改组长标志
+            worker.setIsleader("是");
+            worker.setLeaderid(userid);
+            baseService.update(worker);
+        } catch (Exception e) {
+            return new Result(false);
+        }
+        return new Result(true,"设置成功，登陆账号："+worker.getIdentificationNumber()+",登录密码：123456");
+    }
+    @RequestMapping(method = RequestMethod.POST, value = "/deleteLeader/{userid}/{isdelete}")
+    @ResponseBody
+    private Result deleteLeader(@PathVariable("userid") String userid,@PathVariable("isdelete") String isdelete) {
+    	Worker worker = commonService.get(Worker.class, userid);
+    	//先查询是否存在组员
+    	List<Worker> zys = baseService.find("from Worker where leaderid = '"+userid+"' and id<>leaderid");
+    	if(zys.size()>0&&"no".equals(isdelete)){
+    		return new Result(false,null,"名下还存在"+zys.size()+"组员，是否确认删除","-2");
+    	}
+    	for(Worker zy :zys){
+    		zy.setLeaderid(null);
+    	}
+    	baseService.batchUpdate(zys);
+    	 //删除用户
+        List<User> us = baseService.find("from User where loginName = '"+worker.getIdentificationNumber()+"'");
+    	if(us.size()>0){
+    		User u = us.get(0);
+    		//删除user和权限
+    		List<UserRole> r = baseService.findBySql("select * from tbl_user_role  where userID='" + u.getId()+ "'", UserRole.class);
+            for (UserRole rol : r) {
+           	 	baseService.delete(rol);
+            }
+    		baseService.delete(u);
+    	}
+       
+    	//修改worker表标注
+    	worker.setIsleader("否");
+        worker.setLeaderid(null);
+    	baseService.update(worker);
+    	return new Result(true,"操作成功");
+    }
+    @RequestMapping(method = RequestMethod.POST, value = "/saveBd")
+    @ResponseBody
+    private Result saveBd(String ids,String leaderid){
+    	String[] idss = ids.split(",");
+    	for(String id :idss){
+    		Worker worker = commonService.get(Worker.class, id);
+    		worker.setLeaderid(leaderid);
+    		baseService.update(worker);
+    	}
+    	return new Result(true,"绑定成功");
+    }
+    @RequestMapping(method = RequestMethod.POST, value = "/saveJb")
+    @ResponseBody
+    private Result saveJb(String ids){
+    	String[] idss = ids.split(",");
+    	for(String id :idss){
+    		Worker worker = commonService.get(Worker.class, id);
+    		worker.setLeaderid(null);
+    		baseService.update(worker);
+    	}
+    	return new Result(true,"解绑成功");
     }
 }

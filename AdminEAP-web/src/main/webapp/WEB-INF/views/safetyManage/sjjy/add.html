@@ -162,8 +162,10 @@
                     var params = form.getFormSimpleData();
                     	ajaxPost(basePath+'/sjjynr/saveJy', params, function(data) {
                             if(data.success){
-                            	 modals.correct("流程已启动，请及时处理");
+                            	 modals.correct("流程已启动，请联系组长及时处理");
                                  $("#b_sub").css("display","none");
+                            }else{
+                            	 modals.error(data.message);
                             }                
                         }); 
               

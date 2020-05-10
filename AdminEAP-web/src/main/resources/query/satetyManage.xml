@@ -66,8 +66,9 @@
     <query id="worker_list" key="id" tableName="班组人员花名册"     widthType="px">
         <sql>
             <![CDATA[
-             select wks.* from(
-              SELECT wk.*,
+             select wks.* 
+             from(
+              SELECT wk.* ,(select zz.name from tbl_worker zz where wk.leaderid= zz.id ) leadername ,
               (select GROUP_CONCAT(gx.team_name) from tbl_user_team gx where gx.user_id = wk.id) bz
 			  FROM tbl_worker wk ) wks
 			  WHERE 1=1 
@@ -77,6 +78,8 @@
         <column key="id" header="id" hidden="true"/>
         <column key="version" header="version" hidden="true"/>
         <column key="bz" header="所在班组" align="left" width="100" operator="like"/>
+        <column key="isleader" header="是否组长" width="100"/>
+        <column key="leadername" header="组长姓名" operator="like" width="100" allowSort="true" />
         <column key="name" header="姓名" operator="like" width="100" allowSort="true" />
         <column key="work_type" header="工种" align="left" width="100"/>
         <column key="ethnic" header="民族" align="left" width="100"/>
@@ -86,6 +89,7 @@
         <column key="working_year" header="岗位年限" align="right" operator="eq" width="100"  />
         <column key="mobile" header="电话号码" width="200" align="center"/>
         <column key="identification_number" header="身份证" width="200" align="center"/>
+         <column key="id" header="操作" width="80" fnRender="fnRenderXq"/>
     </query>
     <query id="workerhod_list" key="id" tableName="门卫机修花名册" className="com.radish.master.entity.project.WorkerHod" pageSize="20"  widthType="px">
         <column key="rowIndex" header="序号" width="50" allowSort="false"/>
@@ -198,17 +202,42 @@
         <column key="create_name" header="最后修改人" operator="like" width="100" allowSort="true" />
     	<column key="create_time" header="创建日期" classType="java.util.Date" width="150" allowSort="true" operator="between"  dateFormat="yyyy-mm-dd"/>
     </query>
-     <query id="aqjyList" key="id" tableName="安全教育" className="com.radish.master.entity.safty.Aqjy" widthType="px" pageSize="200">
+     <query id="aqjyList" key="id" tableName="安全教育" widthType="px" pageSize="50">
+        <sql>
+            <![CDATA[
+            select jys.* from (
+              SELECT jy.* ,(select le.name from tbl_worker wk,tbl_worker le where wk.id = jy.workerid and wk.leaderid = le.id) leaname
+			  FROM tbl_aqjy jy ) jys 
+			  WHERE 1=1 
+            ]]>
+        </sql>
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="leaname" header="组长姓名" operator="like" width="100" allowSort="true" />
+        <column key="name" header="姓名" operator="like" width="100" allowSort="true" />
+        <column key="work_type" header="工种"  width="100"/>
+        <column key="sex" header="性别" operator="eq" width="150" allowSort="true" render="1=男,0=女" />
+        <column key="status" header="状态"  width="100" render="10=新建,20=班组教育,30=项目教育,40=公司教育,50=完成" />
+    	<column key="create_time" header="创建日期" classType="java.util.Date" width="150" allowSort="true" operator="between" />
+   		<column key="id" header="文件附件管理" width="80" fnRender="fnRenderGl"/>
+    </query>
+     <query id="aqjyList_auidt" key="id" tableName="安全教育审核" widthType="px">
+        <sql>
+            <![CDATA[
+            select jys.* from (
+              SELECT jy.* ,(select leaderid from tbl_worker wk where wk.id = jy.workerid ) leaderid
+			  FROM tbl_aqjy jy ) jys 
+			  WHERE 1=1 
+            ]]>
+        </sql>
         <column key="id" hidden="true" header="id" width="80"/>
         <column key="rowIndex" header="序号" width="80"/>
         <column key="name" header="姓名" operator="like" width="100" allowSort="true" />
-        <column key="workType" header="工种"  width="100"/>
+        <column key="work_type" header="工种"  width="100"/>
         <column key="sex" header="性别" operator="eq" width="150" allowSort="true" render="1=男,0=女" />
-        <column key="status" header="状态"  width="100" render="10=新建,20=班组教育,30=项目教育,40=公司教育,50=完成" />
-    	<column key="create_time" header="创建日期" classType="java.util.Date" width="150" allowSort="true" operator="between"  dateFormat="yyyy-mm-dd"/>
-   		<column key="id" header="文件附件管理" width="80" fnRender="fnRenderGl"/>
+    	<column key="create_time" header="创建日期" classType="java.util.Date" width="150" allowSort="true" operator="between" />
+   		<column key="id" header="查看审核" width="80" fnRender="fnRenderGl"/>
     </query>
-    
     <query id="aqjyfjList" key="id" tableName="安全教育附件列表" className="com.radish.master.entity.safty.Aqjyfj" widthType="px" pageSize="200">
         <column key="id" hidden="true" header="id" width="80"/>
         <column key="rowIndex" header="序号" width="80"/>
@@ -217,5 +246,32 @@
         <column key="create_name" header="创建人"  width="100"/>
     	<column key="create_time" header="创建日期" classType="java.util.Date" width="150" allowSort="true" operator="between"  dateFormat="yyyy-mm-dd"/>
    		<column key="id" header="文件附件管理" width="80" fnRender="fnRenderGl"/>
+    </query>
+    
+    <query id="worker_unselected_list" key="id" tableName="未绑定组长列表"     widthType="px">
+        <sql>
+            <![CDATA[
+              SELECT wk.name name,wk.id id ,wk.identification_number identification_number
+			  FROM tbl_worker wk 
+			  WHERE wk.isleader <> '是' and wk.leaderid is null and  1=1 
+            ]]>
+        </sql>
+        <column key="rowIndex" header="序号" width="50" allowSort="false"/>
+        <column key="id" header="id" hidden="true"/>
+        <column key="name" header="姓名" operator="like" width="100" allowSort="true" />
+        <column key="identification_number" header="身份证" width="200" align="center"/>
+    </query>
+    <query id="worker_selected_list" key="id" tableName="已绑定组长列表"     widthType="px">
+        <sql>
+            <![CDATA[
+              SELECT ywk.name name,ywk.id id ,ywk.identification_number identification_number
+			  FROM tbl_worker ywk 
+			  WHERE ywk.id<>ywk.leaderid and 1=1 
+            ]]>
+        </sql>
+        <column key="rowIndex" header="序号" width="50" allowSort="false"/>
+        <column key="id" header="id" hidden="true"/>
+        <column key="name" header="姓名" operator="like" width="100" allowSort="true" />
+        <column key="identification_number" header="身份证" width="200" align="center"/>
     </query>
 </queryContext>

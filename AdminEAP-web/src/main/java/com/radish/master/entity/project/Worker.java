@@ -109,6 +109,14 @@ public class Worker extends BaseEntity {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date jctime;
     
+    @Header(name = "是否组长")
+    @Column(name = "isleader")
+    private String isleader;
+    
+    @Header(name = "组长id")
+    @Column(name = "leaderid")
+    private String leaderid;
+    
     @Header(name = "文化程度")
     @Column(name = "whcd")
     private String whcd;
@@ -271,6 +279,22 @@ public class Worker extends BaseEntity {
 
 	public void setWhcd(String whcd) {
 		this.whcd = whcd;
+	}
+
+	public String getIsleader() {
+		return isleader;
+	}
+
+	public void setIsleader(String isleader) {
+		this.isleader = isleader;
+	}
+
+	public String getLeaderid() {
+		return leaderid;
+	}
+
+	public void setLeaderid(String leaderid) {
+		this.leaderid = leaderid;
 	}
 
 }

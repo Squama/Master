@@ -108,12 +108,16 @@
         <!-- /.box-body -->
         <!-- /.box-footer -->
     </form>
+    <div class="" style="text-align: center;height:50px;width:100%;">
+         <!--以下两种方式提交验证,根据所需选择-->
+         <button type="button" class="btn btn-primary" data-btn-type="save" id="jywc">教育完成</button>
+     </div>
 </div>
 <div class="row">
         <div class="col-xs-12">
             <div class="box">
                 <!-- /.box-header -->
-                <div class="dataTables_filter" id="searchDiv1" style="display: none">
+                <div class="dataTables_filter" id="searchDiv2" style="display: none">
                     <!--查询条件-->
                     <!--查询条件-->
                     <select id="flid" class="form-control select2" name="fjtype" style="width:200px;" operator="eq">
@@ -152,7 +156,7 @@ $("#ryid").val(id);
 
 var dutycheckTable
 $(function() {
-	dutycheckTable = new CommonTable("lwContract_table", "aqjyfjList", "searchDiv1");
+	dutycheckTable = new CommonTable("lwContract_table", "aqjyfjList", "searchDiv2");
     //初始化控件
     form=$("#contract-form").form();
     //绑定按钮事件
@@ -208,6 +212,16 @@ $(function() {
     }
     form.initComponent();
     load();
+    $("#jywc").on("click",function(){
+    	modals.confirm("确定教育完成？点击确定将转到下一级教育",function(){
+    		ajaxPost(basePath+'/sjjynr/doauidt', {id:id,status:'${status}'}, function(data) {
+				if(data.success){
+					modals.info("操作成功");
+					modals.hideWin(winId);
+    			}
+            }); 
+    	})
+    })
 });
 function load(){
 	if(id!=0){//查看

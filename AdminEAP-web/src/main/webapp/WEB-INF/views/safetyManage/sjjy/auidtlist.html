@@ -1,0 +1,115 @@
+<section class="content-header">
+    <h1>
+        三级教育审核
+        <small>列表</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
+        <li><a href="#">安全教育</a></li>
+        <li class="active">三级教育审核</li>
+    </ol>
+</section>
+
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <!-- /.box-header -->
+                <div class="dataTables_filter" id="searchDiv1" style="display: none">
+                    <!--查询条件-->
+                    <!--查询条件-->
+                    <select id="ryid1" class="form-control select2" name="workerid" style="width:200px;" operator="eq">
+        				<option selected="selected" value="">选择查询人员</option>
+       				 </select>
+       				 <input type="hidden" value="${status}" name="status"/>
+       				 <input type="hidden" name="leaderid" id="leaderid"/>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-primary" data-btn-type="search">查询</button>
+                    </div>
+                    <div class="btn-group">
+                    </div>
+                </div>
+                <div class="box-body box-body-mobile">
+                    <table id="aqjy_table" class="table table-bordered table-striped table-hover">
+                    </table>
+                </div>
+            </div>
+           </div>
+         </div>
+         
+</section>
+
+<script>
+	var status = '${status}';
+	var leaderid = '${leaderid?default(0)}';
+	if(leaderid!=0){
+		$("#leaderid").val(leaderid);
+	}
+    var form = $("#searchDiv1").form({baseEntity: false}), initData={};
+	var winId = "purchaseApplyWin";
+    var aqjyTable, winId = "projectQueryWin";
+    var rys = '${rys?default(0)}',ry=0;
+    if(rys != 0){
+    	ry = JSON.parse(rys);
+    }
+    /* var jynrs = '${jynrs?default(0)}',jynr=0;
+    if(jynrs != 0){
+    	jynr = JSON.parse(jynrs);
+    } */
+    $(function (){
+    	aqjyTable = new CommonTable("aqjy_table", "aqjyList_auidt", "searchDiv1");
+        
+        
+        
+        //绑定按钮事件
+        $("button[data-btn-type]").click(function () {
+            var action = $(this).data("btn-type");
+            var rowId = dutycheckTable.getSelectedRowId();
+            switch (action) {
+                case 'look':
+                	if(!rowId){
+                        modals.info('请选择要查看的信息');
+                        return false;
+                    }
+                    modals.openWin({
+                        winId:winId,
+                        title:'查看',
+                        width:'1000px',
+                        url:basePath+"/sjjynr/add?id="+rowId+"&lx=look",
+                       });
+                	break;
+                case "print":
+            		if(!rowId){
+                        modals.info('请选择要打印的行');
+                        return false;
+                    }
+            		var url = basePath+"/ureport/preview?_u=file:sjaq.ureport.xml&_t=1,5&id="+rowId;
+            	 	window.open(url);     
+            	break;
+               
+            }
+        });
+        if(ry != 0){
+            for (var i = 0, len = ry.length; i < len; i++) {
+                var u = ry[i];
+                $('#ryid1').append("<option value='" + u.id + "'>" + u.name + "</option>");
+            }
+            $("#ryid1").select2();
+        }
+        
+    });
+    function fnRenderGl(value, type, obj){
+    	return "<a href='javascript:void(0)' onclick='looksh(\"" + obj.ID + "\")'>查看审核</a>";
+    }
+    function looksh(id){
+    	modals.openWin({
+            winId:winId,
+            title:'审核',
+            width:'900px',
+            url:basePath+"/sjjynr/auidtMx?id="+id+"&status="+status,
+            hideFunc:function(){
+            	aqjyTable.reloadData();
+            }
+        });
+    }
+</script>
