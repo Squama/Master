@@ -339,12 +339,12 @@ public class BudgetEstimateController {
             
             BudgetTx bt = budgetService.get(BudgetTx.class, budgetTxID);
             
-            bt.setMateriels(sumMat.toPlainString());
-            bt.setArtificiality(sumLabour.toPlainString());
-            bt.setMech(sumMech.toPlainString());
+            bt.setMateriels(sumMat.setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
+            bt.setArtificiality(sumLabour.setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
+            bt.setMech(sumMech.setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
             BigDecimal sumall = new BigDecimal("0");
             sumall=sumall.add(sumMat).add(sumLabour).add(sumMech);
-            bt.setUnitPrice(sumall.toPlainString());
+            bt.setUnitPrice(sumall.setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
             budgetService.update(bt);
             
         }catch (CodeException ce) {
@@ -380,11 +380,11 @@ public class BudgetEstimateController {
         }
         
         request.setAttribute("budgetNo", budgetNo);
-        request.setAttribute("quantities", quantities.toPlainString());
-        request.setAttribute("unitPrice", unitPrice.toPlainString());
-        request.setAttribute("artificiality", artificiality.toPlainString());
-        request.setAttribute("materiels", materiels.toPlainString());
-        request.setAttribute("mech", mech.toPlainString());
+        request.setAttribute("quantities", quantities.setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
+        request.setAttribute("unitPrice", unitPrice.setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
+        request.setAttribute("artificiality", artificiality.setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
+        request.setAttribute("materiels", materiels.setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
+        request.setAttribute("mech", mech.setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
         
         return "budgetmanage/budgetestimate/merge_estimate";
     }
@@ -513,7 +513,7 @@ public class BudgetEstimateController {
         
         BudgetTx bt = budgetService.get(BudgetTx.class, budgetEstimate.getBudgetTxID());
         
-        bt.setMateriels(sum.toPlainString());
+        bt.setMateriels(sum.setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
         bt.setUnitPrice(getUnitPrice(bt));
         
         budgetService.update(bt);
@@ -540,7 +540,7 @@ public class BudgetEstimateController {
         
         BudgetTx bt = budgetService.get(BudgetTx.class, budgetLabour.getBudgetTxID());
         
-        bt.setArtificiality(sum.toPlainString());
+        bt.setArtificiality(sum.setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
         bt.setUnitPrice(getUnitPrice(bt));
         
         budgetService.update(bt);
@@ -567,7 +567,7 @@ public class BudgetEstimateController {
         
         BudgetTx bt = budgetService.get(BudgetTx.class, budgetMech.getBudgetTxID());
         
-        bt.setMech(sum.toPlainString());
+        bt.setMech(sum.setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
         bt.setUnitPrice(getUnitPrice(bt));
         
         budgetService.update(bt);
@@ -583,7 +583,7 @@ public class BudgetEstimateController {
         BigDecimal mat = new BigDecimal(StrUtil.isEmpty(bt.getMateriels())?"0":bt.getMateriels());
         BigDecimal mech = new BigDecimal(StrUtil.isEmpty(bt.getMech())?"0":bt.getMech());
         
-        return result.add(labour.add(mat.add(mech))).toPlainString();
+        return result.add(labour.add(mat.add(mech))).setScale(2, BigDecimal.ROUND_DOWN).toPlainString();
     }
     
     @RequestMapping(method = RequestMethod.POST, value = "/savepackage")
@@ -607,7 +607,7 @@ public class BudgetEstimateController {
         pack.setRegionCode("包工包料");
         pack.setRegionName("包工包料");
         pack.setQuantities(acreage);
-        pack.setUnitPrice(price.toPlainString());
+        pack.setUnitPrice(price.setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
         pack.setQuotaGroup("package");
         pack.setOrderNo("pack");
         
@@ -618,7 +618,7 @@ public class BudgetEstimateController {
         packGroup.setQuotaGroup("package");
         packGroup.setIsGroup("1");
         packGroup.setQuantities("");
-        packGroup.setUnitPrice(price.toPlainString());
+        packGroup.setUnitPrice(price.setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
         packGroup.setArtificiality("");
         packGroup.setMateriels("");
         packGroup.setMech("");
@@ -647,7 +647,7 @@ public class BudgetEstimateController {
         
         BudgetTx bt = budgetService.get(BudgetTx.class, budgetEstimate.getBudgetTxID());
         
-        bt.setMateriels(sum.toPlainString());
+        bt.setMateriels(sum.setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
         bt.setUnitPrice(getUnitPrice(bt));
         
         budgetService.update(bt);
@@ -693,7 +693,7 @@ public class BudgetEstimateController {
         
         BudgetTx bt = budgetService.get(BudgetTx.class, budgetLabour.getBudgetTxID());
         
-        bt.setArtificiality(sum.toPlainString());
+        bt.setArtificiality(sum.setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
         bt.setUnitPrice(getUnitPrice(bt));
         
         budgetService.update(bt);
@@ -721,7 +721,7 @@ public class BudgetEstimateController {
         
         BudgetTx bt = budgetService.get(BudgetTx.class, budgetMech.getBudgetTxID());
         
-        bt.setMech(sum.toPlainString());
+        bt.setMech(sum.setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
         bt.setUnitPrice(getUnitPrice(bt));
         
         budgetService.update(bt);
@@ -774,10 +774,10 @@ public class BudgetEstimateController {
         	}
         }
         
-        request.setAttribute("sumUnit", sumUnit.toPlainString());
-        request.setAttribute("sumLabour", sumLabour.toPlainString());
-        request.setAttribute("sumMat", sumMat.toPlainString());
-        request.setAttribute("sumMech", sumMech.toPlainString());
+        request.setAttribute("sumUnit", sumUnit.setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
+        request.setAttribute("sumLabour", sumLabour.setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
+        request.setAttribute("sumMat", sumMat.setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
+        request.setAttribute("sumMech", sumMech.setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
         
         return "budgetmanage/budgetactiviti/audit_list";
     }
@@ -885,7 +885,7 @@ public class BudgetEstimateController {
         
         BudgetTx bt = budgetService.get(BudgetTx.class, budgetEstimate.getBudgetTxID());
         
-        bt.setMateriels(sum.toPlainString());
+        bt.setMateriels(sum.setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
         
         budgetService.update(bt);
         
@@ -958,10 +958,10 @@ public class BudgetEstimateController {
         }
         
         if(groupBudgetTx != null){
-            groupBudgetTx.setUnitPrice(unitPriceSum.toPlainString());
-            groupBudgetTx.setArtificiality(artificialitySum.toPlainString());
-            groupBudgetTx.setMech(mechSum.toPlainString());
-            groupBudgetTx.setMateriels(materielsSum.toPlainString());
+            groupBudgetTx.setUnitPrice(unitPriceSum.setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
+            groupBudgetTx.setArtificiality(artificialitySum.setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
+            groupBudgetTx.setMech(mechSum.setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
+            groupBudgetTx.setMateriels(materielsSum.setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
             
             budgetService.update(groupBudgetTx);
         }
