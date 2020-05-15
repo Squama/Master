@@ -64,7 +64,8 @@
         //绑定按钮事件
         $("button[data-btn-type]").click(function () {
             var action = $(this).data("btn-type");
-            var rowId = dutycheckTable.getSelectedRowId();
+            var datas = dutycheckTable.getSelectedRowData();
+            var rowId =datas.ID;
             switch (action) {
            		case "add":
            			modals.openWin({
@@ -118,7 +119,7 @@
         
     });
     function fnRenderGl(value, type, obj){
-    	return "<a href='javascript:void(0)' onclick='lookfj(\"" + value + "\")'>相关附件</a>";
+    	return "<a href='javascript:void(0)' onclick='lookfj(\"" + obj.ID + "\")'>相关附件</a>";
     }
     function lookfj(id){
     	loadPage(basePath+"/sjjynr/lookfjlist?jyid="+id);
