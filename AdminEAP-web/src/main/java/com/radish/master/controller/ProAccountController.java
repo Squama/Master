@@ -1,11 +1,16 @@
 package com.radish.master.controller;
 
+import java.io.OutputStream;
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -15,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONArray;
@@ -23,13 +29,20 @@ import com.cnpc.framework.activiti.service.RuntimePageService;
 import com.cnpc.framework.base.entity.User;
 import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.base.service.BaseService;
+import com.cnpc.framework.utils.CodeException;
 import com.cnpc.framework.utils.SecurityUtil;
+import com.cnpc.framework.utils.StrUtil;
 import com.radish.master.entity.ProAccount;
 import com.radish.master.entity.ProAccountDet;
+import com.radish.master.entity.ProAccountDetExport;
 import com.radish.master.entity.Project;
+import com.radish.master.entity.common.UserExport;
 import com.radish.master.entity.volumePay.ProjectPay;
 import com.radish.master.pojo.Options;
 import com.radish.master.system.Arith;
+import com.radish.master.system.ReportSXSSF;
+import com.radish.master.system.TimeUtil;
+import com.radish.master.system.report.Column;
 
 @Controller
 @RequestMapping("/proaccount")
@@ -271,4 +284,118 @@ public class ProAccountController {
         // 启动流程
         return runtimePageService.startProcessInstanceByKey("ProAccountCheck", name, variables, user.getId(), businessKey);
     }
+	
+	  @RequestMapping(value = "/getexcel", method = RequestMethod.GET)
+	    @ResponseBody
+	    public String exportExcel(ProAccountDet det, HttpServletRequest request, HttpServletResponse response) {
+	        try {
+	        	String sj1 = request.getParameter("sj1");
+	        	String sj2 = request.getParameter("sj2");
+	            ArrayList<String[]> rows = new ArrayList<>();
+	            System.out.println(det.toString());
+	            String[] header = { "序号", "账目日期", "摘要", "进账", "出账", "备注", "状态"};
+	            rows.add(header);
+	            getExcel(det, rows,sj1,sj2);
+	            Column[] columns = getColumn();
+	            ReportSXSSF r = new ReportSXSSF("账目明细", "", columns, rows);
+
+	            response.setContentType("application/octet-stream;charset=utf-8");
+	            response.setHeader("Content-Disposition", "attachment; filename=\"account_ " + TimeUtil.getCurrentDate() + ".xls\"");
+	            OutputStream output = response.getOutputStream();
+	            r.export(output);
+
+	        } catch (Exception e) {
+	            return null;
+	        }
+	        return null;
+	    }
+	  private ArrayList<String[]> getExcel(ProAccountDet det, ArrayList<String[]> rows,String sj1,String sj2) throws CodeException {
+	        StringBuilder buffer = new StringBuilder();
+	        
+	        buffer.append("select a.id id, a.createDate,a.abstracts,a.inMoney,a.outMoney,a.remark, ");
+	        buffer.append("CASE WHEN a.status=\'10\' THEN \'新建\' WHEN \'20\' THEN \'复核确认\' WHEN \'30\' THEN \'完成\' ELSE \'复核驳回\' END as status ");
+	        buffer.append("from tbl_projectaccount_det a  ");
+	        buffer.append("WHERE 1=1 ");
+	        buffer.append("and a.createDate BETWEEN '"+sj1+"' and '"+sj2+"' ");
+	        
+	        
+	        Map<String, Object> params = new HashMap<String, Object>();
+
+	        if (!StrUtil.isEmpty(det.getProjectAccountId())) {
+	            buffer.append(" AND a.projectAccountId= '"+det.getProjectAccountId()+"' ");
+	        }
+
+	        if (!StrUtil.isEmpty(det.getAbstracts())) {
+	            buffer.append(" AND a.abstracts LIKE '%"+det.getAbstracts()+"%' ");
+	        }
+	        buffer.append("order by a.createDate desc ");
+	        try {
+	        	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	            List<ProAccountDetExport> users = baseService.findBySql(buffer.toString(), params, ProAccountDetExport.class);
+	            BigDecimal allin = new BigDecimal("0.0");
+	            BigDecimal allout = new BigDecimal("0.0");
+	            BigDecimal zero = new BigDecimal("0.0");
+	            for (int i = 0; i < users.size(); i++) {
+	            	ProAccountDetExport userColumn = users.get(i);
+
+	                String[] cells = new String[7];
+	                cells[0] = String.valueOf(i + 1);
+	                cells[1] = sdf.format(userColumn.getCreateDate());
+	                cells[2] = userColumn.getAbstracts();
+	                cells[3] = userColumn.getInMoney();
+	                cells[4] = userColumn.getOutMoney();
+	                cells[5] = userColumn.getRemark();
+	                cells[6] = userColumn.getStatus();
+	                        
+	                rows.add(cells);
+	                allin = allin.add(userColumn.getInMoney()==null?zero:new BigDecimal(userColumn.getInMoney()));
+	                allout = allout.add(userColumn.getOutMoney()==null?zero:new BigDecimal(userColumn.getOutMoney()));
+	            }
+	            String[] cells = new String[7];
+	            for (int i = 0; i < cells.length; i++) {
+	                cells[i] = "";
+	            }
+	            cells[1] = "总计";
+	            cells[3] =allin +"";
+	            cells[4] =allout +"";
+	            rows.add(cells);
+	        } catch (Exception e) {
+	            throw new CodeException(e.getMessage());
+	        }
+	        return rows;
+	    }
+
+	    private Column[] getColumn() {
+	        Column[] columns = new Column[7];
+
+	        columns[0] = new Column();
+	        columns[0].setAlign(Column.ALIGN_CENTER);
+	        columns[0].setWidth(2000);
+
+	        columns[1] = new Column();
+	        columns[1].setAlign(Column.ALIGN_CENTER);
+	        columns[1].setWidth(4000);
+
+	        columns[2] = new Column();
+	        columns[2].setAlign(Column.ALIGN_CENTER);
+	        columns[2].setWidth(6000);
+
+	        columns[3] = new Column();
+	        columns[3].setAlign(Column.ALIGN_CENTER);
+	        columns[3].setWidth(4000);
+
+	        columns[4] = new Column();
+	        columns[4].setAlign(Column.ALIGN_CENTER);
+	        columns[4].setWidth(4000);
+
+	        columns[5] = new Column();
+	        columns[5].setAlign(Column.ALIGN_CENTER);
+	        columns[5].setWidth(6000);
+
+	        columns[6] = new Column();
+	        columns[6].setAlign(Column.ALIGN_CENTER);
+	        columns[6].setWidth(3000);
+
+	        return columns;
+	    }
 }

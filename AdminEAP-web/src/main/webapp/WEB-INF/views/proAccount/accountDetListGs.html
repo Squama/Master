@@ -12,12 +12,12 @@
                      	<option value="40">完成</option>
                      </select> -->
                      摘要：
-                	<input name="abstracts" class="form-control" type="search" likeOption="true"operator="like"/> 
+                	<input id="zys" name="abstracts" class="form-control" type="search" likeOption="true"operator="like"/> 
                      <input id="projectAccountId" name="projectAccountId" class="form-control" type="search" style="display:none" /> 
                      日期范围：
-       				 <input type="text"  name="mx.createDate"  class="form-control date-picker" data-flag="datepicker" data-format="yyyy-mm-dd" operator="between"/>
+       				 <input type="text" id="sj1"  name="mx.createDate"  class="form-control date-picker" data-flag="datepicker" data-format="yyyy-mm-dd" operator="between"/>
        				 ——
-       				 <input type="text" name="mx.createDate"  class="form-control date-picker" data-flag="datepicker" data-format="yyyy-mm-dd"  operator="between"/>
+       				 <input type="text" id="sj2" name="mx.createDate"  class="form-control date-picker" data-flag="datepicker" data-format="yyyy-mm-dd"  operator="between"/>
                     <div class="btn-group">
                         <button type="button" class="btn btn-primary"   data-btn-type="search">查询</button>
                         <!-- <button type="button" class="btn btn-default" data-btn-type="reset">重置</button> -->
@@ -26,6 +26,7 @@
                         <button type="button" class="btn btn-default" data-btn-type="add">新增账目</button>
                         <button type="button" class="btn btn-default" data-btn-type="edit" >编辑账目</button>
                         <button type="button" class="btn btn-default" data-btn-type="del" >删除账目</button>
+                        <button type="button" class="btn btn-success" data-btn-type="export">导出</button>
                         <button type="button" class="btn btn-primary" data-btn-type="out" >返回账本列表</button>
                     </div>
                 </div>
@@ -131,6 +132,21 @@ var formsearchDiv = $("#searchDiv").form({baseEntity: false}), initData={};
             case 'out':
             	loadPage(basePath+"/proaccount/addListGs");
             	break;
+            case 'export':
+                var sj1 = $("#sj1").val();
+                var sj2 = $("#sj2").val();
+                var abstracts = $("#zys").val();
+                var projectAccountId = $("#projectAccountId").val();
+                if(!sj1){
+                	sj1="1970-01-01";
+                }
+                if(!sj2){
+                	sj2 = '9999-12-31';
+                }
+                var url = basePath+"/proaccount/getexcel?sj1="+sj1+"&sj2="+sj2+"&abstracts="+abstracts+"&projectAccountId="+projectAccountId;
+                var iframeExcel = '<iframe src="'+url+'" style="dispaly:none;width:0px;height:0px">'
+                $("body").append(iframeExcel);
+                break;
             
             }
 
