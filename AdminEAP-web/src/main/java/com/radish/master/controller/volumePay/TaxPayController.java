@@ -86,6 +86,12 @@ public class TaxPayController {
 			zflx = "点工班组";
 		}else if("40".equals(zf.getType())){
 			zflx = "机关人员";
+		}else if("60".equals(zf.getType())){
+			zflx = "其他类型（13薪）";
+		}else if("70".equals(zf.getType())){
+			zflx = "其他类型（奖金）";
+		}else if("80".equals(zf.getType())){
+			zflx = "其他类型（津贴）";
 		}
 
         String name = zflx + " 工资单税金支付【审核】";
@@ -121,9 +127,17 @@ public class TaxPayController {
 		String je = request.getParameter("je");
 		String xmid = "";
 		String content = "";
-		if("40".equals(j.getType())){//公司账本 机关人员工资
+		if("40".equals(j.getType())||"60".equals(j.getType())||"70".equals(j.getType())||"80".equals(j.getType())){//公司账本 机关人员工资
 			xmid = "1";
-			content="机关人员工资税金支付";
+			if("40".equals(j.getType())){
+				content="机关人员工资税金支付";
+			}else if("60".equals(j.getType())){
+				content="13薪税金支付";
+			}else if("70".equals(j.getType())){
+				content="奖金税金支付";
+			}else if("80".equals(j.getType())){
+				content="津贴税金支付";
+			}
 		}else{//项目账本 其他类型人员工资
 			xmid = j.getProjectID();
 			if("10".equals(j.getType())){

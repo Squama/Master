@@ -265,7 +265,7 @@
     <query id="worker_selected_list" key="id" tableName="已绑定组长列表"     widthType="px">
         <sql>
             <![CDATA[
-              SELECT ywk.name name,ywk.id id ,ywk.identification_number identification_number,wk.work_type work_type
+              SELECT ywk.name name,ywk.id id ,ywk.identification_number identification_number,ywk.work_type work_type
 			  FROM tbl_worker ywk 
 			  WHERE ywk.id<>ywk.leaderid and 1=1 
             ]]>
