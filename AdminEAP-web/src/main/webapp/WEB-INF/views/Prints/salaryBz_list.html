@@ -26,6 +26,9 @@
                         <option value="30">点工班组</option>
                         <option value="40">机关人员</option>
                         <option value="50">门卫机修</option>
+                        <option value="60">13薪</option>
+                        <option value="70">奖金</option>
+                         <option value="80">津贴</option>
                     </select>
                     <!-- <input type="search" class="form-control" name="status" value="60" style="display: none"> -->
                     <div class="btn-group">
@@ -76,6 +79,8 @@
                  	url=basePath+"/project/organ/salary/detailouter/"+rowID;
                  }else if(type=="门卫机修"){//门卫
                  	url=basePath+"/project/hod/salary/detailouter/"+rowID;
+                 }else{//其他
+                 	url=basePath+"/project/else/salary/detailouter/"+rowID;
                  }
             	modals.openWin({
                     winId:winId,
@@ -100,10 +105,14 @@
 	                    return false;
 	                }
 	                var url = basePath+"/ureport/preview?_u=file:salaryBz.ureport.xml&_t=1,5&id="+rowId+"&uid="+uid;
-					/* var types = teamSalaryTable.getSelectedRowData().type;
+	                var types = teamSalaryTable.getSelectedRowData().type;
+					/* 
 					if(types!="专业作业班组"&&types!="点工班组"){
 						url = basePath+"/ureport/preview?_u=file:salaryGs.ureport.xml&_t=1,5&id="+rowId+"&uid="+uid;
 					} */
+					if(types=="13薪"||types=="奖金"||types=="津贴"){
+						url = basePath+"/ureport/preview?_u=file:salaryElse.ureport.xml&_t=1,5&id="+rowId+"&uid="+uid;
+					}
                	 	window.open(url);
                	 	//modals.correct(url);
 	                break;

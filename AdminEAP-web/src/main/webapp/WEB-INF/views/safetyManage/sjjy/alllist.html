@@ -64,8 +64,6 @@
         //绑定按钮事件
         $("button[data-btn-type]").click(function () {
             var action = $(this).data("btn-type");
-            var datas = dutycheckTable.getSelectedRowData();
-            var rowId =datas.ID;
             switch (action) {
            		case "add":
            			modals.openWin({
@@ -80,6 +78,8 @@
                        }); 
                 break;
                 case 'look':
+                	var datas = dutycheckTable.getSelectedRowData();
+                    var rowId =datas.ID;
                 	if(!rowId){
                         modals.info('请选择要查看的信息');
                         return false;
@@ -92,6 +92,8 @@
                        });
                 	break;
                 case "print":
+                	var datas = dutycheckTable.getSelectedRowData();
+                    var rowId =datas.ID;
             		if(!rowId){
                         modals.info('请选择要打印的行');
                         return false;

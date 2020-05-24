@@ -49,7 +49,7 @@
     <query id="salary_list" key="id" tableName="工资单查询" className="com.radish.master.entity.project.Salary" widthType="px" pageSize="50">
         <column key="rowIndex" header="序号" width="80"/>
         <column key="id" hidden="true" header="id" width="80"/>
-        <column key="type" header="类型" allowSort="true" width="150" render="10=专业作业班组,20=管理人员,30=点工班组,40=机关人员,50=门卫机修"/>
+        <column key="type" header="类型" allowSort="true" width="150" render="10=专业作业班组,20=管理人员,30=点工班组,40=机关人员,50=门卫机修,60=13薪,70=奖金,80=津贴"/>
         <column key="startTime" header="开始时间" allowSort="true" dateFormat="yyyy-mm-dd" width="80"/>
         <column key="endTime" header="结束时间" allowSort="true" dateFormat="yyyy-mm-dd" width="80"/>
         <column key="applySum" header="申请总额" width="150"/>
@@ -61,7 +61,7 @@
             <![CDATA[
               SELECT 
               id , type,type typee,start_time startTime,end_time endTime,apply_sum applySum,status ,isjz ,project_id,
-              project_name ,team_name,team_id   
+              project_name ,team_name,team_id ,deptentname,note  
               from tbl_salary where  1=1 
             ]]>
         </sql>
@@ -69,9 +69,28 @@
         <column key="id" hidden="true" header="id" width="80"/>
         <column key="project_name" header="项目名称" width="150"/>
          <column key="team_name" header="班组名称" width="150"/>
-        <column key="type" header="类型" allowSort="true" width="150" render="10=专业作业班组,20=管理人员,30=点工班组,40=机关人员,50=门卫机修"/>
+        <column key="type" header="类型" allowSort="true" width="150" render="10=专业作业班组,20=管理人员,30=点工班组,40=机关人员,50=门卫机修,60=13薪,70=奖金,80=津贴"/>
+        <column key="deptentname" header="所属分部" width="150"/>
         <column key="startTime" header="开始时间" allowSort="true" dateFormat="yyyy-mm-dd" width="80"/>
         <column key="endTime" header="结束时间" allowSort="true" dateFormat="yyyy-mm-dd" width="80"/>
+        <column key="applySum" header="申请总额" width="150"/>
+        <column key="note" header="备注" width="150"/>
+        <column key="status" header="状态" allowSort="true" width="150" render="10=新建,20=负责人审批,30=办公室主任审批,40=总经理审批,50=财务审批,60=已完成(未支付),70=审核不通过,80=支付审核,90=待财务支付,100=支付完成,110=支付审核驳回"/>
+        <column key="id" header="操作" width="80" fnRender="fnRenderSalary"/>
+    </query>
+    <query id="elsesalary_list" key="id" tableName="其他工资单"  widthType="px" pageSize="50">
+        <sql>
+            <![CDATA[
+              SELECT 
+              id , type,type typee,start_time startTime,end_time endTime,apply_sum applySum,status ,isjz ,project_id,
+              project_name ,team_name,team_id ,deptentname 
+              from tbl_salary where type in('60','70','80') and 1=1 
+            ]]>
+        </sql>
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="deptentname" header="所属分部" width="150"/>
+        <column key="type" header="类型" allowSort="true" width="150" render="60=13薪,70=奖金,80=津贴"/>
         <column key="applySum" header="申请总额" width="150"/>
         <column key="status" header="状态" allowSort="true" width="150" render="10=新建,20=负责人审批,30=办公室主任审批,40=总经理审批,50=财务审批,60=已完成(未支付),70=审核不通过,80=支付审核,90=待财务支付,100=支付完成,110=支付审核驳回"/>
         <column key="id" header="操作" width="80" fnRender="fnRenderSalary"/>
@@ -93,7 +112,7 @@
         <column key="id" hidden="true" header="id" width="80"/>
         <column key="projectName" header="项目名称" width="150"/>
          <column key="teamName" header="班组名称" width="150"/>
-        <column key="type" header="类型" allowSort="true" width="150" render="10=专业作业班组,20=管理人员,30=点工班组,40=机关人员,50=门卫机修"/>
+        <column key="type" header="类型" allowSort="true" width="150" render="10=专业作业班组,20=管理人员,30=点工班组,40=机关人员,50=门卫机修,60=13薪,70=奖金,80=津贴"/>
         <column key="startTime" header="开始时间" allowSort="true" dateFormat="yyyy-mm-dd" width="80"/>
         <column key="endTime" header="结束时间" allowSort="true" dateFormat="yyyy-mm-dd" width="80"/>
         <column key="sj" header="税金总额" width="150"/>
@@ -169,6 +188,31 @@
         <column key="remark" header="备注" width="80"/>
         <column key="mobile" header="联系电话" width="80"/>
         <column key="id" header="操作" width="80" fnRender="fnRenderSalaryDetail"/>
+    </query>
+    <query id="else_salary_detail" key="id" tableName="其他工资明细" className="com.radish.master.entity.project.SalaryDetail" widthType="px" pageSize="2000">
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="name" header="姓名" width="150"/>
+        <column key="identificationNumber" header="身份证号" width="150"/>
+        <column key="payable" header="应付金额" width="80"/>
+        <column key="loan" header="借款扣除" width="80"/>
+        <column key="tax" header="个税扣除" width="80"/>
+        <column key="actual" header="实发金额" width="80"/>
+        <column key="remark" header="备注" width="80"/>
+        <column key="mobile" header="联系电话" width="80"/>
+        <column key="id" header="操作" width="80" fnRender="fnRenderSalaryDetail"/>
+    </query>
+    <query id="else_salary_detail_overview" key="id" tableName="其他工资明细" className="com.radish.master.entity.project.SalaryDetail" widthType="px" pageSize="2000">
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="name" header="姓名" width="150"/>
+        <column key="identificationNumber" header="身份证号" width="150"/>
+        <column key="payable" header="应付金额" width="80"/>
+        <column key="loan" header="借款扣除" width="80"/>
+        <column key="tax" header="个税扣除" width="80"/>
+        <column key="actual" header="实发金额" width="80"/>
+        <column key="remark" header="备注" width="80"/>
+        <column key="mobile" header="联系电话" width="80"/>
     </query>
     <query id="hod_salary_detail_overview" key="id" tableName="门卫机修人工资明细" className="com.radish.master.entity.project.SalaryDetail" widthType="px" pageSize="2000">
         <column key="rowIndex" header="序号" width="80"/>

@@ -1,0 +1,117 @@
+<script src="${basePath}/resources/common/js/calculate.js"></script>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <span>
+                        <i class="fa fa-files-o">工资单</i>
+                    </span>
+                </div>
+                <form id="salary-detail-form" name="salary-detail-form" class="form-horizontal">
+                    <div class="box-body">
+                        <div class="col-md-12">
+                    	<div class="form-group">
+                                <label class="col-sm-3 control-label">公司分部</label>
+                                <div class="col-sm-6">
+                                    <select id="deptent" name="deptent"  class="form-control select2" style="width:100%"></select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                            	<label class="col-sm-3 control-label">类型</label>
+                                <div class="col-sm-6">
+                                    <select id="type" name="type"  class="form-control select2"  style="width:100%">
+                                    	<option value="60">13薪</option>
+                                    	<option value="70">奖金</option>
+                                    	<option value="80">津贴</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">备注</label>
+                                <div class="col-sm-6">
+                                    <textarea class="form-control" id="note" name="note" placeholder="备注" rows="6"></textarea>
+                                </div>
+                            </div>
+                          </div>
+                    </div>
+                </form>
+            </div>
+            <div class="box box-success">
+                <div class="box-header with-border">
+                    <span>
+                        <i class="fa fa-files-o">工资单明细</i>
+                        <span id="gcls"></span>
+                    </span>
+                </div>
+                <div class="dataTables_filter" id="searchDivDetail" style="display:none;">
+                   <input type="search" name="salaryID" id="salaryID" class="form-control" operator="eq" style="display:none;">
+                </div>
+                <div class="box-body box-body-mobile">
+                    <!-- 内容 -->
+                    <table id="salary_detail_table" class="table table-bordered table-striped table-hover">
+                        <tfoot>
+                            <tr>
+                                <th colspan="7" style="text-align:right">合计:</th>
+                                <th class="text-left">0</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+    var form, salaryDetailTable;
+    var id = "${id}";
+    var sqltbl = "else_salary_detail_overview";  
+    
+    $('#salaryID',$('#searchDivDetail')).val(id);
+    $(function () {
+    	 ajaxPost(basePath+"/deptent/all",{},function(data){
+             var op = "";
+				for(var i=0;i<data.length;i++){
+					op+="<option value='"+data[i].id+"'>"+data[i].name+"</option>"
+				}
+             $("#deptent").append(op);
+         })
+    	salaryDetailTable = new CommonTable("salary_detail_table", sqltbl, "searchDivDetail", {
+            "footerCallback": function ( row, data, start, end, display ) {
+                var api = this.api(), data;
+                // Remove the formatting to get integer data for summation
+                var intVal = function ( i ) {
+                    return typeof i === 'string' ?
+                        i.replace(/[\$,]/g, '')*1 :
+                        typeof i === 'number' ?
+                            i : 0;
+                };
+     
+                // Total over this page
+                unitTotal = api
+                    .column( 7, { page: 'current'} )
+                    .data()
+                    .reduce( function (a, b) {
+                        return accAddition(intVal(a), intVal(b));
+                    }, 0 );
+                // Update footer
+                $( api.column( 7 ).footer() ).html(
+                    '￥'+unitTotal
+                );
+            }
+    	});
+        //初始化表单 
+        form = $("#salary-detail-form").form({baseEntity:false});
+        //初始化控件
+        form.initComponent();
+        
+        //编辑回填
+        if(id!="0"){
+            ajaxPost(basePath+"/project/team/salary/get",{id:id},function(data){
+                form.initFormData(data);
+            })
+        }
+    });
+   
+
+</script>

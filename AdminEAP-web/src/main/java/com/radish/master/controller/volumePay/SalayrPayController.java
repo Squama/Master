@@ -68,6 +68,8 @@ public class SalayrPayController {
 					return prefix+"auidtMxGl";
 				}else if("50".equals(zf.getType())){
 					return prefix+"auidtMxMw";
+				}else{
+					return prefix+"auidtElse";
 				}
 			}
 		}
@@ -100,6 +102,14 @@ public class SalayrPayController {
 			zflx = "点工班组";
 		}else if("40".equals(zf.getType())){
 			zflx = "机关人员";
+		}else if("50".equals(zf.getType())){
+			zflx = "门卫机修";
+		}else if("60".equals(zf.getType())){
+			zflx = "其他类型（13薪）";
+		}else if("70".equals(zf.getType())){
+			zflx = "其他类型（奖金）";
+		}else if("80".equals(zf.getType())){
+			zflx = "其他类型（津贴）";
 		}
 
         String name = zflx + " 工资单支付【审核】";
@@ -135,9 +145,17 @@ public class SalayrPayController {
 				
 				String xmid = "";
 				String content = "";
-				if("40".equals(j.getType())){//公司账本 机关人员工资
+				if("40".equals(j.getType())||"60".equals(j.getType())||"70".equals(j.getType())||"80".equals(j.getType())){//公司账本 机关人员工资
 					xmid = "1";
-					content="机关人员工资支付";
+					if("40".equals(j.getType())){
+						content="机关人员工资支付";
+					}else if("60".equals(j.getType())){
+						content="13薪支付";
+					}else if("70".equals(j.getType())){
+						content="奖金支付";
+					}else if("80".equals(j.getType())){
+						content="津贴支付";
+					}
 				}else{//项目账本 其他类型人员工资
 					xmid = j.getProjectID();
 					if("10".equals(j.getType())){

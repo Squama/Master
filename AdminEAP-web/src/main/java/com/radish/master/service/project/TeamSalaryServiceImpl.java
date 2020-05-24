@@ -363,6 +363,48 @@ public class TeamSalaryServiceImpl extends BaseServiceImpl implements TeamSalary
         // 启动流程
         return runtimePageService.startProcessInstanceByKey(processDefinitionKey, name, variables, user.getId(), businessKey);
     }
+    @Override
+    public Result startElseSalaryFlow(Salary salary, String processDefinitionKey) {
+        User user = SecurityUtil.getUser();
+
+        salary.setStatus("30");
+
+        this.update(salary);
+
+        String name = "【其他类型（13薪、奖金、津贴）发放单审核】";
+
+        // businessKey
+        String businessKey = salary.getId();
+
+        // 配置流程变量
+        Map<String, Object> variables = new HashMap<>();
+        variables.put(Constants.VAR_APPLYUSER_NAME, user.getName());
+        variables.put(Constants.VAR_BUSINESS_KEY, businessKey);
+        variables.put("taskName", name);
+
+        String suggestionHql = "from ActivitiSuggestion where businessKey=:businessKey AND taskNode=:taskNode";
+        Map<String, Object> suggestionParams = new HashMap<>();
+        suggestionParams.put("businessKey", businessKey);
+        suggestionParams.put("taskNode", "caozuoyuan");
+        ActivitiSuggestion as = this.get(suggestionHql, suggestionParams);
+
+        if (as == null) {
+            as = new ActivitiSuggestion();
+            as.setCreateDateTime(new Date());
+            as.setUpdateDateTime(new Date());
+            as.setBusinessKey(businessKey);
+            as.setTaskNode("caozuoyuan");
+            as.setApprove("true");
+        }
+
+        as.setSuggestion("");
+        as.setOperator(SecurityUtil.getUser().getName());
+        as.setUpdateDateTime(new Date());
+        this.save(as);
+
+        // 启动流程
+        return runtimePageService.startProcessInstanceByKey(processDefinitionKey, name, variables, user.getId(), businessKey);
+    }
 
     @Override
     public List<Salary> checkTimePeriod(String projectID, String startTimeStr, String endTimeStr, String salaryID) {

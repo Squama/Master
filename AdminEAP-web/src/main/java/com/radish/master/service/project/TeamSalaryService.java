@@ -48,6 +48,7 @@ public interface TeamSalaryService extends BaseService {
     Result startOrganSalaryFlow(Salary salary, String processDefinitionKey);
     
     Result startHodSalaryFlow(Salary salary, String processDefinitionKey);
+    Result startElseSalaryFlow(Salary salary, String processDefinitionKey);
 
     List<Salary> checkTimePeriod(String projectID, String startTimeStr, String endTimeStr, String salaryID);
     

@@ -1,0 +1,193 @@
+<script src="${basePath}/resources/cinder/editor/dataTables.editor.min.js"></script>
+<script src="${basePath}/resources/common/js/calculate.js"></script>
+<link rel="stylesheet" href="${basePath}/resources/cinder/editor/dataTables.editor.css">
+<link rel="stylesheet" href="${basePath}/resources/cinder/editor/editor.dataTables.min.css">
+<style>
+.fixed-button-area{position:fixed;z-index:1;left:45%;}
+.DTE_Field_InputControl{color:black;}
+</style>
+<section class="content-header">
+    <h1>
+        <span>其他类型工资发放（13薪、奖金、津贴）</span>
+        <small>新增</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
+        <li><a href="#">办公管理</a></li>
+        <li class="active">新增工资单</li>
+    </ol>
+</section>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box box-success">
+                <div class="box-header with-border">
+                    <span>
+                        <i class="fa fa-files-o">工资单明细</i>
+                    </span>
+                </div>
+                <div id="stepbar" class="add stepbar">
+                    <div>
+                        <div class="step">
+                            <span class="tip">1</span>
+                        </div>
+                        <div class="stepinfo">添加工资单条目</div>
+                    </div>
+                    <div>
+                        <div class="step step">
+                            <span class="tip">2</span>
+                        </div>
+                        <div class="stepinfo">编辑工资单明细</div>
+                    </div>
+                    <div>
+                        <div class="step stepundone">
+                            <span class="tip">3</span>
+                        </div>
+                        <div class="stepinfo undoneinfo">完成</div>
+                    </div>
+                </div>
+                <form id="team-salary-form" name="team-salary-form" class="form-horizontal">
+                    <div class="box-body">
+                        <div class="col-md-12">
+                        	<div class="form-group">
+                                <label class="col-sm-3 control-label">未添加人员<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <select id="userid" name="userid"  class="form-control select2"></select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer text-center">
+                        <button type="button" class="btn btn-success" id="addRy">添加人员</button>
+                    </div>
+                </form>
+                <div class="dataTables_filter" id="searchDiv" style="display:none;">
+                   <input type="search" name="salaryID" id="salaryID" class="form-control" operator="eq" style="display:none;">
+                   <div class="btn-group">
+                       <button type="button" class="btn btn-info" data-btn-type="prev" style="float:right">返回列表</button>
+                   </div>
+                </div>
+                <div class="box-body box-body-mobile">
+                    <!-- 内容 -->
+                    <table id="salary_detail_table" class="table table-bordered table-striped table-hover">
+                        <tfoot>
+                            <tr>
+                                <th colspan="7" style="text-align:right">合计:</th>
+                                <th class="text-left">0</th>
+                                <th class="text-left"></th>
+                                <th class="text-left"></th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+    var form,salaryEditor;
+    var id = "${id}";
+    $('#salaryID').val(id);
+    $('#salaryID',$('#searchDiv')).val(id);
+    var salaryDetailTable, winId = "salaryDetailWin";
+    var salaryDetailCtrl = {
+        initButtonEvent: function () {
+            $("button[data-btn-type='prev']").click(function () {
+                loadPage(basePath+"/project/else/salary/list");
+            });
+        },
+        deleteDetail: function (rowId) {
+            modals.confirm("是否要删除该行数据？",function(){
+                ajaxPost(basePath+"/project/manager/salary/deletedetail/"+rowId,null,function(data){
+                    if(data.success){
+                    	salaryDetailTable.reloadRowData();
+                    }else{
+                        modals.error("删除失败！");
+                    }
+                });
+            })
+        },
+        initSalaryEditor:function(){
+            salaryEditor = new $.fn.dataTable.Editor( {
+                ajax: basePath+"/project/else/salary/rowedit",
+                table: "#salary_detail_table",
+                idSrc:  'id',
+                fields: [ 
+                	{label:"payable:", name:"payable",type:"text"},
+                	{label:"loan:", name:"loan",type:"text"},
+                	{label:"tax:", name:"tax",type:"text"},
+                	{label:"actual:", name:"actual",type:"text"},
+                	{label:"remark:", name:"remark",type:"text"}
+                ]
+            } );
+            
+            $('#salary_detail_table').on( 'click', 'tbody td:not(:first-child)', function (e) {
+            	salaryEditor.inline( this, {
+                    onBlur: 'submit'
+                });
+            } );
+        }
+    }
+    $(function () {
+    	salaryDetailTable = new CommonTable("salary_detail_table", "else_salary_detail", "searchDiv", {
+            "footerCallback": function ( row, data, start, end, display ) {
+                var api = this.api(), data;
+                // Remove the formatting to get integer data for summation
+                var intVal = function ( i ) {
+                    return typeof i === 'string' ?
+                        i.replace(/[\$,]/g, '')*1 :
+                        typeof i === 'number' ?
+                            i : 0;
+                };
+     
+                // Total over this page
+                unitTotal = api
+                    .column( 7, { page: 'current'} )
+                    .data()
+                    .reduce( function (a, b) {
+                        return accAddition(intVal(a), intVal(b));
+                    }, 0 );
+                // Update footer
+                $( api.column( 7 ).footer() ).html(
+                    '￥'+unitTotal
+                );
+            }
+        });
+        salaryDetailCtrl.initButtonEvent();
+        salaryDetailCtrl.initSalaryEditor();
+        $("#addRy").on("click",function(){
+            var userid =  $("#userid option:selected").val();
+            if(!userid){
+            	 modals.error("请选择人员！");
+             }
+        	ajaxPost(basePath+"/project/else/salary/saveBd",{salaryid:id,userid:userid},function(data){
+                if(data.success){
+                	salaryDetailTable.reloadRowData();
+                	selectUsers();
+                }else{
+                    modals.error("添加失败！");
+                }
+            });
+        })
+        selectUsers();
+    });
+    function selectUsers(){
+    	ajaxPost(basePath+"/project/else/salary/selectUser",{salaryid:id},function(data){
+            if(data.success){
+            	$("#userid").empty();
+            	var res = data.data;
+            	 var op = "";
+            	for(var i=0;i<res.length;i++){
+            		op+="<option value='"+res[i].id+"'>"+res[i].name+"</option>"
+               	}
+            	$("#userid").append(op);
+            	$("#userid").select2()
+            }
+        });
+    }
+    function fnRenderSalaryDetail(value, type, rowObj){
+    	 var oper = "<a href='javascript:void(0)' onclick='salaryDetailCtrl.deleteDetail(\"" + value + "\")'>删除</a>";
+        return oper;
+    }
+
+</script>

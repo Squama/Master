@@ -29,6 +29,9 @@
                         <option value="30">点工班组</option>
                         <option value="40">机关人员</option>
                         <option value="50">门卫机修</option>
+                        <option value="60">13薪</option>
+                        <option value="70">奖金</option>
+                         <option value="80">津贴</option>
                     </select>
                     <select id="status" class="form-control select2" name="status" style="width:200px;" operator="eq">
                         <option selected="selected" value="">选择状态</option>
@@ -93,6 +96,8 @@
                 	url=basePath+"/project/organ/salary/detailouter/"+rowID;
                 }else if(type=="50"){//门卫
                 	url=basePath+"/project/hod/salary/detailouter/"+rowID;
+                }else{//其他
+                	url=basePath+"/project/else/salary/detailouter/"+rowID;
                 }
                modals.openWin({
                    winId:winId,
@@ -164,6 +169,7 @@
             }
             $("#bzid").select2();
         }
+        $(".select2").select2();
     });
     
     function fnRenderSalary(value, type, rowObj) {

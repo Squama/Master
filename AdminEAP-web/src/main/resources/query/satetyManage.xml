@@ -251,7 +251,7 @@
     <query id="worker_unselected_list" key="id" tableName="未绑定组长列表"     widthType="px">
         <sql>
             <![CDATA[
-              SELECT wk.name name,wk.id id ,wk.identification_number identification_number
+              SELECT wk.name name,wk.id id ,wk.identification_number identification_number,wk.work_type work_type
 			  FROM tbl_worker wk 
 			  WHERE wk.isleader <> '是' and wk.leaderid is null and  1=1 
             ]]>
@@ -260,11 +260,12 @@
         <column key="id" header="id" hidden="true"/>
         <column key="name" header="姓名" operator="like" width="100" allowSort="true" />
         <column key="identification_number" header="身份证" width="200" align="center"/>
+        <column key="work_type" header="工种"  width="100"/>
     </query>
     <query id="worker_selected_list" key="id" tableName="已绑定组长列表"     widthType="px">
         <sql>
             <![CDATA[
-              SELECT ywk.name name,ywk.id id ,ywk.identification_number identification_number
+              SELECT ywk.name name,ywk.id id ,ywk.identification_number identification_number,wk.work_type work_type
 			  FROM tbl_worker ywk 
 			  WHERE ywk.id<>ywk.leaderid and 1=1 
             ]]>
@@ -273,5 +274,6 @@
         <column key="id" header="id" hidden="true"/>
         <column key="name" header="姓名" operator="like" width="100" allowSort="true" />
         <column key="identification_number" header="身份证" width="200" align="center"/>
+        <column key="work_type" header="工种"  width="100"/>
     </query>
 </queryContext>
