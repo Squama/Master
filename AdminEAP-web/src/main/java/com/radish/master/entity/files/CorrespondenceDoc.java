@@ -80,6 +80,10 @@ public class CorrespondenceDoc implements Serializable {
     @Header(name = "修改日期")
     @Column(name = "editDate")
     private Date editDate;
+    
+    @Header(name = "类型")
+    @Column(name = "type")
+    private String type;
 
 	public String getId() {
 		return id;
@@ -175,6 +179,14 @@ public class CorrespondenceDoc implements Serializable {
 
 	public void setEditDate(Date editDate) {
 		this.editDate = editDate;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 
 	

@@ -73,13 +73,16 @@ public class CorrespondenceDocController {
 	public String index(HttpServletRequest request){
 		List xm = baseService.findMapBySql("select id value, project_name data from tbl_project", new Object[]{}, new Type[]{StringType.INSTANCE}, Options.class);
 		request.setAttribute("xm", JSONArray.toJSONString(xm));
-		
+		String type = request.getParameter("type");
+		request.setAttribute("type",type);
 		return prefix+"ht_index";
 	}
 	@RequestMapping("/list")
 	public String list(HttpServletRequest request){
 		List xm = baseService.findMapBySql("select id value, project_name data from tbl_project", new Object[]{}, new Type[]{StringType.INSTANCE}, Options.class);
 		request.setAttribute("xm", JSONArray.toJSONString(xm));
+		String type = request.getParameter("type");
+		request.setAttribute("type",type);
 		return prefix+"list_index";
 	}
 	
@@ -97,6 +100,7 @@ public class CorrespondenceDocController {
 			request.setAttribute("xm", JSONArray.toJSONString(xm));
 	        request.setAttribute("id", id);
 	        request.setAttribute("doWhat",request.getParameter("doWhat"));
+	        
 	        return prefix+"edit";
 	    }
 	

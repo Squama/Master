@@ -1,5 +1,7 @@
 package com.radish.master.listener;
 
+import java.math.BigDecimal;
+
 import org.activiti.engine.delegate.DelegateTask;
 import org.activiti.engine.delegate.TaskListener;
 
@@ -43,7 +45,11 @@ public class AskLeaveTaskCompleteListener implements TaskListener {
             		jk.setBossyj(suggestion);
                     jk.setBoss(SecurityUtil.getUser().getName());
             	}else if("bgs".equals(taskDefinitionKey)){
-            		jk.setStatus("60");
+            		if(new BigDecimal("1").compareTo(new BigDecimal(jk.getAlldays()))<0){//大于一天
+            			jk.setStatus("60");
+            		}else{
+            			jk.setStatus("80");
+            		}
             		jk.setBgsyj(suggestion);
                     jk.setBgsshr(SecurityUtil.getUser().getName());
             	}

@@ -27,6 +27,7 @@
                     <div class="btn-group">
                         <button type="button" class="btn btn-default" data-btn-type="add">新增</button>
                         <button type="button" class="btn btn-default" data-btn-type="edit" >编辑</button>
+                        <button type="button" class="btn btn-danger" data-btn-type="delete" >删除</button>
                     </div>
                 </div>
                 <div class="box-body box-body-mobile">
@@ -103,6 +104,26 @@
                     url:basePath+"/fixedassets/apply/edit?id="+rowId+"&faType=10"
                    });
                break;
+            case 'delete':
+            	if(!rowId){
+                    modals.info('请选择要删除的行');
+                    return false;
+                }
+                var data = assetsTable.getSelectedRowData();
+                if(data.status != '新建'){
+                    modals.info('审核中或审核完成的条目不可删除!');
+                    return false;
+                }
+                modals.confirm("是否要删除该行数据？",function(){
+                    ajaxPost(basePath+"/fixedassets/apply/delete?id="+rowId,null,function(data){
+                    	if(data.success){
+                    		assetsTable.reloadData();
+                    	}
+                    	
+              
+                    });
+                })
+                break;
             }
 
         });

@@ -108,6 +108,16 @@ public class Sealuse implements Serializable {
     @Header(name = "审核人")
     @Column(name = "bgsshr")
     private String bgsshr;
+    
+    @Header(name = "是否领导审核")
+    @Column(name = "isld")
+    private String isld;
+    
+    @Column(name = "boss")
+    private String boss;
+    
+    @Column(name = "bossbhyy")
+    private String bossbhyy;
 
 	public String getId() {
 		return id;
@@ -243,6 +253,30 @@ public class Sealuse implements Serializable {
 
 	public void setBgsshr(String bgsshr) {
 		this.bgsshr = bgsshr;
+	}
+
+	public String getIsld() {
+		return isld;
+	}
+
+	public void setIsld(String isld) {
+		this.isld = isld;
+	}
+
+	public String getBoss() {
+		return boss;
+	}
+
+	public void setBoss(String boss) {
+		this.boss = boss;
+	}
+
+	public String getBossbhyy() {
+		return bossbhyy;
+	}
+
+	public void setBossbhyy(String bossbhyy) {
+		this.bossbhyy = bossbhyy;
 	}
 
     

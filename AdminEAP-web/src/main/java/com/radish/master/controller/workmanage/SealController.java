@@ -231,8 +231,9 @@ public class SealController {
 			c.setSl(cl.getSl());
 			c.setGsmc(cl.getGsmc());
 			c.setSqyy(cl.getSqyy());
-			cl.setDeptid(deptid);
-			cl.setDeptname(dept);
+			c.setDeptid(deptid);
+			c.setDeptname(dept);
+			c.setIsld(cl.getIsld());
 			baseService.update(c);
 		}
 		r.setCode(id);
@@ -314,6 +315,11 @@ public class SealController {
 		        variables.put(Constants.VAR_APPLYUSER_NAME, user.getName());
 		        variables.put(Constants.VAR_BUSINESS_KEY, businessKey);
 		        variables.put("taskName", name);
+		        if("1".equals(jk.getIsld())){
+		        	variables.put("isld", 1);
+		        }else{
+		        	variables.put("isld", 0);
+		        }
 
 		        // 启动流程
 		        runtimePageService.startProcessInstanceByKey("Seals", name, variables, user.getId(), businessKey);

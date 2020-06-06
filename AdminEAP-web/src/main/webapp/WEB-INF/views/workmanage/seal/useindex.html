@@ -71,7 +71,8 @@
                         modals.info('请选择要编辑的行');
                         return false;
                     }
-            		if(dutycheckTable.getSelectedRowData().status!="新建"){
+            		if(dutycheckTable.getSelectedRowData().status!="新建"&&dutycheckTable.getSelectedRowData().status!="部门驳回"
+                		&&dutycheckTable.getSelectedRowData().status!="办公室驳回"&&dutycheckTable.getSelectedRowData().status!="领导驳回"){
             			modals.info('只能编辑新建的数据');
                         return false;
             		}
@@ -102,7 +103,8 @@
                         modals.info('请选择要删除的行');
                         return false;
                     }
-                	if(dutycheckTable.getSelectedRowData().status!="新建"&&dutycheckTable.getSelectedRowData().status!="不同意用车"){
+                	if(dutycheckTable.getSelectedRowData().status!="新建"&&dutycheckTable.getSelectedRowData().status!="部门驳回"
+                		&&dutycheckTable.getSelectedRowData().status!="办公室驳回"&&dutycheckTable.getSelectedRowData().status!="领导驳回"){
             			modals.info('不能删除该状态下的数据');
                         return false;
             		}
@@ -132,6 +134,8 @@
 			return "<a href='javascript:void(0)'style='color:red' onclick='lookyy(\"" + obj.bmbhyy.replace(/[\r\n]/g,'') + "\")'>部门驳回原因</a>&nbsp;&nbsp;<a href='javascript:void(0)' onclick='lookfj(\"" + value + "\")'>提交审批</a>";
 		}else if(obj.status=="办公室驳回"){
 			return "<a href='javascript:void(0)'style='color:red' onclick='lookyy(\"" + obj.bgsbhyy.replace(/[\r\n]/g,'') + "\")'>办公室驳回原因</a>&nbsp;&nbsp;<a href='javascript:void(0)' onclick='lookfj(\"" + value + "\")'>提交审批</a>";
+		}else if(obj.status=="领导驳回"){
+			return "<a href='javascript:void(0)'style='color:red' onclick='lookyy(\"" + obj.bossbhyy.replace(/[\r\n]/g,'') + "\")'>领导驳回原因</a>&nbsp;&nbsp;<a href='javascript:void(0)' onclick='lookfj(\"" + value + "\")'>提交审批</a>";
 		}
 		
     }

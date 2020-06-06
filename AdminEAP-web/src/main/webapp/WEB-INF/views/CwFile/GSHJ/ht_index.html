@@ -21,7 +21,7 @@
 	</h1>
 	<ol class="breadcrumb">
 		<li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
-		<li><a href="#">财务文件管理</a></li>
+		<li><a href="#">文件管理</a></li>
 		<li class="active">录入公司函件信息</li>
 	</ol>
 </section>
@@ -116,6 +116,7 @@
     if(xms != 0){
     	xm = JSON.parse(xms);
     }
+    var type = '${type?default(1)}';//1财务 2 办公
     $(function() {
         //初始化控件
         form=$("#contract-form").form();
@@ -131,7 +132,7 @@
                 modals.confirm('确认保存？', function() {
                     //Save Data，对应'submit-提交'
                     var params = form.getFormSimpleData();
-                    	ajaxPost(basePath+'/correspondenceDoc/save', params, function(data) {
+                    	ajaxPost(basePath+'/correspondenceDoc/save?type='+type, params, function(data) {
                             if(data.success){
                                 modals.info("数据保存成功");
                                 

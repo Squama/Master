@@ -45,16 +45,31 @@ public class SealTaskCompleteListener implements TaskListener {
             String suggestion = delegateTask.getVariable("suggestion").toString();
             if("true".equalsIgnoreCase(delegateTask.getVariable("approved").toString())){
             	if ("bgs".equals(taskDefinitionKey)) {
-            		bx.setStatus("60");
+            		if("1".equals(bx.getIsld())){
+                		bx.setStatus("70");
+    		        }else{
+                		bx.setStatus("60");
+    		        }
             		bx.setBgsshr(SecurityUtil.getUser().getName());
             		bx.setBgsbhyy(suggestion);
+            	}
+            	
+            	if ("boss".equals(taskDefinitionKey)) {
+            		bx.setStatus("60");
+            		bx.setBoss(SecurityUtil.getUser().getName());
+            		bx.setBossbhyy(suggestion);
             	}
             }else{
             	if ("bgs".equals(taskDefinitionKey)) {
             		bx.setStatus("50");
             		bx.setBgsshr(SecurityUtil.getUser().getName());
             		bx.setBgsbhyy(suggestion);
-                } 
+                }
+            	if ("boss".equals(taskDefinitionKey)) {
+            		bx.setStatus("80");
+            		bx.setBoss(SecurityUtil.getUser().getName());
+            		bx.setBossbhyy(suggestion);
+            	}
             }
             
             baseService.update(bx);

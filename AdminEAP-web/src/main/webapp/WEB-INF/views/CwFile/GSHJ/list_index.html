@@ -5,7 +5,7 @@
     </h1>
     <ol class="breadcrumb">
         <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
-        <li><a href="#">财务文件管理</a></li>
+        <li><a href="#">文件管理</a></li>
         <li class="active">公司函件查询</li>
     </ol>
 </section>
@@ -22,10 +22,9 @@
                   		<option selected="selected" value="">选择所属项目</option>
                     </select>
                     <input type="search" placeholder="请输入编号" title="编号" name="wj.number" class="form-control"  operator="like" likeOption="true">
-			        
+			        <input type="search" id ="wjtype" name="wj.type"  style="display: none"  operator="like" likeOption="true">
                     <div class="btn-group">
                         <button type="button" class="btn btn-primary" data-btn-type="search">查询</button>
-                        <button type="button" class="btn btn-default" data-btn-type="reset">重置</button>
                     </div>
                     <div class="btn-group">
                         <button type="button" class="btn btn-default" data-btn-type="detail">查看</button>
@@ -45,12 +44,12 @@
 
 <script>
     var form = $("#searchDiv1").form({baseEntity: false}), initData={};
-    
+    var type = '${type?default(1)}';//1财务 2 办公
+    $("#wjtype").val(type);
     var xms = '${xm?default(0)}',xm=0;
     if(xms != 0){
     	xm = JSON.parse(xms);
     }
-
     var dutycheckTable, winId = "projectQueryWin";
     $(function (){
     	dutycheckTable = new CommonTable("lwContract_table", "correspondenceDoc_list_file", "searchDiv1");

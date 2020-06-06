@@ -106,6 +106,7 @@
         <column key="leaveReason" header="离职原因" width="80"  />
         <column key="leaveView" header="办公室意见"  width="100"  />
         <column key="leaveStatus" header="审核状态"  width="200" render="10=办公室审核,20=副总经理审核,30=总经理审核,40=审核通过,50=驳回"/>
+    	<column key="id" header="操作" width="50"  fnRender="fnRenderSubmit"/>
     </query>
     <!-- 人员待转正列表 -->
     <query id="employee_list_zz" key="id" tableName="人员待转正列表" widthType="px">

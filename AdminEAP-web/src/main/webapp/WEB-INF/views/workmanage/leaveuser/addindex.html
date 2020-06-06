@@ -323,4 +323,16 @@
                });
          })
     });
+
+    function fnRenderSubmit(value){
+		return "<a href='javascript:void(0)' onclick='lookfj(\"" + value + "\")'>附件</a>";
+    }
+    function lookfj(mbid){
+    	modals.openWin({
+            winId: "files",
+            width: "900px",
+            url: basePath + "/leaveuser/projectdetailfile?id=" + mbid ,
+            title: "查看附件"
+        });
+    }
 </script>

@@ -212,7 +212,7 @@
          <column key="name" header="用章名称" classType="String" width="150"/>
         <column key="deptname" header="用章部门" classType="String" width="150"/>
         <column key="sl" header="数量" classType="String" width="150"/>
-         <column key="status" header="状态" classType="String" width="150" render="10=新建,20=部门审核,30=部门驳回,40=办公室审核,50=办公室驳回,60=完成"/>
+         <column key="status" header="状态" classType="String" width="150" render="10=新建,20=部门审核,30=部门驳回,40=办公室审核,50=办公室驳回,70=领导审核,80=领导驳回,60=完成"/>
         <column key="id" header="管理" width="100" fnRender="fnFj"/>
     </query>
     <query id="sealList_bmsp" key="id" tableName="印章部门审批列表" className="com.radish.master.entity.workmanage.Sealuse" widthType="px" pageSize="200">

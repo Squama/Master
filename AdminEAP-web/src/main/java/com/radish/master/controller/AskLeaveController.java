@@ -1,5 +1,6 @@
 package com.radish.master.controller;
 
+import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,6 +34,10 @@ public class AskLeaveController {
 	private BaseService baseService;
 	@Resource
 	private RuntimePageService runtimePageService;
+	@RequestMapping("/alllook")
+	public String alllook(HttpServletRequest request){
+		return prefix+"index";
+	}
 	@RequestMapping("/grindex")
 	public String grindex(HttpServletRequest request){
 		request.setAttribute("jkr", SecurityUtil.getUserId());
@@ -174,11 +179,10 @@ public class AskLeaveController {
 		        variables.put(Constants.VAR_APPLYUSER_NAME, user.getName());
 		        variables.put(Constants.VAR_BUSINESS_KEY, businessKey);
 		        variables.put("taskName", name);
+		        variables.put("days", j.getAlldays());
                                           
-		        // 启动流程
-		        runtimePageService.startProcessInstanceByKey("AskLeave", name, variables, user.getId(), businessKey);
-				
-				
+		        // 启动流程----1天之内到办公室办结。
+			    runtimePageService.startProcessInstanceByKey("AskLeave", name, variables, user.getId(), businessKey);
 			}else if("20".equals(lx)){//驳回
 				j.setStatus("30");
 			}

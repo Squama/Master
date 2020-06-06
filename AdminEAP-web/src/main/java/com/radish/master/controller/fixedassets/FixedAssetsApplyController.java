@@ -494,6 +494,17 @@ public class FixedAssetsApplyController {
         }
         return new Result(true, fap);
     }
+    @RequestMapping(method = RequestMethod.POST, value="/delete")
+    @ResponseBody
+    public Result delete(String id){
+    	FixedAssetsPur sj = commonService.get(FixedAssetsPur.class, id);
+        try {
+            commonService.delete(sj);
+        } catch (Exception e) {
+            return new Result(false,"保存失败，请联系系统管理员！");
+        }
+        return new Result(true);
+    }
     
     @RequestMapping(method = RequestMethod.POST, value="/deletedetail")
     @ResponseBody

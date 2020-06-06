@@ -1,12 +1,12 @@
 <section class="content-header">
     <h1>
-        请假申请部门审核
+        请假查看
         <small>列表</small>
     </h1>
     <ol class="breadcrumb">
         <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
         <li><a href="#">办公管理</a></li>
-        <li class="active">请假申请部门审核</li>
+        <li class="active"> 请假查看列表</li>
     </ol>
 </section>
 
@@ -17,7 +17,6 @@
                 <!-- /.box-header -->
                 <div class="dataTables_filter" id="searchDiv" >
                     <input placeholder="请输入请假人姓名" name="jk.askame" class="form-control" type="search" likeOption="true"operator="like" />
-                    <input id = "userid" name="jk.pid" class="form-control" type="search" style="display: none"/> 
                     <div class="btn-group">
                         <button type="button" class="btn btn-primary" data-btn-type="search">查询</button>
                     </div>
@@ -42,9 +41,9 @@
             submit: function (id) {
             	modals.openWin({
                     winId:winId,
-                    title:'创建',
+                    title:'查看',
                     width:'1000px',
-                    url:basePath+"/askleave/bmlook?id="+id,
+                    url:basePath+"/askleave/cwlook?lx=look&id="+id,
                     hideFunc:function(){
                     	volumeTable.reloadData();
                     }
@@ -53,11 +52,11 @@
     }
     
     $(function (){
-    	volumeTable = new CommonTable("volume_table", "askleave_bm", "searchDiv", null);
+    	volumeTable = new CommonTable("volume_table", "askleave_gr", "searchDiv", null);
     });
     
     function fnRenderXQ(value, type, rowObj){
-    	var oper ="<a href='javascript:void(0)' onclick='volumeManageObject.submit(\"" + value + "\")'>查看审核</a>";
+    	var oper ="<a href='javascript:void(0)' onclick='volumeManageObject.submit(\"" + value + "\")'>查看</a>";
     	
         return oper;
     }
