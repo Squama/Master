@@ -70,7 +70,7 @@
    <query id="fash_List" key="id" tableName="方案审核列表" widthType="px">
         <sql>
             <![CDATA[
-              SELECT wj.ID id, wj.create_time create_time,wj.status status, wj.type type,wj.bhdesc bhdesc,
+              SELECT wj.ID id, wj.create_time create_time,wj.status status, wj.type type,wj.bhdesc bhdesc,wj.name name,
               p.project_name pName ,wj.proid pid ,wj.create_name create_name,wj.auidtDesc auidtDesc ,wj.oneAuidt oneAuidt 
 			  FROM tbl_planApprove wj ,tbl_project p 
 			  WHERE 1=1 and wj.proid = p.id 
@@ -79,6 +79,7 @@
         <column key="id" hidden="true" header="id" width="80"/>
         <column key="rowIndex" header="序号" width="80"/>
         <column key="pName" header="所属项目" classType="String" width="150"/>
+        <column key="name" header="名称" classType="String" width="150"/>
         <column key="create_time" header="日期" classType="String" width="150" allowSort="true" />
         <column key="type" header="类型" classType="String" width="150" render="10=施工组织设计,20=专项施工方案"/>
         <column key="status" header="状态" classType="String" width="150" render="10=新建,20=总工审批,30=完成,40=驳回,50=指定人员审核,60=指定人员审核驳回"/>
