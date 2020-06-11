@@ -87,8 +87,10 @@
                 });
             },
             overview: function (rowID,type) {
-                var url=basePath+"/project/team/salary/detail/"+rowID;//班组
-                if(type=="20"){//管理
+                var url=basePath+"/project/team/salary/detail/"+rowID;
+                if(type=="10"){//班组
+                	url=basePath+"/project/team/salary/detail/"+rowID;
+                }else if(type=="20"){//管理
                 	url=basePath+"/project/manager/salary/detailouter/"+rowID;
                 }else if(type=="30"){//点工
                 	url=basePath+"/project/point/salary/detail/"+rowID;

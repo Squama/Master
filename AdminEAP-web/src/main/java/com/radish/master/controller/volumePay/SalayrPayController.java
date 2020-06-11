@@ -68,7 +68,7 @@ public class SalayrPayController {
 					return prefix+"auidtMxGl";
 				}else if("50".equals(zf.getType())){
 					return prefix+"auidtMxMw";
-				}else{
+				}else if("60".equals(zf.getType())||"70".equals(zf.getType())||"80".equals(zf.getType())){
 					return prefix+"auidtElse";
 				}
 			}
