@@ -62,7 +62,7 @@
               SELECT 
               id , type,type typee,start_time startTime,end_time endTime,apply_sum applySum,status ,isjz ,project_id,
               project_name ,team_name,team_id ,deptentname,note  
-              from tbl_salary where  1=1 
+              from tbl_salary where  1=1  order by start_time desc
             ]]>
         </sql>
         <column key="rowIndex" header="序号" width="80"/>
