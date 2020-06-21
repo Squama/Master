@@ -25,6 +25,9 @@
                     	<option value="20">包工包料</option>
                     	<option value="30">机械</option>
                     </select>
+                    <select id="htbzid" class="form-control select2" name="l.construction_team_id" style="width:200px;" operator="eq">
+                        <option selected="selected" value="">选择一个班组</option>
+                    </select>
                     <div class="btn-group">
                         <button type="button" class="btn btn-primary" data-btn-type="search">查询</button>
                         <button type="button" class="btn btn-default" data-btn-type="reset">重置</button>
@@ -48,6 +51,10 @@
     var projectOptions = '${projectOptions?default(0)}',options=0;
     if(projectOptions != 0){
     	options = JSON.parse(projectOptions);
+    }
+    var htbzs = '${htbzs?default(0)}',htbz=0;
+    if(htbzs != 0){
+        htbz = JSON.parse(htbzs);
     }
     
     var volumeManageObject = {
@@ -89,6 +96,13 @@
             for (var i = 0, len = options.length; i < len; i++) {
                 var option = options[i];
                 $('#projectID').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+            }
+            $(".select2").select2();
+        }
+        if(htbz != 0){
+            for (var i = 0, len = htbz.length; i < len; i++) {
+                var bzs = htbz[i];
+                $('#htbzid').append("<option value=\"" + bzs.id + "\">" + bzs.teamName + "</option>");
             }
             $(".select2").select2();
         }

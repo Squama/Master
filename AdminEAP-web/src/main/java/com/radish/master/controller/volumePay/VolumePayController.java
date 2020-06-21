@@ -27,6 +27,7 @@ import com.radish.master.entity.Labor;
 import com.radish.master.entity.ProAccount;
 import com.radish.master.entity.ProAccountDet;
 import com.radish.master.entity.ProjectVolume;
+import com.radish.master.entity.project.ProjectTeam;
 import com.radish.master.entity.project.Salary;
 import com.radish.master.entity.project.SalaryDetail;
 import com.radish.master.entity.project.SalaryVolume;
@@ -51,6 +52,8 @@ public class VolumePayController {
 	@RequestMapping("/list")
 	public String list(HttpServletRequest request){
 		request.setAttribute("projectOptions", JSONArray.toJSONString(budgetService.getProjectCombobox()));
+		List<ProjectTeam> htbzs = budgetService.find(" from ProjectTeam where 1=1 ");
+        request.setAttribute("htbzs", JSONArray.toJSONString(htbzs));
 		return prefix+"list";
 	}
 	@RequestMapping("/payList")

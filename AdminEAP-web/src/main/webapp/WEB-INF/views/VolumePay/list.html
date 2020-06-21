@@ -25,6 +25,9 @@
                     	<option value="20">包工包料</option>
                     	<option value="30">机械</option>
                     </select>
+                     <select id="htbzid" class="form-control select2" name="l.construction_team_id" style="width:200px;" operator="eq">
+                        <option selected="selected" value="">选择一个班组</option>
+                    </select>
                     <div class="btn-group">
                         <button type="button" class="btn btn-primary" data-btn-type="search">查询</button>
                         <button type="button" class="btn btn-default" data-btn-type="reset">重置</button>
@@ -48,7 +51,10 @@
     if(projectOptions != 0){
     	options = JSON.parse(projectOptions);
     }
-    
+    var htbzs = '${htbzs?default(0)}',htbz=0;
+    if(htbzs != 0){
+        htbz = JSON.parse(htbzs);
+    }
     var volumeManageObject = {
             pay: function (volumeID,payType) {
             	/* var zflx = "";
@@ -89,7 +95,15 @@
                     width:'900px',
                     url:basePath+"/volumepay/payMoney?zfid="+zfid+"&&type="+payType+"&&lx=look"
                    });
-            }
+            },
+            toAudit: function (volumeID) {
+            	modals.openWin({
+	                 winId:winId,
+	                 title:'工程量上报详情',
+	                 width:'1200px',
+	                 url:basePath+"/projectvolume/detailouter/"+volumeID            
+              });
+           }
     }
     
     $(function (){
@@ -106,6 +120,13 @@
             for (var i = 0, len = options.length; i < len; i++) {
                 var option = options[i];
                 $('#projectID').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+            }
+            $(".select2").select2();
+        }
+        if(htbz != 0){
+            for (var i = 0, len = htbz.length; i < len; i++) {
+                var bzs = htbz[i];
+                $('#htbzid').append("<option value=\"" + bzs.id + "\">" + bzs.teamName + "</option>");
             }
             $(".select2").select2();
         }
@@ -162,6 +183,10 @@
     	}else{
     		oper +="&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)'style='color:red' onclick='volumeManageObject.pay(\"" + rowObj.id + "\",40)'>详情(未支付)</a>";
     	}
+        return oper;
+    }
+    function fnRenderXq(value, type, rowObj){
+        var oper = "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='volumeManageObject.toAudit(\"" + rowObj.id + "\")'>查看详情</a>";
         return oper;
     }
 </script>
