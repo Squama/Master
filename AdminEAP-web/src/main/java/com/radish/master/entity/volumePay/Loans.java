@@ -114,6 +114,10 @@ public class Loans implements Serializable {
     @Header(name = "proid")
     @Column(name = "proid")
     private String proid;
+    
+    @Header(name = "hkmoney")
+    @Column(name = "hkmoney")
+    private String hkmoney;
 
 	public String getId() {
 		return id;
@@ -281,6 +285,14 @@ public class Loans implements Serializable {
 
 	public void setCwshr(String cwshr) {
 		this.cwshr = cwshr;
+	}
+
+	public String getHkmoney() {
+		return hkmoney;
+	}
+
+	public void setHkmoney(String hkmoney) {
+		this.hkmoney = hkmoney;
 	}
 
 	

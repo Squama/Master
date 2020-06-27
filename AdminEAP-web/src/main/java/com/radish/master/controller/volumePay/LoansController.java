@@ -1,5 +1,6 @@
 package com.radish.master.controller.volumePay;
 
+import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -29,6 +30,8 @@ import com.radish.master.entity.ProAccountDet;
 import com.radish.master.entity.Project;
 import com.radish.master.entity.review.MaxNumber;
 import com.radish.master.entity.volumePay.Loans;
+import com.radish.master.entity.volumePay.LoansHk;
+import com.radish.master.entity.volumePay.ProReceipt;
 import com.radish.master.service.BudgetService;
 import com.radish.master.system.Arith;
 
@@ -85,9 +88,32 @@ public class LoansController {
 		request.setAttribute("projectOptions", JSONArray.toJSONString(budgetService.getProjectCombobox()));
 		String  id = request.getParameter("id");
 		String lx = request.getParameter("lx");
+		String iscw = request.getParameter("iscw");
 		request.setAttribute("id", id);
 		request.setAttribute("lx", lx);
+		request.setAttribute("iscw", iscw);
 		return prefix+"cwlook";
+	}
+	//财务还款
+	@RequestMapping("/addHk")
+	public String addHk(HttpServletRequest request){
+		String  jkid = request.getParameter("jkid");
+		request.setAttribute("jkid", jkid);
+		
+		Loans jk = baseService.get(Loans.class,jkid);
+		List<LoansHk> jks = baseService.find(" from LoansHk where loansid='"+jkid+"'");
+		BigDecimal zje = BigDecimal.ZERO;
+		for(LoansHk j :jks){
+			zje = zje.add(new BigDecimal(j.getMoney()));
+		}
+		BigDecimal jkmoney = new BigDecimal(jk.getMoney());
+		BigDecimal hkmoney = jkmoney.subtract(zje);
+		
+		request.setAttribute("yhmoney", zje+"");
+		request.setAttribute("jkmoney", jkmoney+"");
+		request.setAttribute("hkmoney", hkmoney+"");
+		
+		return prefix+"addHk";
 	}
 	public  String maxNum(){ 
 		List<String> result = baseService.find("select max(mat.id) from com.radish.master.entity.review.MaxNumber mat");
@@ -315,6 +341,82 @@ public class LoansController {
 			j.setIsjz("10");
 			baseService.update(j);
 			Result r = new Result();
+			return r;
+		}
+		//添加还款
+		@RequestMapping("/saveHk")
+		@ResponseBody
+		public Result  saveHk(LoansHk hk){
+			User user = SecurityUtil.getUser();
+			hk.setIsjz("0");
+			hk.setSqrid(user.getId());
+			hk.setSqr(user.getName());
+			hk.setSqtime(new Date());
+			baseService.save(hk);
+			Result r = new Result();
+			return r;
+		}
+		//删除还款
+		@RequestMapping("/deleteHk")
+		@ResponseBody
+		public Result  deleteHk(String id){
+			LoansHk hk = baseService.get(LoansHk.class, id);
+			baseService.delete(hk);
+			Result r = new Result();
+			return r;
+		}
+		//确定并存入收据记账
+		@RequestMapping("/hkjz")
+		@ResponseBody
+		public Result  hkjz(String id){
+			Result r = new Result();
+			LoansHk hk = baseService.get(LoansHk.class, id);
+			if(hk.getLoansid()==null){
+				return new Result(false, "未获取到借款id");
+			}
+			Loans jk = baseService.get(Loans.class, hk.getLoansid());
+			
+			//添加收据
+			ProReceipt sj = new ProReceipt();
+			sj.setBz(jk.getLoanname()+"借款还款");
+			sj.setContent(jk.getLoanname()+"借款还款");
+			sj.setCreateDate(hk.getHktime());
+			sj.setJkr(jk.getLoanname());
+			sj.setMoney(jk.getMoney());
+			sj.setProId(jk.getProid());
+			sj.setType("20");//转账
+			sj.setSjtype("20");//普通收据
+			sj.setMoney(hk.getMoney());
+			String str =maxNum();
+			Calendar date = Calendar.getInstance();
+			String year = String.valueOf(date.get(Calendar.YEAR));
+			String strs = "SJ"+year+str;
+			sj.setNumber(strs);
+			baseService.save(sj);
+			//修改还款状态
+			hk.setIsjz("1");
+			hk.setReceiptid(sj.getId());
+			baseService.update(hk);
+			//修改借款状态
+			List<LoansHk> jks = baseService.find(" from LoansHk where loansid='"+hk.getLoansid()+"' and isjz='1'");
+			BigDecimal zje = BigDecimal.ZERO;
+			for(LoansHk j :jks){
+				zje = zje.add(new BigDecimal(j.getMoney()));
+			}
+			BigDecimal jkmoney = new BigDecimal(jk.getMoney());
+			if(jkmoney.compareTo(zje)<=0){//还清
+				jk.setStatus("110");
+			}else{//未还清
+				jk.setStatus("80");	
+			}
+			jk.setHkmoney(zje+"");
+			baseService.update(jk);
+			
+			if(sj.getProId()==null){
+				r.setData("公司收据，编号："+sj.getNumber());
+			}else{
+				r.setData("项目收据，编号："+sj.getNumber());
+			}
 			return r;
 		}
 }

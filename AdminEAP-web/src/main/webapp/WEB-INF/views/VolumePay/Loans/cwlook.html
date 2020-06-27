@@ -18,7 +18,7 @@
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><li class="fa fa-remove"></li></button>
     <h5 class="modal-title"></h5>
 </div>
-<div class="modal-body" style="max-height:100%;overflow-y:auto;">
+<div class="modal-body" style="max-height:700px;overflow-y:auto;">
 	<span id="msg" style="color: red"></span>
     <form id="contract-form" name="contract-form" class="form-horizontal">
      <input type="hidden" name="id" id= "id">
@@ -128,10 +128,35 @@
         </div>
         <!-- /.box-footer -->
     </form>
+    <form id="purchase-det-form" name="purchase-det-form" class="form-horizontal">
+                <div class="box box-success" id="instock_det">
+                    <div class="box-header with-border">
+                        <span>
+                            <i class="fa fa-files-o">还款信息详情</i>
+                        </span>
+                    </div>
+                    <!-- 还款信息详情 -->
+                    <div class="dataTables_filter" id="searchDivPDet"  style="text-align: left;">
+                       <input type="search" id="loansid" name="jk.loansid" class="form-control" operator="eq" style="display:none;" value="1">
+                       <div class="btn-group">
+                           <button type="button" class="btn btn-primary" data-btn-type="search" id="refresh" style="display:none;">查询</button>
+                       		<button type="button" class="btn btn-primary"  id = "addHk">新增还款记录</button>
+                       </div>
+                    </div>
+                    <div class="box-body box-body-mobile">
+                        <!-- 内容 -->
+                        <table id="purchase_det_table" class="table table-bordered table-striped table-hover">
+                        </table>
+                    </div>
+                     
+                   
+                </div>
+            </form>
 </div>
 <script>
     var form =null;
     var id="${id?default(0)}";
+    $("#loansid").val(id);
     var lx = "${lx?default(0)}"
    	if(lx!=0){
 			$("#save").css("display","none");
@@ -141,6 +166,11 @@
     if(pros != 0){
     	pro = JSON.parse(pros);
     }
+    var iscw = "${iscw?default(0)}";
+    if(iscw=='0'){
+		$("#addHk").css("display","none");
+    }
+    var purchaseDetTable, winIds = "purchaseDetWin";
     $(function() {
         //初始化控件
         form=$("#contract-form").form();
@@ -179,7 +209,25 @@
         if(id!=0){
         	load();
         }
-        
+        purchaseDetTable = new CommonTable("purchase_det_table", "loan_hk", "searchDivPDet", {
+            "ordering" : false,
+            "lengthChange": false,
+            "displayLength": 20,
+            "scrollY": "150px",
+            "scrollCollapse": true
+        });
+        $("#addHk").on("click",function(){
+        	modals.openWin({
+                winId:winIds,
+                title:'创建',
+                width:'800px',
+                url:basePath+"/loans/addHk?jkid="+id,
+                hideFunc:function(){
+                	purchaseDetTable.reloadData();
+                }
+                
+               });
+        })
     });
     function load(){
     	var url=basePath+'/loans/load?id='+id;
@@ -286,5 +334,37 @@
 		  return ChineseStr;
 		 
 		}
-	
+	function fnRenderHk(value, type, rowObj){
+		if(iscw=="1"){//财务查看展示
+			if(rowObj.isjz!="1"){
+				var oper = "<a href='javascript:void(0)' onclick='hkjz(\"" + value + "\")'>确认金额并添加收据</a>";
+	    		oper += "&nbsp;&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' style='color:red' onclick='deleteHk(\"" + value + "\")'>删除记录</a>";
+				return oper;
+	    	}
+		}
+	}
+	//还款收据
+	function hkjz(hkid){
+		modals.confirm("确定添加到收据？",function(){
+			ajaxPost(basePath+'/loans/hkjz', {id:hkid}, function(data) {
+                if(data.success){
+                	purchaseDetTable.reloadData();
+                    modals.info("操作成功!"+data.data);
+                    
+                }                
+            }); 
+		});
+	}
+	//删除还款
+	function deleteHk(hkid){
+		modals.confirm("确定删除该记录？",function(){
+			ajaxPost(basePath+'/loans/deleteHk', {id:hkid}, function(data) {
+                if(data.success){
+                	purchaseDetTable.reloadData();
+                    modals.info("操作成功");
+                    
+                }                
+            }); 
+		});
+	}
 </script>
