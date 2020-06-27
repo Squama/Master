@@ -4,14 +4,18 @@
 package com.radish.master.controller.workmanage;
 
 import java.io.IOException;
+import java.lang.reflect.Method;
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -31,11 +35,18 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.alibaba.fastjson.JSONArray;
+import com.cnpc.framework.base.entity.User;
 import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.base.service.BaseService;
 import com.cnpc.framework.utils.CodeException;
+import com.radish.master.entity.project.Salary;
+import com.radish.master.entity.project.SalaryDetail;
+import com.radish.master.entity.project.SocialSecurity;
 import com.radish.master.entity.wechat.Attendance;
 import com.radish.master.entity.wechat.Wen;
+import com.radish.master.pojo.RowEdit;
+import com.radish.master.service.project.TeamSalaryService;
 
 
 /**
@@ -48,6 +59,8 @@ public class AttendanceController {
 	
 	@Autowired
 	private BaseService baseService;
+	 @Resource
+	 private TeamSalaryService teamSalaryService;
 	
 	private final static String XLS = "xls";
     private final static String XLSX = "xlsx";
@@ -379,5 +392,48 @@ public class AttendanceController {
             }
         }
         return value.trim();
+    }
+    
+    @RequestMapping(value = "/rowedit", method = RequestMethod.POST)
+    @ResponseBody
+    public String singleEstimate(String action, HttpServletRequest request) throws Exception {
+        String id = "";
+        String field = "";
+        String value = "";
+        
+        RowEdit re = new RowEdit();
+        List<Object> list = new ArrayList<Object>();
+        
+        Enumeration<String> key = request.getParameterNames();
+        while (key.hasMoreElements()) {
+            String paramName = (String) key.nextElement();
+            if ("action".equals(paramName)) {
+                continue;
+            }
+            String[] paramValues = request.getParameterValues(paramName);
+            if (paramValues.length == 1) {
+                String paramValue = paramValues[0];
+                if (paramValue.length() != 0) {
+                    int idIndexStart = paramName.indexOf("[");
+                    int idIndexEnd = paramName.indexOf("]");
+                    int fieldIndexStart = paramName.lastIndexOf("[");
+                    int fieldIndexEnd = paramName.lastIndexOf("]");
+                    id = paramName.substring(idIndexStart + 1, idIndexEnd);
+                    field = paramName.substring(fieldIndexStart + 1, fieldIndexEnd);
+                    value = paramValue;
+                }
+            }
+        }
+        Attendance detail = teamSalaryService.get(Attendance.class, id);
+
+        Method set = detail.getClass().getMethod("set" + teamSalaryService.captureName(field), String.class);
+        set.invoke(detail, value);
+        
+        teamSalaryService.update(detail);
+        
+        
+        list.add(detail);
+        re.setData(list);
+        return JSONArray.toJSONString(re);
     }
 }

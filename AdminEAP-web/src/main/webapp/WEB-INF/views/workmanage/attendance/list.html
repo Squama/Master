@@ -1,3 +1,11 @@
+<script src="${basePath}/resources/cinder/editor/dataTables.editor.min.js"></script>
+<script src="${basePath}/resources/common/js/calculate.js"></script>
+<link rel="stylesheet" href="${basePath}/resources/cinder/editor/dataTables.editor.css">
+<link rel="stylesheet" href="${basePath}/resources/cinder/editor/editor.dataTables.min.css">
+<style>
+.fixed-button-area{position:fixed;z-index:1;left:45%;}
+.DTE_Field_InputControl{color:black;}
+</style>
 <section class="content-header">
     <h1>
         考勤
@@ -37,5 +45,32 @@
     var attendanceTable;
     $(function (){
     	attendanceTable = new CommonTable("attendance_list_table", "attendance_list", "searchDiv", null);
-    });
+    	salaryDetailCtrl.initSalaryEditor();
+        });
+
+    var salaryDetailCtrl = {
+            initSalaryEditor:function(){
+                salaryEditor = new $.fn.dataTable.Editor( {
+                    ajax: basePath+"/attendance/rowedit",
+                    table: "#attendance_list_table",
+                    idSrc:  'id',
+                    fields: [ 
+                        {label:"suppose:", name:"suppose",type:"text"},
+                        {label:"normal:", name:"normal",type:"text"},
+                        {label:"exception:", name:"exception",type:"text"},
+                        {label:"early:", name:"early",type:"text"},
+                        {label:"late:", name:"late",type:"text"},
+                        {label:"completion:", name:"completion",type:"text"},
+                        {label:"total:", name:"total",type:"text"}
+                        
+                    ]
+                } );
+                
+                $('#attendance_list_table').on( 'click', 'tbody td:not(:first-child)', function (e) {
+                    salaryEditor.inline( this, {
+                        onBlur: 'submit'
+                    });
+                } );
+            }
+        }
 </script>

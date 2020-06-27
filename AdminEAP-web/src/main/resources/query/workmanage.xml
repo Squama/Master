@@ -59,7 +59,7 @@
         <column key="id" header="附件" width="100" fnRender="fnFj"/>
     </query>
     
-    <query id="writingsAdd_List" key="id" tableName="收发文管理" className="com.radish.master.entity.files.Writings" widthType="px" pageSize="200">
+    <query id="writingsAdd_List" key="id" tableName="收发文管理" className="com.radish.master.entity.files.Writings" widthType="px" pageSize="200" order="create_time desc">
         <column key="id" hidden="true" header="id" width="80"/>
         <column key="rowIndex" header="序号" width="80"/>
         <column key="name" header="名称" classType="String" width="150"/>
@@ -82,7 +82,7 @@
         <column key="name" header="部门名称" allowSort="true" width="150"/>
         <column key="pname" header="上级部门" classType="String" allowSort="true" width="150"/>
     </query>
-    <query id="writingsAdd_ListLook" key="id" tableName="收文查看" widthType="px" allowPaging="true">
+    <query id="writingsAdd_ListLook" key="id" tableName="收文查看" widthType="px" allowPaging="true" order="create_time desc">
         <sql>
             <![CDATA[
               SELECT w.name name,w.number number,w.create_name,w.create_time create_time, l.id id ,l.writingid writingid ,l.lookid lookid ,
