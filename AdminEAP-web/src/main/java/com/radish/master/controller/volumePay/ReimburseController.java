@@ -100,6 +100,7 @@ public class ReimburseController {
 		User u = SecurityUtil.getUser();
 		String deptid = u.getDeptId();
 		request.setAttribute("deptid", deptid);
+		request.setAttribute("auidter", u.getName());
 		return prefix+"bmshindex";
 	}
 	//财务付款页

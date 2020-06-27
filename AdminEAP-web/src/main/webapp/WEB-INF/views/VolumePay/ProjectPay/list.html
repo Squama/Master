@@ -82,8 +82,8 @@
                     modals.info('请选择要删除的行');
                     return false;
                 }
-            	if(volumeTable.getSelectedRowData().status!='新建'){
-                	modals.info('只能删除新建的信息');
+            	if(volumeTable.getSelectedRowData().status!='新建'&&volumeTable.getSelectedRowData().status!='待支付'){
+                	modals.info('只能删除新建或者待支付的信息');
                     return false;
                 }
                 modals.confirm("是否要删除该行数据？",function(){

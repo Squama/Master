@@ -19,6 +19,11 @@
                     <input placeholder="请输入报销编号" name="bx.number" class="form-control" type="search" likeOption="true"operator="like" />
                     <input placeholder="请输入申请人姓名" name="bx.reername" class="form-control" type="search" likeOption="true"operator="like" />
                     <input id = "userid" name="bx.pid" class="form-control" type="search" style="display: none"/>  
+                    <select id="auidter" name="bx.bmshr"  class="form-control"  onchange="changestatus()">
+                    	<option value="">待审核</option>
+                    	<option value="${auidter}">已审核</option>
+                    </select>
+                    <input id = "status" name="bx.status" value="20" class="form-control" type="search" style="display: none"/>  
                     <div class="btn-group">
                         <button type="button" class="btn btn-primary" data-btn-type="search">查询</button>
                        
@@ -38,7 +43,6 @@
     var volumeTable, winId = "volumeWin";
     var jkr = '${deptid?default(0)}';
     $("#userid").val(jkr);
-    
     var volumeManageObject = {
             submit: function (id) {
             	modals.openWin({
@@ -51,9 +55,28 @@
                     }
                     
                    });
-            }
+            },
+            look:function(id){
+            	modals.openWin({
+                    winId:winId,
+                    title:'查看',
+                    width:'1000px',
+                    url:basePath+"/reimburse/cwlook?lx=look&id="+id,
+                    hideFunc:function(){
+                    	volumeTable.reloadData();
+                    }
+                    
+                   });
+           }
     }
-    
+    function changestatus(){
+		var auidter = $("#auidter").val();
+		if(auidter){
+			$("#status").val("");
+		}else{
+			$("#status").val("20");
+		}
+    }
     $(function (){
     	volumeTable = new CommonTable("volume_table", "reimburse_bm", "searchDiv", null);
         
@@ -61,8 +84,14 @@
     });
     
     function fnRenderXQ(value, type, rowObj){
-    	var oper ="<a href='javascript:void(0)' onclick='volumeManageObject.submit(\"" + value + "\")'>查看审核</a>";
-        return oper;
+        if(rowObj.status=="部门审核"){
+        	var oper ="<a href='javascript:void(0)' onclick='volumeManageObject.submit(\"" + value + "\")'>查看审核</a>";
+            return oper;
+        }else{
+        	var oper = "<a href='javascript:void(0)' onclick='volumeManageObject.look(\"" + value + "\")'>查看</a>";
+        	return oper;
+        }
+    	
     }
 
 
