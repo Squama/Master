@@ -45,11 +45,10 @@
     var attendanceTable;
     $(function (){
     	attendanceTable = new CommonTable("attendance_list_table", "attendance_list", "searchDiv", null);
-    	salaryDetailCtrl.initSalaryEditor();
-        });
+    	initSalaryEditor();
+    });
 
-    var salaryDetailCtrl = {
-            initSalaryEditor:function(){
+            function initSalaryEditor(){
                 salaryEditor = new $.fn.dataTable.Editor( {
                     ajax: basePath+"/attendance/rowedit",
                     table: "#attendance_list_table",
@@ -72,5 +71,4 @@
                     });
                 } );
             }
-        }
 </script>
