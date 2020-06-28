@@ -154,7 +154,15 @@ public class TeamSalaryServiceImpl extends BaseServiceImpl implements TeamSalary
         User user = SecurityUtil.getUser();
 
         salary.setStatus("20");
-
+        List<SalaryDetail> mxs = baseDao.find("from SalaryDetail where salaryID= '"+salary.getId()+"'");
+        if(mxs.size()==0){
+        	return new Result(false,"无工资明细，不能提交");
+        }
+        BigDecimal zje = BigDecimal.ZERO;
+        for(SalaryDetail mx : mxs){
+        	zje = zje.add(new BigDecimal(mx.getActual()));
+        }
+        salary.setApplySum(zje+"");
         this.update(salary);
 
         String name = "专业作业班组：" + salary.getTeamName() + "【工资单审核】";
@@ -197,7 +205,15 @@ public class TeamSalaryServiceImpl extends BaseServiceImpl implements TeamSalary
         User user = SecurityUtil.getUser();
 
         salary.setStatus("20");
-
+        List<SalaryDetail> mxs = baseDao.find("from SalaryDetail where salaryID= '"+salary.getId()+"'");
+        if(mxs.size()==0){
+        	return new Result(false,"无工资明细，不能提交");
+        }
+        BigDecimal zje = BigDecimal.ZERO;
+        for(SalaryDetail mx : mxs){
+        	zje = zje.add(new BigDecimal(mx.getActual()));
+        }
+        salary.setApplySum(zje+"");
         this.update(salary);
 
         String name = "点工班组：" + salary.getTeamName() + "【工资单审核】";
@@ -240,7 +256,15 @@ public class TeamSalaryServiceImpl extends BaseServiceImpl implements TeamSalary
         User user = SecurityUtil.getUser();
 
         salary.setStatus("20");
-
+        List<SalaryDetail> mxs = baseDao.find("from SalaryDetail where salaryID= '"+salary.getId()+"'");
+        if(mxs.size()==0){
+        	return new Result(false,"无工资明细，不能提交");
+        }
+        BigDecimal zje = BigDecimal.ZERO;
+        for(SalaryDetail mx : mxs){
+        	zje = zje.add(new BigDecimal(mx.getActual()));
+        }
+        salary.setApplySum(zje+"");
         this.update(salary);
 
         String name = "项目：" + salary.getProjectName() + "【管理人员工资单审核】";
@@ -283,7 +307,15 @@ public class TeamSalaryServiceImpl extends BaseServiceImpl implements TeamSalary
         User user = SecurityUtil.getUser();
 
         salary.setStatus("20");
-
+        List<SalaryDetail> mxs = baseDao.find("from SalaryDetail where salaryID= '"+salary.getId()+"'");
+        if(mxs.size()==0){
+        	return new Result(false,"无工资明细，不能提交");
+        }
+        BigDecimal zje = BigDecimal.ZERO;
+        for(SalaryDetail mx : mxs){
+        	zje = zje.add(new BigDecimal(mx.getActual()));
+        }
+        salary.setApplySum(zje+"");
         this.update(salary);
 
         String name = "【机关人员工资单审核】";
@@ -326,7 +358,15 @@ public class TeamSalaryServiceImpl extends BaseServiceImpl implements TeamSalary
         User user = SecurityUtil.getUser();
 
         salary.setStatus("20");
-
+        List<SalaryDetail> mxs = baseDao.find("from SalaryDetail where salaryID= '"+salary.getId()+"'");
+        if(mxs.size()==0){
+        	return new Result(false,"无工资明细，不能提交");
+        }
+        BigDecimal zje = BigDecimal.ZERO;
+        for(SalaryDetail mx : mxs){
+        	zje = zje.add(new BigDecimal(mx.getActual()));
+        }
+        salary.setApplySum(zje+"");
         this.update(salary);
 
         String name = "【门卫机修人员工资单审核】";
@@ -368,7 +408,15 @@ public class TeamSalaryServiceImpl extends BaseServiceImpl implements TeamSalary
         User user = SecurityUtil.getUser();
 
         salary.setStatus("30");
-
+        List<SalaryDetail> mxs = baseDao.find("from SalaryDetail where salaryID= '"+salary.getId()+"'");
+        if(mxs.size()==0){
+        	return new Result(false,"无工资明细，不能提交");
+        }
+        BigDecimal zje = BigDecimal.ZERO;
+        for(SalaryDetail mx : mxs){
+        	zje = zje.add(new BigDecimal(mx.getActual()));
+        }
+        salary.setApplySum(zje+"");
         this.update(salary);
 
         String name = "【其他类型（13薪、奖金、津贴）发放单审核】";
