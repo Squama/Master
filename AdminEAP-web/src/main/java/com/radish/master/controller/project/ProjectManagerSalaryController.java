@@ -354,7 +354,7 @@ public class ProjectManagerSalaryController {
             BigDecimal b = new BigDecimal("0");
             for (SalaryDetail sd : detailList) {
                 BigDecimal actual = new BigDecimal(sd.getActual());
-                BigDecimal cost = new BigDecimal(sd.getPayable());
+                BigDecimal cost = sd.getPayable()==null?BigDecimal.ZERO:new BigDecimal(sd.getPayable());
                 
                 a = a.add(actual);
                 b = b.add(cost);
