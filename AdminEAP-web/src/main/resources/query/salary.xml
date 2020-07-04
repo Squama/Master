@@ -319,7 +319,7 @@
         <column key="rowIndex" header="序号" width="80"/>
         <column key="id" hidden="true" header="id" width="80"/>
         <column key="team_name" header="点工班组" width="150"/>
-        <column key="type" header="措施费类型" width="150" render="issue=总价措施项目费,construct=安全文明施工费"/>
+        <column key="type" header="措施费类型" width="150"  render="construct=安全文明施工费,issue=总价措施项目费,construct1=环境保护费,construct2=安全施工费,construct3=文明施工费,construct4=临时设施费"/>
         <column key="start_time" header="开始时间" allowSort="true" dateFormat="yyyy-mm-dd" width="80"/>
         <column key="end_time" header="结束时间" allowSort="true" dateFormat="yyyy-mm-dd" width="80"/>
         <column key="final_sub" header="总费用" width="150"/>
@@ -336,7 +336,7 @@
         <column key="rowIndex" header="序号" width="80"/>
         <column key="id" hidden="true" header="id" width="80"/>
         <column key="team_name" header="点工班组" width="150"/>
-        <column key="type" header="措施费类型" width="150" render="issue=总价措施项目费,construct=安全文明施工费"/>
+        <column key="type" header="措施费类型" width="150"  render="construct=安全文明施工费,issue=总价措施项目费,construct1=环境保护费,construct2=安全施工费,construct3=文明施工费,construct4=临时设施费"/>
         <column key="start_time" header="开始时间" allowSort="true" dateFormat="yyyy-mm-dd" width="80"/>
         <column key="end_time" header="结束时间" allowSort="true" dateFormat="yyyy-mm-dd" width="80"/>
         <column key="final_sub" header="总费用" width="150"/>

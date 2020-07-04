@@ -20,6 +20,16 @@
                     <select id="projectID" class="form-control select2" name="projectID" style="width:200px;" operator="eq">
                     	<option selected="selected" value="">选择一个项目</option>
                     </select>
+                    <input placeholder="请输入班组名称" name="teamName" class="form-control" type="search" likeOption="true"operator="like" />
+                    <select  class="form-control select2" name="measureType" style="width:200px;">
+                         <option selected="selected" value="">选择一个措施费</option>
+                         <option value="construct">安全文明施工费</option>
+                         <option value="issue">总价措施项目费</option>
+                         <option value="construct1">环境保护费</option>
+                         <option value="construct2">安全施工费</option>
+                         <option value="construct3">文明施工费</option>
+                         <option value="construct4">临时设施费</option>
+                      </select>
                     <div class="btn-group">
                         <button type="button" class="btn btn-primary" data-btn-type="search">查询</button>
                         <button type="button" class="btn btn-default" data-btn-type="reset">重置</button>

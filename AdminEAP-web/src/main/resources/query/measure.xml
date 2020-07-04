@@ -22,7 +22,7 @@
                 SELECT * FROM 
                 (SELECT budget.id,budget.type,budget.project_id,budget.project_name,budget.project_sub_name,budget.budget,consume.consume,'Percent' AS percent,'construct' AS feetype FROM
                 (SELECT project_sub_id AS id,'安全文明施工费' AS type,project_name,project_id,project_sub_name,project_sub_id,SUM(construct) budget FROM tbl_measure WHERE `status` = '30' GROUP BY project_sub_id) budget,
-                (SELECT SUM(amount) consume,project_sub_id FROM tbl_measure_consume WHERE op='-' AND type='construct' GROUP BY project_sub_id) consume
+                (SELECT SUM(amount) consume,project_sub_id FROM tbl_measure_consume WHERE op='-' AND type like 'construct%' GROUP BY project_sub_id) consume
                 WHERE budget.project_sub_id = consume.project_sub_id
                 UNION ALL
                 SELECT budget.id,budget.type,budget.project_id,budget.project_name,budget.project_sub_name,budget.budget,consume.consume,'Percent' AS percent,'issue' AS feetype FROM

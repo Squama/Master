@@ -29,7 +29,7 @@
                     <div class="box box-success">
                         <div class="dataTables_filter" id="searchDivMeasureDetail" style="text-align:center;height:1px;">
                            <input type="search" name="project_sub_id" class="form-control" operator="eq" style="display:none;" value="${projectSubID}">
-                           <input type="search" name="type" class="form-control" operator="eq" style="display:none;" value="${feeType}">
+                           <input type="search" name="type" class="form-control" operator="like" likeOption="true" style="display:none;" value="${feeType}%">
                            <div class="btn-group">
                                <button type="button" class="btn btn-primary" data-btn-type="search" id="refresh" style="display:none;">查询</button>
                            </div>
