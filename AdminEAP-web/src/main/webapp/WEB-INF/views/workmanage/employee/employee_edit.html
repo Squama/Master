@@ -123,6 +123,12 @@
                          <select id="deptent" name="deptent"  class="form-control"></select>
                      </div>
                  </div>
+                 <div class="form-group">
+                     <label for="auditdept" class="col-sm-3 control-label">审核部门</label>
+                     <div class="col-sm-8">
+                         <select id="auditdept" name="auditdept"  class="form-control"></select>
+                     </div>
+                 </div>
             </div>
             <div class="col-md-6">
                 <div class="form-group">
@@ -273,12 +279,20 @@
     $(function () {
     	//填充公司分部
         ajaxPost(basePath+"/deptent/all",{},function(data){
-                console.log(data);
                 var op = "";
 				for(var i=0;i<data.length;i++){
 					op+="<option value='"+data[i].id+"'>"+data[i].name+"</option>"
 				}
                 $("#deptent").append(op);
+            })
+         //填充审核部分
+         ajaxPost(basePath+"/employeeQuery/getAuditDepts",{},function(data){
+                var op = "";
+                var res = data.data;
+				for(var i=0;i<res.length;i++){
+					op+="<option value='"+res[i].value+"'>"+res[i].data+"("+res[i].pdata+")</option>"
+				}
+                $("#auditdept").append(op);
             })
         //初始化控件
         form = $("#user-form").form({ baseEntity: false });

@@ -189,6 +189,10 @@ public class User extends BaseEntity {
     @Column(name = "regionCode")
     private String regionCode;
 
+	 @Header(name = "审核部门")
+    @Column(name = "auditdept")
+    private String auditdept;
+
 	@Transient
 	private String avatarId;
 
@@ -569,6 +573,14 @@ public class User extends BaseEntity {
 
 	public void setRegionCode(String regionCode) {
 		this.regionCode = regionCode;
+	}
+
+	public String getAuditdept() {
+		return auditdept;
+	}
+
+	public void setAuditdept(String auditdept) {
+		this.auditdept = auditdept;
 	}
 
 }

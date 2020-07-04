@@ -32,8 +32,18 @@
     </query>
     
     <!-- 员工信息管理 -->
-    <query id="employee_manage" key="id" tableName="员工列表" className="com.cnpc.framework.base.entity.User"
-        pageSize="10"  widthType="px" order="id asc">
+    <query id="employee_manage" key="id" tableName="员工列表" 
+        pageSize="10"  widthType="px" >
+        <sql>
+	        <![CDATA[
+	          SELECT t.id id,t.version version,t.name name,t.dept_id deptId
+	          ,t.sex sex,t.birthday birthday,t.login_name loginName,
+	          t.email email,t.mobile mobile,t.qq qq,t.audit_status auditStatus,t.deptent deptent
+	          FROM
+                 tbl_user t
+                 WHERE 1=1 and t.audit_status is not null and t.audit_status<>'50' order by  t.audit_status
+	        ]]>
+	    </sql>
         <column key="rowIndex" header="序号" width="50" allowSort="false"/>
         <column key="id" header="id" hidden="true"/>
         <column key="version" header="version" hidden="true"/>

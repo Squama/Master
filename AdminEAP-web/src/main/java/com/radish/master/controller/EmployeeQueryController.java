@@ -41,6 +41,7 @@ import com.radish.master.entity.JobDeptRt;
 import com.radish.master.entity.UserLeave;
 import com.radish.master.entity.common.UserExport;
 import com.radish.master.entity.review.ReviewFile;
+import com.radish.master.pojo.OptionsDept;
 import com.radish.master.service.CommonService;
 import com.radish.master.service.WechatService;
 import com.radish.master.system.ReportSXSSF;
@@ -156,6 +157,7 @@ public class EmployeeQueryController {
             user.setPassword(EncryptUtil.getPassword(initPassword, user.getLoginName()));
             user.setAuditStatus("30");
             user.setZzStatus("0");
+            user.setAuditdept(user.getDeptId());
             String userId = userService.save(user).toString();
             userRoleService.setRoleForRegisterUser(userId);
             // 头像和用户管理
@@ -176,6 +178,7 @@ public class EmployeeQueryController {
             oldUser.setRegionCode(user.getRegionCode());
             oldUser.setDutyContent(user.getDutyContent());
             oldUser.setUpdateDateTime(new Date());
+            oldUser.setAuditdept(user.getAuditdept());
             userService.update(oldUser);
             if (flag) {
                 wechatService.clearUserRole(oldJobID, oldUser);
@@ -532,5 +535,11 @@ public class EmployeeQueryController {
          }
         return new Result();
     }
-
+	@RequestMapping("/getAuditDepts")
+	@ResponseBody
+	public Result getAuditDepts(){
+		 String hql = "select id value,name data,pname pdata  from v_depts  ";
+	     List<OptionsDept> funcs = baseService.findMapBySql(hql, new Object[]{}, new Type[]{StringType.INSTANCE}, OptionsDept.class);
+	     return new Result(true, funcs);
+	}
 }

@@ -144,9 +144,9 @@
         <sql>
             <![CDATA[
               SELECT jk.id id,jk.startdate startdate,jk.enddate enddate,jk.status status,jk.alldays alldays ,jk.askid askid,jk.bmyj bmyj ,jk.bossyj bossyj 
-			  ,jk.bgsyj bgsyj ,jk.dept dept,jk.askame askame 
-			  FROM tbl_askleave jk 
-			  WHERE 1=1  and jk.status='20'
+			  ,jk.bgsyj bgsyj ,jk.dept dept,jk.askame askame ,u.auditdept auditdept
+			  FROM tbl_askleave jk ,tbl_user u 
+			  WHERE 1=1  and jk.status='20' and u.id = jk.askid
             ]]>
         </sql>
         <column key="id" hidden="true" header="id" width="80"/>

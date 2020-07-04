@@ -118,6 +118,8 @@
                             if(data.success){
                                 modals.info("数据保存成功");
                                 $("#id").val(data.code);
+                            }else{
+                            	modals.info(data.message);
                             }                
                         }); 
                 });

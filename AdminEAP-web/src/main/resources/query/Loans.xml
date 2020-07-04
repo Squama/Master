@@ -26,9 +26,9 @@
         <sql>
             <![CDATA[
               SELECT jk.id id,jk.number number ,jk.enddate enddate,jk.status status,jk.money money ,jk.loanerid loanerid,jk.pid pid ,jk.loanname loanname 
-			  ,jk.type type ,jk.cwshyj cwshyj ,jk.hkmoney hkmoney
-			  FROM tbl_loans jk 
-			  WHERE 1=1  and jk.status='20' 
+			  ,jk.type type ,jk.cwshyj cwshyj ,jk.hkmoney hkmoney ,u.auditdept auditdept
+			  FROM tbl_loans jk ,tbl_user u 
+			  WHERE 1=1  and jk.status='20' and jk.loanerid=u.id
             ]]>
         </sql>
         <column key="id" hidden="true" header="id" width="80"/>

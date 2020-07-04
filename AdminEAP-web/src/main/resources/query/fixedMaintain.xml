@@ -61,8 +61,9 @@
         <sql>
             <![CDATA[
               select 
-			id,number,qxdept,qxdeptid,sqr,createdate,status,isone
-			from tbl_fixedmaintain where 1=1 and status in('20','70') 
+			qx.id id,qx.number number,qx.qxdept qxdept,qx.qxdeptid qxdeptid,qx.sqr sqr,
+			qx.createdate createdate,qx.status status,qx.isone isone,u.auditdept auditdept
+			from tbl_fixedmaintain qx,tbl_user u where 1=1 and status in('20','70') and u.id=qx.sqrid
             ]]>
         </sql>
         <column key="rowIndex" header="序号" width="80"/>

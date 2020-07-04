@@ -204,12 +204,15 @@ public class SealController {
 		Result r = new Result();
 		String id = request.getParameter("id");
 		User u = SecurityUtil.getUser();
+		if(u.getAuditdept()==null||"".equals(u.getAuditdept())){
+			return new Result(false, "此账号未配置审核部门，请联系人力配置");
+		}
 		String deptid = "";
 		String dept = "";
 		if(u.getDeptId()!=null){
 			Org bm = baseService.get(Org.class, u.getDeptId());
 			if(bm!=null){
-				deptid=bm.getId();
+				//deptid=bm.getId();
 				dept=bm.getName();
 			}
 		}
@@ -220,7 +223,7 @@ public class SealController {
 			cl.setSqrid(u.getId());
 			cl.setSqr(u.getName());
 			cl.setSqtime(new Date());
-			cl.setDeptid(deptid);
+			cl.setDeptid(u.getAuditdept());
 			cl.setDeptname(dept);
 			baseService.save(cl);
 			id = cl.getId();

@@ -21,10 +21,10 @@
                     	<select id="deptents" name="deptent"  class="form-control"style="width:200px;" operator="eq">
                         	<option selected="selected" value="">选择所属分部</option>
                         </select>
-                        <select id="deptIdym" class="form-control select2" name="deptId" style="width:200px;" operator="eq">
+                        <select id="deptIdym" class="form-control select2" name="t.dept_id" style="width:200px;" operator="eq">
                              <option selected="selected" value="">选择一个部门</option>
                         </select>
-                        <select id="auditStatus" class="form-control select2" name="auditStatus" style="width:200px;" operator="eq">
+                        <select id="auditStatus" class="form-control select2" name="t.audit_status" style="width:200px;" operator="eq">
                              <option selected="selected" value="">选择员工状态</option>
                              <option  value="10">正常</option>
                              <option  value="20">离职待审核</option>
@@ -33,8 +33,6 @@
                         </select>
                         <input placeholder="请输入姓名" name="name" id="name" class="form-control" type="search" likeOption="true" /> 
                         <input placeholder="请输入登录名" name="loginName" id="loginName" class="form-control" type="search" likeOption="true" />
-                    
-                        <input name="auditStatus" type="search" operator="not_null" style="display:none;" /> 
                         <div class="btn-group">
                             <button type="button" class="btn btn-primary" data-btn-type="search">查询</button>
                             <button type="button" class="btn btn-default" data-btn-type="reset">重置</button>
