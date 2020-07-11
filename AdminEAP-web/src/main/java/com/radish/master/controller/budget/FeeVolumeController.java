@@ -6,6 +6,7 @@ package com.radish.master.controller.budget;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -123,6 +124,17 @@ public class FeeVolumeController {
         }
         return new Result(true, fee);
     }
+    @RequestMapping(method = RequestMethod.POST, value="/delete")
+    @ResponseBody
+    public Result delete(String id){
+    	Fee fee = commonService.get(Fee.class, id);
+    	List<FeeDetail> fees =  commonService.find(" from FeeDetail where feeID='"+id+"'") ;  
+    	for(FeeDetail f : fees){
+    		commonService.delete(f);
+    	}
+    	commonService.delete(fee);
+        return new Result(true, "删除成功！");
+    }
     
     @RequestMapping(method = RequestMethod.POST, value="/savemanage")
     @ResponseBody
@@ -160,6 +172,7 @@ public class FeeVolumeController {
     @ResponseBody
     public Result deleteDet(String id, HttpServletRequest request){
         FeeDetail feeDetail = commonService.get(FeeDetail.class, id);
+        String feeid = feeDetail.getFeeID();
         commonService.delete(feeDetail);
         
         Fee fee = commonService.get(Fee.class, feeDetail.getFeeID());
@@ -168,7 +181,7 @@ public class FeeVolumeController {
         fee.setAmount(oldValue.subtract(thisValue).setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
         commonService.save(fee);
         
-        return new Result(true, "success");
+        return new Result(true, "success",feeid);
     }
     
     @RequestMapping(value="/getfee")

@@ -27,6 +27,7 @@
                     <div class="btn-group">
                         <button type="button" class="btn btn-default" data-btn-type="add">新增</button>
                         <button type="button" class="btn btn-default" data-btn-type="edit" >编辑</button>
+                        <button type="button" class="btn btn-danger" data-btn-type="delete" >删除</button>
                     </div>
                 </div>
                 <div class="box-body box-body-mobile">
@@ -108,6 +109,27 @@
                     	packageTable.reloadData();
                     }
                    });
+               break;
+            case 'delete':
+            	if(!rowId){
+                    modals.info('请选择要删除的行');
+                    return false;
+                }
+                var data = packageTable.getSelectedRowData();
+                if(data.status != '新建'){
+                    modals.info('审核中或审核完成的条目不可删除!');
+                    return false;
+                }
+                modals.confirm("确定删除？",function(){
+                    ajaxPost(basePath + '/project/feevolume/delete', {id:rowId}, function (data) {
+                        if (data.success) {
+                            packageTable.reloadData();
+                            modals.correct("删除成功");
+                        } else {
+                            modals.error(data.message);
+                        }
+                    });
+                });
                break;
             }
 

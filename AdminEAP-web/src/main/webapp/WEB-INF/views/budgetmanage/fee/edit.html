@@ -101,18 +101,6 @@
     initData.feeID = feeID;
     packagedetailform.initFormData(initData);
     
-    var packageEditObject = {
-            deleteDetail: function (rowId) {
-                ajaxPost(basePath + '/project/feevolume/deletedetail', {id:rowId}, function (data) {
-                    if (data.success) {
-                    	packageTable.table.page('first').draw(false);
-                    } else {
-                        modals.error(data.message);
-                    }
-                });
-            }
-    }
-    
     $(function (){
         purchaseEditTable = new CommonTable("package_edit_table", "fee_detail_list", "searchDivPDet", {
             "ordering" : false,
@@ -300,6 +288,15 @@
     });
     
     function fnRenderDelete(value){
-        return "<a href='javascript:void(0)' onclick='packageEditObject.deleteDetail(\"" + value + "\")'>删除</a>";
+        return "<a href='javascript:void(0)' onclick='deleteDetail(\"" + value + "\")'>删除</a>";
+    }
+    function deleteDetail(rowId) {
+        ajaxPost(basePath + '/project/feevolume/deletedetail', {id:rowId}, function (data) {
+            if (data.success) {
+            	purchaseEditTable.reloadData();
+            } else {
+                modals.error(data.message);
+            }
+        });
     }
 </script>
