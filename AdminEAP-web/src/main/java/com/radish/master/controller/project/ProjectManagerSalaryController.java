@@ -341,7 +341,17 @@ public class ProjectManagerSalaryController {
         if(!"actual".equals(field)){
         	BigDecimal loan = new BigDecimal(detail.getLoan());
             BigDecimal actual = new BigDecimal(detail.getActual());
-            detail.setActual(actual.subtract(loan).setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
+            BigDecimal yanglao = new BigDecimal(detail.getYanglao());
+            BigDecimal medical = new BigDecimal(detail.getMedical());
+            BigDecimal shiye = new BigDecimal(detail.getShiye());
+            BigDecimal prf = new BigDecimal(detail.getPrf());
+            BigDecimal tax = new BigDecimal(detail.getTax());
+            
+            BigDecimal payable = new BigDecimal(detail.getPayable());
+            
+            BigDecimal actualnow =  payable.subtract(yanglao).subtract(medical).subtract(shiye).subtract(prf).
+            		subtract(tax).subtract(loan).setScale(2, BigDecimal.ROUND_DOWN);
+            detail.setActual(actualnow.toPlainString());
             teamSalaryService.save(detail);
         }
         
