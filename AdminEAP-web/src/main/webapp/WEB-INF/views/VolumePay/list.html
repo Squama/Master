@@ -78,6 +78,9 @@
                    }); */
             	loadPage(basePath+"/volumepay/payList?gclid="+volumeID+"&type="+payType);
             },
+            payBGBL:function (volumeID,payType) {
+            	loadPage(basePath+"/volumepay/payListBGBL?gclid="+volumeID+"&type="+payType);
+            },
             look: function (zfid,payType) {
             	var zflx = "";
             	if(payType==10){
@@ -136,54 +139,79 @@
     function fnRenderRG(value, type, rowObj){
     	var oper ="";
     	if(rowObj.final_labour&&rowObj.final_labour!=0){
-	    	if(rowObj.labourStatus==20){
-	    		oper +="&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' style='color:green' onclick='volumeManageObject.pay(\"" + rowObj.id + "\",10)'>详情(支付完成)</a>";
-	    	}else if(rowObj.labourStatus==10){
-	    		oper +="&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' style='color:#CD950C'  onclick='volumeManageObject.pay(\"" + rowObj.id + "\",10)'>详情(支付部分)</a>";
-	    	}else{
-	    		oper +="&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)'style='color:red' onclick='volumeManageObject.pay(\"" + rowObj.id + "\",10)'>详情(未支付)</a>";
-	    	}
+        	if(rowObj.sblx=="20"){//包工包料
+        		if(rowObj.labourStatus==20){
+    	    		oper +="&nbsp;&nbsp;&nbsp;<span style='color:green' >支付完成</span>";
+    	    	}else if(rowObj.labourStatus==10){
+    	    		oper +="&nbsp;&nbsp;&nbsp;<span style='color:#CD950C' >支付部分</span>";
+    	    	}else{
+    	    		oper +="&nbsp;&nbsp;&nbsp;<span style='color:red' >未支付</span>";
+    	    	}
+           	}else{
+           		if(rowObj.labourStatus==20){
+    	    		oper +="&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' style='color:green' onclick='volumeManageObject.pay(\"" + rowObj.id + "\",10)'>详情(支付完成)</a>";
+    	    	}else if(rowObj.labourStatus==10){
+    	    		oper +="&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' style='color:#CD950C'  onclick='volumeManageObject.pay(\"" + rowObj.id + "\",10)'>详情(支付部分)</a>";
+    	    	}else{
+    	    		oper +="&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)'style='color:red' onclick='volumeManageObject.pay(\"" + rowObj.id + "\",10)'>详情(未支付)</a>";
+    	    	}
+            }
     	}
         return oper;
     }
     function fnRenderCL(value, type, rowObj){
     	var oper ="";
     	if(rowObj.final_mat&&rowObj.final_mat!=0){
-	    	if(rowObj.matStatus==20){
-	    		oper +="&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' style='color:green' onclick='volumeManageObject.pay(\"" + rowObj.id + "\",30)'>详情(支付完成)</a>";
-	    	}else if(rowObj.matStatus==10){
-	    		oper +="&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' style='color:#CD950C' onclick='volumeManageObject.pay(\"" + rowObj.id + "\",30)'>详情(支付部分)</a>";
-	    	}else{
-	    		oper +="&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)'style='color:red' onclick='volumeManageObject.pay(\"" + rowObj.id + "\",30)'>详情(未支付)</a>";
-	    	}
+    		if(rowObj.sblx=="20"){//包工包料
+        		if(rowObj.matStatus==20){
+    	    		oper +="&nbsp;&nbsp;&nbsp;<span style='color:green' >支付完成</span>";
+    	    	}else if(rowObj.matStatus==10){
+    	    		oper +="&nbsp;&nbsp;&nbsp;<span style='color:#CD950C' >支付部分</span>";
+    	    	}else{
+    	    		oper +="&nbsp;&nbsp;&nbsp;<span style='color:red' >未支付</span>";
+    	    	}
+           	}else{
+		    	if(rowObj.matStatus==20){
+		    		oper +="&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' style='color:green' onclick='volumeManageObject.pay(\"" + rowObj.id + "\",30)'>详情(支付完成)</a>";
+		    	}else if(rowObj.matStatus==10){
+		    		oper +="&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' style='color:#CD950C' onclick='volumeManageObject.pay(\"" + rowObj.id + "\",30)'>详情(支付部分)</a>";
+		    	}else{
+		    		oper +="&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)'style='color:red' onclick='volumeManageObject.pay(\"" + rowObj.id + "\",30)'>详情(未支付)</a>";
+		    	}
+           	}
     	}
         return oper;
     }
     function fnRenderJX(value, type, rowObj){
     	var oper ="";
     	if(rowObj.final_mech&&rowObj.final_mech!=0){
-	    	if(rowObj.mechStatus==20){
-	    		oper +="&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)'style='color:green' onclick='volumeManageObject.pay(\"" + rowObj.id + "\",20)'>详情(支付完成)</a>";
-	    	}else if(rowObj.mechStatus==10){
-	    		oper +="&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)'style='color:#CD950C' onclick='volumeManageObject.pay(\"" + rowObj.id + "\",20)'>详情(支付部分)</a>";
-	    	}else{
-	    		oper +="&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' style='color:red' onclick='volumeManageObject.pay(\"" + rowObj.id + "\",20)'>详情(未支付)</a>";
-	    	}
+    		if(rowObj.sblx=="20"){//包工包料
+        		if(rowObj.mechStatus==20){
+    	    		oper +="&nbsp;&nbsp;&nbsp;<span style='color:green' >支付完成</span>";
+    	    	}else if(rowObj.mechStatus==10){
+    	    		oper +="&nbsp;&nbsp;&nbsp;<span style='color:#CD950C' >支付部分</span>";
+    	    	}else{
+    	    		oper +="&nbsp;&nbsp;&nbsp;<span style='color:red' >未支付</span>";
+    	    	}
+           	}else{
+		    	if(rowObj.mechStatus==20){
+		    		oper +="&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)'style='color:green' onclick='volumeManageObject.pay(\"" + rowObj.id + "\",20)'>详情(支付完成)</a>";
+		    	}else if(rowObj.mechStatus==10){
+		    		oper +="&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)'style='color:#CD950C' onclick='volumeManageObject.pay(\"" + rowObj.id + "\",20)'>详情(支付部分)</a>";
+		    	}else{
+		    		oper +="&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' style='color:red' onclick='volumeManageObject.pay(\"" + rowObj.id + "\",20)'>详情(未支付)</a>";
+		    	}
+           	}
     	}
         return oper;
     }
 
     function fnRenderBGBL(value, type, rowObj){
     	var oper ="";
-    	console.log(rowObj);
-    	if(rowObj.packStatus==20){
-    		oper +="&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' style='color:green' onclick='volumeManageObject.pay(\"" + rowObj.id + "\",40)'>详情(支付完成)</a>";
-    	}else if(rowObj.packStatus==10){
-    		oper +="&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)'style='color:#CD950C' onclick='volumeManageObject.pay(\"" + rowObj.id + "\",40)'>详情(支付部分)</a>";
-    	}else{
-    		oper +="&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)'style='color:red' onclick='volumeManageObject.pay(\"" + rowObj.id + "\",40)'>详情(未支付)</a>";
+    	if(rowObj.sblx=="20"){//包工包料
+			oper +="&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' style='color:green' onclick='volumeManageObject.payBGBL(\"" + rowObj.id + "\",40)'>支付查看</a>";
     	}
-        return oper;
+	    return oper;
     }
     function fnRenderXq(value, type, rowObj){
         var oper = "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='volumeManageObject.toAudit(\"" + rowObj.id + "\")'>查看详情</a>";

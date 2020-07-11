@@ -1,0 +1,284 @@
+<link rel="stylesheet" href="${basePath}/resources/common/libs/fileinput/css/fileinput.min.css">
+<style>
+
+#projectaddstep2 .krajee-default.file-preview-frame .kv-file-content {
+    height: auto;
+}
+
+#projectaddstep2 .krajee-default .file-footer-caption {
+    width: 100px;
+}
+
+</style>
+<script src="${basePath}/resources/common/libs/fileinput/js/fileinput.js"></script>
+<script src="${basePath}/resources/common/libs/fileinput/js/locales/zh.js"></script>
+<!--BaseFile组件-->
+<script src="${basePath}/resources/common/js/base-file.js"></script>
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><li class="fa fa-remove"></li></button>
+	 <h5 class="modal-title" ></h5>
+</div>
+<div class="modal-body" style="max-height:100%;overflow-y:auto;">
+<div class="col-md-6" style="margin-left:25%">
+	<div class="callout callout-success" id="applyInfock" style="margin-top:8px;margin-bottom:8px;">
+      <h4>金额信息：</h4>
+      <p id="edith5"></p>
+    </div>
+</div>
+    <form id="contract-form" name="contract-form" class="form-horizontal">
+     <input type="hidden" name="id" id= "id">
+       <div class="box-body">
+            <div class="col-md-6">
+                
+                <div class="form-group">
+                    <label for="payWay" class="col-sm-3 control-label">付款方式</label>
+
+                    <div class="col-sm-8">
+                   		<select id="payWay" class="form-control select2 "  name="payWay" style="width:100%" >
+                    		<option selected="selected" value="">选择一种方式</option>
+                    		<option  value="10">现金</option>
+                    		<option  value="20">转账</option>
+                    		<option  value="30">电汇</option>
+                    	</select>
+                    </div>
+                </div>
+           		<div class="form-group">
+					<label  for="zje" class="col-sm-3 control-label">人工支付</label>
+					<div class=" col-sm-8">
+						<input class="form-control " id="rgmoney" name="rgmoney"  >
+				
+					</div>
+				</div>
+				<div class="form-group">
+					<label  for="zje" class="col-sm-3 control-label">机械支付</label>
+					<div class=" col-sm-8">
+						<input class="form-control " id="jxmoney" name="jxmoney" >
+				
+					</div>
+				</div>
+					<div class="form-group">
+					<label  for="fzrId" class="col-sm-3 control-label">负责人</label>
+					<div class=" col-sm-8">
+						<select id="fzrId" class="form-control select2 "  name="fzrId" style="width:100%" >
+                    		<option selected="selected" value="">选择一个负责人</option>
+                    	</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label  for="volumeId" class="col-sm-3 control-label">清单编号</label>
+					<div class=" col-sm-8">
+						<input class="form-control " id="volumeId" name="volumeId"   placeholder="编号" readonly="readonly" >
+				
+					</div>
+				</div>
+            </div>
+            <div class="col-md-6">
+            	<div class="form-group">
+                    <label  for="department" class="col-sm-3 control-label">部门</label>
+					<div class=" col-sm-8">
+						<input class="form-control " id="department" name="department"   placeholder="部门" readonly="readonly" >
+				
+					</div>
+                </div>
+                <div class="form-group">
+					<label  for="kzf" class="col-sm-3 control-label">材料支付</label>
+					<div class=" col-sm-8">
+						<input class="form-control " id="clmoney" name="clmoney"  >
+				
+					</div>
+				</div>
+				<div class="form-group">
+                    <label  for="payMoney" class="col-sm-3 control-label">支付金额</label>
+					<div class=" col-sm-8">
+						<input class="form-control " id="payMoney" name="payMoney"   placeholder="支付金额" readonly="readonly">
+					</div>
+                </div>
+                <div class="form-group">
+                    <label  for="payType" class="col-sm-3 control-label">支付内容</label>
+                    <div class=" col-sm-8">
+						<select id="payType" class="form-control"  name="payType" style="width:100%" disabled="disabled">
+                    		<option selected="selected" value=""></option>
+                    		<option  value="10">人工费</option>
+                    		<option  value="20">机械费</option>
+                    		<option  value="30">材料费</option>
+                    		<option  value="40">包工包料费</option>
+                    	</select>
+                    </div>
+                </div>
+                <div class="form-group">
+					<label  for="skf" class="col-sm-3 control-label">收款方</label>
+					<div class=" col-sm-8">
+						<input class="form-control " id="skf" name="skf"   placeholder="收款方" >
+				
+					</div>
+				</div>
+            </div>   
+        </div>
+        	<!-- <div class="form-group">
+                    <label for="remark" class="col-sm-2 control-label">内容及用途</label>
+
+                    <div class="col-sm-9">
+                        <textarea class="form-control" id="content" name="content" placeholder="内容及用途" rows="6"></textarea>
+                    </div>
+            </div> -->
+        <div class="" style="text-align: center;">
+            <!--以下两种方式提交验证,根据所需选择-->
+            <button type="submit" class="btn btn-primary" data-btn-type="save" id="save">保存</button>
+        </div>
+        <!-- /.box-footer -->
+    </form>
+</div>
+<script>
+    var form =null;
+    var uses = '${use?default(0)}',use=0;
+    if(uses != 0){
+    	use = JSON.parse(uses);
+    }
+    var zfid="${zfid?default(0)}";
+    var gclid="${gclid?default(0)}";
+    var lx="${lx?default(0)}";
+    var type="${type}";
+    var rgzje="${rgzje?default(0)}";
+    var rgkzf = "${rgkzf?default(0)}";
+    var jxzje="${jxzje?default(0)}";
+    var jxkzf = "${jxkzf?default(0)}";
+    var clzje="${clzje?default(0)}";
+    var clkzf = "${clkzf?default(0)}";
+    debugger
+    $(function() {
+        //初始化控件
+        form=$("#contract-form").form();
+        //数据校验
+        $("#contract-form").bootstrapValidator({
+            message : '请输入有效值',
+            feedbackIcons : {
+                valid : 'glyphicon glyphicon-ok',
+                invalid : 'glyphicon glyphicon-remove',
+                validating : 'glyphicon glyphicon-refresh'
+            },
+            submitHandler : function() {
+                modals.confirm('确认支付？', function() {
+                    //Save Data，对应'submit-提交'
+                    var params = form.getFormSimpleData();
+                    var zf = $("#payMoney").val();
+                	var kzf = $("#kzf").val();
+                	if(parseFloat(zf)>parseFloat(kzf)){
+                		modals.info("支付金额不能大于可支付金额");
+                		$("#payMoney").val("");
+                		return false;
+                	}
+                	var url = "";
+                	if(zfid!=0){
+                		url=basePath + '/volumepay/updatePayInfo?zfid='+zfid;
+                	}else{
+                		url = basePath+'/volumepay/doPay?gclid='+gclid
+                	}
+                    	ajaxPost(url, params, function(data) {
+                            if(data.success){
+                            	modals.hideWin(winId);
+                            	volumeTable.reloadData();
+                                modals.info("保存成功");
+                                
+                            }                
+                        }); 
+                });
+            },
+            fields : {
+            	payWay : {
+                    validators : {
+                        notEmpty : {
+                            message : '请选择付款方式'
+                        }
+                    }
+                },
+                fzrId : {
+                    validators : {
+                        notEmpty : {
+                            message : '请选择负责人'
+                        }
+                    }
+                },
+                content : {
+                    validators : {
+                        notEmpty : {
+                            message : '请输入内容及用途'
+                        }
+                    }
+                },
+                rgmoney:{
+                	validators : {
+                        notEmpty : {
+                            message : '请输入人工支付金额'
+                        }
+                    }
+                },
+                clmoney:{
+                	validators : {
+                        notEmpty : {
+                            message : '请输入材料支付金额'
+                        }
+                    }
+                },
+                jxmoney:{
+                	validators : {
+                        notEmpty : {
+                            message : '请输入机械支付金额'
+                        }
+                    }
+                },
+                skf:{
+                	validators : {
+                        notEmpty : {
+                            message : '请输入收款方'
+                        }
+                    }
+                }
+            }
+        });
+        form.initComponent();
+        if(use != 0){
+            for (var i = 0, len = use.length; i < len; i++) {
+                var u = use[i];
+                $('#fzrId').append("<option value='" + u.id + "'>" + u.name + "</option>");
+            }
+            $(".select2").select2();
+        }
+        if(lx=="look"){
+        	$('input,select,textarea',$('form[name="contract-form"]')).attr('disabled',true);
+        	$("#save").css("display","none");
+        }
+        load();
+        
+        
+    });
+    function load(){
+    	var url="";
+    	if(lx!=0){
+        	url = basePath+'/volumepay/lookZfxx?zfid='+zfid
+        	ajaxPost(url, {}, function(data) {
+                formdata = data.data;
+                form.initFormData(formdata); 
+            }); 
+    	}else{//新增
+    		$("#payType").val(type);
+    		var bm = "${bm}";
+    		$("#department").val(bm);
+    		$("#rgmoney").val(rgkzf);
+    		$("#jxmoney").val(jxkzf);
+    		$("#clmoney").val(clkzf);
+    		var zje = parseFloat(rgkzf)+parseFloat(jxkzf)+parseFloat(clkzf);
+    		$("#payMoney").val(zje);
+    	}
+    	$("#edith5").html("<p>人工费总额："+rgzje+"，可支付："+rgkzf+"</p><p>材料费总额："+clzje+"，可支付："+clkzf+"</p><p>机械费总额："+jxzje+"，可支付："+jxkzf+"</p>");
+    }
+    function resetForm(){
+        form.clearForm();
+        $("#contract-form").data('bootstrapValidator').resetForm();
+    }
+   function formatFloat(f, digit) {
+        var m = Math.pow(10, digit);
+        return Math.round(f * m, 10) / m;
+    }
+
+	
+</script>

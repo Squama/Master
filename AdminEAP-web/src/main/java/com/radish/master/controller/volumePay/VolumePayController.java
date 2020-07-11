@@ -113,6 +113,16 @@ public class VolumePayController {
 		}
 		return prefix+"payList";
 	}
+	@RequestMapping("/payListBGBL")
+	public String payListBGBL(HttpServletRequest request){
+		Arith air = new Arith();
+		String gclid = request.getParameter("gclid");
+		String type = request.getParameter("type");
+		request.setAttribute("gclid", gclid);
+		request.setAttribute("type", type);
+		request.setAttribute("zdr", SecurityUtil.getUserId());
+		return prefix+"payListBGBL";
+	}
 	@RequestMapping("/addPayInfo")//非人工支付
 	public String addPayInfo(HttpServletRequest request){
 		Arith air = new Arith();
@@ -208,6 +218,62 @@ public class VolumePayController {
 		
 		
 		return prefix+"addPayIndexRg";
+	}
+	@RequestMapping("/addPayInfoBGBL")//包工包料
+	public String addPayInfoBGBL(HttpServletRequest request){
+		Arith air = new Arith();
+//		List<User> ul1 = baseService.findMapBySql("select u.name name ,u.id id from tbl_user u where  u.audit_status = 10", new Object[]{}, new Type[]{StringType.INSTANCE}, User.class);
+		List<Worker> ul1 = baseService.findMapBySql("select u.name name ,u.id id from tbl_worker u ", new Object[]{}, new Type[]{StringType.INSTANCE}, Worker.class);
+		request.setAttribute("use", JSONArray.toJSONString(ul1));
+		String gclid = request.getParameter("gclid");
+		String type = request.getParameter("type");
+		request.setAttribute("gclid", gclid);
+		request.setAttribute("type", type);
+		
+		String zfid = request.getParameter("zfid");
+		String lx = request.getParameter("lx");
+		request.setAttribute("zfid", zfid);
+		request.setAttribute("lx", lx);
+		
+		//算出总金额和可支付金额
+		ProjectVolume pv = baseService.get(ProjectVolume.class, gclid);
+		Labor ht = baseService.get(Labor.class, pv.getLaborID());
+		request.setAttribute("bm", pv.getProjectName()+"--"+ht.getConstructionTeam());
+		String sql = " select * from tbl_volumePay where volumeId='"+gclid+"' and status<>'40'";
+		List<VolumePay> zfs = baseService.findBySql(sql, VolumePay.class);
+		double rgzje = 0.0;
+		double jxzje = 0.0;
+		double clzje = 0.0;
+		
+		rgzje = Double.valueOf(pv.getFinalLabour());
+		if(pv.getFinalDebit()!=null){
+			rgzje = air.sub(rgzje, Double.valueOf(pv.getFinalDebit()));
+		}
+		jxzje = Double.valueOf(pv.getFinalMech());
+		if(pv.getFinalDebitjx()!=null){
+			jxzje = air.sub(jxzje, Double.valueOf(pv.getFinalDebitjx()));
+		}
+		clzje = Double.valueOf(pv.getFinalMat());
+		if(pv.getFinalDebitcl()!=null){
+			clzje = air.sub(clzje, Double.valueOf(pv.getFinalDebitcl()));
+		}
+		
+		double rgkzf = rgzje;
+		double clkzf = clzje;
+		double jxkzf = jxzje;
+
+		for(VolumePay zf:zfs){
+			rgkzf = air.sub(rgkzf, Double.valueOf(zf.getRgmoney()));
+			clkzf = air.sub(clkzf, Double.valueOf(zf.getClmoney()));
+			jxkzf = air.sub(jxkzf, Double.valueOf(zf.getJxmoney()));
+		}
+		request.setAttribute("rgzje", rgzje+"");
+		request.setAttribute("rgkzf", rgkzf+"");
+		request.setAttribute("clzje", clzje+"");
+		request.setAttribute("clkzf", clkzf+"");
+		request.setAttribute("jxzje", jxzje+"");
+		request.setAttribute("jxkzf", jxkzf+"");
+		return prefix+"addPayIndexBGBL";
 	}
 	
 	@RequestMapping("/auidLook/{id}")//审核查看页

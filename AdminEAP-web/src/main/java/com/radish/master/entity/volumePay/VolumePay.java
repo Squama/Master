@@ -86,6 +86,19 @@ public class VolumePay implements Serializable {
     @Header(name = "收款方")
     @Column(name = "skf")
     private String skf;
+    
+    @Header(name = "人工支付")
+    @Column(name = "rgmoney")
+    private String rgmoney;
+    
+    @Header(name = "机械支付")
+    @Column(name = "jxmoney")
+    private String jxmoney;
+    
+    @Header(name = "材料支付")
+    @Column(name = "clmoney")
+    private String clmoney;
+    
 	public String getId() {
 		return id;
 	}
@@ -196,6 +209,30 @@ public class VolumePay implements Serializable {
 
 	public void setSkf(String skf) {
 		this.skf = skf;
+	}
+
+	public String getRgmoney() {
+		return rgmoney;
+	}
+
+	public void setRgmoney(String rgmoney) {
+		this.rgmoney = rgmoney;
+	}
+
+	public String getJxmoney() {
+		return jxmoney;
+	}
+
+	public void setJxmoney(String jxmoney) {
+		this.jxmoney = jxmoney;
+	}
+
+	public String getClmoney() {
+		return clmoney;
+	}
+
+	public void setClmoney(String clmoney) {
+		this.clmoney = clmoney;
 	}
 
 	
