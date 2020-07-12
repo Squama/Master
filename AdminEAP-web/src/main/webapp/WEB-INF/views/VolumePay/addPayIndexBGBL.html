@@ -45,14 +45,14 @@
            		<div class="form-group">
 					<label  for="zje" class="col-sm-3 control-label">人工支付</label>
 					<div class=" col-sm-8">
-						<input class="form-control " id="rgmoney" name="rgmoney"  >
+						<input class="form-control " id="rgmoney" name="rgmoney"  onblur="computerMoney()">
 				
 					</div>
 				</div>
 				<div class="form-group">
 					<label  for="zje" class="col-sm-3 control-label">机械支付</label>
 					<div class=" col-sm-8">
-						<input class="form-control " id="jxmoney" name="jxmoney" >
+						<input class="form-control " id="jxmoney" name="jxmoney"  onblur="computerMoney()">
 				
 					</div>
 				</div>
@@ -83,7 +83,7 @@
                 <div class="form-group">
 					<label  for="kzf" class="col-sm-3 control-label">材料支付</label>
 					<div class=" col-sm-8">
-						<input class="form-control " id="clmoney" name="clmoney"  >
+						<input class="form-control " id="clmoney" name="clmoney"  onblur="computerMoney()">
 				
 					</div>
 				</div>
@@ -160,13 +160,29 @@
                 modals.confirm('确认支付？', function() {
                     //Save Data，对应'submit-提交'
                     var params = form.getFormSimpleData();
-                    var zf = $("#payMoney").val();
-                	var kzf = $("#kzf").val();
-                	if(parseFloat(zf)>parseFloat(kzf)){
-                		modals.info("支付金额不能大于可支付金额");
-                		$("#payMoney").val("");
+                    var rgmoney = $("#rgmoney").val();
+                    var clmoney = $("#clmoney").val();
+                    var jxmoney = $("#jxmoney").val();
+                	if(parseFloat(rgmoney)>parseFloat(rgkzf)){
+                		modals.info("人工支付金额不能大于人工可支付金额");
+                		$("#rgmoney").val("");
                 		return false;
                 	}
+                	if(parseFloat(clmoney)>parseFloat(clkzf)){
+                		modals.info("材料支付金额不能大于材料可支付金额");
+                		$("#clmoney").val("");
+                		return false;
+                	}
+                	if(parseFloat(jxmoney)>parseFloat(jxkzf)){
+                		modals.info("机械支付金额不能大于机械可支付金额");
+                		$("#jxmoney").val("");
+                		return false;
+                	}
+                	var payMoney = $("#payMoney").val();
+                	if(parseFloat(payMoney)<=0){
+                		modals.info("支付总额小于等于0元，不可支付");
+                		return false;
+                    }
                 	var url = "";
                 	if(zfid!=0){
                 		url=basePath + '/volumepay/updatePayInfo?zfid='+zfid;
@@ -279,6 +295,50 @@
         var m = Math.pow(10, digit);
         return Math.round(f * m, 10) / m;
     }
+	function computerMoney(){
+		var rgmoney = $("#rgmoney").val();
+        var clmoney = $("#clmoney").val();
+        var jxmoney = $("#jxmoney").val();
 
+		if(!rgmoney){
+			rgmoney = "0"
+		}
+		if(!clmoney){
+			clmoney = "0"
+		}
+		if(!jxmoney){
+			jxmoney = "0"
+		}
+		if(isNaN(rgmoney)){
+			rgmoney = "0"
+			$("#rgmoney").val("0");
+		}
+		if(isNaN(clmoney)){
+			clmoney = "0"
+			$("#clmoney").val("0");
+		}
+		if(isNaN(jxmoney)){
+			jxmoney = "0"
+			$("#jxmoney").val("0");
+		}
+
+		if(parseFloat(rgmoney)>parseFloat(rgkzf)){
+    		modals.info("人工支付金额不能大于人工可支付金额");
+    		$("#rgmoney").val(rgkzf);
+    		rgmoney = rgkzf;
+    	}
+    	if(parseFloat(clmoney)>parseFloat(clkzf)){
+    		modals.info("材料支付金额不能大于材料可支付金额");
+    		$("#clmoney").val(clkzf);
+    		clmoney = clkzf;
+    	}
+    	if(parseFloat(jxmoney)>parseFloat(jxkzf)){
+    		modals.info("机械支付金额不能大于机械可支付金额");
+    		$("#jxmoney").val(jxkzf);
+    		jxmoney = jxkzf;
+    	}
+		var zje = parseFloat(rgmoney) + parseFloat(clmoney) + parseFloat(jxmoney);
+		$("#payMoney").val(zje);
+	}
 	
 </script>

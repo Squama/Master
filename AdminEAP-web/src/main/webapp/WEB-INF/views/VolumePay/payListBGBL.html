@@ -139,7 +139,7 @@
                  winId:winId,
                  title:'支付信息详情',
                  width:'800px',
-                 url:basePath+"/volumepay/addPayInfo?zfid="+rowId+"&&type="+type+"&&gclid="+gclid+"&&lx=look",
+                 url:basePath+"/volumepay/addPayInfoBGBL?zfid="+rowId+"&&type="+type+"&&gclid="+gclid+"&&lx=look",
                  hideFunc:function(){
                 	 volumeTable.reloadData();
                  }
@@ -175,7 +175,7 @@
             	 modals.info('该状态不可打印');
                  return false;
              }
-             var url = basePath+"/ureport/preview?_u=file:volumePay.ureport.xml&_t=1,5&id="+rowId+"&zdr="+zdr;
+             var url = basePath+"/ureport/preview?_u=file:volumePayBGBL.ureport.xml&_t=1,5&id="+rowId+"&zdr="+zdr;
         	 	window.open(url);
         	 break;
          case 'xq':

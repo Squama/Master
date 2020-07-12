@@ -51,6 +51,9 @@ public class VolumePayTaskCompleteListener implements TaskListener {
              
              List<ProjectVolume> zzs = new ArrayList<ProjectVolume>();
              double zje = 0.0;
+             double rgzje = 0.0;
+     		double clzje = 0.0;
+     		double jxzje = 0.0;
              String gclid = zf.getVolumeId();
              if("10".equals(zf.getPayType())){//人工
             	
@@ -72,14 +75,36 @@ public class VolumePayTaskCompleteListener implements TaskListener {
      			ProjectVolume gcl = baseService.get(ProjectVolume.class, gclid);
      			if("20".equals(zf.getPayType())){//机械
                 	zje = ari.add(zje, Double.valueOf(gcl.getFinalMech()));
+                	if(gcl.getFinalDebitjx()!=null){
+        				zje = ari.sub(zje, Double.valueOf(gcl.getFinalDebitjx()));
+        			}
                 }else if("30".equals(zf.getPayType())){//材料
                 	zje = ari.add(zje,Double.valueOf(gcl.getFinalMat()));
+                	if(gcl.getFinalDebitcl()!=null){
+        				zje = ari.sub(zje, Double.valueOf(gcl.getFinalDebitcl()));
+        			}
                 }else if("40".equals(zf.getPayType())){//包公包料
-                	zje = ari.add(zje,Double.valueOf(gcl.getFinalPack()));
+                	rgzje = Double.valueOf(gcl.getFinalLabour());
+        			if(gcl.getFinalDebit()!=null){
+        				rgzje = ari.sub(rgzje, Double.valueOf(gcl.getFinalDebit()));
+        			}
+        			
+        			clzje = Double.valueOf(gcl.getFinalMat());
+        			if(gcl.getFinalDebitcl()!=null){
+        				clzje = ari.sub(clzje, Double.valueOf(gcl.getFinalDebitcl()));
+        			}
+        			
+        			jxzje = Double.valueOf(gcl.getFinalMech());
+        			if(gcl.getFinalDebitjx()!=null){
+        				jxzje = ari.sub(jxzje, Double.valueOf(gcl.getFinalDebitjx()));
+        			}
                 }
      			zzs.add(gcl);
      		}
              Double yzje = zje;
+             double rgzfs =0.0;
+ 	   		double clzfs = 0.0;
+ 	   		double jxzfs = 0.0;
              //计算是否已经完全支付，并修改工程量的状态
              if("10".equals(zf.getPayType())){
             	 String sql = " select * from tbl_volumePay where volumeId='"+zf.getVolumeId()+"' and payType='10' and status='30'";
@@ -100,63 +125,90 @@ public class VolumePayTaskCompleteListener implements TaskListener {
          			zje = ari.sub(zje, Double.valueOf(z.getPayMoney()));
          		}
              }else if("40".equals(zf.getPayType())){//材料
-            	 String sql = " select * from tbl_volumePay where volumeId='"+zf.getVolumeId()+"' and payType='40' and status='30'";
+            	 String sql = " select * from tbl_volumePay where volumeId='"+zf.getVolumeId()+"'  and status='30'";
           		List<VolumePay> zfs = baseService.findBySql(sql, VolumePay.class);
-          		for(VolumePay z:zfs){
-         			zje = ari.sub(zje, Double.valueOf(z.getPayMoney()));
-         		}
+    	   		for(VolumePay bgbl : zfs){
+    	   			rgzfs =ari.add(rgzfs, Double.valueOf(bgbl.getRgmoney()));
+    	   			clzfs =ari.add(clzfs, Double.valueOf(bgbl.getClmoney()));
+    	   			jxzfs =ari.add(jxzfs, Double.valueOf(bgbl.getJxmoney()));
+    	   		}
              }
              
              if("true".equalsIgnoreCase(delegateTask.getVariable("approved").toString())){
             	 zf.setStatus("30");
             	 zje = ari.sub(zje, Double.valueOf(zf.getPayMoney()));
+            	 if("40".equals(zf.getPayType())){//材料
+    	   			rgzfs =ari.add(rgzfs, Double.valueOf(zf.getRgmoney()));
+    	   			clzfs =ari.add(clzfs, Double.valueOf(zf.getClmoney()));
+    	   			jxzfs =ari.add(jxzfs, Double.valueOf(zf.getJxmoney()));
+                 }
              }else if("false".equalsIgnoreCase(delegateTask.getVariable("approved").toString())){
             	 String suggestion = delegateTask.getVariable("suggestion").toString();
             	 zf.setStatus("40");
             	 zf.setRebutReason(suggestion);
              }
-             
-             if(zje>0&&zje<yzje){
-       			for(ProjectVolume g:zzs){
-       				if("10".equals(zf.getPayType())){
-         				g.setLabourStatus("10");
-                    }else if("20".equals(zf.getPayType())){//机械
-                    	g.setMechStatus("10");
-                    }else if("30".equals(zf.getPayType())){//材料
-                    	g.setMatStatus("10");
-                    }else if("40".equals(zf.getPayType())){//包工包料
-                    	g.setPackStatus("10");
-                    }
-       				
-       				baseService.update(g);
-       			}
-       		}else if(zje==0){
-       			for(ProjectVolume g:zzs){
-       				if("10".equals(zf.getPayType())){
-         				g.setLabourStatus("20");
-                    }else if("20".equals(zf.getPayType())){//机械
-                    	g.setMechStatus("20");
-                    }else if("30".equals(zf.getPayType())){//材料
-                    	g.setMatStatus("20");
-                    }else if("40".equals(zf.getPayType())){//包工包料
-                    	g.setPackStatus("20");
-                    }
-       				baseService.update(g);
-       			}
-       		}else{
-       			for(ProjectVolume g:zzs){
-       				if("10".equals(zf.getPayType())){
-         				g.setLabourStatus(null);
-                    }else if("20".equals(zf.getPayType())){//机械
-                    	g.setMechStatus(null);
-                    }else if("30".equals(zf.getPayType())){//材料
-                    	g.setMatStatus(null);
-                    }else if("40".equals(zf.getPayType())){//包工包料
-                    	g.setPackStatus(null);
-                    }
-       				baseService.update(g);
-       			}
-       		}
+             if("40".equals(zf.getPayType())){//包工包料算法
+            	//计算是否完全支付完
+	        	 for(ProjectVolume g:zzs){
+	        		 if(rgzfs>=rgzje){
+	      	   			g.setLabourStatus("20");
+	      	   		}else if(rgzfs>0&&rgzfs<rgzje){
+	      	   			g.setLabourStatus("10");
+	      	   		}else{
+	      	   			g.setLabourStatus(null);
+	      	   		}
+	      	   		if(clzfs>=clzje){
+	      	   			g.setMatStatus("20");
+	      	   		}else if(clzfs>0&&clzfs<clzje){
+	      	   			g.setMatStatus("10");
+	      	   		}else{
+	      	   			g.setMatStatus(null);
+	      	   		}
+	      	   		if(jxzfs>=jxzje){
+	      	   			g.setMechStatus("20");
+	      	   		}else if(jxzfs>0&&jxzfs<jxzje){
+	      	   			g.setMechStatus("10");
+	      	   		}else{
+	      	   			g.setMechStatus(null);
+	      	   		}
+	      	   		baseService.update(g);
+	        	 }
+             }else{
+            	 if(zje>0&&zje<yzje){
+            			for(ProjectVolume g:zzs){
+            				if("10".equals(zf.getPayType())){
+              				g.setLabourStatus("10");
+                         }else if("20".equals(zf.getPayType())){//机械
+                         	g.setMechStatus("10");
+                         }else if("30".equals(zf.getPayType())){//材料
+                         	g.setMatStatus("10");
+                         }
+            				baseService.update(g);
+            			}
+            		}else if(zje==0){
+            			for(ProjectVolume g:zzs){
+            				if("10".equals(zf.getPayType())){
+              				g.setLabourStatus("20");
+                         }else if("20".equals(zf.getPayType())){//机械
+                         	g.setMechStatus("20");
+                         }else if("30".equals(zf.getPayType())){//材料
+                         	g.setMatStatus("20");
+                         }
+            				baseService.update(g);
+            			}
+            		}else{
+            			for(ProjectVolume g:zzs){
+            				if("10".equals(zf.getPayType())){
+              				g.setLabourStatus(null);
+                         }else if("20".equals(zf.getPayType())){//机械
+                         	g.setMechStatus(null);
+                         }else if("30".equals(zf.getPayType())){//材料
+                         	g.setMatStatus(null);
+                         }
+            				baseService.update(g);
+            			}
+            		}
+             }
              baseService.save(zf);
              
              

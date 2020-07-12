@@ -1,5 +1,6 @@
 package com.radish.master.controller.volumePay;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -240,6 +241,9 @@ public class VolumePayController {
 		Labor ht = baseService.get(Labor.class, pv.getLaborID());
 		request.setAttribute("bm", pv.getProjectName()+"--"+ht.getConstructionTeam());
 		String sql = " select * from tbl_volumePay where volumeId='"+gclid+"' and status<>'40'";
+		if(zfid!=null){
+			sql += " and id <> '"+zfid+"'";
+		}
 		List<VolumePay> zfs = baseService.findBySql(sql, VolumePay.class);
 		double rgzje = 0.0;
 		double jxzje = 0.0;
@@ -313,6 +317,58 @@ public class VolumePayController {
 			request.setAttribute("kzf", kzf);
 			request.setAttribute("lx", "look");
 			return prefix+"addPayIndexRg";
+		}else if("40".equals(zf.getPayType())){//包工包料
+			List<Worker> ul1 = baseService.findMapBySql("select u.name name ,u.id id from tbl_worker u ", new Object[]{}, new Type[]{StringType.INSTANCE}, Worker.class);
+			request.setAttribute("use", JSONArray.toJSONString(ul1));
+			String gclid = zf.getVolumeId();
+			String type =zf.getPayType();
+			request.setAttribute("gclid", gclid);
+			request.setAttribute("type", type);
+			
+			String zfid = id;
+			request.setAttribute("zfid", zfid);
+			request.setAttribute("lx", "look");
+			//算出总金额和可支付金额
+			ProjectVolume pv = baseService.get(ProjectVolume.class, gclid);
+			Labor ht = baseService.get(Labor.class, pv.getLaborID());
+			request.setAttribute("bm", pv.getProjectName()+"--"+ht.getConstructionTeam());
+			String sql = " select * from tbl_volumePay where volumeId='"+gclid+"' and status<>'40'";
+			if(zfid!=null){
+				sql += " and id <> '"+zfid+"'";
+			}
+			List<VolumePay> zfs = baseService.findBySql(sql, VolumePay.class);
+			double rgzje = 0.0;
+			double jxzje = 0.0;
+			double clzje = 0.0;
+			
+			rgzje = Double.valueOf(pv.getFinalLabour());
+			if(pv.getFinalDebit()!=null){
+				rgzje = air.sub(rgzje, Double.valueOf(pv.getFinalDebit()));
+			}
+			jxzje = Double.valueOf(pv.getFinalMech());
+			if(pv.getFinalDebitjx()!=null){
+				jxzje = air.sub(jxzje, Double.valueOf(pv.getFinalDebitjx()));
+			}
+			clzje = Double.valueOf(pv.getFinalMat());
+			if(pv.getFinalDebitcl()!=null){
+				clzje = air.sub(clzje, Double.valueOf(pv.getFinalDebitcl()));
+			}
+			
+			double rgkzf = rgzje;
+			double clkzf = clzje;
+			double jxkzf = jxzje;
+			for(VolumePay z:zfs){
+				rgkzf = air.sub(rgkzf, Double.valueOf(z.getRgmoney()));
+				clkzf = air.sub(clkzf, Double.valueOf(z.getClmoney()));
+				jxkzf = air.sub(jxkzf, Double.valueOf(z.getJxmoney()));
+			}
+			request.setAttribute("rgzje", rgzje+"");
+			request.setAttribute("rgkzf", rgkzf+"");
+			request.setAttribute("clzje", clzje+"");
+			request.setAttribute("clkzf", clkzf+"");
+			request.setAttribute("jxzje", jxzje+"");
+			request.setAttribute("jxkzf", jxkzf+"");
+			return prefix+"addPayIndexBGBL";
 		}else{
 //			List<User> ul1 = baseService.findMapBySql("select u.name name ,u.id id from tbl_user u where  u.audit_status = 10", new Object[]{}, new Type[]{StringType.INSTANCE}, User.class);
 			List<Worker> ul1 = baseService.findMapBySql("select u.name name ,u.id id from tbl_worker u ", new Object[]{}, new Type[]{StringType.INSTANCE}, Worker.class);
@@ -405,6 +461,13 @@ public class VolumePayController {
 		zf.setCreateDate(new Date());
 		zf.setCreateId(SecurityUtil.getUserId());
 		zf.setStatus("10");
+		if("10".equals(zf.getPayType())){
+			zf.setRgmoney(zf.getPayMoney());
+		}else if("20".equals(zf.getPayType())){
+			zf.setJxmoney(zf.getPayMoney());
+		}else if("30".equals(zf.getPayType())){
+			zf.setClmoney(zf.getPayMoney());
+		}
 		baseService.save(zf);
 		Result r = new Result();
 		r.setSuccess(true);
@@ -454,6 +517,17 @@ public class VolumePayController {
 		zf.setPayMoney(nzf.getPayMoney());
 		zf.setPayWay(nzf.getPayWay());
 		zf.setSkf(nzf.getSkf());
+		if("10".equals(zf.getPayType())){
+			zf.setRgmoney(nzf.getPayMoney());
+		}else if("20".equals(zf.getPayType())){
+			zf.setJxmoney(nzf.getPayMoney());
+		}else if("30".equals(zf.getPayType())){
+			zf.setClmoney(nzf.getPayMoney());
+		}else{
+			zf.setRgmoney(nzf.getRgmoney());
+			zf.setJxmoney(nzf.getJxmoney());
+			zf.setClmoney(nzf.getClmoney());
+		}
 		baseService.update(zf);
 		Result r = new Result();
 		r.setSuccess(true);
@@ -524,7 +598,7 @@ public class VolumePayController {
 		}else if("30".equals(bx.getPayType())){
 			content += "材料费";
 		}else if("40".equals(bx.getPayType())){
-			content += "包工包料费";
+			content += "包工包料费,其中人工费："+bx.getRgmoney()+"元，材料费："+bx.getClmoney()+"元，机械费："+bx.getJxmoney()+"元";
 		}
 		ProjectVolume gcl = baseService.get(ProjectVolume.class, bx.getVolumeId());
 		
@@ -577,6 +651,10 @@ public class VolumePayController {
 		}
 		String type = bx.getPayType();
 		double zje = 0.0;
+		
+		double rgzje = 0.0;
+		double clzje = 0.0;
+		double jxzje = 0.0;
 		if("10".equals(type)){
 			String gzid="";
 			List<SalaryVolume> gxs = baseService.findBySql("select * from tbl_salary_volume where volume_id='"+bx.getVolumeId()+"'", SalaryVolume.class);
@@ -597,49 +675,87 @@ public class VolumePayController {
 			if(gcl.getFinalDebitcl()!=null){
 				zje = arith.sub(zje, Double.valueOf(gcl.getFinalDebitcl()));
 			}
-		}else if("40".equals(type)){
-			if(gcl.getFinalPack()==null){
-				zje=0.0;
-			}else{
-				zje = Double.valueOf(gcl.getFinalPack());
+		}else if("40".equals(type)){//包工包料
+			rgzje = Double.valueOf(gcl.getFinalLabour());
+			if(gcl.getFinalDebit()!=null){
+				rgzje = arith.sub(rgzje, Double.valueOf(gcl.getFinalDebit()));
+			}
+			
+			clzje = Double.valueOf(gcl.getFinalMat());
+			if(gcl.getFinalDebitcl()!=null){
+				clzje = arith.sub(clzje, Double.valueOf(gcl.getFinalDebitcl()));
+			}
+			
+			jxzje = Double.valueOf(gcl.getFinalMech());
+			if(gcl.getFinalDebitjx()!=null){
+				jxzje = arith.sub(jxzje, Double.valueOf(gcl.getFinalDebitjx()));
 			}
 		}
-		if(zje>0&&zje>yzje){
+		if("40".equals(type)){//包工包料算法
+			//计算是否完全支付完
+			String bgblsql = " select * from tbl_volumePay where volumeId='"+gcl.getId()+"' and status='30'";
+	   		List<VolumePay> bgblzfs = baseService.findBySql(bgblsql, VolumePay.class);
+	   		double rgzfs =0.0;
+	   		double clzfs = 0.0;
+	   		double jxzfs = 0.0;
+	   		for(VolumePay bgbl : bgblzfs){
+	   			rgzfs =arith.add(rgzfs, Double.valueOf(bgbl.getRgmoney()));
+	   			clzfs =arith.add(clzfs, Double.valueOf(bgbl.getClmoney()));
+	   			jxzfs =arith.add(jxzfs, Double.valueOf(bgbl.getJxmoney()));
+	   		}
+	   		if(rgzfs>=rgzje){
+	   			gcl.setLabourStatus("20");
+	   		}else if(rgzfs>0&&rgzfs<rgzje){
+	   			gcl.setLabourStatus("10");
+	   		}else{
+	   			gcl.setLabourStatus(null);
+	   		}
+	   		if(clzfs>=clzje){
+	   			gcl.setMatStatus("20");
+	   		}else if(clzfs>0&&clzfs<clzje){
+	   			gcl.setMatStatus("10");
+	   		}else{
+	   			gcl.setMatStatus(null);
+	   		}
+	   		if(jxzfs>=jxzje){
+	   			gcl.setMechStatus("20");
+	   		}else if(jxzfs>0&&jxzfs<jxzje){
+	   			gcl.setMechStatus("10");
+	   		}else{
+	   			gcl.setMechStatus(null);
+	   		}
+	   		baseService.update(gcl);
+		}else{
+			if(yzje>0&&zje>yzje){
    				if("10".equals(bx.getPayType())){
    					gcl.setLabourStatus("10");
                 }else if("20".equals(bx.getPayType())){//机械
                 	gcl.setMechStatus("10");
                 }else if("30".equals(bx.getPayType())){//材料
                 	gcl.setMatStatus("10");
-                }else if("40".equals(bx.getPayType())){//包工包料
-                	gcl.setPackStatus("10");
                 }
    				
    				baseService.update(gcl);
-   		}else if(zje<=yzje){
-   				if("10".equals(bx.getPayType())){
-   					gcl.setLabourStatus("20");
-                }else if("20".equals(bx.getPayType())){//机械
-                	gcl.setMechStatus("20");
-                }else if("30".equals(bx.getPayType())){//材料
-                	gcl.setMatStatus("20");
-                }else if("40".equals(bx.getPayType())){//包工包料
-                	gcl.setPackStatus("20");
-                }
-   				baseService.update(gcl);
-   		}else{
-   				if("10".equals(bx.getPayType())){
-   					gcl.setLabourStatus(null);
-                }else if("20".equals(bx.getPayType())){//机械
-                	gcl.setMechStatus(null);
-                }else if("30".equals(bx.getPayType())){//材料
-                	gcl.setMatStatus(null);
-                }else if("40".equals(bx.getPayType())){//包工包料
-                	gcl.setPackStatus(null);
-                }
-   				baseService.update(gcl);
-   		}
-		
+	   		}else if(zje<=yzje){
+	   				if("10".equals(bx.getPayType())){
+	   					gcl.setLabourStatus("20");
+	                }else if("20".equals(bx.getPayType())){//机械
+	                	gcl.setMechStatus("20");
+	                }else if("30".equals(bx.getPayType())){//材料
+	                	gcl.setMatStatus("20");
+	                }
+	   				baseService.update(gcl);
+	   		}else{
+	   				if("10".equals(bx.getPayType())){
+	   					gcl.setLabourStatus(null);
+	                }else if("20".equals(bx.getPayType())){//机械
+	                	gcl.setMechStatus(null);
+	                }else if("30".equals(bx.getPayType())){//材料
+	                	gcl.setMatStatus(null);
+	                }
+	   				baseService.update(gcl);
+	   		}
+		}
 		Result r = new Result();
 		return r;
 	}
