@@ -1,5 +1,6 @@
 package com.radish.master.controller.volumePay;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -10,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -168,9 +170,14 @@ public class SalayrPayController {
 						content="门卫机修工资支付";
 					}
 				}
+				List<ProAccount> xmz = new ArrayList<ProAccount>();
+				if(j.getDeptentname()!=null){
+					xmz = baseService.find(" from ProAccount where accountName='"+j.getDeptentname()+"'");
+				}
 				
-				List<ProAccount> xmz = baseService.find(" from ProAccount where projectId='"+xmid+"'");
-				
+				if(CollectionUtils.isEmpty(xmz)){
+					xmz= baseService.find(" from ProAccount where projectId='"+xmid+"'");
+				}
 				User u = SecurityUtil.getUser();
 				//账目明细
 				ProAccountDet mx = new ProAccountDet();
@@ -185,9 +192,9 @@ public class SalayrPayController {
 				mx.setStatus("10");
 				if(xmz.size()<=0){//无账本，先生成账本
 					ProAccount zb = new ProAccount();
-					zb.setProjectId(xmid);
+					zb.setProjectId((xmz.size()+1)+"");
 					if("1".equals(xmid)){
-						zb.setAccountName("公司账本");
+						zb.setAccountName(j.getDeptentname());
 					}else{
 						zb.setAccountName(j.getProjectName());
 					}
