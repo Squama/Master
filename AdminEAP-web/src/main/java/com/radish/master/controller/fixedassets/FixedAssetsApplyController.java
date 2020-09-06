@@ -100,7 +100,7 @@ public class FixedAssetsApplyController {
     
     @RequestMapping(value="/assets/list",method = RequestMethod.GET)
     public String assetsList(HttpServletRequest request){
-        request.setAttribute("deptOptions", JSONArray.toJSONString(commonService.getDeptCombobox()));
+        request.setAttribute("deptOptions", JSONArray.toJSONString(commonService.getDepartmentCombobox()));
         return "fixedassets/apply/assets_list";
     }
     
@@ -367,7 +367,7 @@ public class FixedAssetsApplyController {
     /** 器具、工具start */
     @RequestMapping(value="/tool/list",method = RequestMethod.GET)
     public String toolList(HttpServletRequest request){
-        request.setAttribute("deptOptions", JSONArray.toJSONString(commonService.getDeptCombobox()));
+        request.setAttribute("deptOptions", JSONArray.toJSONString(commonService.getDepartmentCombobox()));
         return "fixedassets/apply/tool_list";
     }
     
@@ -404,7 +404,7 @@ public class FixedAssetsApplyController {
     /** 办公用品start */
     @RequestMapping(value="/office/list",method = RequestMethod.GET)
     public String officeList(HttpServletRequest request){
-        request.setAttribute("deptOptions", JSONArray.toJSONString(commonService.getDeptCombobox()));
+        request.setAttribute("deptOptions", JSONArray.toJSONString(commonService.getDepartmentCombobox()));
         return "fixedassets/apply/office_list";
     }
     

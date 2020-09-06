@@ -33,10 +33,8 @@
                                 <option selected="selected" value="">选择一个项目</option>
                                 </select>
                                 <!-- <input type="search" placeholder="请输入预算编号" title="预算编号" name="s.budget_ID" class="form-control" id="budget_id" operator="like" likeOption="true"> -->
-                                <div class="input-group">
-                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                                    <input type="search" placeholder="时间之后入库" title="入库日期" name="storage_time" data-flag="datepicker" class="form-control" data-format="yyyy-mm-dd" style =" width:20%">
-                                </div>
+                               <input type="search" placeholder="开始时间" title="入库日期" name="storage_time" data-flag="datepicker" class="form-control" data-format="yyyy-mm-dd" style =" width:10%"  operator="between">
+                               	——<input type="search" placeholder="结束时间" title="入库日期" name="storage_time" data-flag="datepicker" class="form-control" data-format="yyyy-mm-dd" style =" width:10%"  operator="between">
                                 <div class="btn-group">
                                     <button type="button" class="btn btn-primary" data-btn-type="search">查询</button>
                                     <button type="button" class="btn btn-default" data-btn-type="reset">重置</button>

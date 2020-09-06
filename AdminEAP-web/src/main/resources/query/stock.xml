@@ -13,7 +13,6 @@
 		    </sql>
 		    <column key="rowIndex" header="序号" width="50" allowSort="false"/>
 	        <column key="id" header="库存编号" classType="String" allowSort="true" width="150" hidden="true"/>
-	        <column key="projectCode" header="所属项目编号" classType="String" width="150"/>
 		    <column key="projectName" header="所属项目" classType="String" allowSort="true" width="150"/>
 	        <column key="matID" header="物料编号" classType="String" width="150" />
 			<column key="matName" header="物料名" classType="String" width="150"/>
@@ -36,7 +35,6 @@
 		</sql>
 		<column key="rowIndex" header="序号" width="50" allowSort="false"/>
 		<column key="id" header="库存编号" classType="String" allowSort="true" width="150" hidden="true"/>
-		<column key="projectCode" header="所属项目编号" classType="String" width="150"/>
 		<column key="projectName" header="所属项目" classType="String" allowSort="true" width="150"/>
 		<column key="matID" header="物料编号" classType="String" width="150" />
 		<column key="matName" header="物料名" classType="String" width="150"/>

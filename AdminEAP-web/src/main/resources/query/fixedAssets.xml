@@ -49,6 +49,7 @@
         <column key="id" hidden="true" header="id" width="80"/>
         <column key="name" header="名称" allowSort="true" width="150"/>
         <column key="englishName" header="英文名称" width="150"/>
+        <column key="keepedDeptName" header="保管部门" width="150"/>
         <column key="model" header="型号" width="150"/>
         <column key="belongedStock" header="所属库存" width="150"/>
         <column key="price" header="单价" width="150"/>

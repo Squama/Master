@@ -185,7 +185,7 @@ public class PurchaseServiceImpl extends BaseServiceImpl implements PurchaseServ
         params.put("sourceProjectID", sourceProjectID);
         params.put("targetProjectID", targetProjectID);
         params.put("purchaseID", purchaseID);
-        return this.get("from Dispatch where sourceProjectID=:sourceProjectID AND targetProjectID=:targetProjectID AND purchaseID=:purchaseID", params);
+        return this.get("from Dispatch where sourceProjectID=:sourceProjectID AND targetProjectID=:targetProjectID AND purchaseID=:purchaseID ", params);
     }
 
     @Override
@@ -193,7 +193,7 @@ public class PurchaseServiceImpl extends BaseServiceImpl implements PurchaseServ
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("dispatchID", dispatchID);
         params.put("purchaseDetID", purchaseDetID);
-        return this.find("from DispatchDetail where dispatchID = :dispatchID AND purchaseDetID = : purchaseDetID", params);
+        return this.find("from DispatchDetail where dispatchID = :dispatchID AND purchaseDetID = :purchaseDetID", params);
     }
 
     @Override
@@ -202,7 +202,7 @@ public class PurchaseServiceImpl extends BaseServiceImpl implements PurchaseServ
         params.put("purchaseID", purchaseID);
         params.put("regionID", regionID);
         params.put("MatNumber", MatNumber);
-        return this.get("from PurchaseDet where purchaseID=:purchaseID AND regionID=:regionID AND MatNumber=:MatNumber AND stockType <> '2'", params);
+        return this.get("from PurchaseDet where purchaseID=:purchaseID AND regionID=:regionID AND matNumber=:MatNumber AND stockType <> '2'", params);
     }
 
     @Override
@@ -285,7 +285,7 @@ public class PurchaseServiceImpl extends BaseServiceImpl implements PurchaseServ
         Dispatch dispatch = this.getDispatchByProAndPur("4028828e61d54c2a0161e4f72db3010c", purchase.getProjectID(), purchaseDetOld.getPurchaseID());
 
         List<DispatchDetail> detailList = this.getDispatchDetailList(dispatch.getId(), purchaseDetOld.getId());
-
+        List<DispatchDetail> allmx = this.find("from DispatchDetail where dispatchID = '"+dispatch.getId()+"'");
         List<StockChannel> list = new ArrayList<StockChannel>();
 
         for (DispatchDetail detail : detailList) {
@@ -294,20 +294,32 @@ public class PurchaseServiceImpl extends BaseServiceImpl implements PurchaseServ
             channel.setProject_id(dispatch.getSourceProjectID());
             channel.setMat_id(purchaseDetOld.getMatNumber());
             channel.setFrozen_num(detail.getQuantity());
+            list.add(channel);
+            this.delete(channel);
+        }
+        if(allmx.size()==detailList.size()){
+        	this.delete(dispatch);
         }
 
         if (stockService.thawStockChannel(list)) {
             // 加回原来的
             PurchaseDet detOriginal = this.getPurchaseDetOri(purchaseDetOld.getPurchaseID(), purchaseDetOld.getRegionID(), purchaseDetOld.getMatNumber());
-            BigDecimal numCancel = new BigDecimal(purchaseDetOld.getQuantity());
-            detOriginal.setQuantity(numCancel.add(new BigDecimal(detOriginal.getQuantity())).doubleValue());
-            detOriginal.setSurplusQuantity(detOriginal.getQuantity());
-
-            this.update(detOriginal);
-            // 删掉现在的
-
-            this.delete(purchaseDetOld);
-
+            if(detOriginal!=null){
+            	BigDecimal numCancel = new BigDecimal(purchaseDetOld.getQuantity());
+                detOriginal.setQuantity(numCancel.add(new BigDecimal(detOriginal.getQuantity())).doubleValue());
+                detOriginal.setSurplusQuantity(detOriginal.getQuantity());
+                detOriginal.setChannelID("");
+                detOriginal.setChannelName("");
+                detOriginal.setStockType("");
+                this.update(detOriginal);
+                // 删掉现在的
+                this.delete(purchaseDetOld);
+            }else{
+            	purchaseDetOld.setChannelID("");
+                purchaseDetOld.setChannelName("");
+                purchaseDetOld.setStockType("");
+                this.update(purchaseDetOld);
+            }
         }
     }
 

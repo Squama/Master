@@ -34,7 +34,7 @@ public class FixedAssetsStockController {
 
     @RequestMapping(value="/list",method = RequestMethod.GET)
     public String assetsList(HttpServletRequest request){
-        request.setAttribute("deptOptions", JSONArray.toJSONString(commonService.getDeptCombobox()));
+        request.setAttribute("deptOptions", JSONArray.toJSONString(commonService.getDepartmentCombobox()));
         return "fixedassets/stock/list";
     }
     
