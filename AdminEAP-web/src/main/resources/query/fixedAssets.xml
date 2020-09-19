@@ -44,7 +44,15 @@
         <column key="channelName" header="供应商" width="150"/>
     </query>
     
-    <query id="fixedassets_stock_list" key="id" tableName="库存查看表" className="com.radish.master.entity.fixedassets.FixedAssetsStk" widthType="px" pageSize="20">
+    <query id="fixedassets_stock_list" key="id" tableName="库存查看表"  widthType="px" pageSize="20">
+        <sql>
+            <![CDATA[
+              select a.id,a.name,a.english_name englishName,
+              a.keeped_dept_name keepedDeptName,a.model,a.belonged_stock belongedStock,
+              a.price,a.quantity,a.quantity_avl quantityAvl,a.vendor,a.keeped_dept_id keepedDeptID 
+               from tbl_fixedassets_stk a where  quantity_avl>0.0 and 1=1
+            ]]>
+        </sql>
         <column key="rowIndex" header="序号" width="80"/>
         <column key="id" hidden="true" header="id" width="80"/>
         <column key="name" header="名称" allowSort="true" width="150"/>

@@ -56,7 +56,7 @@ public class FixedAssetsAllocateController {
     public String assetsAdd(HttpServletRequest request){
     	request.setAttribute("number", System.currentTimeMillis()+"");//先用时间戳
         request.setAttribute("operatorName", SecurityUtil.getUser().getName());
-        request.setAttribute("stkOptions", JSONArray.toJSONString(fixedAssetsService.getAllocateAssetsCombobox()));
+        request.setAttribute("stkOptions", JSONArray.toJSONString(fixedAssetsService.getAllocateAssetsComboboxInfo()));
 //        request.setAttribute("deptOptions", JSONArray.toJSONString(fixedAssetsService.getDeptNameCombobox()));
         request.setAttribute("deptOptions", JSONArray.toJSONString(fixedAssetsService.getDeptNameComboboxByXm()));
         request.setAttribute("userOptions", JSONArray.toJSONString(commonService.getUserCombobox()));
@@ -68,7 +68,7 @@ public class FixedAssetsAllocateController {
     public String assetsEdit(String id, HttpServletRequest request){
         request.setAttribute("id", id);
         request.setAttribute("operatorName", SecurityUtil.getUser().getName());
-        request.setAttribute("stkOptions", JSONArray.toJSONString(fixedAssetsService.getAllocateAssetsCombobox()));
+        request.setAttribute("stkOptions", JSONArray.toJSONString(fixedAssetsService.getAllocateAssetsComboboxInfo()));
 //        request.setAttribute("deptOptions", JSONArray.toJSONString(fixedAssetsService.getDeptNameCombobox()));
         request.setAttribute("deptOptions", JSONArray.toJSONString(fixedAssetsService.getDeptNameComboboxByXm()));
         request.setAttribute("userOptions", JSONArray.toJSONString(commonService.getUserCombobox()));
@@ -87,7 +87,7 @@ public class FixedAssetsAllocateController {
     @ResponseBody
     public Result getStkDet(String stkID){
 //    	return new Result(true, JSONArray.toJSONString(fixedAssetsService.getAllocateStkExitsCombobox(stkID)));
-        return new Result(true, JSONArray.toJSONString(fixedAssetsService.getAllocateStkExitsComboboxByXm(stkID)));
+        return new Result(true, JSONArray.toJSONString(fixedAssetsService.getAllocateStkExitsComboboxByAll(stkID)));
     }
     
     @RequestMapping(method = RequestMethod.POST, value="/save")

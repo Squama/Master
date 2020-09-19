@@ -73,15 +73,25 @@
                                 </div>
                             </div> 
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">目标库<span style="color:red">*</span></label>
+                                <label class="col-sm-3 control-label">目标类型<span style="color:red">*</span></label>
                                 <div class="col-sm-5">
-                                    <select id="targetStock" class="form-control select2" name="targetStock" style="width:100%;">
-                                        <option selected="selected" value="">选择目标库</option>
+                                    <select id="targetType" class="form-control select2" name="targetType" style="width:100%;">
+                                        <option selected="selected" value="10">项目</option>
+                                        <option  value="20">个人</option>
                                     </select>
                                 </div>
                             </div> 
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">目标库管理员<span style="color:red">*</span></label>
+                                <label class="col-sm-3 control-label">目标库<span style="color:red">*</span></label>
+                                <div class="col-sm-5">
+                                    <select id="targetStock1" class="form-control select2" name="targetStock" style="width:100%;">
+                                        <option selected="selected" value="">选择目标库</option>
+                                    </select>
+                                    <input type="text" class="form-control" id="targetStock2" name="targetStock" value="" disabled="disabled" > 
+                                </div>
+                            </div> 
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">目标库管理员/接收人<span style="color:red">*</span></label>
                                 <div class="col-sm-5">
                                     <select id="targetManager" class="form-control select2" name="targetManager" data-param-name="targetManagerName" style="width:100%;">
                                         <option selected="selected" value="">选择管理员</option>
@@ -170,7 +180,7 @@
         if(faOptions != 0){
             for (var i = 0, len = faOptions.length; i < len; i++) {
                 var option = faOptions[i];
-                $('#assetsStkID').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+                $('#assetsStkID').append("<option value=\"" + option.id + "\">" + option.name+"("+option.belongedStock+")" + "</option>");
             }
             
             $('#assetsStkID').select2();
@@ -202,9 +212,9 @@
         if(dpOptions != 0){
             for (var i = 0, len = dpOptions.length; i < len; i++) {
                 var option = dpOptions[i];
-                $('#targetStock').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+                $('#targetStock1').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
             }
-            $('#targetStock').select2();
+            $('#targetStock1').select2();
         }
         if(uOptions != 0){
             for (var i = 0, len = uOptions.length; i < len; i++) {
@@ -295,6 +305,17 @@
             	assetsstkform.initFormData(data);
             })
         }
+        $("#targetType").on("change",function(){
+            debugger
+          var targetType =  $(this).val();
+          if(targetType=="10"){
+			$("#targetStock2").attr("disabled",true);
+			$("#targetStock1").attr("disabled",false);
+          }else{
+        	 $("#targetStock1").attr("disabled",true);
+        	 $("#targetStock2").attr("disabled",false);
+          }
+       })
         
         //初始化控件
         assetsstkform.initComponent();

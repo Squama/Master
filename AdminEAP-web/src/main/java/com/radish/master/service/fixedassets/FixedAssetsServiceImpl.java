@@ -31,6 +31,11 @@ public class FixedAssetsServiceImpl extends BaseServiceImpl implements FixedAsse
     public List<Options> getAllocateAssetsCombobox() {
         return this.findMapBySql("select id value, name data from tbl_fixedassets_stk where fa_type IN ('10', '20')", new Object[] {}, new Type[] {}, Options.class);
     }
+	@Override
+    public List<FixedAssetsStk> getAllocateAssetsComboboxInfo() {
+//        return this.findMapBySql("select * from tbl_fixedassets_stk where fa_type IN ('10', '20')", new Object[] {}, new Type[] {}, FixedAssetsStk.class);
+        return this.find(" from FixedAssetsStk where fa_type IN ('10', '20') and quantity_avl>0.0");
+	}
 	
 	@Override
     public List<Options> getDeptNameCombobox() {
@@ -58,5 +63,12 @@ public class FixedAssetsServiceImpl extends BaseServiceImpl implements FixedAsse
         		new Object[] {stk.getName(), stk.getNorm(), stk.getUnit()}, new Type[] {StringType.INSTANCE, StringType.INSTANCE, StringType.INSTANCE}, Options.class);
 
 	}
-	
+	@Override
+	public List<Options> getAllocateStkExitsComboboxByAll(String stkID) {
+		FixedAssetsStk stk = this.get(FixedAssetsStk.class, stkID);
+		
+        return this.findMapBySql("select belonged_stock value, belonged_stock data from tbl_fixedassets_stk where fa_type IN ('10', '20') AND name=? AND norm=? AND unit=? and belonged_stock=?", 
+        		new Object[] {stk.getName(), stk.getNorm(), stk.getUnit(),stk.getBelongedStock()}, new Type[] {StringType.INSTANCE, StringType.INSTANCE, StringType.INSTANCE, StringType.INSTANCE}, Options.class);
+
+	}
 }

@@ -230,7 +230,7 @@ public class FixedAssetsPurchaseController {
                 stk.setName(purTx.getName());
                 stk.setEnglishName(purTx.getEnglishName());
                 stk.setModel(purTx.getModel());
-                stk.setBelongedStock("总库");
+                stk.setBelongedStock("易耗品请购");
                 stk.setKeepedDeptID(pur.getDeptID());
                 stk.setKeepedDeptName(pur.getDeptName());
                 stk.setNorm(purTx.getNorm());
@@ -339,7 +339,11 @@ public class FixedAssetsPurchaseController {
             stk.setName(purTx.getName());
             stk.setEnglishName(purTx.getEnglishName());
             stk.setModel(purTx.getModel());
-            stk.setBelongedStock("总库");
+            if("30".equals(pur.getFaType())){
+            	 stk.setBelongedStock("公司办公室");
+            }else{
+            	 stk.setBelongedStock("总库");
+            }
             stk.setKeepedDeptID(pur.getDeptID());
             stk.setKeepedDeptName(pur.getDeptName());
             stk.setNorm(purTx.getNorm());

@@ -8,7 +8,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -19,6 +21,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.hibernate.annotations.common.util.StringHelper;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -48,6 +51,7 @@ import com.radish.master.entity.fixedassets.FixedAssetsPur;
 import com.radish.master.entity.fixedassets.FixedAssetsPurChannel;
 import com.radish.master.entity.fixedassets.FixedAssetsPurTx;
 import com.radish.master.entity.fixedassets.FixedAssetsStk;
+import com.radish.master.entity.review.MaxNumber;
 import com.radish.master.pojo.AssetsApplyVO;
 import com.radish.master.pojo.RowEdit;
 import com.radish.master.service.CommonService;
@@ -439,7 +443,23 @@ public class FixedAssetsApplyController {
     }
     
     /** 办公用品end */
-    
+    public  String maxNum(){ 
+		List<String> result = commonService.find("select max(mat.id) from com.radish.master.entity.review.MaxNumber mat");
+		if(result.size()>0&&!"".equals(result.get(0))&&StringHelper.isNotEmpty(result.get(0))){
+			String num = result.get(0);
+			
+			MaxNumber m = new MaxNumber();
+			Integer newId = Integer.valueOf(num)+1;
+			m.setId(newId+"");
+			commonService.save(m);
+			return num;
+		}else{
+			MaxNumber m = new MaxNumber();
+			m.setId("1001");
+			commonService.save(m);
+			return "1001";
+		}
+	}
     @RequestMapping(value="/add",method = RequestMethod.GET)
     public String assetsAdd(String faType, HttpServletRequest request){
         String deptID = SecurityUtil.getUser().getDeptId();
@@ -452,6 +472,12 @@ public class FixedAssetsApplyController {
             request.setAttribute("deptName", org.getName());
         }
         request.setAttribute("faType", faType);
+        //编号
+        String str =maxNum();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyMMdd");
+        
+		String strs = sdf.format(new Date())+str;
+		request.setAttribute("number", strs);
         return "fixedassets/apply/edit";
     }
     

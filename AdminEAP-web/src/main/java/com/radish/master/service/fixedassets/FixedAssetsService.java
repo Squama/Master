@@ -6,6 +6,7 @@ package com.radish.master.service.fixedassets;
 import java.util.List;
 
 import com.cnpc.framework.base.service.BaseService;
+import com.radish.master.entity.fixedassets.FixedAssetsStk;
 import com.radish.master.pojo.Options;
 
 /**
@@ -24,6 +25,8 @@ public interface FixedAssetsService extends BaseService {
 
 	List<Options> getAllocateAssetsCombobox();
 	
+	List<FixedAssetsStk> getAllocateAssetsComboboxInfo();
+	
 	List<Options> getDeptNameCombobox();
 	
 	List<Options> getDeptNameComboboxByXm();
@@ -32,4 +35,5 @@ public interface FixedAssetsService extends BaseService {
 	
 	List<Options> getAllocateStkExitsComboboxByXm(String stkID);
 	
+	List<Options> getAllocateStkExitsComboboxByAll(String stkID);
 }

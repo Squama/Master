@@ -101,8 +101,7 @@
     $.fn.modal.Constructor.prototype.enforceFocus =function(){};
     var assetsform = $("#assets-form").form({baseEntity: false}), initData={}, faOptions=0;
     var assetsTxTable, winId = "assetsDetWin";
-    
-    var purID="${purID?default(0)}",deptID="${deptID?default(0)}",deptName="${deptName?default(0)}";
+    var purID="${purID?default(0)}",deptID="${deptID?default(0)}",deptName="${deptName?default(0)}",faType ="${faType?default(0)}",number ="${number?default(0)}" ;
     $('#purID',$('#searchDivPDet')).val(purID);
     $('#deptID',$('#assets-form')).val(deptID);
     $('#deptName',$('#assets-form')).val(deptName);
@@ -111,6 +110,15 @@
     	modals.closeWin(assetsWinId);
     	modals.error("请先为当前操作员分配部门！！");
     }
+    if(faType=="30"){//办公用品
+		$("#stock",$('#assets-form')).val("易耗品请购");
+    }else{
+    	$("#stock",$('#assets-form')).val("总库");
+    }
+    if(number!=0){
+    	$("#purNo",$('#assets-form')).val(number);	
+     }
+        
     
     var assetsEditObject = {
             deleteDetail: function (rowId) {
