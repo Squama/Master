@@ -42,6 +42,10 @@ public class CommonServiceImpl extends BaseServiceImpl implements CommonService 
     public List<Options> getAssetsCombobox(String type) {
         return this.findMapBySql("select id value, name data from tbl_fixedassets_stk where fa_type=?", new Object[] {type}, new Type[] {StringType.INSTANCE}, Options.class);
     }
+    @Override
+    public List<Options> getAssetsComboboxAndStk(String type) {
+        return this.findMapBySql("select id value, CONCAT_WS('-',name,belonged_stock) data from tbl_fixedassets_stk where fa_type=?", new Object[] {type}, new Type[] {StringType.INSTANCE}, Options.class);
+    }
     
     @Override
     public List<Options> getAssetsCombobox() {

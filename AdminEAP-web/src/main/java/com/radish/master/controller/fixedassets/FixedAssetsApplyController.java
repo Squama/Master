@@ -606,7 +606,7 @@ public class FixedAssetsApplyController {
         
         request.setAttribute("faType", faType);
         request.setAttribute("purID", purID);
-        request.setAttribute("stkOptions", JSONArray.toJSONString(commonService.getAssetsCombobox(faType)));
+        request.setAttribute("stkOptions", JSONArray.toJSONString(commonService.getAssetsComboboxAndStk(faType)));
         
         return "fixedassets/apply/recent_stk";
     }

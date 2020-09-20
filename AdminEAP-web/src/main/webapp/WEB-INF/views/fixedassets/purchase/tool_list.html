@@ -24,6 +24,7 @@
                     <input placeholder="请输名称" name="name" class="form-control" type="search" likeOption="true" operator="like"/> 
                     <div class="btn-group">
                         <button type="button" class="btn btn-primary"   data-btn-type="search">查询</button>
+                    	<button type="button" class="btn btn-success"   data-btn-type="print">打印</button>
                     </div>
                 </div>
                 <div class="box-body box-body-mobile">
@@ -43,7 +44,7 @@
     if(deptOptions != 0){
         options = JSON.parse(deptOptions);
     }
-    
+    var zdr = '${zdr?default(0)}'
     var fixedassetsObj = {
     		acceptance: function (packID) {
                 modals.confirm("即将全部入库，请确认",function(){
@@ -88,6 +89,21 @@
             }
             $("#deptID").select2();
         }
+        //绑定按钮事件
+        $("button[data-btn-type]").click(function () {
+            var action = $(this).data("btn-type");
+            var rowId = assetsTable.getSelectedRowId();
+            switch (action) {
+            case "print":
+                if(!rowId){
+                	 modals.info('请选择要打印的行');
+	                    return false;
+                 }
+            	var url = basePath+"/ureport/preview?_u=file:fixedassetQG.ureport.xml&_t=1,5&id="+rowId+"&zdr="+zdr;
+        	 	window.open(url); 
+                break;
+            }
+        });
         //form_init();
     })
     

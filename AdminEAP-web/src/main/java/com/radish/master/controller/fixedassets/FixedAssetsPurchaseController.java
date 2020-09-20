@@ -56,6 +56,7 @@ public class FixedAssetsPurchaseController {
     @RequestMapping(value="/assets/list",method = RequestMethod.GET)
     public String assetsList(HttpServletRequest request){
         request.setAttribute("deptOptions", JSONArray.toJSONString(commonService.getDepartmentCombobox()));
+        request.setAttribute("zdr", SecurityUtil.getUserId());
         return "fixedassets/purchase/assets_list";
     }
     
@@ -91,7 +92,7 @@ public class FixedAssetsPurchaseController {
             stk.setVendor(purTx.getVendor());
             stk.setFaType("10");
         }else{
-            stk = commonService.get(purTx.getStkID());
+            stk = commonService.get(FixedAssetsStk.class,purTx.getStkID());
             BigDecimal oldQuantity = new BigDecimal(stk.getQuantity());
             BigDecimal oldQuantityAvl = new BigDecimal(stk.getQuantityAvl());
             BigDecimal increment = new BigDecimal(purTx.getQuantity());
@@ -127,6 +128,7 @@ public class FixedAssetsPurchaseController {
     @RequestMapping(value="/tool/list",method = RequestMethod.GET)
     public String toolList(HttpServletRequest request){
         request.setAttribute("deptOptions", JSONArray.toJSONString(commonService.getDepartmentCombobox()));
+        request.setAttribute("zdr", SecurityUtil.getUserId());
         return "fixedassets/purchase/tool_list";
     }
     
@@ -162,7 +164,7 @@ public class FixedAssetsPurchaseController {
                 stk.setVendor(purTx.getVendor());
                 stk.setFaType("20");
             }else{
-                stk = commonService.get(purTx.getStkID());
+                stk = commonService.get(FixedAssetsStk.class,purTx.getStkID());
                 BigDecimal oldQuantity = new BigDecimal(stk.getQuantity());
                 BigDecimal oldQuantityAvl = new BigDecimal(stk.getQuantityAvl());
                 BigDecimal increment = new BigDecimal(purTx.getQuantity());
@@ -206,6 +208,7 @@ public class FixedAssetsPurchaseController {
     @RequestMapping(value="/office/list",method = RequestMethod.GET)
     public String officeList(HttpServletRequest request){
         request.setAttribute("deptOptions", JSONArray.toJSONString(commonService.getDepartmentCombobox()));
+        request.setAttribute("zdr", SecurityUtil.getUserId());
         return "fixedassets/purchase/office_list";
     }
     
@@ -230,7 +233,7 @@ public class FixedAssetsPurchaseController {
                 stk.setName(purTx.getName());
                 stk.setEnglishName(purTx.getEnglishName());
                 stk.setModel(purTx.getModel());
-                stk.setBelongedStock("易耗品请购");
+                stk.setBelongedStock("公司办公室");
                 stk.setKeepedDeptID(pur.getDeptID());
                 stk.setKeepedDeptName(pur.getDeptName());
                 stk.setNorm(purTx.getNorm());
@@ -241,7 +244,7 @@ public class FixedAssetsPurchaseController {
                 stk.setVendor(purTx.getVendor());
                 stk.setFaType("30");
             }else{
-                stk = commonService.get(purTx.getStkID());
+                stk = commonService.get(FixedAssetsStk.class,purTx.getStkID());
                 BigDecimal oldQuantity = new BigDecimal(stk.getQuantity());
                 BigDecimal oldQuantityAvl = new BigDecimal(stk.getQuantityAvl());
                 BigDecimal increment = new BigDecimal(purTx.getQuantity());
@@ -354,13 +357,13 @@ public class FixedAssetsPurchaseController {
             stk.setVendor(purTx.getVendor());
             stk.setFaType(pur.getFaType());
         }else{
-            stk = commonService.get(purTx.getStkID());
+            stk = commonService.get(FixedAssetsStk.class,purTx.getStkID());
             BigDecimal oldQuantity = new BigDecimal(stk.getQuantity());
             BigDecimal oldQuantityAvl = new BigDecimal(stk.getQuantityAvl());
             BigDecimal increment = new BigDecimal(purTx.getQuantity());
             
-            stk.setQuantity(oldQuantity.add(increment).setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
-            stk.setQuantityAvl(oldQuantityAvl.add(increment).setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
+            stk.setQuantity(oldQuantity.add(incrementPur).setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
+            stk.setQuantityAvl(oldQuantityAvl.add(incrementPur).setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
         }
         
         commonService.save(stk);
