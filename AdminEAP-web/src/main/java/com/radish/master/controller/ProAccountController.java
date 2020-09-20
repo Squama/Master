@@ -270,7 +270,7 @@ public class ProAccountController {
 		baseService.update(m);
 		
 
-        String name =user.getName()+"提交账目复核";
+        String name =user.getName()+"提交账目复核-"+m.getAbstracts();
 
         // businessKey
         String businessKey = m.getId();
