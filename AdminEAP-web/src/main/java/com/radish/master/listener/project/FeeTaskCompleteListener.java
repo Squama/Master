@@ -45,28 +45,30 @@ public class FeeTaskCompleteListener implements TaskListener {
              Map<String, Object> params = new HashMap<String, Object>();
              params.put("id", businessKey);
              Fee fee = baseService.get("from Fee where id=:id", params);
-             
+             String taskDefinitionKey = delegateTask.getTaskDefinitionKey();
              if("true".equalsIgnoreCase(delegateTask.getVariable("approved").toString())){
-                 fee.setStatus("30");
-                 
-                 MeasureConsume mc = new MeasureConsume();
-                 
-                 if("10".equals(fee.getType())){
-                     mc.setConsumeName("规费上报审核消耗");
-                     mc.setType("rule");
-                 }else if("20".equals(fee.getType())){
-                     mc.setConsumeName("管理费上报审核消耗");
-                     mc.setType("manage");
-                 }
-                 
-                 mc.setCreateDateTime(new Date());
-                 mc.setProjectID(fee.getProjectID());
-                 mc.setProjectSubID(fee.getProjectSubID());
-                 mc.setOperator(SecurityUtil.getUser().getName());
-                 mc.setOperateTime(new Date());
-                 mc.setAmount(fee.getAmount());
-                 mc.setOp("-");
-                 baseService.save(mc);
+            	 if ("boss".equals(taskDefinitionKey)) {
+            		 fee.setStatus("30");
+                     
+                     MeasureConsume mc = new MeasureConsume();
+                     
+                     if("10".equals(fee.getType())){
+                         mc.setConsumeName("规费上报审核消耗");
+                         mc.setType("rule");
+                     }else if("20".equals(fee.getType())){
+                         mc.setConsumeName("管理费上报审核消耗");
+                         mc.setType("manage");
+                     }
+                     
+                     mc.setCreateDateTime(new Date());
+                     mc.setProjectID(fee.getProjectID());
+                     mc.setProjectSubID(fee.getProjectSubID());
+                     mc.setOperator(SecurityUtil.getUser().getName());
+                     mc.setOperateTime(new Date());
+                     mc.setAmount(fee.getAmount());
+                     mc.setOp("-");
+                     baseService.save(mc);
+            	 }
              }else{
                  fee.setStatus("10");
              }

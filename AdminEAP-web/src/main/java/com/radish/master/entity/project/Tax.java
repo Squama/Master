@@ -54,6 +54,14 @@ public class Tax extends BaseEntity {
     @Header(name = "状态")
     @Column(name = "status")
     private String status;
+    
+    @Header(name = "是否记账")
+    @Column(name = "isjz")
+    private String isjz;
+    
+    @Header(name = "支付对象")
+    @Column(name = "payObj")
+    private String payObj;
 
     public String getProjectID() {
         return projectID;
@@ -110,5 +118,21 @@ public class Tax extends BaseEntity {
     public void setStatus(String status) {
         this.status = status;
     }
+
+	public String getIsjz() {
+		return isjz;
+	}
+
+	public void setIsjz(String isjz) {
+		this.isjz = isjz;
+	}
+
+	public String getPayObj() {
+		return payObj;
+	}
+
+	public void setPayObj(String payObj) {
+		this.payObj = payObj;
+	}
 
 }

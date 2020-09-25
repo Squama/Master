@@ -109,6 +109,18 @@
         <column key="remark" header="说明" classType="String"/>
         <column key="price" header="上报金额（元）" classType="String" width="150"/>
     </query>
+    <query id="feePay_list" key="id" tableName="规费支付列表" className="com.radish.master.entity.project.Fee" widthType="px" pageSize="20" order="createDateTime desc">
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="id" header="编号" hidden="true"/>
+        <column key="type" header="类型" render="10=规费,20=管理费"/>
+        <column key="projectName" header="项目名称" classType="String" width="150"/>
+        <column key="projectSubName" header="子项名称" classType="String" width="150"/>
+        <column key="name" header="上报名称" classType="String" width="150"/>
+        <column key="amount" header="上报金额" classType="String" width="150"/>
+        <column key="createDateTime" header="上报日期" classType="Date" dateFormat="yyyy-mm-dd"  width="150" allowSort="true"/>
+        <column key="status" header="状态" classType="String" render="10=新建,20=审批中,30=审批通过"/>
+        <column key="id" header="操作" classType="String" fnRender="fnRenderDetail"/>
+    </query>
     
     <query id="tax_list" key="id" tableName="规费列表" className="com.radish.master.entity.project.Tax" widthType="px" pageSize="20">
         <column key="rowIndex" header="序号" width="80"/>
@@ -117,6 +129,7 @@
         <column key="projectSubName" header="子项名称" classType="String" width="150"/>
         <column key="name" header="上报名称" classType="String" width="150"/>
         <column key="amount" header="上报金额" classType="String" width="150"/>
+        <column key="createDateTime" header="上报日期" classType="Date" dateFormat="yyyy-mm-dd"  width="150" allowSort="true" order="createDateTime desc"/>
         <column key="status" header="状态" classType="String" render="10=新建,20=审批中,30=审批通过"/>
         <column key="id" header="操作" classType="String" fnRender="fnRenderDetail"/>
     </query>

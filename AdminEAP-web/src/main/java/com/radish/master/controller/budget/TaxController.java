@@ -5,6 +5,7 @@ package com.radish.master.controller.budget;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -22,8 +23,14 @@ import com.cnpc.framework.activiti.service.RuntimePageService;
 import com.cnpc.framework.base.entity.User;
 import com.cnpc.framework.base.pojo.Result;
 import com.cnpc.framework.utils.SecurityUtil;
+import com.radish.master.entity.ProAccount;
+import com.radish.master.entity.ProAccountDet;
+import com.radish.master.entity.Project;
+import com.radish.master.entity.project.Fee;
+import com.radish.master.entity.project.FeeDetail;
 import com.radish.master.entity.project.Tax;
 import com.radish.master.service.CommonService;
+import com.radish.master.system.Arith;
 import com.radish.master.system.TimeUtil;
 
 /**
@@ -120,4 +127,69 @@ public class TaxController {
                 user.getId(), businessKey);
     }
     
+    //---------------------------------------财务支付部分
+    @RequestMapping("/doPrint")
+    private String doPrint(HttpServletRequest request) {
+        request.setAttribute("taxID",request.getParameter("id"));
+        request.setAttribute("zdr", SecurityUtil.getUser().getId());
+        return "budgetmanage/tax/payDetail";
+    }
+    @RequestMapping(value = "/changePayObj", method = RequestMethod.POST)
+    @ResponseBody
+    public Result startManage(Tax fee) {
+    	Tax f = commonService.get(Tax.class, fee.getId());
+         f.setPayObj(fee.getPayObj());
+         commonService.update(f);
+         return new Result(true);
+    }
+    @RequestMapping("/dojz")
+	@ResponseBody
+	public Result dojz(HttpServletRequest request){
+		Arith arith = new Arith();
+		String id = request.getParameter("id");
+		Tax fee = commonService.get(Tax.class, id);
+		
+		String xmid = "";
+		String content = fee.getProjectSubName()+"税金消耗";
+		
+		List<ProAccount> xmz = commonService.find(" from ProAccount where projectId='"+fee.getProjectID()+"'");
+		User u = SecurityUtil.getUser();
+		//账目明细
+		ProAccountDet mx = new ProAccountDet();
+		mx.setCreateDate(new Date());
+		mx.setAbstracts(content);
+		mx.setZmtype("2");
+		mx.setOutMoney(fee.getAmount());
+		mx.setAccounter(u.getName());
+		mx.setAccounterId(u.getId());
+		//mx.setAuditName(u.getName());
+		//mx.setAuditId(u.getId());
+		mx.setStatus("10");
+		if(xmz.size()<=0){//无账本，先生成账本
+			ProAccount zb = new ProAccount();
+			zb.setProjectId(xmid);
+			if("1".equals(xmid)){
+				zb.setAccountName("公司账本");
+			}else{
+				Project p = commonService.get(Project.class, fee.getProjectID());
+				zb.setAccountName(p.getProjectName());
+			}
+			
+			commonService.save(zb);
+			zb.setAllMoney(arith.sub(0.0,Double.valueOf(fee.getAmount()))+"");
+			mx.setProjectAccountId(zb.getId());
+			commonService.save(mx);
+			commonService.update(zb);
+		}else{
+			ProAccount zb = xmz.get(0);
+			zb.setAllMoney(arith.sub(Double.valueOf(zb.getAllMoney()),Double.valueOf(fee.getAmount()))+"");
+			mx.setProjectAccountId(zb.getId());
+			commonService.save(mx);
+			commonService.update(zb);
+		}
+		fee.setIsjz("1");
+		commonService.update(fee);
+		Result r = new Result();
+		return r;
+	}
 }

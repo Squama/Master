@@ -45,20 +45,22 @@ public class TaxTaskCompleteListener implements TaskListener{
              Map<String, Object> params = new HashMap<String, Object>();
              params.put("id", businessKey);
              Tax tax = baseService.get("from Tax where id=:id", params);
-             
+             String taskDefinitionKey = delegateTask.getTaskDefinitionKey();
              if("true".equalsIgnoreCase(delegateTask.getVariable("approved").toString())){
-                 tax.setStatus("30");
-                 MeasureConsume mc = new MeasureConsume();
-                 mc.setCreateDateTime(new Date());
-                 mc.setConsumeName(tax.getName());
-                 mc.setProjectID(tax.getProjectID());
-                 mc.setProjectSubID(tax.getProjectSubID());
-                 mc.setOperator(SecurityUtil.getUser().getName());
-                 mc.setOperateTime(new Date());
-                 mc.setType("tax");
-                 mc.setAmount(tax.getAmount());
-                 mc.setOp("-");
-                 baseService.save(mc);
+            	 if ("boss".equals(taskDefinitionKey)) {
+            		 tax.setStatus("30");
+                     MeasureConsume mc = new MeasureConsume();
+                     mc.setCreateDateTime(new Date());
+                     mc.setConsumeName(tax.getName());
+                     mc.setProjectID(tax.getProjectID());
+                     mc.setProjectSubID(tax.getProjectSubID());
+                     mc.setOperator(SecurityUtil.getUser().getName());
+                     mc.setOperateTime(new Date());
+                     mc.setType("tax");
+                     mc.setAmount(tax.getAmount());
+                     mc.setOp("-");
+                     baseService.save(mc);
+            	 }
              }else{
                  tax.setStatus("10");
              }

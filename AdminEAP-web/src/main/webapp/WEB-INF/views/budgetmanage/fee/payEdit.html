@@ -1,0 +1,222 @@
+<script src="${basePath}/resources/common/js/calculate.js"></script>
+<script type="text/javascript">
+ $.fn.modal.Constructor.prototype.enforceFocus = function () {};
+ </script>
+ <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><li class="fa fa-remove"></li></button>
+    <h5 class="modal-title">打印</h5>
+</div>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            
+            <form id="package-form" name="package-form" class="form-horizontal">
+                <input type="hidden" name="id">
+                <input type="hidden" name="projectName">
+                <input type="hidden" name="projectSubName">
+                <div class="box box-info">
+                    <div class="box-header with-border">
+                        <span>
+                            <i class="fa fa-edit">项目信息</i>
+                        </span>
+                    </div>
+                    <div class="box-body">
+                        <!-- 内容 -->
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">选择项目<span style="color:red">*</span></label>
+                                <div class="col-sm-5">
+                                    <select id="detailProjectID" class="form-control select2" name="projectID">
+                                        <option selected="selected" value="">选择一个项目</option>
+                                    </select>
+                                </div>
+                            </div> 
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">选择子项<span style="color:red">*</span></label>
+                                <div class="col-sm-5">
+                                    <select id="projectSubID" class="form-control select2" name="projectSubID">
+                                        <option selected="selected" value="">选择一个子项</option>
+                                    </select>
+                                </div>
+                            </div> 
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">支付对象<span style="color:red">*</span></label>
+                                <div class="col-sm-5">
+                                	<input class="form-control " id="payObj" name="payObj"  onblur="updateObj()" >
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">付款方式：</label>
+                                <div class="col-sm-5">
+			 						<select id="fkfs" class="form-control select2 "  name="fkfs" style="width:100%">
+			                    		<option selected="selected" value="">选择一种方式</option>
+			                    		<option  value="10">现金</option>
+			                    		<option  value="20">转账</option>
+			                    		<option  value="30">电汇</option>
+			                    	</select>                                
+			                    </div>
+                            </div>
+                            <div class="form-group">
+                            	<div class="" style="text-align: center;">
+						      		<button type="button" class="btn btn-success" id="doPrint" >打印</button>
+						        </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <form id="package-detail-form" name="package-detail-form" class="form-horizontal">
+                <div class="box box-success dn" id="package_det">
+                    <div class="box-header with-border">
+                        <span>
+                            <i class="fa fa-files-o">上报详情</i>
+                        </span>
+                    </div>
+                    <div class="dataTables_filter" id="searchDivPDet" style="text-align:center;height:1px;">
+                       <input type="search" name="feeID" class="form-control" operator="eq" style="display:none;">
+                       <div class="btn-group">
+                           <button type="button" class="btn btn-primary" data-btn-type="search" id="refresh" style="display:none;">查询</button>
+                       </div>
+                    </div>
+                    <div class="box-body box-body-mobile">
+                        <!-- 内容 -->
+                        <table id="package_edit_table" class="table table-bordered table-striped table-hover">
+                        </table>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<script>
+    $.fn.modal.Constructor.prototype.enforceFocus =function(){};
+    var packageform = $("#package-form").form({baseEntity: false}), initData={},
+    packagedetailform = $("#package-detail-form").form({baseEntity: false}),tOptions=0,fOptions=0;
+    var purchaseEditTable, winId = "purchaseDetWin", budgetNo=0;
+    
+    var zdr="${zdr?default(0)}";
+    var feeID="${feeID?default(0)}";
+    initData.feeID = feeID;
+    packagedetailform.initFormData(initData);
+    
+    $(function (){
+        purchaseEditTable = new CommonTable("package_edit_table", "fee_detail_list", "searchDivPDet", {
+            "ordering" : false,
+            "lengthChange": false,
+            "displayLength": 20,
+            "scrollY": "200px",
+            "scrollCollapse": true
+        });
+        
+        if(options != 0){
+            for (var i = 0, len = options.length; i < len; i++) {
+                var option = options[i];
+                $('#detailProjectID').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+            }
+            
+            $('#detailProjectID').select2();
+            
+            $('#detailProjectID').bind("change", function () {
+                var projectID = $(this).val();
+                if (projectID === "") {
+                    return false;
+                }
+                
+                var name = "";
+                if ($("#detailProjectID").prop('selectedIndex') > 0) {
+                    name = $("#detailProjectID").find("option:selected").text();
+                }
+                $('input[name="projectName"]').val(name);
+                
+                //加载子项
+                ajaxPost(basePath+"/projectvolume/getprojectsub",{projectID:projectID},function(data){
+                    var laborSubOptions = data.message;
+                    sOptions = JSON.parse(laborSubOptions);
+                    $('#projectSubID').empty();
+                    $('#projectSubID').append('<option selected="selected" value="">选择一个项目子项</option>');
+                    for (var i = 0, len = sOptions.length; i < len; i++) {
+                        var option = sOptions[i];
+                        $('#projectSubID').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+                    }
+                    $('#projectSubID').select2();
+                    
+                    $('#projectSubID').bind("change", function () {
+                        var value = $(this).val();
+                        if (value === "") {
+                            return false;
+                        }
+                        
+                        var name = "";
+                        if ($("#projectSubID").prop('selectedIndex') > 0) {
+                            name = $("#projectSubID").find("option:selected").text();
+                        }
+                        $('input[name="projectSubName"]').val(name);
+                    });
+                });
+                //子项加载结束
+            }); 
+        }
+        //编辑回填
+        if(feeID != 0){
+            ajaxPost(basePath+"/project/feevolume/getfee",{feeID:feeID},function(data){
+                $('#package_det').show();
+                
+                var projectName = data.data.projectName;
+                var projectSubName = data.data.projectSubName;
+
+                var payObj =data.data.payObj;
+                $("#payObj").val(payObj);
+                
+                var projectArea = $('#detailProjectID').parent();
+                projectArea.empty();
+                $('<input>',{
+                    "value" : projectName,
+                    "type" : "text",
+                    "class" : "form-control",
+                    "readonly" : "readonly"
+                }).appendTo(projectArea);
+                
+                var teamArea = $('#projectSubID').parent();
+                teamArea.empty();
+                $('<input>',{
+                    "value" : projectSubName,
+                    "type" : "text",
+                    "class" : "form-control",
+                    "readonly" : "readonly"
+                }).appendTo(teamArea);
+            })
+        } 
+        $("#doPrint").on("click",function(){
+        	print()
+        })
+        //初始化控件
+        packageform.initComponent();
+        packagedetailform.initComponent();
+        
+    });
+    
+    function fnRenderDelete(value){
+        return "";
+    }
+    function updateObj() {
+        ajaxPost(basePath + '/project/feevolume/changePayObj', {id:feeID,payObj:$("#payObj").val()}, function (data) {
+            if (data.success) {
+            	modals.error("更新成功");
+            }
+        });
+    }
+    function print(){
+        if(!$("#payObj").val()){
+        	modals.info("请输入支付对象");
+       		return ;
+         }
+        var fkfs = $("#fkfs option:selected").val();
+        if(!fkfs){
+        		modals.info("请选择付款方式");
+        		return ;
+          } 
+    	var url = basePath+"/ureport/preview?_u=file:ZfFee.ureport.xml&_t=1,5&id="+feeID+"&zdr="+zdr+"&fkfs="+fkfs;
+	 	window.open(url); 
+     }
+</script>
