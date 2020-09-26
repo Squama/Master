@@ -16,7 +16,21 @@
             <div class="box">
                 <!-- /.box-header -->
                 <div class="dataTables_filter" id="searchDiv">
+                 <select type="search" placeholder="请输入项目名"  name="P.project_id" class="form-control select2" id="project_name" operator="like" likeOption="true"  style =" width:20%">
+                   	<option selected="selected" value="">选择一个项目</option>
+                   </select>
                     <input placeholder="请输入预算名称" name="B.budget_name" class="form-control" type="search"  operator="like"  likeOption="true" /> 
+                    <select type="search" placeholder="请选择状态" title="状态" name="P.status" class="form-control select2"  operator="like" likeOption="true"  style =" width:20%">
+                     	<option selected="selected" value="">选择一种状态</option>
+                     	<option value="10">新建</option>
+                     	<option value="20">待审核</option>
+                     	<option value="25">待编辑市场指导价</option>
+                     	<option value="30">待编辑渠道</option>
+                     	<option value="35">金额超限审核</option>
+                     	<option value="40">待采购</option>
+                     	<option value="50">部分入库</option>
+                     	<option value="60">已完成</option>
+                     </select>
                     <div class="btn-group">
                         <button type="button" class="btn btn-primary"   data-btn-type="search">查询</button>
                         <button type="button" class="btn btn-default" data-btn-type="reset">重置</button>
@@ -42,7 +56,10 @@
 <script>  
     var budgetApplyTable;
     var winId="purchaseApplyWin";
-    
+    var xms = '${xm?default(0)}',xm=0;
+    if(xms != 0){
+    	xm = JSON.parse(xms);
+    }
     var purchaseApplyObject = {
             startFlow: function (purchaseID) {
             	modals.confirm("是否要提交审批？",function(){
@@ -147,6 +164,13 @@
             }
 
         });
+        if(xm != 0){
+            for (var i = 0, len = xm.length; i < len; i++) {
+                var x = xm[i];
+                $('#project_name').append("<option value=\"" + x.value + "\">" + x.data + "</option>");
+            }
+        }
+        $(".select2").select2();
         //form_init();
     })
     

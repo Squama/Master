@@ -5,7 +5,7 @@
         <sql>
             <![CDATA[
               SELECT P.id,TP.project_name projectName,B.budget_name budgetName,U.`name` operator,
-              P.operate_time operateTime,P.`status` status,P.`status` statusJudge
+              P.operate_time operateTime,P.`status` status,P.`status` statusJudge,P.project_id project_id
               FROM tbl_purchase P,tbl_project TP,tbl_budget B,tbl_user U
               WHERE 1=1 AND P.project_id = TP.id AND P.budget_no = B.budget_no AND P.operator = U.id
             ]]>

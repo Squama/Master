@@ -60,7 +60,10 @@ public class PurchaseApplyController {
     private TeamSalaryService teamSalaryService;
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
-    public String list() {
+    public String list(HttpServletRequest request) {
+    	List xm = purchaseService.findMapBySql("select id value, project_name data from tbl_project", new Object[]{}, new Type[]{StringType.INSTANCE}, Options.class);
+
+    	request.setAttribute("xm", JSONArray.toJSONString(xm));
         return "purchase/apply/apply_list";
     }
 
