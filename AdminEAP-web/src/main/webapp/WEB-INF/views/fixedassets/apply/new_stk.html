@@ -56,13 +56,13 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">生产厂商：</label>
                                 <div class="col-sm-5">
-                                    <input type="text" class="form-control" id="vendor" name="vendor" placeholder="生产厂商">                                
+                                    <input type="text" class="form-control" id="vendor" name="vendor" placeholder="生产厂商" disabled="disabled">                                
                                 </div>
                             </div>
                              <div class="form-group">
                                 <label class="col-sm-3 control-label">单价：</label>
                                 <div class="col-sm-5">
-                                    <input type="text" class="form-control" id="price" name="price" placeholder="单价">                                
+                                    <input type="text" class="form-control" id="price" name="price" placeholder="单价" disabled="disabled">                                
                                 </div>
                             </div>
                         </div>
@@ -79,7 +79,12 @@
 <script>
     $.fn.modal.Constructor.prototype.enforceFocus =function(){};
     var assetsstkform = $("#assets-stk-form").form({baseEntity: false}), initData={};
+    var faType = '${faType?default(0)}'
     $(function (){
+        if(faType=="30"){//固定资产编辑价格
+            $("#vendor").attr("disabled",false);
+            $("#price").attr("disabled",false);
+        }
         $("#assets-stk-form").bootstrapValidator({
             message: '请输入有效值',
             feedbackIcons: {
