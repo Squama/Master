@@ -92,6 +92,9 @@ public class TeamSalaryTaskCompleteListener implements TaskListener{
             					zf.setPayType("10");
             					zf.setPayWay("10");
             					zf.setPayMoney(rgje.toString());
+            					zf.setRgmoney(rgje.toString());
+            					zf.setClmoney("0");
+            					zf.setJxmoney("0");
             					zf.setDepartment(gcl.getProjectName()+"（工资单付款数据）");
             					zf.setContent("工资单审核完成自动分配金额,工资id:"+businessKey);
             					zf.setCreateDate(new Date());
