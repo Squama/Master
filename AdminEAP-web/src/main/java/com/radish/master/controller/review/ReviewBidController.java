@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -48,8 +50,8 @@ import com.cnpc.framework.utils.FileUtil;
 import com.cnpc.framework.utils.PropertiesUtil;
 import com.cnpc.framework.utils.SecurityUtil;
 import com.cnpc.framework.utils.StrUtil;
-import com.radish.master.entity.Project;
 import com.radish.master.entity.common.ActivitiReview;
+import com.radish.master.entity.project.Notice;
 import com.radish.master.entity.qualityCheck.CheckDqFile;
 import com.radish.master.entity.review.MaxNumber;
 import com.radish.master.entity.review.ReviewBid;
@@ -85,14 +87,14 @@ public class ReviewBidController {
 	
 	@RequestMapping("/index")
 	public String index(HttpServletRequest request){
-		List<Project> p = baseService.findMapBySql("select p.project_name projectName ,p.id id  from tbl_project p ", new Object[]{}, new Type[]{StringType.INSTANCE}, Project.class);
+		List<Notice> p = baseService.findMapBySql("select p.projectName ,p.id id  from tbl_notice p where p.status='30'", new Object[]{}, new Type[]{StringType.INSTANCE}, Notice.class);
 		request.setAttribute("projectOptions", JSONArray.toJSONString(p));
 		return prefix +"index";
 	}
 	
 	@RequestMapping("/add")
 	public String addIndex(HttpServletRequest request){
-		List<Project> p = baseService.findMapBySql("select p.project_name projectName ,p.id id  from tbl_project p ", new Object[]{}, new Type[]{StringType.INSTANCE}, Project.class);
+		List<Notice> p = baseService.findMapBySql("select p.projectName ,p.id id  from tbl_notice p where p.status='30'", new Object[]{}, new Type[]{StringType.INSTANCE}, Notice.class);
 		request.setAttribute("projectOptions", JSONArray.toJSONString(p));
 		String spid = request.getParameter("spid");
 		request.setAttribute("spid",spid);
@@ -111,7 +113,7 @@ public class ReviewBidController {
 	}
 	@RequestMapping("/auidLook/{id}")
 	public String auidLook(@PathVariable("id") String id,HttpServletRequest request){
-		List<Project> p = baseService.findMapBySql("select p.project_name projectName ,p.id id  from tbl_project p ", new Object[]{}, new Type[]{StringType.INSTANCE}, Project.class);
+		List<Notice> p = baseService.findMapBySql("select p.projectName ,p.id id  from tbl_notice p where p.status='30'", new Object[]{}, new Type[]{StringType.INSTANCE}, Notice.class);
 		request.setAttribute("projectOptions", JSONArray.toJSONString(p));
 		request.setAttribute("spid",id);
 		return prefix +"auidIndex";
@@ -119,7 +121,7 @@ public class ReviewBidController {
 	
 	@RequestMapping("/look")
 	public String look(HttpServletRequest request){
-		List<Project> p = baseService.findMapBySql("select p.project_name projectName ,p.id id  from tbl_project p ", new Object[]{}, new Type[]{StringType.INSTANCE}, Project.class);
+		List<Notice> p = baseService.findMapBySql("select p.projectName ,p.id id  from tbl_notice p where p.status='30'", new Object[]{}, new Type[]{StringType.INSTANCE}, Notice.class);
 		request.setAttribute("projectOptions", JSONArray.toJSONString(p));
 		String id = request.getParameter("spid");
 		request.setAttribute("spid",id);
@@ -132,10 +134,26 @@ public class ReviewBidController {
 		String id = request.getParameter("id");
 		String fileId = request.getParameter("fileId");
 		Result r = new Result();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+		String dateStr = sdf.format(new Date());
+		Date d;
+		try {
+			d = sdf.parse(dateStr);
+			if(ps.getValidDate()!=null){
+				if(ps.getValidDate().before(d)){
+					r.setSuccess(false);
+					r.setMessage("有效期不能早于今天");
+					return r;
+				}
+			}
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		
 		if(StringHelper.isNotEmpty(id)){//修改
 			ReviewBid p = baseService.get(ReviewBid.class,id);
 			if(!p.getProjectId().equals(ps.getProjectId())){
-				Project xm = baseService.get(Project.class, ps.getProjectId());
+				Notice xm = baseService.get(Notice.class, ps.getProjectId());
 				p.setProjectName(xm.getProjectName());
 				p.setProjectId(ps.getProjectId());
 			}
@@ -147,11 +165,12 @@ public class ReviewBidController {
 			p.setBuilder(ps.getBuilder());
 			p.setBuildAddress(ps.getBuildAddress());
 			p.setBuildTime(ps.getBuildTime());
+			p.setValidDate(ps.getValidDate());
 			baseService.update(p);
 			r.setSuccess(true);
 		}else{//保存
 			String pid = ps.getProjectId();
-			Project p = baseService.get(Project.class, pid);
+			Notice p = baseService.get(Notice.class, pid);
 			ps.setProjectName(p.getProjectName());
 			ps.setStatus("10");
 			ps.setCreateDate(new Date());
@@ -263,7 +282,7 @@ public class ReviewBidController {
     }
 	@RequestMapping("/fileIndex")
 	public String fileIndex(HttpServletRequest request){
-		List<Project> p = baseService.findMapBySql("select p.project_name projectName ,p.id id  from tbl_project p ", new Object[]{}, new Type[]{StringType.INSTANCE}, Project.class);
+		List<Notice> p = baseService.findMapBySql("select p.projectName ,p.id id  from tbl_notice p where p.status='30'", new Object[]{}, new Type[]{StringType.INSTANCE}, Notice.class);
 		request.setAttribute("projectOptions", JSONArray.toJSONString(p));
 		
 		return prefix +"fileIndex";

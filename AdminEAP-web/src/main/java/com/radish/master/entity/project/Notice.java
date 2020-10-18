@@ -65,6 +65,23 @@ public class Notice implements Serializable {
     @Header(name = "创建时间")
     @Column(name = "create_time")
     private Date create_time;
+    
+    @Header(name = "项目名称")
+    @Column(name = "projectName")
+    private String projectName;
+    
+    @Header(name = "审核状态")
+    @Column(name = "status")
+    private String status;
+    
+    @Header(name = "类型 1-招标公告，2-投标文件，3-中标文件")
+    @Column(name = "type")
+    private String type;
+    
+    @Header(name = "所属公告id")
+    @Column(name = "pid")
+    private String pid;
+    
 
 	public String getId() {
 		return id;
@@ -120,6 +137,38 @@ public class Notice implements Serializable {
 
 	public void setCreate_time(Date create_time) {
 		this.create_time = create_time;
+	}
+
+	public String getProjectName() {
+		return projectName;
+	}
+
+	public void setProjectName(String projectName) {
+		this.projectName = projectName;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public String getPid() {
+		return pid;
+	}
+
+	public void setPid(String pid) {
+		this.pid = pid;
 	}
 
 	

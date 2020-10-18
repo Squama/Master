@@ -48,8 +48,8 @@ import com.cnpc.framework.utils.FileUtil;
 import com.cnpc.framework.utils.PropertiesUtil;
 import com.cnpc.framework.utils.SecurityUtil;
 import com.cnpc.framework.utils.StrUtil;
-import com.radish.master.entity.Project;
 import com.radish.master.entity.common.ActivitiReview;
+import com.radish.master.entity.project.Notice;
 import com.radish.master.entity.review.MaxNumber;
 import com.radish.master.entity.review.ReviewFile;
 import com.radish.master.entity.review.ReviewLabor;
@@ -84,7 +84,7 @@ public class ReviewLaborController {
 	
 	@RequestMapping("/index")
 	public String index(HttpServletRequest request){
-		List<Project> p = baseService.findMapBySql("select p.project_name projectName ,p.id id  from tbl_project p ", new Object[]{}, new Type[]{StringType.INSTANCE}, Project.class);
+		List<Notice> p = baseService.findMapBySql("select p.projectName ,p.id id  from tbl_notice p where p.status='30'", new Object[]{}, new Type[]{StringType.INSTANCE}, Notice.class);
 		request.setAttribute("projectOptions", JSONArray.toJSONString(p));
 		
 		return prefix +"index";
@@ -93,7 +93,7 @@ public class ReviewLaborController {
 	@RequestMapping("/add")
 	public String addIndex(HttpServletRequest request){
 		
-		List<Project> p = baseService.findMapBySql("select p.project_name projectName ,p.id id  from tbl_project p ", new Object[]{}, new Type[]{StringType.INSTANCE}, Project.class);
+		List<Notice> p = baseService.findMapBySql("select p.projectName ,p.id id  from tbl_notice p where p.status='30' and exists (select 1 from tbl_notice ps where ps.pid = p.id and ps.type='3')", new Object[]{}, new Type[]{StringType.INSTANCE}, Notice.class);
 		request.setAttribute("projectOptions", JSONArray.toJSONString(p));
 		
 		List<User> ul = baseService.findMapBySql("select u.name name ,u.id id  from tbl_user u where  u.audit_status = 10", new Object[]{}, new Type[]{StringType.INSTANCE}, User.class);
@@ -117,7 +117,7 @@ public class ReviewLaborController {
 	}
 	@RequestMapping("/auidLook/{id}")
 	public String auidLook(@PathVariable("id") String id,HttpServletRequest request){
-		List<Project> p = baseService.findMapBySql("select p.project_name projectName ,p.id id  from tbl_project p ", new Object[]{}, new Type[]{StringType.INSTANCE}, Project.class);
+		List<Notice> p = baseService.findMapBySql("select p.projectName ,p.id id  from tbl_notice p where p.status='30'", new Object[]{}, new Type[]{StringType.INSTANCE}, Notice.class);
 		request.setAttribute("projectOptions", JSONArray.toJSONString(p));
 		
 		List<User> ul = baseService.findMapBySql("select u.name name ,u.id id  from tbl_user u where  u.audit_status = 10", new Object[]{}, new Type[]{StringType.INSTANCE}, User.class);
@@ -128,7 +128,7 @@ public class ReviewLaborController {
 	}
 	@RequestMapping("/auidLookboss/{id}")
 	public String auidLookboss(@PathVariable("id") String id,HttpServletRequest request){
-		List<Project> p = baseService.findMapBySql("select p.project_name projectName ,p.id id  from tbl_project p ", new Object[]{}, new Type[]{StringType.INSTANCE}, Project.class);
+		List<Notice> p = baseService.findMapBySql("select p.projectName ,p.id id  from tbl_notice p where p.status='30'", new Object[]{}, new Type[]{StringType.INSTANCE}, Notice.class);
 		request.setAttribute("projectOptions", JSONArray.toJSONString(p));
 		
 		List<User> ul = baseService.findMapBySql("select u.name name ,u.id id  from tbl_user u where  u.audit_status = 10", new Object[]{}, new Type[]{StringType.INSTANCE}, User.class);
@@ -140,7 +140,7 @@ public class ReviewLaborController {
 	
 	@RequestMapping("/look")
 	public String look(HttpServletRequest request){
-		List<Project> p = baseService.findMapBySql("select p.project_name projectName ,p.id id  from tbl_project p ", new Object[]{}, new Type[]{StringType.INSTANCE}, Project.class);
+		List<Notice> p = baseService.findMapBySql("select p.projectName ,p.id id  from tbl_notice p where p.status='30'", new Object[]{}, new Type[]{StringType.INSTANCE}, Notice.class);
 		request.setAttribute("projectOptions", JSONArray.toJSONString(p));
 		
 		List<User> ul = baseService.findMapBySql("select u.name name ,u.id id  from tbl_user u", new Object[]{}, new Type[]{StringType.INSTANCE}, User.class);
@@ -159,7 +159,7 @@ public class ReviewLaborController {
 		if(StringHelper.isNotEmpty(id)){//修改
 			ReviewLabor p = baseService.get(ReviewLabor.class,id);
 			if(!p.getProjectId().equals(ps.getProjectId())){
-				Project xm = baseService.get(Project.class, ps.getProjectId());
+				Notice xm = baseService.get(Notice.class, ps.getProjectId());
 				p.setProjectName(xm.getProjectName());
 				p.setProjectId(ps.getProjectId());
 			}
@@ -189,7 +189,7 @@ public class ReviewLaborController {
 			r.setSuccess(true);
 		}else{//保存
 			String pid = ps.getProjectId();
-			Project p = baseService.get(Project.class, pid);
+			Notice p = baseService.get(Notice.class, pid);
 			ps.setProjectName(p.getProjectName());
 			ps.setStatus("10");
 			ps.setCreateDate(new Date());
@@ -308,7 +308,7 @@ public class ReviewLaborController {
 	
 	@RequestMapping("/fileIndex")
 	public String fileIndex(HttpServletRequest request){
-		List<Project> p = baseService.findMapBySql("select p.project_name projectName ,p.id id  from tbl_project p ", new Object[]{}, new Type[]{StringType.INSTANCE}, Project.class);
+		List<Notice> p = baseService.findMapBySql("select p.projectName ,p.id id  from tbl_notice p where p.status='30'", new Object[]{}, new Type[]{StringType.INSTANCE}, Notice.class);
 		request.setAttribute("projectOptions", JSONArray.toJSONString(p));
 		
 		return prefix +"fileIndex";

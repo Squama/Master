@@ -67,10 +67,32 @@
         <column key="create_name" header="上传人" classType="String" width="150"/>
         <column key="id" header="附件" width="100" fnRender="fnFj"/>
     </query>
-	<query id="notice_List" key="id" tableName="公告" className="com.radish.master.entity.project.Notice" widthType="px" pageSize="200">
+	<query id="notice_List" key="id" tableName="公告" className="com.radish.master.entity.project.Notice" widthType="px" pageSize="200" order="create_time desc">
         <column key="id" hidden="true" header="id" width="80"/>
         <column key="rowIndex" header="序号" width="80"/>
         <column key="name" header="公告名" classType="String" width="150"/>
+        <column key="projectName" header="项目名称" classType="String" width="150"/>
+        <column key="number" header="项目编号" classType="String" width="150"/>
+        <column key="create_time" header="创建日期" classType="java.util.Date" width="150" allowSort="true" operator="between"  dateFormat="yyyy-mm-dd"/>
+        <column key="create_name" header="创建人" classType="String" width="150"/>
+        <column key="id" header="附件" width="100" fnRender="fnFj"/>
+        <column key="status" header="状态" allowSort="true" width="150" render="10=新建,20=审批中,30=审批通过,40=审批不通过"/>
+       	<column key="id" header="操作" width="100" fnRender="fnCz"/>
+    </query>
+    <query id="notice_List_tb" key="id" tableName="投标" className="com.radish.master.entity.project.Notice" widthType="px" pageSize="200" order="create_time desc">
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="name" header="名称" classType="String" width="150"/>
+        <column key="projectName" header="项目名称" classType="String" width="150"/>
+        <column key="create_time" header="创建日期" classType="java.util.Date" width="150" allowSort="true" operator="between"  dateFormat="yyyy-mm-dd"/>
+        <column key="create_name" header="创建人" classType="String" width="150"/>
+        <column key="id" header="附件" width="100" fnRender="fnFj"/>
+    </query>
+    <query id="notice_List_zb" key="id" tableName="中标" className="com.radish.master.entity.project.Notice" widthType="px" pageSize="200" order="create_time desc">
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="name" header="名称" classType="String" width="150"/>
+        <column key="projectName" header="项目名称" classType="String" width="150"/>
         <column key="create_time" header="创建日期" classType="java.util.Date" width="150" allowSort="true" operator="between"  dateFormat="yyyy-mm-dd"/>
         <column key="create_name" header="创建人" classType="String" width="150"/>
         <column key="id" header="附件" width="100" fnRender="fnFj"/>

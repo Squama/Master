@@ -14,40 +14,28 @@
     <div class="row">
         <div class="col-xs-12">
             <div class="box box-info">
-	            <div id="stepbar" class="add stepbar">
-	                <div>
-	                    <div class="step">
-	                        <span class="tip">1</span>
-	                    </div>
-	                    <div class="stepinfo">添加项目基本信息</div>
-	                </div>
-	                <div>
-	                    <div class="step stepundone">
-	                        <span class="tip">2</span>
-	                    </div>
-	                    <div class="stepinfo undoneinfo">上传项目文件（可选）</div>
-	                </div>
-	                <div>
-	                    <div class="step stepundone">
-	                        <span class="tip">3</span>
-	                    </div>
-	                    <div class="stepinfo undoneinfo">完成</div>
-	                </div>
-	            </div>
                 <form id="project_form" name="project_form" class="form-horizontal">
                     <input type="hidden" name="id" id="mainID">
                     <div class="box-body">
                         <div class="col-md-12">
+                        	<div class="form-group">
+                                <label class="col-sm-3 control-label">中标项目<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+									<select id="proid" class="form-control select2 "  style="width:100%" onchange="inputXm()">
+			                   			<option selected="selected" value="">选择一个项目</option>
+			                   		</select>                                
+		                   		</div>
+                            </div>
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">项目编号<span style="color:red">*</span></label>
                                 <div class="col-sm-6">
-                                    <input type="text" class="form-control" id="projectCode" name="projectCode" placeholder="项目编号">
+                                    <input type="text" class="form-control" id="projectCode" name="projectCode" placeholder="项目编号" readonly="readonly">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">项目名称<span style="color:red">*</span></label>
                                 <div class="col-sm-6">
-                                    <input type="text" class="form-control" id="projectName" name="projectName" placeholder="项目名称">
+                                    <input type="text" class="form-control" id="projectName" name="projectName" placeholder="项目名称" readonly="readonly">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -73,8 +61,8 @@
                     <div class="box-footer text-center">
                         <button type="button" class="btn btn-default" data-btn-type="prev">返回</button>
                         <button type="submit" class="btn btn-primary ml10" data-btn-type="sub" id="editSub">保存并编辑子项</button>
-                        <button type="submit" class="btn btn-primary ml10 dn" data-btn-type="next" id="uploadProFiles">上传项目文件</button>
-                        <button type="submit" class="btn btn-success ml10" data-btn-type="save">保存并返回</button>
+<!--                         <button type="submit" class="btn btn-primary ml10 dn" data-btn-type="next" id="uploadProFiles">上传项目文件</button>
+ -->                        <button type="submit" class="btn btn-success ml10" data-btn-type="save">保存并返回</button>
                     </div>
                 </form>
             </div>
@@ -106,6 +94,10 @@
     </div>
 </section>
 <script>
+var pros = '${projectOptions?default(0)}',pro=0;
+if(pros != 0){
+	pro = JSON.parse(pros);
+}
     var labform, projectSubForm = $("#project-sub-form").form({baseEntity:false});
     var id = "${id?default(0)}";
     var projectSubTable;
@@ -235,6 +227,13 @@
                 }
             }
         });
+        if(pro != 0){
+            for (var i = 0, len = pro.length; i < len; i++) {
+                var u = pro[i];
+                $('#proid').append("<option value='" + u.number + "' >" + u.projectName + "</option>");
+            }
+            $("#proid").select2();
+        }
         
         //编辑回填
         //初始化控件
@@ -252,4 +251,11 @@
         return oper;
     }
 
+    function inputXm(){
+		var xm = $("#proid option:selected").val();
+		if(xm){
+			$("#projectName").val($("#proid option:selected").html());
+	    	$("#projectCode").val($("#proid option:selected").val());
+		}
+    }
 </script>

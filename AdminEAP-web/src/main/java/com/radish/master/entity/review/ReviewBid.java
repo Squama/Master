@@ -14,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import com.cnpc.framework.annotation.Header;
 import com.cnpc.framework.base.entity.BaseEntity;
@@ -65,6 +66,12 @@ public class ReviewBid{
   @Header(name = "创建日期")
   @Column(name = "create_date_time")
   private Date createDate;
+  
+  @Header(name = "有效期")
+  @Column(name = "validDate")
+  @DateTimeFormat(pattern = "yyyy-MM-dd")
+  private Date validDate;
+  
   
   @Header(name = "招标方式")
   @Column(name = "bidWay")
@@ -264,6 +271,14 @@ public String getProjectId() {
 
 public void setProjectId(String projectId) {
 	this.projectId = projectId;
+}
+
+public Date getValidDate() {
+	return validDate;
+}
+
+public void setValidDate(Date validDate) {
+	this.validDate = validDate;
 }
 
 }

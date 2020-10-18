@@ -1,21 +1,30 @@
-package com.radish.master.controller.review;
+package com.radish.master.controller.safty;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import com.alibaba.fastjson.JSONArray;
+import com.cnpc.framework.activiti.pojo.Constants;
+import com.cnpc.framework.activiti.service.RuntimePageService;
+import com.cnpc.framework.base.controller.UploaderController;
+import com.cnpc.framework.base.entity.User;
+import com.cnpc.framework.base.pojo.FileResult;
+import com.cnpc.framework.base.pojo.Result;
+import com.cnpc.framework.base.pojo.TreeNode;
+import com.cnpc.framework.base.service.BaseService;
+import com.cnpc.framework.constant.RedisConstant;
+import com.cnpc.framework.utils.DateUtil;
+import com.cnpc.framework.utils.FileUtil;
+import com.cnpc.framework.utils.PropertiesUtil;
+import com.cnpc.framework.utils.SecurityUtil;
+import com.cnpc.framework.utils.StrUtil;
+import com.radish.master.entity.Project;
+import com.radish.master.entity.safty.Aqxy;
+import com.radish.master.entity.safty.CheckFileAQ;
+import com.radish.master.entity.safty.CheckItemAQ;
+import com.radish.master.entity.safty.CheckRecordAQ;
+import com.radish.master.entity.safty.CheckRecordMbAQ;
+import com.radish.master.entity.project.Notice;
+import com.radish.master.entity.review.MaxNumber;
+import com.radish.master.service.BudgetService;
+import com.radish.master.service.SaftyItemService;
 
 import org.hibernate.annotations.common.util.StringHelper;
 import org.hibernate.criterion.DetachedCriteria;
@@ -34,38 +43,44 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.alibaba.fastjson.JSONArray;
-import com.cnpc.framework.activiti.pojo.Constants;
-import com.cnpc.framework.activiti.service.RuntimePageService;
-import com.cnpc.framework.base.controller.UploaderController;
-import com.cnpc.framework.base.entity.User;
-import com.cnpc.framework.base.pojo.FileResult;
-import com.cnpc.framework.base.pojo.Result;
-import com.cnpc.framework.base.service.BaseService;
-import com.cnpc.framework.utils.DateUtil;
-import com.cnpc.framework.utils.FileUtil;
-import com.cnpc.framework.utils.PropertiesUtil;
-import com.cnpc.framework.utils.SecurityUtil;
-import com.cnpc.framework.utils.StrUtil;
-import com.radish.master.entity.common.ActivitiReview;
-import com.radish.master.entity.project.Notice;
-import com.radish.master.entity.review.MaxNumber;
-import com.radish.master.entity.review.ReviewBid;
-import com.radish.master.entity.review.ReviewFile;
-import com.radish.master.entity.review.ReviewQualification;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * Created by billJiang on 2017/6/19.
+ * e-mail:475572229@qq.com  qq:475572229
+ * 组织结构管理控制器
+ */
 @Controller
-@RequestMapping("/qualireview")
-public class ReviewQualificationController {
-	String prefix = "/Reviews/qualireview/";
-	
-	@Autowired
+@RequestMapping("/aqFiles")
+public class saftyFilesController {
+
+    @Resource
+    private SaftyItemService saftyItemService;
+    @Resource
+    private BudgetService budgetService;
+    @Autowired
 	private BaseService baseService;
-	@Resource
-	 private RuntimePageService runtimePageService;
-	
-	private static Logger logger= LoggerFactory.getLogger(UploaderController.class);
-	private static final String uploaderPath=PropertiesUtil.getValue("reviewFilePath")+"\\qualiReview";
+    @Resource
+	private RuntimePageService runtimePageService;
+    
+    private static Logger logger= LoggerFactory.getLogger(UploaderController.class);
+	private static final String uploaderPath=PropertiesUtil.getValue("safetyManageFilePath")+"\\checkRecord";
 	 public static Map fileIconMap=new HashMap();
 	 static {
 	        fileIconMap.put("doc" ,"<i class='fa fa-file-word-o text-primary'></i>");
@@ -80,104 +95,53 @@ public class ReviewQualificationController {
 	        fileIconMap.put("rar" ,"<i class='fa fa-file-archive-o text-muted'></i>");
 	        fileIconMap.put("default" ,"<i class='fa fa-file-o'></i>");
 	    }
-	
-	@RequestMapping("/index")
-	public String index(HttpServletRequest request){
-		List<Notice> p = baseService.findMapBySql("select p.projectName ,p.id id  from tbl_notice p where p.status='30'", new Object[]{}, new Type[]{StringType.INSTANCE}, Notice.class);
+    
+    
+    @RequestMapping(method = RequestMethod.GET, value = "/list")
+    public String listIndex(HttpServletRequest request) {
+    	request.setAttribute("projectOptions", JSONArray.toJSONString(budgetService.getProjectCombobox()));
+    	
+    	String type=request.getParameter("type");
+    	String isAudit=request.getParameter("isAudit");
+    	request.setAttribute("type",type);
+    	request.setAttribute("isAudit",isAudit);
+    	
+    	
+		List<String> result = baseService.find("select names from com.radish.master.entity.safty.Aqfilestype mat where id = '"+type+"'");
+		request.setAttribute("functionName",result.size()==0?"":result.get(0));
+		return "safetyManage/aqfiles/addIndex";
+    }
+    
+    @RequestMapping(method = RequestMethod.GET, value = "/addWj")
+    public String addWj(HttpServletRequest request) {
+    	List<Project> p = baseService.findMapBySql("select p.project_name projectName ,p.id id  from tbl_project p ", new Object[]{}, new Type[]{StringType.INSTANCE}, Project.class);
 		request.setAttribute("projectOptions", JSONArray.toJSONString(p));
-		return prefix +"index";
-	}
-	
-	@RequestMapping("/add")
-	public String addIndex(HttpServletRequest request){
-		List<Notice> p = baseService.findMapBySql("select p.projectName ,p.id id  from tbl_notice p where p.status='30'", new Object[]{}, new Type[]{StringType.INSTANCE}, Notice.class);
-		request.setAttribute("projectOptions", JSONArray.toJSONString(p));
-		String spid = request.getParameter("spid");
-		request.setAttribute("spid",spid);
 		
-		//新增生成编号
-		if(StringHelper.isEmpty(spid)){
-			String str =maxNum();
-			
-			Calendar date = Calendar.getInstance();
-			String year = String.valueOf(date.get(Calendar.YEAR));
-			String strs = "ZBZG"+year+str;
-			
-			request.setAttribute("bh",strs);
-		}
-		return prefix +"addIndex";
-	}
-	@RequestMapping("/auidLook/{id}")
-	public String auidLook(@PathVariable("id") String id,HttpServletRequest request){
-		List<Notice> p = baseService.findMapBySql("select p.projectName ,p.id id  from tbl_notice p where p.status='30'", new Object[]{}, new Type[]{StringType.INSTANCE}, Notice.class);
+		String str =maxNum();
+		
+		Calendar date = Calendar.getInstance();
+		String year = String.valueOf(date.get(Calendar.YEAR));
+		String strs = "CR"+year+str;
+		
+		request.setAttribute("bh",strs);
+		
+		String type = request.getParameter("type");
+		request.setAttribute("type",type);
+        return "safetyManage/aqfiles/edit";
+    }
+    
+    @RequestMapping("/look/{id}")
+	public String auditHf(@PathVariable("id") String id,HttpServletRequest request){
+    	List<Project> p = baseService.findMapBySql("select p.project_name projectName ,p.id id  from tbl_project p ", new Object[]{}, new Type[]{StringType.INSTANCE}, Project.class);
 		request.setAttribute("projectOptions", JSONArray.toJSONString(p));
-		request.setAttribute("spid",id);
-		return prefix +"auidIndex";
-	}
-	
-	@RequestMapping("/look")
-	public String look(HttpServletRequest request){
-		List<Notice> p = baseService.findMapBySql("select p.projectName ,p.id id  from tbl_notice p where p.status='30'", new Object[]{}, new Type[]{StringType.INSTANCE}, Notice.class);
-		request.setAttribute("projectOptions", JSONArray.toJSONString(p));
-		String id = request.getParameter("spid");
-		request.setAttribute("spid",id);
-		return prefix +"lookInfo";
-	}
-	
-	@RequestMapping("/save")
+		
+        return "safetyManage/aqfiles/look";
+    }
+    
+    @RequestMapping("/load")
 	@ResponseBody
-	public Result save(HttpServletRequest request,ReviewQualification ps){
-		String id = request.getParameter("id");
-		String fileId = request.getParameter("fileId");
-		Result r = new Result();
-		if(StringHelper.isNotEmpty(id)){//修改
-			ReviewQualification p = baseService.get(ReviewQualification.class,id);
-			if(!p.getProjectId().equals(ps.getProjectId())){
-				Notice xm = baseService.get(Notice.class, ps.getProjectId());
-				p.setProjectName(xm.getProjectName());
-				p.setProjectId(ps.getProjectId());
-			}
-			p.setBider(ps.getBider());
-			p.setBuildSize(ps.getBuildSize());
-			p.setBuilder(ps.getBuilder());
-			p.setBuildAddress(ps.getBuildAddress());
-			p.setRequires(ps.getRequires());
-			baseService.update(p);
-			r.setSuccess(true);
-		}else{//保存
-			String pid = ps.getProjectId();
-			Notice p = baseService.get(Notice.class, pid);
-			ps.setProjectName(p.getProjectName());
-			ps.setStatus("10");
-			ps.setCreateDate(new Date());
-			baseService.save(ps);
-			r.setSuccess(true);
-			id = ps.getId();
-		}
-		if(fileId!=null){
-			if(fileId.indexOf(",")<0){
-				ReviewFile wj = baseService.get(ReviewFile.class, fileId);
-				wj.setFormId(id);
-				baseService.update(wj);
-			}else{
-				String[] fid = fileId.split(",");
-				for(int i=0;i<fid.length;i++){
-					ReviewFile wj = baseService.get(ReviewFile.class, fid[i]);
-					wj.setFormId(id);
-					baseService.update(wj);
-				}
-			}
-		}
-		return r;
-	}
-	
-	@RequestMapping("/load")
-	@ResponseBody
-	public Result load(HttpServletRequest request){
-		String id = request.getParameter("id");
-		ReviewQualification sp = baseService.get(ReviewQualification.class,id);
-		Result r = new Result();
-		List<ReviewFile> wjs = baseService.findMapBySql("select id  from tbl_reviewfile where form_ID='"+id+"'", new Object[]{}, new Type[]{StringType.INSTANCE}, ReviewFile.class);
+	public Result load(String id){
+		List<CheckFileAQ> wjs = baseService.findMapBySql("select id  from tbl_checkfileAQ where form_ID='"+id+"'", new Object[]{}, new Type[]{StringType.INSTANCE}, CheckFileAQ.class);
         String wjid = "";
 		for(int i =0;i<wjs.size();i++){
         	if(i==wjs.size()-1){
@@ -186,35 +150,120 @@ public class ReviewQualificationController {
         		wjid += wjs.get(i).getId()+",";
         	}
         }
-		r.setSuccess(true);
-		r.setData(sp);
-		r.setCode(wjid);
+		CheckRecordAQ  jd= baseService.get(CheckRecordAQ.class, id);
+		 Result r = new Result();
+		 r.setData(jd);
+		 r.setCode(wjid);
 		return r;
 	}
-	@RequestMapping("/loadSpyj")
-	@ResponseBody
-	public Result loadSpyj(HttpServletRequest request){
+    
+    @RequestMapping(method = RequestMethod.GET, value = "/scWj")
+    public String scWj(HttpServletRequest request) {
+    	
+		
 		String id = request.getParameter("id");
-		
-		List<ActivitiReview> sps = baseService.find(" from ActivitiReview where businessKey='"+id+"'");
-		Result r = new Result();
-		
-		r.setSuccess(true);
-		r.setData(sps);
-		return r;
-	}
-	@RequestMapping("/delete")
+		request.setAttribute("id",id);
+        return "safetyManage/aqfiles/query_file";
+    }
+    
+    @RequestMapping("/start")
 	@ResponseBody
-	public Result delete(HttpServletRequest request){
-		String id = request.getParameter("spid");
-		ReviewQualification sp = baseService.get(ReviewQualification.class,id);
-		baseService.delete(sp);
-		Result r = new Result();
-		r.setSuccess(true);
-		return r;
-	}
-	
-	public  String maxNum(){ 
+	public Result start(String id) {
+    	CheckRecordAQ ck = baseService.get(CheckRecordAQ.class, id);
+		ck.setStatus("20");
+		baseService.update(ck);
+		List<String> result = baseService.find("select names from com.radish.master.entity.safty.Aqfilestype mat where id = '"+ck.getType()+"'");
+		User user = SecurityUtil.getUser();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		String name =(result.size()==0?"":result.get(0))+":"+ck.getName()+"审核";
+
+        // businessKey
+        String businessKey = ck.getId();
+
+        // 配置流程变量
+        Map<String, Object> variables = new HashMap<>();
+        variables.put(Constants.VAR_APPLYUSER_NAME, user.getName());
+        variables.put(Constants.VAR_BUSINESS_KEY, businessKey);
+        variables.put("taskName", name);
+
+        // 启动流程
+        return runtimePageService.startProcessInstanceByKey("aqFiles", name, variables, user.getId(), businessKey);
+    }
+    @RequestMapping("saveWj")
+    @ResponseBody
+    public Result saveWj(HttpServletRequest request,CheckRecordAQ cr){
+    	Result r = new Result();
+    	String fid = request.getParameter("fid");
+    	User u = SecurityUtil.getUser();
+    	String fileids = request.getParameter("fileId");
+    	
+    	
+    	if(cr.getId()==null){
+    		cr.setParent_ID(fid);
+    		cr.setCreate_time(new Date());
+    		cr.setCreate_name_ID(u.getId());
+    		cr.setCreate_name(u.getName());
+    		cr.setStatus("10");
+    		baseService.save(cr);
+    		r.setCode(cr.getId());
+    	}else{
+    		CheckRecordAQ c = baseService.get(CheckRecordAQ.class, cr.getId());
+    		c.setProid(cr.getProid());
+    		baseService.update(c);
+    		r.setCode(cr.getId());
+    	}
+    	r.setSuccess(true);
+    	if(fileids!=null&&fileids.length()>0){
+    		if(fileids.indexOf(",")<0){//单个
+    			CheckFileAQ wj = baseService.get(CheckFileAQ.class, fileids);
+    			wj.setFormId(r.getCode());
+    			baseService.update(wj);
+    		}else{//多个
+    			String[] ids = fileids.split(",");
+    			for(int i = 0;i<ids.length;i++){
+    				CheckFileAQ wj = baseService.get(CheckFileAQ.class, ids[i]);
+    				wj.setFormId(r.getCode());
+    				baseService.update(wj);
+    			}
+    		}
+    	}
+    	
+    	return r;
+    }
+    @RequestMapping(value = "/save", method = RequestMethod.POST)
+    @ResponseBody
+    public Result save(CheckItemAQ org) {
+
+        org.setUpdateDateTime(new Date());
+        saftyItemService.saveOrUpdate(org);
+        if (!StrUtil.isEmpty(org.getParentId())) {
+        	CheckItemAQ parent = saftyItemService.get(CheckItemAQ.class, org.getParentId());
+        	saftyItemService.deleteCacheByKey(RedisConstant.CHECK_PRE + parent.getCode());
+        }
+        saftyItemService.deleteCacheByKey(RedisConstant.SAFTY_PRE + "tree");
+        return new Result(true);
+    }
+
+    @RequestMapping("/deleteWj")
+    @ResponseBody
+    public Result deleteWj(String id,HttpServletRequest request) {
+    	Result r = new Result();
+    	
+    	CheckRecordAQ cr = baseService.get(CheckRecordAQ.class, id);
+    	
+    	List<CheckFileAQ> wjs = baseService.findMapBySql("select id ,savedName from tbl_checkfileAQ where form_ID='"+id+"'", new Object[]{}, new Type[]{StringType.INSTANCE}, CheckFileAQ.class);
+    	for(CheckFileAQ fj : wjs){
+            String dirPath=request.getRealPath("/");
+            FileUtil.delFile(uploaderPath+File.separator+fj.getSavedName());
+            baseService.delete(fj);
+    	}
+    	baseService.delete(cr);
+    	r.setSuccess(true);
+    	
+    	return r;
+    }
+    
+    public  String maxNum(){ 
 		List<String> result = baseService.find("select max(mat.id) from com.radish.master.entity.review.MaxNumber mat");
 		if(result.size()>0&&!"".equals(result.get(0))&&StringHelper.isNotEmpty(result.get(0))){
 			String num = result.get(0);
@@ -231,40 +280,18 @@ public class ReviewQualificationController {
 			return "1001";
 		}
 	}
-	@RequestMapping("/start")
-	@ResponseBody
-	public Result start(String id) {
-		ReviewQualification sp = baseService.get(ReviewQualification.class,id);
-		sp.setStatus("20");
-		baseService.update(sp);
-		
-		User user = SecurityUtil.getUser();
-        String name =sp.getProjectName()+"|招投标资格【评审】";
-
-        // businessKey
-        String businessKey = sp.getId();
-
-        // 配置流程变量
-        Map<String, Object> variables = new HashMap<>();
-        variables.put(Constants.VAR_APPLYUSER_NAME, user.getName());
-        variables.put(Constants.VAR_BUSINESS_KEY, businessKey);
-        variables.put("taskName", name);
-
-        // 启动流程
-        return runtimePageService.startProcessInstanceByKey("qualiReview", name, variables, user.getId(), businessKey);
-    }
-	
-	@RequestMapping("/fileIndex")
+    
+    @RequestMapping("/fileIndex")
 	public String fileIndex(HttpServletRequest request){
-		List<Notice> p = baseService.findMapBySql("select p.projectName ,p.id id  from tbl_notice p where p.status='30'", new Object[]{}, new Type[]{StringType.INSTANCE}, Notice.class);
+		List<Project> p = baseService.findMapBySql("select p.project_name projectName ,p.id id  from tbl_project p ", new Object[]{}, new Type[]{StringType.INSTANCE}, Project.class);
 		request.setAttribute("projectOptions", JSONArray.toJSONString(p));
 		
-		return prefix +"fileIndex";
+		return "safetyManage/aqfiles/fileIndex";
 	}
 	
 	@RequestMapping(value="/projectdetailfile", method = RequestMethod.GET)
     public String projectdetailfile(String id, HttpServletRequest request) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
-		List<ReviewFile> wjs = baseService.findMapBySql("select id  from tbl_reviewfile where form_ID='"+id+"'", new Object[]{}, new Type[]{StringType.INSTANCE}, ReviewFile.class);
+		List<CheckFileAQ> wjs = baseService.findMapBySql("select id  from tbl_checkfileAQ where form_ID='"+id+"'", new Object[]{}, new Type[]{StringType.INSTANCE}, CheckFileAQ.class);
         String wjid = "";
 		for(int i =0;i<wjs.size();i++){
         	if(i==wjs.size()-1){
@@ -276,7 +303,30 @@ public class ReviewQualificationController {
 		
         request.setAttribute("fields", wjid);
         request.setAttribute("id", id);
-        return prefix+"query_file";
+        return "safetyManage/aqfiles/query_file";
+    }
+    
+    @RequestMapping(value="/projectdetailfileMB", method = RequestMethod.GET)
+    public String projectdetailfileMB(String fid, HttpServletRequest request) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
+		List<CheckRecordMbAQ> mbs = baseService.find("from CheckRecordMbAQ where parent_ID='"+fid+"'");
+		String wjid = "";
+		for(CheckRecordMbAQ mb :mbs){
+			List<CheckFileAQ> wjs = baseService.findMapBySql("select id  from tbl_checkfileAQ where form_ID='"+mb.getId()+"'", new Object[]{}, new Type[]{StringType.INSTANCE}, CheckFileAQ.class);
+	        
+			for(int i =0;i<wjs.size();i++){
+	        	if(wjs.size()==0){
+	        		wjid += wjs.get(i).getId();
+	        	}else {
+	        		wjid += ","+wjs.get(i).getId();
+	        	}
+	        }
+    	}
+    	
+		
+        request.setAttribute("fields", wjid);
+        request.setAttribute("id", fid);
+        request.setAttribute("lx", "look");
+        return "safetyManage/aqfiles/query_file";
     }
 	
 	/**
@@ -295,7 +345,7 @@ public class ReviewQualificationController {
 
         ArrayList<Integer> arr = new ArrayList<>();
         //缓存当前的文件
-        List<ReviewFile> fileList=new ArrayList<>();
+        List<CheckFileAQ> fileList=new ArrayList<>();
         String dirPath = request.getRealPath("/");
         for (int i = 0; i < files.length; i++) {
             MultipartFile file = files[i];
@@ -315,7 +365,7 @@ public class ReviewQualificationController {
                     //将文件写入到服务器
                     //FileUtil.copyInputStreamToFile(file.getInputStream(),serverFile);
                     file.transferTo(serverFile);
-                    ReviewFile sysFile=new ReviewFile();
+                    CheckFileAQ sysFile=new CheckFileAQ();
                     sysFile.setFileName(file.getOriginalFilename());
                     sysFile.setSavedName(savedName);
                     sysFile.setCreateDateTime(new Date());
@@ -324,7 +374,7 @@ public class ReviewQualificationController {
                     sysFile.setDeleted(0);
                     sysFile.setFileSize(file.getSize());
                     sysFile.setFilePath(uploaderPath+File.separator+savedName);
-                    sysFile.setFormId(psid);
+                    if(psid!=null)sysFile.setFormId(psid);
                     baseService.save(sysFile);
                     fileList.add(sysFile);
                     /*preview.add("<div class=\"file-preview-other\">\n" +
@@ -364,21 +414,20 @@ public class ReviewQualificationController {
      * @param request
      * @return initialPreiview initialPreviewConfig fileIds
      */
-    public FileResult getPreivewSettings(List<ReviewFile> fileList,HttpServletRequest request){
+    public FileResult getPreivewSettings(List<CheckFileAQ> fileList,HttpServletRequest request){
         FileResult fileResult=new FileResult();
         List<String> previews=new ArrayList<>();
         List<FileResult.PreviewConfig> previewConfigs=new ArrayList<>();
         //缓存当前的文件
-        //String dirPath = request.getRealPath("/");
+        String dirPath = request.getRealPath("/");
         String[] fileArr=new String[fileList.size()];
         int index=0;
-        for (ReviewFile sysFile : fileList) {
+        for (CheckFileAQ sysFile : fileList) {
             //上传后预览 TODO 该预览样式暂时不支持theme:explorer的样式，后续可以再次扩展
             //如果其他文件可预览txt、xml、html、pdf等 可在此配置
-        	String dirPath = request.getContextPath() + "/laborreview/showImage?imageID=" + sysFile.getId();
             if(FileUtil.isImage(uploaderPath+File.separator+sysFile.getSavedName())) {
-                previews.add("<img src='" + dirPath+ "' class='file-preview-image kv-preview-data' " +
-                        "style='width:auto;height:80px' alt='" + sysFile.getFileName() + " title='" + sysFile.getFileName() + "''>");
+                previews.add("<img src='." + sysFile.getFilePath().replace(File.separator, "/") + "' class='file-preview-image kv-preview-data' " +
+                        "style='width:auto;height:160px' alt='" + sysFile.getFileName() + " title='" + sysFile.getFileName() + "''>");
             }else{
                 previews.add("<div class='kv-preview-data file-preview-other-frame'><div class='file-preview-other'>" +
                         "<span class='file-other-icon'>"+getFileIcon(sysFile.getFileName())+"</span></div></div>");
@@ -412,7 +461,7 @@ public class ReviewQualificationController {
     @RequestMapping(value="/deletefile",method = RequestMethod.POST)
     @ResponseBody
     public Result delete(String id, HttpServletRequest request){
-    	ReviewFile sysFile=baseService.get(ReviewFile.class,id);
+    	CheckFileAQ sysFile=baseService.get(CheckFileAQ.class,id);
         String dirPath=request.getRealPath("/");
         FileUtil.delFile(uploaderPath+File.separator+sysFile.getSavedName());
         baseService.delete(sysFile);
@@ -420,7 +469,7 @@ public class ReviewQualificationController {
     }
     @RequestMapping(value="/download/{id}",method = RequestMethod.GET)
     public void downloadFile(@PathVariable("id") String id,HttpServletRequest request,HttpServletResponse response) throws IOException {
-    	ReviewFile sysfile = baseService.get(ReviewFile.class, id);
+    	CheckFileAQ sysfile = baseService.get(CheckFileAQ.class, id);
 
         InputStream is = null;
         OutputStream os = null;
@@ -436,7 +485,7 @@ public class ReviewQualificationController {
                 os = response.getOutputStream();
                 response.setContentType("application/x-msdownload");
                 response.setContentLength((int) filelength);
-                response.addHeader("Content-Disposition", "attachment; filename=\"" + new String(sysfile.getSavedName().getBytes("GBK"),// 只有GBK才可以
+                response.addHeader("Content-Disposition", "attachment; filename=\"" + new String(sysfile.getFileName().getBytes("GBK"),// 只有GBK才可以
                         "iso8859-1") + "\"");
 
                 // 循环取出流中的数据
@@ -471,10 +520,10 @@ public class ReviewQualificationController {
     @RequestMapping(value="/getFiles",method = RequestMethod.POST)
     @ResponseBody
     public FileResult getFiles(String fileIds, String type, HttpServletRequest request){
-        List<ReviewFile> fileList=new ArrayList<>();
+        List<CheckFileAQ> fileList=new ArrayList<>();
         if(!StrUtil.isEmpty(fileIds)) {
             String[] fileIdArr = fileIds.split(",");
-            DetachedCriteria criteria = DetachedCriteria.forClass(ReviewFile.class);
+            DetachedCriteria criteria = DetachedCriteria.forClass(CheckFileAQ.class);
             criteria.add(Restrictions.in("id", fileIdArr));
             criteria.addOrder(Order.asc("createDateTime"));
             fileList = baseService.findByCriteria(criteria);
@@ -486,20 +535,19 @@ public class ReviewQualificationController {
         }
         
     }
-    public FileResult getPreivewSettingsPreview(List<ReviewFile> fileList,HttpServletRequest request){
+    public FileResult getPreivewSettingsPreview(List<CheckFileAQ> fileList,HttpServletRequest request){
         FileResult fileResult=new FileResult();
         List<String> previews=new ArrayList<>();
         List<FileResult.PreviewConfig> previewConfigs=new ArrayList<>();
         //缓存当前的文件
-        //String dirPath = request.getRealPath("/");
+        String dirPath = request.getRealPath("/");
         String[] fileArr=new String[fileList.size()];
         int index=0;
-        for (ReviewFile sysFile : fileList) {
+        for (CheckFileAQ sysFile : fileList) {
             //上传后预览 TODO 该预览样式暂时不支持theme:explorer的样式，后续可以再次扩展
             //如果其他文件可预览txt、xml、html、pdf等 可在此配置
-        	String dirPath = request.getContextPath() + "/laborreview/showImage?imageID=" + sysFile.getId();
             if(FileUtil.isImage(uploaderPath+File.separator+sysFile.getSavedName())) {
-                previews.add("<img src='" + dirPath+ "' class='file-preview-image kv-preview-data' " +
+                previews.add("<img src='." + sysFile.getFilePath().replace(File.separator, "/") + "' class='file-preview-image kv-preview-data' " +
                         "style='width:auto;height:80px' alt='" + sysFile.getFileName() + " title='" + sysFile.getFileName() + "''>");
             }else{
                 previews.add("<div class='kv-preview-data file-preview-other-frame'><div class='file-preview-other'>" +
@@ -521,4 +569,5 @@ public class ReviewQualificationController {
         fileResult.setFileIds(StrUtil.join(fileArr));
         return fileResult;
     }
+    
 }

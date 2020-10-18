@@ -7,12 +7,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -32,6 +34,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.alibaba.fastjson.JSONArray;
+import com.cnpc.framework.activiti.pojo.Constants;
+import com.cnpc.framework.activiti.service.RuntimePageService;
 import com.cnpc.framework.base.controller.UploaderController;
 import com.cnpc.framework.base.entity.User;
 import com.cnpc.framework.base.pojo.FileResult;
@@ -43,6 +48,7 @@ import com.cnpc.framework.utils.PropertiesUtil;
 import com.cnpc.framework.utils.SecurityUtil;
 import com.cnpc.framework.utils.StrUtil;
 import com.radish.master.entity.project.Notice;
+import com.radish.master.entity.safty.AqCheck;
 import com.radish.master.entity.safty.CheckFileAQ;
 import com.radish.master.system.FileHelper;
 
@@ -53,6 +59,8 @@ private String prefix ="projectmanage/notice/";
 	
 	@Autowired
 	private BaseService baseService;
+	@Resource
+	private RuntimePageService runtimePageService;
 	
 	private static Logger logger= LoggerFactory.getLogger(UploaderController.class);
 	private static final String uploaderPath=PropertiesUtil.getValue("safetyManageFilePath")+"\\notice";
@@ -74,17 +82,42 @@ private String prefix ="projectmanage/notice/";
 	public String gsList(HttpServletRequest request){
 		String lx = request.getParameter("lx");
 		request.setAttribute("lx",lx);
+		String type = request.getParameter("type");
+		request.setAttribute("type",type);
+		
+		List<Notice> p = baseService.findMapBySql("select p.projectName ,p.id id  from tbl_notice p where p.status='30' and p.type='1'", new Object[]{}, new Type[]{StringType.INSTANCE}, Notice.class);
+		request.setAttribute("projectOptions", JSONArray.toJSONString(p));
+		if("2".equals(type)){
+			return prefix +"tb/list";
+		}else if("3".equals(type)){
+			return prefix +"zb/list";
+		}
 		return prefix +"list";
 	}
 	 @RequestMapping("/add")
 	public String add(HttpServletRequest request){
 		String ck = request.getParameter("ck");
 		String id=request.getParameter("id");
+		String type = request.getParameter("type");
+		request.setAttribute("type",type);
 		request.setAttribute("ck",ck);
 		request.setAttribute("id",id);
 		
+		List<Notice> p = baseService.findMapBySql("select p.projectName ,p.id id  from tbl_notice p where p.status='30' and p.type='1'", new Object[]{}, new Type[]{StringType.INSTANCE}, Notice.class);
+		request.setAttribute("projectOptions", JSONArray.toJSONString(p));
+		if("2".equals(type)){
+			return prefix +"tb/addIndex";
+		}else if("3".equals(type)){
+			return prefix +"zb/addIndex";
+		}
 		return prefix +"addIndex";
 	}
+	@RequestMapping("/look/{id}")
+	public String auditHf(@PathVariable("id") String id,HttpServletRequest request){
+		request.setAttribute("ck","look");
+		request.setAttribute("id",id);
+		return prefix +"addIndex";
+	 }
 	 @RequestMapping("/save")
 		@ResponseBody
 		public Result save(HttpServletRequest request,Notice jd){
@@ -93,16 +126,29 @@ private String prefix ="projectmanage/notice/";
 			String fileId = request.getParameter("fileId");
 			User u = SecurityUtil.getUser();
 			if(id==null){//保存
+				if(jd.getPid()!=null){
+					String pid = jd.getPid();
+					Notice p = baseService.get(Notice.class, pid);	
+					jd.setProjectName(p.getProjectName());
+				}
 				jd.setCreate_time(new Date());
 				jd.setCreate_name_ID(u.getId());
 				jd.setCreate_name(u.getName());
+				jd.setStatus("10");
 				baseService.save(jd);
 				r.setCode(jd.getId());
 				id = jd.getId();
 			}else{
 				Notice j = baseService.get(Notice.class, id);
+				if(jd.getPid()!=null){
+					String pid = jd.getPid();
+					Notice p = baseService.get(Notice.class, pid);	
+					j.setProjectName(p.getProjectName());
+				}
 				j.setContent(jd.getContent());
 				j.setName(jd.getName());
+				j.setNumber(jd.getNumber());
+				j.setProjectName(jd.getProjectName());
 				baseService.update(j);
 				r.setCode(id);
 			}
@@ -122,6 +168,30 @@ private String prefix ="projectmanage/notice/";
 			}
 			return r;
 		}
+	 	@RequestMapping("/start")
+		@ResponseBody
+		public Result start(String id) {
+	 		Notice ck = baseService.get(Notice.class, id);
+			ck.setStatus("20");
+			baseService.update(ck);
+			
+			User user = SecurityUtil.getUser();
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			String name ="招标公告："+ck.getName()+"-"+ck.getProjectName();
+	       
+
+	        // businessKey
+	        String businessKey = ck.getId();
+
+	        // 配置流程变量
+	        Map<String, Object> variables = new HashMap<>();
+	        variables.put(Constants.VAR_APPLYUSER_NAME, user.getName());
+	        variables.put(Constants.VAR_BUSINESS_KEY, businessKey);
+	        variables.put("taskName", name);
+
+	        // 启动流程
+	        return runtimePageService.startProcessInstanceByKey("zbNotice", name, variables, user.getId(), businessKey);
+	    }
 	 	
 		@RequestMapping("/load")
 		@ResponseBody

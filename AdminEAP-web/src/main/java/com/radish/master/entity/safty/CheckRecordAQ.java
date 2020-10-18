@@ -91,6 +91,14 @@ public class CheckRecordAQ implements Serializable {
     @Header(name = "文件名")
     @Column(name = "name")
     private String name;
+    
+    @Header(name = "类型")
+    @Column(name = "type")
+    private String type;
+    
+    @Header(name = "审核状态")
+    @Column(name = "status")
+    private String status;
 
 	public String getId() {
 		return id;
@@ -202,6 +210,22 @@ public class CheckRecordAQ implements Serializable {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 

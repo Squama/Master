@@ -30,6 +30,7 @@
 		          FROM
                   tbl_reviewLabor mx ,tbl_user u
                   WHERE 1=1 and u.id = mx.creatName 
+                  order by create_date_time desc
 		        ]]>
 		    </sql>
 		    <column key="rowIndex" header="序号" width="50" allowSort="false"/>
@@ -48,10 +49,12 @@
 	<query id="reviewbid_lists" key="id" tableName="招标文件评审列表" widthType="px">
 			<sql>
 		        <![CDATA[
-		          SELECT mx.*
+		          SELECT mx.*,DATE_FORMAT(validDate,'%Y%m%d')-DATE_FORMAT(NOW(),'%Y%m%d') yxq
+		          ,(select count(1) from tbl_notice zb where zb.pid = mx.projectId) zbsl
 		          FROM
                   tbl_reviewBid mx 
                   WHERE 1=1 
+                  order by create_date_time desc
 		        ]]>
 		    </sql>
 		    <column key="rowIndex" header="序号" width="50" allowSort="false"/>
@@ -63,6 +66,7 @@
 			<column key="builder" header="建设单位" classType="String" width="150" operator="like" />
 	        <column key="bider" header="招标单位" classType="String" width="150"/>
 	        <column key="status" header="评审状态" classType="String" width="150" render="10=新建,20=综合评审,30=副经理评审,40=总经理评审,50=经营科总结,60=完成"/>
+	        <column key="yxq" header="有效状态" width="80" fnRender="fnRenderYx"/>
 	        <column key="id" header="招标文件附件" width="80" fnRender="fnRenderFj"/>
 	        <column key="id" header="操作" width="80" fnRender="fnRenderSubmit"/>
 	</query>
@@ -73,6 +77,7 @@
 		          FROM
                   tbl_reviewQualification mx 
                   WHERE 1=1 
+                  order by create_date_time desc
 		        ]]>
 		    </sql>
 		    <column key="rowIndex" header="序号" width="50" allowSort="false"/>

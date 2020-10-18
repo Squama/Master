@@ -276,4 +276,23 @@
         <column key="identification_number" header="身份证" width="200" align="center"/>
         <column key="work_type" header="工种"  width="100"/>
     </query>
+    
+    <query id="aqFiles_list" key="id" tableName="安全文件" widthType="px">
+        <sql>
+            <![CDATA[
+              SELECT wj.ID id,wj.number number , wj.parent_ID parent_ID, wj.create_time create_time,
+              wj.update_time update_time ,p.project_name pName ,wj.proid pid ,wj.name name ,wj.status status,wj.type type
+			  FROM tbl_checkItemAQ wj ,tbl_project p 
+			  WHERE 1=1 and wj.proid = p.id 
+            ]]>
+        </sql>
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="number" header="文件编号" classType="String" allowSort="true" width="150"/>
+        <column key="name" header="文件名称" classType="String" allowSort="true" width="150"/>
+        <column key="pName" header="所属项目" classType="String" width="150"/>
+        <column key="create_time" header="创建日期" classType="String" width="150" allowSort="true" />
+        <column key="status" header="状态"  width="100" fnRender="fnRenderZt" />
+        <column key="id" header="文件详情" width="80" fnRender="fnRenderXq"/>
+    </query>
 </queryContext>

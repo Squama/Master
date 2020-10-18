@@ -25,6 +25,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.type.StringType;
+import org.hibernate.type.Type;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -35,6 +37,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.alibaba.fastjson.JSONArray;
 import com.cnpc.framework.annotation.RefreshCSRFToken;
 import com.cnpc.framework.base.pojo.FileResult;
 import com.cnpc.framework.base.pojo.Result;
@@ -44,6 +47,7 @@ import com.cnpc.framework.utils.SecurityUtil;
 import com.cnpc.framework.utils.StrUtil;
 import com.radish.master.entity.Project;
 import com.radish.master.entity.ProjectFileItem;
+import com.radish.master.entity.project.Notice;
 import com.radish.master.entity.project.ProjectSub;
 import com.radish.master.entity.project.ProjectTeam;
 import com.radish.master.pojo.ProjectDetailVO;
@@ -123,7 +127,11 @@ public class ProjectController {
     
     @RefreshCSRFToken
     @RequestMapping(value="/add",method = RequestMethod.GET)
-    public String add(){
+    public String add(HttpServletRequest request){
+		List<Notice> p = projectService.findMapBySql(
+				"select p.number number,p.projectName projectName from tbl_notice p where p.status='30'  and exists (select 1 from tbl_notice ps where ps.pid = p.id and ps.type='3')", 
+				new Object[]{}, new Type[]{StringType.INSTANCE}, Notice.class);
+		request.setAttribute("projectOptions", JSONArray.toJSONString(p));
         return "projectmanage/project/project_add";
     }
 	

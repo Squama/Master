@@ -18,7 +18,10 @@
                 <div class="dataTables_filter" id="searchDiv1" style="display: none">
                     <!--查询条件-->
                     <!--查询条件-->
-                    <input placeholder="请输入公告名" name="name" class="form-control" type="search" likeOption="true"operator="like" /> 
+                    <input placeholder="请输入名称" name="name" class="form-control" type="search" likeOption="true"operator="like" /> 
+	                 <select  placeholder="请输入项目名" title="项目名" name="pid" class="form-control select2" id="projectName" operator="like" likeOption="true" style =" width:20%">
+                    	<option selected="selected" value="">选择一个项目</option>
+                    </select>
 	                <input id ="type"name="type" class="form-control" type="search"  style="display:none"/> 
 	                 <div class="btn-group">
                         <button type="button" class="btn btn-primary" data-btn-type="search">查询</button>
@@ -55,10 +58,13 @@
 		$("#title1").html("中标文件上传");
 		$("#title2").html("中标文件上传");
 	}
-    
+	var xms = '${projectOptions?default(0)}',xm=0;
+    if(xms != 0){
+    	xm = JSON.parse(xms);
+    }
     var dutycheckTable, winId = "projectQueryWin";
     $(function (){
-    	dutycheckTable = new CommonTable("lwContract_table", "notice_List", "searchDiv1");
+    	dutycheckTable = new CommonTable("lwContract_table", "notice_List_tb", "searchDiv1");
         
         
         
@@ -82,12 +88,6 @@
             	case "edit":
             		if(!rowId){
                         modals.info('请选择要编辑的行');
-                        return false;
-                    }
-            		if(dutycheckTable.getSelectedRowData().status!='新建'
-                		&&dutycheckTable.getSelectedRowData().status!='审批不通过'
-                		){
-                    	modals.info('只能修改新建、驳回的数据');
                         return false;
                     }
                     modals.openWin({
@@ -117,12 +117,6 @@
                         modals.info('请选择要删除的行');
                         return false;
                     }
-                	if(dutycheckTable.getSelectedRowData().status!='新建'
-                		&&dutycheckTable.getSelectedRowData().status!='审批不通过'
-                		){
-                    	modals.info('只能删除新建、驳回的数据');
-                        return false;
-                    }
                     modals.confirm("是否要删除该行数据？",function(){
                         ajaxPost(basePath+"/notice/delete?id="+rowId,null,function(data){
                         	if(data.success){
@@ -135,6 +129,13 @@
                 	break;
             }
         });
+        if(xm != 0){
+            for (var i = 0, len = xm.length; i < len; i++) {
+                var x = xm[i];
+                $('#projectName').append("<option value=\"" + x.id + "\">" + x.projectName + "</option>");
+            }
+            $("#projectName").select2();
+        }
         if(lx=="look"){
             $("#add").css("display","none");
             $("#edit").css("display","none");
