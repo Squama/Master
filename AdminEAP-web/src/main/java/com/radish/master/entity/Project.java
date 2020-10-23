@@ -1,8 +1,13 @@
 package com.radish.master.entity;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
 import com.cnpc.framework.annotation.Header;
 import com.cnpc.framework.base.entity.BaseEntity;
 
@@ -63,6 +68,40 @@ public class Project extends BaseEntity {
 	@Header(name = "项目状态")
 	@Column(name = "status")
 	private String status;
+	
+	@Header(name = "建筑面积")
+	@Column(name = "jzmj")
+	private String jzmj;
+	
+	@Header(name = "建筑结构")
+	@Column(name = "jzjg")
+	private String jzjg;
+	
+	@Header(name = "层数")
+	@Column(name = "cs")
+	private String cs;
+	
+	@Header(name = "开工时间")
+	@Column(name = "kgsj")
+	@DateTimeFormat(pattern="yyyy-MM-dd")
+	private Date kgsj;
+	
+	@Header(name = "竣工时间")
+	@Column(name = "jgsj")
+	@DateTimeFormat(pattern="yyyy-MM-dd")
+	private Date jgsj;
+	
+	@Header(name = "总造价")
+	@Column(name = "zzj")
+	private String zzj;
+	
+	@Header(name = "工程地点")
+	@Column(name = "gcdd")
+	private String gcdd;
+	
+	@Header(name = "工程状态")
+	@Column(name = "gczt")
+	private String gczt;
 
 	public String getProjectCode() {
 		return projectCode;
@@ -166,6 +205,70 @@ public class Project extends BaseEntity {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public String getJzmj() {
+		return jzmj;
+	}
+
+	public void setJzmj(String jzmj) {
+		this.jzmj = jzmj;
+	}
+
+	public String getJzjg() {
+		return jzjg;
+	}
+
+	public void setJzjg(String jzjg) {
+		this.jzjg = jzjg;
+	}
+
+	public String getCs() {
+		return cs;
+	}
+
+	public void setCs(String cs) {
+		this.cs = cs;
+	}
+
+	public Date getKgsj() {
+		return kgsj;
+	}
+
+	public void setKgsj(Date kgsj) {
+		this.kgsj = kgsj;
+	}
+
+	public Date getJgsj() {
+		return jgsj;
+	}
+
+	public void setJgsj(Date jgsj) {
+		this.jgsj = jgsj;
+	}
+
+	public String getZzj() {
+		return zzj;
+	}
+
+	public void setZzj(String zzj) {
+		this.zzj = zzj;
+	}
+
+	public String getGcdd() {
+		return gcdd;
+	}
+
+	public void setGcdd(String gcdd) {
+		this.gcdd = gcdd;
+	}
+
+	public String getGczt() {
+		return gczt;
+	}
+
+	public void setGczt(String gczt) {
+		this.gczt = gczt;
 	}
 	
 }

@@ -1,0 +1,121 @@
+<section class="content-header">
+    <h1>
+        <span id="title"></span>
+    </h1>
+</section>
+
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <!-- /.box-header -->
+                <div class="dataTables_filter" id="searchDiv1" style="display: none">
+                    <!--查询条件-->
+                    <!--查询条件-->
+                    <input placeholder="请输入名称" name="name" class="form-control" type="search" likeOption="true"operator="like" /> 
+                    <input placeholder="请输入年度" name="year" class="form-control" type="search" likeOption="true"operator="like" /> 
+                    <input placeholder="请输入级别" name="level" class="form-control" type="search" likeOption="true"operator="like" /> 
+                    <select name="type" class="form-control">
+                    	<option value="">请选择一个类型</option>
+                    	<option value="10">质量荣誉</option>
+						<option value="20">安全荣誉</option>
+						<option value="30">其他荣誉</option>
+					</select>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-primary" data-btn-type="search">查询</button>
+                    </div>
+                    <div class="btn-group">
+                    	<button type="button" class="btn btn-default" data-btn-type="add" id="add">新增</button>
+                    	<button type="button" class="btn btn-default" data-btn-type="edit" id="edit">编辑</button>
+                        <button type="button" class="btn btn-danger" data-btn-type="delete" id="delete">删除</button>
+                        <button type="button" class="btn btn-success" data-btn-type="re" id="re">返回项目列表</button>
+                    </div>
+                </div>
+                <div class="box-body box-body-mobile">
+                    <table id="lwContract_table" class="table table-bordered table-striped table-hover">
+                    </table>
+                </div>
+            </div>
+           </div>
+         </div>
+         
+</section>
+
+<script>
+    var form = $("#searchDiv1").form({baseEntity: false}), initData={};
+    var projectid = '${projectid?default(0)}';
+    var projectName = '${projectName?default(0)}';
+    $("#title").html(projectName+"荣誉文件列表")
+    var dutycheckTable, winId = "projectQueryWin";
+    $(function (){
+    	dutycheckTable = new CommonTable("lwContract_table", "ryfjlist", "searchDiv1");
+        //绑定按钮事件
+        $("button[data-btn-type]").click(function () {
+            var action = $(this).data("btn-type");
+            var rowId = dutycheckTable.getSelectedRowId();
+            switch (action) {
+            	case "add":
+            		modals.openWin({
+                        winId:winId,
+                        title:'创建',
+                        width:'1000px',
+                        url:basePath+"/projectHonour/add",
+                        hideFunc:function(){
+                        	dutycheckTable.reloadData();
+                        },
+                        
+                       });
+            	break;
+            	case "edit":
+            		if(!rowId){
+                        modals.info('请选择要编辑的行');
+                        return false;
+                    }
+                    modals.openWin({
+                        winId:winId,
+                        title:'编辑',
+                        width:'1000px',
+                        url:basePath+"/projectHonour/add?id="+rowId,
+                        hideFunc:function(){
+                        	dutycheckTable.reloadData();
+                        }
+                       });
+            	break;
+                case "delete":
+                	if(!rowId){
+                        modals.info('请选择要删除的行');
+                        return false;
+                    }
+                    modals.confirm("是否要删除该行数据？",function(){
+                        ajaxPost(basePath+"/projectHonour/delete?id="+rowId,null,function(data){
+                        	if(data.success){
+                        		dutycheckTable.reloadData();
+                        	}
+                        	
+                  
+                        });
+                    })
+                	break;
+                case "re":
+                	loadPage(basePath+"/project/list");
+                    break;
+                              
+            }
+        });
+    });
+    function fnFj(value, type, obj){
+		return "<a href='javascript:void(0)' onclick='lookfj(\"" + value + "\",1)'>附件上传</a>";
+    }
+    function fnPh(value, type, obj){
+		return "<a href='javascript:void(0)' onclick='lookfj(\"" + value + "\",2)'>附件上传</a>";
+    }
+    function lookfj(mbid,type){
+    	modals.openWin({
+            winId: "files",
+            width: "900px",
+            url: basePath + "/projectHonour/projectdetailfile?id=" + mbid+"&type="+type ,
+            title: "查看附件"
+        });
+    }
+    
+</script>

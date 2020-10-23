@@ -176,6 +176,14 @@ public class ProjectController {
             oldProject.setProjectName(project.getProjectName());
             oldProject.setProjectManager(project.getProjectManager());
             oldProject.setUpdateDateTime(new Date());
+            oldProject.setJzmj(project.getJzmj());
+            oldProject.setJzjg(project.getJzjg());
+            oldProject.setCs(project.getCs());
+            oldProject.setKgsj(project.getKgsj());
+            oldProject.setJgsj(project.getJgsj());
+            oldProject.setZzj(project.getZzj());
+            oldProject.setGcdd(project.getGcdd());
+            oldProject.setGczt(project.getGczt());
             projectService.update(oldProject);
         }
         
