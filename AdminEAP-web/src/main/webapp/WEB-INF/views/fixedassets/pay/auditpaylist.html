@@ -1,0 +1,254 @@
+<link rel="stylesheet" href="${basePath}/resources/common/libs/fileinput/css/fileinput.min.css">
+<style>
+
+#assets-form .krajee-default.file-preview-frame .kv-file-content {
+    height: auto;
+}
+
+#assets-form .krajee-default .file-footer-caption {
+    width: 100px;
+}
+</style>
+
+<script src="${basePath}/resources/common/libs/fileinput/js/fileinput.js"></script>
+<script src="${basePath}/resources/common/libs/fileinput/js/locales/zh.js"></script>
+<!--BaseFile组件-->
+<script src="${basePath}/resources/common/js/base-file.js"></script>
+<script src="${basePath}/resources/common/js/calculate.js"></script>
+<script type="text/javascript">
+ $.fn.modal.Constructor.prototype.enforceFocus = function () {};
+ </script>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <form id="assets-form" name="assets-form" class="form-horizontal">
+                <div class="box box-info">
+                    <div class="box-header with-border">
+                        <span>
+                            <i class="fa fa-edit">请购信息</i>
+                        </span>
+                    </div>
+                    <div class="box-body">
+                        <!-- 内容 -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-sm-6 control-label">编号<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" id="purNo" name="purNo" placeholder="编号">
+                                </div>
+                            </div> 
+                            <div class="form-group">
+                                <label class="col-sm-6 control-label">部门<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" id="deptName" name="deptName" readonly="readonly">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">请购单名称<span style="color:red">*</span></label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" id="name" name="name" placeholder="请购单名称">
+                                </div>
+                            </div> 
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">库房<span style="color:red">*</span></label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" id="stock" name="stock" value="总库" readonly="readonly">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">请购原因<span style="color:red">*</span></label>
+                                <div class="col-sm-5">
+                                    <textarea class="form-control" id="reason" name="reason" rows="4" cols="100"></textarea>
+                                </div>
+                            </div> 
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">请购用途<span style="color:red">*</span></label>
+                                <div class="col-sm-5">
+                                    <textarea class="form-control" id="purpose" name="purpose" rows="4" cols="100"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12 dn applyfile">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">采购合同<span style="color:red">*</span></label>
+                                <div class="col-sm-6">
+                                    <input type="hidden" name="fileID" id="fileID">
+                                    <div class="form-group">
+                                        <div class="btn btn-default btn-file" id="fileupload">
+                                            <i class="fa fa-paperclip"></i> 上传采购合同(最大. 100MB)
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="file" name="fileidattachment" id="fileidattachment">
+                                    </div> 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="box box-success" id="assets_tx">
+                <div class="box-header with-border">
+                    <span>
+                        <i class="fa fa-files-o">请购明细</i>
+                    </span>
+                </div>
+                <div class="dataTables_filter" id="searchDivPDet" style="text-align:center;height:1px;">
+                   <input type="search" name="purID" id="purID" class="form-control" operator="eq" style="display:none;">
+                   <div class="btn-group">
+                       <button type="button" class="btn btn-primary" data-btn-type="search" id="refresh" style="display:none;">查询</button>
+                   </div>
+                </div>
+                <div class="box-body box-body-mobile">
+                    <!-- 内容 -->
+                    <table id="assets_tx_table" class="table table-bordered table-striped table-hover">
+                    </table>
+                </div>
+            </div>
+            <div class="box box-success" id="pay_tx">
+                <div class="box-header with-border">
+                    <span>
+                        <i class="fa fa-files-o">支付明细</i>
+                    </span>
+                </div>
+                <div class="dataTables_filter" id="searchPayDet" style="text-align:left;">
+                   <input type="search" name="purId" id="payPurId" class="form-control" operator="eq" style="display:none;">
+                   <input type="search" name="id" id="payId" class="form-control" operator="eq" style="display:none;">
+                   <div class="btn-group">
+                   </div>
+                </div>
+                <div class="box-body box-body-mobile">
+                    <!-- 内容 -->
+                    <table id="pay_tx_table" class="table table-bordered table-striped table-hover">
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    $.fn.modal.Constructor.prototype.enforceFocus =function(){};
+    var assetsform = $("#assets-form").form({baseEntity: false}), initData={}, faOptions=0;
+    var assetsTxTable, winId = "assetsDetWin", status,payTxTable;
+    
+    var purID="${purID?default(0)}";
+    $('#purID',$('#searchDivPDet')).val(purID);
+    $('#payPurId',$('#searchPayDet')).val(purID);
+
+    var assetsEditObject = {
+    		chooseChannel: function (rowId) {
+                modals.openWin({
+                    winId:winId,
+                    width:'1200px',
+                    url:basePath+"/fixedassets/apply/gotochannel?id="+rowId
+                   });
+            },
+            deleteDetail: function (rowId) {
+                ajaxPost(basePath + '/fixedassets/apply/deletedetail', {id:rowId}, function (data) {
+                    if (data.success) {
+                        assetsTxTable.table.page('first').draw(false);
+                    } else {
+                        modals.error(data.message);
+                    }
+                });
+            }
+    }
+    
+    $(function (){
+        assetsTxTable = new CommonTable("assets_tx_table", "fixedassets_apply_txpay_list", "searchDivPDet", {
+            "ordering" : false,
+            "lengthChange": false,
+            "displayLength": 20,
+            "scrollY": "200px",
+            "scrollCollapse": true
+        });
+        payTxTable = new CommonTable("pay_tx_table", "fixPay_list", "searchPayDet", {
+            "ordering" : false,
+            "lengthChange": false,
+            "displayLength": 20,
+            "scrollY": "200px",
+            "scrollCollapse": true
+        });
+        
+        //编辑回填
+        if(purID != 0){
+            ajaxPost(basePath+"/fixedassets/apply/getpur",{purID:purID},function(data){
+                $('#assets_tx').show();
+                $('#assetsformsave').hide();
+                assetsform.initFormData(data);
+                $('.form-control',$('#assets-form')).attr("disabled","disabled");
+                if(data.faType == '10'){
+                	$('.applyfile').show();
+                }
+                status = data.status;
+            })
+        } 
+
+        $("#doadd").on("click",function(){
+				doadd();
+        })
+        //初始化控件
+        assetsform.initComponent();
+    });
+    var fileinputDefaults = {
+            maxFileSize: 102400,
+            maxFileCount:10,
+            previewSettings: {
+                image: {width: "160px", height: "60px"},
+                text: {width: "213px", height: "160px"},
+                object: {width: "160px", height: "auto"},
+                pdf: {width: "160px", height: "160px"},
+                other: {width: "160px", height: "160px"}
+            },
+            previewZoomSettings: {
+                image: {width: "auto", height: "auto", 'max-width': "100%", 'max-height': "100%"},
+                text: {width: "100%", height: "100%", 'min-height': "480px"},
+                object: {width: "auto", height: "100%", 'min-height': "480px"},
+                pdf: {width: "100%", height: "100%", 'min-height': "480px"},
+                other: {width: "auto", height: "100%", 'min-height': "480px"}
+            },
+            uploadUrl: basePath + "/fixedassets/apply/uploadMultipleFile",
+            deleteUrl: basePath + "/project/deletefile",
+            allowedPreviewTypes : ['image', 'object']
+      }
+      var defaults = {
+            title: "请上传附件",
+            getFileResultUrl: basePath+"/project/getFiles",
+            downloadFileUrl: basePath+"/project/download/",
+            fileinput: fileinputDefaults,
+            showType:'detail',
+            window:false,
+            callback:function(fileIds,oldfileIds){
+                this.showFiles({
+                    fileIds:fileIds,
+                    type:'preview'
+                });
+            }
+      }
+    
+      $("#fileupload").file($.extend({}, defaults, {
+          title:"请上传合同",
+          fileinput:$.extend({}, fileinputDefaults, {
+              uploadExtraData: {"id":purID,"fileField":"fileID"}
+          }),
+          showContainer:'#fileidattachment',
+          fileIdContainer:"[name='fileID']",
+          extraPreviewConfig:{
+              "fileField":"fileID"
+          }
+      }));
+
+    function fnRenderGl (value, type, rowObj){
+	    var oper = "";
+        return oper;
+    }
+    function doprint(zfid){
+
+    }
+    
+</script>

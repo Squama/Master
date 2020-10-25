@@ -369,7 +369,7 @@ public class ReimburseController {
 			Org bm = baseService.get(Org.class, bx.getPid());
 			if("10".equals(lx)){//通过
 				bx.setStatus("40");
-				String name ="部门："+bm.getName()+",姓名："+jk.getReername()+",报销【审核】";
+				String name ="部门："+bm.getName()+",姓名："+jk.getReername()+",报销【审核】-"+bx.getContent();
 
 		        // businessKey
 		        String businessKey = bx.getId();

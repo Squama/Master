@@ -117,4 +117,70 @@
         <column key="id" header="操作" width="80" fnRender="fnRenderOperate"/>
     </query>
     
+    <query id="fixedassets_pay_list" key="id" tableName="资产支付"  widthType="px" pageSize="20">
+        <sql>
+            <![CDATA[
+             select * ,
+             (case when payMoney=0 then 0 when (payMoney>0 and pMoney>payMoney) then 1 when payMoney>=pMoney then 2 Else 3 end ) payStatus
+              from (
+              select 
+              	a.id id,
+              	a.name,
+              	a.dept_name deptName,
+              	a.dept_id deptId,
+              	a.fa_type faType,
+              	a.status status,
+              	a.pur_no purNo,
+              	(select sum(ifnull(b.price,0)*ifnull(b.quantity,0)) pMoney 
+              		from tbl_fixedassets_pur_tx b where a.id = b.pur_id ) pMoney,
+              	(select ifnull(sum(ifnull(payMoney,0)) ,0) 
+              		from tbl_fixedAssetsPay b where a.id = b.purId and b.status='30') payMoney
+              from tbl_fixedassets_pur a where a.status in (40,50,60)  order by create_date_time desc) a where 1=1 
+            ]]>
+        </sql>
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="faType" header="类型" width="80" render="10=固定资产,20=器具、工具,30=办公用品"/>
+        <column key="purNo" header="编号" width="150"/>
+        <column key="name" header="名称" allowSort="true" width="150"/>
+        <column key="deptName" header="部门" allowSort="true" width="150"/>
+        <column key="status" header="状态" width="80" render="10=新建,11=总经理审批,12=采购员填写渠道,13=总经理审批渠道,14=上传合同,15=合同评审,21=项目经理审批,22=总经理审批,23=采购员编辑渠道,24=选择采购渠道,31=总经理审批,40=已生成采购单,50=部分入库,60=已全部入库"/>
+        <column key="pMoney" header="总金额" allowSort="true" width="150"/>
+        <column key="payMoney" header="已支付金额" allowSort="true" width="150"/>
+        <column key="id" header="操作" width="80" fnRender="fnRenderOperate"/>
+    </query>
+    
+    <query id="fixPay_list" key="id" tableName="支付明细列表" widthType="px">
+        <sql>
+            <![CDATA[
+              SELECT p.*,zm.accountName accountName
+			  FROM tbl_fixedAssetsPay p left join tbl_projectaccount zm on p.accountId = zm.id 
+			  WHERE  1=1 
+            ]]>
+        </sql>
+        <column key="id" hidden="true" header="id" width="80" />
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="accountName" header="所属账目" classType="String" width="150"/>
+        <column key="payWay" header="支付方式" classType="String" allowSort="true" width="150" render="10=现金,20=转账,30=电汇"/>
+        <column key="skf" header="支付对象" classType="String" width="150"/>
+        <column key="payMoney" header="支付金额" classType="String" width="150"/>
+        <column key="createDate" header="创建时间" classType="String" width="150" dateFormat="yyyy-mm-dd"/>
+        <column key="status" header="支付审核状态" classType="String" width="150" render="10=新建,20=审核,30=审核通过,40=审核不通过"/>
+        <column key="id" header="管理" classType="String" width="150" fnRender="fnRenderGl"/>
+        
+    </query>
+    <query id="fixedassets_apply_txpay_list" key="id" tableName="请购表明细-支付页面" className="com.radish.master.entity.fixedassets.FixedAssetsPurTx" widthType="px" pageSize="20">
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="name" header="名称" allowSort="true" width="150"/>
+        <column key="englishName" header="英文名称" width="150"/>
+        <column key="model" header="型号" width="150"/>
+        <column key="norm" header="规格" width="150"/>
+        <column key="unit" header="单位" width="150"/>
+        <column key="quantity" header="数量" width="150"/>
+        <column key="vendor" header="生产厂商" width="150"/>
+        <column key="price" header="单价" width="150"/>
+        <column key="channelName" header="供应商" width="150"/>
+    </query>
+    
 </queryContext>
