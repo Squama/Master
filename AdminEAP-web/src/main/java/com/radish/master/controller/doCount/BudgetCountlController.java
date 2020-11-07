@@ -56,7 +56,7 @@ public class BudgetCountlController {
 	@ResponseBody
 	public List<BudgetCount> getList(String projectId,String projectSubId){
 		String sql = "select *  from v_budgetCount where project_id='"+projectId+"'"
-				+ " and project_sub_id='"+projectSubId+"'";
+				+ " and project_sub_id='"+projectSubId+"' order by budget_no";
 		List<BudgetCount> mxs = baseService.findMapBySql(sql, new Object[]{}, new Type[]{}, BudgetCount.class);
 		return mxs;
 	}

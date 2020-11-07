@@ -168,15 +168,15 @@ var budgetNo = '${budgetNo?default(0)}';
 		  }
 		  	tb +="<tr >";
 			tb +="<td colspan='4'>合计</td>";
-			tb +="<td >"+drhj+"</td>";
-			tb +="<td >"+drrg+"</td>";
-			tb +="<td >"+drcl+"</td>";
-			tb +="<td >"+drjx+"</td>";
-			tb +="<td >"+drzc+"</td>";
-			tb +="<td >"+cshj+"</td>";
-			tb +="<td >"+csrg+"</td>";
-			tb +="<td >"+cscl+"</td>";
-			tb +="<td >"+csjx+"</td>";
+			tb +="<td >"+toDecimal(drhj)+"</td>";
+			tb +="<td >"+toDecimal(drrg)+"</td>";
+			tb +="<td >"+toDecimal(drcl)+"</td>";
+			tb +="<td >"+toDecimal(drjx)+"</td>";
+			tb +="<td >"+toDecimal(drzc)+"</td>";
+			tb +="<td >"+toDecimal(cshj)+"</td>";
+			tb +="<td >"+toDecimal(csrg)+"</td>";
+			tb +="<td >"+toDecimal(cscl)+"</td>";
+			tb +="<td >"+toDecimal(csjx)+"</td>";
 			tb +="</tr>";
 		  
 		  $("#tbsdetail").append(tb);
