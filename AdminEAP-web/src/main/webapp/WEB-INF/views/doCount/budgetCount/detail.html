@@ -1,0 +1,220 @@
+
+<link rel="stylesheet" href="${basePath}/resources/common/libs/fileinput/css/fileinput.min.css">
+<script src="${basePath}/resources/common/libs/fileinput/js/fileinput.js"></script>
+<script src="${basePath}/resources/common/libs/fileinput/js/locales/zh.js"></script>
+<!--BaseFile组件-->
+<script src="${basePath}/resources/common/js/base-file.js"></script>
+ <style >
+     	#tbdetail table{
+     		font-family: verdana,arial,sans-serif;
+	     	font-size:11px;
+	     	color:#333333;
+	      	border-width: 1px;
+	      	border-color: #666666;
+	      	border-collapse: collapse;
+	      	word-wrap:break-word; 
+	      	word-break:break-all;
+     	}
+      	#tbdetail th{
+     		 border-width: 1px;
+		     padding: 8px;
+		     border-style: solid;
+		     border-color: #666666;
+		     background-color: 	#FFEFDB;
+		     text-align: center;
+		     font-size: 15px
+		     
+     	}
+     	#tbdetail td{
+	     	 border-width: 1px;
+		     padding: 8px;
+		     border-style: solid;
+		     border-color: #666666;
+		     background-color: #ffffff;
+		     text-align: center
+     	}
+     	#titledetail td{
+     		 border-width: 0px;
+		     padding: 8px;
+		     border-color: #666666;
+		     background-color: #E0FFFF;
+		     text-align: center;
+		     font-size: 18px;
+		     font-weight: 500
+		     
+     	}
+     	
+	</style>
+<div class="modal-header">
+   <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><li class="fa fa-remove"></li></button>
+   <h5 class="modal-title"></h5>
+</div>
+<section class="content">
+    <div class="row" style="height:650px;overflow-y:auto;>
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-body">
+                    <table style="width: 100%;text-align: center" id="tbdetail">
+                    	
+                    	<thead>
+	                    	<tr id="titledetail">
+	                    		<td colspan="13" style="text-align: left;font-size: 25px;font-weight: 600">
+	                    			<span id="tdtitle"></span>
+	                    		</td>
+	                    	</tr>
+	                    	<tr >
+	                    		<th style="width: 5%;border: none"></th>
+	                    		<th style="width: 9%;border: none"></th>
+	                    		<th style="width: 5%;border: none"></th>
+	                    		<th style="width: 5%;border: none"></th>
+	                    		<th style="width: 7%;border: none"></th>
+	                    		<th style="width: 7%;border: none"></th>
+	                    		<th style="width: 7%;border: none"></th>
+	                    		<th style="width: 7%;border: none"></th>
+	                    		<th style="width: 7%;border: none"></th>
+	                    		<th style="width: 7%;border: none"></th>
+	                    		<th style="width: 7%;border: none"></th>
+	                    		<th style="width: 7%;border: none"></th>
+	                    		<th style="width: 7%;border: none"></th>
+	                    	</tr>
+                    		<tr>
+                    			<th colspan="1"  rowspan="2" >定额编号</th>
+                    			<th colspan="1"  rowspan="2"  >子目名称</th>
+                    			<th colspan="1"  rowspan="2"  >单位</th>
+                    			<th colspan="1"  rowspan="2"  >工程量</th>
+                    			<th colspan="1"  rowspan="2"  >定额合价</th>
+                    			<th colspan="3"  rowspan="1"  >其中（元）</th>
+                    			<th colspan="1" rowspan="2"  >主材合价</th>
+                    			<th colspan="1" rowspan="2"  >测算合价</th>
+                    			<th colspan="3"  rowspan="1"  >其中（元）</th>
+                    		</tr>
+                    		<tr >
+                    			<th >人工</th>
+                    			<th >材料</th>
+                    			<th >机械</th>
+                    			<th >人工合价</th>
+                    			<th >材料合价</th>
+                    			<th >机械合价</th>
+                    		</tr>
+                    	</thead>
+                    	<tbody  id="tbsdetail">
+                    	
+                    	</tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+var budgetNo = '${budgetNo?default(0)}';
+
+    $(function () {
+        $("#print").on("click",function(){
+			var id = $("#Id").val();
+			if(id){
+				var url = basePath+"/ureport/preview?_u=file:costall.ureport.xml&_t=1,5&xmid="+id;
+		   	 	window.open(url);
+			}else{
+				modals.info("请先生成数据");
+			}
+        })
+        loadInfo();
+    });
+    function loadInfo(){
+    	$("#tbsdetail").empty();
+    	ajaxPost(basePath+'/budgetCount/getDetailList', {budgetNo:budgetNo}, function(data) {
+           var mxjcs = data;
+           if(mxjcs.length==0){
+        	   modals.info("数据条数0，请重新选择条件");
+        	   return;
+           }
+           $("#tdtitle").html("工程名称："+mxjcs[0].budget_name);
+           var tb= "";
+           var drhj = parseFloat(0.0);
+           var drrg = parseFloat(0.0);
+           var drcl = parseFloat(0.0);
+           var drjx =parseFloat(0.0);
+           var drzc = parseFloat(0.0);
+           var cshj = parseFloat(0.0);
+           var csrg = parseFloat(0.0);
+           var cscl =parseFloat(0.0);
+           var csjx = parseFloat(0.0);
+		  for(var i=0;i<mxjcs.length;i++){
+			tb +="<tr >";
+			tb +="<td >"+mxjcs[i].region_code+"</td>";
+			tb +="<td >"+mxjcs[i].region_name+"</td>";
+			tb +="<td >"+mxjcs[i].units+"</td>";
+			tb +="<td >"+mxjcs[i].quantities+"</td>";
+			tb +="<td >"+toDecimal(mxjcs[i].drhj)+"</td>";
+			tb +="<td >"+toDecimal(mxjcs[i].drrg)+"</td>";
+			tb +="<td >"+toDecimal(mxjcs[i].drcl)+"</td>";
+			tb +="<td >"+toDecimal(mxjcs[i].drjx)+"</td>";
+			tb +="<td >"+toDecimal(mxjcs[i].drzc)+"</td>";
+			tb +="<td >"+toDecimal(mxjcs[i].cshj)+"</td>";
+			tb +="<td >"+toDecimal(mxjcs[i].csrg)+"</td>";
+			tb +="<td >"+toDecimal(mxjcs[i].cscl)+"</td>";
+			tb +="<td >"+toDecimal(mxjcs[i].csjx)+"</td>";
+			tb +="</tr>";
+			 drhj =parseFloat(drhj) + parseFloat(toDecimal(mxjcs[i].drhj));
+	         drrg =parseFloat(drrg) + parseFloat(toDecimal(mxjcs[i].drrg));
+	         drcl =parseFloat(drcl) + parseFloat(toDecimal(mxjcs[i].drcl));
+	         drjx =parseFloat(drjx) + parseFloat(toDecimal(mxjcs[i].drjx));
+	         drzc =parseFloat(drzc) + parseFloat(toDecimal(mxjcs[i].drzc));
+	         cshj =parseFloat(cshj) + parseFloat(toDecimal(mxjcs[i].cshj));
+	         csrg =parseFloat(csrg) + parseFloat(toDecimal(mxjcs[i].csrg));
+	         cscl =parseFloat(cscl) + parseFloat(toDecimal(mxjcs[i].cscl));
+	         csjx =parseFloat(csjx) + parseFloat(toDecimal(mxjcs[i].csjx));
+		  }
+		  	tb +="<tr >";
+			tb +="<td colspan='4'>合计</td>";
+			tb +="<td >"+drhj+"</td>";
+			tb +="<td >"+drrg+"</td>";
+			tb +="<td >"+drcl+"</td>";
+			tb +="<td >"+drjx+"</td>";
+			tb +="<td >"+drzc+"</td>";
+			tb +="<td >"+cshj+"</td>";
+			tb +="<td >"+csrg+"</td>";
+			tb +="<td >"+cscl+"</td>";
+			tb +="<td >"+csjx+"</td>";
+			tb +="</tr>";
+		  
+		  $("#tbsdetail").append(tb);
+           
+          
+        }); 
+    }
+    function toDecimal(x) {  
+        if(!x){
+			return "0";
+           } 
+    	  var f = parseFloat(x);    
+    	if (isNaN(f)) {   
+    	  return;    
+    	}          
+    	f = Math.round(x*100)/100;  
+    	return f;        
+    	}  
+    function jsonYearMonthDay(milliseconds) {
+		if(milliseconds==null || milliseconds=="undefined"){
+			return "";
+		}
+		var datetime = new Date();
+		datetime.setTime(milliseconds);
+		var year = datetime.getFullYear();
+		var month = datetime.getMonth() + 1 < 10 ? "0"
+				+ (datetime.getMonth() + 1) : datetime.getMonth() + 1;
+		var date = datetime.getDate() < 10 ? "0" + datetime.getDate()
+				: datetime.getDate();
+		return year + "." + month + "." + date;
+
+	}
+
+	function qcnull(value){
+		if(!value){
+			return "";
+		}else{
+			return value;
+		}
+	}
+</script>
