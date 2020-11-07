@@ -16,6 +16,11 @@
             <div class="box">
                 <!-- /.box-header -->
                 <div class="dataTables_filter" id="searchDiv">
+                	<select class="form-control select2" name="a.fa_type" style="width:150px;" operator="eq">
+                        <option selected="selected" value="10">固定资产</option>
+                        <option value="20">器具、工具</option>
+                        <option value="30">办公用品</option>
+                    </select> 
                 	<input placeholder="请输名称" name="a.name" class="form-control" type="search" likeOption="true" operator="like"/> 
                 	<input placeholder="请输厂商" name="a.vendor" class="form-control" type="search" likeOption="true" operator="like"/> 
                     <select id="deptID" class="form-control select2" name="a.keeped_dept_id" style="width:300px;" operator="eq">
@@ -65,6 +70,7 @@
             }
             $("#deptID").select2();
         }
+        $(".select2").select2();
         //form_init();
     })
     

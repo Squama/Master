@@ -47,7 +47,7 @@
     <query id="fixedassets_stock_list" key="id" tableName="库存查看表"  widthType="px" pageSize="20">
         <sql>
             <![CDATA[
-              select a.id,a.name,a.english_name englishName,
+              select a.id,a.name,a.english_name englishName,a.fa_type faType,
               a.keeped_dept_name keepedDeptName,a.model,a.belonged_stock belongedStock,
               a.price,a.quantity,a.quantity_avl quantityAvl,a.vendor,a.keeped_dept_id keepedDeptID 
                from tbl_fixedassets_stk a where  quantity_avl>0.0 and 1=1
@@ -56,7 +56,7 @@
         <column key="rowIndex" header="序号" width="80"/>
         <column key="id" hidden="true" header="id" width="80"/>
         <column key="name" header="名称" allowSort="true" width="150"/>
-        <column key="englishName" header="英文名称" width="150"/>
+        <column key="faType" header="类型" width="150" render="10=固定资产,20=器具、工具,30=办公用品"/>
         <column key="keepedDeptName" header="保管部门" width="150"/>
         <column key="model" header="型号" width="150"/>
         <column key="belongedStock" header="所属库存" width="150"/>
