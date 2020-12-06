@@ -308,7 +308,7 @@ public class LoansController {
 			//账目明细
 			ProAccountDet mx = new ProAccountDet();
 			mx.setCreateDate(new Date());
-			mx.setAbstracts(content);
+			mx.setAbstracts(content+"-"+j.getContent());
 			mx.setZmtype("2");
 			mx.setOutMoney(j.getMoney());
 			mx.setAccounter(u.getName());
