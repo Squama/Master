@@ -48,7 +48,7 @@
     var gclfkid = '${gclid?default(0)}'
    	$("#bzfkid").val(bzid);
 	$("#bzid2").val(bzid);
-	$("#gclfkid").val(gclid);
+	$("#gclfkid").val(gclfkid);
 	dutycheckTable = new CommonTable("lwContract_table", "lookfkdList", "searchDiv1", {
         "ordering" : false,
         "lengthChange": false,
@@ -78,7 +78,7 @@
     } 
     function deleteDet(fkid){
     	modals.confirm("是否进行取消执行操作？",function(){
-            ajaxPost(basePath + '/projectvolume/doqxfkd', {fkid:fkfkid,gclid:gclfkid}, function (data) {
+            ajaxPost(basePath + '/projectvolume/doqxfkd', {fkid:fkid,gclid:gclfkid}, function (data) {
                 if (data.success) {
                 	dutycheckTable.reloadData();
                 	instockDetTable.reloadData();
@@ -90,7 +90,7 @@
     }
     function addDet(fkid){
     	modals.confirm("是否进行确认执行操作？",function(){
-            ajaxPost(basePath + '/projectvolume/doqrfkd', {fkid:fkfkid,gclid:gclfkid}, function (data) {
+            ajaxPost(basePath + '/projectvolume/doqrfkd', {fkid:fkid,gclid:gclfkid}, function (data) {
                 if (data.success) {
                 	dutycheckTable.reloadData();
                 	instockDetTable.reloadData();
