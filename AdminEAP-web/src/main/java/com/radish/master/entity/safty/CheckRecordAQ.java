@@ -99,6 +99,10 @@ public class CheckRecordAQ implements Serializable {
     @Header(name = "审核状态")
     @Column(name = "status")
     private String status;
+    
+    @Header(name = "文件类型")
+    @Column(name = "fileType")
+    private String fileType;
 
 	public String getId() {
 		return id;
@@ -226,6 +230,14 @@ public class CheckRecordAQ implements Serializable {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public String getFileType() {
+		return fileType;
+	}
+
+	public void setFileType(String fileType) {
+		this.fileType = fileType;
 	}
 
 

@@ -56,6 +56,7 @@ public class AqFilesTaskCompleteListener implements TaskListener{
              CheckRecordAQ zf = baseService.get("from CheckRecordAQ where id=:id", params);
              if (FALSE.equalsIgnoreCase(delegateTask.getVariable("approved").toString())) {
             	 zf.setStatus("40");
+            	 zf.setReserve2(suggestion);
              }else if (TRUE.equalsIgnoreCase(delegateTask.getVariable("approved").toString())) {
             	 zf.setStatus("30");
              }

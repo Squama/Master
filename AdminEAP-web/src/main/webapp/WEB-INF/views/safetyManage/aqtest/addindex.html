@@ -1,0 +1,282 @@
+
+     <style >
+     	table{
+     		font-family: verdana,arial,sans-serif;
+	     	font-size:11px;
+	     	color:#333333;
+	      	border-width: 1px;
+	      	border-color: #666666;
+	      	border-collapse: collapse;
+     	}
+     	th{
+     		 border-width: 1px;
+		     padding: 8px;
+		     border-style: solid;
+		     border-color: #666666;
+		     background-color: #dedede;
+     	}
+     	td{
+	     	 border-width: 1px;
+		     padding: 8px;
+		     border-style: solid;
+		     border-color: #666666;
+		     background-color: #ffffff;
+		     text-align: center
+     	}
+     	input{
+     		width:100%;
+     		text-align: center;
+     		font-size: 12px;
+     		border-color: #878787; 
+			border-style: solid; 
+			border-top-width: 0px; 
+			 border-right-width: 0px; 
+			border-bottom-width: 1px; 
+			 border-left-width: 0px
+     	}
+     	span{
+     		font-size: 13px
+     	}
+	</style>
+<section class="content">
+	<div class="row">
+		 <div class="modal-header">
+		    <h5 class="modal-title"></h5>
+		</div>
+	<div class="modal-body " style="float:left;width:30%">
+		 <div class="box-body">
+			 <form id="searchform" name="team-salary-form" class="form-horizontal">
+			     <div class="col-md-12">
+			         <div class="form-group">
+			             <label class="col-sm-3 control-label">选择考核内容<span style="color:red">*</span></label>
+			             <div class="col-sm-6">
+			                 <select id="type" class="form-control select2" name="type" style="width:100%">
+		                         <option selected="selected" value="">选择一个内容</option>
+		                         <option value="1">安全责任考核</option>
+		                         <option value="2">安全生产责任制考核表</option>
+		                         <option value="3">安全责任目标考核表</option>
+		                         <option value="4">施工现场CI形象宣传检查评分表</option>
+			                 </select>
+			             </div>
+			         </div>
+			         <div class="form-group">
+			             <label class="col-sm-3 control-label">选择岗位<span style="color:red">*</span></label>
+			             <div class="col-sm-6" >
+			                 <select id="stationSelect" class="form-control select2" name="stationSelect" style="width:100%">
+		                          <option selected="selected" value="">选择岗位</option>
+			                 </select>
+			             </div>
+			         </div>
+			     </div>
+			  </form>
+		</div>
+	</div>
+	<div class="modal-body" style="float:left;width:65%;display: none" id="contextDiv">
+		 <form style="width:100%" id="MxForm"  autocomplete="off">
+		  	<input type="hidden" name="id" id="id">
+		 	<div style="text-align: center">
+		 		<h2 id="fileName"></h2>
+		 	</div>
+			 <div style="margin: 2px 0 5px 20px">
+			 	<span  style="margin-right: 40%">
+			 	岗位：<input id="station"name="station" style="width:20%;text-align: left;" readonly="readonly" /></span>
+			 	<span>考核日期：<input class="date-picker" id="rq"name="rq" style="width:15%;text-align: left;" data-flag="datepicker" data-format="yyyy-mm-dd"  /></span>	
+			 </div>
+			  <table cellSpacing=0 cellPadding=0  style="width:100%;table-layout:fixed;border-collapse:collapse">
+				<thead>
+					<th style="width:10%">序号</th>
+					<th style="width:20%">考核内容</th>
+					<th style="width:50%">扣分标准</th>
+					<th style="width:10%">应得标准</th>
+					<th style="width:10%">扣减分数</th>
+					<th style="width:10%">实得分数</th>
+				</thead>
+				<tbody id="contextTB">
+					
+				</tbody>
+				<tfoot>
+					<tr>
+					<td colspan="2">合计</td>
+					<td></td>
+					<td>100</td>
+					<td><input id = "deduction"  name="deduction" readonly="readonly"/></td>
+					<td><input id = "score" name="score" readonly="readonly"/></td>
+				</tr>
+				<tr>
+					<td colspan="2">被考核人:<input id = "bkhr" name="bkhr"style="width:50%;text-align: left;" /></td>
+					<td colspan="4">考核人:<input id = "khr" name="khr" style="width:50%;text-align: left;" /></td>
+				</tr>
+				</tfoot>
+				
+			</table>
+	        <div class="box-footer text-center">
+	            <!--以下两种方式提交验证,根据所需选择-->
+	            <button type="button" class="btn btn-default" data-btn-type="cancel" data-dismiss="modal">取消</button>
+	            <button type="button" class="btn btn-primary" data-btn-type="save" id="save">提交</button>
+	        </div>
+		</form>
+	</div>
+</div>
+</section>
+ <script>
+ var  name = '${name?default(0)}';
+ if(name!=0){
+	 $("#khr").val(name);
+	 $("#khr").css("display","none");
+ }
+ var id,cd;
+ 	$(function(){
+ 		var form=$("#MxForm").form();
+ 		$("#save").on("click",function(){
+ 			doSave();
+ 		});
+ 		$("#type").on("change",function(){
+ 			getStation();
+ 		});
+ 		$("#stationSelect").on("change",function(){
+ 			getContext();
+ 		});
+ 		
+ 		if(cd){
+ 			var checkDetail = JSON.parse(cd);
+ 			form.initFormData(checkDetail); 
+ 		}
+ 		if(id){
+        	ajaxPost(basePath+"/dutycheck/load",{id:id},function(data){
+        		
+                formdata = data;
+                $("#dutycheck_ID").val(formdata.id);
+                formdata.id = null
+                formdata.check_time=jsonYearMonthDay(formdata.check_time);
+                form.initFormData(formdata); 
+              }); 
+        }
+ 		$(".select2").select2();
+ 	});
+ 	//获得岗位
+ 	function getStation(){
+		var type = $("#type option:selected").val();
+		 $('#stationSelect').empty();
+		 $('#stationSelect').append("<option selected='selected' value=''>选择岗位</option>");
+		if(type){
+			ajaxPost(basePath+"/aqtest/getModelGroup",{type:type},function(data){
+                var result = data.data;
+                for (var i = 0, len = result.length; i < len; i++) {
+                    var u = result[i];
+                    $('#stationSelect').append("<option value='" + u.value + "'>" + u.data + "</option>");
+                }
+			}); 
+		}else{
+			modals.info("请选择考核内容");
+			$("#contextDiv").css("display","");
+		}
+ 	}
+ 	//获得考核内容
+	function getContext(){
+		var type = $("#type option:selected").val();
+		var station = $("#stationSelect option:selected").val();
+		if(station){
+			 $("#contextTB").empty();
+			 $("#MxForm").form().clearForm();
+			ajaxPost(basePath+"/aqtest/getModelInfo",{type:type,gw:station},function(data){
+                var result = data.data;
+                if(result){
+                	$("#station").val(result[0].station);
+                	if(result[0].fileName=="安全责任考核"){
+                		$("#fileName").html("项目部安全生产责制/安全目标责任考核表");
+                    }else{
+                    	$("#fileName").html(result[0].fileName);
+                    }
+                    var tb = "";
+                    for (var i = 0, len = result.length; i < len; i++) {
+                    	tb +="<tr>";
+						tb +='<td><p id="orderNum'+(i+1)+'"'+'>'+result[i].orderNum+'</p>';
+						tb +='<input id="mbid'+i+'" name="mbid'+i+'" value="'+result[i].id+'" readonly= "readonly" style="display:none""/></td>';
+						tb +='<td><p id="rulename'+(i+1)+'"'+'>'+result[i].rulename+'</p></td>';
+						tb +='<td><p id="rules'+(i+1)+'"'+'>'+result[i].rules+'</p ></td>';
+						tb +='<td><p id="fraction'+(i+1)+'"'+'>'+result[i].fraction+'</p></td>';
+						tb +='<td><input id = "kf'+i+'" name="kf'+i+'" onChange=\"computer('+result[i].fraction+','+i+')\"/></td>';
+						tb +='<td><input id = "df'+i+'" name="df'+i+'" readonly="readonly"/></td>'; 
+
+						tb +="</tr>";
+                    }
+                    $("#contextTB").append(tb);
+                }
+			});
+			$("#contextDiv").css("display","");
+		}else{
+			$("#contextDiv").css("display","none")
+		}
+	}
+ 	
+ 	
+ 	function doSave(){
+ 		var params = $("#MxForm").form().getFormSimpleData();
+ 		var list=new Array();
+ 		for(var i=0;i<10;i++){
+			if($("#mbid"+i).val()){
+				list[i]={
+						mbid:$("#mbid"+i).val(),
+						kf:$("#kf"+i).val(),
+						df:$("#df"+i).val()
+						}
+				delete params["mbid"+i];
+				delete params["kf"+i];
+				delete params["df"+i];
+			}else{
+				break;
+			}
+ 	 	}
+ 	 	params.list=list;
+ 		ajaxPost(basePath+'/aqtest/save', params, function(data) {
+            if(data.success){
+                modals.info("数据保存成功");
+                
+            }                
+        });
+ 	}
+ 	function jsonYearMonthDay(milliseconds) {
+		if(milliseconds == "" || milliseconds == undefined || milliseconds == null){
+			return "";
+		}else{
+			var datetime = new Date();
+			datetime.setTime(milliseconds);
+			var year = datetime.getFullYear();
+			var month = datetime.getMonth() + 1 < 10 ? "0"
+					+ (datetime.getMonth() + 1) : datetime.getMonth() + 1;
+			var date = datetime.getDate() < 10 ? "0" + datetime.getDate()
+					: datetime.getDate();
+			var hour=datetime.getHours(); 
+			var minute=datetime.getMinutes();
+			return year + "-" + month + "-" + date;
+		}
+	}
+
+	function computer(fs,xh){
+		var kf = $("#kf"+xh).val();
+		fs = parseFloat(fs);
+		kf = parseFloat(kf);
+		if(kf>fs){
+			modals.info("扣分不能大于"+fs);	
+			$("#kf"+xh).val(0);
+			$("#df"+xh).val(fs);
+			return;
+		}
+		var df = fs-kf;
+		$("#df"+xh).val(df);
+		getZf();
+	}
+	function getZf(){
+		var zkf = 0;
+		for(var i=0;i<10;i++){
+			var kf = $("#kf"+i).val();
+			if(kf){
+				kf = parseFloat(kf);
+				zkf = zkf+kf;
+			}
+ 	 	}
+ 	 	var zdf = 100-parseFloat(zkf);
+ 	 	$("#deduction").val(zkf);
+ 	 	$("#score").val(zdf);
+	}
+ </script>

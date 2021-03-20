@@ -23,6 +23,7 @@ import com.radish.master.entity.safty.CheckRecordAQ;
 import com.radish.master.entity.safty.CheckRecordMbAQ;
 import com.radish.master.entity.project.Notice;
 import com.radish.master.entity.review.MaxNumber;
+import com.radish.master.pojo.Options;
 import com.radish.master.service.BudgetService;
 import com.radish.master.service.SaftyItemService;
 
@@ -103,10 +104,15 @@ public class saftyFilesController {
     	
     	String type=request.getParameter("type");
     	String isAudit=request.getParameter("isAudit");
+    	String islook=request.getParameter("islook");
     	request.setAttribute("type",type);
     	request.setAttribute("isAudit",isAudit);
+    	request.setAttribute("islook",islook);
     	
-    	
+    	List<Options> fileTypes = baseService.findMapBySql("select names data,names value  from tbl_aqfileselects "
+				+ "where type='"+type+"' ", new Object[]{}, new Type[]{StringType.INSTANCE}, Options.class);
+		request.setAttribute("fileType", JSONArray.toJSONString(fileTypes));
+		
 		List<String> result = baseService.find("select names from com.radish.master.entity.safty.Aqfilestype mat where id = '"+type+"'");
 		request.setAttribute("functionName",result.size()==0?"":result.get(0));
 		return "safetyManage/aqfiles/addIndex";
@@ -127,6 +133,10 @@ public class saftyFilesController {
 		
 		String type = request.getParameter("type");
 		request.setAttribute("type",type);
+		
+		List<Options> fileTypes = baseService.findMapBySql("select names data,names value  from tbl_aqfileselects "
+				+ "where type='"+type+"' ", new Object[]{}, new Type[]{StringType.INSTANCE}, Options.class);
+		request.setAttribute("fileType", JSONArray.toJSONString(fileTypes));
         return "safetyManage/aqfiles/edit";
     }
     
@@ -135,6 +145,10 @@ public class saftyFilesController {
     	List<Project> p = baseService.findMapBySql("select p.project_name projectName ,p.id id  from tbl_project p ", new Object[]{}, new Type[]{StringType.INSTANCE}, Project.class);
 		request.setAttribute("projectOptions", JSONArray.toJSONString(p));
 		
+//		CheckRecordAQ  jd= baseService.get(CheckRecordAQ.class, id);
+//		List<Options> fileTypes = baseService.findMapBySql("select names data,names value  from tbl_aqfileselects "
+//				+ "where type='"+jd.getType()+"' ", new Object[]{}, new Type[]{StringType.INSTANCE}, Options.class);
+//		request.setAttribute("fileType", JSONArray.toJSONString(fileTypes));
         return "safetyManage/aqfiles/look";
     }
     
@@ -163,6 +177,8 @@ public class saftyFilesController {
 		
 		String id = request.getParameter("id");
 		request.setAttribute("id",id);
+		String islook = request.getParameter("islook");
+		request.setAttribute("islook",islook);
         return "safetyManage/aqfiles/query_file";
     }
     
@@ -209,6 +225,8 @@ public class saftyFilesController {
     	}else{
     		CheckRecordAQ c = baseService.get(CheckRecordAQ.class, cr.getId());
     		c.setProid(cr.getProid());
+    		c.setName(cr.getName());
+    		c.setFileType(cr.getFileType());
     		baseService.update(c);
     		r.setCode(cr.getId());
     	}
@@ -300,7 +318,8 @@ public class saftyFilesController {
         		wjid += wjs.get(i).getId()+",";
         	}
         }
-		
+		String islook = request.getParameter("islook");
+		request.setAttribute("islook",islook);
         request.setAttribute("fields", wjid);
         request.setAttribute("id", id);
         return "safetyManage/aqfiles/query_file";
