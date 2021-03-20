@@ -84,6 +84,10 @@ public class AqTest implements Serializable {
     
     @Column(name = "deduction")
     private String deduction;
+    
+    @Column(name = "khdj")
+    private String khdj;
+
 
 	public String getId() {
 		return id;
@@ -180,4 +184,13 @@ public class AqTest implements Serializable {
 	public void setDeduction(String deduction) {
 		this.deduction = deduction;
 	}
+
+	public String getKhdj() {
+		return khdj;
+	}
+
+	public void setKhdj(String khdj) {
+		this.khdj = khdj;
+	}
+	
 }

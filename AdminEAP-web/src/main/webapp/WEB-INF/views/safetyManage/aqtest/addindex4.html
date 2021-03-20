@@ -51,22 +51,21 @@
 			             <label class="col-sm-3 control-label">选择考核内容<span style="color:red">*</span></label>
 			             <div class="col-sm-6">
 			                 <select id="type" class="form-control select2" name="type" style="width:100%">
-		                         <option selected="selected" value="">选择一个内容</option>
-		                         <option value="1">安全责任考核</option>
-		                         <!-- <option value="2">安全生产责任制考核表</option>
-		                         <option value="3">安全责任目标考核表</option>
-		                         <option value="4">施工现场CI形象宣传检查评分表</option> -->
+		                         <!-- <option value="1">安全责任考核</option>
+		                         <option value="2">安全生产责任制考核表</option>
+		                         <option value="3">安全责任目标考核表</option> -->
+		                         <option  value="4">施工现场CI形象宣传检查评分表</option>
 			                 </select>
 			             </div>
 			         </div>
-			         <div class="form-group">
+			         <!-- <div class="form-group">
 			             <label class="col-sm-3 control-label">选择岗位<span style="color:red">*</span></label>
 			             <div class="col-sm-6" >
 			                 <select id="stationSelect" class="form-control select2" name="stationSelect" style="width:100%">
 		                          <option selected="selected" value="">选择岗位</option>
 			                 </select>
 			             </div>
-			         </div>
+			         </div> -->
 			     </div>
 			  </form>
 		</div>
@@ -78,9 +77,17 @@
 		 		<h2 id="fileName"></h2>
 		 	</div>
 			 <div style="margin: 2px 0 5px 20px">
-			 	<span  style="margin-right: 40%">
-			 	岗位：<input id="station"name="station" style="width:20%;text-align: left;" readonly="readonly" /></span>
-			 	<span>考核日期：<input class="date-picker" id="rq"name="rq" style="width:15%;text-align: left;" data-flag="datepicker" data-format="yyyy-mm-dd"  /></span>	
+			 	<!-- <span  style="margin-right: 10%">
+			 		岗位：<input id="station"name="station" style="width:20%;text-align: left;" readonly="readonly" />
+			 	</span> -->
+			 	<span  style="margin-right: 10%">
+			 		工程名称：<select id=projectId class="form-control select2" name="projectId" style="width:200px;" operator="eq">
+              				<option selected="selected" value="">选择一个项目</option>
+             		</select>
+			 	</span>
+			 	<span>
+			 		考核日期：<input class="date-picker" id="rq"name="rq" style="width:15%;text-align: left;" data-flag="datepicker" data-format="yyyy-mm-dd"  />
+			 	</span>	
 			 </div>
 			  <table cellSpacing=0 cellPadding=0  style="width:100%;table-layout:fixed;border-collapse:collapse">
 				<thead>
@@ -96,15 +103,19 @@
 				</tbody>
 				<tfoot>
 					<tr>
-					<td colspan="2">合计</td>
-					<td></td>
-					<td>100</td>
+					<td colspan="2">考  核  等  级</td>
+					<td><input id = "khdj"  name="khdj" style="text-align: left"/></td>
+					<td>合计(100)</td>
 					<td><input id = "deduction"  name="deduction" readonly="readonly"/></td>
 					<td><input id = "score" name="score" readonly="readonly"/></td>
 				</tr>
 				<tr>
-					<td colspan="2">被考核人:<input id = "bkhr" name="bkhr"style="width:50%;text-align: left;" /></td>
-					<td colspan="4">考核人:<input id ="khr" name="khr" style="width:50%;text-align: left;" /></td>
+					<td colspan="2">项目部:<input id = "xmb" name="xmb"style="width:50%;text-align: left;" /></td>
+					<td colspan="4">项目经理:<input id ="xmjl" name="xmjl" style="width:50%;text-align: left;" /></td>
+				</tr>
+				<tr>
+					<td colspan="2">施工单位</td>
+					<td colspan="4"><input id ="sgdw" name="sgdw" style="width:50%;text-align: left;" /></td>
 				</tr>
 				</tfoot>
 				
@@ -120,6 +131,10 @@
 </section>
  <script>
  var  name = '${name?default(0)}';
+ var projectOptions = '${projectOptions?default(0)}',options=0;
+ if(projectOptions != 0){
+ 	options = JSON.parse(projectOptions);
+ }
  var id,cd;
  	$(function(){
  		var form=$("#MxForm").form();
@@ -127,16 +142,15 @@
  			doSave();
  		});
  		$("#goback").on("click",function(){
- 			loadPage(basePath+"/aqtest/search?type=1");
+ 			loadPage(basePath+"/aqtest/search?type=4");
  		});
- 		$("#type").on("change",function(){
- 			$("#contextDiv").css("display","none");
+ 		/* $("#type").on("change",function(){
+ 			$("#contextDiv").css("display","none")
  			getStation();
  		});
  		$("#stationSelect").on("change",function(){
  			getContext();
- 		});
- 		
+ 		}); */
  		if(cd){
  			var checkDetail = JSON.parse(cd);
  			form.initFormData(checkDetail); 
@@ -151,7 +165,14 @@
                 form.initFormData(formdata); 
               }); 
         }
+ 		if(options != 0){
+ 	        for (var i = 0, len = options.length; i < len; i++) {
+ 	            var option = options[i];
+ 	            $('#projectId').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+ 	        }
+ 	    }
  		$(".select2").select2();
+ 		getContext();
  	});
  	//获得岗位
  	function getStation(){
@@ -174,7 +195,7 @@
  	//获得考核内容
 	function getContext(){
 		var type = $("#type option:selected").val();
-		var station = $("#stationSelect option:selected").val();
+		var station = "施工现场CI形象宣传";//$("#stationSelect option:selected").val();
 		if(station){
 			 $("#contextTB").empty();
 			 $("#MxForm").form().clearForm();
@@ -185,7 +206,7 @@
                 	if(result[0].fileName=="安全责任考核"){
                 		$("#fileName").html("项目部安全生产责制/安全目标责任考核表");
                     }else{
-                    	$("#fileName").html(station+result[0].fileName);
+                    	$("#fileName").html(result[0].fileName);
                     }
                     var tb = "";
                     for (var i = 0, len = result.length; i < len; i++) {
@@ -204,9 +225,8 @@
                 }
 			});
 			$("#contextDiv").css("display","");
-			if(name!=0){
-				 $("#khr").val(name);
-				 $("#khr").attr("readonly","readonly")
+			 if(name!=0){
+				 $("#xmjl").val(name);
 			 }
 		}else{
 			$("#contextDiv").css("display","none")
@@ -236,8 +256,20 @@
  	 		modals.info("日期不能为空");	
  	 		return ;
  	 	 }
- 	 	if(!params.bkhr){
- 	 		modals.info("被考核人不能为空");	
+ 	 	if(!params.xmb){
+ 	 		modals.info("项目部不能为空");	
+ 	 		return ;
+ 	 	 }
+ 	 	if(!params.xmjl){
+ 	 		modals.info("项目经理不能为空");	
+ 	 		return ;
+ 	 	 }
+ 	 	if(!params.projectId){
+ 	 		modals.info("项目不能为空");	
+ 	 		return ;
+ 	 	 }
+ 	 	if(!params.sgdw){
+ 	 		modals.info("施工单位不能为空");	
  	 		return ;
  	 	 }
  	 	var type = $("#type option:selected").val();
@@ -250,8 +282,6 @@
             if(data.success){
                 modals.info("数据保存成功");
                 $("#MxForm").form().clearForm();
-                $("#station").val(params.station);
-                $("#khr").val(params.khr);
             }else{
             	modals.info(data.message);
              }              

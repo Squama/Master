@@ -1,0 +1,102 @@
+<section class="content-header">
+    <h1>
+        <span id="title1">施工现场CI形象宣传检查评分表</span>
+        <small>列表</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="${basePath}"><i class="fa fa-dashboard"></i> 首页</a></li>
+        <li><a href="#">安全管理</a></li>
+        <li class="active"><a href="#" id = "title2">施工现场CI形象宣传检查评分表</a></li>
+    </ol>
+</section>
+
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+            	<div class="dataTables_filter" id="searchDiv" >
+                   <!--查询条件-->
+                   <!--查询条件-->
+                  <select id="projectID" class="form-control select2" name="wj.projectId" style="width:200px;" operator="eq">
+              				<option selected="selected" value="">选择一个项目</option>
+             		</select>
+             		<select id="fileTypeSelect" class="form-control select2" name="wj.type" style="width:200px;" operator="eq">
+                         <option selected="selected" value="4">施工现场CI形象宣传检查评分表</option>
+             		</select>
+             		<!-- <select id="station" class="form-control select2" name="wj.station" style="width:200px;" operator="eq">
+             			<option selected="selected" value="">选择一个岗位</option>
+             		</select> -->
+                   	<input type="search" placeholder="请输入项目部" title="项目部" name="wj.xmb" class="form-control" operator="like" likeOption="true">
+                    <input type="search" placeholder="请输入项目经理" title="项目经理" name="wj.xmjl" class="form-control" operator="like" likeOption="true">
+                   <div class="btn-group">
+                       <button type="button" class="btn btn-primary" data-btn-type="search">查询</button>
+                   </div>
+                   <div class="btn-group" id="btnDiv">
+                   <button type="button" class="btn btn-default" data-btn-type="add" >录入考核结果</button>
+                   <button type="button" class="btn btn-default" data-btn-type="delete" >删除</button>
+                   </div>
+               </div>
+               <div class="box-body box-body-mobile">
+                   <table id="volume_table" class="table table-bordered table-striped table-hover">
+                   </table>
+               </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+var projectOptions = '${projectOptions?default(0)}',options=0;
+if(projectOptions != 0){
+	options = JSON.parse(projectOptions);
+}
+var volumeTable;
+var  type = '${type?default(0)}';
+$(function () {
+	volumeTable = new CommonTable("volume_table", "aqTest_list4", "searchDiv", null);
+	$('button[data-btn-type]').click(function() {
+        var action = $(this).attr('data-btn-type');
+        var rowId=volumeTable.getSelectedRowId();
+        switch (action) {
+        case 'add':
+        	loadPage(basePath+"/aqtest/addindex?type="+type);
+            break;
+        case 'delete':
+            modals.confirm("是否要删除该行数据？",function(){
+                ajaxPost(basePath+"/aqFiles/deleteWj?id="+rowId,null,function(data){
+                    if(data.success){
+                    	modals.info('删除成功');
+                    	volumeTable.reloadRowData();
+                    }else{
+                        modals.error("用户数据被引用，不可删除！");
+                    }
+                });
+            })
+            break;   
+        }
+        
+    });
+
+	if(options != 0){
+        for (var i = 0, len = options.length; i < len; i++) {
+            var option = options[i];
+            $('#projectID').append("<option value=\"" + option.value + "\">" + option.data + "</option>");
+        }
+        $(".select2").select2();
+    }
+})
+
+function fnRenderXq(value, type, rowObj){
+
+	var a = "<a href='javascript:void(0)' onclick='showDetail(\"" + value + "\")'>查看</a>";
+	return a;
+}
+function showDetail(fileId) {
+	modals.openWin({
+        winId: "checkRecord",
+        width: "900px",
+        url: basePath + "/aqFiles/projectdetailfile?id=" + fileId+"&islook="+islook ,
+        title: "查看附件"
+    });
+}
+</script>
