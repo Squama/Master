@@ -67,7 +67,7 @@ $(function () {
             break;
         case 'delete':
             modals.confirm("是否要删除该行数据？",function(){
-                ajaxPost(basePath+"/aqFiles/deleteWj?id="+rowId,null,function(data){
+                ajaxPost(basePath+"/aqtest/delete?id="+rowId,null,function(data){
                     if(data.success){
                     	modals.info('删除成功');
                     	volumeTable.reloadRowData();
@@ -95,12 +95,17 @@ function fnRenderXq(value, type, rowObj){
 	var a = "<a href='javascript:void(0)' onclick='showDetail(\"" + value + "\")'>查看</a>";
 	return a;
 }
-function showDetail(fileId) {
-	modals.openWin({
-        winId: "checkRecord",
-        width: "900px",
-        url: basePath + "/aqFiles/projectdetailfile?id=" + fileId+"&islook="+islook ,
-        title: "查看附件"
-    });
+
+function fnRenderLX(value){
+	if(value=='2'){
+		return "安全生产责任制考核表";
+	}else if(value=='3'){
+		return "安全责任目标考核表";
+	}
+	return "";
+}
+function showDetail(id) {
+	var url = basePath+"/ureport/preview?_u=file:aqtest2.ureport.xml&_t=1,5&id="+id;
+ 	window.open(url); 
 }
 </script>

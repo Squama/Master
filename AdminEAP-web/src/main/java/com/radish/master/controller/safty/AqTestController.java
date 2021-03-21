@@ -21,8 +21,6 @@ import com.cnpc.framework.utils.SecurityUtil;
 import com.radish.master.entity.safty.AqTest;
 import com.radish.master.entity.safty.AqTestModel;
 import com.radish.master.entity.safty.AqTestMx;
-import com.radish.master.entity.safty.Aqjyfj;
-import com.radish.master.entity.safty.CheckFileAQ;
 import com.radish.master.pojo.AqtestVO;
 import com.radish.master.pojo.Options;
 import com.radish.master.service.BudgetService;
@@ -116,6 +114,17 @@ public class AqTestController {
 		}
 		return new Result(true,"保存成功");
 	}
-	
+	@RequestMapping("/delete")
+	@ResponseBody
+	public Result delete(String id,HttpServletRequest request){
+		Result r= new Result();
+		AqTest jd =  baseService.get(AqTest.class, id);
+		List<AqTestMx> wjs = baseService.find(" from AqTestMx where pid='"+id+"'");
+		for(AqTestMx tp:wjs){
+			baseService.delete(tp);
+		}
+		baseService.delete(jd);
+		return r;
+	}
 	
 }

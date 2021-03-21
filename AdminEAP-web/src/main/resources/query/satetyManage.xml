@@ -320,13 +320,14 @@
             <![CDATA[
               SELECT 
               wj.station station,wj.khr khr,wj.bkhr bkhr,wj.rq rq,wj.score score,wj.id id
-              ,wj.khdj khdj,wj.sgdw sgdw,p.project_name pName
+              ,wj.khdj khdj,wj.sgdw sgdw,p.project_name pName,wj.type type
 			  FROM tbl_aqtest wj left join tbl_project p  on wj.projectId = p.id 
 			  WHERE 1=1 and type in ('2','3') order by rq desc
             ]]>
         </sql>
         <column key="id" hidden="true" header="id" width="80"/>
         <column key="rowIndex" header="序号" width="80"/>
+        <column key="type" header="类型" width="80" fnRender="fnRenderLX"/>
         <column key="pName" header="所在项目" classType="String" allowSort="true" width="150"/>
         <column key="station" header="岗位" classType="String" allowSort="true" width="150"/>
         <column key="khr" header="考核人" classType="String" allowSort="true" width="150"/>
