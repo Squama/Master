@@ -15,6 +15,7 @@
     <div class="row">
         <div class="col-xs-12">
             <div class="box box-info">
+            	<h3 id="isPayHtml" style="color:red"></h3>
                 <form id="volume_form" name="volume_form" class="form-horizontal">
                     <input type="hidden" name="projectName" id="projectName">
                     <input type="hidden" name="id">
@@ -31,7 +32,7 @@
                             <div class="form-group">
                                 <label class="col-sm-5 control-label">选择合同<span style="color:red">*</span></label>
                                 <div class="col-sm-6">
-                                    <select id="laborID" class="form-control select2" name="laborID">
+                                    <select id="laborID" class="form-control select2" name="laborID" >
                                         <option selected="selected" value="">选择一个合同</option>
                                     </select>
                                 </div>
@@ -344,6 +345,10 @@
                             $('#packageDetailID').select2();
                         });
                         //子项加载结束
+                        //显示已上报合计
+                        ajaxPost(basePath+"/projectvolume/getHtlsje",{htid:laborid},function(data){
+                            $("#isPayHtml").html(data.message);
+                        });
                     });
                 });
                 //加载子项
@@ -398,5 +403,9 @@
             $('#applySub').val(sub);
         });
     });
+
+    function getHtMoney(){
+		var htid = $("laborID ")
+    }
     
 </script>

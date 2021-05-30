@@ -88,7 +88,7 @@
         <column key="id" header="编号" hidden="true"/>
         <column key="name" header="名称" classType="String" width="150"/>
         <column key="price" header="上报金额（元）" classType="String" width="150"/>
-        <column key="remark" header="说明" classType="String"/>
+        <column key="notes" header="说明" classType="String"/>
         <column key="id" header="操作" classType="String" fnRender="fnRenderDelete"/>
     </query>
     

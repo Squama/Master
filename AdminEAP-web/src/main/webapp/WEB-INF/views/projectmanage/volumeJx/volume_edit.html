@@ -15,6 +15,7 @@
     <div class="row">
         <div class="col-xs-12">
             <div class="box box-info">
+            	<h3 id="isPayHtml" style="color:red"></h3>
                 <form id="volume_form" name="volume_form" class="form-horizontal">
                     <input type="hidden" name="projectName" id="projectName">
                     <input type="hidden" name="id">
@@ -345,6 +346,10 @@
                             $('#packageDetailID').select2();
                         });
                         //子项加载结束
+                        //显示已上报合计
+                        ajaxPost(basePath+"/projectvolume/getHtlsje",{htid:laborid},function(data){
+                            $("#isPayHtml").html(data.message);
+                        });
                     });
                 });
                 //加载子项

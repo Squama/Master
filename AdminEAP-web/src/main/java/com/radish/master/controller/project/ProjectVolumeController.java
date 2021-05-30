@@ -3,6 +3,8 @@
  */
 package com.radish.master.controller.project;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -748,5 +750,26 @@ public class ProjectVolumeController {
 
         List<AllVolume> gcls = projectService.findMapBySql(buffer.toString(), new Object[]{}, new Type[]{StringType.INSTANCE}, AllVolume.class);
         return gcls;
+    }
+    
+    @RequestMapping("/getHtlsje")//获取合同历史申报金额
+    @ResponseBody
+    public Result getHtlsje(HttpServletRequest request){
+    	String htid = request.getParameter("htid");
+    	Labor ht= projectService.get(Labor.class, htid);
+    	
+    	String type=request.getParameter("type");
+    	
+    	List<ProjectVolume> gcls = projectService.find(" from ProjectVolume where laborID='"+htid+"' and status='70'");
+    	BigDecimal isPay = BigDecimal.ZERO;
+    	
+    	for(ProjectVolume gcl : gcls){
+    		isPay = isPay.add(gcl.getFinalSub()==null?BigDecimal.ZERO:new BigDecimal(gcl.getFinalSub()));
+    	}
+    	String desc = "该合同总价："+ht.getContractPrice()+"元，已上报完成:"+isPay+"元。";
+    	Map<String, Object> res = new HashMap<>();
+    	res.put("htMoney", ht.getContractPrice());
+    	res.put("isPay", isPay);
+    	return new Result(true, res, desc);
     }
 }

@@ -3,6 +3,7 @@
     <div class="row">
         <div class="col-xs-12">
             <div class="box box-info">
+            	<h3 id="isPayHtml" style="color:red"></h3>
                 <form id="volume_form" name="project_form" class="form-horizontal">
                     <input type="hidden" name="projectName" id="projectName">
                     <div class="box-body">
@@ -252,7 +253,10 @@
                             $('#constructionManager').val(data.constructionManager);
                             $('#contractPrice').val(data.contractPrice);
                         });
-                        
+                        //显示已上报合计
+                        ajaxPost(basePath+"/projectvolume/getHtlsje",{htid:laborid},function(data){
+                            $("#isPayHtml").html(data.message);
+                        });
                     });
                 });
                 //加载子项

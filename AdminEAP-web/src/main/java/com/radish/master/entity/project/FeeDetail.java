@@ -42,6 +42,11 @@ public class FeeDetail extends BaseEntity {
     @Header(name = "说明")
     @Column(name = "remark")
     private String remark;
+    
+    
+    @Header(name = "备注")
+    @Column(name = "notes")
+    private String notes;
 
     public String getFeeID() {
         return feeID;
@@ -74,5 +79,13 @@ public class FeeDetail extends BaseEntity {
     public void setRemark(String remark) {
         this.remark = remark;
     }
+
+	public String getNotes() {
+		return notes;
+	}
+
+	public void setNotes(String notes) {
+		this.notes = notes;
+	}
 
 }
