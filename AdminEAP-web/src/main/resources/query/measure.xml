@@ -96,7 +96,7 @@
     
         <sql>
             <![CDATA[
-              SELECT f.project_name, f.project_sub_name,fd.`name`,fd.remark,fd.price 
+              SELECT f.project_name, f.project_sub_name,fd.`name`,fd.remark,fd.price,fd.notes
               FROM tbl_fee_detail fd,tbl_fee f
               WHERE fd.fee_id = f.id AND 1=1
             ]]>
@@ -106,7 +106,7 @@
         <column key="project_name" header="项目名称" classType="String"/>
         <column key="project_sub_name" header="子项名称" classType="String"/>
         <column key="name" header="名称" classType="String" width="150"/>
-        <column key="remark" header="说明" classType="String"/>
+        <column key="notes" header="说明" classType="String"/>
         <column key="price" header="上报金额（元）" classType="String" width="150"/>
     </query>
     <query id="feePay_list" key="id" tableName="规费支付列表" className="com.radish.master.entity.project.Fee" widthType="px" pageSize="20" order="createDateTime desc">
