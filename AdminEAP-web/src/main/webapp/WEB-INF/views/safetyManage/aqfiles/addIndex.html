@@ -159,16 +159,19 @@ function submit(id){
        	}
     });
 }
+//10=新建,20=办公室审核,30=审核完成,40=驳回,50=总经理审核
 function fnRenderZt(value){
 	if(isAudit=="1"){
 		if(value=="10"){
 			return "新建"
-		}else if(value=="20"){
-			return "审核中"
+		}else if(value=="50"){
+			return "办公室审核"
 		}else if(value=="30"){
 			return "审核完成"
 		}else if(value=="40"){
 			return "审核不通过"
+		}else if(value=="20"){
+			return "总经理审核"
 		}
 	}else{
 		return "完成"

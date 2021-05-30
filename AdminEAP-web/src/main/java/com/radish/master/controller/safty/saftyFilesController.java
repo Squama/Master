@@ -186,7 +186,7 @@ public class saftyFilesController {
 	@ResponseBody
 	public Result start(String id) {
     	CheckRecordAQ ck = baseService.get(CheckRecordAQ.class, id);
-		ck.setStatus("20");
+		ck.setStatus("50");
 		baseService.update(ck);
 		List<String> result = baseService.find("select names from com.radish.master.entity.safty.Aqfilestype mat where id = '"+ck.getType()+"'");
 		User user = SecurityUtil.getUser();

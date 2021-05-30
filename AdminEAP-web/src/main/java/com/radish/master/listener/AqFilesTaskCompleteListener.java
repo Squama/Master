@@ -54,11 +54,16 @@ public class AqFilesTaskCompleteListener implements TaskListener{
              Map<String, Object> params = new HashMap<String, Object>();
              params.put("id", businessKey);
              CheckRecordAQ zf = baseService.get("from CheckRecordAQ where id=:id", params);
+             //10=新建,20=总经理审核,30=审核完成,40=驳回,50=办公室审核
              if (FALSE.equalsIgnoreCase(delegateTask.getVariable("approved").toString())) {
             	 zf.setStatus("40");
             	 zf.setReserve2(suggestion);
              }else if (TRUE.equalsIgnoreCase(delegateTask.getVariable("approved").toString())) {
-            	 zf.setStatus("30");
+            	 if ("auidt".equals(taskDefinitionKey)) {///终审
+            		 zf.setStatus("30");
+            	 }else if("bgs".equals(taskDefinitionKey)){//办公室
+            		 zf.setStatus("20");
+            	 }
              }
              baseService.update(zf);
              
