@@ -32,8 +32,9 @@
                        <!-- <button type="button" class="btn btn-default" data-btn-type="reset">重置</button> -->
                    </div>
                    <div class="btn-group" id="btnDiv">
-                   <button type="button" class="btn btn-default" data-btn-type="add" >新增文件</button>
-                   <button type="button" class="btn btn-default" data-btn-type="delete" >删除</button>
+                   <button type="button" class="btn btn-success" data-btn-type="add" >新增文件</button>
+                   <button type="button" class="btn btn-default" data-btn-type="looks" >查看</button>
+                   <button type="button" class="btn btn-danger" data-btn-type="delete" >删除</button>
                    </div>
                </div>
                <div class="box-body box-body-mobile">
@@ -66,9 +67,15 @@ if(islook!='0'){
 	$("#btnDiv").css("display","none");
 	$("#status").val("30");
 }
+
+//动态加载列表数据
+var listInfo = "aqFiles_list";
+if(type=="10"){
+	listInfo = "aqFiles_list10";
+}
 $(function () {
 	
-	volumeTable = new CommonTable("volume_table", "aqFiles_list", "searchDiv", null);
+	volumeTable = new CommonTable("volume_table",listInfo , "searchDiv", null);
 	$('button[data-btn-type]').click(function() {
         var action = $(this).attr('data-btn-type');
         var rowId=volumeTable.getSelectedRowId();
@@ -83,6 +90,21 @@ $(function () {
                 	volumeTable.reloadData();
                 }
                });                        
+            break;
+        case 'looks':
+            if(!rowId){
+                modals.info('请选择要查看的明细');
+                return false;
+            }
+            modals.openWin({
+                winId:"checkRecord",
+                title:'创建',
+                width:'1000px',
+                url:basePath+"/aqFiles/look/"+rowId,
+                hideFunc:function(){
+                	volumeTable.reloadData();
+                }
+               }); 
             break;
         case 'delete':
             if(!rowId){
@@ -172,6 +194,8 @@ function fnRenderZt(value){
 			return "审核不通过"
 		}else if(value=="20"){
 			return "总经理审核"
+		}else if(value=="60"){
+			return "项目经理审核"
 		}
 	}else{
 		return "完成"

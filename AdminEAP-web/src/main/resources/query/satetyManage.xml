@@ -18,18 +18,18 @@
             <![CDATA[
               SELECT wj.ID id, wj.create_time create_time,wj.number number, wj.dx dx,wj.ty ty,
               p.project_name pName ,wj.proid pid ,wj.create_name create_name ,
-              wj.jdtime jdtime ,wj.bmfzr bmfzr 
+              wj.jdtime jdtime ,wj.bmfzr bmfzr ,wj.fxlx fxlx
 			  FROM tbl_SafeSkillJD wj ,tbl_project p 
-			  WHERE 1=1 and wj.proid = p.id 
+			  WHERE 1=1 and wj.proid = p.id  order by jdtime desc
             ]]>
         </sql>
         <column key="id" hidden="true" header="id" width="80"/>
         <column key="rowIndex" header="序号" width="80"/>
-        <column key="ty" header="类型" width="80" render="1=专项方案交底,2=安全技术交底,3=安全交底"/>
+        <column key="ty" header="类型" width="80" render="1=专项方案交底,2=安全技术交底,3=安全交底,11=建筑机械安全技术交底,12=分部（分项）工程及工种安全技术交底,13=临时施工用电技术交底"/>
         <column key="pName" header="所属项目" classType="String" width="150"/>
         <column key="jdtime" header="交底日期" classType="String" width="150" allowSort="true" operator="between"/>
         <column key="number" header="编号" classType="String" width="150"/>
-        <column key="bmfzr" header="部门负责人" classType="String" width="150"/>
+        <column key="fxlx" header="分项内容" classType="String" width="150"/>
     </query>
 	<query id="checkRecordListAQ" key="id" tableName="安全管理文件列表" widthType="px">
         <sql>
@@ -284,7 +284,7 @@
               wj.update_time update_time ,p.project_name pName ,wj.proid pid ,wj.name name ,wj.status status,wj.type type
 			  ,wj.fileType fileType,wj.reserve2 reserve2
 			  FROM tbl_checkItemAQ wj ,tbl_project p 
-			  WHERE 1=1 and wj.proid = p.id 
+			  WHERE 1=1 and wj.proid = p.id order by wj.create_time desc
             ]]>
         </sql>
         <column key="id" hidden="true" header="id" width="80"/>
@@ -293,6 +293,27 @@
         <column key="fileType" header="文件类型" classType="String" allowSort="true" width="150"/>
         <column key="name" header="文件名称" classType="String" allowSort="true" width="150"/>
         <column key="pName" header="所属项目" classType="String" width="150"/>
+        <column key="create_time" header="创建日期" classType="String" width="150" allowSort="true" />
+        <column key="status" header="状态"  width="100" fnRender="fnRenderZt" />
+        <column key="id" header="文件详情" width="80" fnRender="fnRenderXq"/>
+    </query>
+    <query id="aqFiles_list10" key="id" tableName="安全文件10" widthType="px">
+        <sql>
+            <![CDATA[
+              SELECT wj.ID id,wj.number number , wj.parent_ID parent_ID, wj.create_time create_time,
+              wj.update_time update_time ,p.project_name pName ,wj.proid pid ,wj.name name ,wj.status status,wj.type type
+			  ,wj.fileType fileType,wj.reserve2 reserve2,wj.notes notes 
+			  FROM tbl_checkItemAQ wj ,tbl_project p 
+			  WHERE 1=1 and wj.proid = p.id  order by wj.create_time desc
+            ]]>
+        </sql>
+        <column key="id" hidden="true" header="id" width="80"/>
+        <column key="rowIndex" header="序号" width="80"/>
+        <column key="number" header="文件编号" classType="String" allowSort="true" width="150"/>
+        <column key="fileType" header="文件类型" classType="String" allowSort="true" width="150"/>
+        <column key="name" header="文件名称" classType="String" allowSort="true" width="150"/>
+        <column key="pName" header="所属项目" classType="String" width="150"/>
+        <column key="notes" header="布设区域" classType="String" width="150"/>
         <column key="create_time" header="创建日期" classType="String" width="150" allowSort="true" />
         <column key="status" header="状态"  width="100" fnRender="fnRenderZt" />
         <column key="id" header="文件详情" width="80" fnRender="fnRenderXq"/>

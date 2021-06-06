@@ -111,6 +111,22 @@ public class SafeSkillJd implements Serializable {
     @Column(name = "jdtime")
     private Date jdtime;
     
+    @Header(name = "机械名称")
+    @Column(name = "jxmc")
+    private String jxmc;
+    
+    @Header(name = "机械编号")
+    @Column(name = "jxbh")
+    private String jxbh;
+    
+    @Header(name = "机械型号")
+    @Column(name = "jxxh")
+    private String jxxh;
+    
+    @Header(name = "分项类型")
+    @Column(name = "fxlx")
+    private String fxlx;
+    
     
 	public String getId() {
 		return id;
@@ -254,6 +270,38 @@ public class SafeSkillJd implements Serializable {
 
 	public void setJdtime(Date jdtime) {
 		this.jdtime = jdtime;
+	}
+
+	public String getJxmc() {
+		return jxmc;
+	}
+
+	public void setJxmc(String jxmc) {
+		this.jxmc = jxmc;
+	}
+
+	public String getJxbh() {
+		return jxbh;
+	}
+
+	public void setJxbh(String jxbh) {
+		this.jxbh = jxbh;
+	}
+
+	public String getJxxh() {
+		return jxxh;
+	}
+
+	public void setJxxh(String jxxh) {
+		this.jxxh = jxxh;
+	}
+
+	public String getFxlx() {
+		return fxlx;
+	}
+
+	public void setFxlx(String fxlx) {
+		this.fxlx = fxlx;
 	}
     
     

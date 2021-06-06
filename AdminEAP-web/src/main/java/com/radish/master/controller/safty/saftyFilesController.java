@@ -186,7 +186,19 @@ public class saftyFilesController {
 	@ResponseBody
 	public Result start(String id) {
     	CheckRecordAQ ck = baseService.get(CheckRecordAQ.class, id);
-		ck.setStatus("50");
+    	
+    	/**
+    	 * 1:办公室---总经理
+    	 * 2：项目经理----总经理
+    	 */
+    	String reviewFlag = "1";
+    	if("11".equals(ck.getType())){
+    		ck.setStatus("60");
+    		reviewFlag="2";
+    	}else{
+    		ck.setStatus("50");
+    	}
+		
 		baseService.update(ck);
 		List<String> result = baseService.find("select names from com.radish.master.entity.safty.Aqfilestype mat where id = '"+ck.getType()+"'");
 		User user = SecurityUtil.getUser();
@@ -201,6 +213,7 @@ public class saftyFilesController {
         variables.put(Constants.VAR_APPLYUSER_NAME, user.getName());
         variables.put(Constants.VAR_BUSINESS_KEY, businessKey);
         variables.put("taskName", name);
+        variables.put("type", reviewFlag);
 
         // 启动流程
         return runtimePageService.startProcessInstanceByKey("aqFiles", name, variables, user.getId(), businessKey);

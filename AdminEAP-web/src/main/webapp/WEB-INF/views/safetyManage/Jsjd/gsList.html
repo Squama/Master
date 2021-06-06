@@ -21,26 +21,26 @@
                     <select id="projectID" class="form-control select2" name="proid" style="width:200px;" operator="eq">
         				<option selected="selected" value="">选择一个项目</option>
        				 </select>
-       				  <select  class="form-control select2" name="ty" style="width:200px;" operator="eq">
-        				<option selected="selected" value="">选择类型</option>
-        				<option value="1">专项方案交底</option>
-                 			<option value="2">安全技术交底</option>
-                 			<option value="3">安全交底</option>
+       				 <span style="color:red">新增时类型必选</span>
+       				  <select id="tyOption"  class="form-control select2" name="ty" style="width:200px;" operator="eq">
+        				<option  value="11">建筑机械安全技术交底</option>
+                 			<option selected="selected"  value="12">分部（分项）工程及工种安全技术交底</option>
+                 			<option value="13">临时施工用电技术交底</option>
        				 </select>
        				 日期范围：
        				 <input name="jdtime"  class="form-control date-picker" data-flag="datepicker" data-format="yyyy-mm-dd" operator="between"/>
        				 ——
        				 <input name="jdtime"  class="form-control date-picker" data-flag="datepicker" data-format="yyyy-mm-dd" operator="between"/>
-           			 <input name="type" value="10" style="display: none"/>
+           			 <input name="type" value="20" style="display: none"/>
                     <div class="btn-group">
                         <button type="button" class="btn btn-primary" data-btn-type="search">查询</button>
                     </div>
                     <div class="btn-group">
-                    	<button type="button" class="btn btn-default" data-btn-type="add" id="add">新增</button>
+                    	<button type="button" class="btn btn-info" data-btn-type="add" id="add">新增</button>
                     	<button type="button" class="btn btn-default" data-btn-type="edit" id="edit">编辑</button>
                     	<button type="button" class="btn btn-default" data-btn-type="look" id="look">查看</button>
-                    	<button type="button" class="btn btn-default" data-btn-type="print" id="print">打印</button>
-                        <button type="button" class="btn btn-default" data-btn-type="delete" id="delete">删除</button>
+                    	<button type="button" class="btn btn-success" data-btn-type="print" id="print">打印</button>
+                        <button type="button" class="btn btn-danger" data-btn-type="delete" id="delete">删除</button>
                     </div>
                 </div>
                 <div class="box-body box-body-mobile">
@@ -70,13 +70,14 @@
         $("button[data-btn-type]").click(function () {
             var action = $(this).data("btn-type");
             var rowId = dutycheckTable.getSelectedRowId();
+            var ty = $("#tyOption option:selected").val();
             switch (action) {
             	case "add":
             		modals.openWin({
                         winId:winId,
                         title:'创建',
                         width:'1000px',
-                        url:basePath+"/safejsjd/add?type=10",
+                        url:basePath+"/safejsjd/add?type=20&ty="+ty,
                         hideFunc:function(){
                         	dutycheckTable.reloadData();
                         },
@@ -92,7 +93,7 @@
                         winId:winId,
                         title:'编辑',
                         width:'1000px',
-                        url:basePath+"/safejsjd/add?id="+rowId+"&type=10",
+                        url:basePath+"/safejsjd/add?id="+rowId+"&type=20&ty="+ty,
                         hideFunc:function(){
                         	dutycheckTable.reloadData();
                         }
@@ -100,14 +101,14 @@
             	break;
             	case "look":
             		if(!rowId){
-                        modals.info('请选择要编辑的行');
+                        modals.info('请选择要查看的行');
                         return false;
                     }
                     modals.openWin({
                         winId:winId,
                         title:'编辑',
                         width:'1000px',
-                        url:basePath+"/safejsjd/add?id="+rowId+"&ck=look&type=10"
+                        url:basePath+"/safejsjd/add?id="+rowId+"&ck=look&type=20&ty="+ty
                        });
             	break;
                 case "delete":
@@ -131,6 +132,14 @@
                         return false;
                     }
             		var url = basePath+"/ureport/preview?_u=file:aqjsjd.ureport.xml&_t=1,5&id="+rowId;
+            		if(dutycheckTable.getSelectedRowData().ty=='建筑机械安全技术交底'){
+            			url = basePath+"/ureport/preview?_u=file:aqjsjd11.ureport.xml&_t=1,5&id="+rowId;
+                	}else if(dutycheckTable.getSelectedRowData().ty=='分部（分项）工程及工种安全技术交底'){
+                		url = basePath+"/ureport/preview?_u=file:aqjsjd12.ureport.xml&_t=1,5&id="+rowId;
+                    }else if(dutycheckTable.getSelectedRowData().ty=='临时施工用电技术交底'){
+                    	url = basePath+"/ureport/preview?_u=file:aqjsjd13.ureport.xml&_t=1,5&id="+rowId;
+                    }
+            		
             	 	window.open(url);     
             	break;
                

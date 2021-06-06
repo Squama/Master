@@ -49,6 +49,7 @@ import com.radish.master.entity.Project;
 import com.radish.master.entity.review.MaxNumber;
 import com.radish.master.entity.safty.SafeFile;
 import com.radish.master.entity.safty.SafeSkillJd;
+import com.radish.master.pojo.Options;
 import com.radish.master.service.BudgetService;
 
 @Controller
@@ -126,6 +127,7 @@ public class SafeSkillJdController {
 		String proid = request.getParameter("proid");
 		String type = request.getParameter("type");
 		String id=request.getParameter("id");
+		String ty=request.getParameter("ty");
 		if(id==null){
 			String str =maxNum();
 			
@@ -138,12 +140,21 @@ public class SafeSkillJdController {
 			}
 			
 		}
-		
+		List<Options> fileTypes = baseService.findMapBySql("select names data,names value  from tbl_aqfileselects "
+				+ "where type='"+ty+"' ", new Object[]{}, new Type[]{StringType.INSTANCE}, Options.class);
+		request.setAttribute("fileType", JSONArray.toJSONString(fileTypes));
 		request.setAttribute("proid",proid);
 		request.setAttribute("ck",ck);
 		request.setAttribute("type",type);
 		request.setAttribute("id",id);
-		
+		request.setAttribute("ty",ty);
+		if("11".equals(ty)){
+			return prefix +"addIndex11";
+		}else if("12".equals(ty)){
+			return prefix +"addIndex12";
+		}else if("13".equals(ty)){
+			return prefix +"addIndex13";
+		}
 		return prefix +"addIndex";
 	}
 	@RequestMapping("/save")
@@ -159,7 +170,7 @@ public class SafeSkillJdController {
 			jd.setCreate_name_ID(u.getId());
 			jd.setCreate_name(u.getName());
 			if("20".equals(type)){//项目的固定项目
-				String proId = request.getParameter("proId");
+				String proId = request.getParameter("proid");
 				jd.setProid(proId);
 			}
 			Project p = baseService.get(Project.class, jd.getProid());
@@ -183,6 +194,11 @@ public class SafeSkillJdController {
 			j.setJdtime(jd.getJdtime());
 			j.setBmfzr(jd.getBmfzr());
 			j.setGz(jd.getGz());
+			
+			j.setJxmc(jd.getJxmc());
+			j.setJxbh(jd.getJxbh());
+			j.setJxxh(jd.getJxxh());
+			j.setFxlx(jd.getFxlx());
 			baseService.update(j);
 			r.setCode(id);
 		}

@@ -103,6 +103,10 @@ public class CheckRecordAQ implements Serializable {
     @Header(name = "文件类型")
     @Column(name = "fileType")
     private String fileType;
+    
+    @Header(name = "备注")
+    @Column(name = "notes")
+    private String notes;
 
 	public String getId() {
 		return id;
@@ -238,6 +242,14 @@ public class CheckRecordAQ implements Serializable {
 
 	public void setFileType(String fileType) {
 		this.fileType = fileType;
+	}
+
+	public String getNotes() {
+		return notes;
+	}
+
+	public void setNotes(String notes) {
+		this.notes = notes;
 	}
 
 
